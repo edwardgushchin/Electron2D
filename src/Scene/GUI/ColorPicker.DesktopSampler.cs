@@ -12,7 +12,8 @@ public partial class ColorPicker
         if (!IsInsideTree || !IsVisibleInTree || !_samplerVisible || _desktopSampler?.Visible == true) return;
         try
         {
-            _desktopSampler ??= new DesktopSamplerPopup(this) { Name = "_desktop_color_sampler" };
+            var display = DisplayServer.Service!;
+            _desktopSampler ??= new DesktopSamplerPopup(this, display.UsesWindowsScreenCapture, display.CanMagnifyDesktopColor) { Name = "_desktop_color_sampler" };
             if (_desktopSampler.Parent == null) AddChild(_desktopSampler, InternalMode.Front);
             _desktopSampler.Start();
         }
@@ -21,22 +22,51 @@ public partial class ColorPicker
 
     private sealed class DesktopSamplerPopup : Popup
     {
-        private static readonly Vector2i PreviewSize = new(28, 28);
         private readonly ColorPicker _owner;
-        private readonly ColorRect _border = new() { Size = PreviewSize, Color = Colors.Black, MouseFilter = MouseFilter.Ignore };
-        private readonly ColorRect _swatch = new() { Position = new(2, 2), Size = new(24, 24), MouseFilter = MouseFilter.Ignore };
+        private readonly Vector2i _previewSize;
+        private readonly ColorRect _border;
+        private readonly ColorRect _swatch;
+        private readonly TextureRect? _zoom;
+        private ImageTexture? _zoomTexture;
         private SceneTree? _session;
-        private X11ColorSampler? _grab;
+        private IDesktopColorSampler? _grab;
         private Color _openingColor;
-        private bool _leftDown;
 
-        internal DesktopSamplerPopup(ColorPicker owner)
+        internal DesktopSamplerPopup(ColorPicker owner, bool windows, bool magnify)
         {
             _owner = owner;
+            _previewSize = magnify ? new(55, 72) : new(28, 28);
+            _border = new ColorRect { Size = _previewSize, Color = Colors.Black, MouseFilter = MouseFilter.Ignore };
+            _swatch = new ColorRect
+            {
+                Position = magnify ? new(2, 55) : new(2, 2),
+                Size = magnify ? new(51, 15) : new(24, 24),
+                MouseFilter = MouseFilter.Ignore,
+            };
             ForceNative = true;
             WrapControls = false;
+            ExcludeFromCapture = magnify;
+            if (windows)
+            {
+                // SDL menu popups cannot become topmost above other applications.
+                PopupWMHint = PopupWindow = MinimizeDisabled = MaximizeDisabled = Transient = false;
+                AlwaysOnTop = true;
+            }
             AddChild(_border);
             _border.AddChild(_swatch);
+            if (magnify)
+            {
+                _zoom = new TextureRect
+                {
+                    Position = new(2, 2),
+                    Size = new(51, 51),
+                    ExpandMode = TextureRectExpandMode.IgnoreSize,
+                    StretchMode = TextureStretchMode.Scale,
+                    TextureFilter = TextureFilter.Nearest,
+                    MouseFilter = MouseFilter.Ignore,
+                };
+                _border.AddChild(_zoom);
+            }
             PopupHide += Cancel;
         }
 
@@ -47,7 +77,15 @@ public partial class ColorPicker
             try
             {
                 var point = DisplayServer.MouseGetPosition();
-                Popup(new(PreviewPosition(point), PreviewSize));
+                var position = PreviewPosition(point, DisplayServer.Service!.DesktopColorSampleBounds(point));
+                if (PopupWMHint) Popup(new(position, _previewSize));
+                else
+                {
+                    Position = position;
+                    Size = _previewSize;
+                    Show();
+                    GrabFocus();
+                }
                 if (!Visible) { Cancel(); return; }
                 _session = Tree!;
                 _session.ProcessFrameStarted += UpdateSample;
@@ -66,23 +104,18 @@ public partial class ColorPicker
             if (!_owner.IsVisibleInTree || !_owner._samplerVisible) { Hide(); return; }
             try
             {
-                while (grab.TryReadButton(out var button, out var pressed, out var point))
+                if (grab.TryReadSelection(out var point, out var accepted))
                 {
-                    if (button == 3 && !pressed) { Hide(); return; }
-                    if (button != 1) continue;
-                    if (pressed) _leftDown = true;
-                    else if (_leftDown)
-                    {
-                        var color = Sample(point);
-                        Stop();
-                        Hide();
-                        _owner.CommitSample(color);
-                        return;
-                    }
+                    if (!accepted) { Hide(); return; }
+                    var color = Sample(point);
+                    Stop();
+                    Hide();
+                    _owner.CommitSample(color);
+                    return;
                 }
                 Sample(DisplayServer.MouseGetPosition());
             }
-            catch (Exception error) when (_grab is not null && error is IOException or ArgumentOutOfRangeException)
+            catch (Exception error) when (_grab is not null && error is IOException or ArgumentOutOfRangeException or InvalidOperationException)
             {
                 Hide();
                 _owner.ShowError(error.Message);
@@ -91,9 +124,10 @@ public partial class ColorPicker
 
         private Color Sample(Vector2i point)
         {
-            var position = PreviewPosition(point);
+            var screen = DisplayServer.Service!.DesktopColorSampleBounds(point);
+            var position = PreviewPosition(point, screen);
             if (Position != position) Position = position;
-            var color = DisplayServer.ScreenGetPixel(point);
+            var color = _zoom is null ? DisplayServer.ScreenGetPixel(point) : UpdateZoom(point, screen);
             if (_swatch.Color != color)
             {
                 _swatch.Color = color;
@@ -103,13 +137,35 @@ public partial class ColorPicker
             return color;
         }
 
-        private static Vector2i PreviewPosition(Vector2i point)
+        private Color UpdateZoom(Vector2i point, Rect2i screen)
         {
+            var crop = screen.Intersection(new(point - new Vector2i(8, 8), new(17, 17)));
+            using var image = DisplayServer.ScreenGetImageRect(crop);
+            if (_zoomTexture is { } existing && existing.GetSize() == image.Size)
+                existing.Update(image);
+            else
+            {
+                var texture = ImageTexture.CreateFromImage(image);
+                var previous = _zoomTexture;
+                _zoom!.Texture = _zoomTexture = texture;
+                previous?.Dispose();
+            }
+            var local = point - crop.Position;
+            return image.GetPixel(local.X, local.Y);
+        }
+
+        private Vector2i PreviewPosition(Vector2i point, Rect2i screen)
+        {
+            if (_zoom is not null)
+            {
+                var position = point - new Vector2i(28, 28);
+                var last = (screen.End - _previewSize).Max(screen.Position);
+                return position.Clamp(screen.Position, last);
+            }
+
             const int gap = 8;
-            var screen = DisplayServer.ScreenWithMouseFocus;
-            var end = DisplayServer.ScreenGetPosition(screen) + DisplayServer.ScreenGetSize(screen);
-            var offset = new Vector2i(point.X + gap + PreviewSize.X <= end.X ? gap : -gap - PreviewSize.X,
-                point.Y + gap + PreviewSize.Y <= end.Y ? gap : -gap - PreviewSize.Y);
+            var offset = new Vector2i(point.X + gap + _previewSize.X <= screen.End.X ? gap : -gap - _previewSize.X,
+                point.Y + gap + _previewSize.Y <= screen.End.Y ? gap : -gap - _previewSize.Y);
             return point + offset;
         }
 
@@ -125,14 +181,26 @@ public partial class ColorPicker
         {
             _grab?.Dispose();
             _grab = null;
-            _leftDown = false;
+            if (_zoomTexture is { } texture)
+            {
+                _zoomTexture = null;
+                _zoom!.Texture = null;
+                texture.Dispose();
+            }
             if (_session is { } session) session.ProcessFrameStarted -= UpdateSample;
             _session = null;
+        }
+
+        internal override void HandlePopupInput(InputEvent input)
+        {
+            if (!PopupWMHint && input.IsActionPressed("ui_cancel", false, true)) RequestEmbeddedClose();
+            else base.HandlePopupInput(input);
         }
 
         protected override void OnNotification(int what)
         {
             if (what == NotificationExitTree) Cancel();
+            else if (what == NotificationApplicationFocusOut && !PopupWMHint && Visible) RequestEmbeddedClose();
             base.OnNotification(what);
         }
 

@@ -6,11 +6,27 @@ public sealed partial class DisplayServer
 {
     private X11ScreenCapture? _x11ScreenCapture;
     private bool _screenCaptureChecked;
-    private bool UsesWindowsScreenCapture => _videoDriver == "windows" && OperatingSystem.IsWindows();
+    internal bool UsesWindowsScreenCapture => _videoDriver == "windows" && OperatingSystem.IsWindows();
     private bool HasScreenCapture => UsesWindowsScreenCapture || GetX11ScreenCapture() is not null;
-    internal bool CanSampleDesktopColor => GetX11ScreenCapture() is not null;
-    internal X11ColorSampler OpenDesktopColorSampler() =>
-        GetX11ScreenCapture()?.OpenColorSampler() ?? throw new NotSupportedException("Live desktop color sampling requires native X11.");
+    internal bool CanSampleDesktopColor => HasScreenCapture;
+    internal bool CanMagnifyDesktopColor => UsesWindowsScreenCapture && HasCaptureExclusion();
+
+    internal IDesktopColorSampler OpenDesktopColorSampler()
+    {
+        EnsureOwner();
+        if (UsesWindowsScreenCapture) return WindowsColorSampler.Open();
+        return GetX11ScreenCapture()?.OpenColorSampler() ?? throw new NotSupportedException("Live desktop color sampling requires Windows or native X11.");
+    }
+
+    internal Rect2i DesktopColorSampleBounds(Vector2i point)
+    {
+        EnsureOwner();
+        var at = new SDL.Point { X = point.X, Y = point.Y };
+        var id = SDL.GetDisplayForPoint(in at);
+        if (id == 0 || !SDL.GetDisplayBounds(id, out var bounds))
+            throw new IOException("The screen under the pointer is unavailable.");
+        return new(bounds.X, bounds.Y, bounds.W, bounds.H);
+    }
 
     /// <summary>Captures an entire screen from the native desktop.</summary>
     /// <param name="screen">A zero-based screen index or a screen selector.</param>

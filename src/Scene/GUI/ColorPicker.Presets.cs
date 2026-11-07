@@ -97,5 +97,16 @@ public partial class ColorPicker
     }
     private void SavePalette(string path)
     { using var palette = new ColorPalette { Colors = GetPresets() }; ResourceSaver.Save(palette, path); _palettePath = path; _paletteLabel.Text = System.IO.Path.GetFileNameWithoutExtension(path); }
-    private void ShowError(string message) { _error ??= new AcceptDialog { Name = "_color_error" }; if (_error.Parent == null) AddChild(_error, InternalMode.Front); _error.DialogText = message; _error.PopupCentered(); }
+    private void ShowError(string message)
+    {
+        _error ??= new AcceptDialog { Name = "_color_error" };
+        if (_error.Parent == null) AddChild(_error, InternalMode.Front);
+        if (!_error.IsEmbedded() && DisplayServer.IsAvailable && DisplayServer.HasFeature(DisplayServer.Feature.NativeDialog))
+        {
+            DisplayServer.DialogShow("Color picker", message, ["OK"], static _ => { });
+            return;
+        }
+        _error.DialogText = message;
+        _error.PopupCentered();
+    }
 }

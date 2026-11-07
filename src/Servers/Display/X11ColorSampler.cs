@@ -3,12 +3,12 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Electron2D;
 
-internal sealed unsafe partial class X11ColorSampler : SafeHandleZeroOrMinusOneIsInvalid
+internal sealed unsafe partial class X11ColorSampler : SafeHandleZeroOrMinusOneIsInvalid, IDesktopColorSampler
 {
     private const string XCB = "libxcb.so.1";
     private const ushort ButtonEvents = (1 << 2) | (1 << 3);
     private const byte ButtonPress = 4, ButtonRelease = 5, Async = 1;
-    private bool _grabbed;
+    private bool _grabbed, _leftDown;
 
     [StructLayout(LayoutKind.Explicit, Size = 32)]
     private struct ButtonEvent
@@ -59,7 +59,7 @@ internal sealed unsafe partial class X11ColorSampler : SafeHandleZeroOrMinusOneI
         }
     }
 
-    internal bool TryReadButton(out byte button, out bool pressed, out Vector2i position)
+    public bool TryReadSelection(out Vector2i point, out bool accepted)
     {
         if (ConnectionHasError(handle) != 0)
             throw new IOException("The X11 color sampling connection closed.");
@@ -67,18 +67,17 @@ internal sealed unsafe partial class X11ColorSampler : SafeHandleZeroOrMinusOneI
         {
             try
             {
-                if (input->Type is not (ButtonPress or ButtonRelease) || input->SameScreen == 0)
-                    continue;
-                button = input->Button;
-                pressed = input->Type == ButtonPress;
-                position = new(input->RootX, input->RootY);
+                if (input->SameScreen == 0) continue;
+                if (input->Type == ButtonPress && input->Button == 1) _leftDown = true;
+                if (input->Type != ButtonRelease || !(input->Button == 3 || input->Button == 1 && _leftDown)) continue;
+                point = new(input->RootX, input->RootY);
+                accepted = input->Button == 1;
                 return true;
             }
             finally { NativeMemory.Free(input); }
         }
-        button = 0;
-        pressed = false;
-        position = default;
+        point = default;
+        accepted = false;
         return false;
     }
 

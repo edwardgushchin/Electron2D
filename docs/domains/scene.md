@@ -18,7 +18,7 @@ Last updated: 2026-10-27
 
 [Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification) now runs before viewport localization and scene callbacks for native and forwarded embedded events. Visibility changes also deliver notification 30 before their typed signal; input ownership and failure cleanup remain in the existing host/tree lifetime.
 
-[Color authoring](../components/color-authoring.md#desktop-and-application-sampling) connects the picker and its swatch button to live native X11 desktop pixels with an owned preview and cancelable pointer grab. Embedded root windows retain application sampling.
+[Color authoring](../components/color-authoring.md#desktop-and-application-sampling) connects the picker and its swatch button to live Windows and native X11 desktop pixels with an owned preview and cancelable pointer input. Embedded root windows retain application sampling.
 
 ## Node scene-authoring metadata
 

@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>A color editor with shaped color spaces, numeric channels, intensity, text and local swatches.</summary>
 /// <remarks>Programmatic color assignments are silent. User edits publish ColorChanged; DeferredMode defers
 /// slider and surface gestures until release. Internal controls and their resources remain owned by the picker.
-/// Pick uses live desktop colors on supported native X11 windows and a completed viewport image otherwise.
+/// Pick uses live desktop colors on supported Windows and native X11 windows and a completed viewport image otherwise.
 /// Palette file I/O and sampling start on the scene owner.</remarks>
 public partial class ColorPicker : VBoxContainer
 {
