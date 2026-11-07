@@ -1,6 +1,6 @@
 # Electron2D versioning decisions
 
-Last updated: 2026-10-22
+Last updated: 2026-11-07
 
 This bounded document owns product versioning and compatibility milestones. Use [the decision index](index.md) for other architectural domains; class pages describe the version metadata actually exposed by the runtime.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0096](#adr-0096).
 <a id="adr-0096"></a>
 ## ADR 0096: Use semantic product versions with separate runtime and editor milestones
 
-Last updated: 2026-10-22
+Last updated: 2026-11-07
 
 - Status: Accepted; the 0.2.0-alpha release was selected by the user on 2026-10-22.
 - Scope: Electron2D product releases, public compatibility, development channels and runtime/editor milestones.
@@ -26,9 +26,14 @@ Electron2D uses [Semantic Versioning 2.0.0](https://semver.org/), in the form `M
 | Product milestone | Version and acceptance boundary |
 | --- | --- |
 | Current runtime development | `0.2.0-alpha` is the accepted development version; the public API is not yet stable. |
+| Runtime API implementation | [`0.3.0-alpha`](https://github.com/edwardgushchin/Electron2D/milestone/1) at 80% of the accepted runtime API implemented. |
+| Runtime API implementation | [`0.4.0`](https://github.com/edwardgushchin/Electron2D/milestone/2) at 90% of the accepted runtime API implemented. |
+| Full runtime API implementation | [`0.5.0`](https://github.com/edwardgushchin/Electron2D/milestone/3) at 100% of the accepted runtime API implemented with executable behavior evidence. Full verification on all target platforms is tracked separately under ADR 0021. |
 | Complete stable runtime API | `1.0.0`, after the entire accepted runtime scope is implemented, behaviorally verified, documented and stabilized. Accepted exclusions remain excluded; editor-only obligations remain tracked for the editor milestone. |
 | Complete editor with compatible runtime | The next `1.x.0` release, for example `1.1.0` if it directly follows `1.0.0`. The editor must execute its accepted visual and programmatic workflows through the public runtime API. |
 | Incompatible public contract | The next major release, for example `2.0.0` after the `1.x` series. Delivering an editor alone does not require a major increment. |
+
+Use the [coverage register's implementation measure](../coverage/index.md#roadmap-rule) for the three `0.x` checkpoints. Each checkpoint covers every commit on `main` after the preceding checkpoint through the first commit that meets its threshold. The first range starts immediately after `v0.2.0-alpha`. Record the ending commit and its coverage result when closing each milestone.
 
 The public compatibility contract includes documented public/protected API, observable behavior and supported saved project/resource data. After `1.0.0`:
 
@@ -40,7 +45,7 @@ During `0.x` development, new functionality or incompatible changes increment `M
 
 Prerelease candidates use `alpha`, `beta` and `rc` channels before removing the suffix for a stable release; a numeric candidate identifier is optional. The current development channel is unnumbered `alpha`. Alpha permits incomplete work and evolving contracts; beta has the planned release scope implemented and undergoing stabilization; a release candidate has passed the required release checks with no known blocking defect. A new published candidate must have a distinct product version, channel or candidate identifier. Build metadata such as `+<source-revision>` may identify a build but does not change version precedence or replace a unique published package version. Never replace the contents of an already published version.
 
-Runtime API completion is judged against the accepted product scope and its coverage obligations, not declaration counts alone. The runtime milestone does not claim an implemented editor, full external-reference parity or verification on every target. Release verification follows the active platform gate in ADR 0021; the editor milestone additionally requires the executable authoring and observation workflows in ADR 0090. Missing capabilities and unverified platforms remain explicit.
+The `0.x` checkpoints track audited runtime API implementation. Release qualification follows the [release runbook](../releasing.md) and the platform gate in ADR 0021. The editor milestone additionally requires the executable authoring and observation workflows in ADR 0090. Record missing capabilities and unverified platforms separately.
 
 ### Platform package versions and minimum engine
 

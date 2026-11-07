@@ -1099,6 +1099,8 @@ Update the affected coverage rows, family totals, and roadmap in the same change
 
 ## Roadmap rule
 
+For the [runtime API milestones](../decisions/versioning.md#adr-0096), divide the number of `Implemented` reference rows by all applicable reference rows in the accepted runtime API scope. Count `Partially implemented`, `Unimplemented`, and `Blocked` rows in the denominator. Omit permanently excluded and editor-only rows. Evaluate the threshold against the unrounded ratio at the checkpoint commit, record the counts and the pinned reference revision, and track full platform verification separately under ADR 0021.
+
 Build the implementation roadmap from the incomplete rows that belong to the accepted 2D product. Group blocked rows by their exact prerequisite and link them to the relevant ADR and domain boundary. Order prerequisites before their dependent members, then list actionable `Partially implemented` and `Unimplemented` rows with the owner and smallest complete vertical slice. Mark whether a blocked member enters the prerequisite's first slice or awaits a separately accepted capability. Keep permanently excluded rows visible in the census but out of delivery milestones. Recalculate the order whenever an upstream release, product decision, or completed domain changes the dependency graph; do not assign speculative dates.
 
 ## Rebuild and verification
