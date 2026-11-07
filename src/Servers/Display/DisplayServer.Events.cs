@@ -101,7 +101,7 @@ public sealed partial class DisplayServer
                 Input.ReleasePressedEvents();
             }
             while (SDL.PollEvent(out var nativeEvent) ||
-                   EndWindowGesture() && SDL.PollEvent(out nativeEvent))
+                   AdvanceWindowGesture(ref failures) && SDL.PollEvent(out nativeEvent))
             {
                 var type = (SDL.EventType)nativeEvent.Type;
                 DisplayServer? gestureRelease = null;
@@ -587,6 +587,7 @@ public sealed partial class DisplayServer
         var position = new Vector2(source.X * scale, source.Y * scale);
         if (!position.IsFinite())
             throw new ArgumentOutOfRangeException(nameof(source), "Native mouse-button coordinates must be finite.");
+        _lastClientMousePosition = position;
         var mask = ButtonMask(button);
         if (source.Down) _heldMouseButtons |= mask;
         else

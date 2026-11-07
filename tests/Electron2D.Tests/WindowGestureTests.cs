@@ -15,6 +15,7 @@ internal static partial class WindowGestureTests
 
     internal static void Run(string profile)
     {
+        if (profile == "windows") { WindowsWindowGestureTests.Run(); return; }
         if (profile == "embedded") { Embedded(); return; }
         Reject<InvalidOperationException>(() => DisplayServer.WindowStartDrag());
         if (profile == "unavailable")

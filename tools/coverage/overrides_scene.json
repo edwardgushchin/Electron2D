@@ -3,12 +3,12 @@
     {
       "godot": "Window::method:start_drag()",
       "electron2d": "method:Electron2D.Window.StartDrag()",
-      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial; Windows and macOS require native adapters and verification (ADRs 0008/0040/0021)."
+      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the Win32 system move/size loop and X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial. macOS needs a native event handoff and backend verification (ADRs 0008/0040/0021)."
     },
     {
       "godot": "Window::method:start_resize(int:DisplayServer.WindowResizeEdge)",
       "electron2d": "method:Electron2D.Window.StartResize(Electron2D.DisplayServer.WindowResizeEdge)",
-      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial; Windows and macOS require native adapters and verification (ADRs 0008/0040/0021)."
+      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the Win32 system move/size loop and X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial. macOS needs a native event handoff and backend verification (ADRs 0008/0040/0021)."
     },
     {
       "godot": "Viewport::property:gui_snap_controls_to_pixels",
@@ -8751,7 +8751,7 @@
         "Window::method:start_resize(int:DisplayServer.WindowResizeEdge)"
       ],
       "state": "Partial",
-      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial; Windows and macOS require native adapters and verification (ADRs 0008/0040/0021)."
+      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the Win32 system move/size loop and X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial. macOS needs a native event handoff and backend verification (ADRs 0008/0040/0021)."
     },
     {
       "godot": [

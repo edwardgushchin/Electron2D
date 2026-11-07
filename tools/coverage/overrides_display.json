@@ -3,12 +3,12 @@
     {
       "godot": "DisplayServer::method:window_start_drag(int:)",
       "electron2d": "method:Electron2D.DisplayServer.WindowStartDrag(System.Int32)",
-      "reason": "X11 hands a physical left-button press to an EWMH window manager and releases SDL and managed pointer capture. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. Windows and macOS need native pointer handoff and backend verification (ADRs 0040/0021)."
+      "reason": "Windows hands the initiating press to the Win32 system move/size loop at the display pump boundary. X11 uses EWMH. Both retire SDL and managed capture through canceled release delivery. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. macOS needs a native event handoff and backend verification (ADRs 0040/0021)."
     },
     {
       "godot": "DisplayServer::method:window_start_resize(int:DisplayServer.WindowResizeEdge,int:)",
       "electron2d": "method:Electron2D.DisplayServer.WindowStartResize(Electron2D.DisplayServer.WindowResizeEdge,System.Int32)",
-      "reason": "X11 hands a physical left-button press to an EWMH window manager and releases SDL and managed pointer capture. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. Windows and macOS need native pointer handoff and backend verification (ADRs 0040/0021)."
+      "reason": "Windows hands the initiating press to the Win32 system move/size loop at the display pump boundary. X11 uses EWMH. Both retire SDL and managed capture through canceled release delivery. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. macOS needs a native event handoff and backend verification (ADRs 0040/0021)."
     },
     {
       "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_BOTTOM",
@@ -1276,7 +1276,7 @@
     },
     {
       "state": "Partial",
-      "reason": "X11 hands a physical left-button press to an EWMH window manager and releases SDL and managed pointer capture. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. Windows and macOS need native pointer handoff and backend verification (ADRs 0040/0021).",
+      "reason": "Windows hands the initiating press to the Win32 system move/size loop at the display pump boundary. X11 uses EWMH. Both retire SDL and managed capture through canceled release delivery. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. macOS needs a native event handoff and backend verification (ADRs 0040/0021).",
       "godot": [
         "DisplayServer::method:window_start_drag(int:)",
         "DisplayServer::method:window_start_resize(int:DisplayServer.WindowResizeEdge,int:)"

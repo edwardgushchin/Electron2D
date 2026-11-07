@@ -30,7 +30,8 @@ public sealed partial class DisplayServer
     /// <summary>Requests that the window manager move a window with the pointer.</summary>
     /// <param name="windowID">The live native window identity.</param>
     /// <remarks>Call on the display owner thread during a physical left-button press in a visible
-    /// window with no other mouse button held. The window manager owns the interaction. On X11 it must support EWMH move/resize.</remarks>
+    /// window with no other mouse button held. The window manager owns the interaction. Windows enters
+    /// its native move/size loop after the display pump drains queued input. X11 requires an EWMH-capable window manager.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The window identity is absent or retired.</exception>
     /// <exception cref="InvalidOperationException">There is no owned display session or the caller is not its owner.</exception>
     /// <exception cref="NotSupportedException">The active display backend or window manager has no gesture adapter.</exception>
@@ -58,6 +59,7 @@ public sealed partial class DisplayServer
     }
 
     private (DisplayServer Owner, X11WindowGesture Native)? _windowGesture;
+    private (DisplayServer Owner, WindowResizeEdge? Edge)? _pendingWindowsGesture;
     private DisplayServer? _windowGestureRelease;
     private bool _discardWindowGestureRelease;
 
@@ -65,15 +67,21 @@ public sealed partial class DisplayServer
     {
         EnsureOwner();
         var root = _rootDisplay ?? this;
-        var flags = SDL.GetWindowFlags(_window.DangerousGetHandle());
-        if (IsNativePopup || (flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0 ||
-            edge is not null && (flags & SDL.WindowFlags.Resizable) == 0)
+        if (!CanMoveOrResize(edge))
             return;
-        if (SDL.GetCurrentVideoDriver() != "x11")
-            throw new NotSupportedException("Native interactive window gestures require the X11 display backend.");
+        var driver = SDL.GetCurrentVideoDriver();
+        if (driver is not ("windows" or "x11"))
+            throw new NotSupportedException("Native interactive window gestures require the Windows or X11 display backend.");
         if (root._mouseMode is not (MouseMode.Visible or MouseMode.Hidden) || root._windowGesture is not null ||
+            root._pendingWindowsGesture is not null || root._windowGestureRelease is not null ||
             _heldMouseButtons != MouseButtonMask.Left)
             return;
+
+        if (driver == "windows")
+        {
+            root._pendingWindowsGesture = (this, edge);
+            return;
+        }
 
         var display = WindowGetNativeHandleCore(HandleType.DisplayHandle);
         var window = (nuint)WindowGetNativeHandleCore(HandleType.WindowHandle);
@@ -84,8 +92,50 @@ public sealed partial class DisplayServer
         }
     }
 
+    private bool CanMoveOrResize(WindowResizeEdge? edge)
+    {
+        var flags = SDL.GetWindowFlags(_window.DangerousGetHandle());
+        return !IsNativePopup && (flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) == 0 &&
+            (edge is null || (flags & SDL.WindowFlags.Resizable) != 0);
+    }
+
+    private bool AdvanceWindowGesture(ref List<Exception>? failures)
+    {
+        if (_pendingWindowsGesture is null)
+            return EndWindowGesture();
+
+        try
+        {
+            FlushBufferedInput();
+            if (_pendingWindowsGesture is not { } request)
+                return false;
+            _pendingWindowsGesture = null;
+            var owner = request.Owner;
+            if (owner.IsDisposed || owner._heldMouseButtons != MouseButtonMask.Left ||
+                _mouseMode is not (MouseMode.Visible or MouseMode.Hidden) || !owner.CanMoveOrResize(request.Edge))
+                return false;
+
+            var window = owner.WindowGetNativeHandleCore(HandleType.WindowHandle);
+            if (!WindowsWindowGesture.TryPrepare(window, request.Edge, owner._lastClientMousePosition, out var command, out var position))
+                return false;
+
+            // The Win32 modal loop can generate an SDL release while handing off capture.
+            _windowGestureRelease = owner;
+            WindowsWindowGesture.Run(window, command, position);
+            return true;
+        }
+        catch (Exception error)
+        {
+            _pendingWindowsGesture = null;
+            _windowGestureRelease = null;
+            (failures ??= new List<Exception>()).Add(error);
+            return false;
+        }
+    }
+
     private void DropWindowGesture()
     {
+        _pendingWindowsGesture = null;
         if (_windowGesture is not { } active || _discardWindowGestureRelease)
             return;
         active.Native.Cancel();
@@ -107,6 +157,8 @@ public sealed partial class DisplayServer
     private void RetireWindowGesture()
     {
         var root = _rootDisplay ?? this;
+        if (root._pendingWindowsGesture?.Owner == this)
+            root._pendingWindowsGesture = null;
         if (root._windowGesture is { } active && active.Owner == this)
         {
             root._windowGesture = null;
