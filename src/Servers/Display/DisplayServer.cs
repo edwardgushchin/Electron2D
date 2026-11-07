@@ -196,6 +196,12 @@ public sealed partial class DisplayServer : ElectronObject
                     if (presentBlank && !hidden && SDL.GetCurrentVideoDriver() == "wayland")
                         PresentBlankWindowSurface(window);
                     server = new DisplayServer(window, gtkStyle.GtkScreen, gtkStyle.GtkProvider, previousGamepadBackgroundHint);
+                    if (server._waylandWindowPosition)
+                    {
+                        var properties = SDL.GetWindowProperties(window);
+                        server._waylandWindowGestures = WaylandWindowGestures.Open(
+                            SDL.GetPointerProperty(properties, SDL.Props.WindowWaylandDisplayPointer, 0));
+                    }
                     server.InitializeGamepads();
                     Input.Service.SetNativeFlush(server.FlushBufferedInput);
                     AccessibilityServer.BeginDisplay();
@@ -211,7 +217,11 @@ public sealed partial class DisplayServer : ElectronObject
                     else
                     {
                         try { server.CloseGamepads(); }
-                        finally { server._window.Dispose(); }
+                        finally
+                        {
+                            server._waylandWindowGestures?.Dispose();
+                            server._window.Dispose();
+                        }
                     }
                     throw;
                 }
@@ -644,6 +654,8 @@ public sealed partial class DisplayServer : ElectronObject
             CloseGamepads();
             Input.Service.SetNativeFlush(null);
             Input.ReleasePressedEvents();
+            _waylandWindowGestures?.Dispose();
+            _waylandWindowGestures = null;
             _window.Dispose();
             RemoveGTKTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
             SDL.QuitSubSystem(SDL.InitFlags.Gamepad);

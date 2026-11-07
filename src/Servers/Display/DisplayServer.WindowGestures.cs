@@ -31,7 +31,8 @@ public sealed partial class DisplayServer
     /// <param name="windowID">The live native window identity.</param>
     /// <remarks>Call on the display owner thread during a physical left-button press in a visible
     /// window with no other mouse button held. The window manager owns the interaction. Windows enters
-    /// its native move/size loop after the display pump drains queued input. X11 requires an EWMH-capable window manager.</remarks>
+    /// its native move/size loop after the display pump drains queued input. X11 requires an EWMH-capable window manager.
+    /// On Wayland, the compositor validates the originating press and decides whether to honor the request.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The window identity is absent or retired.</exception>
     /// <exception cref="InvalidOperationException">There is no owned display session or the caller is not its owner.</exception>
     /// <exception cref="NotSupportedException">The active display backend or window manager has no gesture adapter.</exception>
@@ -59,6 +60,7 @@ public sealed partial class DisplayServer
     }
 
     private (DisplayServer Owner, X11WindowGesture Native)? _windowGesture;
+    private WaylandWindowGestures? _waylandWindowGestures;
     private (DisplayServer Owner, WindowResizeEdge? Edge)? _pendingWindowsGesture;
     private DisplayServer? _windowGestureRelease;
     private bool _discardWindowGestureRelease;
@@ -69,9 +71,9 @@ public sealed partial class DisplayServer
         var root = _rootDisplay ?? this;
         if (!CanMoveOrResize(edge))
             return;
-        var driver = SDL.GetCurrentVideoDriver();
-        if (driver is not ("windows" or "x11"))
-            throw new NotSupportedException("Native interactive window gestures require the Windows or X11 display backend.");
+        var driver = _videoDriver;
+        if (driver is not ("windows" or "x11" or "wayland") || driver == "wayland" && root._waylandWindowGestures is null)
+            throw new NotSupportedException("The active display backend has no native interactive window gesture adapter.");
         if (root._mouseMode is not (MouseMode.Visible or MouseMode.Hidden) || root._windowGesture is not null ||
             root._pendingWindowsGesture is not null || root._windowGestureRelease is not null ||
             _heldMouseButtons != MouseButtonMask.Left)
@@ -80,6 +82,19 @@ public sealed partial class DisplayServer
         if (driver == "windows")
         {
             root._pendingWindowsGesture = (this, edge);
+            return;
+        }
+
+        if (root._waylandWindowGestures is { } wayland)
+        {
+            // A later queued button transition can supersede the press currently being delivered by SDL.
+            if (SDL.HasEvents((uint)SDL.EventType.MouseButtonDown, (uint)SDL.EventType.MouseButtonUp))
+                return;
+            var properties = SDL.GetWindowProperties(_window.DangerousGetHandle());
+            var surface = SDL.GetPointerProperty(properties, SDL.Props.WindowWaylandSurfacePointer, 0);
+            var toplevel = SDL.GetPointerProperty(properties, SDL.Props.WindowWaylandXDGToplevelPointer, 0);
+            if (wayland.TryStart(surface, toplevel, edge))
+                root._windowGestureRelease = this;
             return;
         }
 
@@ -101,6 +116,8 @@ public sealed partial class DisplayServer
 
     private bool AdvanceWindowGesture(ref List<Exception>? failures)
     {
+        try { _waylandWindowGestures?.DispatchPending(); }
+        catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
         if (_pendingWindowsGesture is null)
             return EndWindowGesture();
 
@@ -136,6 +153,8 @@ public sealed partial class DisplayServer
     private void DropWindowGesture()
     {
         _pendingWindowsGesture = null;
+        if (_waylandWindowGestures is not null && _windowGestureRelease is not null)
+            _discardWindowGestureRelease = true;
         if (_windowGesture is not { } active || _discardWindowGestureRelease)
             return;
         active.Native.Cancel();
@@ -157,6 +176,11 @@ public sealed partial class DisplayServer
     private void RetireWindowGesture()
     {
         var root = _rootDisplay ?? this;
+        if (root._waylandWindowGestures is { } wayland)
+        {
+            var properties = SDL.GetWindowProperties(_window.DangerousGetHandle());
+            wayland.Forget(SDL.GetPointerProperty(properties, SDL.Props.WindowWaylandSurfacePointer, 0));
+        }
         if (root._pendingWindowsGesture?.Owner == this)
             root._pendingWindowsGesture = null;
         if (root._windowGesture is { } active && active.Owner == this)

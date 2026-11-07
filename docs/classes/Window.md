@@ -555,7 +555,7 @@ Requests a native taskbar progress fraction for the active window.
 
 ### Interactive window gestures
 
-Use `StartDrag()` from a custom title bar and `StartResize(edge)` from a resize handle. Invoke the method while the left-button press belongs to this window. Embedded windows, including borderless ones, use the containing viewport's coordinates and the existing constrained window geometry. Native windows follow the [display gesture contract](DisplayServer.md#interactive-window-gestures). The gesture cancels the initiating click. A hidden or detached window stays unchanged, and `Unresizable` disables resizing.
+Use `StartDrag()` from a custom title bar and `StartResize(edge)` from a resize handle. Invoke the method while the left-button press belongs to this window. Embedded windows, including borderless ones, use the containing viewport's coordinates and the existing constrained window geometry. Native windows delegate to the window manager on Win32, X11 and Wayland. The gesture cancels the initiating click. A hidden or detached window stays unchanged, and `Unresizable` disables resizing. See the [display gesture contract](DisplayServer.md#interactive-window-gestures).
 
 ## Event Descriptions
 

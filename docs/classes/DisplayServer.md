@@ -243,7 +243,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 <a id="method-getwindowevents"></a>
 #### Interactive window gestures
 
-Call `WindowStartDrag` or `WindowStartResize` after the target receives a physical left-button press. Use a visible window and an unconfined pointer, with only the left button held. Windows uses the native system loop from the display pump. X11 requires an EWMH-capable window manager. Resizing requires a resizable window. The window manager controls geometry and the display pump reports the observed result. See [the display component](../components/display-server.md#interactive-window-gestures) and [WindowResizeEdge](DisplayServer.WindowResizeEdge.md).
+Call `WindowStartDrag` or `WindowStartResize` after the target receives a physical left-button press. Use a visible window and an unconfined pointer, with only the left button held. Windows uses the native system loop from the display pump. X11 requires an EWMH-capable window manager. Wayland uses the initiating pointer seat and asks the compositor to act on the native toplevel. Resizing requires a resizable window. The window manager controls geometry and the display pump reports the observable result. See [the display component](../components/display-server.md#interactive-window-gestures) and [WindowResizeEdge](DisplayServer.WindowResizeEdge.md).
 
 #### `public static DisplayWindowEvents GetWindowEvents(int windowID = 0)`
 
