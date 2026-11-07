@@ -408,6 +408,13 @@ public sealed partial class DisplayServer : ElectronObject
 
     private static Vector2i WaylandPhysicalScreenSize(uint displayId, SDL.Rect bounds)
     {
+        // SDL lists the native Wayland mode before smaller emulated modes at unit density.
+        // Using its dimensions avoids rounding the physical height with the width-derived scale.
+        if (SDL.GetFullscreenDisplayModes(displayId, out _) is { } modes)
+            foreach (var mode in modes)
+                if (mode.PixelDensity == 1f)
+                    return new Vector2i(mode.W, mode.H);
+
         var density = SDL.GetCurrentDisplayMode(displayId)?.PixelDensity ?? 0f;
         if (!float.IsFinite(density) || density <= 0f)
             return new Vector2i(bounds.W, bounds.H);

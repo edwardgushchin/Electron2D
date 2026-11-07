@@ -1,3 +1,5 @@
+[Wayland desktop screen capture](../components/desktop-screen-capture.md) reads whole outputs, rectangles and pixels through compositor image capture. The three rows remain Partial for the remaining provider and platform dependencies. Coverage remains **13,808/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,589 Blocked, 8,440 Excluded and zero unmapped.
+
 [Windows desktop color sampling](../components/color-authoring.md#desktop-and-application-sampling) adds live external pixels, modal click delivery and a capture-excluded magnifier to ColorPicker and ColorPickerButton. Remaining providers and control capabilities keep both classes Partial. Coverage remains **13,808/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,589 Blocked, 8,440 Excluded and zero unmapped.
 
 [Windows interprocess foreground permission](../components/display-server.md#interprocess-foreground-permission) adds the platform-specific DisplayServer grant. One declaration becomes Implemented. Coverage is **13,808/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,589 Blocked, 8,440 Excluded and zero unmapped.

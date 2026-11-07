@@ -18,6 +18,12 @@ internal static partial class DesktopScreenCaptureTests
             return;
         }
 
+        if (profile == "wayland")
+        {
+            WaylandScene(args);
+            return;
+        }
+
         var windows = profile == "windows";
         nint actor = 0;
         if (windows)

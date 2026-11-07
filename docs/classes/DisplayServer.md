@@ -968,7 +968,7 @@ Gets the index of the current primary display.
 
 #### Desktop capture
 
-Use `HasFeature(Feature.ScreenCapture)` to check the current display adapter. `ScreenGetImage` accepts an explicit screen index or an existing screen selector. `ScreenGetImageRect` and `ScreenGetPixel` take desktop pixel coordinates. Capture runs on the display owner thread. Image results are independent RGBA8 snapshots that the caller disposes. See [desktop screen capture](../components/desktop-screen-capture.md).
+Use `HasFeature(Feature.ScreenCapture)` to check the current display adapter. `ScreenGetImage` accepts an explicit screen index or an existing screen selector. `ScreenGetImageRect` and `ScreenGetPixel` take desktop pixel coordinates. On Wayland, use the published output positions and physical sizes. Uncovered pixels inside the desktop bounds are black, and the first screen index supplies overlapping pixels. Capture runs on the display owner thread. Image results are independent RGBA8 snapshots that the caller disposes. See [desktop screen capture](../components/desktop-screen-capture.md).
 
 <a id="method-screengetposition"></a>
 #### `public static Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`

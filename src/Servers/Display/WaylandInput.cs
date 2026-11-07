@@ -136,6 +136,7 @@ internal sealed unsafe partial class WaylandInput : IDisposable
         foreach (var seat in _seats.Values)
             seat.Dispose();
         _seats.Clear();
+        DisposeCapture();
         if (_registry != 0) DestroyProxyLocal(_registry);
         if (_listener.IsAllocated) _listener.Free();
         if (_queue != 0) DestroyQueue(_queue);
@@ -150,10 +151,18 @@ internal sealed unsafe partial class WaylandInput : IDisposable
         try
         {
             var id = arguments[0].UInt;
-            if (opcode == 0 && Marshal.PtrToStringUTF8(arguments[1].Object) == "wl_seat")
-                owner.AddSeat(id, arguments[2].UInt);
-            else if (opcode == 1 && owner._seats.Remove(id, out var seat))
-                seat.Dispose();
+            if (opcode == 0)
+            {
+                var name = Marshal.PtrToStringUTF8(arguments[1].Object);
+                var version = arguments[2].UInt;
+                if (name == "wl_seat") owner.AddSeat(id, version);
+                else owner.ObserveCaptureGlobal(id, name, version);
+            }
+            else if (opcode == 1)
+            {
+                if (owner._seats.Remove(id, out var seat)) seat.Dispose();
+                else owner.RetireCaptureGlobal(id);
+            }
         }
         catch (Exception error) { owner._listenerFailure ??= error; }
         return 0;
@@ -163,12 +172,7 @@ internal sealed unsafe partial class WaylandInput : IDisposable
     {
         var seatInterface = NativeLibrary.GetExport(_library, "wl_seat_interface");
         var bindVersion = Math.Min(version, 5u);
-        Argument* arguments = stackalloc Argument[4];
-        arguments[0] = new Argument { UInt = id };
-        arguments[1] = new Argument { Object = *(nint*)seatInterface };
-        arguments[2] = new Argument { UInt = bindVersion };
-        arguments[3] = default;
-        var handle = RequireHandle(MarshalRequest(_registry, 0, seatInterface, bindVersion, 0, arguments));
+        var handle = RequireHandle(BindGlobal(id, seatInterface, bindVersion));
         var seat = new Seat(this, handle);
         try
         {
@@ -180,6 +184,16 @@ internal sealed unsafe partial class WaylandInput : IDisposable
             seat.Dispose();
             throw;
         }
+    }
+
+    private nint BindGlobal(uint id, nint type, uint version)
+    {
+        Argument* arguments = stackalloc Argument[4];
+        arguments[0] = new Argument { UInt = id };
+        arguments[1] = new Argument { Object = *(nint*)type };
+        arguments[2] = new Argument { UInt = version };
+        arguments[3] = default;
+        return MarshalRequest(_registry, 0, type, version, 0, arguments);
     }
 
     private sealed class Seat(WaylandInput owner, nint handle) : IDisposable
@@ -327,6 +341,7 @@ internal sealed unsafe partial class WaylandInput : IDisposable
         [FieldOffset(0)] internal uint UInt;
         [FieldOffset(0)] internal nint Object;
         [FieldOffset(0)] internal int FD;
+        [FieldOffset(0)] internal int Int;
     }
 
     [LibraryImport(ClientLibrary, EntryPoint = "wl_display_create_queue")]

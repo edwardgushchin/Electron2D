@@ -8,17 +8,17 @@
     {
       "godot": "DisplayServer::method:screen_get_image(int:)",
       "electron2d": "method:Electron2D.DisplayServer.ScreenGetImage(System.Int32)",
-      "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
+      "reason": "Windows GDI, native X11 checked root reads and Wayland output image capture with shared memory provide owned desktop pixels. Independent Windows monitor capture, private Xvfb and Sway verify output, rectangle and pixel reads. Other Wayland compositors need an authorized output capture provider. XWayland additionally needs an X11-to-compositor output mapping. macOS needs its native permission-aware capture bridge. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
     },
     {
       "godot": "DisplayServer::method:screen_get_image_rect(Rect2i:)",
       "electron2d": "method:Electron2D.DisplayServer.ScreenGetImageRect(Electron2D.Rect2i)",
-      "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
+      "reason": "Windows GDI, native X11 checked root reads and Wayland output image capture with shared memory provide owned desktop pixels. Independent Windows monitor capture, private Xvfb and Sway verify output, rectangle and pixel reads. Other Wayland compositors need an authorized output capture provider. XWayland additionally needs an X11-to-compositor output mapping. macOS needs its native permission-aware capture bridge. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
     },
     {
       "godot": "DisplayServer::method:screen_get_pixel(Vector2i:)",
       "electron2d": "method:Electron2D.DisplayServer.ScreenGetPixel(Electron2D.Vector2i)",
-      "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
+      "reason": "Windows GDI, native X11 checked root reads and Wayland output image capture with shared memory provide owned desktop pixels. Independent Windows monitor capture, private Xvfb and Sway verify output, rectangle and pixel reads. Other Wayland compositors need an authorized output capture provider. XWayland additionally needs an X11-to-compositor output mapping. macOS needs its native permission-aware capture bridge. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
     },
     {
       "godot": "DisplayServer::method:window_start_drag(int:)",
@@ -1220,7 +1220,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090).",
+      "reason": "Windows GDI, native X11 checked root reads and Wayland output image capture with shared memory provide owned desktop pixels. Independent Windows monitor capture, private Xvfb and Sway verify output, rectangle and pixel reads. Other Wayland compositors need an authorized output capture provider. XWayland additionally needs an X11-to-compositor output mapping. macOS needs its native permission-aware capture bridge. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090).",
       "godot": [
         "DisplayServer::method:screen_get_image(int:)",
         "DisplayServer::method:screen_get_image_rect(Rect2i:)",
