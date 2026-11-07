@@ -607,7 +607,11 @@ public sealed partial class DisplayServer : ElectronObject
             if (_rootDisplay is { } root)
             {
                 if (ReferenceEquals(root.FocusedWindow(), this) || ReferenceEquals(root._pressedInputWindow, this))
-                { Input.ReleasePressedEvents(); root._pressedInputWindow = null; }
+                {
+                    root._windowsHeldKeys?.Clear();
+                    Input.ReleasePressedEvents();
+                    root._pressedInputWindow = null;
+                }
                 ClearWindowComposition(); ReleaseWindowTouches();
                 if (ReferenceEquals(root._mouseModeWindow, this)) root._mouseModeWindow = null;
                 AccessibilityServer.RetireWindow(WindowID);

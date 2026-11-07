@@ -180,3 +180,5 @@ Native Wayland verification uses an isolated compositor and external producer.
 [Windows recoverable trash](../components/windows-trash.md) connects FileDialog confirmation/error/list refresh to the actual Shell recycle service.
 
 [Native speech](../components/text-to-speech.md) adds real Windows and Linux Speech Dispatcher synthesis/playback, typed voice snapshots, queue/control operations and owner-pump utterance callbacks. Provider capacity, source-coordinate and actual audio/platform receipts remain in the owning component.
+
+[Windows keyboard layouts](../components/display-server.md#native-keyboard-layouts) provide live input-locale listing, names, language codes, activation and synchronized SDL key mapping. The operations require the display owner. Linux and macOS enumeration and activation still need native providers.

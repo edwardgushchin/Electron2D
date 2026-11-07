@@ -21,6 +21,7 @@ public sealed partial class DisplayServer
     private List<string>? _pendingDroppedFiles;
     private SDL.Keymod _eventKeyModifiers;
     private bool _hasEventKeyModifiers;
+    private Dictionary<SDL.Scancode, (Key Code, Key Label)>? _windowsHeldKeys;
 
     internal event Action? QuitRequestedCore { add => _publisherQuitRequestedCore.Add(value); remove => _publisherQuitRequestedCore.Remove(value); }
     private EventPublisher<Action> _publisherQuitRequestedCore;
@@ -82,6 +83,7 @@ public sealed partial class DisplayServer
             if (dropInput)
             {
                 _pendingInputWindow = null;
+                _windowsHeldKeys?.Clear();
                 _hasPendingMouseMotion = false;
                 _touchContacts.Clear();
                 _freeTouchIndexes.Clear();
@@ -416,7 +418,9 @@ public sealed partial class DisplayServer
         {
             if (!focused)
             {
-                (_rootDisplay ?? this)._pressedInputWindow = null;
+                var root = _rootDisplay ?? this;
+                root._pressedInputWindow = null;
+                root._windowsHeldKeys?.Clear();
                 Input.ReleasePressedEvents();
             }
         }
@@ -471,14 +475,30 @@ public sealed partial class DisplayServer
             _ => SDL.Keymod.None,
         };
         var modifiers = source.Mod & ~ownModifier;
+        var identity = (Code: MapKeycode(source.Key), Label: MapKeycode(SDL.GetKeyFromScancode(source.Scancode, source.Mod, false)));
+        if (UsesWindowsInput && source.Scancode != SDL.Scancode.Unknown)
+        {
+            // A layout change can reinterpret a held key before the release arrives.
+            var root = _rootDisplay ?? this;
+            var held = root._windowsHeldKeys ??= new();
+            if (source.Down)
+            {
+                if (source.Repeat && held.TryGetValue(source.Scancode, out var pressed))
+                    identity = pressed;
+                else
+                    held[source.Scancode] = identity;
+            }
+            else if (held.Remove(source.Scancode, out var pressed))
+                identity = pressed;
+        }
         using var @event = new InputEventKey
         {
             WindowID = this.WindowID,
             Pressed = source.Down,
             Echo = source.Repeat,
-            Keycode = MapKeycode(source.Key),
+            Keycode = identity.Code,
             PhysicalKeycode = PhysicalKeys.GetValueOrDefault(source.Scancode),
-            KeyLabel = MapKeycode(SDL.GetKeyFromScancode(source.Scancode, source.Mod, false)),
+            KeyLabel = identity.Label,
             Location = source.Scancode switch
             {
                 SDL.Scancode.LCtrl or SDL.Scancode.LShift or SDL.Scancode.LAlt or SDL.Scancode.LGUI => KeyLocation.Left,

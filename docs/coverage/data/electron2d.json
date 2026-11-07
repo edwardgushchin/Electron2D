@@ -110573,6 +110573,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.KeyboardGetCurrentLayout()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "KeyboardGetCurrentLayout",
+    "signature": "public static System.Int32 KeyboardGetCurrentLayout()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.KeyboardGetKeycodeFromPhysical(Electron2D.Key)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -110608,6 +110621,76 @@
       }
     ],
     "returnType": "Electron2D.Key",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.KeyboardGetLayoutCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "KeyboardGetLayoutCount",
+    "signature": "public static System.Int32 KeyboardGetLayoutCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.KeyboardGetLayoutLanguage(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "KeyboardGetLayoutLanguage",
+    "signature": "public static System.String KeyboardGetLayoutLanguage(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.KeyboardGetLayoutName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "KeyboardGetLayoutName",
+    "signature": "public static System.String KeyboardGetLayoutName(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.KeyboardSetCurrentLayout(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "KeyboardSetCurrentLayout",
+    "signature": "public static System.Void KeyboardSetCurrentLayout(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
