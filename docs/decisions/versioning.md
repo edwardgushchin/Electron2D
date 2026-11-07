@@ -27,8 +27,8 @@ Electron2D uses [Semantic Versioning 2.0.0](https://semver.org/), in the form `M
 | --- | --- |
 | Current runtime development | `0.2.0-alpha` is the accepted development version; the public API is not yet stable. |
 | Runtime API implementation | [`0.3.0-alpha`](https://github.com/edwardgushchin/Electron2D/milestone/1) at 80% of the accepted runtime API implemented. |
-| Runtime API implementation | [`0.4.0`](https://github.com/edwardgushchin/Electron2D/milestone/2) at 90% of the accepted runtime API implemented. |
-| Full runtime API implementation | [`0.5.0`](https://github.com/edwardgushchin/Electron2D/milestone/3) at 100% of the accepted runtime API implemented with executable behavior evidence. Full verification on all target platforms is tracked separately under ADR 0021. |
+| Runtime API implementation | [`0.4.0-alpha`](https://github.com/edwardgushchin/Electron2D/milestone/2) at 90% of the accepted runtime API implemented. |
+| Full runtime API implementation | [`0.5.0-alpha`](https://github.com/edwardgushchin/Electron2D/milestone/3) at 100% of the accepted runtime API implemented with executable behavior evidence. Full verification on all target platforms is tracked separately under ADR 0021. |
 | Complete stable runtime API | `1.0.0`, after the entire accepted runtime scope is implemented, behaviorally verified, documented and stabilized. Accepted exclusions remain excluded; editor-only obligations remain tracked for the editor milestone. |
 | Complete editor with compatible runtime | The next `1.x.0` release, for example `1.1.0` if it directly follows `1.0.0`. The editor must execute its accepted visual and programmatic workflows through the public runtime API. |
 | Incompatible public contract | The next major release, for example `2.0.0` after the `1.x` series. Delivering an editor alone does not require a major increment. |
