@@ -110149,6 +110149,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.ColorPicker(System.Action\u003CSystem.Boolean, Electron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ColorPicker",
+    "signature": "public static System.Boolean ColorPicker(System.Action\u003CSystem.Boolean, Electron2D.Color\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.Boolean, Electron2D.Color\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.CreateStatusIndicator(Electron2D.Texture,System.String,System.Action\u003CElectron2D.MouseButton, Electron2D.Vector2i\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",

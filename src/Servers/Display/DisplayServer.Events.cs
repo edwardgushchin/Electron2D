@@ -206,6 +206,14 @@ public sealed partial class DisplayServer
             {
                 (failures ??= new List<Exception>()).Add(exception);
             }
+            try
+            {
+                PollPortalColorPickers(ref failures);
+            }
+            catch (Exception exception)
+            {
+                (failures ??= new List<Exception>()).Add(exception);
+            }
         }
         finally
         {

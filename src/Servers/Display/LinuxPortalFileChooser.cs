@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Text;
 using static Electron2D.LinuxPortalDBus;
 
@@ -9,12 +8,9 @@ namespace Electron2D;
 internal sealed class LinuxPortalFileChooser : IDisposable
 {
     internal const string Interface = "org.freedesktop.portal.FileChooser";
-    private const string RequestInterface = "org.freedesktop.portal.Request";
     private readonly record struct Rule(uint Kind, string Pattern);
     private sealed record Filter(string Label, Rule[] Rules);
-    private nint _connection;
-    private string _path = "", _owner = "";
-    private bool _completed;
+    private readonly LinuxPortalRequest _request;
     private readonly bool _multiple;
     private readonly Filter[] _filters;
     private readonly FileDialogOption[] _options;
@@ -27,60 +23,34 @@ internal sealed class LinuxPortalFileChooser : IDisposable
         _options = options;
         _multiple = mode == FileDialogMode.OpenFiles;
         _filters = mode == FileDialogMode.OpenDirectory ? [] : ParseFilters(filters);
+        _request = new LinuxPortalRequest(Interface, mode == FileDialogMode.OpenDirectory ? 3u : 1u);
         try
         {
-            Check(ThreadsInitDefault()); _connection = BusGetPrivate(0, 0);
-            if (_connection == 0) throw new NotSupportedException("The session bus is unavailable.");
-            SetExitOnDisconnect(_connection, 0);
-            var version = QueryVersion(_connection, Interface, out _owner);
-            if (version == 0 || _owner.Length == 0) throw new NotSupportedException("The FileChooser portal is unavailable.");
-            if (mode == FileDialogMode.OpenDirectory && version < 3) throw new NotSupportedException("This FileChooser portal cannot select directories.");
-            var sender = Marshal.PtrToStringUTF8(BusGetUniqueName(_connection)) ?? throw new InvalidOperationException("The portal connection has no sender identity.");
-            var token = "electron2d_" + Guid.NewGuid().ToString("N");
-            _path = DesktopPath + "/request/" + sender[1..].Replace('.', '_') + "/" + token;
-            // Subscribe before calling: a portal may finish before its method reply arrives.
-            BusAddMatch(_connection, $"type='signal',sender='{_owner}',interface='{RequestInterface}',member='Response'", 0);
-            BusAddMatch(_connection, $"type='signal',sender='org.freedesktop.DBus',interface='org.freedesktop.DBus',member='NameOwnerChanged',arg0='{_owner}'", 0);
-            Launch(parent, title, directory, filename, mode, token);
+            _request.Launch(mode == FileDialogMode.SaveFile ? "SaveFile" : "OpenFile",
+                (message, token) => WriteArguments(message, token, parent, title, directory, filename, mode));
         }
-        catch { Dispose(); throw; }
+        catch { _request.Dispose(); throw; }
     }
 
-    private void Launch(string parent, string title, string directory, string filename, FileDialogMode mode, string token)
+    private void WriteArguments(nint message, string token, string parent, string title, string directory, string filename, FileDialogMode mode)
     {
-        var message = NewMethodCall(_owner, DesktopPath, Interface, mode == FileDialogMode.SaveFile ? "SaveFile" : "OpenFile");
-        if (message == 0) throw new OutOfMemoryException();
-        try
+        InitAppend(message, out var args); AppendString(ref args, parent); AppendString(ref args, title);
+        var options = Open(ref args, ArrayType, "{sv}");
+        StringOption(ref options, "handle_token", token);
+        BoolOption(ref options, "modal", true);
+        if (mode != FileDialogMode.SaveFile)
+        { BoolOption(ref options, "multiple", mode == FileDialogMode.OpenFiles); if (mode == FileDialogMode.OpenDirectory) BoolOption(ref options, "directory", true); }
+        if (directory.Length != 0) PathOption(ref options, "current_folder", directory);
+        if (mode == FileDialogMode.SaveFile && filename.Length != 0) StringOption(ref options, "current_name", filename);
+        if (_filters.Length != 0)
         {
-            InitAppend(message, out var args); AppendString(ref args, parent); AppendString(ref args, title);
-            var options = Open(ref args, ArrayType, "{sv}");
-            StringOption(ref options, "handle_token", token);
-            BoolOption(ref options, "modal", true);
-            if (mode != FileDialogMode.SaveFile)
-            { BoolOption(ref options, "multiple", mode == FileDialogMode.OpenFiles); if (mode == FileDialogMode.OpenDirectory) BoolOption(ref options, "directory", true); }
-            if (directory.Length != 0) PathOption(ref options, "current_folder", directory);
-            if (mode == FileDialogMode.SaveFile && filename.Length != 0) StringOption(ref options, "current_name", filename);
-            if (_filters.Length != 0)
-            {
-                var entry = Option(ref options, "filters", "a(sa(us))", out var variant);
-                var list = Open(ref variant, ArrayType, "(sa(us))");
-                foreach (var filter in _filters) WriteFilter(ref list, filter);
-                Close(ref variant, ref list); Close(ref entry, ref variant); Close(ref options, ref entry);
-            }
-            if (_options.Length != 0) WriteChoices(ref options);
-            Close(ref args, ref options);
-            var reply = SendWithReplyAndBlock(_connection, message, 5000, 0);
-            if (reply == 0) throw new InvalidOperationException("The FileChooser portal could not launch the request.");
-            try
-            {
-                if (MessageType(reply) != 2 || Init(reply, out var value) == 0) throw new InvalidOperationException("The FileChooser portal returned no request.");
-                var actual = ReadString(ref value, PathType);
-                if (!actual.StartsWith(DesktopPath + "/request/", StringComparison.Ordinal)) throw new InvalidOperationException("The FileChooser portal returned an invalid request path.");
-                _path = actual;
-            }
-            finally { MessageUnref(reply); }
+            var entry = Option(ref options, "filters", "a(sa(us))", out var variant);
+            var list = Open(ref variant, ArrayType, "(sa(us))");
+            foreach (var filter in _filters) WriteFilter(ref list, filter);
+            Close(ref variant, ref list); Close(ref entry, ref variant); Close(ref options, ref entry);
         }
-        finally { MessageUnref(message); }
+        if (_options.Length != 0) WriteChoices(ref options);
+        Close(ref args, ref options);
     }
 
     private static MessageIter Option(ref MessageIter options, string name, string signature, out MessageIter value)
@@ -184,24 +154,13 @@ internal sealed class LinuxPortalFileChooser : IDisposable
         paths = []; filter = -1; error = null;
         try
         {
-            var connected = ReadWrite(_connection, 0) != 0;
-            nint message;
-            while ((message = PopMessage(_connection)) != 0)
-            {
-                try
-                {
-                    var sender = Marshal.PtrToStringUTF8(MessageSender(message));
-                    if (sender == _owner && IsSignal(message, RequestInterface, "Response") != 0 && Marshal.PtrToStringUTF8(MessagePath(message)) == _path)
-                    { ReadResponse(message, out paths, out filter); _completed = true; return true; }
-                    if (sender == "org.freedesktop.DBus" && IsSignal(message, "org.freedesktop.DBus", "NameOwnerChanged") != 0 && Init(message, out var changed) != 0 && ReadString(ref changed) == _owner)
-                    { Next(ref changed); _ = ReadString(ref changed); Next(ref changed); if (ReadString(ref changed).Length == 0) throw new InvalidOperationException("The FileChooser portal disconnected."); }
-                }
-                finally { MessageUnref(message); }
-            }
-            if (!connected) throw new InvalidOperationException("The FileChooser session bus disconnected.");
-            return false;
+            var message = _request.TakeResponse();
+            if (message == 0) return false;
+            try { ReadResponse(message, out paths, out filter); }
+            finally { MessageUnref(message); }
+            return true;
         }
-        catch (Exception failure) { SelectedOptions = EmptyOptions; paths = []; filter = -1; error = failure.Message; _completed = true; return true; }
+        catch (Exception failure) { SelectedOptions = EmptyOptions; paths = []; filter = -1; error = failure.Message; return true; }
     }
 
     private void ReadResponse(nint message, out string[] paths, out int filter)
@@ -266,14 +225,5 @@ internal sealed class LinuxPortalFileChooser : IDisposable
         return new(label, [.. result]);
     }
 
-    public void Dispose()
-    {
-        if (_connection == 0) return;
-        if (!_completed && _path.Length != 0)
-        {
-            var message = NewMethodCall(_owner, _path, RequestInterface, "Close");
-            if (message != 0) { try { Send(_connection, message, 0); ReadWrite(_connection, 0); } finally { MessageUnref(message); } }
-        }
-        ConnectionClose(_connection); ConnectionUnref(_connection); _connection = 0;
-    }
+    public void Dispose() => _request.Dispose();
 }

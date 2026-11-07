@@ -564,7 +564,7 @@
         "class:ColorPickerButton"
       ],
       "state": "Partial",
-      "reason": "Color editing, palettes, embedded viewport sampling and live desktop selection on Windows and native X11 execute. Windows uses modal input and a capture-excluded zoom on eligible desktops. Native GPU popup transparency retains its renderer dependency. Wayland/XWayland need an authorized compositor provider or desktop portal picker. macOS needs its native picker and permissions. Typed color expressions, semantic accessibility and editor quick-load retain their own owners. See docs/components/color-authoring.md."
+      "reason": "Color editing, palettes, embedded viewport sampling and live desktop selection on Windows and native X11 execute. Windows uses modal input and a capture-excluded zoom on eligible desktops. Native GPU popup transparency retains its renderer dependency. Wayland uses the Linux Screenshot portal when the selected provider can pick pixels. Other Linux compositor/provider combinations and native X11 portal selection retain provider acceptance gates. macOS needs its native picker and permissions. Typed color expressions, semantic accessibility and editor quick-load retain their own owners. See docs/components/color-authoring.md."
     },
     {
       "godot": [

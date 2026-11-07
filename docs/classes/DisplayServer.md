@@ -179,7 +179,9 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static bool ScreenIsKeptOn()`](#method-screeniskepton) | Reports whether native screen blanking is disabled. |
 | [`public static void ScreenSetKeepOn(bool enable)`](#method-screensetkeepon) | Requests screen wakefulness for this process. |
 | [`public static int GetPrimaryScreen()`](#method-getprimaryscreen) | Gets the index of the current primary display. |
+| [`public static bool ColorPicker(Action<bool, Color> callback)`](#native-desktop-color-selection) | Starts the system desktop color picker. |
 | [`public static Image ScreenGetImage(int screen = ScreenOfMainWindow)`](#desktop-capture) | Captures one screen from the native desktop. |
+| [`public static bool ColorPicker(Action<bool, Color> callback)`](#native-desktop-color-selection) | Starts the system desktop color picker. |
 | [`public static Image ScreenGetImageRect(Rect2i rectangle)`](#desktop-capture) | Captures the requested desktop rectangle. |
 | [`public static Color ScreenGetPixel(Vector2i position)`](#desktop-capture) | Reads one desktop pixel. |
 | [`public static Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`](#method-screengetposition) | Gets the global desktop position of a display. |
@@ -966,7 +968,11 @@ Gets the index of the current primary display.
 
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
-#### Desktop capture
+#### Native desktop color selection
+
+`public static bool ColorPicker(Action<bool, Color> callback)` requests a desktop pixel from the system picker. On Linux the Screenshot portal owns the selection interaction. A true result means the request started. The callback receives the selection status and opaque sRGB color on the display owner thread. Unsuccessful requests report false with black. Display shutdown retires outstanding requests. [Color sampling](../components/color-authoring.md#desktop-and-application-sampling)
+
+## Desktop capture
 
 Use `HasFeature(Feature.ScreenCapture)` to check the current display adapter. `ScreenGetImage` accepts an explicit screen index or an existing screen selector. `ScreenGetImageRect` and `ScreenGetPixel` take desktop pixel coordinates. On Wayland, use the published output positions and physical sizes. Uncovered pixels inside the desktop bounds are black, and the first screen index supplies overlapping pixels. Capture runs on the display owner thread. Image results are independent RGBA8 snapshots that the caller disposes. See [desktop screen capture](../components/desktop-screen-capture.md).
 
@@ -1308,7 +1314,7 @@ Identifies a display-server capability for `HasFeature`.
 | `WindowEmbedding = 29` | Embedding of external native windows. |
 | `NativeDialogFileMime = 30` | MIME-based native file-dialog filters. |
 | `EmojiAndSymbolPicker = 31` | A system emoji and symbol picker. |
-| `NativeColorPicker = 32` | A native color picker. |
+| `NativeColorPicker = 32` | Native desktop color selection through an available system provider. |
 | `SelfFittingWindows = 33` | Automatic popup fitting to display bounds. |
 | `AccessibilityScreenReader = 34` | Screen-reader accessibility integration. |
 | `HdrOutput = 35` | High-dynamic-range presentation. |

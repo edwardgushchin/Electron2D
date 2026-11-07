@@ -74,7 +74,11 @@ public partial class ColorPickerButton : Button
         var reversed = IsNotificationReversed;
 
         if (!reversed) base.OnNotification(what);
-        if ((what == NotificationVisibilityChanged && !IsVisibleInTree || what == NotificationExitTree) && _popup?.Visible == true) _popup.Hide();
+        if (what == NotificationVisibilityChanged && !IsVisibleInTree || what == NotificationExitTree)
+        {
+            _picker?.CancelPortalSample();
+            if (_popup?.Visible == true) _popup.Hide();
+        }
 
         if (reversed) base.OnNotification(what);
     }

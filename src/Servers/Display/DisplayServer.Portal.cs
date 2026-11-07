@@ -9,9 +9,7 @@ public sealed partial class DisplayServer
 
     private void ShowPortalFileDialog(nint window, int parentWindowId, string title, string directory, string filename, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int>? callback, FileDialogOption[]? options, Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>>? optionsCallback)
     {
-        var properties = SDL.GetWindowProperties(window);
-        var handle = _videoDriver == "wayland" ? SDL.GetStringProperty(properties, SDL.Props.WindowWaylandXDGToplevelExportHandleString, "") : "";
-        var parent = handle.Length != 0 ? "wayland:" + handle : _videoDriver == "x11" ? "x11:" + SDL.GetNumberProperty(properties, SDL.Props.WindowX11WindowNumber, 0).ToString("x", System.Globalization.CultureInfo.InvariantCulture) : "";
+        var parent = GetPortalParent(window);
         LinuxPortalFileChooser? portal = null;
         var request = new DialogRequest(this, ResolveWindow(parentWindowId), optionsCallback == null ? callback! : (ok, paths, filter) => optionsCallback(ok, paths, filter, portal!.SelectedOptions), []);
         request.RetainParent();
@@ -22,6 +20,13 @@ public sealed partial class DisplayServer
             lock (_dialogGate) _pendingNativeDialogs++;
         }
         catch { portal?.Dispose(); request.DisposeFilters(); throw; }
+    }
+
+    private string GetPortalParent(nint window)
+    {
+        var properties = SDL.GetWindowProperties(window);
+        var handle = _videoDriver == "wayland" ? SDL.GetStringProperty(properties, SDL.Props.WindowWaylandXDGToplevelExportHandleString, "") : "";
+        return handle.Length != 0 ? "wayland:" + handle : _videoDriver == "x11" ? "x11:" + SDL.GetNumberProperty(properties, SDL.Props.WindowX11WindowNumber, 0).ToString("x", System.Globalization.CultureInfo.InvariantCulture) : "";
     }
 
     private void PollPortalFileDialogs()

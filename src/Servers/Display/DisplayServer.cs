@@ -657,6 +657,7 @@ public sealed partial class DisplayServer : ElectronObject
             _mouseInputRegion?.Dispose(); _mouseInputRegion = null; _mouseInputPolygon = [];
             _pendingDroppedFiles = null;
             DisposeDialogs();
+            RetirePortalColorPickers();
             _defaultWindowIcon?.Dispose(); _defaultWindowIcon = null;
             ReleasePointer();
             CloseGamepads();

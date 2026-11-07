@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:color_picker(Callable:)",
+      "electron2d": "method:Electron2D.DisplayServer.ColorPicker(System.Action<System.Boolean, Electron2D.Color>)",
+      "reason": "Typed status/color callback and display-owner delivery. The Linux desktop portal supplies the selected pixel."
+    },
+    {
       "godot": "DisplayServer::method:enable_for_stealing_focus(int:)",
       "electron2d": "method:Electron2D.DisplayServer.EnableForStealingFocus(System.Int32)",
       "reason": "Typed PID, owner-thread access and explicit native refusal."
@@ -1362,8 +1367,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: Integrate the operating system color picker with an owner-thread success callback and cancel/retirement handling. Linux needs an authorized Screenshot.PickColor portal provider, absent from the installed GTK-only portal configuration. macOS needs its native picker bridge. The X11 live ColorPicker control uses desktop pixels and does not advertise the separate native service (ADRs 0021/0040).",
+      "state": "Partial",
+      "reason": "The Linux Screenshot portal accepts asynchronous native pixel selection through a typed owner-thread status/color callback with cancellation and request retirement. Native Sway exercises selection and cancellation. A Linux X11 session with an authorized PickColor provider still needs an end-to-end check (ADRs 0021/0040).",
       "godot": [
         "DisplayServer::method:color_picker(Callable:)"
       ]

@@ -100,6 +100,7 @@ public sealed partial class DisplayServer
             Feature.CursorShape or Feature.CustomCursorShape => desktop && SDL.HasMouse(),
             Feature.StatusIndicator => HasStatusIndicatorHost(),
             Feature.TextToSpeech => GetTTSBackend() is not null,
+            Feature.NativeColorPicker => UsesPortalColorPicker && LinuxPortalDBus.QueryVersion(LinuxPortalColorPicker.Interface) >= LinuxPortalColorPicker.RequiredVersion,
             Feature.NativeDialog => desktop,
             Feature.NativeDialogInput => CanUseNativeInput(),
             Feature.NativeDialogFile => UsesPortalFileChooser ? LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1 : desktop,

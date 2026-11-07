@@ -5,7 +5,7 @@ namespace Electron2D;
 internal static unsafe partial class LinuxPortalDBus
 {
     internal const string Library = "libdbus-1.so.3", Destination = "org.freedesktop.portal.Desktop", DesktopPath = "/org/freedesktop/portal/desktop";
-    internal const int StringType = 's', PathType = 'o', UInt32Type = 'u', BooleanType = 'b', ArrayType = 'a', StructType = 'r', VariantType = 'v', DictEntryType = 'e';
+    internal const int StringType = 's', PathType = 'o', UInt32Type = 'u', DoubleType = 'd', BooleanType = 'b', ArrayType = 'a', StructType = 'r', VariantType = 'v', DictEntryType = 'e';
 
     internal static uint QueryVersion(string portal)
     {
@@ -61,6 +61,9 @@ internal static unsafe partial class LinuxPortalDBus
     internal static uint ReadUInt32(ref MessageIter iter)
     { Require(ref iter, UInt32Type); GetBasic(ref iter, out uint value); return value; }
 
+    internal static double ReadDouble(ref MessageIter iter)
+    { Require(ref iter, DoubleType); GetBasicDouble(ref iter, out var value); return value; }
+
     [StructLayout(LayoutKind.Sequential)]
     internal struct MessageIter
     {
@@ -98,5 +101,6 @@ internal static unsafe partial class LinuxPortalDBus
     [DllImport(Library, EntryPoint = "dbus_message_iter_next")] internal static extern int Next(ref MessageIter iter);
     [DllImport(Library, EntryPoint = "dbus_message_iter_recurse")] internal static extern void Recurse(ref MessageIter iter, out MessageIter child);
     [DllImport(Library, EntryPoint = "dbus_message_iter_get_basic")] private static extern void GetBasicPointer(ref MessageIter iter, out nint value);
+    [DllImport(Library, EntryPoint = "dbus_message_iter_get_basic")] private static extern void GetBasicDouble(ref MessageIter iter, out double value);
     [DllImport(Library, EntryPoint = "dbus_message_iter_get_basic")] internal static extern void GetBasic(ref MessageIter iter, out uint value);
 }

@@ -1,3 +1,5 @@
+[Linux desktop portal color selection](../components/color-authoring.md#desktop-and-application-sampling) adds the typed DisplayServer picker and connects it to GUI color authoring on supported Linux sessions. One row moves from Blocked to Partial. Coverage remains **13,808/18,853 (73.24%)**, with 1,091 Partial, 366 Unimplemented, 3,588 Blocked, 8,440 Excluded and zero unmapped.
+
 [Wayland desktop screen capture](../components/desktop-screen-capture.md) reads whole outputs, rectangles and pixels through compositor image capture. The three rows remain Partial for the remaining provider and platform dependencies. Coverage remains **13,808/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,589 Blocked, 8,440 Excluded and zero unmapped.
 
 [Windows desktop color sampling](../components/color-authoring.md#desktop-and-application-sampling) adds live external pixels, modal click delivery and a capture-excluded magnifier to ColorPicker and ColorPickerButton. Remaining providers and control capabilities keep both classes Partial. Coverage remains **13,808/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,589 Blocked, 8,440 Excluded and zero unmapped.

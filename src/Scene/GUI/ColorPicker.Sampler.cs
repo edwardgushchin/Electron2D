@@ -2,6 +2,9 @@ namespace Electron2D;
 
 public partial class ColorPicker
 {
+    private LinuxPortalColorPicker? _portalSample;
+    private Popup? _portalSamplePopup;
+
     private void BeginSample()
     {
         if (!IsInsideTree) return;
@@ -10,6 +13,68 @@ public partial class ColorPicker
             Tree!.Defer(BeginDesktopSample);
             return;
         }
+        if (Tree?.Root is Window { GUIEmbedSubwindows: false, NativeDisplay.UsesPortalColorPicker: true })
+        {
+            Tree.Defer(BeginPortalSample);
+            return;
+        }
+        BeginViewportSample();
+    }
+
+    private void BeginPortalSample()
+    {
+        if (!IsInsideTree || !IsVisibleInTree || !_samplerVisible || _portalSample is not null) return;
+        if (DisplayServer.Service is not { } display) return;
+        var request = display.BeginPortalColorPick(CompletePortalSample);
+        if (request is null)
+        {
+            BeginViewportSample();
+            return;
+        }
+
+        var popup = GetWindow() is Popup { PopupWMHint: true } host && !host.IsEmbedded() ? host : null;
+        try
+        {
+            // Release the native popup's input grab before the system selector receives clicks.
+            popup?.Hide();
+        }
+        catch
+        {
+            display.CancelPortalColorPick(request);
+            throw;
+        }
+
+        if (!IsInsideTree || !_samplerVisible || !CanReceivePortalSample(popup))
+        {
+            display.CancelPortalColorPick(request);
+            return;
+        }
+        _portalSamplePopup = popup;
+        _portalSample = request;
+    }
+
+    private bool CanReceivePortalSample(Popup? popup) =>
+        popup is null ? IsVisibleInTree : ReferenceEquals(GetWindow(), popup) && popup.Parent is not Control { IsVisibleInTree: false };
+
+    private void CompletePortalSample(Color? color)
+    {
+        var popup = _portalSamplePopup;
+        _portalSample = null;
+        _portalSamplePopup = null;
+        if (color is { } selected && IsInsideTree && _samplerVisible && CanReceivePortalSample(popup))
+            CommitSample(selected);
+    }
+
+    internal void CancelPortalSample()
+    {
+        if (_portalSample is { } request)
+            DisplayServer.Service?.CancelPortalColorPick(request);
+        _portalSample = null;
+        _portalSamplePopup = null;
+    }
+
+    private void BeginViewportSample()
+    {
         try
         {
             var viewport = GetViewport()!; while (viewport is Window { Embedder: { } parent }) viewport = parent;

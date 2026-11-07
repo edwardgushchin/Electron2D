@@ -134,7 +134,7 @@ public partial class ColorPicker : VBoxContainer
     /// <summary>Gets or sets visibility of color text controls.</summary><value>True initially.</value>
     public bool HexVisible { get { CheckPicker(); return _hexVisible; } set { EnsureMutable(); _hexVisible = value; Refresh(); } }
     /// <summary>Gets or sets visibility of the sample, sampler and shape menu.</summary><value>True initially.</value>
-    public bool SamplerVisible { get { CheckPicker(); return _samplerVisible; } set { EnsureMutable(); _samplerVisible = value; Refresh(); } }
+    public bool SamplerVisible { get { CheckPicker(); return _samplerVisible; } set { EnsureMutable(); _samplerVisible = value; if (!value) CancelPortalSample(); Refresh(); } }
     /// <summary>Gets or sets visibility of local and recent swatches.</summary><value>True initially.</value>
     public bool PresetsVisible { get { CheckPicker(); return _presetsVisible; } set { EnsureMutable(); _presetsVisible = value; Refresh(); } }
     /// <summary>Gets or sets user addition/removal of swatches.</summary><value>True initially; programmatic preset methods remain available.</value>
@@ -269,8 +269,11 @@ public partial class ColorPicker : VBoxContainer
         var reversed = IsNotificationReversed;
 
         if (!reversed) base.OnNotification(what);
-        if (what == NotificationEnterTree) _pick.TooltipText = CanSampleDesktop() ? "Pick a color from the desktop." : "Pick a color from this application window.";
-        if (what is NotificationEnterTree or NotificationThemeChanged or NotificationTranslationChanged) Refresh(); if (what is NotificationExitTree or NotificationVisibilityChanged && !IsVisibleInTree) { _surface?.CancelGesture(); _bar?.CancelGesture(); _dragging = false; }
+        if (what == NotificationEnterTree)
+            _pick.TooltipText = CanSampleDesktop() ? "Pick a color from the desktop." :
+                Tree?.Root is Window { GUIEmbedSubwindows: false, NativeDisplay.UsesPortalColorPicker: true } ?
+                    "Pick a color from the desktop when available." : "Pick a color from this application window.";
+        if (what is NotificationEnterTree or NotificationThemeChanged or NotificationTranslationChanged) Refresh(); if (what is NotificationExitTree or NotificationVisibilityChanged && !IsVisibleInTree) { _surface?.CancelGesture(); _bar?.CancelGesture(); _dragging = false; CancelPortalSample(); }
 
         if (reversed) base.OnNotification(what);
     }
@@ -278,5 +281,5 @@ public partial class ColorPicker : VBoxContainer
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(ColorPicker) ? CreateColorPicker : base.CreateSceneInstanceFactory();
     private static Node CreateColorPicker() => new ColorPicker();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; _sampler?.ReleaseCapture(); _publisherColorChanged.Handlers = _publisherPresetAdded.Handlers = _publisherPresetRemoved.Handlers = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; CancelPortalSample(); _sampler?.ReleaseCapture(); _publisherColorChanged.Handlers = _publisherPresetAdded.Handlers = _publisherPresetRemoved.Handlers = null; } base.Dispose(disposing); }
 }

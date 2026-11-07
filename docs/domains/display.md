@@ -2,7 +2,7 @@
 
 [Native window capture exclusion](../components/window-capture.md) connects stored Window requests and observed DisplayServer flags to per-HWND Windows capture policy.
 
-[Desktop screen capture](../components/desktop-screen-capture.md) reads desktop output on Windows, native X11 and Wayland compositors with the output image capture protocols. It returns caller-owned images or single desktop pixels through the display owner.
+[Native desktop color selection](../components/color-authoring.md#desktop-and-application-sampling) uses the Linux Screenshot portal and dispatches the selected color on the display owner thread.(../components/desktop-screen-capture.md) reads desktop output on Windows, native X11 and Wayland compositors with the output image capture protocols. It returns caller-owned images or single desktop pixels through the display owner.
 
 [Native popup menus](../components/native-menus.md) execute through the display-owned NativeMenu service and the existing PopupMenu identity. Native tracking reserves the actual containing window and root display; Windows popup capability is separate from global/system menu registration.
 
