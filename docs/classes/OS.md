@@ -29,22 +29,22 @@ FileDialogTests, DisplayServerDialogTests and FileDialogRenderingTests exercise 
 
 ## System font integration
 
-[System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+[System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. Linux Fontconfig and Windows DirectWrite catalogs execute through the same text consumers; Windows native SDK/file/face/metric and both-backend pixel checks are recorded in the component. CoreText, unqualified raster modes, native heaps and wider target acceptance remain separate.
 
 <a id="getsystemfontpath"></a>
 `public static System.String GetSystemFontPath(System.String fontName, System.Int32 weight = 400, System.Int32 stretch = 100, System.Boolean italic = false)`
 
-Returns copied catalog family names, the closest style file or ordered files contributing text/locale coverage. These are cold static queries independent of a graphics session. Empty/absent catalog results are explicit; null/NUL or queries above 65536 UTF16 units fail. Weight clamps to 100..999 and stretch to 50..200. Linux script metadata is accepted while actual coverage/locale drives matching. Current Linux uses optional host Fontconfig; other provider gates remain in coverage.
+Returns copied catalog family names, the closest style file or ordered files contributing text/locale coverage. These are cold static queries independent of a graphics session. Empty/absent catalog results are explicit; null/NUL or queries above 65536 UTF16 units fail. Weight clamps to 100..999 and stretch to 50..200. Script metadata is accepted while actual coverage/locale drives native matching. Linux uses optional host Fontconfig; Windows uses DirectWrite local file/face matching. CoreText and wider target gates remain in coverage.
 
 <a id="getsystemfontpathfortext"></a>
 `public static System.String[] GetSystemFontPathForText(System.String fontName, System.String text, System.String locale = "", System.String script = "", System.Int32 weight = 400, System.Int32 stretch = 100, System.Boolean italic = false)`
 
-Returns copied catalog family names, the closest style file or ordered files contributing text/locale coverage. These are cold static queries independent of a graphics session. Empty/absent catalog results are explicit; null/NUL or queries above 65536 UTF16 units fail. Weight clamps to 100..999 and stretch to 50..200. Linux script metadata is accepted while actual coverage/locale drives matching. Current Linux uses optional host Fontconfig; other provider gates remain in coverage.
+Returns copied catalog family names, the closest style file or ordered files contributing text/locale coverage. These are cold static queries independent of a graphics session. Empty/absent catalog results are explicit; null/NUL or queries above 65536 UTF16 units fail. Weight clamps to 100..999 and stretch to 50..200. Script metadata is accepted while actual coverage/locale drives native matching. Linux uses optional host Fontconfig; Windows uses DirectWrite local file/face matching. CoreText and wider target gates remain in coverage.
 
 <a id="getsystemfonts"></a>
 `public static System.String[] GetSystemFonts()`
 
-Returns copied catalog family names, the closest style file or ordered files contributing text/locale coverage. These are cold static queries independent of a graphics session. Empty/absent catalog results are explicit; null/NUL or queries above 65536 UTF16 units fail. Weight clamps to 100..999 and stretch to 50..200. Linux script metadata is accepted while actual coverage/locale drives matching. Current Linux uses optional host Fontconfig; other provider gates remain in coverage.
+Returns copied catalog family names, the closest style file or ordered files contributing text/locale coverage. These are cold static queries independent of a graphics session. Empty/absent catalog results are explicit; null/NUL or queries above 65536 UTF16 units fail. Weight clamps to 100..999 and stretch to 50..200. Script metadata is accepted while actual coverage/locale drives native matching. Linux uses optional host Fontconfig; Windows uses DirectWrite local file/face matching. CoreText and wider target gates remain in coverage.
 
 ## Independent process operations
 

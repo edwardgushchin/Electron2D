@@ -745,17 +745,17 @@
     {
       "godot": "OS::method:get_system_font_path(String:,int:,int:,bool:)",
       "electron2d": "method:Electron2D.OS.GetSystemFontPath(System.String,System.Int32,System.Int32,System.Boolean)",
-      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+      "reason": "ADR 0046/0095: static OS discovery connects Linux Fontconfig and Windows DirectWrite local families/style/text/locale selection to shared path/face ownership. Independent native SDK, source/package/AOT and rendering evidence and target limits are in docs/components/system-fonts.md."
     },
     {
       "godot": "OS::method:get_system_font_path_for_text(String:,String:,String:,String:,int:,int:,bool:)",
       "electron2d": "method:Electron2D.OS.GetSystemFontPathForText(System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Boolean)",
-      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+      "reason": "ADR 0046/0095: static OS discovery connects Linux Fontconfig and Windows DirectWrite local families/style/text/locale selection to shared path/face ownership. Independent native SDK, source/package/AOT and rendering evidence and target limits are in docs/components/system-fonts.md."
     },
     {
       "godot": "OS::method:get_system_fonts()",
       "electron2d": "method:Electron2D.OS.GetSystemFonts()",
-      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+      "reason": "ADR 0046/0095: static OS discovery connects Linux Fontconfig and Windows DirectWrite local families/style/text/locale selection to shared path/face ownership. Independent native SDK, source/package/AOT and rendering evidence and target limits are in docs/components/system-fonts.md."
     },
     {
       "godot": "OS::method:create_instance(PackedStringArray:)",
@@ -2410,7 +2410,7 @@
         "OS::method:get_system_fonts()"
       ],
       "state": "Partial",
-      "reason": "Current Linux Fontconfig profile enumerates scalable families and resolves style/text/locale requests with exact path/face ownership; unavailable catalogs return empty results. Trigger: owning Windows DirectWrite and Apple CoreText provider slices must connect these same static OS contracts, with actual target discovery/ownership fixtures. Discovery does not depend on a graphics session."
+      "reason": "Linux Fontconfig and Windows DirectWrite enumerate aliases and resolve native style/text/locale requests with exact local path/collection-face ownership. Windows independent SDK/file/metric, archive, fallback and GPU/Compatibility checks execute; see docs/components/system-fonts.md. Discovery needs no display. Trigger: Apple CoreText provider must connect the same static OS contracts, with native target discovery/lifetime fixtures; other target/package/native-heap and full ADR 0021 gates remain open."
     },
     {"godot": ["Noise::method:get_noise_1d(float:)", "Noise::method:get_noise_2d(float:,float:)", "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "class:Noise", "Noise::method:get_image(int:,int:,bool:,bool:,bool:)"], "state": "Implemented", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."},
     {

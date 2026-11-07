@@ -6,7 +6,8 @@ public sealed partial class OS
     internal static NativeSystemFonts FontCatalog => Service._fonts;
     /// <summary>Returns installed scalable system font family names.</summary>
     /// <returns>An independent ordered array; empty when the platform catalog is unavailable.</returns>
-    /// <remarks>Discovery is a cold operating-system query. The current Linux profile uses an owned optional Fontconfig configuration.</remarks>
+    /// <remarks>Discovery is a cold operating-system query. Linux uses an owned optional Fontconfig configuration;
+    /// Windows uses DirectWrite's installed local font catalog without an engine display.</remarks>
     public static string[] GetSystemFonts() => FontCatalog.Names();
     /// <summary>Returns the platform's closest scalable font file for a preferred family and style.</summary>
     /// <param name="fontName">Preferred family; an empty name uses platform defaults.</param>
@@ -20,7 +21,7 @@ public sealed partial class OS
     }
     /// <summary>Returns ordered system font files covering text for a preferred family, locale and style.</summary>
     /// <param name="fontName">Preferred family, or empty for platform defaults.</param><param name="text">Text whose Unicode scalar coverage is requested.</param>
-    /// <param name="locale">Optional locale preference.</param><param name="script">Optional script metadata; Linux matching uses character coverage and locale.</param>
+    /// <param name="locale">Optional locale preference. Windows uses the current UI culture when empty.</param><param name="script">Optional script metadata; native matching uses character coverage and locale.</param>
     /// <param name="weight">Preferred weight, clamped to 100 through 999.</param><param name="stretch">Preferred width percent, clamped to 50 through 200.</param><param name="italic">Whether italic is preferred.</param>
     /// <returns>Independent distinct file paths, or an empty array when no catalog match exists.</returns>
     /// <exception cref="ArgumentException">A query contains NUL or exceeds 65536 UTF16 units.</exception><exception cref="ArgumentNullException">A query is null.</exception>

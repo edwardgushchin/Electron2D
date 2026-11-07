@@ -5,7 +5,7 @@ namespace Electron2D;
 
 internal readonly record struct SystemFontMatch(string Path, int FaceIndex, string Family);
 
-// Owns an optional host Fontconfig catalog. Discovery is cold; source owners retain prepared fallback faces.
+// Owns the optional host catalog. Discovery is cold; source owners retain prepared fallback faces.
 internal sealed partial class NativeSystemFonts
 {
 #if IOS || TVOS || ANDROID || ELECTRON2D_BROWSER_NATIVE
@@ -15,12 +15,14 @@ internal sealed partial class NativeSystemFonts
 #else
     private readonly object _gate = new();
     private nint _config;
+    private WindowsCatalog? _windows;
     private bool _initialized;
     private readonly Dictionary<(string Family, string Text, string Locale, int Weight, int Stretch, bool Italic), SystemFontMatch[]> _matches = [];
     private bool Ensure()
     {
-        if (_initialized) return _config != 0;
+        if (_initialized) return _config != 0 || _windows != null;
         _initialized = true;
+        if (OperatingSystem.IsWindows()) { _windows = WindowsCatalog.Create(); return _windows != null; }
         if (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid()) return false;
         try { _config = FcInitLoadConfigAndFonts(); }
         catch (Exception error) when (error is DllNotFoundException or EntryPointNotFoundException or BadImageFormatException) { return false; }
@@ -32,6 +34,7 @@ internal sealed partial class NativeSystemFonts
         lock (_gate)
         {
             if (!Ensure()) return [];
+            if (_windows != null) return _windows.Names();
             var names = new HashSet<string>(StringComparer.Ordinal); nint pattern = 0, objects = 0, fonts = 0;
             try
             {
@@ -55,7 +58,13 @@ internal sealed partial class NativeSystemFonts
         lock (_gate)
         {
             if (!Ensure()) return [];
+            if (_windows != null && locale.Length == 0) locale = System.Globalization.CultureInfo.CurrentUICulture.Name;
             var key = (family, text, locale, weight, stretch, italic); if (_matches.TryGetValue(key, out var cached)) return cached;
+            if (_windows != null)
+            {
+                var matches = _windows.Match(family, text, locale, weight, stretch, italic);
+                if (_matches.Count >= 4096) _matches.Clear(); _matches[key] = matches; return matches;
+            }
             nint pattern = 0, characters = 0, fonts = 0, coverage = 0;
             try
             {
@@ -83,7 +92,6 @@ internal sealed partial class NativeSystemFonts
                     if (remaining.Count == 0) break;
                 }
                 var values = result.ToArray();
-                // ponytail: clear cold request keys above 4096; use per-entry LRU if cold catalog workloads outgrow this bound.
                 if (_matches.Count >= 4096) _matches.Clear(); _matches[key] = values; return values;
             }
             finally { if (coverage != 0) FcCharSetDestroy(coverage); if (fonts != 0) FcFontSetDestroy(fonts); if (characters != 0) FcCharSetDestroy(characters); if (pattern != 0) FcPatternDestroy(pattern); }
@@ -94,7 +102,7 @@ internal sealed partial class NativeSystemFonts
     private static void Require(nint value) { if (value == 0) throw new OutOfMemoryException("Font catalog allocation failed."); }
     private static void Check(int value) { if (value == 0) throw new InvalidOperationException("Font catalog rejected a request."); }
     private static void ValidateSet(FontSet set) { if (set.Count < 0 || set.Count > 65536 || set.Count > 0 && set.Fonts == 0) throw new InvalidDataException("Font catalog exceeds its budget."); }
-    ~NativeSystemFonts() { if (_config != 0 && !Environment.HasShutdownStarted) try { FcConfigDestroy(_config); } catch { } }
+    ~NativeSystemFonts() { if (!Environment.HasShutdownStarted) { _windows?.Dispose(); if (_config != 0) try { FcConfigDestroy(_config); } catch { } } }
     [StructLayout(LayoutKind.Sequential)] private struct FontSet { internal int Count, Capacity; internal nint Fonts; }
     private const string Library = "libfontconfig.so.1";
     [LibraryImport(Library), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint FcInitLoadConfigAndFonts();

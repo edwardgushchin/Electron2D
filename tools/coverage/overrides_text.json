@@ -5396,14 +5396,14 @@
         "SystemFont::property:subpixel_positioning"
       ],
       "state": "Implemented",
-      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through Linux Fontconfig and Windows DirectWrite local catalogs over the shared FreeType/HarfBuzz owner and Font/canvas/control paths. SystemFontTests and WindowsSystemFontChecks cover native matching, logical faces, policy/lifetime, resources and prepared render output; exact target/package/native-heap limits remain in docs/components/system-fonts.md."
     },
     {
       "godot": [
         "class:SystemFont"
       ],
       "state": "Partial",
-      "reason": "SystemFont resolves and owns Linux system faces, styles/variables, logical collection faces, common text consumers and typed storage; absent catalogs use a borrowed theme source. Exact remaining dependencies: CoreText and DirectWrite providers on their owning targets. No inert policies are exposed."
+      "reason": "SystemFont resolves Linux Fontconfig and Windows DirectWrite local faces/styles, logical collections, existing variable defaults, shared text consumers and typed storage; absent providers retain borrowed theme fallback. Native Windows SDK, metric, archive and GPU/Compatibility evidence is in docs/components/system-fonts.md. CoreText integration and remaining target/package/native-heap qualification are exact dependencies."
     },
     {
       "godot": [

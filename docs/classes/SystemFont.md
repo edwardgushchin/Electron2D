@@ -1,6 +1,6 @@
 # SystemFont
 
-Last updated: 2026-10-20
+Last updated: 2026-11-07
 
 **Namespace:** Electron2D · **Declaration:** public partial class SystemFont · **Inherits:** [Font](Font.md) · **Inherited By:** — · **Source:** [SystemFont.cs](../../src/Scene/Resources/SystemFont.cs) · **Component:** [System fonts](../components/system-fonts.md)
 
@@ -11,11 +11,11 @@ Last updated: 2026-10-20
 
 ## Description
 
-Resolves preferred installed families, weight, width and italic style to owned ordinary FreeType/HarfBuzz data. Current Linux discovery uses optional host Fontconfig through the retained OS service; names and paths are cold queries. Unavailable catalogs or unresolved sources use the borrowed ThemeDB fallback, with weak change/disposal subscriptions and independent native realization. The theme resource itself is never disposed by this font.
+Resolves preferred installed families, weight, width and italic style to owned ordinary FreeType/HarfBuzz data. Linux discovery uses optional host Fontconfig; Windows uses local DirectWrite matches through the same retained OS service. Names and paths remain cold queries. Unavailable catalogs or unresolved sources use the borrowed ThemeDB fallback, with weak change/disposal subscriptions and independent native realization. The theme resource itself is never disposed by this font.
 
 Matching examines source collection faces, retains equally best logical indices and applies supported weight/width/italic variable axes when an exact style was not found. GetFaceCount exposes that logical selected subset; theme fallback reports zero. Font.FindVariation maps logical face indices to native source faces, preserves requested system default coordinates, and gives explicit user coordinates precedence. Invalid logical indices fail during realization. Settings changes invalidate owned data and retained variants, retire active readers safely, and notify Changed outside locks. Equal writes are silent. Resource disposal releases owned faces and subscriptions, preserving explicit borrowed fallbacks.
 
-Explicit Font.Fallbacks retain precedence over automatic platform fallback. AllowSystemFallback permits additional owned native sources for missing text/graphemes; primary support queries remain observations of explicit sources. Locale and actual character coverage drive Linux matching; OS script metadata remains accepted separately. Cold discovery, file loading and first layout/glyph preparation allocate; prepared measurement/rendering reuse sources, indices, shapes and texture caches.
+Explicit Font.Fallbacks retain precedence over automatic platform fallback. AllowSystemFallback permits additional owned native sources for missing text/graphemes; primary support queries remain observations of explicit sources. Locale and actual character coverage drive native matching; OS script metadata remains accepted separately. Cold discovery, file loading and first layout/glyph preparation allocate; prepared measurement/rendering reuse sources, indices, shapes and texture caches.
 
 Archives store requested names and settings, rather than resolved machine paths or native handles. Fresh loading rematches that host. Resource duplicates copy settings/fallback graph policy and rebuild independent native ownership. ResetState returns default names/style/settings with Disabled subpixel positioning, retaining inherited Font lifecycle policy.
 
@@ -150,7 +150,9 @@ Auto initially. Existing half/quarter/threshold policy controls raster phases; u
 
 [SystemFontTests](../../tests/Electron2D.Tests/SystemFontTests.cs) exercises host matching, independent variable/collection/empty Fontconfig child catalogs, logical face/default coordinate mapping, explicit override precedence, active fallback retirement, theme replacement, copied preferences, resource duplication/fresh process and prepared measurement. Native canvas/Label/RichTextLabel and automatic Arabic fallback produce verified pixels and zero managed bytes over 64 prepared intervals on current Linux GPU/compatibility.
 
-CoreText/DirectWrite providers and other missing service APIs remain exact [coverage](../coverage/classes/SystemFont.md) dependencies. Native allocator counts, foreign/device/editor and owner acceptance remain unverified. Unsupported provider profiles use the documented theme behavior; they do not claim native installed discovery. [ADR 0046](../decisions/rendering.md#adr-0046) and [ADR 0095](../decisions/singleton-services.md#adr-0095) own resource/native and retained static service boundaries.
+[Windows native checks](../components/system-fonts.md#windows-native-verification) compare an independent SDK catalog, style files, TTC indices, fallback order and design metrics, then verify whole fallback crops and 64 active/64 idle render intervals on Vulkan and Compatibility.
+
+CoreText providers and other missing service APIs remain exact [coverage](../coverage/classes/SystemFont.md) dependencies. Native allocator counts, foreign/device/editor and owner acceptance remain unverified. Unsupported provider profiles use the documented theme behavior; they do not claim native installed discovery. [ADR 0046](../decisions/rendering.md#adr-0046) and [ADR 0095](../decisions/singleton-services.md#adr-0095) own resource/native and retained static service boundaries.
 
 ## Native strike, autohinter and MIP policy
 

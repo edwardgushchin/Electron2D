@@ -1,6 +1,6 @@
 # SystemFontMatch
 
-Last updated: 2026-10-07
+Last updated: 2026-11-07
 
 **Visibility:** internal · **Source:** [NativeSystemFonts.cs](../../src/Servers/Text/NativeSystemFonts.cs) · **Component:** [System fonts](../components/system-fonts.md)
 
@@ -10,4 +10,4 @@ Internal immutable typed source selection: file path, native collection/named fa
 
 ## Verification and limits
 
-SystemFontTests exercises host and isolated fixture/empty catalogs, native sources, lifecycle and current prepared consumers. Current installed discovery is Linux-only; platform provider, native allocator and foreign execution gates remain explicit under [ADR 0046](../decisions/rendering.md#adr-0046).
+SystemFontTests exercises Linux host and isolated fixture/empty catalogs. WindowsSystemFontChecks independently verifies DirectWrite local paths, nonzero collection indices, actual text sources, resources and prepared rendering. Exact profile and native allocator/foreign-platform limits remain in [the component](../components/system-fonts.md#windows-native-verification) under ADR 0046.

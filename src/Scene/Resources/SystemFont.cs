@@ -2,6 +2,7 @@ namespace Electron2D;
 
 /// <summary>Resolves installed font families and styles into ordinary owned native text sources.</summary>
 /// <remarks>Unresolved names use the borrowed theme fallback. Matching and source loading are cold operations;
+/// Windows uses local DirectWrite matches, including collection faces and automatic Unicode fallback.
 /// prepared shaping/raster caches use the same Font and canvas paths. Linux Type 1 matches load paired PFM/AFM metrics through the shared native source reader.
 /// Runtime source paths are not stored in resource archives.</remarks>
 public partial class SystemFont : Font

@@ -411,3 +411,5 @@ Owned movie runs now preserve the last successful simulation pose and PCM on pro
 [Windows recoverable trash](../components/windows-trash.md) adds native Shell recovery, apartment/lifetime ownership and safe refusal through the existing OS service.
 
 [Windows file-manager navigation](../components/file-manager.md) opens directories and selects exact files/directories using Shell identities independently of an engine display. A private STA preserves the caller apartment; native folder-view checks verify the actual external result.
+
+[Windows system fonts](../components/system-fonts.md#windows-native-verification) connect existing OS catalog queries, SystemFont and owned automatic text fallback to local DirectWrite file/collection identities through the shared text owner.

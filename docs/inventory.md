@@ -1,3 +1,5 @@
+[NativeSystemFonts](classes/NativeSystemFonts.md) now owns the internal WindowsCatalog, IAnalysisSource and AnalysisSource helpers in NativeSystemFonts.Windows.cs for [DirectWrite local system fonts](components/system-fonts.md#windows-native-verification). The existing OS/SystemFont/FontFile API and shared text owners remain unchanged.
+
 The existing static OS service owns [Windows file-manager navigation](components/file-manager.md) through OS.WindowsFileManager.cs and a private STA/PIDL adapter. No public type is added.
 
 The existing static OS service owns [system certificate snapshots](components/system-certificates.md) through OS.Certificates.cs and its private native helpers. It adds no public type or trust-store owner.

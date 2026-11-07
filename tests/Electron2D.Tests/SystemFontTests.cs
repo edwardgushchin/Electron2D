@@ -6,7 +6,7 @@ internal static class SystemFontTests
     internal static void Run()
     {
         var names = OS.GetSystemFonts();
-        if (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid()) { using var unsupported = new SystemFont(); Check(unsupported.GetStringSize("Theme text").X > 0, "Unavailable catalog uses the theme source."); return; }
+        if (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid()) { using var fallback = new SystemFont(); Check(fallback.GetStringSize("Theme text").X > 0, "An empty preferred family list uses the theme source."); return; }
         Check(names.Length > 0 && names.Distinct(StringComparer.Ordinal).Count() == names.Length, "Host catalog enumerates installed scalable families.");
         var family = names[0]; var path = OS.GetSystemFontPath(family); Check(path.Length > 0 && File.Exists(path), "Matched system font file exists.");
         var files = OS.GetSystemFontPathForText(family, "Aאב", "he", "Hebr"); Check(files.Length > 0 && files.All(File.Exists), "System text query returns real coverage sources.");
