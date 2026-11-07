@@ -102,7 +102,8 @@ public sealed partial class DisplayServer
             Feature.NativeDialog => desktop,
             Feature.NativeDialogInput => CanUseGTKInput(),
             Feature.NativeDialogFile => UsesPortalFileChooser ? LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1 : desktop,
-            Feature.NativeDialogFileExtra or Feature.NativeDialogFileMime => UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
+            Feature.NativeDialogFileExtra => driver == "windows" && OperatingSystem.IsWindows() || UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
+            Feature.NativeDialogFileMime => UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
             Feature.Hidpi => desktop && GetScreenCountCore() > 0,
             Feature.Icon => driver is "windows" or "x11" or "cocoa" ||
                 driver == "wayland" && _nativeWaylandIconAvailable,

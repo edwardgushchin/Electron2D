@@ -49,7 +49,7 @@ Own enum identities: [Customization](FileDialog.Customization.md) and [DisplayMo
 | `public System.Int32 OptionCount { get; set; }` | Gets or sets the number of additional checkbox/choice controls. value: Zero initially; range 0..65536. |
 | `public System.Boolean OverwriteWarningEnabled { get; set; }` | Gets or sets explicit confirmation for existing save destinations. value: True initially. |
 | `public System.Boolean RecentListEnabled { get; set; }` | Gets or sets visibility of recent directories. value: True initially. |
-| `public System.String RootSubfolder { get; set; }` | Gets or sets a directory navigation boundary within the selected scope. value: Empty initially. Requests with this boundary use the custom browser because the current native portal cannot confine navigation. |
+| `public System.String RootSubfolder { get; set; }` | Gets or sets a directory navigation boundary within the selected scope. value: Empty initially. Requests with this boundary use the custom browser because the current native choosers cannot confine navigation. |
 | `public System.Boolean ShowHiddenFiles { get; set; }` | Gets or sets whether hidden entries are listed. value: False initially. |
 | `public System.Boolean UseNativeDialog { get; set; }` | Gets or sets preference for a supported OS-native chooser. value: False initially. Scoped/root-boundary requests retain this browser; options use native controls only when supported and their captions are representable. |
 
@@ -107,8 +107,8 @@ FileDialogTests, DisplayServerDialogTests and FileDialogRenderingTests exercise 
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
 
-The [Linux native file portal](../components/native-file-portal.md) applies MIME-only and combined filters through UseNativeDialog, including both rule families in All Recognized. Native root restrictions keep the existing custom browser fallback; typed options execute through the portal.
+The [Linux native file portal](../components/native-file-portal.md) applies MIME-only and combined filters through UseNativeDialog, including both rule families in All Recognized. Native root restrictions keep the existing custom browser fallback; typed options execute through the portal or Windows common file dialog.
 
-Native [checkbox/choice options](../components/native-file-portal.md#native-checkbox-and-choice-controls) now execute on the Linux portal. GetSelectedOptions publishes captured defaults after launch and accepted results before selection events. RootSubfolder, virtual access and empty native labels/captions retain the working custom browser.
+Native [checkbox/choice options](../components/native-file-portal.md#native-checkbox-and-choice-controls) execute on the Linux portal and Windows common file dialog. GetSelectedOptions publishes captured defaults after launch and accepted results before selection events. RootSubfolder, virtual access and empty native labels/captions retain the working custom browser.
 
 [Windows recoverable trash](../components/windows-trash.md) executes the existing confirmation and partial-failure refresh flow against the real native recycle service.

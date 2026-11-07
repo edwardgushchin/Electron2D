@@ -1,10 +1,10 @@
-# Linux native file choosers
+# Native file choosers
 
-Last updated: 2026-10-28
+Last updated: 2026-11-07
 
-[ADR 0040](../decisions/display.md#adr-0040) owns DisplayServer.FileDialogShow and the existing FileDialog native consumer. Linux Wayland/X11 now select org.freedesktop.portal.FileChooser through the existing system libdbus dependency. Other desktop hosts keep SDL's asynchronous chooser. The extra-control path also exposes the immutable FileDialogOption description; no backend handle escapes.
+[ADR 0040](../decisions/display.md#adr-0040) owns DisplayServer.FileDialogShow and the existing FileDialog native consumer. Linux Wayland/X11 now select org.freedesktop.portal.FileChooser through the existing system libdbus dependency. Windows uses the system common file dialog on a private STA; other desktop hosts keep SDL's asynchronous chooser. The extra-control path also exposes the immutable FileDialogOption description; no backend handle escapes.
 
-## Native request and result
+## Linux portal request and result
 
 A private bus connection owns each request. The non-UI capability probe checks interface version: NativeDialogFile, NativeDialogFileMime and NativeDialogFileExtra need version 1; OpenDirectory needs version 3. Missing service/interface or bus reports no capability. Launch validates arguments and rolls back parent ownership on failure. OpenFile/OpenFiles/OpenDirectory use OpenFile with their actual multiple/directory options; SaveFile carries current_name. Initial folders use UTF-8 NUL-terminated byte arrays. Linux continues to ignore showHidden, and the service may ignore the suggested directory or title.
 
@@ -22,9 +22,25 @@ OpenAny remains explicitly unsupported: the standard portal has no combined file
 
 The portal receives `choices` as `a(ssa(ss)s)`, with stable per-request IDs and numeric choice IDs; checkbox selections are exactly `true`/`false`. Response choices are `a(ss)`. Unknown provider IDs are ignored. Duplicate known IDs, invalid kinds/indices, missing expected choices or malformed payloads fail the complete request before publishing paths or options. Native response ordering does not affect duplicate authored names: the last configured option wins. Cancellation/native failure returns an empty map, empty paths and filter -1; native failures are then reported by the normal aggregate event-pump exception. Immutable results remain readable after the native request retires.
 
-The raw method rejects nonempty `root`: the standard portal cannot restrict navigation. FileDialog retains its existing custom browser for RootSubfolder and virtual resource/user access, or labels/captions the portal cannot represent. Other native hosts keep the extra capability false and reject the raw method until their adapter executes. No confinement or sandbox guarantee is inferred from a feature flag.
+The raw method rejects nonempty `root`: the standard portal cannot restrict navigation. FileDialog retains its existing custom browser for RootSubfolder and virtual resource/user access, or labels/captions the portal cannot represent. Windows also executes native checkbox/choice controls. Remaining native hosts keep the extra capability false and reject the raw method until their adapter executes. No confinement or sandbox guarantee is inferred from a feature flag.
 
 FileDialog captures options, defaults, mode and filters when opening. Successful launch publishes captured defaults to GetSelectedOptions; launch failure preserves the prior result. Acceptance replaces these results before FileSelected/FilesSelected/DirSelected. Cancellation retains the captured defaults. Authoring edits while pending affect the next presentation rather than changing the current native request. All new presentations reject while native completion is pending, including after a policy edit would otherwise select the custom browser. The next custom presentation rebuilds its actual controls from current authored defaults.
+
+## Windows common file dialog
+
+The Windows SDL driver supplies the retained parent HWND to `IFileOpenDialog` or `IFileSaveDialog`. A private background STA owns COM initialization, the dialog, shell items, filters and `IFileDialogCustomize` controls. No COM interface or native handle enters the public API. Native completion releases these resources before queueing the copied result; the existing display owner pump delivers callbacks and aggregate errors. Parent retirement and display disposal retain their pending/queued guards. Idle pumping starts no worker and performs no COM work.
+
+OpenFile, OpenFiles, OpenDirectory and SaveFile execute their corresponding native modes. The adapter requests filesystem results, an existing initial directory and stable process current-directory state. File opening requires existing files; saving retains native overwrite confirmation and supplies the first extension filter as the default extension. Selection does not create the saved file. Initial filenames work in file modes; `showHidden` requests hidden-item visibility. Native title and initial folder are suggestions subject to system policy.
+
+NativeDialogFileExtra is true for this integrated Windows driver. Checkboxes carry copied labels/defaults; choices occupy labeled visual groups with copied captions and zero-based item IDs. Checked state and selected IDs are read after successful native acceptance, range-validated, then published as the same read-only typed map. Duplicate names still use final authored order. Cancellation and native setup/readback failures publish empty raw results; failures also reach the event-pump aggregate. FileDialog keeps its captured defaults on cancellation and commits accepted values before its selection event.
+
+Windows retains the extension-only filter policy: `*.ext` lists and all-files rules are supported, MIME-only requests reject and NativeDialogFileMime remains false. Folder mode ignores filters. The selected native one-based filter index maps to the caller's zero-based index, or -1 without filters. OpenAny and raw root confinement remain explicitly unsupported. FileDialog continues using its custom browser for root/virtual access and empty native labels/captions.
+
+### Windows native verification
+
+On Windows x64, the [public consumer](../../tests/WindowsFileDialog.Consumer) uses a separate [Windows SDK/UI Automation probe](../../tools/windows-file-dialog-probe.cpp). The probe selects only the consumer's exact process ID and unique dialog title, waits for a fixture directory item before acting, changes real native checkbox/choice controls and filter selection, and accepts or cancels the native dialog. The raw profile covers all four supported modes, hidden items, multi-select, Unicode and punctuation, selected filter identity, initial folder/file, save extension, copied inputs, immutable results, duplicate names, cancellation, native setup failure, callback failure and owner-thread completion. Vulkan GPU and Compatibility scene profiles exercise options committed before FileSelected, edits applying to the next launch, cancellation defaults, native child-parent retirement and custom fallback. The dummy driver retains explicit unavailability.
+
+Source, fresh Core, strict trimmed NativeAOT and root test hosts each passed 138 profile assertions (102 raw, 15 GPU, 18 Compatibility, 3 unavailable). The fresh Core DLL matches the qualified Release assembly byte for byte. These tests use the source-qualified Windows native DLL closure; they do not qualify unchanged platform packages, Windows ARM64, other native extra-control providers, native allocation totals or human acceptance. Native setup is cold work and may allocate. Windows API reference: [Common File Dialog](https://learn.microsoft.com/en-us/windows/win32/shell/common-file-dialog).
 
 ## Executable evidence
 

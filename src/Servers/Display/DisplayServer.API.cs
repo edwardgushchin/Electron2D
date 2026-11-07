@@ -64,12 +64,12 @@ public sealed partial class DisplayServer
     /// <param name="title">Requested dialog title; the native platform may ignore it.</param>
     /// <param name="currentDirectory">Initial filesystem directory, or an empty string for the platform default.</param>
     /// <param name="filename">Initial filename for file modes, or an empty string. Linux uses it only for SaveFile.</param>
-    /// <param name="showHidden">Requests hidden files. This SDL chooser ignores the preference; on Linux this matches the native contract.</param>
+    /// <param name="showHidden">Requests hidden files. Windows applies this preference; Linux and the SDL fallback ignore it.</param>
     /// <param name="mode">The selection mode. <see cref="FileDialogMode.OpenAny"/> has no equivalent in the current native backend.</param>
     /// <param name="filters">Filters such as <c>*.png,*.jpg;Images;image/png,image/jpeg</c>. The Linux portal accepts extension and MIME rules, including MIME-only filters. Other backends retain their extension-only policy. Folder mode ignores filters.</param>
     /// <param name="callback">Receives success, selected paths, and the selected filter index. Cancellation and native failure both deliver false and an empty path list.</param>
     /// <param name="parentWindowId">An active native parent window ID; zero selects the main window. The selected parent must survive until native completion.</param>
-    /// <remarks>The native callback may run on another thread. Paths are copied immediately and the typed callback runs only on the owner thread during <see cref="ProcessEvents"/>. A native failure still completes the callback, then the event pump reports it in an aggregate exception. Disposal is rejected until the native chooser completes and its result has been pumped. Linux desktop hosts use the FileChooser portal and copy local file URIs into filesystem paths. Extension and MIME rules are combined; current_filter maps back to the original filter index, or -1 when unspecified. Service loss and malformed responses complete with failure before event-pump error reporting. Directory selection needs portal version 3. The operating system may ignore the title or initial location; Android may return content URIs instead of filesystem paths.</remarks>
+    /// <remarks>The native callback may run on another thread. Paths are copied immediately and the typed callback runs only on the owner thread during <see cref="ProcessEvents"/>. A native failure still completes the callback, then the event pump reports it in an aggregate exception. Disposal is rejected until the native chooser completes and its result has been pumped. Windows uses a private STA common file dialog and returns filesystem paths; save mode supplies the first filter's default extension. Linux desktop hosts use the FileChooser portal and copy local file URIs into filesystem paths. Extension and MIME rules are combined; current_filter maps back to the original filter index, or -1 when unspecified. Service loss and malformed responses complete with failure before event-pump error reporting. Directory selection needs portal version 3. The operating system may ignore the title or initial location; Android may return content URIs instead of filesystem paths.</remarks>
     /// <exception cref="ArgumentNullException">A required argument is null.</exception>
     /// <exception cref="ArgumentException">A filter is malformed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The mode or window ID is invalid.</exception>
@@ -90,15 +90,15 @@ public sealed partial class DisplayServer
     /// <summary>Opens a native file chooser with typed checkbox and choice controls.</summary>
     /// <param name="title">Requested native title.</param>
     /// <param name="currentDirectory">Initial filesystem directory, or empty for the platform default.</param>
-    /// <param name="root">Must be empty: the current portal cannot constrain selection to a root.</param>
-    /// <param name="filename">Initial save filename, or empty.</param>
-    /// <param name="showHidden">Requested hidden-file policy; the current portal ignores this preference.</param>
+    /// <param name="root">Must be empty: current native choosers cannot constrain selection to a root.</param>
+    /// <param name="filename">Initial filename for file modes, or empty. Linux uses it only for SaveFile.</param>
+    /// <param name="showHidden">Requests hidden files on Windows; the Linux portal ignores this preference.</param>
     /// <param name="mode">A native file/directory selection mode; OpenAny is unsupported.</param>
     /// <param name="filters">Copied extension/MIME filter descriptions, as in FileDialogShow.</param>
     /// <param name="options">Copied immutable option descriptions; at most 65536.</param>
     /// <param name="callback">Owner-pump result: success, copied paths, filter index and read-only selections keyed by option name. Duplicate names use the last configured option. Cancellation/failure returns empty paths and selections, and filter -1.</param>
     /// <param name="parentWindowId">Active native parent window; zero selects the main window.</param>
-    /// <remarks>Requires NativeDialogFileExtra. Linux desktop FileChooser portals version one and later support options; directories require version three. Initial defaults are clamped by FileDialogOption. Results are validated before publication. Native failures complete the callback before aggregate event-pump error reporting. Parent/display disposal is rejected until completion has been pumped. See FileDialogShow for the shared native lifecycle.</remarks>
+    /// <remarks>Requires NativeDialogFileExtra. Windows uses a private STA common file dialog with native checkbox/choice controls and extension filters. Linux desktop FileChooser portals version one and later support options; directories require version three. Initial defaults are clamped by FileDialogOption. Results are validated before publication. Native failures complete the callback before aggregate event-pump error reporting. Parent/display disposal is rejected until completion has been pumped. See FileDialogShow for the shared native lifecycle.</remarks>
     /// <exception cref="ArgumentNullException">A required argument or option is null.</exception>
     /// <exception cref="ArgumentException">A filter or native string is malformed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The option count, mode or window identity is invalid.</exception>

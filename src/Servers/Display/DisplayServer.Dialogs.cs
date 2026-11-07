@@ -103,6 +103,7 @@ public sealed partial class DisplayServer
         ArgumentNullException.ThrowIfNull(filename);
         ArgumentNullException.ThrowIfNull(filters);
         if (optionsCallback == null) ArgumentNullException.ThrowIfNull(callback);
+        OS.ValidateNativeMessage(title, nameof(title)); OS.ValidateNativeMessage(currentDirectory, nameof(currentDirectory)); OS.ValidateNativeMessage(filename, nameof(filename));
         var window = GetWindow(parentWindowId);
         var nativeMode = mode switch
         {
@@ -116,6 +117,11 @@ public sealed partial class DisplayServer
         if (UsesPortalFileChooser)
         {
             ShowPortalFileDialog(window, parentWindowId, title, currentDirectory, filename, mode, filters, callback, options, optionsCallback);
+            return;
+        }
+        if (_videoDriver == "windows" && OperatingSystem.IsWindows())
+        {
+            ShowWindowsFileDialog(window, parentWindowId, title, currentDirectory, filename, showHidden, mode, filters, callback, options, optionsCallback);
             return;
         }
         if (options != null) throw new NotSupportedException("This native file chooser cannot display additional options.");
@@ -186,29 +192,8 @@ public sealed partial class DisplayServer
         {
             for (var index = 0; index < filters.Count; index++)
             {
-                var entry = filters[index] ?? throw new ArgumentException("A filter is null.", nameof(filters));
-                var parts = entry.Split(';');
-                if (parts.Length >= 3 && parts[0].Trim().Length == 0 && parts[2].Trim().Length > 0)
-                    throw new NotSupportedException("The native chooser cannot apply a MIME-only filter.");
-                var patterns = parts[0].Split(',');
-                var extensions = new string[patterns.Length];
-                for (var part = 0; part < patterns.Length; part++)
-                {
-                    var pattern = patterns[part].Trim();
-                    if (pattern is "*" or "*.*")
-                    {
-                        if (patterns.Length != 1)
-                            throw new ArgumentException("The all-files filter must stand alone.", nameof(filters));
-                        extensions[part] = "*";
-                        continue;
-                    }
-                    if (!pattern.StartsWith("*.", StringComparison.Ordinal) || pattern.Length <= 2 ||
-                        !pattern.AsSpan(2).ToString().All(static c => char.IsAsciiLetterOrDigit(c) || c is '-' or '_' or '.'))
-                        throw new ArgumentException($"Invalid extension filter at index {index}.", nameof(filters));
-                    extensions[part] = pattern[2..];
-                }
-                var label = parts.Length > 1 && parts[1].Length > 0 ? parts[1] : parts[0];
-                native[index] = new SDL.DialogFileFilter(label, string.Join(';', extensions));
+                var parsed = ParseDialogFilter(filters[index], index);
+                native[index] = new SDL.DialogFileFilter(parsed.Label, parsed.Pattern);
                 count++;
             }
             return native;
@@ -219,6 +204,27 @@ public sealed partial class DisplayServer
                 native[index].Dispose();
             throw;
         }
+    }
+
+    private static (string Label, string Pattern) ParseDialogFilter(string? entry, int index)
+    {
+        if (entry == null) throw new ArgumentException("A filter is null.", "filters");
+        OS.ValidateNativeMessage(entry, "filters");
+        var parts = entry.Split(';');
+        if (parts.Length >= 3 && parts[0].Trim().Length == 0 && parts[2].Trim().Length > 0) throw new NotSupportedException("The native chooser cannot apply a MIME-only filter.");
+        var patterns = parts[0].Split(','); var extensions = new string[patterns.Length];
+        for (var part = 0; part < patterns.Length; part++)
+        {
+            var pattern = patterns[part].Trim();
+            if (pattern is "*" or "*.*")
+            {
+                if (patterns.Length != 1) throw new ArgumentException("The all-files filter must stand alone.", "filters");
+                extensions[part] = "*"; continue;
+            }
+            if (!pattern.StartsWith("*.", StringComparison.Ordinal) || pattern.Length <= 2 || !pattern.AsSpan(2).ToString().All(static c => char.IsAsciiLetterOrDigit(c) || c is '-' or '_' or '.')) throw new ArgumentException($"Invalid extension filter at index {index}.", "filters");
+            extensions[part] = pattern[2..];
+        }
+        return (parts.Length > 1 && parts[1].Length > 0 ? parts[1] : parts[0], string.Join(';', extensions));
     }
 
     private static void OnNativeDialogCompleted(nint userdata, nint fileList, int filter)

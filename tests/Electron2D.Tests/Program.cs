@@ -10,6 +10,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_FILE_DIALOG") is { } chooserProfile) { if (chooserProfile == "regression") DisplayServerDialogTests.Run(); else WindowsFileDialogChecks.Run(chooserProfile, args[0], args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_FONTS") is { } fontsProfile) { WindowsSystemFontChecks.Run(fontsProfile, args); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_MANAGER") is { } shellObserver) { FileManagerChecks.Run(shellObserver, args[0]); return; }

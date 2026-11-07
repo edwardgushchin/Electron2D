@@ -2447,7 +2447,7 @@ Formatted graphics writes reuse `TexelBufferProgram`, `RenderingDevice.GraphicsS
 
 [Copied native depth/stencil state](components/depth-stencil-state.md) completes the existing RDPipelineDepthStencilState family and pipeline variants; no new public runtime type.
 
-The existing DisplayServer/FileDialog chain now uses the [Linux FileChooser portal](components/native-file-portal.md) for real MIME-aware native file/folder selection; no public type is added.
+The existing DisplayServer/FileDialog chain uses the [native file choosers](components/native-file-portal.md): Linux portal MIME-aware file/folder selection and Windows common file dialogs with native checkbox/choice controls. No public type is added.
 
 Existing RenderingServer and Viewport canvas composition now implement [follow-scale preview](components/canvas-rendering.md#canvas-follow-scale-preview); no production type is added. CanvasLayer authoring and logical coordinates retain their existing identities.
 
