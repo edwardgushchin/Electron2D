@@ -382,13 +382,13 @@ Returns the active layout index, or -1 if absent from the native list.
 <a id="method-keyboardgetlayoutcount"></a>
 #### `public static int KeyboardGetLayoutCount()`
 
-Returns the number of loaded Windows input locales or X11 keyboard groups.
+Returns the number of loaded Windows input locales or XKB keyboard groups.
 
 
 <a id="method-keyboardgetlayoutlanguage"></a>
 #### `public static string KeyboardGetLayoutLanguage(int index)`
 
-Returns the indexed layout's input language code, or an empty string when unknown.
+Returns the indexed layout's input language. On Wayland this is the compositor keymap's group name. An unknown language yields an empty string.
 
 
 <a id="method-keyboardgetlayoutname"></a>
@@ -402,7 +402,7 @@ Returns the Windows localized layout name or the XKB group name.
 
 Activates the indexed input layout and updates the SDL keymap before returning.
 
-These five operations require an active Windows or X11 display on its opening thread. X11 activation locks a group on the connected server. Its language query reports the active XKB symbol prefix, such as `us` or `ru`. An unsupported backend throws `NotSupportedException`. An index outside the current list throws `ArgumentOutOfRangeException`. An inactive or off-owner display or an unsuccessful native operation throws `InvalidOperationException`. Indices follow the current native list. Requery after switching or after a host layout change. See [native keyboard layouts](../components/display-server.md#native-keyboard-layouts).
+These operations require an active display on its opening thread. Windows and X11 support selection. X11 locks a group on the connected server and reports an XKB symbol prefix such as `us` or `ru` for the language. Wayland reads the compositor's keyboard map and group. Wayland selection throws `NotSupportedException`. An index outside the current list throws `ArgumentOutOfRangeException` on supported operations. An inactive or off-owner display or an unsuccessful native operation throws `InvalidOperationException`. Requery indices after a host layout change. See [native keyboard layouts](../components/display-server.md#native-keyboard-layouts).
 
 <a id="method-keyboardgetkeycodefromphysical"></a>
 #### `public static Key KeyboardGetKeycodeFromPhysical(Key physical)`
@@ -413,7 +413,7 @@ Maps a physical key to the logical key reported for the current keyboard layout.
 
 - `physical`: A physical key identity.
 
-**Remarks:** The result reflects the active SDL keyboard layout and modifier state at the time of the call without SDL key-event options. An unmapped non-Latin symbol falls back to the physical key; localized Unicode belongs to `KeyboardGetLabelFromPhysical`. Modifier bits supplied with `physical` are preserved. Reverse Tab is normalized to Tab, as in key events. The physical US bracket positions use `BraceLeft` and `BraceRight`; the grave position uses `Section`, and the ISO key beside left Shift uses `QuoteLeft`. SDL keypad keycodes do not distinguish Num Lock or shifted navigation symbols on Wayland, so these keys can retain their physical identity instead of the layout's logical symbol.
+**Remarks:** The result reflects the active keyboard layout and modifier state at the time of the call. An unmapped non-Latin symbol falls back to the physical key. Localized Unicode belongs to `KeyboardGetLabelFromPhysical`. Modifier bits supplied with `physical` are preserved. Reverse Tab is normalized to Tab. The physical US bracket positions use `BraceLeft` and `BraceRight`. The grave position uses `Section`, and the ISO key beside left Shift uses `QuoteLeft`. Wayland reads the current keypad symbol from the compositor's XKB state.
 
 **Errors:** `ObjectDisposedException` if disposed; `InvalidOperationException` off the opening thread.
 
@@ -428,7 +428,7 @@ Maps a physical key to its localized label in the current keyboard layout.
 
 - `physical`: A physical key identity.
 
-**Remarks:** The label uses the active SDL layout and modifier state without key-event options. Modifier bits supplied with `physical` are preserved. Key presses derive their labels from the same mapping using each event's modifier state. On Windows and X11, repeats and releases retain the logical identity and label of the original press. A real layout switch and non-Latin label have not yet been checked on Wayland. SDL keypad keycodes do not expose the Num Lock printable label, so a physical keypad identity can be returned in its place.
+**Remarks:** The label uses the active layout and modifier state. Modifier bits supplied with `physical` are preserved. Key presses derive their labels from their layout and modifier state. On Windows, X11 and Wayland, repeats and releases retain the logical identity and label of the original press.
 
 **Errors:** `ObjectDisposedException` if disposed; `InvalidOperationException` off the opening thread.
 

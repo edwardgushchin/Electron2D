@@ -4,7 +4,7 @@ using Edge = Electron2D.DisplayServer.WindowResizeEdge;
 
 namespace Electron2D;
 
-internal sealed unsafe partial class WaylandWindowGestures : IDisposable
+internal sealed unsafe partial class WaylandInput : IDisposable
 {
     private const string ClientLibrary = "libwayland-client.so.0";
     private const uint DestroyProxy = 1;
@@ -14,18 +14,19 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
     private readonly nint _display;
     private readonly nint _library;
     private readonly Dictionary<uint, Seat> _seats = new();
+    private nint _xkbLibrary;
     private GCHandle _listener;
     private nint _queue;
     private nint _registry;
     private Exception? _listenerFailure;
 
-    private WaylandWindowGestures(nint display, nint library)
+    private WaylandInput(nint display, nint library)
     {
         _display = display;
         _library = library;
     }
 
-    internal static WaylandWindowGestures? Open(nint display)
+    internal static WaylandInput? Open(nint display)
     {
         if (display == 0 || !NativeLibrary.TryLoad(ClientLibrary, out var library))
             return null;
@@ -35,7 +36,7 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
             return null;
         }
 
-        var source = new WaylandWindowGestures(display, library);
+        var source = new WaylandInput(display, library);
         try
         {
             source.Initialize();
@@ -50,6 +51,7 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
 
     private void Initialize()
     {
+        NativeLibrary.TryLoad(XKBClientLibrary, out _xkbLibrary);
         _queue = RequireHandle(CreateQueue(_display));
         var wrapper = RequireHandle(CreateWrapper(_display));
         try
@@ -64,14 +66,14 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
         _listener = GCHandle.Alloc(this);
         Listen(_registry, &RegistryEvent, _listener);
 
-        // Read the initial registry, then the capabilities of any seats it announced.
-        for (var pass = 0; pass < 2; pass++)
+        // Read the registry, seat capabilities and initial keyboard keymaps in order.
+        for (var pass = 0; pass < (_xkbLibrary == 0 ? 2 : 3); pass++)
             CheckDispatch(Roundtrip(_display, _queue));
     }
 
     internal void DispatchPending() => CheckDispatch(DispatchQueuePending(_display, _queue));
 
-    internal bool TryStart(nint surface, nint toplevel, Edge? edge)
+    internal bool TryStartGesture(nint surface, nint toplevel, Edge? edge)
     {
         if (surface == 0 || toplevel == 0)
             return false;
@@ -117,9 +119,16 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
 
     internal void Forget(nint surface)
     {
+        for (var i = _keys.Count - 1; i >= _nextKey; i--)
+            if (_keys[i].Surface == surface)
+                _keys.RemoveAt(i);
         foreach (var seat in _seats.Values)
+        {
             if (seat.Focus == surface)
                 seat.ResetFocus(0);
+            if (seat.Keyboard?.Focus == surface)
+                seat.Keyboard.Focus = 0;
+        }
     }
 
     public void Dispose()
@@ -130,13 +139,14 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
         if (_registry != 0) DestroyProxyLocal(_registry);
         if (_listener.IsAllocated) _listener.Free();
         if (_queue != 0) DestroyQueue(_queue);
+        if (_xkbLibrary != 0) NativeLibrary.Free(_xkbLibrary);
         NativeLibrary.Free(_library);
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static int RegistryEvent(nint context, nint proxy, uint opcode, nint message, Argument* arguments)
     {
-        var owner = (WaylandWindowGestures)GCHandle.FromIntPtr(context).Target!;
+        var owner = (WaylandInput)GCHandle.FromIntPtr(context).Target!;
         try
         {
             var id = arguments[0].UInt;
@@ -172,9 +182,9 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
         }
     }
 
-    private sealed class Seat(WaylandWindowGestures owner, nint handle) : IDisposable
+    private sealed class Seat(WaylandInput owner, nint handle) : IDisposable
     {
-        private readonly WaylandWindowGestures _owner = owner;
+        private readonly WaylandInput _owner = owner;
         private GCHandle _listener;
         private nint _pointer;
         private int _buttons;
@@ -183,11 +193,12 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
         internal nint Focus;
         internal bool Eligible;
         internal uint Serial;
+        internal KeyboardState? Keyboard { get; private set; }
 
         internal void Listen()
         {
             _listener = GCHandle.Alloc(this);
-            WaylandWindowGestures.Listen(Handle, &SeatEvent, _listener);
+            WaylandInput.Listen(Handle, &SeatEvent, _listener);
         }
 
         private void UpdatePointer(bool available)
@@ -197,7 +208,7 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
                 Argument newID = default;
                 _pointer = RequireHandle(MarshalRequest(Handle, 0, NativeLibrary.GetExport(_owner._library,
                     "wl_pointer_interface"), ProxyVersion(Handle), 0, &newID));
-                try { WaylandWindowGestures.Listen(_pointer, &PointerEvent, _listener); }
+                try { WaylandInput.Listen(_pointer, &PointerEvent, _listener); }
                 catch { ReleasePointer(); throw; }
             }
             else if (!available)
@@ -216,6 +227,7 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
         public void Dispose()
         {
             ReleasePointer();
+            Keyboard?.Dispose();
             ReleaseProxy(Handle, opcode: 3, minimumVersion: 5);
             if (_listener.IsAllocated) _listener.Free();
         }
@@ -233,7 +245,18 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
             if (opcode == 0)
             {
                 var seat = (Seat)GCHandle.FromIntPtr(context).Target!;
-                try { seat.UpdatePointer((arguments[0].UInt & 1) != 0); }
+                try
+                {
+                    var capabilities = arguments[0].UInt;
+                    seat.UpdatePointer((capabilities & 1) != 0);
+                    if ((capabilities & 2) != 0 && seat._owner._xkbLibrary != 0)
+                        seat.Keyboard ??= KeyboardState.Open(seat._owner, seat.Handle);
+                    else
+                    {
+                        seat.Keyboard?.Dispose();
+                        seat.Keyboard = null;
+                    }
+                }
                 catch (Exception error) { seat._owner._listenerFailure ??= error; }
             }
             return 0;
@@ -303,6 +326,7 @@ internal sealed unsafe partial class WaylandWindowGestures : IDisposable
     {
         [FieldOffset(0)] internal uint UInt;
         [FieldOffset(0)] internal nint Object;
+        [FieldOffset(0)] internal int FD;
     }
 
     [LibraryImport(ClientLibrary, EntryPoint = "wl_display_create_queue")]

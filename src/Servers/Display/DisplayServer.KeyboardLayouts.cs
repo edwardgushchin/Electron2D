@@ -10,19 +10,21 @@ public sealed partial class DisplayServer
     {
         var display = RequireService();
         display.EnsureOwner();
-        if (!display.UsesWindowsInput && !display.UsesX11KeyboardLayouts)
-            throw new NotSupportedException("Keyboard layout enumeration and activation require a Windows or X11 display.");
+        if (!display.UsesWindowsInput && !display.UsesX11KeyboardLayouts && display._waylandInput?.HasKeyboardAdapter != true)
+            throw new NotSupportedException("The display backend has no native keyboard layout provider.");
         return display;
     }
 
     private nint X11KeyboardConnection() => WindowGetNativeHandleCore(HandleType.DisplayHandle);
 
-    /// <summary>Gets the number of input layouts currently available to the native desktop.</summary>
+    /// <summary>Gets the number of input layouts in the current native keyboard map.</summary>
     /// <exception cref="InvalidOperationException">The display is inactive, the caller is off the owner thread, or native enumeration failed.</exception>
     /// <exception cref="NotSupportedException">The active backend does not enumerate input layouts.</exception>
     public static int KeyboardGetLayoutCount()
     {
         var display = RequireKeyboardLayouts();
+        if (display._waylandInput is { } wayland)
+            return wayland.LayoutCount;
         return display.UsesX11KeyboardLayouts
             ? X11KeyboardLayouts.Count(display.X11KeyboardConnection())
             : WindowsKeyboardLayouts.Count();
@@ -35,12 +37,15 @@ public sealed partial class DisplayServer
     public static int KeyboardGetCurrentLayout()
     {
         var display = RequireKeyboardLayouts();
+        if (display._waylandInput is { } wayland)
+            return wayland.CurrentLayout;
         return display.UsesX11KeyboardLayouts
             ? X11KeyboardLayouts.Current(display.X11KeyboardConnection())
             : WindowsKeyboardLayouts.Current();
     }
 
     /// <summary>Gets the input language of an indexed native layout, or an empty string when unknown.</summary>
+    /// <remarks>Wayland supplies the layout name for this query.</remarks>
     /// <param name="index">An index in the current native layout list.</param>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the current layout list.</exception>
     /// <exception cref="InvalidOperationException">The display is inactive, the caller is off the owner thread, or native enumeration failed.</exception>
@@ -48,6 +53,8 @@ public sealed partial class DisplayServer
     public static string KeyboardGetLayoutLanguage(int index)
     {
         var display = RequireKeyboardLayouts();
+        if (display._waylandInput is { } wayland)
+            return wayland.LayoutName(index);
         return display.UsesX11KeyboardLayouts
             ? X11KeyboardLayouts.Language(display.X11KeyboardConnection(), index)
             : WindowsKeyboardLayouts.Language(index);
@@ -61,6 +68,8 @@ public sealed partial class DisplayServer
     public static string KeyboardGetLayoutName(int index)
     {
         var display = RequireKeyboardLayouts();
+        if (display._waylandInput is { } wayland)
+            return wayland.LayoutName(index);
         if (OperatingSystem.IsWindows())
             return WindowsKeyboardLayouts.Name(index);
         return X11KeyboardLayouts.Name(display.X11KeyboardConnection(), index);
@@ -75,6 +84,8 @@ public sealed partial class DisplayServer
     public static void KeyboardSetCurrentLayout(int index)
     {
         var display = RequireKeyboardLayouts();
+        if (display._waylandInput is not null)
+            throw new NotSupportedException("Selecting the system keyboard layout requires a Wayland compositor protocol.");
         if (display.UsesX11KeyboardLayouts)
         {
             X11KeyboardLayouts.Activate(display.X11KeyboardConnection(), index);

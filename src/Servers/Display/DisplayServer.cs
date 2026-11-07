@@ -54,6 +54,7 @@ public sealed partial class DisplayServer : ElectronObject
     internal Vector2i ObservedWindowPosition => _windowRect.Position;
     private Vector2i _waylandMinimumSize = new(64, 64);
     private Vector2i _waylandMaximumSize;
+    private WaylandInput? _waylandInput;
 
     private DisplayServer(nint window, nint gtkScreen, nint gtkTitlebarProvider, string? previousGamepadBackgroundHint,
         DisplayServer? root = null, int windowID = MainWindowId)
@@ -199,7 +200,7 @@ public sealed partial class DisplayServer : ElectronObject
                     if (server._waylandWindowPosition)
                     {
                         var properties = SDL.GetWindowProperties(window);
-                        server._waylandWindowGestures = WaylandWindowGestures.Open(
+                        server._waylandInput = WaylandInput.Open(
                             SDL.GetPointerProperty(properties, SDL.Props.WindowWaylandDisplayPointer, 0));
                     }
                     server.InitializeGamepads();
@@ -219,7 +220,7 @@ public sealed partial class DisplayServer : ElectronObject
                         try { server.CloseGamepads(); }
                         finally
                         {
-                            server._waylandWindowGestures?.Dispose();
+                            server._waylandInput?.Dispose();
                             server._window.Dispose();
                         }
                     }
@@ -654,8 +655,8 @@ public sealed partial class DisplayServer : ElectronObject
             CloseGamepads();
             Input.Service.SetNativeFlush(null);
             Input.ReleasePressedEvents();
-            _waylandWindowGestures?.Dispose();
-            _waylandWindowGestures = null;
+            _waylandInput?.Dispose();
+            _waylandInput = null;
             _window.Dispose();
             RemoveGTKTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
             SDL.QuitSubSystem(SDL.InitFlags.Gamepad);

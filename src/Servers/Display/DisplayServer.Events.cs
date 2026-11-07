@@ -21,7 +21,7 @@ public sealed partial class DisplayServer
     private List<string>? _pendingDroppedFiles;
     private SDL.Keymod _eventKeyModifiers;
     private bool _hasEventKeyModifiers;
-    private Dictionary<SDL.Scancode, (Key Code, Key Label)>? _layoutHeldKeys;
+    private Dictionary<(uint Device, uint Key), (Key Code, Key Label)>? _layoutHeldKeys;
 
     internal event Action? QuitRequestedCore { add => _publisherQuitRequestedCore.Add(value); remove => _publisherQuitRequestedCore.Remove(value); }
     private EventPublisher<Action> _publisherQuitRequestedCore;
@@ -101,7 +101,7 @@ public sealed partial class DisplayServer
                 Input.ReleasePressedEvents();
             }
             while (SDL.PollEvent(out var nativeEvent) ||
-                   AdvanceWindowGesture(ref failures) && SDL.PollEvent(out nativeEvent))
+                   AdvanceNativeInput(ref failures) && SDL.PollEvent(out nativeEvent))
             {
                 var type = (SDL.EventType)nativeEvent.Type;
                 DisplayServer? gestureRelease = null;
@@ -488,7 +488,8 @@ public sealed partial class DisplayServer
 
     private void DispatchKey(SDL.KeyboardEvent source)
     {
-        if (source.Down) (_rootDisplay ?? this)._pressedInputWindow = this;
+        var root = _rootDisplay ?? this;
+        if (source.Down) root._pressedInputWindow = this;
         _eventKeyModifiers = source.Mod;
         _hasEventKeyModifiers = true;
         var ownModifier = source.Scancode switch
@@ -505,19 +506,39 @@ public sealed partial class DisplayServer
         };
         var modifiers = source.Mod & ~ownModifier;
         var identity = (Code: MapKeycode(source.Key), Label: MapKeycode(SDL.GetKeyFromScancode(source.Scancode, source.Mod, false)));
-        if ((UsesWindowsInput || UsesX11KeyboardLayouts) && source.Scancode != SDL.Scancode.Unknown)
+        var physical = PhysicalKeys.GetValueOrDefault(source.Scancode);
+        var wayland = root._waylandInput;
+        var nativeWaylandKey = wayland?.HasKeyboardAdapter == true && source.Raw != 0 && source.Which != 0;
+        if (nativeWaylandKey && WaylandInput.ExtendedFunctionKey(source.Raw) is var extended && extended != Key.None)
+            physical = extended;
+        if (nativeWaylandKey && !source.Repeat)
+        {
+            var properties = SDL.GetWindowProperties(_window.DangerousGetHandle());
+            var surface = SDL.GetPointerProperty(properties, SDL.Props.WindowWaylandSurfacePointer, 0);
+            if (wayland!.TryReadKey(surface, source.Raw, source.Down, out var observed))
+            {
+                var mapped = WaylandInput.MapSymbol(observed.Symbol, label: false);
+                var plain = WaylandInput.MapSymbol(observed.BaseSymbol, label: false);
+                var logical = ((mapped | plain) & Key.Special) != 0 && mapped != Key.None ? mapped : plain;
+                if (logical == Key.Backtab) logical = Key.Tab;
+                if (logical == Key.None) logical = physical == Key.None ? identity.Code : physical;
+                var label = WaylandInput.MapSymbol(observed.Symbol, label: true);
+                identity = (logical, label == Key.None ? logical : label);
+            }
+        }
+        if (nativeWaylandKey || (UsesWindowsInput || UsesX11KeyboardLayouts) && source.Scancode != SDL.Scancode.Unknown)
         {
             // A layout change can reinterpret a held key before the release arrives.
-            var root = _rootDisplay ?? this;
             var held = root._layoutHeldKeys ??= new();
+            var key = nativeWaylandKey ? (source.Which, (uint)source.Raw) : (0u, (uint)source.Scancode);
             if (source.Down)
             {
-                if (source.Repeat && held.TryGetValue(source.Scancode, out var pressed))
+                if (source.Repeat && held.TryGetValue(key, out var pressed))
                     identity = pressed;
                 else
-                    held[source.Scancode] = identity;
+                    held[key] = identity;
             }
-            else if (held.Remove(source.Scancode, out var pressed))
+            else if (held.Remove(key, out var pressed))
                 identity = pressed;
         }
         using var @event = new InputEventKey
@@ -526,7 +547,7 @@ public sealed partial class DisplayServer
             Pressed = source.Down,
             Echo = source.Repeat,
             Keycode = identity.Code,
-            PhysicalKeycode = PhysicalKeys.GetValueOrDefault(source.Scancode),
+            PhysicalKeycode = physical,
             KeyLabel = identity.Label,
             Location = source.Scancode switch
             {
@@ -804,10 +825,18 @@ public sealed partial class DisplayServer
         return MapPhysicalKey(physical, false);
     }
 
-    private static Key MapPhysicalKey(Key physical, bool logicalKeycode)
+    private Key MapPhysicalKey(Key physical, bool logicalKeycode)
     {
         var modifiers = (int)physical & (int)KeyModifierMask.ModifierMask;
         var baseKey = (Key)((int)physical & (int)KeyModifierMask.CodeMask);
+        if ((_rootDisplay ?? this)._waylandInput is { HasKeyboardAdapter: true } wayland &&
+            wayland.SymbolForPhysical(baseKey) is var symbol && symbol != 0)
+        {
+            var mapped = WaylandInput.MapSymbol(symbol, label: !logicalKeycode);
+            if (mapped == Key.None) return physical;
+            if (logicalKeycode && mapped == Key.Backtab) mapped = Key.Tab;
+            return (Key)((int)mapped | modifiers);
+        }
         foreach (var (scancode, key) in PhysicalKeys)
         {
             if (key != baseKey)

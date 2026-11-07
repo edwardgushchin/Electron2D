@@ -246,7 +246,7 @@ public sealed partial class DisplayServer
     /// <summary>Maps a physical key to the logical key reported for the current keyboard layout.</summary>
     /// <param name="physical">A physical key identity.</param>
     /// <returns>The current logical key, or the supplied physical key when no layout mapping is available.</returns>
-    /// <remarks>The result reflects the active keyboard layout and modifier state at the time of the call. Modifier bits in <paramref name="physical"/> are preserved. Reverse Tab is normalized to Tab, as in key events. On Wayland, SDL's keypad lookup does not distinguish Num Lock or shifted navigation symbols, so those keys can retain their physical identity instead of the current logical symbol.</remarks>
+    /// <remarks>The result reflects the active keyboard layout and modifier state at the time of the call. Modifier bits in <paramref name="physical"/> are preserved. Reverse Tab is normalized to Tab, as in key events. On Wayland, the compositor's keymap supplies the current keypad symbol.</remarks>
     /// <exception cref="ObjectDisposedException">The server is disposed.</exception>
     /// <exception cref="InvalidOperationException">The call is not on the opening thread.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
@@ -255,7 +255,7 @@ public sealed partial class DisplayServer
     /// <summary>Maps a physical key to its localized label in the current keyboard layout.</summary>
     /// <param name="physical">A physical key identity.</param>
     /// <returns>The current label key, including a non-Latin Unicode scalar where applicable, or the supplied physical key when no layout mapping is available.</returns>
-    /// <remarks>The label follows the current layout and modifier state without event-keycode remapping. Modifier bits in <paramref name="physical"/> are preserved; key presses use the same label mapping with their event modifier state. On Windows and X11, a held key retains the pressed identity for repeats and release. On Wayland, SDL's keypad lookup does not expose Num Lock's printable label and can retain the physical keypad identity.</remarks>
+    /// <remarks>The label follows the current layout and modifier state without event-keycode remapping. Modifier bits in <paramref name="physical"/> are preserved. Key presses use the layout and modifier state of the press. On Windows, X11 and Wayland, a held key retains its pressed identity for repeat and release.</remarks>
     /// <exception cref="ObjectDisposedException">The server is disposed.</exception>
     /// <exception cref="InvalidOperationException">The call is not on the opening thread.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
