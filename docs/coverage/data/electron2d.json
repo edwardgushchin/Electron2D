@@ -110345,6 +110345,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.EnableForStealingFocus(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "EnableForStealingFocus",
+    "signature": "public static System.Void EnableForStealingFocus(System.Int32 pid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pid",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.FileDialogShow(System.String,System.String,System.String,System.Boolean,Electron2D.FileDialogMode,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32\u003E,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",

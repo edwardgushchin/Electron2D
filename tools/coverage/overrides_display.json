@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:enable_for_stealing_focus(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.EnableForStealingFocus(System.Int32)",
+      "reason": "Typed PID, owner-thread access and explicit native refusal."
+    },
+    {
       "godot": "DisplayServer::method:screen_get_image(int:)",
       "electron2d": "method:Electron2D.DisplayServer.ScreenGetImage(System.Int32)",
       "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
@@ -1389,8 +1394,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First Windows application-host integration of interprocess foreground permission. Implement the operating-system focus-stealing exception for a validated process ID with explicit failure and native host checks; it is a separate platform capability from tablet input (ADR 0021).",
+      "state": "Implemented",
+      "reason": "ADRs 0021/0040/0095: the native Windows display grants one positive PID foreground activation permission, reports Win32 refusal and rejects unsupported display drivers. An independent process verified denial, revocation by donor input and actual HWND activation on Windows x64. Release package and other Windows RID qualification remain separate.",
       "godot": [
         "DisplayServer::method:enable_for_stealing_focus(int:)"
       ]

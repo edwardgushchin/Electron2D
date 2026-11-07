@@ -80,6 +80,14 @@ The SDL pointer adapter rejects non-finite mouse positions, relative movement, d
 
 The SDL touch adapter rejects duplicate contact beginnings and non-finite normalized or derived position, movement, velocity and pressure before changing its contact table or timestamp. Rejected motion/end events leave the contact available for a later valid event; cancellation releases the index even when a callback fails. `ELECTRON2D_TEST_TOUCH_INPUT=1` checks malformed/valid queue order and index reuse on Wayland with synthetic events. Native double-tap and pen tablet data are separate integrations.
 
+## Interprocess foreground permission
+
+On a native Windows desktop, `DisplayServer.EnableForStealingFocus(pid)` lets a selected process request foreground activation. Pass a positive PID from a trusted process launch or IPC channel. The display owner calls the method while Windows allows it to set the foreground window. The recipient then requests activation through its own window system. User input directed to a different process or another grant can revoke the permission. [Windows foreground rules](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-allowsetforegroundwindow)
+
+The grant returns after Windows accepts it. It raises `Win32Exception` with the native error code on refusal, including an invalid or exited PID. A zero or negative PID raises `ArgumentOutOfRangeException`. Other display drivers raise `NotSupportedException`. An inactive display or off-owner call raises `InvalidOperationException`. The grant has no engine-side handle and Windows controls its lifetime.
+
+The `ELECTRON2D_TEST_FOREGROUND_GRANT=windows` profile takes the path to [the recipient](../../tests/Electron2D.Tests/Fixtures/ForegroundGrant/recipient.cpp). Compile it with `cl /std:c++20 /EHsc recipient.cpp /link user32.lib` and run in an open Windows session. A separate native process checks denial before the grant, revocation after input to the donor and a real HWND foreground transition after a fresh grant. The `unsupported` profile runs with `SDL_VIDEODRIVER=dummy`.
+
 ## Current implementation status and exclusions
 
 `CursorSetCustomImage(Resource?, ...)` accepts an Image, readable Texture or null. It copies pixels into an SDL color cursor, accepts fractional hotspot coordinates and truncates them to native pixels. Texture.GetImage returns a temporary owned image; conversion disposes it on success and failure, and rechecks the display lifetime after custom callbacks. Limits and hotspots use actual image pixels, not a texture logical-size override. Empty/unreadable images, unsupported resource types, dimensions above 256×256 and invalid hotspots reject before replacement. Sources remain caller-owned and later mutations need explicit resubmission. Compressed cursor pixels remain blocked on CPU image decompression under ADR 0039.

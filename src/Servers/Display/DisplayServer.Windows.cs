@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using SDL3;
 
 namespace Electron2D;
@@ -502,6 +504,20 @@ public sealed partial class DisplayServer
         var flags = SDL.GetWindowFlags(GetWindow(windowId));
         return (flags & SDL.WindowFlags.Resizable) != 0;
     }
+
+    private void EnableForStealingFocusCore(int pid)
+    {
+        EnsureOwner();
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(pid);
+        if (!OperatingSystem.IsWindows() || _videoDriver != "windows")
+            throw new NotSupportedException("Foreground permission requires a native Windows desktop.");
+
+        if (AllowSetForegroundWindow((uint)pid) == 0)
+            throw new Win32Exception(Marshal.GetLastPInvokeError(), "Windows rejected the foreground permission grant.");
+    }
+
+    [LibraryImport("user32.dll", SetLastError = true), DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    private static partial int AllowSetForegroundWindow(uint pid);
 
     internal void WindowMoveToForegroundCore(int windowId = MainWindowId)
     {

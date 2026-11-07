@@ -120,6 +120,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static void ForceProcessAndDropEvents()`](#method-forceprocessanddropevents) | Processes native window events while discarding pending keyboard, pointer, touch, and text input. |
 | [`public static void DialogInputText(string title, string description, string existingText, Action<string> callback)`](#method-dialoginputtext) | Shows native single-line text input and reports confirmation. |
 | [`public static void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`](#method-dialogshow) | Shows a blocking native message dialog. |
+| [`public static void EnableForStealingFocus(int pid)`](#method-enableforstealingfocus) | Grants a Windows process permission to request foreground activation. |
 | [`public static void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`](#method-filedialogshow) | Opens an asynchronous native file or folder chooser. |
 | [`public static void FileDialogWithOptionsShow(string title, string currentDirectory, string root, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, IReadOnlyList<FileDialogOption> options, Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>> callback, int parentWindowId = MainWindowId)`](#method-filedialogwithoptionsshow) | Opens a native chooser with typed checkbox/choice controls. |
 | [`public static int KeyboardGetCurrentLayout()`](#method-keyboardgetcurrentlayout) | Returns the active layout index, or -1 if absent from the native list. |
@@ -269,6 +270,13 @@ Shows blocking native single-line input on the display owner. Confirmation copie
 Requires `NativeDialogInput`. The Windows SDL driver uses Win32 controls. Linux GTK 3.22 or later requires a default toolkit display matching Wayland/X11. Missing toolkit, incompatible driver and unsupported hosts return false from the feature query and throw `NotSupportedException` on invocation. Null and embedded-NUL strings reject. Initial text that the native entry cannot represent exactly rejects with `ArgumentException` before presentation. Windows requires one line of valid UTF-16 and rejects overlap with a pending native file chooser. During the modal loop, recursive input dialogs, SDL event pumping and display retirement throw `InvalidOperationException`. The Windows loop also rejects overlapping message, alert and file dialogs. This cold blocking operation pauses engine frames. See [native text input](../components/native-text-input.md) for lifecycle, qualification and platform limits.
 
 **Source:** `src/Servers/Display/DisplayServer.TextInput.cs`, with Win32 and GTK adapters.
+
+<a id="method-enableforstealingfocus"></a>
+#### `public static void EnableForStealingFocus(int pid)`
+
+Grants the positive process ID temporary foreground activation permission on the native Windows desktop. The recipient requests activation separately. Windows can revoke the permission on input to a different process or a replacement grant.
+
+An invalid PID value throws `ArgumentOutOfRangeException`. An inactive display or off-owner call throws `InvalidOperationException`. Other drivers throw `NotSupportedException`. A native refusal throws `Win32Exception` carrying the Win32 error code. [Interprocess foreground permission](../components/display-server.md#interprocess-foreground-permission)
 
 <a id="method-filedialogshow"></a>
 #### `public static void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`

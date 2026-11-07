@@ -551,6 +551,16 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId) => RequireService().WindowIsMaximizeAllowedCore(windowId);
 
+    /// <summary>Grants a specific process permission to request foreground activation on Windows.</summary>
+    /// <param name="pid">A positive Windows process ID.</param>
+    /// <remarks>The calling process must be allowed to activate a foreground window. The recipient must request
+    /// activation itself. Windows can revoke the grant when input goes to another process or a new grant is issued.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="pid"/> is not positive.</exception>
+    /// <exception cref="InvalidOperationException">The native service is inactive or the caller is off the owner thread.</exception>
+    /// <exception cref="NotSupportedException">The active display is not a native Windows desktop.</exception>
+    /// <exception cref="System.ComponentModel.Win32Exception">Windows rejected the grant.</exception>
+    public static void EnableForStealingFocus(int pid) => RequireService().EnableForStealingFocusCore(pid);
+
     /// <summary>Requests that the window manager bring the selected native window to the foreground.</summary>
     /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>Wayland has no standard foreground request for an existing top-level window, so this is a no-op there. Other window managers may refuse a native raise request under their focus policy.</remarks>

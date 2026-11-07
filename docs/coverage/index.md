@@ -1,3 +1,5 @@
+[Windows interprocess foreground permission](../components/display-server.md#interprocess-foreground-permission) adds the platform-specific DisplayServer grant. One declaration becomes Implemented. Coverage is **13,808/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,589 Blocked, 8,440 Excluded and zero unmapped.
+
 [Live X11 desktop color sampling](../components/color-authoring.md#desktop-and-application-sampling) connects native desktop pixels and modal pointer input to ColorPicker and ColorPickerButton. Both classes remain Partial for the remaining providers and control capabilities. Coverage remains **13,807/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,590 Blocked, 8,440 Excluded and zero unmapped.
 
 [Desktop screen capture](../components/desktop-screen-capture.md) adds whole-screen, rectangle and pixel reads on Windows and native X11. All three rows move from Blocked to Partial for remaining compositor and platform providers. Coverage remains **13,807/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,590 Blocked, 8,440 Excluded and zero unmapped.
