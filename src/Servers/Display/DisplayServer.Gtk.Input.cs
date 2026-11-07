@@ -5,7 +5,6 @@ namespace Electron2D;
 
 public sealed partial class DisplayServer
 {
-    private bool _nativeTextInputActive;
     private bool CanUseGTKInput()
     {
         if (!OperatingSystem.IsLinux() || _videoDriver is not ("wayland" or "x11")) return false;
@@ -17,18 +16,6 @@ public sealed partial class DisplayServer
         }
         catch (DllNotFoundException) { return false; }
         catch (EntryPointNotFoundException) { return false; }
-    }
-
-    internal void DialogInputTextCore(string title, string description, string existingText, Action<string> callback)
-    {
-        EnsureOwner(); OS.ValidateNativeMessage(title, nameof(title)); OS.ValidateNativeMessage(description, nameof(description)); OS.ValidateNativeMessage(existingText, nameof(existingText)); ArgumentNullException.ThrowIfNull(callback);
-        if (_nativeTextInputActive || _nativeMenuTracking) throw new InvalidOperationException("A native text dialog is already active.");
-        if (!CanUseGTKInput()) throw new NotSupportedException("Native text input requires a matching GTK 3.22 desktop backend.");
-        var parent = GetWindow(MainWindowId); string? result;
-        _nativeTextInputActive = true; Interlocked.Increment(ref _pendingNativeDialogs); Interlocked.Increment(ref _pendingOwnedNativeDialogs);
-        try { result = ShowGTKInput(parent, title, description, existingText); }
-        finally { Interlocked.Decrement(ref _pendingOwnedNativeDialogs); Interlocked.Decrement(ref _pendingNativeDialogs); _nativeTextInputActive = false; }
-        if (result != null) callback(result);
     }
 
     private string? ShowGTKInput(nint parent, string title, string description, string existingText)

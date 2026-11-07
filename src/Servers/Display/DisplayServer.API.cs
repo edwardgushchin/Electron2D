@@ -48,13 +48,14 @@ public sealed partial class DisplayServer
     /// <param name="description">Plain text describing the input field.</param>
     /// <param name="existingText">Initial text, copied into the native field without silent truncation.</param>
     /// <param name="callback">Receives copied text, including an empty string, after confirmation and native cleanup. Cancellation or window close does not invoke it.</param>
-    /// <remarks>Requires NativeDialogInput. The current Linux GTK 3.22 path blocks the display owner until close;
-    /// the main window is retained and supplied as a native parent hint. Backend availability must match the active
-    /// video driver. Input editing uses native GTK controls. Callback errors propagate after cleanup; the callback
-    /// may open another dialog. Display event pumping and another text dialog reject during the modal native loop.
+    /// <remarks>Requires NativeDialogInput. Windows and matching Linux GTK 3.22 desktop drivers use native controls
+    /// and block the display owner until close. The main window is retained throughout presentation.
+    /// Callback errors propagate after cleanup, and the callback may open another dialog.
+    /// Display event pumping and another text dialog reject during the modal native loop.
+    /// On Windows, overlapping message, alert and file dialogs reject while text input is active.
     /// This is a cold operation, with no real-time allocation guarantee.</remarks>
     /// <exception cref="ArgumentNullException">A required argument is null.</exception>
-    /// <exception cref="ArgumentException">A string contains NUL, or the native field cannot preserve the initial text.</exception>
+    /// <exception cref="ArgumentException">A string contains NUL, or the native field cannot preserve the initial text. Windows initial text must be one line of valid UTF-16.</exception>
     /// <exception cref="NotSupportedException">The matching native text-input backend is unavailable.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable, the call is off-owner, a dialog is already active, or native setup fails.</exception>
     /// <exception cref="ObjectDisposedException">The display is disposed.</exception>

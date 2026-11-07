@@ -100,7 +100,7 @@ public sealed partial class DisplayServer
             Feature.StatusIndicator => HasStatusIndicatorHost(),
             Feature.TextToSpeech => GetTTSBackend() is not null,
             Feature.NativeDialog => desktop,
-            Feature.NativeDialogInput => CanUseGTKInput(),
+            Feature.NativeDialogInput => CanUseNativeInput(),
             Feature.NativeDialogFile => UsesPortalFileChooser ? LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1 : desktop,
             Feature.NativeDialogFileExtra => driver == "windows" && OperatingSystem.IsWindows() || UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
             Feature.NativeDialogFileMime => UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,

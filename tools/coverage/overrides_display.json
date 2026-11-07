@@ -558,7 +558,7 @@
     {
       "electron2d": "method:Electron2D.DisplayServer.DialogInputText(System.String,System.String,System.String,System.Action<System.String>)",
       "godot": "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)",
-      "reason": "ADR 0040: Linux GTK 3.22 matching the active Wayland/X11 display executes native single-line input, localized native buttons, main-window parent retention and exact copied UTF-8 confirmation, including empty strings. Cancel/close invoke no callback. Native modal-loop probes cover owner, retirement, SDL pump/reentry guards; callbacks can throw, reopen or dispose after cleanup. Dummy validation, real Wayland AT-SPI edit/readback and GPU/Compatibility frame-resumption checks cover the executable boundary. Initial text that native storage cannot round-trip rejects before presentation. Typed exceptions replace Error; foreign hosts, physical typing, native-heap and NativeAOT qualification remain separate."
+      "reason": "ADR 0040: Linux GTK 3.22 with a matching Wayland/X11 display and the Windows SDL driver execute native single-line input. Localized controls and retained native parenting support exact Unicode confirmation, including empty strings. Cancel and close omit the callback. Owner modal probes cover retirement, pump and reentry guards, and callbacks can throw, reopen or dispose after cleanup. The Windows HWND modal excludes overlapping message, alert and file presentations. Native SDK and AT-SPI edit/readback and GPU/Compatibility frame resumption cover the executable profiles. Typed exceptions replace Error. See docs/components/native-text-input.md for exact platform limits."
     },
     {
       "godot": "DisplayServer::constant:INVALID_INDICATOR_ID",
@@ -1748,7 +1748,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0040: Linux GTK 3.22 matching the active Wayland/X11 display executes native single-line input, localized native buttons, main-window parent retention and exact copied UTF-8 confirmation, including empty strings. Cancel/close invoke no callback. Native modal-loop probes cover owner, retirement, SDL pump/reentry guards; callbacks can throw, reopen or dispose after cleanup. Dummy validation, real Wayland AT-SPI edit/readback and GPU/Compatibility frame-resumption checks cover the executable boundary. Initial text that native storage cannot round-trip rejects before presentation. Typed exceptions replace Error; foreign hosts, physical typing, native-heap and NativeAOT qualification remain separate.",
+      "reason": "ADR 0040: Linux GTK 3.22 with a matching Wayland/X11 display and the Windows SDL driver execute native single-line input. Localized controls and retained native parenting support exact Unicode confirmation, including empty strings. Cancel and close omit the callback. Owner modal probes cover retirement, pump and reentry guards, and callbacks can throw, reopen or dispose after cleanup. The Windows HWND modal excludes overlapping message, alert and file presentations. Native SDK and AT-SPI edit/readback and GPU/Compatibility frame resumption cover the executable profiles. Typed exceptions replace Error. See docs/components/native-text-input.md for exact platform limits.",
       "godot": [
         "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)"
       ]

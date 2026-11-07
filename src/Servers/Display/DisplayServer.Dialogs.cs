@@ -18,17 +18,23 @@ public sealed partial class DisplayServer
     internal bool HasPendingNativeDialogs => Volatile.Read(ref _pendingNativeDialogs) != 0;
     private bool _dialogsDisposed;
 
+    private void EnsureDialogPresentation()
+    {
+        if (_nativeMenuTracking || (_nativeTextInputActive && UsesWindowsInput))
+            throw new InvalidOperationException("A native modal presentation is already active.");
+    }
+
     internal nint GetAlertParentWindow()
     {
         EnsureOwner();
-        if (_nativeMenuTracking) throw new InvalidOperationException("A native popup menu is active.");
+        EnsureDialogPresentation();
         return GetWindow(MainWindowId);
     }
 
     internal unsafe void DialogShowCore(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)
     {
         EnsureOwner();
-        if (_nativeMenuTracking) throw new InvalidOperationException("A native popup menu is active.");
+        EnsureDialogPresentation();
         OS.ValidateNativeMessage(title, nameof(title));
         OS.ValidateNativeMessage(description, nameof(description));
         ArgumentNullException.ThrowIfNull(buttons);
@@ -97,7 +103,7 @@ public sealed partial class DisplayServer
     Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>>? optionsCallback = null)
     {
         EnsureOwner();
-        if (_nativeMenuTracking) throw new InvalidOperationException("A native popup menu is active.");
+        EnsureDialogPresentation();
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(currentDirectory);
         ArgumentNullException.ThrowIfNull(filename);
