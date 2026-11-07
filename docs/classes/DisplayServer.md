@@ -123,9 +123,9 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`](#method-filedialogshow) | Opens an asynchronous native file or folder chooser. |
 | [`public static void FileDialogWithOptionsShow(string title, string currentDirectory, string root, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, IReadOnlyList<FileDialogOption> options, Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>> callback, int parentWindowId = MainWindowId)`](#method-filedialogwithoptionsshow) | Opens a native chooser with typed checkbox/choice controls. |
 | [`public static int KeyboardGetCurrentLayout()`](#method-keyboardgetcurrentlayout) | Returns the active layout index, or -1 if absent from the native list. |
-| [`public static int KeyboardGetLayoutCount()`](#method-keyboardgetlayoutcount) | Returns the number of loaded Windows input layouts. |
+| [`public static int KeyboardGetLayoutCount()`](#method-keyboardgetlayoutcount) | Returns the number of loaded Windows input locales or X11 keyboard groups. |
 | [`public static string KeyboardGetLayoutLanguage(int index)`](#method-keyboardgetlayoutlanguage) | Returns the indexed layout's input language code, or an empty string when unknown. |
-| [`public static string KeyboardGetLayoutName(int index)`](#method-keyboardgetlayoutname) | Returns the localized layout name, with layout text and locale name as fallbacks. |
+| [`public static string KeyboardGetLayoutName(int index)`](#method-keyboardgetlayoutname) | Returns the Windows localized layout name or the XKB group name. |
 | [`public static void KeyboardSetCurrentLayout(int index)`](#method-keyboardsetcurrentlayout) | Activates the indexed input layout and updates the SDL keymap before returning. |
 | [`public static Key KeyboardGetKeycodeFromPhysical(Key physical)`](#method-keyboardgetkeycodefromphysical) | Maps a physical key to the logical key reported for the current keyboard layout. |
 | [`public static Key KeyboardGetLabelFromPhysical(Key physical)`](#method-keyboardgetlabelfromphysical) | Maps a physical key to its localized label in the current keyboard layout. |
@@ -376,7 +376,7 @@ Returns the active layout index, or -1 if absent from the native list.
 <a id="method-keyboardgetlayoutcount"></a>
 #### `public static int KeyboardGetLayoutCount()`
 
-Returns the number of loaded Windows input layouts.
+Returns the number of loaded Windows input locales or X11 keyboard groups.
 
 
 <a id="method-keyboardgetlayoutlanguage"></a>
@@ -388,7 +388,7 @@ Returns the indexed layout's input language code, or an empty string when unknow
 <a id="method-keyboardgetlayoutname"></a>
 #### `public static string KeyboardGetLayoutName(int index)`
 
-Returns the localized layout name, with layout text and locale name as fallbacks.
+Returns the Windows localized layout name or the XKB group name.
 
 
 <a id="method-keyboardsetcurrentlayout"></a>
@@ -396,7 +396,7 @@ Returns the localized layout name, with layout text and locale name as fallbacks
 
 Activates the indexed input layout and updates the SDL keymap before returning.
 
-These five operations require an active Windows display on its opening thread. An unsupported backend throws `NotSupportedException`. An index outside the current list throws `ArgumentOutOfRangeException`. An inactive or off-owner display or an unsuccessful native operation throws `InvalidOperationException`. Indices follow the current native list. Requery after switching or after a host layout change. See [native keyboard layouts](../components/display-server.md#native-keyboard-layouts).
+These five operations require an active Windows or X11 display on its opening thread. X11 activation locks a group on the connected server. Its language query reports the active XKB symbol prefix, such as `us` or `ru`. An unsupported backend throws `NotSupportedException`. An index outside the current list throws `ArgumentOutOfRangeException`. An inactive or off-owner display or an unsuccessful native operation throws `InvalidOperationException`. Indices follow the current native list. Requery after switching or after a host layout change. See [native keyboard layouts](../components/display-server.md#native-keyboard-layouts).
 
 <a id="method-keyboardgetkeycodefromphysical"></a>
 #### `public static Key KeyboardGetKeycodeFromPhysical(Key physical)`
@@ -422,7 +422,7 @@ Maps a physical key to its localized label in the current keyboard layout.
 
 - `physical`: A physical key identity.
 
-**Remarks:** The label uses the active SDL layout and modifier state without key-event options. Modifier bits supplied with `physical` are preserved. Key presses derive their labels from the same mapping using each event's modifier state. On Windows, repeats and releases retain the logical identity and label of the original press. A real layout switch and non-Latin label have not yet been checked on Wayland. SDL keypad keycodes do not expose the Num Lock printable label, so a physical keypad identity can be returned in its place.
+**Remarks:** The label uses the active SDL layout and modifier state without key-event options. Modifier bits supplied with `physical` are preserved. Key presses derive their labels from the same mapping using each event's modifier state. On Windows and X11, repeats and releases retain the logical identity and label of the original press. A real layout switch and non-Latin label have not yet been checked on Wayland. SDL keypad keycodes do not expose the Num Lock printable label, so a physical keypad identity can be returned in its place.
 
 **Errors:** `ObjectDisposedException` if disposed; `InvalidOperationException` off the opening thread.
 

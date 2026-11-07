@@ -7,67 +7,6 @@ namespace Electron2D;
 
 public sealed partial class DisplayServer
 {
-    private void EnsureKeyboardLayouts()
-    {
-        EnsureOwner();
-        if (!OperatingSystem.IsWindows() || _videoDriver != "windows")
-            throw new NotSupportedException("Keyboard layout enumeration and activation require the Windows display backend.");
-    }
-
-    /// <summary>Gets the number of input layouts currently loaded for the Windows desktop.</summary>
-    /// <exception cref="InvalidOperationException">The display is inactive, the caller is off the owner thread, or Windows could not enumerate layouts.</exception>
-    /// <exception cref="NotSupportedException">The active backend does not enumerate input layouts.</exception>
-    public static int KeyboardGetLayoutCount()
-    {
-        RequireService().EnsureKeyboardLayouts();
-        return WindowsKeyboardLayouts.Count();
-    }
-
-    /// <summary>Gets the active input layout's index in the current native list, or -1 if it is absent.</summary>
-    /// <remarks>Requery the list after activation or an operating-system layout change. Indices do not identify layouts across changes.</remarks>
-    /// <exception cref="InvalidOperationException">The display is inactive, the caller is off the owner thread, or Windows could not enumerate layouts.</exception>
-    /// <exception cref="NotSupportedException">The active backend does not enumerate input layouts.</exception>
-    public static int KeyboardGetCurrentLayout()
-    {
-        RequireService().EnsureKeyboardLayouts();
-        return WindowsKeyboardLayouts.Current();
-    }
-
-    /// <summary>Gets the input language of an indexed Windows layout, or an empty string when unknown.</summary>
-    /// <param name="index">An index in the current native layout list.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The index is outside the current layout list.</exception>
-    /// <exception cref="InvalidOperationException">The display is inactive, the caller is off the owner thread, or Windows could not enumerate layouts.</exception>
-    /// <exception cref="NotSupportedException">The active backend does not enumerate input layouts.</exception>
-    public static string KeyboardGetLayoutLanguage(int index)
-    {
-        RequireService().EnsureKeyboardLayouts();
-        return WindowsKeyboardLayouts.Language(index);
-    }
-
-    /// <summary>Gets the localized name of an indexed Windows layout, or an empty string when unknown.</summary>
-    /// <param name="index">An index in the current native layout list.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The index is outside the current layout list.</exception>
-    /// <exception cref="InvalidOperationException">The display is inactive, the caller is off the owner thread, or Windows could not enumerate layouts.</exception>
-    /// <exception cref="NotSupportedException">The active backend does not enumerate input layouts.</exception>
-    public static string KeyboardGetLayoutName(int index)
-    {
-        RequireService().EnsureKeyboardLayouts();
-        return OperatingSystem.IsWindows() ? WindowsKeyboardLayouts.Name(index) : throw new PlatformNotSupportedException();
-    }
-
-    /// <summary>Activates an already loaded Windows input layout for the application.</summary>
-    /// <param name="index">An index in the current native layout list.</param>
-    /// <remarks>The new layout is available to physical-key and label queries when the call returns. A held key retains its original logical identity and label until release.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The index is outside the current layout list.</exception>
-    /// <exception cref="InvalidOperationException">The display is inactive, the caller is off the owner thread, or native enumeration or activation failed.</exception>
-    /// <exception cref="NotSupportedException">The active backend does not activate input layouts.</exception>
-    public static void KeyboardSetCurrentLayout(int index)
-    {
-        var display = RequireService();
-        display.EnsureKeyboardLayouts();
-        WindowsKeyboardLayouts.Activate(index, display.WindowGetNativeHandleCore(HandleType.WindowHandle));
-    }
-
     private static unsafe partial class WindowsKeyboardLayouts
     {
         private const string LayoutRegistryPath = @"SYSTEM\CurrentControlSet\Control\Keyboard Layouts";

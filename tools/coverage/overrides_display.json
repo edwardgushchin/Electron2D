@@ -3,27 +3,27 @@
     {
       "godot": "DisplayServer::method:keyboard_get_current_layout()",
       "electron2d": "method:Electron2D.DisplayServer.KeyboardGetCurrentLayout()",
-      "reason": "ADRs 0040/0095: Windows uses live Win32 layout enumeration, localized registry/NLS names and process activation with immediate SDL keymap synchronization. Indices follow the native list. Linux XKB/desktop layout integration and macOS input-source enumeration/activation remain required."
+      "reason": "ADRs 0040/0095: Windows uses live Win32 input locales and process activation. Linux X11 uses XKB group state, names, symbol prefixes and group locks. Both synchronize SDL before returning. Wayland needs compositor-native layout enumeration and selection. macOS requires an input-source provider."
     },
     {
       "godot": "DisplayServer::method:keyboard_get_layout_count()",
       "electron2d": "method:Electron2D.DisplayServer.KeyboardGetLayoutCount()",
-      "reason": "ADRs 0040/0095: Windows uses live Win32 layout enumeration, localized registry/NLS names and process activation with immediate SDL keymap synchronization. Indices follow the native list. Linux XKB/desktop layout integration and macOS input-source enumeration/activation remain required."
+      "reason": "ADRs 0040/0095: Windows uses live Win32 input locales and process activation. Linux X11 uses XKB group state, names, symbol prefixes and group locks. Both synchronize SDL before returning. Wayland needs compositor-native layout enumeration and selection. macOS requires an input-source provider."
     },
     {
       "godot": "DisplayServer::method:keyboard_get_layout_language(int:)",
       "electron2d": "method:Electron2D.DisplayServer.KeyboardGetLayoutLanguage(System.Int32)",
-      "reason": "ADRs 0040/0095: Windows uses live Win32 layout enumeration, localized registry/NLS names and process activation with immediate SDL keymap synchronization. Indices follow the native list. Linux XKB/desktop layout integration and macOS input-source enumeration/activation remain required."
+      "reason": "ADRs 0040/0095: Windows uses live Win32 input locales and process activation. Linux X11 uses XKB group state, names, symbol prefixes and group locks. Both synchronize SDL before returning. Wayland needs compositor-native layout enumeration and selection. macOS requires an input-source provider."
     },
     {
       "godot": "DisplayServer::method:keyboard_get_layout_name(int:)",
       "electron2d": "method:Electron2D.DisplayServer.KeyboardGetLayoutName(System.Int32)",
-      "reason": "ADRs 0040/0095: Windows uses live Win32 layout enumeration, localized registry/NLS names and process activation with immediate SDL keymap synchronization. Indices follow the native list. Linux XKB/desktop layout integration and macOS input-source enumeration/activation remain required."
+      "reason": "ADRs 0040/0095: Windows uses live Win32 input locales and process activation. Linux X11 uses XKB group state, names, symbol prefixes and group locks. Both synchronize SDL before returning. Wayland needs compositor-native layout enumeration and selection. macOS requires an input-source provider."
     },
     {
       "godot": "DisplayServer::method:keyboard_set_current_layout(int:)",
       "electron2d": "method:Electron2D.DisplayServer.KeyboardSetCurrentLayout(System.Int32)",
-      "reason": "ADRs 0040/0095: Windows uses live Win32 layout enumeration, localized registry/NLS names and process activation with immediate SDL keymap synchronization. Indices follow the native list. Linux XKB/desktop layout integration and macOS input-source enumeration/activation remain required."
+      "reason": "ADRs 0040/0095: Windows uses live Win32 input locales and process activation. Linux X11 uses XKB group state, names, symbol prefixes and group locks. Both synchronize SDL before returning. Wayland needs compositor-native layout enumeration and selection. macOS requires an input-source provider."
     },
     {
       "godot": "DisplayServer::method:clipboard_get_image()",
@@ -1235,7 +1235,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0040/0095: Windows uses live Win32 layout enumeration, localized registry/NLS names and process activation with immediate SDL keymap synchronization. Indices follow the native list. Linux XKB/desktop layout integration and macOS input-source enumeration/activation remain required.",
+      "reason": "ADRs 0040/0095: Windows uses live Win32 input locales and process activation. Linux X11 uses XKB group state, names, symbol prefixes and group locks. Both synchronize SDL before returning. Wayland needs compositor-native layout enumeration and selection. macOS requires an input-source provider.",
       "godot": [
         "DisplayServer::method:keyboard_get_current_layout()",
         "DisplayServer::method:keyboard_get_layout_count()",
@@ -1245,21 +1245,21 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0040/0095: Windows uses live Win32 layout enumeration, localized registry/NLS names and process activation with immediate SDL keymap synchronization. Indices follow the native list. Linux XKB/desktop layout integration and macOS input-source enumeration/activation remain required.",
+      "reason": "ADRs 0040/0095: Windows uses live Win32 input locales and process activation. Linux X11 uses XKB group state, names, symbol prefixes and group locks. Both synchronize SDL before returning. Wayland needs compositor-native layout enumeration and selection. macOS requires an input-source provider.",
       "godot": [
         "DisplayServer::method:keyboard_set_current_layout(int:)"
       ]
     },
     {
       "state": "Partial",
-      "reason": "Windows activates a loaded Win32 layout and refreshes the SDL keymap immediately, including on a hidden host. Native switches exercise Latin and Cyrillic labels and preserved modifier bits. On Wayland, SDL does not track live XKB keypad/Num Lock behavior. The native XKB bridge, non-Latin switch and F25–F35 checks remain required (ADR 0040).",
+      "reason": "Windows activates a loaded Win32 layout and refreshes SDL on the hidden host. Linux X11 locks live XKB groups, refreshes SDL and exercises external group changes and native XTEST events. Both profiles exercise Latin and Cyrillic labels, preserved modifier bits and held-key retirement. On Wayland, SDL does not track live XKB keypad/Num Lock behavior. The native XKB bridge, non-Latin switch and F25–F35 checks remain required (ADR 0040).",
       "godot": [
         "DisplayServer::method:keyboard_get_keycode_from_physical(int:Key)"
       ]
     },
     {
       "state": "Partial",
-      "reason": "Windows activates a loaded Win32 layout and refreshes the SDL keymap immediately, including on a hidden host. Native switches exercise Latin and Cyrillic labels and preserved modifier bits. On Wayland, SDL does not track live XKB keypad/Num Lock behavior. The native XKB bridge, non-Latin switch and F25–F35 checks remain required (ADR 0040).",
+      "reason": "Windows activates a loaded Win32 layout and refreshes SDL on the hidden host. Linux X11 locks live XKB groups, refreshes SDL and exercises external group changes and native XTEST events. Both profiles exercise Latin and Cyrillic labels, preserved modifier bits and held-key retirement. On Wayland, SDL does not track live XKB keypad/Num Lock behavior. The native XKB bridge, non-Latin switch and F25–F35 checks remain required (ADR 0040).",
       "godot": [
         "DisplayServer::method:keyboard_get_label_from_physical(int:Key)"
       ]

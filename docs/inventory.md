@@ -2487,4 +2487,4 @@ OS.WindowsTrash supplies the existing static OS/FileDialog trash workflow on Win
 
 [Native speech](components/text-to-speech.md) adds DisplayServer.Speech.cs, private WindowsSpeech COM and SpeechDispatcherSpeech SSIP producers, the shared INativeSpeech/NativeSpeechText boundary and immutable [TTSVoice](classes/TTSVoice.md) descriptors. Native output/queue/callback ownership retires with the display; ProjectSettings owns its restart-required enable policy.
 
-The retained [DisplayServer](classes/DisplayServer.md) includes owner-thread [Win32 keyboard-layout operations](components/display-server.md#native-keyboard-layouts) and immediate SDL keymap refresh on activation.
+The retained [DisplayServer](classes/DisplayServer.md) includes owner-thread [Windows](components/display-server.md#native-keyboard-layouts) and [X11](components/display-server.md#x11-keyboard-layouts) keyboard-layout operations and immediate SDL keymap refresh on activation.

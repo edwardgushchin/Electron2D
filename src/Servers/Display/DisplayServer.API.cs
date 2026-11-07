@@ -255,7 +255,7 @@ public sealed partial class DisplayServer
     /// <summary>Maps a physical key to its localized label in the current keyboard layout.</summary>
     /// <param name="physical">A physical key identity.</param>
     /// <returns>The current label key, including a non-Latin Unicode scalar where applicable, or the supplied physical key when no layout mapping is available.</returns>
-    /// <remarks>The label follows the current layout and modifier state without event-keycode remapping. Modifier bits in <paramref name="physical"/> are preserved; key presses use the same label mapping with their event modifier state. On Windows, a held key retains the pressed identity for repeats and release. On Wayland, SDL's keypad lookup does not expose Num Lock's printable label and can retain the physical keypad identity.</remarks>
+    /// <remarks>The label follows the current layout and modifier state without event-keycode remapping. Modifier bits in <paramref name="physical"/> are preserved; key presses use the same label mapping with their event modifier state. On Windows and X11, a held key retains the pressed identity for repeats and release. On Wayland, SDL's keypad lookup does not expose Num Lock's printable label and can retain the physical keypad identity.</remarks>
     /// <exception cref="ObjectDisposedException">The server is disposed.</exception>
     /// <exception cref="InvalidOperationException">The call is not on the opening thread.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

@@ -189,6 +189,25 @@ The [native accessibility service](accessibility.md) initializes only for an eli
 
 On the Windows SDL backend, the static `KeyboardGetLayoutCount`, `KeyboardGetCurrentLayout`, `KeyboardGetLayoutLanguage`, `KeyboardGetLayoutName` and `KeyboardSetCurrentLayout` operations require the display owner. Indices refer to the current list of loaded Win32 input locales. The list can change or rotate. The current query returns -1 when the active locale is absent. Getters leave the loaded and active layouts untouched. Names use the Windows layout's localized registry resource, layout text or the localized input-locale name. Languages use the language subtag of the native locale name.
 
-Activation selects an already loaded input locale for the application. SDL refreshes the keymap before returning, including for the hidden main window. Existing physical key and label queries then use the refreshed map, preserving the typed fallback for unmapped logical keys. Ordinary native input continues through the display pump. On Windows, a held physical key keeps the logical key and label captured at press time for repeat and release. A layout switch can change subsequent lookup results without leaving an old label or action pressed. Other display backends reject enumeration and switching explicitly. See [Win32 activation and notification](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-activatekeyboardlayout).
+Activation selects an already loaded input locale for the application. SDL refreshes the keymap before returning, including for the hidden main window. Existing physical key and label queries then use the refreshed map, preserving the typed fallback for unmapped logical keys. Ordinary native input continues through the display pump. On Windows, a held physical key keeps the logical key and label captured at press time for repeat and release. A layout switch can change subsequent lookup results without leaving an old label or action pressed. Backends without an adapter reject enumeration and switching explicitly. See [Win32 activation and notification](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-activatekeyboardlayout).
 
 On Windows x64, the `ELECTRON2D_TEST_WINDOWS_KEYBOARD_LAYOUTS` runner exercises the `raw`, `gpu`, `compatibility` and `unavailable` profiles. With Russian and US layouts already loaded, the Win32 oracle observes their actual activation and independently translates the physical A key. The raw profile injects scancode press and release events into the SDL queue, including a layout switch while holding a label-bound action. The GPU and Compatibility profiles verify the next rendered frame. The dummy driver rejects the five Win32 operations. The profiles passed 59, 42, 42 and 9 assertions respectively. The Windows native text-input regression passed 164 assertions. Physical key delivery, Raw Input, IME switching, variant layout/TSF names, and other platforms require separate qualification.
+
+## X11 keyboard layouts
+
+The same five operations use the current XKB state and configured groups on Linux's X11 SDL driver. They borrow the window's SDL Xlib connection. Group names come from native XKB atoms. The language query returns the group symbol prefix, such as `us` or `ru`. When a named symbol list lacks the indexed layout token, it falls back to `en`. An unnamed map returns an empty string.
+
+Selection locks the group on the connected X server and refreshes the SDL keymap before a subsequent physical-key query. Temporary group modifiers can still change the effective group. The SDL refresh queues native messages. The usual display pump delivers the associated managed input. External group changes also become visible through that pump. Repeat and release retain the logical identity and label captured when a physical key was pressed.
+
+Build `tests/Electron2D.Tests` in Release and run its DLL with a qualified Linux native runtime. The X11 fixture requires Xvfb, `setxkbmap` and XTEST. A private test display preserves the working desktop's group selection.
+
+```sh
+xvfb-run -a -s '-screen 0 1024x768x24 -nolisten tcp -noreset' sh -ec '
+  setxkbmap -layout us,ru
+  export SDL_VIDEODRIVER=x11 ELECTRON2D_TEST_X11_PRIVATE_DISPLAY="$DISPLAY"
+  ELECTRON2D_TEST_X11_LAYOUTS=raw dotnet "$1"
+  SDL_RENDER_DRIVER=software ELECTRON2D_TEST_X11_LAYOUTS=compatibility dotnet "$1"
+' fixture /path/to/Electron2D.Tests.dll
+```
+
+The Linux x64 fixture passed 43 raw and six Compatibility assertions. An independent Xlib connection confirmed real group changes and injected press/release with XTEST. A held Cyrillic label and its action retired after a switch to the US group. The Compatibility profile confirmed the next rendered frame. Dummy and WSLg Wayland each passed six unavailability checks, and the Windows layout regression passed 152 assertions. XTEST runs on the isolated X server. Physical keyboard and IME behavior, native Wayland/macOS layout providers, Linux GPU and package/AOT qualification remain separate.

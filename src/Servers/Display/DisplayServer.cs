@@ -608,7 +608,7 @@ public sealed partial class DisplayServer : ElectronObject
             {
                 if (ReferenceEquals(root.FocusedWindow(), this) || ReferenceEquals(root._pressedInputWindow, this))
                 {
-                    root._windowsHeldKeys?.Clear();
+                    root._layoutHeldKeys?.Clear();
                     Input.ReleasePressedEvents();
                     root._pressedInputWindow = null;
                 }
