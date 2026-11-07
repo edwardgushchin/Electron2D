@@ -18,6 +18,8 @@ Last updated: 2026-10-27
 
 [Window input reception](../classes/Window.md#window-input-reception-and-visibility-notification) now runs before viewport localization and scene callbacks for native and forwarded embedded events. Visibility changes also deliver notification 30 before their typed signal; input ownership and failure cleanup remain in the existing host/tree lifetime.
 
+[Color authoring](../components/color-authoring.md#desktop-and-application-sampling) connects the picker and its swatch button to live native X11 desktop pixels with an owned preview and cancelable pointer grab. Embedded root windows retain application sampling.
+
 ## Node scene-authoring metadata
 
 [Node authoring state](../classes/Node.md#scene-authoring-state) supplies stored descriptions, transient folding, explicit edited-subtree membership and target-owned editable flags. [PackedScene](../classes/PackedScene.md#editable-ownership-capture) includes editable-owned physical children in its flattened graph and restores typed origin/flag metadata from fresh-process files. Authoring observations cover persistent connections and groups; physical owner/borrow/capture guards remain applicable. Linked nested/inherited override graphs, full editor UI, hardware GPU and full-goal acceptance remain open.

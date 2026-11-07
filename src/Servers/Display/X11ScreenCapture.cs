@@ -69,6 +69,8 @@ internal sealed unsafe partial class X11ScreenCapture
         catch (EntryPointNotFoundException) { return null; }
     }
 
+    internal X11ColorSampler OpenColorSampler() => X11ColorSampler.Open(XDisplayString(_display), _root);
+
     internal Image Capture(Rect2i rectangle)
     {
         var width = rectangle.Size.X;
@@ -230,6 +232,7 @@ internal sealed unsafe partial class X11ScreenCapture
     [LibraryImport(Xlib)] private static partial int XImageByteOrder(nint display);
     [LibraryImport(Xlib)] private static partial int XFlush(nint display);
     [LibraryImport(Xlib)] private static partial int XFree(void* pointer);
+    [LibraryImport(Xlib)] private static partial nint XDisplayString(nint display);
     [LibraryImport(Xlib, StringMarshalling = StringMarshalling.Utf8)]
     private static partial int XQueryExtension(nint display, string name, out int opcode, out int firstEvent, out int firstError);
     [LibraryImport("libX11-xcb.so.1")] private static partial nint XGetXCBConnection(nint display);

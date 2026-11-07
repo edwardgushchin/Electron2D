@@ -1,10 +1,10 @@
 # ColorPickerButton
 
-Last updated: 2026-10-19
+Last updated: 2026-11-07
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.ColorPickerButton`. **Base:** `Electron2D.Button`. **Source:** [source](../../src/Scene/GUI/ColorPickerButton.cs). **Component:** [Color authoring](../components/color-authoring.md).
 
-A themed swatch button with a lazy required borrowed ColorPicker/PopupPanel. Accept commits the focused field; Escape restores the opening color. Use an embedding viewport.
+A themed swatch button with a lazy required borrowed ColorPicker/PopupPanel. Accept commits the focused field; Escape restores the opening color. An embedding viewport or a supported native popup hosts the editor. The editor can pick live desktop colors on native X11.
 
 ```csharp
 var root = new Window { Size = new(800, 800), GUIEmbedSubwindows = true };

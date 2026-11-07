@@ -1,10 +1,10 @@
 # ColorPicker
 
-Last updated: 2026-10-19
+Last updated: 2026-11-07
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.ColorPicker`. **Base:** `Electron2D.VBoxContainer`. **Source:** [source](../../src/Scene/GUI/ColorPicker.cs). **Component:** [Color authoring](../components/color-authoring.md).
 
-A color editor connecting six spatial shapes, shared SpinBox/slider channels, intensity, numeric/hex text, local swatches, palette files and completed application-viewport sampling. Programmatic color writes are silent. The component defines input, lifecycle, theme and verification limits.
+A color editor connecting six spatial shapes, shared SpinBox/slider channels, intensity, numeric/hex text, local swatches, palette files, live desktop sampling on supported native X11 windows, and completed application-viewport sampling elsewhere. Programmatic color writes are silent. The component defines input, lifecycle, theme and verification limits.
 
 
 ## Constructors

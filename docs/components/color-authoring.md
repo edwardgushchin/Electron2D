@@ -1,6 +1,6 @@
 # Color authoring
 
-Last updated: 2026-10-18
+Last updated: 2026-11-07
 
 ColorPicker : VBoxContainer is an executable color editor. ColorPickerButton : Button creates its required picker and PopupPanel lazily. ColorPalette : Resource supplies independent ordered swatch data and the built-in typed `.e2dres` factory. These consumers use existing Color math, Range/SpinBox/LineEdit, containers, themes, menus, file dialogs, popup routing and completed viewport textures.
 
@@ -18,7 +18,7 @@ Six spatial editors execute: HSV rectangle/hue bar, HSV ring/inner SV square, VH
 
 Color fields use a retained 64-by-64 rectangle mesh or 64 angular by 32 radial subdivisions. This shared CPU tessellation executes on GPU and compatibility; it approximates nonlinear color gradients between samples, and does not claim exact shader-pixel equivalence at arbitrary scales. It introduces no second renderer or public shader identity. Theme cursor/background, focus, hue, slider-center, dimensions/margins, preview/revert, shape/menu/copy/add and folded/expanded assets all have real consumers. Current ColorPicker owns 27 theme keys and ColorPickerButton adds bg; authored SVGs and shared StyleBox resources belong to ThemeDB. Focus remains visible, and numeric channel labels supplement color.
 
-The button's getters return stable borrowed required nodes and reject their independent disposal while its owner is live. Opening remembers the color; acceptance commits the focused field before closing, Escape restores the opening value, and PopupClosed resets toggle state. The old/new preview can revert the opening color. Presentation requires GUIEmbedSubwindows on a containing viewport; independent native child windows retain their existing Window gate.
+The button's getters return stable borrowed required nodes and reject their independent disposal while its owner is live. Opening remembers the color; acceptance commits the focused field before closing, Escape restores the opening value, and PopupClosed resets toggle state. The old/new preview can revert the opening color. Presentation uses GUIEmbedSubwindows on a containing viewport or a supported native popup.
 
 ## Swatches, files and sampling
 
@@ -26,7 +26,15 @@ Preset operations are local and silent. AddPreset moves an existing exact color 
 
 Swatches and recent sections can fold independently. Palette Save/Save As/Load/Clear commands use FileDialog and ResourceSaver/ResourceLoader. Decoding validates all swatches before replacing the current palette; failed persistence keeps the previous atomic file. ColorPalette copies both array boundaries, retains order/duplicates/HDR, and assignments are silent like the pinned resource. EmitChanged remains explicit for a live observable palette. Duplication owns an independent array.
 
-Pick captures the containing application viewport's completed native image, presents it through an embedded popup, samples scaled/clamped pixel coordinates and shows a zoom/color preview. Left release commits, cancellation discards the sample. The cold capture synchronizes native execution and allocates owned images/textures, released on hide/disposal. Missing completed rendering fails explicitly through the error dialog. External screen capture, capture permissions and native OS picker are separate DisplayServer prerequisites; current application sampling does not claim them.
+### Desktop and application sampling
+
+On native X11 with desktop capture and a non-embedding root window, Pick follows live desktop pixels across application boundaries. The preview swatch stays beside the pointer. The picker updates its preview color silently until left release commits one ColorChanged event and records the recent preset. Right click, Escape and closing the picker cancel and restore the opening color. The modal pointer grab belongs to a private X11 connection and retires when the preview closes, detaches or is disposed. Selection clicks do not reach the application underneath.
+
+With embedded root windows or other current backends, Pick captures the containing application viewport's completed image. It presents that image through a popup with scaled, clamped coordinates and a zoom preview. Left release commits and cancellation discards the sample. Hide and disposal release the owned capture. Missing completed rendering or a native sampling failure uses the error dialog. Leaving an unedited color field keeps the presented value and emits no edit.
+
+Windows live sampling needs desktop-wide pointer ownership and a capture-excluded zoom preview. Wayland and XWayland need a desktop portal color picker or authorized compositor capture and input. The macOS desktop provider needs its system picker and permission integration. DisplayServer's separate native color-picker API retains its provider dependency. [Desktop capture contract](desktop-screen-capture.md)
+
+The X11 test profile `ELECTRON2D_TEST_DESKTOP_COLOR_SAMPLER=x11` runs on a private Xvfb display with XTEST and `ELECTRON2D_TEST_X11_PRIVATE_DISPLAY` matching `DISPLAY`. It drives the native ColorPickerButton popup and checks live external colors, commit, cancellation and input ownership at Xvfb depths 24 and 16 with the compatibility OpenGL renderer.
 
 PackedScene stores public color/edit/mode/shape/visibility policies and recreates internal controls and shared ranges. Swatches, recent history, file path, editing/focus, gesture state and caches remain runtime state. A 64-state text cache bounds retained prepared strings; arbitrary novel colors/formulas, swatch changes, file I/O and sampling allocate cold. Native/UI/scene tests cover the executable profile; other platforms, semantic accessibility, editor quick-load metadata and owner acceptance remain separate gates.
 

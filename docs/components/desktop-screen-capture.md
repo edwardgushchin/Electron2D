@@ -9,6 +9,8 @@ A capture of a screen or rectangle returns an independent, caller-owned RGBA8 im
 - **Windows.** GDI copies the virtual desktop into a top-down DIB and converts its pixels to RGBA. The one-pixel path uses the same copy operation. Capture follows the operating system's [window capture exclusion](window-capture.md).
 - **X11.** The adapter reads the root drawable using checked XCB requests on SDL's X11 connection. It validates the live root bounds and converts the visual masks, byte order and scanline padding. It supports TrueColor outputs in a shared X screen, including multiple monitors on that root. Independent roots lack a shared public coordinate space. Indexed and DirectColor visuals need their own color provider. XWayland and Wayland need an authorized compositor capture provider. macOS needs its native capture and permission bridge.
 
+[ColorPicker desktop sampling](color-authoring.md#desktop-and-application-sampling) uses the X11 single-pixel reader while the picker owns modal input.
+
 ## Verification
 
 The public `DesktopScreenCaptureTests` profile renders an Electron2D fixture and checks its pixels through an independent Windows Graphics Capture monitor reader or Xlib root reader. It also checks the typed screen selectors, an odd-width crop, channels, orientation, alpha, native overlay composition, rejected input and image ownership after display shutdown. The Windows profile checks exclusion and restoration and confirms that repeated captures release GDI objects.

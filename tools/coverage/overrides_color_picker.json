@@ -564,7 +564,7 @@
         "class:ColorPickerButton"
       ],
       "state": "Partial",
-      "reason": "The complete current color control API executes with numeric/hex/numeric-constructor editing, palettes, embedded UI and application sampler. Full typed color Expression/object/collection consumers need the separately accepted typed expression host; semantic accessibility and editor quick-load/settings retain their owners. Native external screen capture, OS picker and permission UI need their DisplayServer capabilities and are not application sampling. Shared CPU meshes approximate nonlinear gradients between samples; independent native windows, foreign platforms and owner acceptance are unverified."
+      "reason": "Color editing, palettes, embedded viewport sampling and native X11 live desktop sampling execute. The X11 path owns a modal pointer grab, live color preview, selection and cancellation through ColorPicker and ColorPickerButton. Windows needs desktop-wide input and capture-excluded preview. Wayland/XWayland need an authorized compositor provider or the desktop portal picker. macOS needs its native picker and permissions. Typed color expressions, semantic accessibility and editor quick-load retain their own owners. See docs/components/color-authoring.md."
     },
     {
       "godot": [

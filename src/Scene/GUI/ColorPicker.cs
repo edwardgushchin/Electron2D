@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>A color editor with shaped color spaces, numeric channels, intensity, text and local swatches.</summary>
 /// <remarks>Programmatic color assignments are silent. User edits publish ColorChanged; DeferredMode defers
 /// slider and surface gestures until release. Internal controls and their resources remain owned by the picker.
-/// Palette file I/O and completed viewport sampling are explicit cold operations on the scene owner.</remarks>
+/// Pick uses live desktop colors on supported native X11 windows and a completed viewport image otherwise.
+/// Palette file I/O and sampling start on the scene owner.</remarks>
 public partial class ColorPicker : VBoxContainer
 {
     /// <summary>Selects the numeric channel encoding.</summary>
@@ -58,7 +59,7 @@ public partial class ColorPicker : VBoxContainer
     private readonly Label _textLabel, _paletteLabel;
     private readonly List<Color> _presets = [], _recent = [];
     private readonly List<SwatchButton> _presetButtons = [], _recentButtons = [];
-    private string _palettePath = "";
+    private string _palettePath = "", _presentedText = "";
     private FileDialog? _paletteDialog;
     private AcceptDialog? _error;
     private SamplerPopup? _sampler;
@@ -193,7 +194,7 @@ public partial class ColorPicker : VBoxContainer
         ThrowCollected("Color surface callbacks failed.", errors);
     }
     private void QueueText(string text) { if (Tree is { IsClosing: false } tree) tree.SetDeferred(_submitText, text); else if (Tree is null) SubmitText(text); }
-    private void TextFocusExit() { if (!_disposing && IsVisibleInTree) QueueText(_text.Text); }
+    private void TextFocusExit() { if (!_disposing && IsVisibleInTree && _text.Text != _presentedText) QueueText(_text.Text); }
     private void SubmitText(string text)
     {
         if (IsDisposed) return; Color value;
@@ -220,7 +221,7 @@ public partial class ColorPicker : VBoxContainer
     {
         var constructor = _textConstructor || _color.R < 0 || _color.G < 0 || _color.B < 0 || _color.R > 1 || _color.G > 1 || _color.B > 1;
         _textLabel.Text = constructor ? "Expr" : "Hex"; _textType.Text = constructor ? "()" : "#";
-        var value = ColorText(constructor);
+        var value = _presentedText = ColorText(constructor);
         if (_text.Text != value) _text.SetTextPreservingSelection(value);
     }
     private void Refresh()
@@ -268,6 +269,7 @@ public partial class ColorPicker : VBoxContainer
         var reversed = IsNotificationReversed;
 
         if (!reversed) base.OnNotification(what);
+        if (what == NotificationEnterTree) _pick.TooltipText = CanSampleDesktop() ? "Pick a color from the desktop." : "Pick a color from this application window.";
         if (what is NotificationEnterTree or NotificationThemeChanged or NotificationTranslationChanged) Refresh(); if (what is NotificationExitTree or NotificationVisibilityChanged && !IsVisibleInTree) { _surface?.CancelGesture(); _bar?.CancelGesture(); _dragging = false; }
 
         if (reversed) base.OnNotification(what);

@@ -8,6 +8,9 @@ public sealed partial class DisplayServer
     private bool _screenCaptureChecked;
     private bool UsesWindowsScreenCapture => _videoDriver == "windows" && OperatingSystem.IsWindows();
     private bool HasScreenCapture => UsesWindowsScreenCapture || GetX11ScreenCapture() is not null;
+    internal bool CanSampleDesktopColor => GetX11ScreenCapture() is not null;
+    internal X11ColorSampler OpenDesktopColorSampler() =>
+        GetX11ScreenCapture()?.OpenColorSampler() ?? throw new NotSupportedException("Live desktop color sampling requires native X11.");
 
     /// <summary>Captures an entire screen from the native desktop.</summary>
     /// <param name="screen">A zero-based screen index or a screen selector.</param>

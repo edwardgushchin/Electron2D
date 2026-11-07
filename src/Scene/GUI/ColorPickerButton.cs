@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>A themed color swatch button opening an owned color editor popup.</summary>
 /// <remarks>The picker is created lazily. GetPicker/GetPopup return required borrowed nodes; preserve their
-/// parent and lifetime. Programmatic color writes are silent. Escape restores the opening color and publishes it.</remarks>
+/// parent and lifetime. The editor can sample live desktop colors on supported native X11 windows.
+/// Programmatic color writes are silent. Escape in the editor popup restores the opening color and publishes it.</remarks>
 public partial class ColorPickerButton : Button
 {
     private Color _color = Colors.Black, _openingColor;

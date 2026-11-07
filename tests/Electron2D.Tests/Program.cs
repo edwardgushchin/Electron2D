@@ -49,6 +49,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUILTIN_TEXTURES") is { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TIMING") is { } viewportTimingProfile) { RenderingRuntimeTests.RunViewportTiming(viewportTimingProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TIMESTAMPS") is { } timestampProfile) { GPUTimestampTests.Run(timestampProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_GESTURES") is { } windowGestureProfile) { WindowGestureTests.Run(windowGestureProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DESKTOP_COLOR_SAMPLER") == "x11") { DesktopColorSamplerTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCREEN_CAPTURE") is { } desktopCaptureProfile) { DesktopScreenCaptureTests.Run(desktopCaptureProfile, args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_X11_LAYOUTS") is { } x11LayoutProfile) { X11KeyboardLayoutTests.Run(x11LayoutProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WAYLAND_LAYOUTS") == "1") { WaylandKeyboardLayoutTests.Run(); return; }
