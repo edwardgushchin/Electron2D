@@ -107,7 +107,10 @@ internal static class CanvasVertexProgramTests
         window.Ready += _ =>
         {
             if (gpuBuffers) { RenderingServer.MultiMeshGetBufferRDRID(multi.GetRID()); window.SnapVerticesToPixel = profile.Contains("snap", StringComparison.Ordinal); }
-            Check(RenderingServer.GetCurrentRenderingMethod() == "gpu", "Native GPU without fallback."); RenderingServer.SetDefaultClearColor(Colors.Black);
+            Check(RenderingServer.GetCurrentRenderingMethod() == "gpu", "Native GPU without fallback.");
+            if (profile.Contains("direct3d12", StringComparison.Ordinal))
+                Check(RenderingServer.GetCurrentRenderingDriverName() == "direct3d12", "The native test uses Direct3D 12.");
+            RenderingServer.SetDefaultClearColor(Colors.Black);
             var owned = RenderingServer.ShaderCreate(); RenderingServer.ShaderSetSPIRV(owned, shader.GetSPIRV(RenderingDevice.ShaderStage.Vertex), shader.GetSPIRV());
             Check(RenderingServer.ShaderGetSPIRV(owned, RenderingDevice.ShaderStage.Vertex).SequenceEqual(shader.GetSPIRV(RenderingDevice.ShaderStage.Vertex)), "Owned shader stages use the public server family."); RenderingServer.FreeRID(owned);
             window.Tree!.ProcessFrameStarted += _ =>

@@ -96,8 +96,16 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     private RenderHandle CreatePipeline(byte[] code, BlendMode blend, bool overwrite = false, bool instanced = false, bool lighting = false, SDL.GPUTextureFormat format = SDL.GPUTextureFormat.R8G8B8A8Unorm, SDL.GPUSampleCount samples = SDL.GPUSampleCount.SampleCount1, bool lcd = false, byte[]? vertexCode = null, Mesh.PrimitiveType primitive = Mesh.PrimitiveType.Triangles)
     {
-        using var vertex = vertexCode is null ? null : CreateShader(vertexCode, fragment: false);
-        using var fragment = CreateShader(code, fragment: true);
+        var (builtInVertexCode, builtInVertexShader) = (lighting, instanced) switch
+        {
+            (true, true) => (BuiltInShaders.LightingInstancedVertex, _lightingInstancedVertexShader),
+            (true, false) => (BuiltInShaders.LightingVertex, _lightingVertexShader),
+            (false, true) => (BuiltInShaders.InstancedVertex, _instancedVertexShader),
+            _ => (BuiltInShaders.Vertex, _vertexShader)
+        };
+        var (linkedVertex, linkedFragment) = ShaderCompiler.LinkGraphicsStages(Device, vertexCode ?? builtInVertexCode, code);
+        using var vertex = ReferenceEquals(linkedVertex, builtInVertexCode) ? null : CreateShader(linkedVertex, fragment: false);
+        using var fragment = CreateShader(linkedFragment, fragment: true);
         var buffers = stackalloc SDL.GPUVertexBufferDescription[2];
         buffers[0] = new() { Slot = 0, Pitch = (uint)sizeof(CanvasVertex), InputRate = SDL.GPUVertexInputRate.Vertex };
         buffers[1] = new() { Slot = 1, Pitch = (uint)sizeof(CanvasInstance), InputRate = SDL.GPUVertexInputRate.Instance };
@@ -139,7 +147,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         };
         var info = new SDL.GPUGraphicsPipelineCreateInfo
         {
-            VertexShader = vertex?.DangerousGetHandle() ?? (lighting ? instanced ? _lightingInstancedVertexShader : _lightingVertexShader : instanced ? _instancedVertexShader : _vertexShader).DangerousGetHandle(),
+            VertexShader = (vertex ?? builtInVertexShader).DangerousGetHandle(),
             FragmentShader = fragment.DangerousGetHandle(),
             PrimitiveType = primitive switch { Mesh.PrimitiveType.Points => SDL.GPUPrimitiveType.PointList, Mesh.PrimitiveType.Lines => SDL.GPUPrimitiveType.LineList, Mesh.PrimitiveType.LineStrip => SDL.GPUPrimitiveType.LineStrip, Mesh.PrimitiveType.TriangleStrip => SDL.GPUPrimitiveType.TriangleStrip, _ => SDL.GPUPrimitiveType.TriangleList },
             // Required when the Android device does not support depth clamping.

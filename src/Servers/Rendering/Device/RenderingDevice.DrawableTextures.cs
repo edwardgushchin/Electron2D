@@ -89,8 +89,9 @@ public sealed unsafe partial class RenderingDevice
     }
     private RenderHandle CreateDrawablePipeline(byte[] fragmentCode, DataFormat format, int count, BlitBlendMode blend)
     {
-        using var vertex = new RenderHandle(ShaderCompiler.CreateShader(Device, BuiltInShaders.DrawableVertex, false), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
-        using var fragment = new RenderHandle(ShaderCompiler.CreateShader(Device, fragmentCode, true), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
+        var (vertexCode, linkedFragment) = ShaderCompiler.LinkGraphicsStages(Device, BuiltInShaders.DrawableVertex, fragmentCode);
+        using var vertex = new RenderHandle(ShaderCompiler.CreateShader(Device, vertexCode, false), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
+        using var fragment = new RenderHandle(ShaderCompiler.CreateShader(Device, linkedFragment, true), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
         var state = blend switch
         {
             BlitBlendMode.Mix or BlitBlendMode.Disabled => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),

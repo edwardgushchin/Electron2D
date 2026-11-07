@@ -25,6 +25,33 @@ internal static class RenderingDeviceGraphicsTests
         }
         Canvas();
     }
+    internal static void StageLink()
+    {
+        using var device = RenderingServer.CreateLocalRenderingDevice();
+        using var module = Load("DeviceStageLink");
+        var vertex = module.BytecodeVertex;
+        var fragment = module.BytecodeFragment;
+        var shader = device.ShaderCreateFromSPIRV(module);
+        var output = Image(device);
+        var framebuffer = device.FramebufferCreate([output]);
+        using var raster = new RDPipelineRasterizationState();
+        using var attachment = new RDPipelineColorBlendStateAttachment();
+        using var blend = new RDPipelineColorBlendState { Attachments = [attachment] };
+        var pipeline = device.RenderPipelineCreate(shader, device.FramebufferGetFormat(framebuffer), -1,
+            RenderingDevice.RenderPrimitive.Triangles, raster, blend);
+        var list = device.DrawListBegin(framebuffer, RenderingDevice.DrawFlags.ClearColorAll, [Colors.Black]);
+        device.DrawListBindRenderPipeline(list, pipeline);
+        device.DrawListDraw(list, false, 1, 3);
+        device.DrawListEnd();
+        var pixels = device.TextureGetData(output, 0);
+        for (var offset = 0; offset < pixels.Length; offset += 4)
+            Check(pixels[offset] is >= 63 and <= 64 && pixels[offset + 1] is >= 127 and <= 128 &&
+                  pixels[offset + 2] is >= 191 and <= 192 && pixels[offset + 3] == 255,
+                  "Sparse stage linkage preserves the varying, interpolation, and fragment position.");
+        Check(module.BytecodeVertex.SequenceEqual(vertex) && module.BytecodeFragment.SequenceEqual(fragment),
+            "Native stage linkage preserves authored SPIR-V.");
+        Console.WriteLine("Sparse float/integer stage signatures and pixel readback passed on " + device.GetDeviceName());
+    }
     internal static void Export(RDShaderSPIRV module, string language)
     {
         var directory = Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_GRAPHICS_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_DEPTH_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_MSAA_OUTPUT"); if (directory is not null) Directory.CreateDirectory(directory);

@@ -77,8 +77,10 @@ internal static unsafe partial class ShaderCompiler
     internal static nint CreateShader(nint device, byte[] code, bool fragment, bool sizedPoints = false) => Run(() =>
     {
         ShaderPrecision.ValidateNative(device, code);
-        CanvasPointProgram.ValidateNative(code, fragment, SDL.GetGPUDeviceDriver(device) ?? "", sizedPoints);
+        var driver = SDL.GetGPUDeviceDriver(device) ?? "";
+        CanvasPointProgram.ValidateNative(code, fragment, driver, sizedPoints);
         fixed (byte* pointer = code)
+        fixed (byte* entrypoint = "main\0"u8)
         {
             var metadata = ShaderCross.ReflectGraphicsSPIRV((nint)pointer, (nuint)code.Length, 0);
             if (metadata == 0) throw new ArgumentException("Shader reflection failed: " + SDL.GetError(), nameof(code));
@@ -87,8 +89,33 @@ internal static unsafe partial class ShaderCompiler
                 var resources = Marshal.PtrToStructure<ShaderCross.GraphicsShaderMetadata>(metadata).ResourceInfo;
                 resources.NumSamplers = Math.Max(resources.NumSamplers, SamplerCount(code));
                 resources.NumUniformBuffers = Math.Max(resources.NumUniformBuffers, UniformBufferCount(code, fragment));
-                return ShaderCross.CompileGraphicsShaderFromSPIRV(device, (nint)pointer, (nuint)code.Length, "main",
-                    fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, in resources);
+                var info = new ShaderCross.SPIRVInfo
+                {
+                    ByteCode = (nint)pointer,
+                    ByteCodeSize = (nuint)code.Length,
+                    Entrypoint = (nint)entrypoint,
+                    ShaderStage = fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex
+                };
+                if (driver != "direct3d12" || (SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)
+                    return ShaderCross.CompileGraphicsShaderFromSPIRV(device, ref info, ref resources, 0);
+                var compiled = ShaderCross.CompileDXILFromSPIRV(in info, out var size);
+                if (compiled == 0) return 0;
+                try
+                {
+                    return SDL.CreateGPUShader(device, new SDL.GPUShaderCreateInfo
+                    {
+                        Code = compiled,
+                        CodeSize = size,
+                        Entrypoint = "main",
+                        Format = SDL.GPUShaderFormat.DXIL,
+                        Stage = fragment ? SDL.GPUShaderStage.Fragment : SDL.GPUShaderStage.Vertex,
+                        NumSamplers = resources.NumSamplers,
+                        NumStorageTextures = resources.NumStorageTextures,
+                        NumStorageBuffers = resources.NumStorageBuffers,
+                        NumUniformBuffers = resources.NumUniformBuffers
+                    });
+                }
+                finally { SDL.Free(compiled); }
             }
             finally { SDL.Free(metadata); }
         }

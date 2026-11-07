@@ -168,6 +168,8 @@ False skips capture and submission while retaining existing commands and pending
 
 Reports the backend actually opened. A requested GPU method may report compatibility if the configured startup fallback succeeded. Requires the owner thread.
 
+The Windows GPU path uses linked DXIL signatures when SDL selects Direct3D 12. Canvas materials and drawable textures share the stage linkage described in [shader materials](../components/shader-materials.md#direct3d-12-stage-linkage).
+
 ### GetCurrentRenderingDriverName
 
 Reports the backend's native driver string. This is diagnostic information and does not grant access to native resources. Requires the owner thread.

@@ -182,9 +182,16 @@ internal static class DrawableTextureTests
             using (var description = new RDTextureFormat { Width = 2, Height = 2, Format = RenderingDevice.DataFormat.R8G8B8A8UINT, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyFrom | RenderingDevice.TextureUsageBits.CanCopyTo })
             using (var view = new RDTextureView())
             {
-                var device = RenderingServer.GetRenderingDevice()!; var integerImage = device.TextureCreate(description, view);
-                using var source = new TextureRD { TextureRDRID = integerImage };
-                Reject<ArgumentException>(() => texture.BlitRect(new(0, 0, 8, 8), source)); device.FreeRID(integerImage);
+                var device = RenderingServer.GetRenderingDevice()!;
+                if (device.TextureIsFormatSupportedForUsage(description.Format, description.UsageBits))
+                {
+                    var integerImage = device.TextureCreate(description, view);
+                    using var source = new TextureRD { TextureRDRID = integerImage };
+                    Reject<ArgumentException>(() => texture.BlitRect(new(0, 0, 8, 8), source));
+                    device.FreeRID(integerImage);
+                }
+                else
+                    Reject<NotSupportedException>(() => device.TextureCreate(description, view));
             }
             b.CopyFromResource(texture); Pixel(b, Colors.Red); b.BlitRect(new(0, 0, 8, 8), green, material: replace); b.ResetState(); Pixel(b, Colors.Red);
             using (var pattern = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8))

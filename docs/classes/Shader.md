@@ -68,6 +68,8 @@ Creates the embedded fragment program multiplying the command texture sample by 
 
 For Shader, returns the executing domain: `CanvasItem` (1), `Particles` (2) or `TextureBlit` (5). Throws `ObjectDisposedException` after disposal.
 
+Direct3D 12 builds the native pair from linked signature copies. Matching fragment inputs can be sparse, and shader export preserves the authored SPIR-V. See [Direct3D 12 stage linkage](../components/shader-materials.md#direct3d-12-stage-linkage).
+
 ### CreateFromSPIRV
 
 The one-module overload copies `bytecode` before validation. The input must contain the supported canvas fragment interface, one `main` entry point and a little-endian SPIR-V header, within 16 MiB. Invalid structure/reflection throws `ArgumentException`; unsupported interfaces/resources throw `NotSupportedException`. Native-library initialization/load failures remain visible. Named sampled images use fixed linear filtering, clamp-to-edge coordinates and LOD zero independently of canvas policies. The complete current profile is in the component page.
