@@ -91,6 +91,7 @@ public sealed partial class DisplayServer
             Feature.HdrOutput => _output.Available,
             Feature.SwapBuffers => _renderingAttached,
             Feature.Subwindows => desktop,
+            Feature.ScreenCapture => HasScreenCapture,
             Feature.ScreenExcludeFromCapture => HasCaptureExclusion(),
             Feature.Touchscreen => IsTouchscreenAvailableCore(),
             Feature.Mouse => SDL.HasMouse(),

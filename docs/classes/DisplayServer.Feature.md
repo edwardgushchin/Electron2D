@@ -39,7 +39,7 @@ The current host advertises `Clipboard` while open; `Mouse` when SDL reports a m
 | [`ClipboardPrimary = 18`](#value-clipboardprimary) | A separate primary-selection clipboard. |
 | [`TextToSpeech = 19`](#value-texttospeech) | Text-to-speech output. |
 | [`ExtendToTitle = 20`](#value-extendtotitle) | Content drawn under native title controls. |
-| [`ScreenCapture = 21`](#value-screencapture) | Desktop screen capture. |
+| [`ScreenCapture = 21`](#value-screencapture) | Native desktop screen and pixel capture. |
 | [`StatusIndicator = 22`](#value-statusindicator) | System status indicators. |
 | [`NativeHelp = 23`](#value-nativehelp) | Native help-search integration. |
 | [`NativeDialogInput = 24`](#value-nativedialoginput) | Native text-input dialogs. |
@@ -156,7 +156,7 @@ Content drawn under native title controls.
 <a id="value-screencapture"></a>
 ### `ScreenCapture = 21`
 
-Desktop screen capture.
+Available on Windows and supported native X11 displays. See [desktop screen capture](../components/desktop-screen-capture.md).
 
 <a id="value-statusindicator"></a>
 ### `StatusIndicator = 22`

@@ -1,38 +1,22 @@
-# Desktop screen capture prerequisite
+# Desktop screen capture
 
 Last updated: 2026-11-07
 
-The three `screen_get_image`, `screen_get_image_rect` and `screen_get_pixel`
-comparison rows remain Blocked. No public Electron2D screen-readback methods
-are implemented. `Feature.ScreenCapture` remains unavailable. Existing engine
-viewport/native-surface readback and [window capture exclusion](window-capture.md)
-are separate capabilities.
+`DisplayServer.ScreenGetImage`, `ScreenGetImageRect` and `ScreenGetPixel` read the native desktop on Windows and supported X11 sessions. `HasFeature(ScreenCapture)` reports the active adapter. The calls run synchronously on the display owner thread. They use the same screen coordinates and selectors as `ScreenGetPosition` and `ScreenGetSize`.
 
-The first native slice must return owned compositor pixels, define coordinates,
-permission/failure behavior and image lifetime, and exercise actual screen
-composition under ADRs 0028/0040/0090. Windows needs its native desktop producer;
-native Xorg needs a checked producer and host verification, with the reference's
-XWayland limitation accounted; macOS needs its capture/permission bridge.
+A capture of a screen or rectangle returns an independent, caller-owned RGBA8 image with opaque alpha and no mipmaps. A rectangle must have positive dimensions and fit inside the desktop. A point must lie inside the desktop. Invalid selectors, coordinates and image dimensions throw `ArgumentOutOfRangeException`. An unsupported backend throws `NotSupportedException`. Native pixel acquisition errors throw `IOException`. Display ownership checks apply even on an unsupported backend.
 
-## Attempt on 2026-11-07
+- **Windows.** GDI copies the virtual desktop into a top-down DIB and converts its pixels to RGBA. The one-pixel path uses the same copy operation. Capture follows the operating system's [window capture exclusion](window-capture.md).
+- **X11.** The adapter reads the root drawable using checked XCB requests on SDL's X11 connection. It validates the live root bounds and converts the visual masks, byte order and scanline padding. It supports TrueColor outputs in a shared X screen, including multiple monitors on that root. Independent roots lack a shared public coordinate space. Indexed and DirectColor visuals need their own color provider. XWayland and Wayland need an authorized compositor capture provider. macOS needs its native capture and permission bridge.
 
-A Windows GDI prototype compiled with three image/pixel operations and an
-independent SDK consumer. It was removed from runtime sources after the real
-fixture failed: its engine viewport held the red marker, but both owner and SDK
-desktop GetPixel observed RGB `(210, 225, 235)`. WindowFromPoint identified a
-different `Windows.UI.Core.CoreWindow` at that position. The owned window was
-visible, not minimized or cloaked, and had neither capture exclusion nor mouse
-passthrough enabled. Public foreground/topmost and scoped SDK asynchronous
-topmost requests did not expose the marker. An independent Windows Graphics
-Capture monitor frame was 1920×1080 and contained no red fixture pixels either.
-The underlying host/composition cause is unproven; this is not evidence that a
-GDI-only implementation is faulty or that the proposed public API is qualified.
+## Verification
 
-The continuation prerequisite is a native desktop/host on which the controlled
-owned fixture reaches monitor composition, followed by independent orientation,
-channel/alpha, selector, exclusion/restoration, lifetime, failure and resource-drain
-checks. Window/viewport capture alone cannot establish this desktop contract.
-Only validated fixture crops should be persisted. Prototype code, failed logs and
-`blocked-candidate.json` are retained under
-`C:/Users/eduar/.codex/artifacts/Electron2D/screen-capture-20261107/`;
-the unqualified source patch is not shipped.
+The public `DesktopScreenCaptureTests` profile renders an Electron2D fixture and checks its pixels through an independent Windows Graphics Capture monitor reader or Xlib root reader. It also checks the typed screen selectors, an odd-width crop, channels, orientation, alpha, native overlay composition, rejected input and image ownership after display shutdown. The Windows profile checks exclusion and restoration and confirms that repeated captures release GDI objects.
+
+Run `ELECTRON2D_TEST_SCREEN_CAPTURE=windows` with the path to [the monitor reader](../../tests/Electron2D.Tests/Fixtures/ScreenCapture/monitor.cpp) as the test runner's argument. Build the reader from a Visual Studio developer shell with `cl /std:c++20 /EHsc monitor.cpp /link windowsapp.lib d3d11.lib user32.lib`. Run the renderer in an open Windows user session where the test window is visible. The reader verifies the known test pixels in a monitor frame and prints their values. It does not write the desktop frame to disk.
+
+Run `ELECTRON2D_TEST_SCREEN_CAPTURE=x11` on a private Xvfb display with `SDL_VIDEODRIVER=x11`, `SDL_RENDER_DRIVER=software` and `ELECTRON2D_TEST_X11_PRIVATE_DISPLAY` matching `DISPLAY`. The native profile passes on Xvfb at depths 24 and 16. The `unavailable` profile passes on the dummy driver, nested Weston and WSLg XWayland.
+
+The earlier Windows fixture failed to reach monitor composition. An independent monitor capture found no red test pixels and `WindowFromPoint` reported another window at the expected marker. The repeated control on the same machine kept a smaller rendered window active while a separate process read the 1920×1080 monitor. That control found all three known markers. The cause of the earlier failure remains unproven.
+
+These checks cover the tested Windows desktop and private X11 server. Mixed-DPI and multi-monitor hardware, additional native backends and release-package qualification retain separate gates under ADR 0021. Viewport and single-window readback have their own contracts.

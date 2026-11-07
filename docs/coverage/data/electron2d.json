@@ -110929,6 +110929,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.ScreenGetImage(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetImage",
+    "signature": "public static Electron2D.Image ScreenGetImage(System.Int32 screen = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenGetImageRect(Electron2D.Rect2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetImageRect",
+    "signature": "public static Electron2D.Image ScreenGetImageRect(Electron2D.Rect2i rectangle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rectangle",
+        "type": "Electron2D.Rect2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.ScreenGetMaxScale()",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -110939,6 +110977,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ScreenGetPixel(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetPixel",
+    "signature": "public static Electron2D.Color ScreenGetPixel(Electron2D.Vector2i position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
     "value": null
   },
   {

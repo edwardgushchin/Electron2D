@@ -178,6 +178,9 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static bool ScreenIsKeptOn()`](#method-screeniskepton) | Reports whether native screen blanking is disabled. |
 | [`public static void ScreenSetKeepOn(bool enable)`](#method-screensetkeepon) | Requests screen wakefulness for this process. |
 | [`public static int GetPrimaryScreen()`](#method-getprimaryscreen) | Gets the index of the current primary display. |
+| [`public static Image ScreenGetImage(int screen = ScreenOfMainWindow)`](#desktop-capture) | Captures one screen from the native desktop. |
+| [`public static Image ScreenGetImageRect(Rect2i rectangle)`](#desktop-capture) | Captures the requested desktop rectangle. |
+| [`public static Color ScreenGetPixel(Vector2i position)`](#desktop-capture) | Reads one desktop pixel. |
 | [`public static Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`](#method-screengetposition) | Gets the global desktop position of a display. |
 | [`public static Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`](#method-screengetsize) | Gets the full size of a display. |
 | [`public static Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)`](#method-screengetusablerect) | Gets the usable desktop rectangle of a display. |
@@ -954,6 +957,10 @@ Gets the index of the current primary display.
 **Returns:** Index zero on Wayland, which has no primary-display identity; otherwise the zero-based native primary index or `InvalidScreen` when no display matches.
 
 **Source:** `src/Servers/Display/DisplayServer.cs`.
+
+#### Desktop capture
+
+Use `HasFeature(Feature.ScreenCapture)` to check the current display adapter. `ScreenGetImage` accepts an explicit screen index or an existing screen selector. `ScreenGetImageRect` and `ScreenGetPixel` take desktop pixel coordinates. Capture runs on the display owner thread. Image results are independent RGBA8 snapshots that the caller disposes. See [desktop screen capture](../components/desktop-screen-capture.md).
 
 <a id="method-screengetposition"></a>
 #### `public static Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`

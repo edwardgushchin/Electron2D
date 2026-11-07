@@ -1,6 +1,21 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:screen_get_image(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.ScreenGetImage(System.Int32)",
+      "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
+    },
+    {
+      "godot": "DisplayServer::method:screen_get_image_rect(Rect2i:)",
+      "electron2d": "method:Electron2D.DisplayServer.ScreenGetImageRect(Electron2D.Rect2i)",
+      "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
+    },
+    {
+      "godot": "DisplayServer::method:screen_get_pixel(Vector2i:)",
+      "electron2d": "method:Electron2D.DisplayServer.ScreenGetPixel(Electron2D.Vector2i)",
+      "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090)."
+    },
+    {
       "godot": "DisplayServer::method:window_start_drag(int:)",
       "electron2d": "method:Electron2D.DisplayServer.WindowStartDrag(System.Int32)",
       "reason": "Win32 uses the system move/size loop, X11 uses EWMH and Wayland submits xdg-toplevel requests with the initiating pointer seat serial. The display pump delivers canceled release to the initiating window. Native fixtures observe actual geometry. macOS needs a native event handoff and backend verification (ADRs 0040/0021)."
@@ -1199,8 +1214,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: native OS/compositor screen-pixel producer with owned Image buffers, coordinate/permission/failure/lifetime contracts and real desktop verification. The 2026-11-07 Windows prototype was reverted: both GDI and independent WGC-monitor capture failed to observe the owned rendered fixture despite foreground/topmost requests; a native desktop exposing the controlled fixture is required before qualification. Renderer/window readback alone is insufficient. See docs/components/desktop-screen-capture.md (ADRs 0028/0040/0090).",
+      "state": "Partial",
+      "reason": "Windows GDI and native X11 checked root reads provide owned desktop pixels. Independent Windows monitor capture and private Xvfb verify output, rectangle and pixel reads. macOS needs its native permission-aware capture bridge. Wayland and XWayland need authorized compositor output capture. See docs/components/desktop-screen-capture.md (ADRs 0021/0040/0090).",
       "godot": [
         "DisplayServer::method:screen_get_image(int:)",
         "DisplayServer::method:screen_get_image_rect(Rect2i:)",

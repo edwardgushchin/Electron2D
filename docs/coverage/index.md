@@ -1,3 +1,5 @@
+[Desktop screen capture](../components/desktop-screen-capture.md) adds whole-screen, rectangle and pixel reads on Windows and native X11. All three rows move from Blocked to Partial for remaining compositor and platform providers. Coverage remains **13,807/18,853 (73.24%)**, with 1,090 Partial, 366 Unimplemented, 3,590 Blocked, 8,440 Excluded and zero unmapped.
+
 [Wayland keyboard layouts and physical key mapping](../components/display-server.md#wayland-keyboard-layouts) add compositor XKB observations, live keypad symbols and F25–F35 input. The seven layout and conversion rows remain Partial for their remaining native providers and compositor selection. Coverage remains **13,807/18,853 (73.24%)**, with 1,087 Partial, 366 Unimplemented, 3,593 Blocked, 8,440 Excluded and zero unmapped.
 
 [Wayland interactive window gestures](../components/display-server.md#interactive-window-gestures) extend client-side move and all eight resize directions to xdg-toplevels using the initiating pointer seat. The four methods remain Partial for macOS. Coverage remains **13,807/18,853 (73.24%)**, with 1,087 Partial, 366 Unimplemented, 3,593 Blocked, 8,440 Excluded and zero unmapped.

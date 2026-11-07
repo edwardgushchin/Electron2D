@@ -118,6 +118,8 @@ Run `ELECTRON2D_TEST_WINDOW_GESTURES=windows` for a private Win32 desktop fixtur
 
 ## Verification
 
+[Desktop screen capture](desktop-screen-capture.md) exercises full output, rectangle and pixel readback against independent native desktop observers.
+
 `env -u LD_LIBRARY_PATH ELECTRON2D_TEST_DISPLAY_WINDOW_EVENTS=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release --no-build` passed after a real compositor close request. The visible window remained alive until the test disposed it. The same session delivered two keyboard-focus gains, one loss, one pointer enter, and one exit through the public typed events. Synthetic dummy and Wayland checks separately cover close/focus/hover queue order, foreign-window filtering, effective hover transitions, pressed-input release after focus loss, and callback failures.
 
 The native Wayland smoke exercised fractional custom cursor hotspots, the accepted 256-pixel image boundary, image-copy lifetime, rejection of nonfinite hotspots and images wider than 256 pixels, shape-slot restoration, and clearing to a system cursor. It compared SDL cursor identities; visual pointer appearance and physical hotspot location were not measured. RenderingRuntimeTests adds ImageTexture/custom Texture conversion, original pixel dimensions despite logical overrides, temporary image cleanup on success/failure, source disposal, shape-slot isolation, invalid/unreadable/disposed resources, off-thread rejection and display disposal during a custom GetImage callback. Those checks run on native Wayland.
