@@ -104,6 +104,12 @@ The display server owns SDL's gamepad subsystem and each opened gamepad/joystick
 
 [InputGamepadNativeTests](../../tests/Electron2D.Tests/InputGamepadNativeTests.cs) exercises this ownership on dummy and Linux Wayland using virtual devices. Physical hardware, other platform hosts, Steam/XInput metadata and native allocation behavior remain unverified. Controller motion sensors have a separate prerequisite under [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers).
 
+## Interactive window gestures
+
+`WindowStartDrag` and `WindowStartResize` hand a visible X11 window's physical left-button press to its window manager using `_NET_WM_MOVERESIZE`. The manager must advertise the operation. Pointer confinement, minimized windows, native popup roles and a second held mouse button prevent handoff. The window manager applies its own fullscreen and maximization policies. On physical release, the display pump delivers a canceled release to the initiating window and clears SDL's automatic capture even when the manager consumes the hardware release. Normal native rectangle notifications carry the observed geometry. Dropping input cancels the manager interaction and discards the initiating release.
+
+The private Xvfb/Openbox profile uses XTEST and a separate Xlib client to observe movement and all eight resize directions. The scene profile reads pixels after a native move. Run `ELECTRON2D_TEST_WINDOW_GESTURES=native` or `scene` with the private display marker described in `WindowGestureTests`. `no-manager` verifies rejection on Xvfb without a window manager. Wayland needs the initiating seat serial and an SDL-owned xdg-toplevel handoff. Windows and macOS require their own native pointer handoff and validation.
+
 ## Verification
 
 `env -u LD_LIBRARY_PATH ELECTRON2D_TEST_DISPLAY_WINDOW_EVENTS=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release --no-build` passed after a real compositor close request. The visible window remained alive until the test disposed it. The same session delivered two keyboard-focus gains, one loss, one pointer enter, and one exit through the public typed events. Synthetic dummy and Wayland checks separately cover close/focus/hover queue order, foreign-window filtering, effective hover transitions, pressed-input release after focus loss, and callback failures.

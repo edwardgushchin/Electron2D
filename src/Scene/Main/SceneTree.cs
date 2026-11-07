@@ -1594,7 +1594,7 @@ public sealed partial class SceneTree : MainLoop
                 if (dragButton.ButtonIndex == MouseButton.Left ||
                     dragButton.ButtonIndex == MouseButton.Right && dragButton.Pressed)
                 {
-                    CompleteGUIDrag(viewport, mouse.Position, dragButton.ButtonIndex == MouseButton.Left, ref errors);
+                    CompleteGUIDrag(viewport, mouse.Position, dragButton.ButtonIndex == MouseButton.Left && !dragButton.Canceled, ref errors);
                     SetInputAsHandled();
                     return;
                 }

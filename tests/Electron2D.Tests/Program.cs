@@ -48,6 +48,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUILTIN_TEXTURES") is { 
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TIMING") is { } viewportTimingProfile) { RenderingRuntimeTests.RunViewportTiming(viewportTimingProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TIMESTAMPS") is { } timestampProfile) { GPUTimestampTests.Run(timestampProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_GESTURES") is { } windowGestureProfile) { WindowGestureTests.Run(windowGestureProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_X11_LAYOUTS") is { } x11LayoutProfile) { X11KeyboardLayoutTests.Run(x11LayoutProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_KEYBOARD_LAYOUTS") is { } windowsLayoutProfile) { WindowsKeyboardLayoutTests.Run(windowsLayoutProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_TEXT_INPUT") is { } windowsInputProfile) { WindowsTextInputChecks.Run(windowsInputProfile, args[0]); return; }
@@ -194,7 +195,7 @@ if (args.Length == 2 && args[0] == "--gui-snap-archive") { try { GUISnapControlT
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_SNAP") == "managed") { try { GUISnapControlTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_SNAP") is { } guiSnapProfile) { try { GUISnapControlTests.RunNative(guiSnapProfile); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (args.Length == 2 && args[0] == "--window-chrome-archive") { try { WindowDecorationTests.RunArchive(args[1]); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CHROME") == "managed") { try { WindowDecorationTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CHROME") == "managed") { try { WindowDecorationTests.RunManaged(); WindowGestureTests.Embedded(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CHROME") is { } windowChromeProfile) { try { WindowDecorationTests.RunNative(windowChromeProfile); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_SDF") == "1") { LightingTests.NativeSDF(); ParticleServerTests.Run("sdf"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_MIP_BIAS") is { } mipBias) { if (mipBias == "managed") ViewportMIPMapBiasTests.RunManaged(); else ViewportMIPMapBiasTests.RunNative(mipBias); return; }

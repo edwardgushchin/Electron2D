@@ -1,6 +1,16 @@
 {
   "mappings": [
     {
+      "godot": "Window::method:start_drag()",
+      "electron2d": "method:Electron2D.Window.StartDrag()",
+      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial; Windows and macOS require native adapters and verification (ADRs 0008/0040/0021)."
+    },
+    {
+      "godot": "Window::method:start_resize(int:DisplayServer.WindowResizeEdge)",
+      "electron2d": "method:Electron2D.Window.StartResize(Electron2D.DisplayServer.WindowResizeEdge)",
+      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial; Windows and macOS require native adapters and verification (ADRs 0008/0040/0021)."
+    },
+    {
       "godot": "Viewport::property:gui_snap_controls_to_pixels",
       "electron2d": "property:Electron2D.Viewport.GUISnapControlsToPixels()",
       "state": "Implemented",
@@ -8740,8 +8750,8 @@
         "Window::method:start_drag()",
         "Window::method:start_resize(int:DisplayServer.WindowResizeEdge)"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: first native desktop-operation bridge shared with DisplayServer window_start_drag/window_start_resize: X11 _NET_WM_MOVERESIZE or Wayland xdg_toplevel.move/resize with the initiating pointer-button serial, plus compositor verification. SDL hit testing does not issue an interactive move or resize."
+      "state": "Partial",
+      "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the X11 EWMH handoff. Wayland needs SDL-owned xdg-toplevel operations using the initiating seat serial; Windows and macOS require native adapters and verification (ADRs 0008/0040/0021)."
     },
     {
       "godot": [

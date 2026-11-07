@@ -82,6 +82,7 @@ public sealed partial class DisplayServer
             DispatchPendingGamepadConnections(ref failures);
             if (dropInput)
             {
+                DropWindowGesture();
                 _pendingInputWindow = null;
                 _layoutHeldKeys?.Clear();
                 _hasPendingMouseMotion = false;
@@ -99,12 +100,37 @@ public sealed partial class DisplayServer
                 }
                 Input.ReleasePressedEvents();
             }
-            while (SDL.PollEvent(out var nativeEvent))
+            while (SDL.PollEvent(out var nativeEvent) ||
+                   EndWindowGesture() && SDL.PollEvent(out nativeEvent))
             {
-                if (dropInput && IsInputEvent((SDL.EventType)nativeEvent.Type))
+                var type = (SDL.EventType)nativeEvent.Type;
+                DisplayServer? gestureRelease = null;
+                if (_windowGestureRelease is { } owner && type is SDL.EventType.MouseButtonDown or SDL.EventType.MouseButtonUp &&
+                    nativeEvent.Button.Button == 1 && nativeEvent.Button.Which == 0)
+                {
+                    if (type == SDL.EventType.MouseButtonUp)
+                    {
+                        _windowGestureRelease = null;
+                        if (_discardWindowGestureRelease)
+                        {
+                            if (_windowGesture is null)
+                                _discardWindowGestureRelease = false;
+                            continue;
+                        }
+                        gestureRelease = owner;
+                    }
+                    else
+                    {
+                        if (_windowGesture is not null)
+                            continue;
+                        _windowGestureRelease = null;
+                        _discardWindowGestureRelease = false;
+                    }
+                }
+                if (dropInput && IsInputEvent(type))
                     continue;
-                var context = EventContext(nativeEvent);
-                if ((SDL.EventType)nativeEvent.Type == SDL.EventType.MouseMotion &&
+                var context = gestureRelease ?? EventContext(nativeEvent);
+                if (type == SDL.EventType.MouseMotion &&
                     context is not null &&
                     nativeEvent.Motion.Which != SDL.TouchMouseID && Input.UseAccumulatedInput)
                 {
@@ -139,9 +165,12 @@ public sealed partial class DisplayServer
                 {
                     if (context is { IsDisposed: false })
                     {
-                        var type = (SDL.EventType)nativeEvent.Type;
                         _eventInputWindow = type is >= SDL.EventType.JoystickAxisMotion and <= SDL.EventType.GamepadSteamHandleUpdated ? FocusedWindow() ?? this : context;
-                        try { context.DispatchEvent(nativeEvent); }
+                        try
+                        {
+                            if (gestureRelease is not null) context.DispatchMouseButton(nativeEvent.Button, canceled: true);
+                            else context.DispatchEvent(nativeEvent);
+                        }
                         finally { _eventInputWindow = null; }
                     }
                 }
@@ -540,7 +569,7 @@ public sealed partial class DisplayServer
         Input.ParseInputEvent(@event);
     }
 
-    private void DispatchMouseButton(SDL.MouseButtonEvent source)
+    private void DispatchMouseButton(SDL.MouseButtonEvent source, bool canceled = false)
     {
         if (source.Down) (_rootDisplay ?? this)._pressedInputWindow = this;
         var button = source.Button switch
@@ -575,7 +604,8 @@ public sealed partial class DisplayServer
             Position = position,
             GlobalPosition = position,
             Pressed = source.Down,
-            DoubleClick = source.Clicks >= 2,
+            Canceled = canceled,
+            DoubleClick = !canceled && source.Clicks >= 2,
         };
         SetPointerModifiers(@event);
         Input.ParseInputEvent(@event);

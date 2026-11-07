@@ -1,6 +1,61 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:window_start_drag(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowStartDrag(System.Int32)",
+      "reason": "X11 hands a physical left-button press to an EWMH window manager and releases SDL and managed pointer capture. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. Windows and macOS need native pointer handoff and backend verification (ADRs 0040/0021)."
+    },
+    {
+      "godot": "DisplayServer::method:window_start_resize(int:DisplayServer.WindowResizeEdge,int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowStartResize(Electron2D.DisplayServer.WindowResizeEdge,System.Int32)",
+      "reason": "X11 hands a physical left-button press to an EWMH window manager and releases SDL and managed pointer capture. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. Windows and macOS need native pointer handoff and backend verification (ADRs 0040/0021)."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_BOTTOM",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Bottom()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_BOTTOM_LEFT",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.BottomLeft()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_BOTTOM_RIGHT",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.BottomRight()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_LEFT",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Left()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_MAX",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Max()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_RIGHT",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Right()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_TOP",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Top()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_TOP_LEFT",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.TopLeft()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_TOP_RIGHT",
+      "electron2d": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.TopRight()",
+      "reason": "The compiled typed edge value retains the pinned numeric identity."
+    },
+    {
       "godot": "DisplayServer::method:keyboard_get_current_layout()",
       "electron2d": "method:Electron2D.DisplayServer.KeyboardGetCurrentLayout()",
       "reason": "ADRs 0040/0095: Windows uses live Win32 input locales and process activation. Linux X11 uses XKB group state, names, symbol prefixes and group locks. Both synchronize SDL before returning. Wayland needs compositor-native layout enumeration and selection. macOS requires an input-source provider."
@@ -1168,8 +1223,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First native programmatic interactive-resize operation with per-platform compositor checks.",
+      "state": "Implemented",
+      "reason": "The compiled resize edge enum and all nine values retain their numeric identities. The executable edge directions use backend-specific translation.",
       "godot": [
         "DisplayServer::enum:WindowResizeEdge",
         "DisplayServer::enum_value:WindowResizeEdge.WINDOW_EDGE_BOTTOM",
@@ -1220,16 +1275,10 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First native desktop-operation bridge: X11 _NET_WM_MOVERESIZE or Wayland xdg_toplevel.move with the initiating pointer-button serial, plus compositor tests. SDL hit testing does not start a move.",
+      "state": "Partial",
+      "reason": "X11 hands a physical left-button press to an EWMH window manager and releases SDL and managed pointer capture. Wayland needs the initiating seat serial and SDL-owned xdg-toplevel operations. Windows and macOS need native pointer handoff and backend verification (ADRs 0040/0021).",
       "godot": [
-        "DisplayServer::method:window_start_drag(int:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: First native desktop-operation bridge: X11 _NET_WM_MOVERESIZE or Wayland xdg_toplevel.resize with the initiating pointer-button serial, plus all-edge compositor tests. SDL hit testing does not start a resize.",
-      "godot": [
+        "DisplayServer::method:window_start_drag(int:)",
         "DisplayServer::method:window_start_resize(int:DisplayServer.WindowResizeEdge,int:)"
       ]
     },

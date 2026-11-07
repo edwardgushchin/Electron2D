@@ -4,8 +4,8 @@ public sealed partial class SceneTree
 {
     private readonly Dictionary<Viewport, Window> _embeddedFocus = [];
     private readonly Dictionary<Viewport, Window> _embeddedWindowHover = [];
-    private readonly Dictionary<Viewport, Window> _embeddedMouseCapture = [];
-    private readonly Dictionary<Viewport, (Window Window, Vector2 Start, Vector2i Position, Vector2i Size, int Edges, Rect2 CloseRect)> _embeddedDecorDrag = [];
+    private readonly Dictionary<Viewport, (Window Window, Vector2 Point, bool Left, bool CancelRelease)> _embeddedMouseCapture = [];
+    private readonly Dictionary<Viewport, (Window Window, Vector2 Start, Vector2i Position, Vector2i Size, int Edges, Rect2 CloseRect, bool FromClient)> _embeddedDecorDrag = [];
     private readonly Dictionary<(Viewport, int), Window> _embeddedTouchCapture = [];
     private void ReleaseEmbeddedHost(Viewport host)
     { _embeddedWindowHover.Remove(host); _embeddedFocus.Remove(host); _embeddedMouseCapture.Remove(host); CancelEmbeddedDecoration(host); foreach (var entry in _embeddedTouchCapture.ToArray()) if (entry.Key.Item1 == host) _embeddedTouchCapture.Remove(entry.Key); }
@@ -69,7 +69,7 @@ public sealed partial class SceneTree
             try { if (!window.IsDisposed) window.ExitWindowMouse(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         try { DisableGUIViewport(window); } catch (Exception error) { CollectException(ref errors, error); }
-        if (_embeddedMouseCapture.GetValueOrDefault(host) == window) _embeddedMouseCapture.Remove(host);
+        if (_embeddedMouseCapture.TryGetValue(host, out var capture) && capture.Window == window) _embeddedMouseCapture.Remove(host);
         if (_embeddedDecorDrag.TryGetValue(host, out var activeDecor) && activeDecor.Window == window) CancelEmbeddedDecoration(host);
         foreach (var entry in _embeddedTouchCapture.ToArray()) if (entry.Value == window) _embeddedTouchCapture.Remove(entry.Key);
         if (_embeddedFocus.GetValueOrDefault(host) == window)
@@ -94,9 +94,11 @@ public sealed partial class SceneTree
         Vector2? point = input switch { InputEventMouse mouse => mouse.Position, InputEventScreenTouch touch => touch.Position, InputEventScreenDrag drag => drag.Position, InputEventGesture gesture => gesture.Position, _ => null };
         if (ContinueEmbeddedDecoration(host, input, ref errors)) return null;
         Window? chosen = null;
+        bool canceledRelease = false;
         if (point is not null)
         {
-            if (input is InputEventMouse) _embeddedMouseCapture.TryGetValue(host, out chosen);
+            _embeddedMouseCapture.TryGetValue(host, out var capture);
+            if (input is InputEventMouse) chosen = capture.Window;
             if (input is InputEventScreenDrag drag) _embeddedTouchCapture.TryGetValue((host, drag.Index), out chosen);
             if (input is InputEventScreenTouch { Pressed: false } touch) _embeddedTouchCapture.TryGetValue((host, touch.Index), out chosen);
             if (chosen is { IsDisposed: true } || chosen is { Visible: false }) chosen = null;
@@ -114,9 +116,23 @@ public sealed partial class SceneTree
             }
             if (input is InputEventMouseButton button)
             {
-                if (button.Pressed && chosen is not null) { _embeddedMouseCapture[host] = chosen; FocusEmbeddedWindow(chosen); }
-                else if (!button.Pressed && button.ButtonMask == MouseButtonMask.None) _embeddedMouseCapture.Remove(host);
+                var left = button.ButtonIndex == MouseButton.Left;
+                if (button.IsPressed() && chosen is not null)
+                {
+                    _embeddedMouseCapture[host] = (chosen, point.Value, left || capture.Left, !left && capture.CancelRelease);
+                    FocusEmbeddedWindow(chosen);
+                }
+                else if (!button.Pressed)
+                {
+                    canceledRelease = left && capture.CancelRelease;
+                    if (button.ButtonMask == MouseButtonMask.None)
+                        _embeddedMouseCapture.Remove(host);
+                    else if (left && capture.Window is not null)
+                        _embeddedMouseCapture[host] = (capture.Window, point.Value, false, false);
+                }
             }
+            else if (input is InputEventMouseMotion && capture.Window is not null)
+                _embeddedMouseCapture[host] = (capture.Window, point.Value, capture.Left, capture.CancelRelease);
             if (input is InputEventScreenTouch touchEvent) { if (touchEvent.Pressed && chosen is not null) _embeddedTouchCapture[(host, touchEvent.Index)] = chosen; else if (!touchEvent.Pressed) _embeddedTouchCapture.Remove((host, touchEvent.Index)); }
         }
         else _embeddedFocus.TryGetValue(host, out chosen);
@@ -131,6 +147,8 @@ public sealed partial class SceneTree
         try
         {
             windowLocal = input.XformedBy(new Transform(0, -(Vector2)chosen.Position));
+            if (canceledRelease && windowLocal is InputEventMouseButton release)
+                release.Canceled = true;
             if (!ReceiveWindowInput(chosen, windowLocal, ref errors)) return null;
             if (chosen.IsDisposed || !ReferenceEquals(chosen.Tree, this) || chosen.GUIDisableInput) return null;
             localized = chosen.MakeViewportInputLocal(windowLocal);

@@ -4320,6 +4320,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DisplayServer.WindowResizeEdge",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "WindowResizeEdge",
+    "signature": "public enum Electron2D.DisplayServer.WindowResizeEdge",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DisplayWindowEvents",
     "kind": "type",
     "declaringType": "Electron2D.DisplayWindowEvents",
@@ -37301,6 +37319,123 @@
     "parameters": [],
     "returnType": "Electron2D.DisplayServer.VSyncMode",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Bottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "Bottom",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge Bottom = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.BottomLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "BottomLeft",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge BottomLeft = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.BottomRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "BottomRight",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge BottomRight = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Left()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "Left",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge Left = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "Max",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge Max = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Right()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "Right",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge Right = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.Top()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "Top",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge Top = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.TopLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "TopLeft",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge TopLeft = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.WindowResizeEdge.TopRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "name": "TopRight",
+    "signature": "public const Electron2D.DisplayServer.WindowResizeEdge TopRight = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.WindowResizeEdge",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.DomainWarpFractalType.Independent()",
@@ -112293,6 +112428,49 @@
       },
       {
         "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowStartDrag(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowStartDrag",
+    "signature": "public static System.Void WindowStartDrag(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowStartResize(Electron2D.DisplayServer.WindowResizeEdge,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowStartResize",
+    "signature": "public static System.Void WindowStartResize(Electron2D.DisplayServer.WindowResizeEdge edge, System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "edge",
+        "type": "Electron2D.DisplayServer.WindowResizeEdge",
+        "default": null
+      },
+      {
+        "name": "windowID",
         "type": "System.Int32",
         "default": "0"
       }
@@ -258451,6 +258629,38 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.StartDrag()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "StartDrag",
+    "signature": "public System.Void StartDrag()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.StartResize(Electron2D.DisplayServer.WindowResizeEdge)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "StartResize",
+    "signature": "public System.Void StartResize(Electron2D.DisplayServer.WindowResizeEdge edge)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "edge",
+        "type": "Electron2D.DisplayServer.WindowResizeEdge",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },

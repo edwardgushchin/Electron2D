@@ -19,25 +19,37 @@ public sealed partial class SceneTree
         var shape = moving ? CursorShape.Move : edges switch { 5 or 10 => CursorShape.FDiagSize, 6 or 9 => CursorShape.BDiagSize, 1 or 2 => CursorShape.HSize, 4 or 8 => CursorShape.VSize, _ => CursorShape.Arrow };
         try { if (display.CursorGetShapeCore() != shape) display.CursorSetShapeCore(shape); } catch (Exception error) { CollectException(ref errors, error); }
     }
+    internal void StartEmbeddedWindowGesture(Window window, int edges)
+    {
+        if (window.Embedder is not { } host || _embeddedDecorDrag.ContainsKey(host) ||
+            !_embeddedMouseCapture.TryGetValue(host, out var capture) || capture.Window != window ||
+            !capture.Left || capture.CancelRelease)
+            return;
+
+        _embeddedMouseCapture[host] = (window, capture.Point, true, true);
+        _embeddedDecorDrag[host] = (window, capture.Point, window.Position, window.Size, edges, default, true);
+    }
+
     private bool BeginEmbeddedDecoration(Viewport host, Window window, Vector2 point, ref List<Exception>? errors)
     {
         var title = window.EmbeddedTitleRect.HasPoint(point); var edges = title ? 0 : window.EmbeddedResizeEdges(point); if (!title && edges == 0) return false;
         try { FocusEmbeddedWindow(window); } catch (Exception error) { CollectException(ref errors, error); }
         if (window.IsDisposed || !window.Visible || window.Embedder != host || window.Borderless) return true;
         var close = window.EmbeddedCloseRect; var closing = title && close.HasPoint(point);
-        _embeddedDecorDrag[host] = (window, point, window.Position, window.Size, closing ? -1 : edges, close); window.SetEmbeddedClosePressed(closing);
+        _embeddedDecorDrag[host] = (window, point, window.Position, window.Size, closing ? -1 : edges, close, false); window.SetEmbeddedClosePressed(closing);
         return true;
     }
     private bool ContinueEmbeddedDecoration(Viewport host, InputEvent input, ref List<Exception>? errors)
     {
         if (!_embeddedDecorDrag.TryGetValue(host, out var active)) return false;
         var window = active.Window;
-        if (window.IsDisposed || !window.Visible || window.Embedder != host || window.Borderless || active.Edges > 0 && window.Unresizable)
+        if (window.IsDisposed || !window.Visible || window.Embedder != host || (!active.FromClient && window.Borderless) || active.Edges > 0 && window.Unresizable)
         { CancelEmbeddedDecoration(host); return false; }
         if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false } release)
         {
             CancelEmbeddedDecoration(host);
-            if (active.Edges < 0 && active.CloseRect.HasPoint(release.Position)) try { window.RequestEmbeddedClose(); } catch (Exception error) { CollectException(ref errors, error); }
+            if (active.FromClient) return false;
+            if (active.Edges < 0 && release.IsReleased() && active.CloseRect.HasPoint(release.Position)) try { window.RequestEmbeddedClose(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         else if (input is InputEventMouseMotion motion)
         {
@@ -67,7 +79,8 @@ public sealed partial class SceneTree
                 }
             }
             SetEmbeddedCursor(Math.Max(0, active.Edges), active.Edges == 0, ref errors);
+            return true;
         }
-        return true;
+        return !active.FromClient;
     }
 }

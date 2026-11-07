@@ -40,6 +40,9 @@ internal static class PopupMenuTests
         using (var down = new InputEventMouseButton { Position = Point(0), ButtonIndex = MouseButton.Left, Pressed = true }) root.PushInput(down, true);
         using (var up = new InputEventMouseButton { Position = Point(2), ButtonIndex = MouseButton.Left }) root.PushInput(up, true);
         Check(pressed.Count == 0, "Press/release on different records cancels.");
+        using (var down = new InputEventMouseButton { Position = Point(1), ButtonIndex = MouseButton.Left, Pressed = true }) root.PushInput(down, true);
+        using (var up = new InputEventMouseButton { Position = Point(1), ButtonIndex = MouseButton.Left, Canceled = true }) root.PushInput(up, true);
+        Check(pressed.Count == 0, "A canceled release cannot activate a menu item.");
         using (var down = new InputEventScreenTouch { Position = Point(1), Index = 0, Pressed = true }) root.PushInput(down, true);
         using (var up = new InputEventScreenTouch { Position = Point(1), Index = 0 }) root.PushInput(up, true);
         Check(pressed.SequenceEqual(new[] { 1 }), "Routed touch activation."); pressed.Clear();

@@ -99,6 +99,8 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | [`public void Hide()`](#hide) | Hides this window without disposing it or its scene. |
 | [`public int GetWindowID()`](#getwindowid) | Gets the native window identity while running. |
 | [`public void GrabFocus()`](#grabfocus) | Requests keyboard focus and foreground placement from the native system. |
+| [`public void StartDrag()`](#interactive-window-gestures) | Starts a move from a client-area left-button press. |
+| [`public void StartResize(DisplayServer.WindowResizeEdge edge)`](#interactive-window-gestures) | Starts resizing from a client-area press and a chosen edge. |
 | [`public bool HasFocus()`](#hasfocus) | Reports whether the active native window has keyboard focus. |
 | [`public void RequestAttention()`](#requestattention) | Requests a platform attention indication until this window is focused. |
 | [`public bool GetFlag(Flags flag)`](#getflag) | Gets a configured window policy. |
@@ -550,6 +552,10 @@ Requests a native taskbar progress fraction for the active window.
 **InvalidOperationException:** The window is inactive, accessed off-thread, or the request fails.
 
 **ObjectDisposedException:** The window is disposed.
+
+### Interactive window gestures
+
+Use `StartDrag()` from a custom title bar and `StartResize(edge)` from a resize handle. Invoke the method while the left-button press belongs to this window. Embedded windows, including borderless ones, use the containing viewport's coordinates and the existing constrained window geometry. Native windows follow the [display gesture contract](DisplayServer.md#interactive-window-gestures). The gesture cancels the initiating click. A hidden or detached window stays unchanged, and `Unresizable` disables resizing.
 
 ## Event Descriptions
 

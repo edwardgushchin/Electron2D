@@ -186,6 +186,8 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static Vector2i WindowGetSize(int windowId = MainWindowId)`](#method-windowgetsize) | Gets the main window's client size. |
 | [`public static void WindowSetSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetsize) | Requests a new main-window client size. |
 | [`public static Vector2i WindowGetPosition(int windowId = MainWindowId)`](#method-windowgetposition) | Gets the main window's global desktop position. |
+| [`public static void WindowStartDrag(int windowID = MainWindowId)`](#interactive-window-gestures) | Requests an interactive native move. |
+| [`public static void WindowStartResize(WindowResizeEdge edge, int windowID = MainWindowId)`](#interactive-window-gestures) | Requests an interactive native resize. |
 | [`public static void WindowSetPosition(Vector2i position, int windowId = MainWindowId)`](#method-windowsetposition) | Requests a global desktop position for the main window. |
 | [`public static bool ClipboardHas()`](#method-clipboardhas) | Gets whether the system clipboard currently contains text. |
 | [`public static string ClipboardGet()`](#method-clipboardget) | Gets text from the system clipboard. |
@@ -239,6 +241,10 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 ### Method Descriptions
 
 <a id="method-getwindowevents"></a>
+#### Interactive window gestures
+
+Call `WindowStartDrag` or `WindowStartResize` after the target receives a physical left-button press. Use a visible window and an unconfined pointer, with only the left button held. X11 requires an EWMH-capable window manager. Resizing requires a resizable window. The window manager controls geometry and the display pump reports the observed result. See [the display component](../components/display-server.md#interactive-window-gestures) and [WindowResizeEdge](DisplayServer.WindowResizeEdge.md).
+
 #### `public static DisplayWindowEvents GetWindowEvents(int windowID = 0)`
 
 Zero selects the main native window; a positive ID selects an active native child. Returns the same live publisher until explicit disposal or native retirement. A later query after explicit disposal creates a new publisher without closing the native window. Absent IDs throw `ArgumentOutOfRangeException`; unavailable/retiring services and off-owner access throw `InvalidOperationException`.

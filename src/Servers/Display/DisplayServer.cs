@@ -597,6 +597,7 @@ public sealed partial class DisplayServer : ElectronObject
         Exception? retirementFailure;
         lock (InstanceGate)
         {
+            RetireWindowGesture();
             retirementFailure = !_retiringNativeWindow ? PrepareNativeWindowRetirement() : null;
             if (RetireWindowEvents() is { } eventFailure) retirementFailure = retirementFailure is null ? eventFailure : new AggregateException(retirementFailure, eventFailure);
             _publisherQuitRequestedCore.Handlers = _publisherSystemThemeChangedCore.Handlers = _publisherCloseRequestedCore.Handlers = null;

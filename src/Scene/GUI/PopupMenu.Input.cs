@@ -61,6 +61,7 @@ public partial class PopupMenu
         else if (input is InputEventMouseButton button && (button.ButtonIndex == MouseButton.Left || (_initialButtons & Mask(button.ButtonIndex)) != 0))
         {
             var index = ItemAt(button.Position.Y);
+            if (button.Canceled) { _grabbedOpen = false; _initialButtons = 0; _pressedItem = null; return; }
             if (button.Pressed) { _grabbedOpen = false; _pressedItem = Eligible(index) ? _items[index] : null; FocusItem(index, false); }
             else { var grabbed = _grabbedOpen; _grabbedOpen = false; _initialButtons = 0; if (grabbed && _openedElapsed < .4) return; if (!Eligible(index)) return; if (!grabbed && _pressedItem is not null && _pressedItem != _items[index]) return; _pressedItem = null; if (_items[index].Submenu is not null) OpenSubmenu(index, false); else Activate(index); }
         }

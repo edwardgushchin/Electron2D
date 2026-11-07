@@ -286,6 +286,10 @@ commit before acceptance and restoration on cancellation.
 
 The native decoration producer for TitlebarChanged remains a separate prerequisite. TitleChanged covers text changes; custom nonclient input and system back requests now have their own executing producers.
 
+## Interactive window gestures
+
+`Window.StartDrag` and `StartResize` accept an initiating left-button press from the window's client area. An embedded window uses the same constrained geometry as its built-in frame, including borderless windows and retained opposite edges when size clamps. Releasing the press ends the gesture and sends a canceled release back to the initiating client. Hide and focus teardown retire the capture, and disabling resize stops an active resize. Run `ELECTRON2D_TEST_WINDOW_GESTURES=embedded` for the scene and GUI checks. Native children and the main window share the [display gesture contract](display-server.md#interactive-window-gestures).
+
 ## Independent native windows
 
 Native Windows retain an authored [mouse input polygon and full passthrough
