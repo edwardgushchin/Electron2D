@@ -1,16 +1,16 @@
 # OS
 
-Last updated: 2026-11-06
+Last updated: 2026-11-07
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
-Retained permanent process operating-system service with static operations and named Engine lookup. It cannot be independently constructed, disposed or unregistered. MoveToTrash uses system GIO on desktop Linux and the [Windows Shell recycle adapter](../components/windows-trash.md), preserving native recovery metadata/mount/link policies; no permanent deletion fallback exists. ShellOpen delegates URI/path requests to SDL. Linux ShellShowInFileManager opens the appropriate folder URI; Windows/macOS native selection requires its backend.
+Retained permanent process operating-system service with static operations and named Engine lookup. It cannot be independently constructed, disposed or unregistered. MoveToTrash uses system GIO on desktop Linux and the [Windows Shell recycle adapter](../components/windows-trash.md), preserving native recovery metadata/mount/link policies; no permanent deletion fallback exists. ShellOpen delegates URI/path requests to SDL. [ShellShowInFileManager](../components/file-manager.md) opens directories or selects exact items through Windows Shell identities; Linux retains the folder-URI fallback. macOS native selection requires its backend.
 
 `GetSystemCACertificates()` exports fresh public system CA encodings as PEM for an explicitly selected X509Certificate/TLSOptions trust snapshot. It uses read-only native Windows ROOT/disallow metadata, standard desktop Unix bundles or macOS anchors, without display initialization or trust-store mutation. See [system certificates](../components/system-certificates.md) for source order, native ownership, empty/error behavior, default live OS-trust distinction and verified platform boundaries.
 
 Empty/null/NUL inputs fail before external work. Recoverable trash failure throws IOException or unavailable-service NotSupportedException. Launch failure throws InvalidOperationException. These blocking native operations are unsuitable for real-time callbacks. FileDialog invokes trash only after its confirmation; the caller decides when to launch an external application.
 
-The isolated XDG child verifies recovery content/metadata and symlink-target preservation. External application launch, native memory and foreign platforms remain unverified. See [file-dialog component](../components/file-dialogs.md).
+The isolated XDG child verifies recovery content/metadata and symlink-target preservation. Windows file-manager checks inspect the native folder view and exact selection through an independent SDK observer. Other external application launches, native heaps and foreign platforms retain their separate gates. See the [file-dialog component](../components/file-dialogs.md).
 
 Process argv, Linux MIDI names and GIO paths use [tracked UTF8 input storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29); partial preparation retires preceding buffers.
 
@@ -20,7 +20,7 @@ Process argv, Linux MIDI names and GIO paths use [tracked UTF8 input storage](..
 | --- | --- |
 | `public static System.Void MoveToTrash(System.String path)` | Moves a file, directory or symbolic link to the desktop trash without permanently deleting it. path: An ordinary, res:// or user:// path identifying the entry itself. System.ArgumentException: The path is empty or contains a null character. System.ArgumentNullException: The path is null. System.NotSupportedException: The platform or system trash service is unavailable. System.IO.IOException: The native service cannot trash the entry. |
 | `public static System.Void ShellOpen(System.String uri)` | Requests the platform's default application for a URI or filesystem resource. uri: A nonempty URI or ordinary filesystem path. System.ArgumentException: The resource identifier is empty or contains a null character. System.InvalidOperationException: The native platform rejects the launch request. |
-| `public static System.Void ShellShowInFileManager(System.String fileOrDirPath, System.Boolean openFolder = true)` | Requests the file manager for a file or directory. fileOrDirPath: An ordinary filesystem path. openFolder: Enters a directory when true; otherwise opens its parent. System.NotSupportedException: The profile requires a native item-selection backend. |
+| `public static System.Void ShellShowInFileManager(System.String fileOrDirPath, System.Boolean openFolder = true)` | Requests the file manager for an ordinary filesystem path; globalize project paths first. Windows enters a directory when openFolder is true, otherwise selects the file/directory in its parent. Existing directory views retain native selection state. Invalid empty/null/NUL input fails before external work; Windows Shell rejection throws IOException. The macOS backend remains unavailable. See [native behavior and verification](../components/file-manager.md). |
 | `protected override System.Void ValidateDisposal()` | Inherited dialog/tree/scene lifecycle extension point; see the owning base reference. |
 
 ## Storage, verification and decisions

@@ -1120,7 +1120,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: Separately accepted native screen-image capture capability. Its first executable slice must obtain compositor or renderer pixels into owned Image buffers, define permission and failure behavior, and verify screen coordinates; a renderer alone does not provide screen capture (ADR 0028).",
+      "reason": "Trigger: native OS/compositor screen-pixel producer with owned Image buffers, coordinate/permission/failure/lifetime contracts and real desktop verification. The 2026-11-07 Windows prototype was reverted: both GDI and independent WGC-monitor capture failed to observe the owned rendered fixture despite foreground/topmost requests; a native desktop exposing the controlled fixture is required before qualification. Renderer/window readback alone is insufficient. See docs/components/desktop-screen-capture.md (ADRs 0028/0040/0090).",
       "godot": [
         "DisplayServer::method:screen_get_image(int:)",
         "DisplayServer::method:screen_get_image_rect(Rect2i:)",

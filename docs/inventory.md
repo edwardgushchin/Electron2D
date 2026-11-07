@@ -1,3 +1,5 @@
+The existing static OS service owns [Windows file-manager navigation](components/file-manager.md) through OS.WindowsFileManager.cs and a private STA/PIDL adapter. No public type is added.
+
 The existing static OS service owns [system certificate snapshots](components/system-certificates.md) through OS.Certificates.cs and its private native helpers. It adds no public type or trust-store owner.
 
 The existing Window/DisplayServer family owns [native Windows capture exclusion](components/window-capture.md) through DisplayServer.Capture.cs; no production type is added.

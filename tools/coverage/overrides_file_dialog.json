@@ -578,7 +578,7 @@
     {
       "godot": "OS::method:shell_show_in_file_manager(String:,bool:)",
       "electron2d": "method:Electron2D.OS.ShellShowInFileManager(System.String,System.Boolean)",
-      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; Native checkbox/choice controls execute through the Linux portal; exact root/virtual fallback and platform limits are documented in docs/components/native-file-portal.md."
+      "reason": "ADRs 0004/0095: retained static OS service opens directories or selects exact native Windows Shell items on a private STA; Linux keeps its folder-URI fallback. See docs/components/file-manager.md for behavior, native folder-view checks and remaining target gates."
     },
     {
       "godot": "class:OS",
@@ -824,11 +824,10 @@
     },
     {
       "godot": [
-        "OS::method:shell_open(String:)",
-        "OS::method:shell_show_in_file_manager(String:,bool:)"
+        "OS::method:shell_open(String:)"
       ],
       "state": "Partial",
-      "reason": "ShellOpen delegates SDL; Linux file-manager navigation uses the folder URI fallback. Windows/macOS native item-selection backends and equivalent mobile/browser behavior retain their target implementation/acceptance gates. External application launch is not exercised by automated fixtures."
+      "reason": "ShellOpen delegates URI/path launch to SDL. External application launch and equivalent foreign/mobile/browser acceptance retain their target gates."
     },
     {
       "godot": [
@@ -836,6 +835,13 @@
       ],
       "state": "Partial",
       "reason": "Desktop Linux GIO and Windows Shell recycle operations preserve native recovery metadata and link targets. Windows uses a private STA/generated COM sink, refuses permanent-delete steps and verifies operation/item/abort/recycle identity; controlled native undelete, source/package/NativeAOT, concurrency, sharing/long-path refusal and browser evidence is in docs/components/windows-trash.md. macOS/mobile/browser recoverable-trash backends, foreign Windows architecture/volume qualification, native heaps and full ADR 0021 delivery remain separate gates."
+    },
+    {
+      "godot": [
+        "OS::method:shell_show_in_file_manager(String:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "Windows native directory entry and exact file/directory selection execute through private STA/PIDL ownership, preserving caller COM state. Independent SDK folder-view checks cover source, fresh Core and NativeAOT profiles; see docs/components/file-manager.md. Linux retains the existing folder-URI fallback without exact-selection semantics. macOS needs its native selection adapter; mobile/browser, foreign Windows architecture/sandbox and full ADR 0021 qualification remain open."
     }
   ]
 }

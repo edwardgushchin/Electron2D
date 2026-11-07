@@ -409,3 +409,5 @@ Specified desktop application launch now uses [OS.OpenWithProgram](../components
 Owned movie runs now preserve the last successful simulation pose and PCM on process/physics quit before writer finalization; [animation completion](../components/movie-writing.md#animation-completion) owns the precise before-step/failure boundary.
 
 [Windows recoverable trash](../components/windows-trash.md) adds native Shell recovery, apartment/lifetime ownership and safe refusal through the existing OS service.
+
+[Windows file-manager navigation](../components/file-manager.md) opens directories and selects exact files/directories using Shell identities independently of an engine display. A private STA preserves the caller apartment; native folder-view checks verify the actual external result.

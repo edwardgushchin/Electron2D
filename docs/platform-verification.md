@@ -867,3 +867,9 @@ and individual logs. NativeAOT publication disables debug-symbol generation and 
 to fit the bounded host; strict compilation/trim warning gates remain enabled. Dependency debug symbols
 remain compressed after automatic cleanup approval was refused. See
 [the component](components/window-capture.md) for commands and policy limits.
+
+## Windows file-manager navigation (2026-11-07)
+
+`OS.ShellShowInFileManager` opens an existing directory or selects an exact file/directory through Windows Shell PIDLs on a private STA. The public consumer, freshly packed Core consumer, strict trimmed NativeAOT consumer and root test host each passed 14 assertions on the current Windows x64 desktop. The independent Windows SDK observer verifies actual folder views and canonical item selections, including Unicode/metacharacters, relative paths, trailing separators, directory-view reuse, failures and existing STA/MTA callers. The operation needs no engine display and preserves retained OS service identity.
+
+The receipt under `C:/Users/eduar/.codex/artifacts/Electron2D/file-manager-20261107/qualification.json` identifies completed source/package/AOT/root/post-main runs and exact binaries. NativeAOT initially failed for lack of disk space and passed after private-cache cleanup and lossless compression. The root host required an intermediate clean/rebuild after a disk-full compile left an invalid assembly; failed attempts remain in the logs. This profile does not establish native heap accounting, all Windows architectures/sandboxes, macOS/mobile/browser implementation or full ADR 0021 acceptance. Linux's existing folder-URI fallback has no new native-selection acceptance. See [the component](components/file-manager.md).
