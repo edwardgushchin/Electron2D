@@ -57,6 +57,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCREEN_CAPTURE") is { } 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCREEN_DPI") is { } dpiProfile) { ScreenDPITests.Run(dpiProfile, args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_BELL") is { } bellProfile) { SystemBellTests.Run(bellProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ADAPTER_IDENTITY") is { } adapterProfile) { GraphicsAdapterIdentityTests.Run(adapterProfile, args); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMMAND_LABELS") is { } commandLabelProfile) { GPUCommandLabelTests.Run(commandLabelProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_NAMES") is { } resourceNameProfile) { GPUResourceNameTests.Run(resourceNameProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DESKTOP_ACCESSIBILITY") is { } desktopAccessibilityProfile) { DesktopAccessibilityTests.Run(desktopAccessibilityProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_X11_LAYOUTS") is { } x11LayoutProfile) { X11KeyboardLayoutTests.Run(x11LayoutProfile); return; }

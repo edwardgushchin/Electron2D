@@ -1,6 +1,18 @@
 {
   "mappings": [
     {
+      "godot": "RenderingDevice::method:draw_command_begin_label(String:,Color:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawCommandBeginLabel(System.String,Electron2D.Color)",
+      "state": "Partial",
+      "reason": "Vulkan debug utils emits caller UTF-8 and RGBA on the live command buffer. Native tracing verifies labeled draw, dispatch and copy commands. Direct3D 12 needs a colored command-list event adapter, Metal needs native encoder/command-buffer scope handling, and WebGPU needs browser command recording. See docs/components/local-compute.md#native-command-labels (ADR 0028)."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_command_end_label()",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawCommandEndLabel()",
+      "state": "Partial",
+      "reason": "Closes the active Vulkan label. Replacement and submission balance the native command buffer. Other backends need the corresponding begin/end adapter and scope handling. See docs/components/local-compute.md#native-command-labels (ADR 0028)."
+    },
+    {
       "godot": "RenderingDevice::method:set_resource_name(RID:,String:)",
       "electron2d": "method:Electron2D.RenderingDevice.SetResourceName(Electron2D.RID,System.String)",
       "state": "Partial",

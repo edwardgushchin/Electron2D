@@ -481,6 +481,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         IdleList(canvasMetadata); if (_fence != 0 || _submittedReadbacks.Count != 0 || _timestampPending) throw new InvalidOperationException("Synchronize the previous submission first.");
         if (_command != 0)
         {
+            CloseCommandLabel();
             var command = _command; _command = 0; _fence = SDL.SubmitGPUCommandBufferAndAcquireFence(command);
             if (_fence == 0)
             {
@@ -552,7 +553,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             RenderingServer.NotifyRenderMutation();
             if (_drawPass != 0) { try { RestoreAddressUniforms(); } finally { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; } }
-            if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
+            if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; _commandLabelOpen = false; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
             ReleaseDepthResolves();

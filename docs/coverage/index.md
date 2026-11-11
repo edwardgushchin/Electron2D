@@ -1,3 +1,5 @@
+[Native GPU command labels](../components/local-compute.md#native-command-labels) group recorded draw, dispatch and copy commands with a caller-defined name and color on Vulkan. Two operations move from Blocked to Partial. Coverage is **13,814/18,853 (73.27%)**, with 1,111 Partial, 348 Unimplemented, 3,580 Blocked, 8,440 Excluded and zero unmapped.
+
 [Native GPU resource labels](../components/local-compute.md#native-resource-labels) add Vulkan debug names to live buffers, textures, views, samplers, shaders and pipelines. One method moves to Partial. Coverage is **13,814/18,853 (73.27%)**, with 1,109 Partial, 348 Unimplemented, 3,582 Blocked, 8,440 Excluded and zero unmapped.
 
 [Graphics adapter identity](../components/graphics-adapter-identity.md) exposes the selected hardware and driver through RenderingServer, RenderingDevice and OS. Six enum values become Implemented. The enum and seven methods move to Partial. Coverage is **13,814/18,853 (73.27%)**, with 1,108 Partial, 349 Unimplemented, 3,582 Blocked, 8,440 Excluded and zero unmapped.

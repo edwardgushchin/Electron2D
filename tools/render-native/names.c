@@ -62,13 +62,19 @@ static int label_resource(VulkanRenderer *renderer, uint32_t kind, void *resourc
     }
 }
 
+static VulkanRenderer *debug_renderer(SDL_GPUDevice *device)
+{
+    const char *driver = SDL_GetGPUDeviceDriver(device);
+    if (!e2d_render_pinned_core() || !driver || SDL_strcmp(driver, "vulkan") != 0) return NULL;
+    VulkanRenderer *renderer = (VulkanRenderer *)device->driverData;
+    return renderer && renderer->supportsDebugUtils ? renderer : NULL;
+}
+
 E2D_EXPORT int e2d_render_resource_name(SDL_GPUDevice *device, uint32_t abi, uint32_t kind, void *resource, const char *name)
 {
     if (!device || abi != 1 || !resource || !name) return -1;
-    const char *driver = SDL_GetGPUDeviceDriver(device);
-    if (!e2d_render_pinned_core() || !driver || SDL_strcmp(driver, "vulkan") != 0) return 0;
-    VulkanRenderer *renderer = (VulkanRenderer *)device->driverData;
-    if (!renderer || !renderer->supportsDebugUtils || !renderer->vkSetDebugUtilsObjectNameEXT) return 0;
+    VulkanRenderer *renderer = debug_renderer(device);
+    if (!renderer || !renderer->vkSetDebugUtilsObjectNameEXT) return 0;
     if (kind < E2D_NAME_BUFFER || kind > E2D_NAME_IMAGE_VIEW)
         return label_resource(renderer, kind, resource, name);
 
@@ -77,4 +83,28 @@ E2D_EXPORT int e2d_render_resource_name(SDL_GPUDevice *device, uint32_t abi, uin
     int result = label_resource(renderer, kind, resource, name);
     SDL_UnlockRWLock(renderer->defragLock);
     return result;
+}
+
+E2D_EXPORT int e2d_render_command_label(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *command,
+    const char *name, float r, float g, float b, float a, uint32_t replace)
+{
+    if (!device || abi != 1) return -1;
+    VulkanRenderer *renderer = debug_renderer(device);
+    if (!renderer || !renderer->vkCmdBeginDebugUtilsLabelEXT || !renderer->vkCmdEndDebugUtilsLabelEXT) return 0;
+    if (!command) return 1;
+    VulkanCommandBuffer *buffer = (VulkanCommandBuffer *)command;
+    if (buffer->renderer != renderer || !buffer->commandBuffer) return -1;
+
+    if (name) {
+        const VkDebugUtilsLabelEXT info = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+            .pLabelName = name,
+            .color = { r, g, b, a }
+        };
+        if (replace) renderer->vkCmdEndDebugUtilsLabelEXT(buffer->commandBuffer);
+        renderer->vkCmdBeginDebugUtilsLabelEXT(buffer->commandBuffer, &info);
+    } else {
+        renderer->vkCmdEndDebugUtilsLabelEXT(buffer->commandBuffer);
+    }
+    return 1;
 }

@@ -531,6 +531,16 @@ RenderingDeviceScreenTests passed software Vulkan Wayland, X11 and HDR-canvas pr
 
 The public-only DeviceScreen.Consumer passed CLR and strict full-trim, reflection-disabled NativeAOT on Wayland/X11/HDR, using the existing offline device-shader build target and embedded modules. Its successful pipeline execution and unchanged public viewport image complement the internal final-presentation pixel probe. The previous GLSL/HLSL graphics, buffer/image/index/instance, scissor, retained-canvas and interrupted-pass cohort also passed on software Wayland. Native map guards exclude NVIDIA; these are software-driver checks. Physical GPUs, native heap, throughput and other platforms remain unverified. Receipts: `bin/device-screen-draw/2026-10-24/` (the slice began before midnight).
 
+## Native command labels
+
+`DrawCommandBeginLabel(name, color)` starts a native Vulkan debug region on the device's current command buffer. It accepts UTF-8 names without embedded null characters and finite RGBA channels in the range zero to one. Vulkan treats all-zero RGBA as no color. A second begin replaces the region. `DrawCommandEndLabel()` closes the current region and is harmless when no region is open.
+
+The region covers subsequent recorded work, including draws, dispatches and copies, through render pass changes. It may begin before a list or inside it. Both explicit submission and an implicit submit from readback or renderer publication close the region before native submission. Disposing the device cancels its unsubmitted recording. The commands preserve ordinary owner-thread and renderer access rules.
+
+Colored regions require the pinned Vulkan debug-utils adapter. A backend or native module without that adapter rejects begin with `NotSupportedException`. Direct3D 12 requires colored command-list events, Metal requires its own encoder and command-buffer scope handling, and WebGPU requires browser command recording.
+
+Set `ELECTRON2D_TEST_COMMAND_LABELS=vulkan` to run the Windows Vulkan profile. Compile [the native observer](../../tests/Electron2D.Tests/Native/CommandLabelTrace.c) as `command-label-trace.dll` alongside the runner with the generated `memory-layout.h` and pinned SDL include paths used by the resource-label profile. It forwards the Vulkan commands and checks color, UTF-8 names, replacement, live commands inside regions and balance at submission. The profile verifies pixels and copied compute output. The `unavailable` profile checks refusal on Direct3D 12 or the previous module while ordinary GPU transfers still work.
+
 ## Native resource labels
 
 `SetResourceName(id, name)` sets a Vulkan debug-utils name on a live resource owned by the calling device. It accepts UTF-8 and clears the current name when given an empty string. It labels native buffers (including native-backed uniform buffers), owned images, shared image views, samplers, instantiated shader modules and executable pipelines. Both stages of a graphics shader and each materialized layer pipeline receive the label. A compute pipeline alias names the same native pipeline as its underlying program. The owner thread applies labels without changing resource data or recorded commands.

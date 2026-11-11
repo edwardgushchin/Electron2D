@@ -104,6 +104,8 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
 | `public string GetDeviceVendorName()` | Returns the selected device's hardware vendor when available. |
 | `public string GetDevicePipelineCacheUUID()` | Returns the native cache UUID in lowercase hexadecimal when available. |
+| `public void DrawCommandBeginLabel(string name, Color color)` | Starts or replaces a native command debug region. |
+| `public void DrawCommandEndLabel()` | Ends the active command debug region. |
 | `public void SetResourceName(RID id, string name)` | Sets or clears a native GPU resource label. |
 | [`public System.Byte[] ShaderCompileBinaryFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")`](#member-shader-binary-compile) | Validates and packages copied stages and a strict UTF-8 diagnostic name. |
 | [`public Electron2D.RID ShaderCreateFromBytecode(System.ReadOnlySpan<System.Byte> binaryData, Electron2D.RID placeholderRID = default)`](#member-shader-binary-load) | Loads a complete container and optionally initializes one reserved shader identity. |
@@ -325,6 +327,10 @@ Borrowers become invalid; they may still be freed explicitly.
 ### Device identity
 
 `GetDeviceVendorName()` and `GetDevicePipelineCacheUUID()` return empty strings when their native fields are unavailable. [`DeviceType`](RenderingDevice.DeviceType.md) classifies physical adapters. See [graphics adapter identity](../components/graphics-adapter-identity.md).
+
+### DrawCommandBeginLabel and DrawCommandEndLabel
+
+Labels the commands recorded on this device with a UTF-8 name and RGBA color. A new label replaces the current region. Explicit end or submission closes it. Labels can span native draw, compute and copy passes. See [native command labels](../components/local-compute.md#native-command-labels).
 
 ### SetResourceName
 
