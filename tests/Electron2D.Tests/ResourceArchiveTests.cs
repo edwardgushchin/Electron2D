@@ -81,7 +81,7 @@ internal static partial class ResourceArchiveTests
             SceneFiles(folder);
             Composite(folder);
             SceneReplacement(folder); FileReplication(folder); CopyOwnership(folder); StateOwnership(folder); EmptyAndEditor(folder);
-            FailureBoundaries(folder); SceneIDValidation(folder);
+            FailureBoundaries(folder); SceneIDValidation(folder); SubresourceAddresses(folder);
             FreshProcess(folder);
             Console.WriteLine("Typed resource graph and scene archive checks passed.");
         }
@@ -126,7 +126,8 @@ internal static partial class ResourceArchiveTests
         var rootPath = System.IO.Path.Combine(folder, "external.e2dres");
         using var dependency = new Data
         {
-            Number = 72
+            Number = 72,
+            ResourceSceneUniqueID = "External"
         };
         ResourceSaver.Save(dependency, dependencyPath);
         dependency.ResourcePath = dependencyPath;
@@ -136,6 +137,7 @@ internal static partial class ResourceArchiveTests
             Next = dependency
         };
         ResourceSaver.Save(root, rootPath, SaverFlags.RelativePaths);
+        Check(!ResourceLoader.Exists<Data>(rootPath + "::External"), "External table entries have no embedded address.");
         var tokens = ResourceLoader.GetDependencies(rootPath, true);
         Check(tokens.Length == 1 && tokens[0].Contains("::tests.Data::" + dependencyPath), "Typed UID dependency token resolves its relative fallback beside the archive.");
         using var loaded = ResourceLoader.Load<Data>(rootPath, ResourceLoader.CacheMode.Ignore);
@@ -476,6 +478,7 @@ internal static partial class ResourceArchiveTests
         using var data = new Data
         {
             Number = 7,
+            ResourceSceneUniqueID = "SceneData",
             ResourceLocalToScene = true
         };
         var root = new Actor
@@ -500,6 +503,8 @@ internal static partial class ResourceArchiveTests
         packed.Pack(root);
         root.Dispose();
         ResourceSaver.Save(packed, path, SaverFlags.Compress | SaverFlags.SaveBigEndian);
+        using var selected = ResourceLoader.Load<Data>(path + "::SceneData", ResourceLoader.CacheMode.Ignore);
+        Check(selected.Number == 7 && selected.ResourceLocalToScene, "Packed scenes expose their stored embedded resources by ID.");
         using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore);
         using var a = (Actor)loaded.Instantiate();
         var b = a.GetNode<Actor>("Child");

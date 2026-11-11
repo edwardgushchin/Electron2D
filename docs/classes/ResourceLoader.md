@@ -1,6 +1,6 @@
 # ResourceLoader
 
-Last updated: 2026-10-26
+Last updated: 2026-11-11
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed partial class Electron2D.ResourceLoader`. **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs).
 
@@ -12,7 +12,7 @@ Loads supported resource files through the engine's typed resource path cache.
 
 Supported resources include registered typed archives/format extensions, image textures, dynamic fonts, WAV/MP3/Ogg audio and certificate/private-key files. Static operations use a permanent retained service. The returned resource belongs to the caller and is cached weakly while it remains live. Synchronous load operations serialize cache decisions. File roots own newly decoded dependency graphs; the weak cache owns no resources.
 
-See [typed resource files](../components/resource-files.md) for the complete storage, type/factory, graph, UID, cache, failure, ownership and thread contract.
+Direct embedded loads preserve the selected graph's internal references and cycles. A whole-file load has independent ownership. See [typed resource files](../components/resource-files.md) for the complete storage, type/factory, graph, UID, cache, failure, ownership and thread contract.
 
 ## Example
 
@@ -62,11 +62,11 @@ Registers a borrowed typed file loader without duplicating identity.
 
 Reports whether a supported resource file exists or is already cached.
 
-The cache is checked first, so a cached resource may outlive removal of its source file.
+The cache is checked first, so a cached resource may outlive removal of its source file. An uncached embedded address is checked against the selected archive's table without constructing resources.
 
 Returns: True when a live cached instance has this type, or a recognized resource file exists for it.
 
-- `path`: Exact cache path or file path.
+- `path`: Exact cache path, file path or archive address with an embedded scene ID appended as `::ID`.
 
 - `TResource`: Requested resource type or compatible base type.
 
@@ -83,7 +83,7 @@ Retrieval does not extend ownership; the resource's owner controls disposal.
 
 Returns: A borrowed live instance, or null when the path is absent or holds another type.
 
-- `path`: Ordinal, case-sensitive cache path.
+- `path`: Ordinal, case-sensitive cache path or its registered UID alias, including embedded archive addresses.
 
 - `TResource`: Resource or one of its concrete derived types.
 
@@ -143,7 +143,7 @@ Reports whether any live registered resource occupies an exact cache path.
 
 Returns: True for a live registered resource, including a resource registered outside this loader.
 
-- `path`: Ordinal, case-sensitive cache path.
+- `path`: Ordinal, case-sensitive cache path or its registered UID alias, including embedded archive addresses.
 
 - `System.ArgumentException`: The path is null or empty.
 
@@ -156,7 +156,7 @@ Loads a supported typed resource from an operating-system, res:// or user:// pat
 
 Returns: A caller-owned live resource. Reuse and Replace can return the same cached instance.
 
-- `path`: File path; the exact path string is the cache key.
+- `path`: File path or archive address with an embedded scene ID appended as `::ID`. After UID resolution the exact logical address is the cache key.
 - `cacheMode`: Whether to reuse, ignore or refresh an existing live instance.
 
 - `TResource`: Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, X509Certificate, CryptoKey, or an assignable resource base type.
@@ -165,6 +165,7 @@ Returns: A caller-owned live resource. Reuse and Replace can return the same cac
 - `System.NotSupportedException`: The resource type or file extension is unsupported.
 - `System.InvalidOperationException`: Reuse finds a different resource type at the path.
 - `System.IO.IOException`: The file cannot be read.
+- `System.IO.FileNotFoundException`: The requested embedded scene ID is absent.
 - `System.FormatException`: Encoded audio is malformed or outside its verified channel profile.
 - `System.IO.InvalidDataException`: The encoded resource is malformed or exceeds supported limits.
 - `System.Security.Cryptography.CryptographicException`: Certificate/key input is malformed or does not match the requested key role.
@@ -219,7 +220,7 @@ ResourceArchiveTests exercises registered public formats, graph/scene persistenc
 | `LoadThreadedGet(string path)` | Waits and releases one matching request, returning the published Resource or rethrowing failure after cleanup. |
 | `LoadThreadedGet<TResource>(string path)` | Checks an assignable concrete type; an incompatible get does not consume the request. |
 
-Every accepted request requires get, including failure/cancellation. Conflicting duplicate options reject. There are at most 128 uncollected request paths. Preparation is allocating explicit work; at most 1024 file records and depth 64 are permitted. Independent external dependencies genuinely execute on workers with useSubThreads. Their temporary identities do not appear in the path cache.
+Requests, status and collection accept the same archive addresses and UID aliases as synchronous loading. Every accepted request requires get, including failure/cancellation. Conflicting duplicate options reject. There are at most 128 uncollected request paths. Preparation is allocating explicit work; at most 1024 file records and depth 64 are permitted. Independent external dependencies genuinely execute on workers with useSubThreads. Their temporary identities do not appear in the path cache.
 
 Cache modes preserve compatible identities, root cycles, aliases and ownership. Existing resources and Changed callbacks update on the publication owner. SceneTree.Defer and owner polls publish ready graphs; until then status is InProgress. Without a tree the consuming status/get caller publishes. An unpublished scene result cannot be consumed off owner, and a load callback cannot recursively consume another unpublished threaded request. A publication callback also rejects self-collection, preserving its matching consumers. Worker collection can help a specifically awaited older root task with active-stack checks.
 

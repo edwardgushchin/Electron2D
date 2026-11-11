@@ -6,7 +6,34 @@ namespace Electron2D;
 internal static partial class ResourceArchive
 {
     internal const int Limit = 67108864;
-    internal static bool IsPath(string path) => System.IO.Path.GetExtension(path).Equals(".e2dres", StringComparison.OrdinalIgnoreCase) || System.IO.Path.GetExtension(path).Equals(".e2dscene", StringComparison.OrdinalIgnoreCase);
+    internal static bool IsPath(string path) => IsArchiveExtension(System.IO.Path.GetExtension(path.AsSpan()));
+    internal static string FilePath(string path, out string? subresourceID)
+    {
+        var name = System.IO.Path.GetFileName(path.AsSpan());
+        var separator = name.IndexOf("::", StringComparison.Ordinal);
+        if (separator >= 0 && IsArchiveExtension(System.IO.Path.GetExtension(name[..separator])))
+        {
+            separator += path.Length - name.Length;
+            subresourceID = path[(separator + 2)..];
+            return path[..separator];
+        }
+        subresourceID = null;
+        return path;
+    }
+
+    private static bool IsArchiveExtension(ReadOnlySpan<char> extension) =>
+        extension.Equals(".e2dres", StringComparison.OrdinalIgnoreCase) || extension.Equals(".e2dscene", StringComparison.OrdinalIgnoreCase);
+
+    internal static string ResolveLoadPath(string path)
+    {
+        if (!path.StartsWith("uid://", StringComparison.Ordinal)) return path;
+        var separator = path.IndexOf("::", StringComparison.Ordinal);
+        if (separator < 0) return ResourceUID.EnsurePath(path);
+        var file = ResourceUID.EnsurePath(path[..separator]);
+        if (!IsPath(file)) throw new ArgumentException("A subresource address requires an archive file UID.", nameof(path));
+        return file + path[separator..];
+    }
+
     internal static string Absolute(string path) => ProjectSettings.GlobalizePath(ResourceUID.EnsurePath(path));
     internal static void AtomicWrite(string path, byte[] bytes)
     {
@@ -122,13 +149,13 @@ internal static partial class ResourceArchive
         bigEndian = (flags & SaverFlags.SaveBigEndian) != 0;
         return payload;
     }
-    internal static ResourceArchiveRead Decode(string path, ResourceLoader.CacheMode mode, string? originalPath = null)
+    internal static ResourceArchiveRead Decode(string path, ResourceLoader.CacheMode mode, string? originalPath = null, string? subresourceID = null)
     {
         var payload = ReadPayload(path, out var bigEndian, out var version);
         var context = new ResourceArchiveRead(path, mode, bigEndian, version, ResourceLoader.AbortOnMissingResources, originalPath);
         try
         {
-            context.Decode(payload);
+            context.Decode(payload, subresourceID);
             return context;
         }
         catch (Exception error)
@@ -155,6 +182,29 @@ internal static partial class ResourceArchive
         if (stream.GetAvailableBytes() != 0 || definitions[0].Path.Length != 0) throw new InvalidDataException("Invalid archive metadata root or trailing bytes.");
         return definitions;
     }
+    internal static string EmbeddedID(ArchiveDefinition definition, int index) =>
+        definition.SceneID.Length == 0 ? index.ToString(System.Globalization.CultureInfo.InvariantCulture) : definition.SceneID;
+
+    internal static int SelectResource(ArchiveDefinition[] definitions, string? subresourceID)
+    {
+        if (definitions[0].Path.Length != 0) throw new InvalidDataException("Archive root cannot be an external reference.");
+        var selected = subresourceID is null ? 0 : -1;
+        var sceneIDs = new HashSet<string>(StringComparer.Ordinal);
+        for (var i = 0; i < definitions.Length; i++)
+        {
+            var definition = definitions[i];
+            if (!Resource.IsValidSceneUniqueID(definition.SceneID)) throw new InvalidDataException("Invalid subresource scene ID.");
+            if (i == 0) continue;
+            if (definition.UID < -1 || definition.Path.Length != 0 && definition.Payload.Length != 0)
+                throw new InvalidDataException("Invalid external resource metadata.");
+            if (definition.Path.Length != 0) continue;
+            var id = EmbeddedID(definition, i);
+            if (!sceneIDs.Add(id)) throw new InvalidDataException("Duplicate subresource scene ID.");
+            if (id == subresourceID) selected = i;
+        }
+        return selected;
+    }
+
     internal static void ValidateScriptReferences(ArchiveDefinition[] definitions)
     {
         foreach (var definition in definitions)
@@ -489,7 +539,8 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
     internal readonly List<Resource> Owned = [];
     private Resource?[] _resources = [];
     private ArchiveDefinition[] _definitions = [];
-    internal Resource Root => _resources[0] ?? throw new InvalidDataException("Missing archive root.");
+    private int _selected;
+    internal Resource Root => _resources[_selected] ?? throw new InvalidDataException("Missing selected archive resource.");
     internal Resource? Reference(int id) => id == -1 ? null : id >= 0 && id < _resources.Length ? _resources[id] : throw new InvalidDataException("Invalid resource reference.");
     private StreamPeerBuffer Stream(byte[] bytes) => new()
     {
@@ -502,7 +553,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
         if (n < 0 || n > max) throw new InvalidDataException("Archive count exceeds its budget.");
         return n;
     }
-    internal void Decode(byte[] payload)
+    internal void Decode(byte[] payload, string? subresourceID)
     {
         using var stream = Stream(payload);
         var count = Count(stream);
@@ -512,15 +563,8 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
         for (var i = 0; i < count; i++) _definitions[i] = ResourceArchive.ReadDefinition(stream, version, abortOnMissing);
         ResourceArchive.ValidateScriptReferences(_definitions);
         if (stream.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing archive payload.");
-        var sceneIDs = new HashSet<string>(StringComparer.Ordinal);
-        for (var i = 1; i < _definitions.Length; i++)
-        {
-            var definition = _definitions[i];
-            if (definition.UID < -1 || definition.Path.Length != 0 && definition.Payload.Length != 0) throw new InvalidDataException("Invalid external resource metadata.");
-            var id = definition.SceneID.Length != 0 ? definition.SceneID : i.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            if (definition.Path.Length == 0 && !sceneIDs.Add(id)) throw new InvalidDataException("Duplicate subresource scene ID.");
-        }
-        if (_definitions[0].Path.Length != 0) throw new InvalidDataException("Archive root cannot be an external reference.");
+        _selected = ResourceArchive.SelectResource(_definitions, subresourceID);
+        if (_selected < 0) throw new FileNotFoundException("Archive has no embedded resource with this scene ID.", (originalPath ?? path) + "::" + subresourceID);
         void LoadIdentity(int i)
         {
             var d = _definitions[i];
@@ -579,7 +623,8 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             resource.ResourceName = d.Name;
             resource.ResourceLocalToScene = d.Local;
             resource.ResourceSceneUniqueID = d.SceneID;
-            if (i > 0) resource.SetPathCache((originalPath ?? path) + "::" + (d.SceneID.Length == 0 ? i.ToString(System.Globalization.CultureInfo.InvariantCulture) : d.SceneID));
+            if (i > 0) resource.SetPathCache((originalPath ?? path) + "::" + ResourceArchive.EmbeddedID(d, i));
+            else if (_selected != 0) resource.SetPathCache(originalPath ?? path);
             using var value = Stream(d.Payload);
             if (MissingResourceData.For(resource) is { } opaque && (resource is MissingResource && version >= 2 || opaque.OriginalClass.Length != 0))
             {

@@ -4,10 +4,10 @@ namespace Electron2D;
 
 public sealed partial class ResourceLoader
 {
-    private sealed class LocalizedResource(string path)
+    private sealed class LocalizedResource(string path, bool active)
     {
         internal readonly string Path = path;
-        internal bool Active = true;
+        internal bool Active = active;
     }
     private readonly object _localeMapGate = new();
     private ulong _localeMapVersion;
@@ -30,12 +30,14 @@ public sealed partial class ResourceLoader
             return Runtime._localeMap;
         }
     }
-    internal static void TrackLocalizedResource(Resource resource, string path)
+    internal static void TrackLocalizedResource(Resource resource, string path, bool active = true)
     {
         lock (LoadGate)
         {
-            Runtime._localizedResources.AddOrUpdate(resource, new(path));
-            Volatile.Write(ref Runtime._hasLocalizedResources, 1);
+            if (!Runtime._localizedResources.TryGetValue(resource, out var current) || current.Path != path)
+                Runtime._localizedResources.AddOrUpdate(resource, new(path, active));
+            else if (active) current.Active = true;
+            if (active) Volatile.Write(ref Runtime._hasLocalizedResources, 1);
         }
     }
     internal static long LocalizedSourceUID(string path)
@@ -56,7 +58,7 @@ public sealed partial class ResourceLoader
         try { return !resource.IsDisposed && resource.ResourcePath == path; }
         catch (ObjectDisposedException) { return false; }
     }
-    private static Resource LoadLocalized(string path, CacheMode mode, Type type, out bool owned)
+    private static Resource LoadStaged(string path, CacheMode mode, Type type, out bool owned)
     {
         lock (LoadGate)
         {
@@ -64,7 +66,8 @@ public sealed partial class ResourceLoader
             if (mode == CacheMode.Reuse && cached is not null)
             {
                 if (!type.IsInstanceOfType(cached)) throw new InvalidOperationException("Cached resource does not match requested type.");
-                TrackLocalizedResource(cached, path); owned = false; return cached;
+                TrackLocalizedResource(cached, path, LocaleMap().Contains(ResourceArchive.FilePath(path, out _)));
+                owned = false; return cached;
             }
             var graph = new ResourceLoadGraph(LoaderSnapshot(), false, default, AbortOnMissingResources);
             try
@@ -99,15 +102,16 @@ public sealed partial class ResourceLoader
                         if (!ReferenceEquals(map, LocaleMap()) || locale != TranslationServer.Culture.Name) break;
                         var resource = pair.Key; var path = pair.Value.Path;
                         if (!LocalizedAlive(resource, path)) { Runtime._localizedResources.Remove(resource); continue; }
-                        if (!map.Contains(path) && !pair.Value.Active) continue;
+                        var mapped = map.Contains(ResourceArchive.FilePath(path, out _));
+                        if (!mapped && !pair.Value.Active) continue;
                         var graph = new ResourceLoadGraph(LoaderSnapshot(), false, default, AbortOnMissingResources, map, locale);
                         try
                         {
                             graph.Prepare(path, CacheMode.IgnoreDeep, resource.GetType());
                             if (!graph.LocaleIsCurrent) { graph.DisposeUnused(); break; }
-                            using var prepared = graph.Commit();
-                            if (LocalizedAlive(resource, path)) resource.CopyFileState(prepared);
-                            pair.Value.Active = map.Contains(path);
+                            if (!LocalizedAlive(resource, path)) { graph.DisposeUnused(); continue; }
+                            _ = graph.Commit(resource);
+                            pair.Value.Active = mapped;
                         }
                         catch (Exception error)
                         {

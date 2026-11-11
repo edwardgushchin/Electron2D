@@ -1,6 +1,6 @@
 # Localized resource files
 
-Last updated: 2026-10-21
+Last updated: 2026-11-11
 
 ## Scope and owned types
 
@@ -18,11 +18,13 @@ Load/Exists/dependency inspection and rewrite select the backing file. Cache key
 
 Existing file access handles native/virtual paths and mounted packs. Public consumer checks execute PNG, bundled AtlasTexture/ImageTexture archives, relative external archives, ZIP images, WAV, FontFile and ShaderInclude data through actual format loaders. PackedScene saves external logical resource paths so a fresh process can choose locale-specific content at startup.
 
+[Embedded resource addresses](resource-files.md#embedded-resource-addresses) keep their scene ID when the backing archive changes. A variant that lacks the ID reports a failed refresh while the previous selected graph stays live.
+
 ## Refresh, ownership and errors
 
 After committing Culture/options and releasing the catalog lock, TranslationServer refreshes resources before current-MainLoop notification. Different-name Culture changes, every PseudolocalizationEnabled assignment, explicit ReloadPseudolocalization and project localization startup use this path. Equal-name Culture assignment retains the supplied CultureInfo without another refresh. Scene owner rejection precedes resource mutation; independent library trees keep explicit notification.
 
-Weak associations include mapped Ignore/IgnoreDeep results and registered cached sources. A resource loaded with no mapping and never registered is not retroactively discoverable. Each active target prepares an independent IgnoreDeep graph and receives a compatible CopyFromResource, preserving its identity. Removal restores original data once and marks the weak association inactive; re-adding a map reactivates known instances. Inactive associations do not read files. Disposal/path changes prune entries; weak keys do not retain callers or their resources.
+Weak associations include mapped Ignore/IgnoreDeep results and registered cached sources. Direct embedded loads are also tracked weakly before a mapping exists. Other unregistered results loaded without a mapping are outside later refreshes. Each active target prepares an independent IgnoreDeep graph. Publication rebases the graph's references to the existing compatible target before transferring file state and ownership. Removal restores original data once and marks the weak association inactive; re-adding a map reactivates known instances. Inactive associations do not read files. Disposal/path changes prune entries; weak keys do not retain callers or their resources.
 
 Bad preparation leaves prior target data intact. Copy callbacks can fail after data commitment; later resources and the application notification are still attempted, with aggregate errors reported. Completed copies and culture/options are not rolled back. Reentrant changes stop the obsolete pass and settle against the latest map/culture. Nesting and settling have 32-change guards; pathological observer loops fail explicitly. Actual refresh is cold, blocking, allocation-capable work. A prepared empty map without active associations retains zero owner-managed bytes; native allocation is not claimed.
 

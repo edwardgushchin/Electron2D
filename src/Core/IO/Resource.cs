@@ -254,7 +254,8 @@ public class Resource : ElectronObject
 
     /// <summary>Gets or sets the identifier used when this resource is embedded in a serialized scene.</summary>
     /// <value>An empty string, or an identifier containing only ASCII letters, digits, and underscores.</value>
-    /// <remarks>Assignments do not raise <see cref="Changed"/>. Successful graph saving assigns missing IDs and resolves duplicate IDs after atomic persistence; the first encountered authored ID is preserved.</remarks>
+    /// <remarks>Assignments do not raise <see cref="Changed"/>. Successful graph saving assigns missing IDs and resolves duplicate IDs after atomic persistence; the first encountered authored ID is preserved.
+    /// Use the saved ID with the archive's ::ID address to load the embedded resource through <see cref="ResourceLoader"/>.</remarks>
     /// <exception cref="ArgumentException">The assigned value contains a character outside ASCII letters, digits, and underscores.</exception>
     /// <exception cref="ArgumentNullException">The assigned value is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
@@ -835,7 +836,7 @@ public class Resource : ElectronObject
         resource._pathIsRegistered = false;
     }
 
-    private static bool IsValidSceneUniqueID(string? value)
+    internal static bool IsValidSceneUniqueID(string? value)
     {
         if (value is null)
             return false;

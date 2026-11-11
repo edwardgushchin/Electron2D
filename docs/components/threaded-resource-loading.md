@@ -1,6 +1,6 @@
 # Threaded resource loading
 
-Last updated: 2026-10-21
+Last updated: 2026-11-11
 
 ## Executable scope
 
@@ -11,6 +11,8 @@ Last updated: 2026-10-21
 The scene owner or standalone consuming caller publishes ready cache state and delivers replacement Changed callbacks. Owner status polling attempts publication without blocking on the synchronous cache gate; SceneTree.Defer also publishes. Get blocks for preparation, performs owner publication and consumes one matching request. Until publication finishes status stays InProgress; terminal states report progress one. Invalid/consumed paths report InvalidResource. Identical duplicates share work; conflicts and incompatible gets reject. Every success/failure/cancellation must be collected.
 
 Worker waits help only the selected dependency group, avoiding unrelated callbacks in loader scopes. Collection of an older root task uses active-stack/cycle checks and a non-consuming preparation wait; publication then retires its pool owner ticket. Public worker wait guards remain intact. A load callback cannot consume an unpublished threaded request, and a publication callback cannot collect its own active request; off-owner scene collection rejects before waiting.
+
+Requests, status and collection accept [embedded archive addresses](resource-files.md#embedded-resource-addresses). The selected resource owns its decoded graph, and publication rebases its cyclic references when replacing a compatible cached target.
 
 ## Ownership and cleanup
 

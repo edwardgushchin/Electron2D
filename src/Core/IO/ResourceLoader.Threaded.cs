@@ -47,7 +47,7 @@ public sealed partial class ResourceLoader
 
     /// <summary>Requests a typed resource graph on background workers, retaining its result until collected.</summary>
     /// <typeparam name="TResource">Requested resource type or compatible base type.</typeparam>
-    /// <param name="path">Ordinary, res://, user:// or registered UID path.</param>
+    /// <param name="path">Ordinary, res://, user:// or registered UID path. Append ::ID to select an embedded resource from an archive.</param>
     /// <param name="useSubThreads">Allows independent external dependency preparation on multiple workers.</param>
     /// <param name="cacheMode">Root and external dependency cache policy.</param>
     /// <param name="cancellationToken">Cooperative cancellation between file stages and before publication.</param>
@@ -64,8 +64,8 @@ public sealed partial class ResourceLoader
     /// <exception cref="PlatformNotSupportedException">The runtime cannot start background workers.</exception>
     public static void LoadThreadedRequest<TResource>(string path, bool useSubThreads = false, CacheMode cacheMode = CacheMode.Reuse, CancellationToken cancellationToken = default, SceneTree? publicationTree = null) where TResource : Resource
     {
-        CheckFilePath(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); cancellationToken.ThrowIfCancellationRequested();
-        path = ResourceUID.EnsurePath(path); publicationTree ??= Engine.MainLoop as SceneTree;
+        path = CheckFilePath(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); cancellationToken.ThrowIfCancellationRequested();
+        publicationTree ??= Engine.MainLoop as SceneTree;
         if (publicationTree is not null) { ObjectDisposedException.ThrowIf(publicationTree.IsDisposed, publicationTree); }
         var localization = LocaleMap(); var locale = TranslationServer.Culture.Name;
         lock (Runtime._threadGate)
@@ -163,7 +163,7 @@ public sealed partial class ResourceLoader
     /// <param name="path">Request path.</param><param name="progress">Completed-stage ratio; zero for an absent request, one for terminal status.</param><returns>The request lifetime status.</returns>
     public static ThreadLoadStatus LoadThreadedGetStatus(string path, out float progress)
     {
-        CheckPath(path); path = ResourceUID.EnsurePath(path); ThreadRequest? request;
+        CheckPath(path); path = ResourceArchive.ResolveLoadPath(path); ThreadRequest? request;
         lock (Runtime._threadGate) Runtime._threadRequests.TryGetValue(path, out request);
         if (request is null) { progress = 0; return ThreadLoadStatus.InvalidResource; }
         PublishRequest(request, false);
@@ -185,7 +185,7 @@ public sealed partial class ResourceLoader
     /// <exception cref="InvalidOperationException">A pending load callback or scene owner makes waiting unsafe.</exception>
     public static TResource LoadThreadedGet<TResource>(string path) where TResource : Resource
     {
-        CheckPath(path); path = ResourceUID.EnsurePath(path); ThreadRequest request;
+        CheckPath(path); path = ResourceArchive.ResolveLoadPath(path); ThreadRequest request;
         lock (Runtime._threadGate)
         {
             if (!Runtime._threadRequests.TryGetValue(path, out request!)) throw new ArgumentException("No matching threaded resource request remains.", nameof(path));

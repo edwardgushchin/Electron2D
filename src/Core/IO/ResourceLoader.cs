@@ -64,13 +64,17 @@ public sealed partial class ResourceLoader : ElectronObject
     public static Type[] GetClassesUsed(string path) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetClassesUsed(path); return []; }
     /// <summary>Loads a supported typed resource from an operating-system, res:// or user:// path.</summary>
     /// <typeparam name="TResource">Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, VideoStreamTheora, ShaderInclude, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
-    /// <param name="path">Logical file path; after UID resolution its exact string remains the cache key even when locale selection chooses another file.</param>
+    /// <param name="path">Logical file path or archive address with an embedded scene ID appended as ::ID.
+    /// After UID resolution its exact string remains the cache key even when locale selection chooses another file.</param>
     /// <param name="cacheMode">Whether to reuse, ignore or refresh an existing live instance.</param>
     /// <returns>A caller-owned live resource. Reuse and Replace can return the same cached instance.</returns>
     /// <exception cref="ArgumentException">The path or cache mode is invalid.</exception>
     /// <exception cref="NotSupportedException">The resource type or file extension is unsupported.</exception>
     /// <exception cref="InvalidOperationException">Reuse finds a different resource type, or locale/remap configuration changes during mapped graph preparation.</exception>
+    /// <remarks>A direct archive address selects a caller-owned graph independently of a whole-file load.
+    /// Internal references and cycles are preserved. Cache replacement preserves the selected resource's identity.</remarks>
     /// <exception cref="IOException">The file cannot be read.</exception>
+    /// <exception cref="FileNotFoundException">The archive does not contain the specified embedded scene ID.</exception>
     /// <exception cref="FormatException">Encoded audio is malformed or outside its verified channel profile.</exception>
     /// <exception cref="InvalidDataException">The encoded resource is malformed or exceeds supported limits.</exception>
     /// <exception cref="System.Security.Cryptography.CryptographicException">Certificate/key input is malformed or does not match the requested key role.</exception>
@@ -105,10 +109,11 @@ public sealed partial class ResourceLoader : ElectronObject
     private static Resource LoadImmediateTracked(string path, CacheMode cacheMode, Type requestedType, out bool owned, bool isolated = false, CacheMode? hookMode = null, string? originalPath = null)
     {
         owned = false;
-        CheckFilePath(path);
+        path = CheckFilePath(path);
         if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode));
-        path = ResourceUID.EnsurePath(path);
-        if (!isolated && LocaleMap().Contains(path)) return LoadLocalized(path, cacheMode, requestedType, out owned);
+        var file = ResourceArchive.FilePath(path, out var subresourceID);
+        if (!isolated && (subresourceID is not null || LocaleMap().Contains(file)))
+            return LoadStaged(path, cacheMode, requestedType, out owned);
         foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, requestedType))
             {
                 if (loader is ResourceArchiveLoader) return LoadFileResourceTracked(path, cacheMode, out owned, requestedType);
@@ -136,7 +141,6 @@ public sealed partial class ResourceLoader : ElectronObject
                 }
             }
         CheckType(requestedType);
-        CheckFilePath(path);
         if (cacheMode is < CacheMode.Ignore or > CacheMode.ReplaceDeep)
             throw new ArgumentOutOfRangeException(nameof(cacheMode));
 
@@ -222,9 +226,10 @@ public sealed partial class ResourceLoader : ElectronObject
     private static Resource LoadFileResourceTracked(string path, CacheMode cacheMode, out bool owned, Type? expectedType = null)
     {
         owned = false;
-        ArgumentException.ThrowIfNullOrEmpty(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); path = ResourceUID.EnsurePath(path);
+        ArgumentException.ThrowIfNullOrEmpty(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); path = ResourceArchive.ResolveLoadPath(path);
         if (ResourceLoadGraph.Current is { } stage) return stage.Load(path, cacheMode, expectedType ?? typeof(Resource));
-        if (!ResourceArchive.IsPath(path)) return LoadCore(path, cacheMode, expectedType ?? typeof(Resource));
+        if (!ResourceArchive.IsPath(path) || ResourceArchive.FilePath(path, out _) != path)
+            return LoadCore(path, cacheMode, expectedType ?? typeof(Resource));
         lock (LoadGate)
         {
             var cached = Resource.GetRegisteredPath(path); if (cacheMode == CacheMode.Reuse && cached is not null) { if (expectedType is not null && !expectedType.IsInstanceOfType(cached)) throw new InvalidOperationException("Cached resource does not match requested type."); return cached; }
@@ -252,16 +257,24 @@ public sealed partial class ResourceLoader : ElectronObject
 
     /// <summary>Reports whether a supported resource file exists or is already cached.</summary>
     /// <typeparam name="TResource">Requested resource type or compatible base type.</typeparam>
-    /// <param name="path">Exact cache path or file path.</param>
+    /// <param name="path">Exact cache path, file path or archive address with an embedded scene ID appended as ::ID.</param>
     /// <returns>True when a live cached instance has this type, or a recognized resource file exists for it.</returns>
-    /// <remarks>The cache is checked first, so a cached resource may outlive removal of its source file.</remarks>
+    /// <remarks>The cache is checked first, so a cached resource may outlive removal of its source file.
+    /// For an uncached archive address the lookup checks the selected file's table without constructing resources.</remarks>
     /// <exception cref="ArgumentException">The path is null or empty.</exception>
     public static bool Exists<TResource>(string path) where TResource : Resource
     {
-        CheckFilePath(path);
-        path = ResourceUID.EnsurePath(path);
+        path = CheckFilePath(path);
         if (Resource.GetRegisteredPath(path) is TResource) return true;
-        path = LocaleMap().Resolve(path, TranslationServer.Culture.Name);
+        var file = ResourceArchive.FilePath(path, out var subresourceID);
+        path = LocaleMap().Resolve(file, TranslationServer.Culture.Name);
+        if (subresourceID is not null)
+        {
+            if (!ResourceArchive.IsPath(path) || !FileAccess.FileExists(path)) return false;
+            var definitions = ResourceArchive.Inspect(path, out _);
+            var selected = ResourceArchive.SelectResource(definitions, subresourceID);
+            return selected >= 0 && typeof(TResource).IsAssignableFrom(definitions[selected].Type.Type);
+        }
         foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, typeof(TResource)) && loader.Exists(path)) { var type = loader.GetResourceType(path); return type is not null && typeof(TResource).IsAssignableFrom(type); }
         return Resource.GetRegisteredPath(path) is TResource ||
 
@@ -271,27 +284,27 @@ public sealed partial class ResourceLoader : ElectronObject
     }
 
     /// <summary>Reports whether any live registered resource occupies an exact cache path.</summary>
-    /// <param name="path">Ordinal, case-sensitive cache path.</param>
+    /// <param name="path">Ordinal, case-sensitive cache path or its registered UID alias, including embedded archive addresses.</param>
     /// <returns>True for a live registered resource, including a resource registered outside this loader.</returns>
     /// <exception cref="ArgumentException">The path is null or empty.</exception>
     public static bool HasCached(string path)
     {
         CheckPath(path);
-        path = ResourceUID.EnsurePath(path);
+        path = ResourceArchive.ResolveLoadPath(path);
         if (ResourceLoadGraph.Current?.IsCreatingPath(path) == true) return false;
         return Resource.GetRegisteredPath(path) is not null;
     }
 
     /// <summary>Gets a live cached resource of the requested type, or null when absent.</summary>
     /// <typeparam name="TResource">Resource or one of its concrete derived types.</typeparam>
-    /// <param name="path">Ordinal, case-sensitive cache path.</param>
+    /// <param name="path">Ordinal, case-sensitive cache path or its registered UID alias, including embedded archive addresses.</param>
     /// <returns>A borrowed live instance, or null when the path is absent or holds another type.</returns>
     /// <remarks>Retrieval does not extend ownership; the resource's owner controls disposal.</remarks>
     /// <exception cref="ArgumentException">The path is null or empty.</exception>
     public static TResource? GetCachedRef<TResource>(string path) where TResource : Resource
     {
         CheckPath(path);
-        path = ResourceUID.EnsurePath(path);
+        path = ResourceArchive.ResolveLoadPath(path);
         if (ResourceLoadGraph.Current?.IsCreatingPath(path) == true) return null;
         return Resource.GetRegisteredPath(path) as TResource;
     }
@@ -338,10 +351,12 @@ public sealed partial class ResourceLoader : ElectronObject
 
     private static void CheckPath(string path) => ArgumentException.ThrowIfNullOrEmpty(path);
 
-    private static void CheckFilePath(string path)
+    private static string CheckFilePath(string path)
     {
         CheckPath(path);
-        ProjectSettings.GlobalizePath(path);
+        path = ResourceArchive.ResolveLoadPath(path);
+        ProjectSettings.GlobalizePath(ResourceArchive.FilePath(path, out _));
+        return path;
     }
 
     private static bool IsExtension(string path, string[] extensions)

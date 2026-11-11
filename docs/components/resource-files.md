@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-26
+Last updated: 2026-11-11
 
 ## Live-scene authoring save
 
@@ -81,7 +81,15 @@ Further resource payloads require concrete stored schemas and factories, particu
 
 Exported SceneState views also retain their file-backed graph snapshot through a private lease, including after template disposal. Dispose such a view when finished. Internal unexported views retain no extra ownership; later state/content transitions update exported-view retention. ResourceArchiveTests verifies the final resource snapshot and deterministic release.
 
-Internal subresource paths are visible metadata; direct reload by a `file::subresource` path remains a separate ResourceLoader dependency requiring identity-table lookup with ownership rebasing. Load the file root and use its typed properties/SceneState in the current profile.
+## Embedded resource addresses
+
+Load or query a saved embedded resource by appending its case-sensitive scene ID to a `.e2dres` or `.e2dscene` path, for example `ResourceLoader.Load<ColorPalette>("res://theme.e2dres::Accent")`. The file can also be a registered UID. The archive root and external dependency records have no embedded address. Legacy records without an authored ID use their invariant decimal table index. An absent ID returns false from `Exists<T>` and fails a load with `FileNotFoundException`. An uncached existence check reads the selected archive table without invoking factories or resolving dependencies.
+
+A direct load decodes the archive graph and transfers ownership to the selected resource. Its aliases and cycles remain intact, including references to the original archive root. A separately loaded whole file owns a separate graph. The exact logical address is a weak cache key. `Reuse` returns its live instance, `Ignore` and `IgnoreDeep` prepare independent graphs, and `Replace` and `ReplaceDeep` update a compatible cached target in place, rebinding references to it before releasing its previous graph. Disposing the direct result retires its owned graph. File UIDs still identify the archive file.
+
+Threaded request, status and collection use the same logical address and publication rules. Locale remaps select the backing archive while keeping the same embedded ID. Locale changes refresh live results in place. When the selected variant exists but lacks the ID, refresh reports the error and preserves the existing result. Missing variant files follow the ordinary source fallback policy.
+
+ResourceArchiveTests exercises direct typed queries, compressed and big-endian archives, packed-scene resources, legacy and duplicate IDs, UID aliases, replacement of cyclic graphs, threaded publication, locale refresh and deterministic disposal.
 
 AudioBusLayout and all 27 concrete effect resources now have built-in direct schemas. Layout count fields prepare indexed bus/effect descriptors before dependent values load; aliases and borrowed external references keep ordinary archive semantics. Applying a loaded layout and generating later snapshots retain the existing internal file graph owner. AudioBusLayoutTests adds fresh-process default startup, cache/corruption and complete DSP schema roundtrips.
 

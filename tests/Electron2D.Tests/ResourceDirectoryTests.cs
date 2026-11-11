@@ -14,7 +14,7 @@ internal static class ResourceDirectoryTests
         {
             ProjectSettings.ConfigurePaths(folder, user);
             Directory.CreateDirectory(IOPath.Combine(folder, "nested"));
-            Directory.CreateDirectory(IOPath.Combine(folder, ".hidden"));
+            var hiddenDirectory = Directory.CreateDirectory(IOPath.Combine(folder, ".hidden"));
             using var root = new Node { Name = "Discovered" };
             using var scene = new PackedScene(); scene.Pack(root);
             ResourceSaver.Save(scene, IOPath.Combine(folder, "scene.e2dscene"));
@@ -22,7 +22,13 @@ internal static class ResourceDirectoryTests
             ResourceSaver.Save(curve, IOPath.Combine(folder, "curve.e2dres"));
             File.WriteAllText(IOPath.Combine(folder, "picture.PNG"), "invalid pixels");
             File.WriteAllText(IOPath.Combine(folder, "ignored.txt"), "text");
-            File.WriteAllText(IOPath.Combine(folder, ".hidden.e2dres"), "hidden");
+            var hiddenFile = IOPath.Combine(folder, ".hidden.e2dres");
+            File.WriteAllText(hiddenFile, "hidden");
+            if (OperatingSystem.IsWindows())
+            {
+                hiddenDirectory.Attributes |= FileAttributes.Hidden;
+                File.SetAttributes(hiddenFile, File.GetAttributes(hiddenFile) | FileAttributes.Hidden);
+            }
             File.WriteAllText(IOPath.Combine(folder, "picture.PNG.uid"), "sidecar");
             File.WriteAllText(IOPath.Combine(folder, "absent.png.import"), "unsupported remap");
             var expected = new[] { "curve.e2dres", "nested/", "picture.PNG", "scene.e2dscene" };
