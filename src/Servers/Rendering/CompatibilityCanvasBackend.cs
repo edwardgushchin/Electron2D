@@ -134,6 +134,14 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     }
 
     internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default, CanvasRenderTiming? timing = null)
+        => DrawCanvas(output, default, vertices, batches, clear, clearEnabled, timing);
+
+    internal void DrawDirect(Rect2 region, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches,
+        Color clear, bool clearEnabled, CanvasRenderTiming? timing)
+        => DrawCanvas(null, region, vertices, batches, clear, clearEnabled, timing);
+
+    private void DrawCanvas(CanvasRenderTarget? output, Rect2 directRegion, ReadOnlySpan<CanvasVertex> vertices,
+        ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, CanvasRenderTiming? timing)
     {
         var measured = (GLTiming?)timing;
         ResetRenderInfo();
@@ -149,15 +157,18 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                     throw new NotSupportedException($"The software compatibility renderer cannot execute {(batch.GroupShader || batch.MaskShader ? BlendMode.PremultAlpha : batch.Blend)} canvas blending.");
         var renderer = _renderer.DangerousGetHandle();
         if (measured is not null) { Check(SDL.FlushRenderer(renderer), "flush before measured canvas"); measured.Begin(); }
-        var size = output.Size; var screen = false;
+        var origin = output is null ? directRegion.Position : Vector2.Zero;
+        if (output is null) directRegion = directRegion.Intersection(new Rect2(Vector2.Zero, GetPixelSize()));
+        var screen = false;
         foreach (var batch in batches)
         {
             if (batch.MIPMaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
-            screen |= batch.Operation != CanvasOperation.Draw;
+            screen |= batch.Operation != CanvasOperation.Draw || batch.GroupShader || batch.MaskShader;
         }
-        if (screen) _ = BackBuffer(output, false);
+        if (screen)
+            _ = BackBuffer(output ?? throw new NotSupportedException("Direct viewports cannot copy or group screen pixels."), false);
         foreach (var batch in batches)
-            if (batch.MaskShader) { output.MaskBuffer ??= CreateTarget(size, default); break; }
+            if (batch.MaskShader) { output!.MaskBuffer ??= CreateTarget(output.Size, default); break; }
         foreach (var batch in batches)
             if (!batch.GroupShader && batch.Texture is { } texture)
             {
@@ -174,19 +185,33 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                     !SDL.GetBooleanProperty(SDL.GetRendererProperties(renderer), SDL.Props.RendererTextureWrappingBoolean, false))
                     throw new NotSupportedException("This compatibility driver cannot repeat textures whose dimensions are not powers of two.");
             }
-        Check(SDL.SetRenderTarget(renderer, output.Next.DangerousGetHandle()), "bind canvas framebuffer");
+        Check(SDL.SetRenderTarget(renderer, output?.Next.DangerousGetHandle() ?? 0), "bind canvas framebuffer");
         try
         {
-            Check(SDL.SetRenderClipRect(renderer, 0), "reset canvas clipping");
-            if (clearEnabled) { Check(SDL.SetRenderDrawColorFloat(renderer, clear.R, clear.G, clear.B, clear.A), "set clear color"); Check(SDL.RenderClear(renderer), "clear canvas framebuffer"); }
-            else { Check(SDL.SetTextureBlendMode(output.Current.DangerousGetHandle(), SDL.BlendMode.None), "preserve framebuffer blending"); Check(SDL.RenderTexture(renderer, output.Current.DangerousGetHandle(), 0, 0), "preserve completed canvas image"); }
+            SetClip(null);
+            if (clearEnabled)
+            {
+                Check(SDL.SetRenderDrawColorFloat(renderer, clear.R, clear.G, clear.B, clear.A), "set clear color");
+                if (output is null)
+                {
+                    var rect = new SDL.FRect { X = directRegion.Position.X, Y = directRegion.Position.Y, W = directRegion.Size.X, H = directRegion.Size.Y };
+                    Check(SDL.SetRenderDrawBlendMode(renderer, SDL.BlendMode.None), "replace direct viewport clear region");
+                    unsafe { Check(SDL.RenderFillRect(renderer, (nint)(&rect)), "clear direct viewport region"); }
+                }
+                else Check(SDL.RenderClear(renderer), "clear canvas framebuffer");
+            }
+            else if (output is not null)
+            {
+                Check(SDL.SetTextureBlendMode(output.Current.DangerousGetHandle(), SDL.BlendMode.None), "preserve framebuffer blending");
+                Check(SDL.RenderTexture(renderer, output.Current.DangerousGetHandle(), 0, 0), "preserve completed canvas image");
+            }
             if (_vertices.Length < vertices.Length) Array.Resize(ref _vertices, Math.Max(vertices.Length, _vertices.Length * 2));
             for (var i = 0; i < vertices.Length; i++)
             {
                 var v = vertices[i];
                 _vertices[i] = new SDL.Vertex
                 {
-                    Position = new SDL.FPoint { X = v.Position.X, Y = v.Position.Y },
+                    Position = new SDL.FPoint { X = v.Position.X + origin.X, Y = v.Position.Y + origin.Y },
                     Color = new SDL.FColor { R = v.Color.R, G = v.Color.G, B = v.Color.B, A = v.Color.A },
                     TexCoord = new SDL.FPoint { X = v.UV.X, Y = v.UV.Y }
                 };
@@ -196,15 +221,15 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             {
                 if (batch.Operation is CanvasOperation.Copy or CanvasOperation.MaskBegin)
                 {
-                    Check(SDL.SetRenderTarget(renderer, output.BackBuffer!.DangerousGetHandle()), "bind screen copy target");
+                    Check(SDL.SetRenderTarget(renderer, output!.BackBuffer!.DangerousGetHandle()), "bind screen copy target");
                     Check(SDL.SetRenderClipRect(renderer, 0), "clear copy clipping");
                     if (batch.Region.HasArea())
                     {
                         var rect = new SDL.FRect { X = batch.Region.Position.X, Y = batch.Region.Position.Y, W = batch.Region.Size.X, H = batch.Region.Size.Y };
-                        Check(SDL.SetTextureBlendMode(output.Next.DangerousGetHandle(), SDL.BlendMode.None), "set screen copy blending");
-                        Check(SDL.RenderTexture(renderer, output.Next.DangerousGetHandle(), in rect, in rect), "copy screen region");
+                        Check(SDL.SetTextureBlendMode(output!.Next.DangerousGetHandle(), SDL.BlendMode.None), "set screen copy blending");
+                        Check(SDL.RenderTexture(renderer, output!.Next.DangerousGetHandle(), in rect, in rect), "copy screen region");
                     }
-                    var target = batch.Operation == CanvasOperation.MaskBegin ? output.BackBuffer! : output.Next;
+                    var target = batch.Operation == CanvasOperation.MaskBegin ? output!.BackBuffer! : output!.Next;
                     Check(SDL.SetRenderTarget(renderer, target.DangerousGetHandle()), "restore canvas after copy");
                     Check(SDL.SetRenderClipRect(renderer, 0), "reset canvas copy clipping"); activeClip = null;
                     continue;
@@ -212,7 +237,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                 if (batch.Operation == CanvasOperation.MaskEnd && !inMask)
                 {
                     inMask = true;
-                    Check(SDL.SetRenderTarget(renderer, (batch.MaskShader ? output.MaskBuffer! : output.Next).DangerousGetHandle()), "bind mask result target");
+                    Check(SDL.SetRenderTarget(renderer, (batch.MaskShader ? output!.MaskBuffer! : output!.Next).DangerousGetHandle()), "bind mask result target");
                     Check(SDL.SetRenderClipRect(renderer, 0), "reset mask clipping"); activeClip = null;
                     if (batch.MaskShader) { Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, 0), "set mask clear"); Check(SDL.RenderClear(renderer), "clear mask alpha target"); }
                 }
@@ -223,38 +248,33 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                         var rect = new SDL.FRect { X = batch.Region.Position.X, Y = batch.Region.Position.Y, W = batch.Region.Size.X, H = batch.Region.Size.Y };
                         Check(SDL.SetRenderClipRect(renderer, 0), "reset mask composite clipping");
                         var maskBlend = SDL.ComposeCustomBlendMode(SDL.BlendFactor.DstAlpha, SDL.BlendFactor.Zero, SDL.BlendOperation.Add, SDL.BlendFactor.Zero, SDL.BlendFactor.One, SDL.BlendOperation.Add);
-                        Check(SDL.SetTextureBlendMode(output.BackBuffer!.DangerousGetHandle(), maskBlend), "set screen mask blending");
-                        Check(SDL.SetTextureScaleMode(output.BackBuffer.DangerousGetHandle(), SDL.ScaleMode.Nearest), "set screen mask filtering");
-                        Check(SDL.RenderTexture(renderer, output.BackBuffer.DangerousGetHandle(), in rect, in rect), "apply screen RGB to mask alpha");
-                        Check(SDL.SetRenderTarget(renderer, output.Next.DangerousGetHandle()), "restore main mask target");
+                        Check(SDL.SetTextureBlendMode(output!.BackBuffer!.DangerousGetHandle(), maskBlend), "set screen mask blending");
+                        Check(SDL.SetTextureScaleMode(output!.BackBuffer.DangerousGetHandle(), SDL.ScaleMode.Nearest), "set screen mask filtering");
+                        Check(SDL.RenderTexture(renderer, output!.BackBuffer.DangerousGetHandle(), in rect, in rect), "apply screen RGB to mask alpha");
+                        Check(SDL.SetRenderTarget(renderer, output!.Next.DangerousGetHandle()), "restore main mask target");
                         Check(SDL.SetRenderClipRect(renderer, 0), "reset final mask clipping");
-                        Check(SDL.SetTextureBlendMode(output.MaskBuffer!.DangerousGetHandle(), SDL.BlendMode.BlendPremultiplied), "set mask composite blending");
-                        Check(SDL.RenderTexture(renderer, output.MaskBuffer.DangerousGetHandle(), in rect, in rect), "composite masked children");
+                        Check(SDL.SetTextureBlendMode(output!.MaskBuffer!.DangerousGetHandle(), SDL.BlendMode.BlendPremultiplied), "set mask composite blending");
+                        Check(SDL.RenderTexture(renderer, output!.MaskBuffer.DangerousGetHandle(), in rect, in rect), "composite masked children");
                     }
-                    else Check(SDL.SetRenderTarget(renderer, output.Next.DangerousGetHandle()), "restore main after mask");
+                    else Check(SDL.SetRenderTarget(renderer, output!.Next.DangerousGetHandle()), "restore main after mask");
                     Check(SDL.SetRenderClipRect(renderer, 0), "reset completed mask clipping"); activeClip = null; inMask = false;
                     continue;
                 }
                 if (batch.Operation is CanvasOperation.GroupBegin or CanvasOperation.GroupEnd)
                 {
-                    var target = batch.Operation == CanvasOperation.GroupBegin ? output.BackBuffer! : output.Next;
+                    var target = batch.Operation == CanvasOperation.GroupBegin ? output!.BackBuffer! : output!.Next;
                     Check(SDL.SetRenderTarget(renderer, target.DangerousGetHandle()), "switch group render target");
                     Check(SDL.SetRenderClipRect(renderer, 0), "reset group clipping"); activeClip = null;
                 }
                 if (batch.Count == 0 || batch.Clip is { } emptyClip && !emptyClip.HasArea()) continue;
                 if (batch.Clip != activeClip)
                 {
-                    if (batch.Clip is { } clip)
-                    {
-                        var rect = new SDL.Rect { X = clip.Position.X, Y = clip.Position.Y, W = clip.Size.X, H = clip.Size.Y };
-                        Check(SDL.SetRenderClipRect(renderer, in rect), "set canvas clipping");
-                    }
-                    else Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping");
+                    SetClip(batch.Clip);
                     activeClip = batch.Clip;
                 }
                 var mode = batch.Repeat == TextureRepeat.Enabled ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp;
                 Check(SDL.SetRenderTextureAddressMode(renderer, mode, mode), "set texture addressing");
-                var texture = batch.GroupShader ? output.BackBuffer!.DangerousGetHandle() : batch.Texture is null ? 0 : TextureHandle(batch.Texture);
+                var texture = batch.GroupShader ? output!.BackBuffer!.DangerousGetHandle() : batch.Texture is null ? 0 : TextureHandle(batch.Texture);
                 var blend = batch.Operation == CanvasOperation.GroupBegin ? SDL.BlendMode.None : CanvasBlend(batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend);
                 if (texture == 0) Check(SDL.SetRenderDrawBlendMode(renderer, blend), "set canvas geometry blending");
                 else Check(SDL.SetTextureBlendMode(texture, blend), "set canvas texture blending");
@@ -282,7 +302,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                     Check(SDL.RenderGeometry(renderer, texture, _vertices.AsSpan(first, step), step, 0, 0), "draw canvas geometry");
                 RecordCanvasDraw(batch, batch.Count / step);
             }
-            output.Commit();
+            output?.Commit();
         }
         finally
         {
@@ -292,6 +312,32 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                 try { Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping"); }
                 finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
             }
+        }
+
+        void SetClip(Rect2i? clip)
+        {
+            if (output is null)
+            {
+                var region = clip is { } scissor
+                    ? directRegion.Intersection(new Rect2(origin + scissor.Position, scissor.Size))
+                    : directRegion;
+                var left = (int)MathF.Floor(region.Position.X);
+                var top = (int)MathF.Floor(region.Position.Y);
+                var rect = new SDL.Rect
+                {
+                    X = left,
+                    Y = top,
+                    W = (int)MathF.Ceiling(region.End.X) - left,
+                    H = (int)MathF.Ceiling(region.End.Y) - top
+                };
+                Check(SDL.SetRenderClipRect(renderer, in rect), "clip direct viewport");
+            }
+            else if (clip is { } scissor)
+            {
+                var rect = new SDL.Rect { X = scissor.Position.X, Y = scissor.Position.Y, W = scissor.Size.X, H = scissor.Size.Y };
+                Check(SDL.SetRenderClipRect(renderer, in rect), "set canvas clipping");
+            }
+            else Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping");
         }
     }
 
@@ -475,24 +521,52 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     private static void SetPrimitiveColor(nint renderer, SDL.FColor color) =>
         Check(SDL.SetRenderDrawColorFloat(renderer, color.R, color.G, color.B, color.A), "set compatibility primitive color");
 
+    private bool _directPresentation;
+
+    internal void BeginDirectPresentation()
+    {
+        var renderer = _renderer.DangerousGetHandle();
+        Check(SDL.SetRenderTarget(renderer, 0), "bind the native window framebuffer");
+        Check(SDL.SetRenderClipRect(renderer, 0), "reset window clipping");
+        ClearPresentation(renderer);
+    }
+
+    internal void EndDirectPresentation()
+    {
+        Check(SDL.RenderPresent(_renderer.DangerousGetHandle()), "present direct canvas");
+        _directPresentation = true;
+        DiscardPresentation();
+    }
+
+    internal override Image ReadbackScreen(CanvasRenderTarget? content) => _directPresentation
+        ? throw new NotSupportedException("The last window frame was drawn directly to screen.")
+        : base.ReadbackScreen(content);
+
+    private void ClearPresentation(nint renderer)
+    {
+        Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, _transparentWindow ? 0 : 1), "set presentation margins");
+        Check(SDL.RenderClear(renderer), "clear presentation margins");
+    }
+
+    internal void CopyPresentation(CanvasPresentation view, Vector2i client)
+    {
+        if (!PresentationRegion(view.Rect, client, out var clipped, out var uv)) return;
+        var source = view.Target.Current.DangerousGetHandle();
+        Check(SDL.SetTextureBlendMode(source, SDL.BlendMode.None), "set presentation blending");
+        Check(SDL.SetTextureScaleMode(source, SDL.ScaleMode.Nearest), "set presentation filtering");
+        var src = new SDL.FRect { X = uv.Position.X * view.Target.Size.X, Y = uv.Position.Y * view.Target.Size.Y, W = uv.Size.X * view.Target.Size.X, H = uv.Size.Y * view.Target.Size.Y };
+        var dst = new SDL.FRect { X = clipped.Position.X, Y = clipped.Position.Y, W = clipped.Size.X, H = clipped.Size.Y };
+        Check(SDL.RenderTexture(_renderer.DangerousGetHandle(), source, in src, in dst), "copy viewport to presentation");
+    }
+
     internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)
     {
         var renderer = _renderer.DangerousGetHandle(); var presentation = PreparePresentation();
         Check(SDL.SetRenderTarget(renderer, presentation.Next.DangerousGetHandle()), "bind presentation target");
         try
         {
-            Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, _transparentWindow ? 0 : 1), "set presentation margins");
-            Check(SDL.RenderClear(renderer), "clear presentation margins");
-            foreach (var view in viewports)
-            {
-                if (!PresentationRegion(view.Rect, presentation.Size, out var clipped, out var uv)) continue;
-                var source = view.Target.Current.DangerousGetHandle();
-                Check(SDL.SetTextureBlendMode(source, SDL.BlendMode.None), "set presentation blending");
-                Check(SDL.SetTextureScaleMode(source, SDL.ScaleMode.Nearest), "set presentation filtering");
-                var src = new SDL.FRect { X = uv.Position.X * view.Target.Size.X, Y = uv.Position.Y * view.Target.Size.Y, W = uv.Size.X * view.Target.Size.X, H = uv.Size.Y * view.Target.Size.Y };
-                var dst = new SDL.FRect { X = clipped.Position.X, Y = clipped.Position.Y, W = clipped.Size.X, H = clipped.Size.Y };
-                Check(SDL.RenderTexture(renderer, source, in src, in dst), "copy viewport to presentation");
-            }
+            ClearPresentation(renderer);
+            foreach (var view in viewports) CopyPresentation(view, presentation.Size);
             presentation.Commit();
         }
         finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window target"); }
@@ -500,6 +574,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         Check(SDL.SetTextureBlendMode(texture, SDL.BlendMode.None), "set presentation copy blending");
         Check(SDL.RenderTexture(renderer, texture, 0, 0), "copy presentation to window");
         Check(SDL.RenderPresent(renderer), "present canvas");
+        _directPresentation = false;
     }
 
     internal override void Sync(CanvasRenderTarget? target)

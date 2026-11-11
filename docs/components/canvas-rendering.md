@@ -906,6 +906,14 @@ MultiMeshInstance interpolation reset also covers its undrawn borrowed source. A
 
 ### Independent native window presentation
 
+### Direct viewport presentation
+
+In Compatibility, `RenderingServer.ViewportSetRenderDirectToScreen` switches a live scene or server-owned viewport to native-window framebuffer drawing. The attached client rectangle places its unscaled geometry. The viewport size, rectangle and visible client bound its draw region, including negative destination origins. Ordinary viewport copies and direct draws retain the same child-before-parent and sibling activation order. The mixed window pass clears the native client once and skips the retained presentation image. When a direct viewport requests a clear, it replaces only its region. Clear Once or Never leaves the rest of each new window composition intact.
+
+Enabling direct mode retires offscreen storage in the main and child backends. The viewport texture's logical RID survives. Texture readback returns null and sampling the direct viewport fails. Screen copies, screen-dependent masks and groups reject in direct mode. A completed direct window composition has no retained presentation image. Normal viewport images in the same composition retain their readback. Disabling direct mode lets the next eligible draw recreate the viewport texture. Disabled, hidden, detached, empty and fully clipped destinations leave pending Once state intact, as does drawing with buffer swaps disabled. A presented direct draw consumes pending update and clear Once modes. Native elapsed queries owned by the main compatibility context cannot time direct drawing into a distinct child window.
+
+The Windows profile `ELECTRON2D_TEST_VIEWPORT_DIRECT=windows` accepts the independent [WGC monitor reader](../../tests/Electron2D.Tests/Fixtures/ScreenCapture/monitor.cpp). It verifies the native output in an open desktop session, including mixed direct/copy layers, clipping, reordering, update policies, native child output, texture retirement and restoration, rejection and zero managed bytes over 32 prepared frames. `ELECTRON2D_TEST_VIEWPORT_DIRECT=gpu` checks explicit capability rejection and ordinary rendering afterward. Direct output uses the Compatibility backend. Further host and driver qualification follows [ADR 0021](../decisions/product.md#adr-0021).
+
 The same viewport graph now supplies independent desktop Window surfaces. GPU windows share authoritative targets and device state; compatibility windows replay frozen dependency submissions and cold-copy retained history when joining or recovering. Native child IDs select ViewportAttachToScreen destinations; a hidden root does not prevent visible children from drawing/presenting. Viewport release removes every compatibility mirror. See [the complete ownership and capability contract](window-runtime.md#independent-native-windows).
 
 ## Native popup surfaces

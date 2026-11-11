@@ -33,7 +33,13 @@ internal abstract partial class CanvasBackend : IDisposable
         var replacement = new CanvasRenderTarget(current, next, size) { HDR = HDR };
         storage?.Dispose(); return storage = replacement;
     }
-    internal Image ReadbackScreen(CanvasRenderTarget? content) => Readback(_presentation is { HasFrame: true } ? _presentation : content ?? throw new InvalidOperationException("No canvas frame has completed."));
+    protected void DiscardPresentation()
+    {
+        _presentation?.Dispose();
+        _presentation = null;
+    }
+
+    internal virtual Image ReadbackScreen(CanvasRenderTarget? content) => Readback(_presentation is { HasFrame: true } ? _presentation : content ?? throw new InvalidOperationException("No canvas frame has completed."));
     internal abstract void Present(ReadOnlySpan<CanvasPresentation> viewports);
     // Clip before native submission, preserving the source mapping for partially off-window rectangles.
     protected static bool PresentationRegion(Rect2 destination, Vector2i client, out Rect2 clipped, out Rect2 uv)
@@ -61,12 +67,17 @@ internal abstract partial class CanvasBackend : IDisposable
     internal virtual void ValidateMSAA(Viewport.MSAA mode) { if (mode != Viewport.MSAA.Disabled) throw new NotSupportedException("The compatibility renderer cannot use canvas multisample antialiasing."); }
     internal virtual RenderHandle CreateMultisampleTarget(Vector2i size, Color clear, Viewport.MSAA mode, bool HDR = false) => throw new NotSupportedException("Multisample canvas targets require GPU rendering.");
     internal virtual void ValidateMIPMapBias(float bias) { if (bias != 0) throw new NotSupportedException("Texture mipmap bias requires a supporting GPU sampler backend."); }
-    internal CanvasRenderTarget Target(Viewport viewport, Vector2i size, Color clear)
+    internal (float Bias, Viewport.MSAA Mode, bool HDR) ValidateViewportOptions(Viewport viewport)
     {
         var bias = viewport.RenderingOwner?.ViewportMIPMapBias(viewport) ?? viewport.TextureMIPMapBias; ValidateMIPMapBias(bias);
         var mode = viewport.RenderingOwner?.ViewportMSAA(viewport) ?? viewport.MSAA2D; ValidateMSAA(mode);
         var hdr = viewport.RenderingOwner?.ViewportHDR(viewport) ?? viewport.UseHDR2D; ValidateHDR(hdr);
         ValidateDebanding(viewport.RenderingOwner?.ViewportDebanding(viewport) ?? viewport.UseDebanding);
+        return (bias, mode, hdr);
+    }
+    internal CanvasRenderTarget Target(Viewport viewport, Vector2i size, Color clear)
+    {
+        var (bias, mode, hdr) = ValidateViewportOptions(viewport);
         if (_targets.TryGetValue(viewport, out var target) && target.Size == size && target.MSAA == mode && target.HDR == hdr) { target.TextureMIPMapBias = bias; return target; }
         if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Canvas targets require 1..16384 pixels per axis on this backend profile.");
         var current = CreateTarget(size, clear, HDR: hdr); RenderHandle next;
@@ -84,7 +95,7 @@ internal abstract partial class CanvasBackend : IDisposable
     }
     internal CanvasRenderTarget? FindTarget(Viewport viewport) => _targets.GetValueOrDefault(viewport);
     internal void ReleaseTarget(Viewport viewport) { if (_targets.Remove(viewport, out var target)) target.Dispose(); }
-    protected void ReleaseTargets() { foreach (var target in _targets.Values) target.Dispose(); _targets.Clear(); _presentation?.Dispose(); _presentation = null; }
+    protected void ReleaseTargets() { foreach (var target in _targets.Values) target.Dispose(); _targets.Clear(); DiscardPresentation(); }
     internal virtual void SetWindowVisible(DisplayServer display, bool visible) => display.SetWindowVisible(visible);
     internal virtual void BeginFrame() { }
     internal virtual void EndFrame() { }

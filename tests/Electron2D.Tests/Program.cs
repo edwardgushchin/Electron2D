@@ -747,6 +747,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROCEDURAL_MESH_CHILD") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROCEDURAL_MESH") is { } proceduralProfile) { if (proceduralProfile == "managed") ProceduralMeshTests.Run(); else ProceduralMeshTests.RunNative(proceduralProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VERTEX_ID") is { } vertexIDProfile) { if (vertexIDProfile == "managed") MeshVertexIDTests.Run(); else MeshVertexIDTests.RunNative(vertexIDProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_VERTEX") is { } canvasVertexProfile) { if (canvasVertexProfile == "managed") CanvasVertexProgramTests.RunManaged(); else CanvasVertexProgramTests.RunNative(canvasVertexProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_DIRECT") is { } directProfile) { ViewportDirectTests.Run(directProfile, args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_PRESENTATION") is { } presentationProfile) { ViewportPresentationTests.Run(presentationProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS_NATIVE") == "1") { ServerViewportTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS") == "1") { ServerViewportTests.RunManaged(); return; }

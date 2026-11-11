@@ -50,7 +50,8 @@ public sealed partial class RenderingServer
         foreach (var frame in _submittedFrames)
         {
             if (!ScreenAttachment(frame.Viewport, out var rect, out var id) || NativeWindow(id) is not { Visible: true, NativeDisplay: { } display }) continue;
-            if (rect == default) rect = new(Vector2.Zero, _backend.FindTarget(frame.Viewport)!.Size);
+            if (frame.DirectRegion.HasArea()) rect = frame.DirectRegion;
+            else if (rect == default) rect = new(Vector2.Zero, TargetSize(frame.Viewport));
             if (rect.Intersects(new Rect2(Vector2.Zero, display.WindowGetSizeCore())) && FrameNeedsTextureRedraw(frame)) return true;
         }
         return false;
@@ -75,7 +76,7 @@ public sealed partial class RenderingServer
     private bool TextureBatchVisible(CanvasFrame frame, CanvasBatch batch)
     {
         if (batch.Operation != CanvasOperation.Draw || batch.Count <= 0) return false;
-        var size = _backend.FindTarget(frame.Viewport)!.Size;
+        var size = TargetSize(frame.Viewport);
         var clip = new Rect2(Vector2.Zero, size);
         if (batch.Clip is { } scissor) clip = clip.Intersection(new Rect2(scissor.Position, scissor.Size));
         if (!clip.HasArea()) return false;

@@ -6,7 +6,7 @@ public sealed partial class RenderingServer
     {
         internal CanvasRenderTiming? Timing;
         internal readonly bool Owned = owned;
-        internal bool Active = !owned, DisableCanvas, ParentAssigned;
+        internal bool Active = !owned, DisableCanvas, ParentAssigned, DirectToScreen;
         internal Viewport? Parent;
         internal int ViewCount = 1;
         internal Vector2i? Size;

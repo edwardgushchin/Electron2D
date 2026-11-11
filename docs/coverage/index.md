@@ -1,3 +1,5 @@
+[Direct viewport presentation](../components/canvas-rendering.md#direct-viewport-presentation) draws directly into native windows with Compatibility. One operation moves from Blocked to Partial for remaining host and driver verification. Coverage is **13,830/18,849 (73.37%)**, with 1,110 Partial, 344 Unimplemented, 3,565 Blocked, 8,444 Excluded and zero unmapped.
+
 [Editor process-mode changes](../classes/SceneTree.md#e-electron2d-scenetree-treeprocessmodechanged) refresh processing eligibility on the live project-preview tree. One event moves to Implemented. Coverage is **13,830/18,849 (73.37%)**, with 1,109 Partial, 344 Unimplemented, 3,566 Blocked, 8,444 Excluded and zero unmapped.
 
 [Editor-only lighting](../components/canvas-lights.md#editor-only-lighting) admits point and directional lights by the edited root and exact authoring owner. The property and its abstract class move to Implemented. Coverage is **13,829/18,849 (73.37%)**, with 1,109 Partial, 345 Unimplemented, 3,566 Blocked, 8,444 Excluded and zero unmapped.

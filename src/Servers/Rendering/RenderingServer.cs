@@ -140,6 +140,7 @@ public sealed partial class RenderingServer : ElectronObject
         internal long RenderObjects, RenderPrimitives, RenderDrawCalls;
         internal bool Wanted, Drawn, ClearEnabled, TextureRedrawVisited;
         internal Color Clear;
+        internal Rect2 DirectRegion;
     }
     private Viewport _viewport;
     private Transform _canvasBasis;
@@ -161,8 +162,14 @@ public sealed partial class RenderingServer : ElectronObject
         if (!_canvasFrames.TryGetValue(viewport, out var frame)) _canvasFrames.Add(viewport, frame = new(viewport));
         viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = frame.TextureRedrawVisited = false; _activeFrames.Add(frame);
         var size = TargetSize(viewport);
+        frame.DirectRegion = default;
         if (ViewportActive(viewport) && (size.X > 1 && size.Y > 1 || ReferenceEquals(viewport, _window) && size.X > 0 && size.Y > 0))
         {
+            if (ViewportDirectToScreen(viewport))
+            {
+                _backend.ValidateViewportOptions(viewport);
+                return;
+            }
             _backend.Target(viewport, size.Max(Vector2i.One), FrameClear(viewport));
             foreach (var surface in _nativeWindows.Values)
                 if (surface.Presentation is null && !surface.NeedsSeed)
@@ -225,10 +232,10 @@ public sealed partial class RenderingServer : ElectronObject
                 finally { _submittingTextures = false; }
             }
             ReplayNativeFrames();
-            _continuousCanvas |= HasVisibleTextureRedraw();
             setupTicks += Stopwatch.GetTimestamp() - setupStart;
             PresentViewports();
             setupStart = Stopwatch.GetTimestamp();
+            _continuousCanvas |= HasVisibleTextureRedraw();
             EndNativeFrames();
             _nativeFrameStarted = false;
             PublishRenderInfo();
@@ -277,20 +284,32 @@ public sealed partial class RenderingServer : ElectronObject
             SubmitTexture(channels.DiffuseTexture, tree); SubmitTexture(channels.NormalTexture, tree); SubmitTexture(channels.SpecularTexture, tree); return;
         }
         if (texture is not ViewportTexture view || view.Bound is not { } viewport || !_canvasFrames.TryGetValue(viewport, out var frame) || !ViewportLive(viewport, tree)) return;
+        if (ViewportDirectToScreen(viewport)) throw new NotSupportedException("A direct viewport cannot be sampled.");
         if (viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled } || viewport is Window { Visible: false }) return;
         if (UpdateMode(viewport) == ViewportUpdateMode.WhenParentVisible && !ScreenVisible(viewport) && (RenderParent(viewport) is not { } parent || !ViewportScheduled(parent))) return;
         frame.Wanted = true; SubmitFrame(frame, tree);
     }
     private void SubmitFrame(CanvasFrame frame, SceneTree tree)
     {
-        if (frame.State != 0 || !frame.Wanted || !ViewportLive(frame.Viewport, tree) || !ViewportActive(frame.Viewport) || TargetSize(frame.Viewport).X < (ReferenceEquals(frame.Viewport, _window) ? 1 : 2) || TargetSize(frame.Viewport).Y < (ReferenceEquals(frame.Viewport, _window) ? 1 : 2) || _backend.FindTarget(frame.Viewport) is null) return;
-        if (UpdateMode(frame.Viewport) == ViewportUpdateMode.Disabled || frame.Viewport is Window { Visible: false }) return;
+        var viewport = frame.Viewport;
+        if (frame.State != 0 || !frame.Wanted || !ViewportLive(viewport, tree) || !ViewportActive(viewport) ||
+            UpdateMode(viewport) == ViewportUpdateMode.Disabled || viewport is Window { Visible: false }) return;
+        var size = TargetSize(viewport);
+        var minimum = ReferenceEquals(viewport, _window) ? 1 : 2;
+        if (size.X < minimum || size.Y < minimum) return;
+        var direct = ViewportDirectToScreen(viewport);
+        if (direct)
+        {
+            if (!TryDirectRegion(viewport, size, out var region)) return;
+            frame.DirectRegion = region;
+        }
+        else if (_backend.FindTarget(viewport) is null) return;
         var parentTiming = _cpuRenderTiming; PauseRenderCPU(); _cpuRenderTiming = null;
         var timing = ViewportTiming(frame.Viewport);
         try
         {
             timing?.BeginFrame(); _cpuRenderTiming = timing; if (timing is not null) _cpuRenderStart = Stopwatch.GetTimestamp();
-            frame.State = 1; BuildFrame(frame, tree);
+            frame.State = 1; BuildFrame(frame, tree, size, direct);
             foreach (var batch in frame.Batches)
             {
                 SubmitTexture(batch.Texture, tree);
@@ -299,9 +318,10 @@ public sealed partial class RenderingServer : ElectronObject
             SubmitParticleTextures(frame, tree);
             foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
             foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
-            var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
+            frame.Clear = FrameClear(viewport); frame.ClearEnabled = ClearMode(viewport) != ViewportClearMode.Never;
+            if (direct) { PauseRenderCPU(); return; }
+            var target = _backend.FindTarget(viewport); if (target is null) return;
             _renderingDevice?.FlushRendererCommands();
-            frame.Clear = FrameClear(frame.Viewport); frame.ClearEnabled = ClearMode(frame.Viewport) != ViewportClearMode.Never;
             _submittingTextures = true;
             try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting, modelPoses: CollectionsMarshal.AsSpan(frame.ModelPoses), timing: timing); }
             finally { _submittingTextures = false; }
@@ -350,11 +370,11 @@ public sealed partial class RenderingServer : ElectronObject
             Array.Clear(frame.TextureScratch);
         }
     }
-    private void BuildFrame(CanvasFrame frame, SceneTree tree)
+    private void BuildFrame(CanvasFrame frame, SceneTree tree, Vector2i pixels, bool direct)
     {
         UseFrame(frame); _instances.Clear(); _modelPoses.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _repeatModels.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
-        var viewport = frame.Viewport; var pixels = _backend.FindTarget(viewport)!.Size;
-        var framebufferTransform = viewport is Window embedded ? new Transform(0, Vector2.One * embedded.RenderDensity, 0, Vector2.Zero) : Transform.Identity;
+        var viewport = frame.Viewport;
+        var framebufferTransform = !direct && viewport is Window embedded ? new Transform(0, Vector2.One * embedded.RenderDensity, 0, Vector2.Zero) : Transform.Identity;
         // Drawing callbacks may change parenting, visibility or sibling order.
         _nodes.Clear();
         if (!_serverViewports.TryGetValue(viewport, out var viewportState) || !viewportState.DisableCanvas) CaptureCanvasScene(tree.Root);
@@ -369,7 +389,8 @@ public sealed partial class RenderingServer : ElectronObject
         foreach (var node in _nodes)
             if (node is VisibleOnScreenNotifier notifier) notifier.ScreenCandidate = false;
         _canvasChildOrder.Clear(); _canvasRootOrder.Clear();
-        foreach (var node in _nodes) if (node.RenderParent is null && node.RenderCanvas() is { } canvas)
+        foreach (var node in _nodes)
+            if (node.RenderParent is null && node.RenderCanvas() is { } canvas)
             {
                 _canvasRootOrder.TryGetValue(canvas.RID, out var index);
                 _canvasChildOrder.Add((node, node.ServerState is { Owned: true } ? 0 : index, _canvasChildOrder.Count));
