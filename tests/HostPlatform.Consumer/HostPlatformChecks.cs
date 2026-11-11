@@ -7,6 +7,7 @@ internal static class HostPlatformChecks
 {
     internal static void Run(string[] args)
     {
+        if (args is ["entropy"]) { Entropy(); return; }
         if (args.Length > 0 && args[0] is "gpu" or "compatibility") { Native(args[0], args[1], args.Length > 2 && args[2] == "movie"); return; }
         Check(OS.GetName() == "Linux" && !RenderingServer.IsAvailable, "Host queries require no renderer.");
         Check(OS.GetProcessorCount() > 0 && OS.GetProcessorName().Length != 0, "Native CPU metadata.");
@@ -68,6 +69,33 @@ internal static class HostPlatformChecks
         }
         Console.WriteLine(System.Text.Encoding.UTF8.GetString(bytes.ToArray()));
     }
+    private static void Entropy()
+    {
+        Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Entropy runs before native startup.");
+        foreach (var size in new[] { 0, 1, 32, 65_537 })
+            Check(OS.GetEntropy(size).Length == size, "Entropy returns the exact requested length.");
+        Reject<ArgumentOutOfRangeException>(() => OS.GetEntropy(-1));
+        Reject<ArgumentOutOfRangeException>(() => OS.GetEntropy(int.MinValue));
+
+        var first = OS.GetEntropy(32);
+        var second = OS.GetEntropy(32);
+        Check(!ReferenceEquals(first, second) && !first.AsSpan().SequenceEqual(second),
+            "Positive requests return independent samples.");
+        Check(first.AsSpan().ContainsAnyExcept((byte)0), "The provider filled the first sample.");
+        var saved = (byte[])second.Clone();
+        Array.Clear(first);
+        Check(second.AsSpan().SequenceEqual(saved), "A caller can modify its bytes without changing another result.");
+
+        Parallel.For(0, 16, _ =>
+        {
+            var sample = OS.GetEntropy(64);
+            Check(sample.Length == 64 && sample.AsSpan().ContainsAnyExcept((byte)0),
+                "A concurrent caller receives a filled, correctly sized result.");
+        });
+        Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Entropy leaves native services unopened.");
+        Console.WriteLine("OS entropy passed: exact lengths, invalid sizes, independent results and concurrent calls.");
+    }
+
     private static void QueryPrepared() { _ = OS.GetName(); _ = OS.GetDistributionName(); _ = OS.GetVersion(); _ = OS.GetProcessorName(); _ = OS.HasFeature("linux"); _ = OS.HasFeature("s3tc"); _ = OS.IsDebugBuild(); }
     private static void Restore(string name, string? value) { if (value is null) OS.UnsetEnvironment(name); else OS.SetEnvironment(name, value); }
     private static void Native(string backend, string output, bool movie = false)

@@ -22,6 +22,12 @@ GPU renderer startup captures complete s3tc/rgtc/bptc family support for ordinar
 
 `ELECTRON2D_TEST_OS_THREADS=delay` checks zero, negative and interrupted waits, both units, values past the 32-bit nanosecond boundary, a separate caller thread and Windows handle cleanup. It runs on Windows x64 and Arch Linux x64 under WSL. The browser suite includes both units on its UI thread. Browser execution, other target hosts and package qualification remain open.
 
+## Host entropy
+
+`OS.GetEntropy(size)` uses the runtime cryptographic random provider also used by `Crypto`. It returns an independent array for each positive size and an empty array for zero. Negative sizes throw before allocation. An unavailable or failing provider propagates its exception. The call is synchronous and requires no display, renderer, scene or owner thread.
+
+Run `HostPlatform.Consumer entropy` or set `ELECTRON2D_TEST_OS_ENTROPY=1` on the root runner. The shared profile exercises zero, one byte, 32 bytes, a 65,537-byte request, negative sizes, result ownership and parallel calls before native startup. It runs on Windows x64 and Arch Linux x64 under WSL. Further target and packaged execution follow ADR 0021.
+
 ## Invariants and errors
 
 Host metadata and capability preparation are cold. Prepared immutable identity and feature queries reuse data; live environment queries may allocate. Null feature names throw ArgumentNullException; unknown/empty/malformed names return false. Native service shutdown removes its capability snapshot. Environment edits remain process-local and synchronized through OS. No shell subprocess is used to read host identity. Optional file reads have fixed byte budgets; parser results never execute shell syntax.

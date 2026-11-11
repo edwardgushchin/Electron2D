@@ -154349,6 +154349,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetEntropy(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetEntropy",
+    "signature": "public static System.Byte[] GetEntropy(System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetEnvironment(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.OS",

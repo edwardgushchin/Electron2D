@@ -295,6 +295,10 @@ finalization. Native naming changes no managed Thread.Name and does not truncate
 overlong UTF-8 input. Unsupported profiles fail explicitly. See the
 [complete behavior and verification](../components/os-thread-identity.md).
 
+## Host entropy
+
+`OS.GetEntropy(int size)` returns the requested number of cryptographically secure bytes from the host runtime provider. Each positive request returns a caller-owned array. Zero returns an empty array. Negative sizes throw `ArgumentOutOfRangeException` and provider failures propagate. Calls can run concurrently before engine startup. [Host entropy](../components/host-platform.md#host-entropy)
+
 ## Host identity and feature queries
 
 Sources: [OS.Host.cs](../../src/Core/OS/OS.Host.cs), [OS.Features.cs](../../src/Core/OS/OS.Features.cs). All operations are static on the retained process service.

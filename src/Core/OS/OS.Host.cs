@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
+using CryptoRandom = System.Security.Cryptography.RandomNumberGenerator;
 
 namespace Electron2D;
 
@@ -9,6 +10,21 @@ public sealed partial class OS
     private readonly Lazy<Dictionary<string, string>> _hostRelease = new(() => ParseHostRelease(ReadHostText("/etc/os-release", 65536)));
     private readonly Lazy<string> _processorName = new(ReadProcessorName);
     private readonly Lazy<string> _hostVersion = new(ReadHostVersion);
+
+    /// <summary>Returns cryptographically secure random bytes from the host runtime provider.</summary>
+    /// <param name="size">The number of bytes to generate.</param>
+    /// <returns>A caller-owned array of the requested length, or an empty array when the size is zero.</returns>
+    /// <remarks>Concurrent calls are supported independently of engine startup. Positive requests allocate their
+    /// result and synchronously obtain random bytes.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> is negative.</exception>
+    /// <exception cref="System.Security.Cryptography.CryptographicException">The runtime provider cannot generate the bytes.</exception>
+    /// <exception cref="PlatformNotSupportedException">The runtime has no supported cryptographic random provider.</exception>
+    public static byte[] GetEntropy(int size)
+    {
+        Service.ThrowIfDisposed();
+        ArgumentOutOfRangeException.ThrowIfNegative(size);
+        return CryptoRandom.GetBytes(size);
+    }
 
     /// <summary>Gets the platform family hosting this process.</summary>
     /// <returns>Windows, Linux, macOS, Android, iOS, tvOS, Web or the managed runtime's platform description.</returns>

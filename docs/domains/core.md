@@ -392,6 +392,8 @@ The typed project schema includes ordered LocaleResourceRemaps with compiled JSO
 
 ## Host platform integration
 
+`OS.GetEntropy` supplies caller-owned cryptographic random bytes from the host runtime without opening native engine services. [Host entropy](../components/host-platform.md#host-entropy)
+
 `OS.DelayMSEC` and `OS.DelayUSEC` block the calling thread against a monotonic clock independently of engine startup and the scene clock. See [blocking thread delays](../components/host-platform.md#blocking-thread-delays).
 
 OS now exposes actual host platform/distribution/version, native logical CPU count and available model, live system locale and Linux sandbox observations. Shared host features drive typed project overrides; OS also observes current movie/font/rendering capabilities without opening a graphics device. See [host identity and features](../components/host-platform.md). Static `OS.GetMemoryInfo` also queries immutable native physical/free/available/stack budgets without an active lifecycle; platform meanings and independent native verification are in [host memory](../components/host-memory.md).

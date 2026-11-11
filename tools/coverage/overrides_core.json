@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"godot": "OS::method:get_entropy(int:)", "electron2d": "method:Electron2D.OS.GetEntropy(System.Int32)", "reason": "ADRs 0004/0095/0113: static OS access to the host runtime cryptographic random provider."},
     {"godot": "OS::method:delay_msec(int:)", "electron2d": "method:Electron2D.OS.DelayMSEC(System.Int32)", "reason": "Typed static calling-thread delay under ADR 0095."},
     {"godot": "OS::method:delay_usec(int:)", "electron2d": "method:Electron2D.OS.DelayUSEC(System.Int32)", "reason": "Typed static calling-thread delay under ADR 0095."},
     {"godot": "OS::method:get_system_ca_certificates()", "electron2d": "method:Electron2D.OS.GetSystemCACertificates()", "reason": "ADRs 0004/0095/0113: retained static OS export of fresh public native trust-anchor PEM snapshots, independent of display initialization. The system certificate component owns source/policy/lifetime and executable qualification."},
@@ -1799,6 +1800,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0095/0113: the static OS operation returns the exact requested number of host runtime cryptographic bytes in a caller-owned array. Negative sizes and provider failures surface as typed exceptions. The public host consumer verifies empty, small and larger requests, ownership, concurrency and lifecycle independence on Windows and Linux.",
+      "godot": ["OS::method:get_entropy(int:)"]
+    },
     {
       "godot": ["OS::method:delay_msec(int:)", "OS::method:delay_usec(int:)"],
       "state": "Partial",
