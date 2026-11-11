@@ -36,7 +36,7 @@ internal static class NavigationLinkTests
         var allocated = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 2000; i++) { _ = NavigationServer.LinkGetStartPosition(link); NavigationServer.LinkSetStartPosition(link, new(8, 5)); NavigationServer.Synchronize(); }
         Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "2000 unchanged link identity/setting/sync cycles allocate zero bytes.");
         NavigationServer.FreeRID(map); Check(NavigationServer.LinkGetMap(link) == default, "Map free detaches surviving caller-owned links."); NavigationServer.FreeRID(link); Reject<ArgumentException>(() => NavigationServer.LinkGetIterationID(link)); NavigationServer.FreeRID(a); NavigationServer.FreeRID(b);
-        WeightedRoutes(); CompleteRouteCosts(); SameRegion(); SceneAndStorage(); WeakLifetime();
+        WeightedRoutes(); CompleteRouteCosts(); CompetingIntermediateArrivals(); SameRegion(); SceneAndStorage(); WeakLifetime();
         Console.WriteLine("Navigation links, direction/layers/costs/radius, surface ownership, scene transforms/storage and zero-allocation idle cycles passed.");
         void Bind(RID region, NavigationPolygon polygon) { NavigationServer.RegionSetMap(region, map); NavigationServer.RegionSetNavigationPolygon(region, polygon); }
         Vector2[] Path(Vector2 start, Vector2 end) => NavigationServer.MapGetPath(map, start, end, true);
@@ -159,6 +159,84 @@ internal static class NavigationLinkTests
         foreach (var rid in owned) NavigationServer.FreeRID(rid); NavigationServer.FreeRID(map);
         Vector2[] Path() => NavigationServer.MapGetPath(map, new(5, 10), new(35, 10), true);
     }
+    private static void CompetingIntermediateArrivals()
+    {
+        using var left = NavigationTests.Rectangle(0, 0, 10, 90);
+        using var relay = NavigationTests.Rectangle(40, 0, 10, 90);
+        using var right = NavigationTests.Rectangle(90, 0, 10, 10);
+        var map = NavigationServer.MapCreate();
+        var owned = new List<RID>();
+        using var parameters = new NavigationPathQueryParameters
+        {
+            Map = map,
+            StartPosition = new(5, 5),
+            TargetPosition = new(95, 5),
+            PathSearchMaxPolygons = 6,
+            PostProcessing = NavigationPathQueryParameters.PathPostProcessing.None
+        };
+        using var result = new NavigationPathQueryResult();
+        try
+        {
+            NavigationServer.MapSetActive(map, true);
+            NavigationServer.MapSetUseEdgeConnections(map, false);
+            foreach (var polygon in new[] { left, relay, right })
+            {
+                var region = NavigationServer.RegionCreate();
+                owned.Add(region);
+                NavigationServer.RegionSetNavigationPolygon(region, polygon);
+                NavigationServer.RegionSetMap(region, map);
+            }
+            var cheaperArrival = Link(new(9, 5), new(45, 80));
+            var cheaperContinuation = Link(new(9, 20), new(45, 5));
+            var exit = Link(new(45, 6), new(91, 5));
+            NavigationServer.Synchronize();
+
+            CheckRoute(cheaperContinuation, cheaperArrival, "A second entry in the relay polygon can produce the cheaper complete route.");
+            Check(NavigationServer.MapGetPath(map, parameters.StartPosition, parameters.TargetPosition, true)
+                .Contains(new Vector2(45, 5)), "MapGetPath retains the winning intermediate entry.");
+
+            NavigationServer.LinkSetEnterCost(cheaperContinuation, 100);
+            CheckRoute(cheaperContinuation, cheaperArrival, "Staged weights preserve the old route.");
+            NavigationServer.Synchronize();
+            parameters.PathSearchMaxPolygons = 0;
+            CheckRoute(cheaperArrival, cheaperContinuation, "Published weights switch the chosen intermediate entry.");
+
+            parameters.PathSearchMaxPolygons = 2;
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.Path[^1] == new Vector2(10, 5) && !result.PathRIDs.Contains(exit),
+                "The polygon budget stops before reaching the relay.");
+
+            void CheckRoute(RID expected, RID rejected, string message)
+            {
+                NavigationServer.QueryPath(parameters, result);
+                var path = result.Path;
+                var owners = result.PathRIDs;
+                Check(path.Length >= 2 && path[^1] == parameters.TargetPosition &&
+                    owners.Contains(expected) && owners.Contains(exit) && !owners.Contains(rejected),
+                    message + " Actual: " + string.Join(";", path));
+            }
+        }
+        finally
+        {
+            foreach (var rid in owned)
+                NavigationServer.FreeRID(rid);
+            NavigationServer.FreeRID(map);
+            NavigationServer.Synchronize();
+        }
+
+        RID Link(Vector2 start, Vector2 end)
+        {
+            var link = NavigationServer.LinkCreate();
+            owned.Add(link);
+            NavigationServer.LinkSetStartPosition(link, start);
+            NavigationServer.LinkSetEndPosition(link, end);
+            NavigationServer.LinkSetBidirectional(link, false);
+            NavigationServer.LinkSetTravelCost(link, 0);
+            NavigationServer.LinkSetMap(link, map);
+            return link;
+        }
+    }
+
     private static void SameRegion()
     {
         using var polygon = new NavigationPolygon(); polygon.SetVertices([new(0, 0), new(10, 0), new(10, 10), new(0, 10), new(30, 0), new(40, 0), new(40, 10), new(30, 10)]); polygon.AddPolygon([0, 1, 2, 3]); polygon.AddPolygon([4, 5, 6, 7]);

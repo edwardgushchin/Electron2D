@@ -189,6 +189,7 @@ public sealed partial class NavigationAgent : Node
     public float PathSearchMaxDistance { get { Read(); return _query.PathSearchMaxDistance; } set { EnsureMutable(); _query.PathSearchMaxDistance = value; } }
     /// <summary>Gets or changes the processed polygon limit; nonpositive values are unlimited.</summary>
     /// <value>Default 4096; retained source setting.</value>
+    /// <remarks>Multiple arrivals through the same polygon count once per query.</remarks>
     /// <exception cref="ObjectDisposedException">The agent is disposed.</exception>
     /// <exception cref="InvalidOperationException">Mutation occurs during navigation delivery or off the tree owner thread.</exception>
     public int PathSearchMaxPolygons { get { Read(); return _query.PathSearchMaxPolygons; } set { EnsureMutable(); _query.PathSearchMaxPolygons = value; } }

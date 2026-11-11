@@ -2,7 +2,8 @@ namespace Electron2D;
 
 internal sealed partial class NavigationMapIteration
 {
-    private readonly record struct CorridorArrival(int Cell, Vector2 Entry, Portal Portal, int Parent, double Cost);
+    private readonly record struct CorridorArrival(int Cell, Vector2 Entry, Portal Portal, int Parent, double Cost,
+        (int Source, int PortalIndex) Key);
 
     internal Vector2[] Path(Vector2 origin, Vector2 destination, bool optimize, uint layers) => Query(NavigationPathQuerySettings.Default with { StartPosition = origin, TargetPosition = destination, NavigationLayers = layers, MetadataFlags = NavigationPathQueryParameters.PathMetadataFlags.IncludeNone, PostProcessing = optimize ? NavigationPathQueryParameters.PathPostProcessing.CorridorFunnel : NavigationPathQueryParameters.PathPostProcessing.EdgeCentered }).Path;
     internal NavigationPathQueryData Query(NavigationPathQuerySettings settings)
@@ -21,9 +22,10 @@ internal sealed partial class NavigationMapIteration
         if (start < 0 || finish < 0) return NavigationPathQueryData.Empty;
         var points = new List<(Vector2 Point, int Cell)>();
         if (start == finish) { Add(points, from, start); Add(points, to, finish); return Complete(points); }
-        var bestCost = new double[Cells.Length];
+        var bestArrivals = new Dictionary<(int Source, int PortalIndex), int>();
+        var processedPolygons = new bool[Cells.Length];
         var arrivals = new List<CorridorArrival>();
-        var queue = new PriorityQueue<int, (double Total, double NegativeCost, int Order)>();
+        var queue = new PriorityQueue<int, (double Total, double NegativeCost, int Polygon, int Sequence)>();
         var target = settings.TargetPosition;
         var nearestReached = -1;
         var nearestEntryDistance = double.PositiveInfinity;
@@ -82,17 +84,18 @@ internal sealed partial class NavigationMapIteration
 
         int FindCorridor(int goal, Vector2 destination, bool trackFrontier)
         {
-            Array.Fill(bestCost, double.PositiveInfinity);
-            bestCost[start] = 0;
+            bestArrivals.Clear();
+            var startKey = (start, -1);
+            bestArrivals.Add(startKey, 0);
             arrivals.Clear();
-            arrivals.Add(new(start, from, default, -1, 0));
+            arrivals.Add(new(start, from, default, -1, 0, startKey));
             queue.Clear();
-            queue.Enqueue(0, (Math.Sqrt(DistanceSquared(from, destination)) * minimumTravelCost, 0, start));
+            queue.Enqueue(0, (Math.Sqrt(DistanceSquared(from, destination)) * minimumTravelCost, 0, start, 0));
             while (queue.TryDequeue(out var arrivalIndex, out _))
             {
                 var current = arrivals[arrivalIndex];
                 var index = current.Cell;
-                if (current.Cost != bestCost[index])
+                if (bestArrivals[current.Key] != arrivalIndex)
                     continue;
                 if (index == goal)
                     return arrivalIndex;
@@ -109,7 +112,11 @@ internal sealed partial class NavigationMapIteration
                 }
 
                 // Once a limit ends exploration, the second pass can finish the corridor to the reached polygon.
-                processed++;
+                if (!processedPolygons[index])
+                {
+                    processedPolygons[index] = true;
+                    processed++;
+                }
                 if (!limitReached && (settings.PathSearchMaxPolygons > 0 && processed >= settings.PathSearchMaxPolygons ||
                     limitDistanceSquared > 0 && DistanceSquared(from, current.Entry) > limitDistanceSquared))
                 {
@@ -117,8 +124,10 @@ internal sealed partial class NavigationMapIteration
                     return -1;
                 }
 
-                foreach (var portal in Edges[index])
+                var portals = Edges[index];
+                for (var portalIndex = 0; portalIndex < portals.Length; portalIndex++)
                 {
+                    var portal = portals[portalIndex];
                     var next = portal.Target;
                     if (!usable[next])
                         continue;
@@ -127,14 +136,18 @@ internal sealed partial class NavigationMapIteration
                     var enter = cell.Region != Cells[next].Region ? Cells[next].EnterCost : 0;
                     var cost = current.Cost + travel + enter;
                     var remaining = Math.Sqrt(DistanceSquared(point, destination));
-                    if (next == goal)
+                    var final = next == goal;
+                    if (final)
                         cost += remaining * Cells[goal].TravelCost;
-                    if (cost >= bestCost[next])
+                    // Different incoming portals can have different costs to reach the next exit.
+                    var key = final ? (goal, -1) : (index, portalIndex);
+                    if (bestArrivals.TryGetValue(key, out var previous) && cost >= arrivals[previous].Cost)
                         continue;
-                    bestCost[next] = cost;
-                    var estimate = next == goal ? 0 : remaining * minimumTravelCost;
-                    queue.Enqueue(arrivals.Count, (cost + estimate, -cost, next));
-                    arrivals.Add(new(next, point, portal, arrivalIndex, cost));
+                    var sequence = arrivals.Count;
+                    bestArrivals[key] = sequence;
+                    var estimate = final ? 0 : remaining * minimumTravelCost;
+                    queue.Enqueue(sequence, (cost + estimate, -cost, next, sequence));
+                    arrivals.Add(new(next, point, portal, arrivalIndex, cost, key));
                 }
             }
             return -1;

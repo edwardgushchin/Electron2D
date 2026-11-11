@@ -215,7 +215,7 @@ Attached access follows the tree owner thread and disposed access rejects. Advan
 <a id="pathsearchmaxpolygons"></a>
 ### `public int PathSearchMaxPolygons { get; set; }`
 
-Gets or changes the processed polygon limit; nonpositive values are unlimited. Default 4096; retained source setting.
+Gets or changes the processed polygon limit. The search counts each polygon once across arrivals through different portals. The default is 4096, and nonpositive values are unlimited.
 
 `ObjectDisposedException`: The agent is disposed.
 

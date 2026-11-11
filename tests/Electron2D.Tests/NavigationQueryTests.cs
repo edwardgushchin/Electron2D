@@ -54,12 +54,65 @@ internal static class NavigationQueryTests
     }
     private sealed class Traveler : Entity
     {
-        internal NavigationLink Link = null!; internal Vector2[] Path = []; internal bool Done; internal int Teleports; private NavigationPathQueryResult.PathSegmentType[] _types = []; private RID[] _rids = []; private ulong[] _owners = []; private int _next = 1;
-        private readonly NavigationPathQueryParameters _parameters = new() { PostProcessing = NavigationPathQueryParameters.PathPostProcessing.None }; private readonly NavigationPathQueryResult _result = new();
+        internal required NavigationLink[] Links;
+        internal Vector2[] Path = [];
+        internal bool Done;
+        internal int Teleports;
+        private NavigationPathQueryResult.PathSegmentType[] _types = [];
+        private RID[] _rids = [];
+        private ulong[] _owners = [];
+        private int _next = 1;
+        private readonly NavigationPathQueryParameters _parameters = new()
+        {
+            PostProcessing = NavigationPathQueryParameters.PathPostProcessing.None,
+            PathSearchMaxPolygons = 6
+        };
+        private readonly NavigationPathQueryResult _result = new();
         protected override void OnPhysicsProcess(double delta)
         {
-            if (Path.Length == 0) { _parameters.Map = GetWorld()!.NavigationMap; _parameters.StartPosition = Position; _parameters.TargetPosition = new(44, 44); NavigationServer.QueryPath(_parameters, _result); Path = _result.Path; _types = _result.PathTypes; _rids = _result.PathRIDs; _owners = _result.PathOwnerIDs; Check(Path.SequenceEqual(new Vector2[] { new(12, 44), Link.StartPosition, Link.EndPosition, new(44, 44) }), "Native typed query chooses the link with the cheaper complete route."); }
-            var remaining = (float)(delta * 200); while (_next < Path.Length && remaining > 0) { var difference = Path[_next] - Position; var distance = difference.Length(); if (distance > remaining) { Position += difference / distance * remaining; break; } Position = Path[_next]; remaining -= distance; if (_types[_next] == NavigationPathQueryResult.PathSegmentType.Link) { Check(_rids[_next] == Link.GetRID() && _owners[_next] == Link.InstanceID, "Native transition resolves exact link/scene owner metadata."); Position = Path[_next + 1]; _next += 2; Teleports++; } else _next++; }
+            if (Path.Length == 0)
+            {
+                _parameters.Map = GetWorld()!.NavigationMap;
+                _parameters.StartPosition = Position;
+                _parameters.TargetPosition = new(44, 44);
+                NavigationServer.QueryPath(_parameters, _result);
+                Path = _result.Path;
+                _types = _result.PathTypes;
+                _rids = _result.PathRIDs;
+                _owners = _result.PathOwnerIDs;
+                var expected = new List<Vector2> { Position };
+                foreach (var link in Links)
+                {
+                    expected.Add(link.StartPosition);
+                    expected.Add(link.EndPosition);
+                }
+                expected.Add(_parameters.TargetPosition);
+                Check(Path.SequenceEqual(expected), "Native query chooses the cheaper continuation through the relay.");
+            }
+            var remaining = (float)(delta * 200);
+            while (_next < Path.Length && remaining > 0)
+            {
+                var difference = Path[_next] - Position;
+                var distance = difference.Length();
+                if (distance > remaining)
+                {
+                    Position += difference / distance * remaining;
+                    break;
+                }
+                Position = Path[_next];
+                remaining -= distance;
+                if (_types[_next] == NavigationPathQueryResult.PathSegmentType.Link)
+                {
+                    Check(Teleports < Links.Length, "The route has no extra link transitions.");
+                    var link = Links[Teleports];
+                    Check(_rids[_next] == link.GetRID() && _owners[_next] == link.InstanceID, "The transition resolves its exact link and scene owner.");
+                    Position = Path[_next + 1];
+                    _next += 2;
+                    Teleports++;
+                }
+                else
+                    _next++;
+            }
             Done = _next == Path.Length;
         }
         protected override void OnDraw() => DrawRect(new(-2, -2, 4, 4), Colors.Yellow);
@@ -68,19 +121,43 @@ internal static class NavigationQueryTests
     private sealed class Journey : Entity
     {
         internal Traveler Traveler = null!;
-        protected override void OnDraw() { DrawRect(new(4, 4, 16, 48), new(.2f, .2f, .2f)); DrawRect(new(36, 4, 16, 48), new(.2f, .2f, .2f)); if (Traveler.Path.Length > 1) DrawPolyline(Traveler.Path, Colors.Green, 2); DrawCircle(Traveler.Link.StartPosition, 2, Colors.Cyan); DrawCircle(Traveler.Link.EndPosition, 2, Colors.Cyan); }
+        protected override void OnDraw()
+        {
+            var floor = new Color(.2f, .2f, .2f);
+            DrawRect(new(4, 4, 16, 48), floor);
+            DrawRect(new(24, 4, 8, 48), floor);
+            DrawRect(new(36, 4, 16, 48), floor);
+            if (Traveler.Path.Length > 1)
+                DrawPolyline(Traveler.Path, Colors.Green, 2);
+            foreach (var link in Traveler.Links)
+            {
+                DrawCircle(link.StartPosition, 2, Colors.Cyan);
+                DrawCircle(link.EndPosition, 2, Colors.Cyan);
+            }
+        }
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu"; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); Engine.MaxFPS = 60; using var left = NavigationTests.Rectangle(4, 4, 16, 48); using var right = NavigationTests.Rectangle(36, 4, 16, 48); var window = new Window { Size = new(64, 64) };
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu";
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        Engine.MaxFPS = 60;
+        using var left = NavigationTests.Rectangle(4, 4, 16, 48);
+        using var relay = NavigationTests.Rectangle(24, 4, 8, 48);
+        using var right = NavigationTests.Rectangle(36, 4, 16, 48);
+        var window = new Window { Size = new(64, 64) };
         var leftRegion = new NavigationRegion { Name = "Left", NavigationPolygon = left };
+        var relayRegion = new NavigationRegion { Name = "Relay", NavigationPolygon = relay };
         var rightRegion = new NavigationRegion { Name = "Right", NavigationPolygon = right };
         window.AddChild(leftRegion);
+        window.AddChild(relayRegion);
         window.AddChild(rightRegion);
-        window.AddChild(new NavigationLink { Name = "DistantExit", StartPosition = new(12, 44), EndPosition = new(38, 6), Bidirectional = false, TravelCost = 0 });
-        var link = new NavigationLink { Name = "NearExit", StartPosition = new(18, 32), EndPosition = new(38, 44), Bidirectional = false, TravelCost = 0 };
-        window.AddChild(link);
-        var actor = new Traveler { Link = link, Position = new(12, 44), PhysicsProcessEnabled = true };
+        window.AddChild(new NavigationLink { Name = "FarRelayEntry", StartPosition = new(12, 44), EndPosition = new(28, 6), Bidirectional = false, TravelCost = 0 });
+        var nearEntry = new NavigationLink { Name = "NearRelayEntry", StartPosition = new(18, 32), EndPosition = new(28, 42), Bidirectional = false, TravelCost = 0 };
+        var exit = new NavigationLink { Name = "RelayExit", StartPosition = new(28, 44), EndPosition = new(38, 44), Bidirectional = false, TravelCost = 0 };
+        window.AddChild(nearEntry);
+        window.AddChild(exit);
+        var actor = new Traveler { Links = [nearEntry, exit], Position = new(12, 44), PhysicsProcessEnabled = true };
         var journey = new Journey { Traveler = actor };
         window.AddChild(journey);
         window.AddChild(actor);
@@ -91,10 +168,27 @@ internal static class NavigationQueryTests
             Check(RenderingServer.GetCurrentRenderingMethod() == backend && RenderingServer.GetCurrentRenderingDriverName() != "software", "Requested hardware backend.");
             map = window.World!.NavigationMap;
             NavigationServer.MapSetUseAsyncIterations(map, false);
+            NavigationServer.MapSetUseEdgeConnections(map, false);
             NavigationServer.RegionSetUseAsyncIterations(leftRegion.GetRID(), false);
+            NavigationServer.RegionSetUseAsyncIterations(relayRegion.GetRID(), false);
             NavigationServer.RegionSetUseAsyncIterations(rightRegion.GetRID(), false);
             RenderingServer.SetDefaultClearColor(Colors.Black);
-            RenderingServer.FramePostDraw += () => { frames++; journey.QueueRedraw(); if (!actor.Done) { Check(frames < 180, "Bounded metadata-driven navigation host."); return; } Check(actor.Teleports == 1, "Native actor executes exactly one metadata-driven teleport."); using var pixels = window.GetTexture().GetImage()!; Check(pixels.GetPixel(44, 44).R > .9f && pixels.GetPixel(44, 44).G > .9f, "Native metadata-driven actor reaches goal pixels."); if (Environment.GetEnvironmentVariable("ELECTRON2D_NAVIGATION_QUERY_SNAPSHOT") is { } capture) pixels.SavePNG(capture); window.Tree!.Quit(); };
+            RenderingServer.FramePostDraw += () =>
+            {
+                frames++;
+                journey.QueueRedraw();
+                if (!actor.Done)
+                {
+                    Check(frames < 180, "Bounded metadata-driven navigation host.");
+                    return;
+                }
+                Check(actor.Teleports == 2, "The actor executes both selected link transitions.");
+                using var pixels = window.GetTexture().GetImage()!;
+                Check(pixels.GetPixel(44, 44).R > .9f && pixels.GetPixel(44, 44).G > .9f, "The actor reaches the goal pixels.");
+                if (Environment.GetEnvironmentVariable("ELECTRON2D_NAVIGATION_QUERY_SNAPSHOT") is { } capture)
+                    pixels.SavePNG(capture);
+                window.Tree!.Quit();
+            };
         };
         Engine.Run(window); Check(window.IsDisposed && RenderingServer.Service is null, "Native typed-query scene teardown."); Reject<ArgumentException>(() => NavigationServer.MapGetLinks(map)); Console.WriteLine($"Typed navigation metadata teleport/pixels/cleanup passed: {backend}, {frames} frames.");
     }

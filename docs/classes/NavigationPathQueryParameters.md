@@ -176,7 +176,7 @@ Queries capture one settings/map snapshot and publish one complete result before
 <a id="pathsearchmaxpolygons"></a>
 ### `public int PathSearchMaxPolygons { get; set; }`
 
-Gets or changes the maximum processed polygon count. The default is 4096. Zero or negative values allow unlimited exploration. After the limit stops the search, a second pass can finish the corridor to a reached polygon.
+Gets or changes the maximum processed polygon count. Arrivals through different portals into the same polygon count once. The default is 4096. Zero or negative values allow unlimited exploration. After the limit stops the search, a second pass can finish the corridor to a reached polygon.
 
 `ObjectDisposedException`: This object is disposed.
 
