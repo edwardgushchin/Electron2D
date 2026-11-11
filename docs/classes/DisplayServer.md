@@ -175,6 +175,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static int GetScreenCount()`](#method-getscreencount) | Gets the current number of connected displays. |
 | [`public static bool IsDarkMode()`](#method-isdarkmode) | Reports whether the current native system theme is dark. |
 | [`public static bool IsDarkModeSupported()`](#method-isdarkmodesupported) | Reports Linux Wayland/X11 Settings portal support, or a known native theme on other drivers. |
+| [`public static void Beep()`](#method-beep) | Requests the desktop system bell. |
 | [`public static int AccessibilityScreenReaderActive()`](#method-accessibilityscreenreaderactive) | Reads desktop screen-reader activity. |
 | [`public static int AccessibilityShouldIncreaseContrast()`](#method-accessibilityshouldincreasecontrast) | Reads the desktop preference for increased contrast. |
 | [`public static int AccessibilityShouldReduceAnimation()`](#method-accessibilityshouldreduceanimation) | Reads the desktop preference for reduced animation. |
@@ -331,6 +332,11 @@ On Linux Wayland and X11, returns whether the desktop Settings portal supports a
 **Errors:** `InvalidOperationException` off the opening thread; `ObjectDisposedException` while disposing or after disposal.
 
 **Source:** `src/Servers/Display/DisplayServer.cs`.
+
+<a id="method-beep"></a>
+#### `public static void Beep()`
+
+Requests the native [system bell](../components/display-server.md#system-bell) on the active display's opening thread. The host selects the feedback and may silence the bell. With no native provider, the method returns without feedback.
 
 <a id="method-accessibilityscreenreaderactive"></a>
 #### `public static int AccessibilityScreenReaderActive()`

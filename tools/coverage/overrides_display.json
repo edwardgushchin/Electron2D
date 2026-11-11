@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:beep()",
+      "electron2d": "method:Electron2D.DisplayServer.Beep()",
+      "reason": "Requests the native system bell on the display owner through Win32, AppKit, X11 or optional Wayland system-bell protocol. Missing providers and system policy can yield no feedback."
+    },
+    {
       "godot": "DisplayServer::method:screen_get_dpi(int:)",
       "electron2d": "method:Electron2D.DisplayServer.ScreenGetDPI(System.Int32)",
       "reason": "Shared screen selectors resolve the SDL display. Windows reads the selected HMONITOR's effective DPI. Linux X11 reads matched RandR monitor millimeters with a sole-root fallback. Invalid or unknown returns 96."
@@ -1364,8 +1369,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First native desktop-operation bridge with X11 XBell and Wayland's optional xdg_system_bell_v1 protocol, including unsupported-capability checks. SDL has no equivalent.",
+      "state": "Partial",
+      "reason": "System bell dispatch executes. XKB observes X11 bells and a private Weston module observes Wayland request and retirement. Windows dispatch is exercised. Cocoa needs native NSBeep verification and the package matrix remains unqualified. See docs/components/display-server.md#system-bell (ADRs 0021/0040).",
       "godot": [
         "DisplayServer::method:beep()"
       ]

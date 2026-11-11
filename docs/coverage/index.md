@@ -1,3 +1,5 @@
+[System bell](../components/display-server.md#system-bell) adds desktop-owned feedback through the active display host. One declaration moves from Blocked to Partial. Coverage is **13,808/18,853 (73.24%)**, with 1,100 Partial, 363 Unimplemented, 3,582 Blocked, 8,440 Excluded and zero unmapped.
+
 [Native screen density](../components/display-server.md#screen-density) reads effective Win32 DPI and physical X11 DPI using the existing screen selectors. One declaration moves from Blocked to Partial. Coverage is **13,808/18,853 (73.24%)**, with 1,099 Partial, 363 Unimplemented, 3,583 Blocked, 8,440 Excluded and zero unmapped.
 
 [Desktop accessibility preferences](../components/display-server.md#desktop-accessibility-preferences) add live tri-state queries for screen-reader activity, contrast, motion and transparency. Four declarations move from Blocked to Partial. Coverage is **13,808/18,853 (73.24%)**, with 1,098 Partial, 363 Unimplemented, 3,584 Blocked, 8,440 Excluded and zero unmapped.

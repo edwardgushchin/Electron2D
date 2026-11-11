@@ -180,6 +180,14 @@ Wayland needs a bridge that associates the physical geometry of the same `wl_out
 
 Run the `ELECTRON2D_TEST_SCREEN_DPI=windows` profile on Windows to compare indexed and special selectors with native monitor hit testing and DPI. The Windows test matched three monitors at 96 DPI. Mixed-DPI hardware remains unverified. The `x11` profile takes the expected density as its argument. Use a private 1024×768 Xvfb display with an explicit RandR monitor. `xrandr --setmonitor E2D_DPI 1024/257x768/190+0+0 screen` yields 101 DPI at unit content scale. A monitor with `1024/0x768/177+0+0` reports 110 DPI using one axis. Xvfb at `-dpi 123 -extension RANDR` reported 211×159 mm and yielded 122 DPI after truncation. The `fallback` profile verifies 96 DPI on dummy, WSLg Wayland and Xvfb with independent roots. Each profile also checks invalid selectors and display ownership.
 
+## System bell
+
+`DisplayServer.Beep()` requests the desktop system bell on the display opening thread. Windows requests its default system sound with `MessageBeep`, Cocoa calls `NSBeep`, and X11 submits `XBell` with the server's configured volume. Wayland sends `xdg_system_bell_v1.ring` without a window association when the compositor advertises the protocol. The proxy belongs to the display session and retires on registry removal or display shutdown.
+
+The operating system or compositor chooses the feedback. Muting engine audio does not change the request. The host may silence its system bell or choose visual feedback. With no native provider, the call returns without feedback.
+
+Run `ELECTRON2D_TEST_SYSTEM_BELL=windows` or `cocoa` on the corresponding desktop to exercise the native call. Use the `unavailable` profile with SDL dummy or `wayland-unavailable` on a compositor without the protocol. For X11 and Wayland, run `bash tests/Electron2D.Tests/check-system-bell-linux.sh` with the built test assembly path. The fixture requires Xvfb, libX11 development headers, Weston 15, its development headers, Wayland development tools and the `xdg-system-bell-v1` protocol XML. The XKB observer counts bell notifications and the isolated Weston module records requests and proxy retirement. These tests establish dispatch and lifecycle. Speaker output and the Cocoa native path still require target verification.
+
 ## Windowed lifecycle
 
 Window now delegates native operations to DisplayServer under Engine.Run. Startup happens before scene ready, teardown after scene finalization. The manual DisplayServer API remains available. Native backend event probes live in tests, including WindowRuntimeTests; examples no longer own a duplicate frame loop.

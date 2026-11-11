@@ -55,6 +55,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DESKTOP_COLOR_SAMPLER") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_COLOR_PICKER") is { } colorPortalProfile) { PortalColorPickerTests.Run(colorPortalProfile, args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCREEN_CAPTURE") is { } desktopCaptureProfile) { DesktopScreenCaptureTests.Run(desktopCaptureProfile, args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCREEN_DPI") is { } dpiProfile) { ScreenDPITests.Run(dpiProfile, args); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_BELL") is { } bellProfile) { SystemBellTests.Run(bellProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DESKTOP_ACCESSIBILITY") is { } desktopAccessibilityProfile) { DesktopAccessibilityTests.Run(desktopAccessibilityProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_X11_LAYOUTS") is { } x11LayoutProfile) { X11KeyboardLayoutTests.Run(x11LayoutProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WAYLAND_LAYOUTS") == "1") { WaylandKeyboardLayoutTests.Run(); return; }

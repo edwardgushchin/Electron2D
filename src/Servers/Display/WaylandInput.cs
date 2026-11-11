@@ -136,6 +136,7 @@ internal sealed unsafe partial class WaylandInput : IDisposable
         foreach (var seat in _seats.Values)
             seat.Dispose();
         _seats.Clear();
+        Retire(ref _systemBell, 0);
         DisposeCapture();
         if (_registry != 0) DestroyProxyLocal(_registry);
         if (_listener.IsAllocated) _listener.Free();
@@ -156,11 +157,17 @@ internal sealed unsafe partial class WaylandInput : IDisposable
                 var name = Marshal.PtrToStringUTF8(arguments[1].Object);
                 var version = arguments[2].UInt;
                 if (name == "wl_seat") owner.AddSeat(id, version);
+                else if (name == BellProtocol.Name && owner._systemBellGlobal == 0) owner._systemBellGlobal = id;
                 else owner.ObserveCaptureGlobal(id, name, version);
             }
             else if (opcode == 1)
             {
                 if (owner._seats.Remove(id, out var seat)) seat.Dispose();
+                else if (id == owner._systemBellGlobal)
+                {
+                    owner._systemBellGlobal = 0;
+                    Retire(ref owner._systemBell, 0);
+                }
                 else owner.RetireCaptureGlobal(id);
             }
         }

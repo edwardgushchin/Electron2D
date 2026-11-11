@@ -110098,6 +110098,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.Beep()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "Beep",
+    "signature": "public static System.Void Beep()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.ClipboardGet()",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",

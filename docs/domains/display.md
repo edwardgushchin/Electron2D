@@ -42,6 +42,8 @@ Own the native display connection, borrowed operating-system display/window and 
 
 [`ScreenGetDPI`](../classes/DisplayServer.md#method-screengetdpi) reads effective Win32 monitor density and physical X11 density through the shared screen selectors. The [screen density contract](../components/display-server.md#screen-density) covers unavailable measurements and driver support.
 
+[`DisplayServer.Beep()`](../classes/DisplayServer.md#method-beep) requests the [system bell](../components/display-server.md#system-bell) through the active desktop host.
+
 The existing `TextInput` and `TextEditing` events remain the native full-string/preedit boundary. During Engine.Run, root Window forwards them to SceneTree after DisplayServer commits IME state; focused Control receives the typed text stream. DisplayServer does not synthesize or attribute an InputEventKey from a later SDL commit.
 
 ## Dependency direction
