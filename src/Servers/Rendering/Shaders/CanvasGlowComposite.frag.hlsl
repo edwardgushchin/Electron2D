@@ -1,3 +1,5 @@
+#include "Includes/electron2d/tonemap.hlslinc"
+
 Texture2D<float4> sourceImage : register(t0, space2);
 Texture2D<float4> level0 : register(t1, space2);
 Texture2D<float4> level1 : register(t2, space2);
@@ -22,6 +24,8 @@ cbuffer Glow : register(b0, space3)
     float4 weights1;
     float4 options; // intensity, map strength, blend mode, bicubic
     float4 mapRegion;
+    float4 tone;
+    float4 curve;
 };
 
 float3 SampleLevel(Texture2D<float4> image, SamplerState filter, float2 uv, float weight)
@@ -54,6 +58,7 @@ float3 SampleLevel(Texture2D<float4> image, SamplerState filter, float2 uv, floa
 float4 main([[vk::location(1)]] float2 uv : TEXCOORD1) : SV_Target0
 {
     float4 source = sourceImage.SampleLevel(sourceSampler, uv, 0);
+    source.rgb = ExposeCanvas(source.rgb, tone.y);
     float3 glow = SampleLevel(level0, sampler0, uv, weights0.x) + SampleLevel(level1, sampler1, uv, weights0.y) +
                   SampleLevel(level2, sampler2, uv, weights0.z) + SampleLevel(level3, sampler3, uv, weights0.w) +
                   SampleLevel(level4, sampler4, uv, weights1.x) + SampleLevel(level5, sampler5, uv, weights1.y) +
@@ -65,14 +70,16 @@ float4 main([[vk::location(1)]] float2 uv : TEXCOORD1) : SV_Target0
     {
         glow *= options.x;
         if (options.z == 0) source.rgb += glow;
-        else if (options.z == 1) source.rgb += saturate(glow) * (1.0 - source.rgb);
+        else if (options.z == 1) source.rgb += clamp(glow, 0.0, tone.w) * (1.0 - source.rgb / tone.w);
         else if (options.z == 2)
         {
-            float3 value = source.rgb;
+            float3 value = TonemapCanvas(source.rgb, tone, curve);
+            glow = TonemapCanvas(glow, tone, curve);
             float3 curve = lerp((16.0 * value - 12.0) * value * value + 4.0 * value, sqrt(max(value, 0.0)), step(0.25, value));
             source.rgb = lerp(value + saturate(glow) * (curve - value), value, step(1.0, value));
         }
         else source.rgb = glow;
     }
+    if (options.z != 2) source.rgb = TonemapCanvas(source.rgb, tone, curve);
     return float4(clamp(source.rgb, -65504.0, 65504.0), source.a);
 }

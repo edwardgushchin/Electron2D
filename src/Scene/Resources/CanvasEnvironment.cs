@@ -2,10 +2,10 @@ using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
-/// <summary>Stores shared HDR canvas glow settings.</summary>
+/// <summary>Stores shared HDR canvas glow and tone mapping settings.</summary>
 /// <remarks>Assign this resource to a <see cref="WorldEnvironment"/>. Changes affect the next canvas frame.
 /// Resources and textures are borrowed by the scene. Glow is evaluated on linear half-float canvas targets.</remarks>
-public sealed class CanvasEnvironment : Resource
+public sealed partial class CanvasEnvironment : Resource
 {
     /// <summary>Combines the blurred glow and the original canvas color.</summary>
     public enum GlowBlendMode
@@ -233,9 +233,9 @@ public sealed class CanvasEnvironment : Resource
         }
     }
 
-    internal GlowSettings SnapshotGlow()
+    internal CanvasPostProcess SnapshotPostProcess()
     {
-        lock (_gate) return IsDisposed ? default : _glow;
+        lock (_gate) return IsDisposed ? default : new(_glow, _tonemap);
     }
 
     private T Read<T>(ref T value)
@@ -282,14 +282,19 @@ public sealed class CanvasEnvironment : Resource
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        var settings = SnapshotGlow();
-        if (deep) settings.Map = (Texture?)duplicateSubresource(settings.Map);
+        var settings = SnapshotPostProcess();
+        var glow = settings.Glow;
+        if (deep) glow.Map = (Texture?)duplicateSubresource(glow.Map);
         var copy = (CanvasEnvironment)target;
-        lock (copy._gate) copy._glow = settings;
+        lock (copy._gate)
+        {
+            copy._glow = glow;
+            copy._tonemap = settings.Tonemap.GetValueOrDefault(TonemapSettings.Default);
+        }
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties).Concat(LevelProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties).Concat(LevelProperties).Concat(TonemapProperties);
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

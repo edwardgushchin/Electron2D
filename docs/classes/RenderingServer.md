@@ -77,6 +77,10 @@ Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon 
 
 `EnvironmentSetGlow` updates a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. It copies seven weights and validates settings before publication. `EnvironmentGlowSetUseBicubicUpscale` switches the upsampling filter for the active session. `ViewportSetEnvironmentMode` enables, disables or inherits the effect per viewport. See [canvas glow](../components/canvas-glow.md).
 
+## Canvas tone mapping
+
+`EnvironmentSetTonemap` sets the tone operator, exposure and white point on a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. The AgX mode uses its separate white point. `EnvironmentSetTonemapAGXContrast` changes the AgX contrast. Both calls validate settings and owner-thread access before publishing. See [canvas tone mapping](../components/canvas-tonemapping.md).
+
 ## ViewportSetUseHDR2D
 
 `public static void ViewportSetUseHDR2D(RID viewport, bool enabled)` selects linear half-float output for a live scene or caller-owned viewport. The renderer-session override preserves the authored UseHDR2D getter; an equal scene assignment republishes it. Texture metadata/notifications commit immediately, while dependent native storage replaces on the next submission and expires old device aliases. Wrong/stale/foreign identities, off-owner access and capture/submission mutation reject. Compatibility and unsupported native capabilities reject enabled targets. See [HDR canvas targets](../components/hdr-canvas.md).

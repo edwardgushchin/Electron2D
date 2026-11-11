@@ -44,6 +44,10 @@ A local public NuGet candidate, `0.1.0-viewporthdr.20261016.2` over the unchange
 
 A scene-selected [canvas environment](canvas-glow.md) applies glow after the native canvas resolve. The completed texture, readback and window presentation receive the composited linear pixels. Never-clear history and in-pass screen sampling retain the unprocessed canvas.
 
+## World environment tone mapping
+
+An authored [canvas environment](canvas-tonemapping.md) applies exposure and its selected operator after canvas resolve and before publishing the completed HDR texture. The default Linear operator with unit exposure leaves the ordinary viewport path active.
+
 ## Screen debanding
 
 `Viewport.UseDebanding`, `RenderingServer.ViewportSetUseDebanding` and `ProjectSettings.UseDebanding` form the stored/live/startup contract. Defaults are false. Startup uses the active feature override for an unassigned root; explicit authoring wins. Scene files and project feature values survive fresh-process reconstruction. Session overrides preserve authored getters; even an equal authored assignment republishes the scene selection. Target identity, precision, borrowed native aliases and texture notifications remain unchanged when only debanding changes. Ordinary owner/disposal/capture/submission guards apply, including caller-owned and stale server viewports.

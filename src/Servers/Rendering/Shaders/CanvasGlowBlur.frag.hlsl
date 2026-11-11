@@ -1,10 +1,12 @@
+#include "Includes/electron2d/tonemap.hlslinc"
+
 Texture2D<float4> inputImage : register(t0, space2);
 SamplerState linearSampler : register(s0, space2);
 cbuffer Glow : register(b0, space3)
 {
     float2 texel;
     float strength;
-    float extract;
+    float exposure;
     float threshold;
     float transition;
     float bloom;
@@ -14,7 +16,8 @@ cbuffer Glow : register(b0, space3)
 float3 ReadGlow(float2 uv)
 {
     float3 color = inputImage.SampleLevel(linearSampler, uv, 0).rgb;
-    if (extract == 0) return color;
+    if (exposure < 0) return color;
+    color = ExposeCanvas(color, exposure);
 
     float brightness = max(color.r, max(color.g, color.b));
     float feedback = transition > 0 ? smoothstep(threshold, threshold + transition, brightness) : step(threshold, brightness);

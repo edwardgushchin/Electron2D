@@ -1,6 +1,101 @@
 {
   "mappings": [
     {
+      "godot": "Environment::enum:ToneMapper",
+      "electron2d": "T:Electron2D.CanvasEnvironment.ToneMapper",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "Environment::enum_value:ToneMapper.TONE_MAPPER_ACES",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.ACES()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "Environment::enum_value:ToneMapper.TONE_MAPPER_AGX",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.AGX()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "Environment::enum_value:ToneMapper.TONE_MAPPER_FILMIC",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Filmic()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "Environment::enum_value:ToneMapper.TONE_MAPPER_LINEAR",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Linear()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "Environment::enum_value:ToneMapper.TONE_MAPPER_REINHARDT",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Reinhard()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "Environment::property:tonemap_agx_contrast",
+      "electron2d": "property:Electron2D.CanvasEnvironment.TonemapAGXContrast()",
+      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+    },
+    {
+      "godot": "Environment::property:tonemap_agx_white",
+      "electron2d": "property:Electron2D.CanvasEnvironment.TonemapAGXWhite()",
+      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+    },
+    {
+      "godot": "Environment::property:tonemap_exposure",
+      "electron2d": "property:Electron2D.CanvasEnvironment.TonemapExposure()",
+      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+    },
+    {
+      "godot": "Environment::property:tonemap_mode",
+      "electron2d": "property:Electron2D.CanvasEnvironment.TonemapMode()",
+      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+    },
+    {
+      "godot": "Environment::property:tonemap_white",
+      "electron2d": "property:Electron2D.CanvasEnvironment.TonemapWhite()",
+      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+    },
+    {
+      "godot": "RenderingServer::enum:EnvironmentToneMapper",
+      "electron2d": "T:Electron2D.CanvasEnvironment.ToneMapper",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_ACES",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.ACES()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_AGX",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.AGX()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_FILMIC",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Filmic()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_LINEAR",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Linear()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_REINHARD",
+      "electron2d": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Reinhard()",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
+    },
+    {
+      "godot": "RenderingServer::method:environment_set_tonemap(RID:,int:RenderingServer.EnvironmentToneMapper,float:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetTonemap(Electron2D.RID,Electron2D.CanvasEnvironment.ToneMapper,System.Single,System.Single)",
+      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+    },
+    {
+      "godot": "RenderingServer::method:environment_set_tonemap_agx_contrast(RID:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetTonemapAGXContrast(Electron2D.RID,System.Single)",
+      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+    },
+    {
       "godot": "WorldEnvironment::property:environment",
       "electron2d": "property:Electron2D.WorldEnvironment.Environment()",
       "reason": "Borrowed typed environment resource, selected by scene order per world and stored with the scene node."
@@ -5772,8 +5867,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Needs native canvas tone operators and exposure/white-point application on the HDR-to-display stage.",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs.",
       "godot": [
         "Environment::enum:ToneMapper",
         "Environment::enum_value:ToneMapper.TONE_MAPPER_ACES",
@@ -5781,6 +5876,18 @@
         "Environment::enum_value:ToneMapper.TONE_MAPPER_FILMIC",
         "Environment::enum_value:ToneMapper.TONE_MAPPER_LINEAR",
         "Environment::enum_value:ToneMapper.TONE_MAPPER_REINHARDT",
+        "RenderingServer::enum:EnvironmentToneMapper",
+        "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_ACES",
+        "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_AGX",
+        "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_FILMIC",
+        "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_LINEAR",
+        "RenderingServer::enum_value:EnvironmentToneMapper.ENV_TONE_MAPPER_REINHARD"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md.",
+      "godot": [
         "Environment::property:tonemap_agx_contrast",
         "Environment::property:tonemap_agx_white",
         "Environment::property:tonemap_exposure",

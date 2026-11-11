@@ -1,0 +1,13 @@
+# Canvas tone mapping
+
+A [WorldEnvironment](../classes/WorldEnvironment.md) selects a [CanvasEnvironment](../classes/CanvasEnvironment.md) for the world. A GPU viewport using [HDR canvas storage](hdr-canvas.md) reads that environment after rendering the canvas and resolving MSAA. The viewport environment mode controls whether it uses the selected resource. Window and SubViewport targets can use independent worlds or share one resource.
+
+`TonemapExposure` multiplies linear RGB before the operator. `TonemapMode` selects Linear, Reinhard, Filmic, ACES or AgX. Linear with unit exposure takes the ordinary canvas path. Reinhard uses the greater of the authored white point and the attached window's output range. Filmic and ACES normalize their curves at the authored white point with a minimum of one. AgX uses its own white point and contrast. Its white point uses a minimum of two and scales with the window's output range. Offscreen targets with no containing output use a linear maximum of one. The pass preserves alpha and stores finite linear values in the completed half-float viewport texture. Native window presentation and movie capture apply their usual output transfer later.
+
+Exposure also affects bright-pixel extraction for [canvas glow](canvas-glow.md). Additive, Screen, Replace and Mix combine source and glow before tone mapping. SoftLight combines their tone-mapped values. Tone mapping shares the existing post-process scratch target with glow. It uses one source sampler when glow is inactive. The backend retains raw draw history for Never-clear targets, and the resource setters and server calls keep the logical texture and existing device alias alive.
+
+## Verification and remaining profiles
+
+Run the Release test executable with `ELECTRON2D_TEST_TONEMAP=managed`, `gpu` or `compatibility`. The managed profile checks stored descriptors, scene-local copies, argument validation and headroom coefficients. The Vulkan profile compares all five modes with independent double-precision color samples on a window and a 4x-MSAA SubViewport. It checks alpha, server edits, texture identity, raw history, environment bypass, exposure-dependent glow and finite extreme values. The Direct3D 11 Compatibility profile exercises ordinary SDR output with tone settings authored.
+
+This slice targets GPU half-float viewports. Compatibility and SDR canvas composition need their own executing environment path. Layer-limited canvas backgrounds, color adjustment and lookup textures remain separate coverage items. The physical HDR display, additional drivers and target platforms, native allocation counters, performance and release-package qualification retain their own verification gates.

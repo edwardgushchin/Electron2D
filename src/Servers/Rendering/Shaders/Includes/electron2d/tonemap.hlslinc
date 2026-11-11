@@ -1,0 +1,56 @@
+// Shared by the single-source and glow composite passes.
+float3 ExposeCanvas(float3 color, float exposure)
+{
+    // Keep quadratic tone curves within the finite float32 range.
+    return clamp(color * exposure, -1e15, 1e15);
+}
+
+float3 FilmicCurve(float3 value)
+{
+    float3 numerator = value * (0.88 * value + 0.06) + 0.002;
+    float3 denominator = value * (0.88 * value + 0.6) + 0.06;
+    return numerator / denominator - 1.0 / 30.0;
+}
+
+float3 ACESCurve(float3 value)
+{
+    float3 working = float3(dot(value, float3(0.59719, 0.35458, 0.04823)),
+                            dot(value, float3(0.07600, 0.90834, 0.01566)),
+                            dot(value, float3(0.02840, 0.13383, 0.83777))) * 1.8;
+    float3 mapped = (working * (working + 0.0245786) - 0.000090537) /
+                    (working * (working * 0.983729 + 0.432951) + 0.238081);
+    return float3(dot(mapped, float3(1.60475, -0.53108, -0.07367)),
+                  dot(mapped, float3(-0.10208, 1.10813, -0.00605)),
+                  dot(mapped, float3(-0.00327, -0.07276, 1.07602)));
+}
+
+float3 AGXCurve(float3 value, float outputMaximum, float3 curve)
+{
+    float3 working = float3(dot(value, float3(0.5448147465, 0.3737873984, 0.0813978551)),
+                            dot(value, float3(0.1404169485, 0.7541375546, 0.1054454970)),
+                            dot(value, float3(0.0888104196, 0.1788717564, 0.7323178240)));
+    const float middle = 0.18;
+    float3 power = pow(max(saturate(working / middle), 1e-30), curve.x);
+    float3 toe = sign(working) * power / (power + (1.0 - middle) / middle);
+
+    // Rational shoulder, using the derivative at middle gray.
+    float3 distance = max(0, working - middle);
+    float3 fraction = distance * curve.y;
+    float3 slope = min(distance * curve.z, 1e30);
+    float3 shoulder = middle + (outputMaximum - middle) * ((slope + fraction * fraction) / (1.0 + slope));
+    float3 mapped = min(outputMaximum, lerp(toe, shoulder, step(middle, working)));
+    return float3(dot(mapped, float3(1.964887412, -0.855988496, -0.108898916)),
+                  dot(mapped, float3(-0.299313365, 1.326397965, -0.027084600)),
+                  dot(mapped, float3(-0.164352743, -0.238183969, 1.402536712)));
+}
+
+float3 TonemapCanvas(float3 color, float4 tone, float4 curve)
+{
+    if (tone.x == 0.0) return color;
+    float3 positive = max(color, 0.0);
+    if (tone.x == 1.0)
+        return positive * (1.0 + positive * curve.x) / (1.0 + positive / tone.z);
+    if (tone.x == 2.0) return FilmicCurve(positive) * curve.x;
+    if (tone.x == 3.0) return ACESCurve(positive) * curve.x;
+    return AGXCurve(positive, tone.z, curve.xyz);
+}

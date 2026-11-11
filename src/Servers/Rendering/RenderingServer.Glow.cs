@@ -113,11 +113,14 @@ public sealed partial class RenderingServer
         return true;
     }
 
-    private GlowSettings SelectGlow(Viewport viewport, SceneTree tree)
+    private CanvasPostProcess SelectPostProcess(Viewport viewport, SceneTree tree)
     {
         if (!tree.HasWorldEnvironment || _backend is not GPUCanvasBackend || !ViewportHDR(viewport) || !EnvironmentEnabled(viewport) || viewport.FindWorld() is not { } world) return default;
-        var settings = tree.SelectWorldEnvironment(world.Runtime)?.LiveEnvironment?.SnapshotGlow() ?? default;
-        settings.Bicubic = _bicubicGlow;
-        return settings;
+        if (tree.SelectWorldEnvironment(world.Runtime)?.LiveEnvironment is not { } environment) return default;
+        var settings = environment.SnapshotPostProcess();
+        var glow = settings.Glow;
+        if (!glow.Enabled && settings.Tonemap is not { IsIdentity: false }) return default;
+        glow.Bicubic = _bicubicGlow;
+        return settings with { Glow = glow, OutputMaximum = TonemapOutputMaximum(viewport) };
     }
 }

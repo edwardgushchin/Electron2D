@@ -3032,6 +3032,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CanvasEnvironment.ToneMapper",
+    "kind": "type",
+    "declaringType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "name": "ToneMapper",
+    "signature": "public enum Electron2D.CanvasEnvironment.ToneMapper",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CanvasGroup",
     "kind": "type",
     "declaringType": "Electron2D.CanvasGroup",
@@ -35141,6 +35159,71 @@
     "parameters": [],
     "returnType": "Electron2D.CanvasEnvironment.GlowBlendMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.ACES()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "name": "ACES",
+    "signature": "public const Electron2D.CanvasEnvironment.ToneMapper ACES = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.AGX()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "name": "AGX",
+    "signature": "public const Electron2D.CanvasEnvironment.ToneMapper AGX = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Filmic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "name": "Filmic",
+    "signature": "public const Electron2D.CanvasEnvironment.ToneMapper Filmic = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Linear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "name": "Linear",
+    "signature": "public const Electron2D.CanvasEnvironment.ToneMapper Linear = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasEnvironment.ToneMapper.Reinhard()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "name": "Reinhard",
+    "signature": "public const Electron2D.CanvasEnvironment.ToneMapper Reinhard = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.CanvasLightMode.Directional()",
@@ -184172,6 +184255,64 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.EnvironmentSetTonemap(Electron2D.RID,Electron2D.CanvasEnvironment.ToneMapper,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "EnvironmentSetTonemap",
+    "signature": "public static System.Void EnvironmentSetTonemap(Electron2D.RID environment, Electron2D.CanvasEnvironment.ToneMapper mode, System.Single exposure, System.Single white)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "environment",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.CanvasEnvironment.ToneMapper",
+        "default": null
+      },
+      {
+        "name": "exposure",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "white",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.EnvironmentSetTonemapAGXContrast(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "EnvironmentSetTonemapAGXContrast",
+    "signature": "public static System.Void EnvironmentSetTonemapAGXContrast(Electron2D.RID environment, System.Single contrast)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "environment",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "contrast",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ForceDraw(System.Boolean,System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -272354,6 +272495,71 @@
     "declaringType": "Electron2D.CanvasEnvironment",
     "name": "GlowStrength",
     "signature": "public System.Single GlowStrength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.TonemapAGXContrast()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "TonemapAGXContrast",
+    "signature": "public System.Single TonemapAGXContrast { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.TonemapAGXWhite()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "TonemapAGXWhite",
+    "signature": "public System.Single TonemapAGXWhite { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.TonemapExposure()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "TonemapExposure",
+    "signature": "public System.Single TonemapExposure { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.TonemapMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "TonemapMode",
+    "signature": "public Electron2D.CanvasEnvironment.ToneMapper TonemapMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasEnvironment.ToneMapper",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.TonemapWhite()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "TonemapWhite",
+    "signature": "public System.Single TonemapWhite { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

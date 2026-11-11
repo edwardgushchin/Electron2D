@@ -102,7 +102,7 @@ internal abstract partial class CanvasBackend : IDisposable
     internal abstract void Sync(CanvasRenderTarget? target);
     internal abstract void ReleaseTemporaryTexture(Texture texture);
     internal virtual CanvasRenderTiming CreateRenderTiming() => throw new NotSupportedException("This canvas backend has no native elapsed-query adapter.");
-    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default, CanvasRenderTiming? timing = null, GlowSettings glow = default);
+    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default, CanvasRenderTiming? timing = null, CanvasPostProcess postProcess = default);
     internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false, bool requireFrame = true);
     internal void SeedHistory(CanvasBackend source)
     {
