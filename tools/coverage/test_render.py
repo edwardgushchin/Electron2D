@@ -1002,7 +1002,10 @@ def main():
         assert "IntegerLightingTests" in declaration and "IntegerCanvasTests" in declaration
     inverse_image = next(row for row in rendering_rows if "method texture_get_rd_texture(" in row)
     assert " | Partial | " in inverse_image and "exports actual ordinary/array renderer uploads" in inverse_image
-    assert "completed viewport native allocations" in inverse_image and "Partial only for distinct sRGB reinterpretation" in inverse_image
+    assert "completed viewport native allocations" in inverse_image and "DeviceCanvasSRGBTests" in inverse_image
+    assert "mutable backing" in inverse_image and "viewport ping-pong" in inverse_image
+    shared = next(row for row in pages[CLASS_PAGES / "RenderingDevice.md"].splitlines() if "method texture_is_shared(" in row)
+    assert " | Implemented | " in shared and "TextureIsShared" in shared and "DeviceCanvasSRGBTests" in shared
 
     for name in ('texture_proxy_create(', 'texture_proxy_update('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]

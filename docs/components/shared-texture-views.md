@@ -1,6 +1,6 @@
 # Shared texture views
 
-Last updated: 2026-10-28
+Last updated: 2026-11-11
 
 `RenderingDevice.TextureCreateShared` exposes the original allocation through a copied
 `RDTextureView`. `TextureCreateSharedFromSlice` selects one original layer and a
@@ -8,6 +8,35 @@ positive mip interval as an ordinary image. The only applicable `TextureSliceTyp
 is `Texture`. Both factories resolve an existing shared view to its original owner:
 indices and default full extent are relative to that owner, not to the source view.
 No pixels are copied or periodically synchronized.
+
+`RenderingDevice.TextureIsShared` reports whether a live RID represents one of
+these views or an sRGB export. Allocation owners, renderer borrow wrappers and
+invalid, expired or foreign RIDs return false.
+
+## sRGB canvas texture exports
+
+`RenderingServer.TextureGetRDTexture(texture, SRGB: true)` returns already-sRGB
+storage directly. For an ordinary or array device allocation that declares a
+compatible sRGB format, it returns a cached native view of the same bytes. It
+preserves the source view's sampled component map and exact physical layer/mip
+range, including when a proxy resolves to a device slice. Sampling decodes RGB;
+raw readback and updates use the encoded bytes. Creating a new view requires an
+idle device. Freeing the export allows a fresh export from the same source.
+Freeing its source RID, including a slice, expires the cached export.
+
+An unavailable or undeclared distinct view rejects. Renderer-managed ordinary
+and array uploads still need mutable backing that preserves existing GPU writes,
+storage roles and compatible-update identity. Viewport exports need views for each
+physical ping-pong image and must select the completed image at command recording.
+Distinct views currently use the Vulkan adapter.
+
+Run `ELECTRON2D_TEST_DEVICE_CANVAS_SRGB=vulkan` with `SDL_GPU_DRIVER=vulkan` to
+check ordinary, array and swizzled slice sampling in a rendered frame. The
+[test](../../tests/Electron2D.Tests/DeviceCanvasSRGBTests.cs) also checks raw
+reads and writes, mip/layer isolation, proxy identity, active-list refusal and
+view retirement. The `direct3d12` profile checks already-sRGB export and refusal
+to create mutable format backing on that adapter. Both profiles pass on the
+tested Windows desktop.
 
 ## Formats and consumers
 

@@ -180614,6 +180614,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.TextureIsShared(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "TextureIsShared",
+    "signature": "public System.Boolean TextureIsShared(Electron2D.RID texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.TextureIsValid(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",

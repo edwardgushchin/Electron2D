@@ -19,7 +19,7 @@ public sealed unsafe partial class RenderingDevice
     public RID TextureCreateShared(RDTextureView view, RID withTexture)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(view); var (ownerID, owner) = TextureViewOwner(withTexture); var info = owner.Texture!;
-        return CreateTextureView(view, ownerID, owner, 0, info.Layers, 0, info.Mips, info.Type);
+        return CreateTextureView(view.FormatOverride, TextureSwizzles.Capture(view), ownerID, owner, 0, info.Layers, 0, info.Mips, info.Type);
     }
     /// <summary>Creates one shared image layer with a bounded mip interval.</summary>
     /// <param name="view">Copied format and sampled component mapping.</param>
@@ -37,8 +37,56 @@ public sealed unsafe partial class RenderingDevice
         var (ownerID, owner) = TextureViewOwner(withTexture); var info = owner.Texture!;
         if (layer >= info.Layers) throw new ArgumentOutOfRangeException(nameof(layer));
         if (mipmaps == 0 || mipmap >= info.Mips || mipmaps > info.Mips - mipmap) throw new ArgumentOutOfRangeException(nameof(mipmaps));
-        return CreateTextureView(view, ownerID, owner, layer, 1, mipmap, mipmaps, TextureType.Texture);
+        return CreateTextureView(view.FormatOverride, TextureSwizzles.Capture(view), ownerID, owner, layer, 1, mipmap, mipmaps, TextureType.Texture);
     }
+    /// <summary>Reports whether a live texture is a view of another texture's allocation.</summary>
+    /// <param name="texture">The identity to inspect on this device's owning thread.</param>
+    /// <returns>True for a live shared view. Invalid, foreign and allocation-owner identities return false.</returns>
+    public bool TextureIsShared(RID texture)
+    {
+        Access();
+        return _entries.TryGetValue(texture, out var entry) && entry.TextureOwner.IsValid() && entry.Alive;
+    }
+    internal RID CanvasSRGBTexture(RID source)
+    {
+        Access(true);
+        if (!_entries.TryGetValue(source, out var entry) || entry.Texture is not { } info || !entry.Alive) return default;
+        var format = SRGBViewFormat(info.Format);
+        if (format == info.Format) return source;
+        if (format == DataFormat.Max || !info.Shareable.Contains(format))
+            throw new NotSupportedException("This texture allocation does not declare a compatible sRGB view.");
+        if (entry.SRGBView.IsValid() && _entries.TryGetValue(entry.SRGBView, out var alias) && alias.Alive)
+            return entry.SRGBView;
+
+        IdleList();
+        var (ownerID, owner) = TextureViewOwner(source);
+        entry.SRGBView = CreateTextureView(format, info.Swizzle, ownerID, owner, info.BaseLayer, info.Layers, info.BaseMip, info.Mips, info.Type);
+        return entry.SRGBView;
+    }
+    private static DataFormat SRGBViewFormat(DataFormat format) => format switch
+    {
+        DataFormat.R8G8B8A8UNORM or DataFormat.R8G8B8A8SRGB => DataFormat.R8G8B8A8SRGB,
+        DataFormat.B8G8R8A8UNORM or DataFormat.B8G8R8A8SRGB => DataFormat.B8G8R8A8SRGB,
+        DataFormat.BC1RGBAUNORMBLOCK or DataFormat.BC1RGBASRGBBLOCK => DataFormat.BC1RGBASRGBBLOCK,
+        DataFormat.BC2UNORMBLOCK or DataFormat.BC2SRGBBLOCK => DataFormat.BC2SRGBBLOCK,
+        DataFormat.BC3UNORMBLOCK or DataFormat.BC3SRGBBLOCK => DataFormat.BC3SRGBBLOCK,
+        DataFormat.BC7UNORMBLOCK or DataFormat.BC7SRGBBLOCK => DataFormat.BC7SRGBBLOCK,
+        DataFormat.ASTC4X4UNORMBLOCK or DataFormat.ASTC4X4SRGBBLOCK => DataFormat.ASTC4X4SRGBBLOCK,
+        DataFormat.ASTC5X4UNORMBLOCK or DataFormat.ASTC5X4SRGBBLOCK => DataFormat.ASTC5X4SRGBBLOCK,
+        DataFormat.ASTC5X5UNORMBLOCK or DataFormat.ASTC5X5SRGBBLOCK => DataFormat.ASTC5X5SRGBBLOCK,
+        DataFormat.ASTC6X5UNORMBLOCK or DataFormat.ASTC6X5SRGBBLOCK => DataFormat.ASTC6X5SRGBBLOCK,
+        DataFormat.ASTC6X6UNORMBLOCK or DataFormat.ASTC6X6SRGBBLOCK => DataFormat.ASTC6X6SRGBBLOCK,
+        DataFormat.ASTC8X5UNORMBLOCK or DataFormat.ASTC8X5SRGBBLOCK => DataFormat.ASTC8X5SRGBBLOCK,
+        DataFormat.ASTC8X6UNORMBLOCK or DataFormat.ASTC8X6SRGBBLOCK => DataFormat.ASTC8X6SRGBBLOCK,
+        DataFormat.ASTC8X8UNORMBLOCK or DataFormat.ASTC8X8SRGBBLOCK => DataFormat.ASTC8X8SRGBBLOCK,
+        DataFormat.ASTC10X5UNORMBLOCK or DataFormat.ASTC10X5SRGBBLOCK => DataFormat.ASTC10X5SRGBBLOCK,
+        DataFormat.ASTC10X6UNORMBLOCK or DataFormat.ASTC10X6SRGBBLOCK => DataFormat.ASTC10X6SRGBBLOCK,
+        DataFormat.ASTC10X8UNORMBLOCK or DataFormat.ASTC10X8SRGBBLOCK => DataFormat.ASTC10X8SRGBBLOCK,
+        DataFormat.ASTC10X10UNORMBLOCK or DataFormat.ASTC10X10SRGBBLOCK => DataFormat.ASTC10X10SRGBBLOCK,
+        DataFormat.ASTC12X10UNORMBLOCK or DataFormat.ASTC12X10SRGBBLOCK => DataFormat.ASTC12X10SRGBBLOCK,
+        DataFormat.ASTC12X12UNORMBLOCK or DataFormat.ASTC12X12SRGBBLOCK => DataFormat.ASTC12X12SRGBBLOCK,
+        _ => DataFormat.Max
+    };
     private (RID, Entry) TextureViewOwner(RID source)
     {
         var entry = Get(source, Kind.Texture);
@@ -48,18 +96,24 @@ public sealed unsafe partial class RenderingDevice
     {
         if (GPUTextureViews.Support(Device, 1) != 1) throw new NotSupportedException("This texture role requires the pinned native image/view adapter.");
     }
-    private RID CreateTextureView(RDTextureView view, RID ownerID, Entry owner, uint layer, uint layers, uint mip, uint mips, TextureType type)
+    private RID CreateTextureView(DataFormat formatOverride, uint swizzle, RID ownerID, Entry owner, uint layer, uint layers, uint mip, uint mips, TextureType type)
     {
         RequireTextureViews(); var original = owner.Texture!; var stored = original.StoredFormat == DataFormat.Max ? original.Format : original.StoredFormat;
-        var format = view.FormatOverride == DataFormat.Max ? stored : view.FormatOverride;
-        if (format != stored && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", nameof(view));
+        var format = formatOverride == DataFormat.Max ? stored : formatOverride;
+        if (format != stored && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", "view");
         var create = NativeTextureInfo(original with { Format = stored });
         if (stored == DataFormat.S8UINT)
         {
             if (format != DataFormat.S8UINT || !StencilSupported(original.Usage, original.Samples)) throw new NotSupportedException("A stencil-only view retains its native format and supported roles.");
         }
         else if (GPUTextureViews.FormatSupport(Device, 1, in create, NativeFormat(format)) != 1) throw new NotSupportedException("The shared native format is incompatible or lacks the requested usage/sample roles.");
-        var info = CaptureTextureInfo(format, type, Math.Max(1, original.Width >> (int)mip), Math.Max(1, original.Height >> (int)mip), layers, mips, original.Usage, original.Shareable, original.Samples, original.Resolve, TextureSwizzles.Capture(view), stored);
+        var info = CaptureTextureInfo(format, type, Math.Max(1, original.Width >> (int)mip), Math.Max(1, original.Height >> (int)mip),
+            layers, mips, original.Usage, original.Shareable, original.Samples, original.Resolve, swizzle, stored)
+        with
+        {
+            BaseLayer = layer,
+            BaseMip = mip
+        };
         var ownedViews = owner.TextureViews ??= []; ownedViews.EnsureCapacity(ownedViews.Count + 1);
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, TextureOwner = ownerID, TextureSource = owner };
         try

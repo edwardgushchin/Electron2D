@@ -26,7 +26,7 @@ Windows Direct3D 12 creates canvas and device graphics pipelines with private DX
 
 [Mesh graph inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs) now expose decoded custom0/custom1 and logical instance IDs to vertex authoring, including existing MultiMesh/particle ordering and named varying transport.
 
-[Sampled component views](../components/local-compute.md#sampled-component-views) execute initial channel maps across local compute/graphics and retained canvas, particle and writable-texture consumers, with copied descriptions and unchanged raw transfers. [Shared texture views](../components/shared-texture-views.md) execute native format reinterpretation and bounded layer/mip selection with original-owner lifetime.
+[Sampled component views](../components/local-compute.md#sampled-component-views) execute initial channel maps across local compute/graphics and retained canvas, particle and writable-texture consumers, with copied descriptions and unchanged raw transfers. [Shared texture views](../components/shared-texture-views.md) execute native format reinterpretation and bounded layer/mip selection with original-owner lifetime. The canvas bridge exposes declared compatible device formats as cached sRGB views over the same image bytes.
 
 [Repeatable scalar graph variation](../components/visual-shaders.md#repeatable-scalar-variation) supplies seed-driven material values through the existing canvas, particle and writable-texture graph paths, including unclamped equal/reversed-bound arithmetic.
 

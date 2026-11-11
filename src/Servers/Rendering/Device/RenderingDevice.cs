@@ -59,6 +59,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         internal Kind Kind;
         internal RID TextureOwner;
+        internal RID SRGBView;
         internal Entry? TextureSource;
         internal List<RID>? TextureViews;
         internal RenderHandle? TextureAllocation;
@@ -524,7 +525,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="rid">A live identity owned by this device.</param>
     /// <remarks>Borrowed renderer image identities release their wrapper and leases, preserving source ownership.
     /// Live renderer-owned instance buffers retain their resource lifetime and cannot be freed directly.
-    /// Expired borrowed identities may still be freed. Shared texture views are automatically freed with their original owner. Other borrowers become invalid and may still be freed explicitly. Pending readbacks complete
+    /// Expired borrowed identities may still be freed. Shared texture views are automatically freed with their original owner.
+    /// Cached sRGB exports also expire when their source view is freed. Other borrowers become invalid and may still be freed explicitly. Pending readbacks complete
     /// before removal; their callbacks run after the resource is removed.</remarks>
     /// <exception cref="AggregateException">One or more completed readback callbacks failed.</exception>
     /// <exception cref="InvalidOperationException">A live instance buffer has resource-owned lifetime, or owner/list/native state is invalid.</exception>
@@ -539,6 +541,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         if (!_entries.Remove(rid)) return; entry.Expired = true;
         ReleaseDepthResolves(entry);
+        // The export shares the allocation but its lifetime also depends on the selected source slice.
+        if (entry.SRGBView.IsValid() && _entries.TryGetValue(entry.SRGBView, out var alias)) ReleaseEntry(entry.SRGBView, alias);
         if (entry.TextureViews is { } views) while (views.Count != 0) { var child = views[^1]; views.RemoveAt(views.Count - 1); if (_entries.TryGetValue(child, out var owned)) ReleaseEntry(child, owned); }
         if (entry.TextureOwner != default && _entries.TryGetValue(entry.TextureOwner, out var owner)) owner.TextureViews?.Remove(rid);
         if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.StorageArrayView?.Dispose(); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseSwizzles(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.TextureAllocation?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();

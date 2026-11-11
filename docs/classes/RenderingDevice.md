@@ -26,7 +26,7 @@ for ownership and verification limits.
 
 ## Description
 
-An owner-thread graphics and compute device. Create a local device with `RenderingServer.CreateLocalRenderingDevice()` or `CreateLocalDevice()`. `RenderingServer.GetRenderingDevice()` returns the active GPU renderer's retained device. The retained renderer device flushes after canvas authoring and before drawing, and completes queued reads before FramePostDraw; Submit, Sync and public disposal are local-only. Renderer-owned image RIDs bind directly to TextureRD/TextureArrayRD canvas resources. RenderingServer.TextureGetRDTexture exports actual renderer-managed ordinary uploads, independent arrays and completed viewport images to the retained device without CPU copying. Compatible authored updates keep the RID; replacing allocation, disposing the source, rebinding the viewport or retiring its target expires it. A viewport RID resolves the completed ping-pong image when each command is recorded. FreeRID releases only the borrowed wrapper; queued native operations retain the old allocation through completion. Device writes change GPU storage, while authored CPU snapshots remain unchanged; the next authored update overwrites device changes. Sampling, raw update/copy/read and supported storage roles reflect actual native allocation flags. Prepare changed uploads before starting a draw list. Empty storage, unrendered targets and the compatibility renderer return an empty RID. Distinct sRGB views still require native format-view ownership. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs (renderer exports own only wrappers); cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
+An owner-thread graphics and compute device. Create a local device with `RenderingServer.CreateLocalRenderingDevice()` or `CreateLocalDevice()`. `RenderingServer.GetRenderingDevice()` returns the active GPU renderer's retained device. The retained renderer device flushes after canvas authoring and before drawing, and completes queued reads before FramePostDraw; Submit, Sync and public disposal are local-only. Renderer-owned image RIDs bind directly to TextureRD/TextureArrayRD canvas resources. RenderingServer.TextureGetRDTexture exports actual renderer-managed ordinary uploads, independent arrays and completed viewport images to the retained device without CPU copying. Compatible authored updates keep the RID; replacing allocation, disposing the source, rebinding the viewport or retiring its target expires it. A viewport RID resolves the completed ping-pong image when each command is recorded. FreeRID releases only the borrowed wrapper; queued native operations retain the old allocation through completion. Device writes change GPU storage, while authored CPU snapshots remain unchanged; the next authored update overwrites device changes. Sampling, raw update/copy/read and supported storage roles reflect actual native allocation flags. Prepare changed uploads before starting a draw list. Empty storage, unrendered targets and the compatibility renderer return an empty RID. Device allocations with a declared compatible format expose [shared sRGB views](../components/shared-texture-views.md#srgb-canvas-texture-exports). It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs (renderer exports own only wrappers); cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
 
 Layered framebuffers execute ordered native passes for each view, with vertex/fragment view indices, copied draw state, per-layer depth/resolve/input operations and untouched extra layers. See [layered multiview](../components/local-compute.md#layered-multiview) for ownership and verification limits.
 
@@ -130,6 +130,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public enum Electron2D.RenderingDevice.TextureSliceType` | [Ordinary slice selector](RenderingDevice.TextureSliceType.md). |
 | `public Electron2D.RDTextureFormat TextureGetFormat(Electron2D.RID texture)` | Copies stored format metadata and the selected view dimensions, layers and mip interval. |
 | `public System.Boolean TextureIsFormatSupportedForUsage(Electron2D.RenderingDevice.DataFormat format, Electron2D.RenderingDevice.TextureUsageBits usageFlags)` | Reports whether the selected format supports the requested two-dimensional texture usage. |
+| `public System.Boolean TextureIsShared(Electron2D.RID texture)` | Reports whether a live texture views another texture's allocation. |
 | `public System.Boolean TextureIsValid(Electron2D.RID texture)` | Reports whether an identity is a live texture of this device. |
 | `public System.Void TextureUpdate(Electron2D.RID texture, System.UInt32 layer, System.ReadOnlySpan<System.Byte> data)` | Updates one complete layer including every mip level. |
 | `public System.Void TextureClear(Electron2D.RID texture, Electron2D.Color color, System.UInt32 baseMipmap, System.UInt32 mipmapCount, System.UInt32 baseLayer, System.UInt32 layerCount)` | Records a color clear of complete selected image layers and mip levels. |
@@ -611,6 +612,14 @@ False for formats or roles unavailable on this backend.
 
 `usageFlags`: Requested allocation and transfer roles.
 <a id="member-b883b624c27c"></a>
+### TextureIsShared(RID)
+
+```csharp
+public bool TextureIsShared(RID texture)
+```
+
+Returns true for live [shared texture views and sRGB exports](../components/shared-texture-views.md). Allocation owners, invalid, expired and foreign identities return false. Query on the device's owning thread.
+
 ### TextureIsValid(Electron2D.RID)
 
 ```csharp

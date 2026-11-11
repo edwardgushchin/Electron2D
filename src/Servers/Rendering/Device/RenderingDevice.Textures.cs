@@ -119,7 +119,11 @@ public sealed unsafe partial class RenderingDevice
         41 => DataFormat.R64SINT,
         _ => DataFormat.Max
     };
-    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable, TextureSamples Samples = TextureSamples.Samples1, bool Resolve = false, uint Swizzle = 0, DataFormat StoredFormat = DataFormat.Max);
+    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable, TextureSamples Samples = TextureSamples.Samples1, bool Resolve = false, uint Swizzle = 0, DataFormat StoredFormat = DataFormat.Max)
+    {
+        internal uint BaseLayer { get; init; }
+        internal uint BaseMip { get; init; }
+    }
     private static SDL.GPUTextureUsageFlags NativeUsage(TextureUsageBits usage)
     {
         var native = (SDL.GPUTextureUsageFlags)0;

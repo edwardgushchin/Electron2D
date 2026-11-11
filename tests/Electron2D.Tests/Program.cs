@@ -826,6 +826,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATERIAL_LIGHTING") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTEGER_LIGHTING") == "1") { IntegerLightingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTEGER_CANVAS") == "1") { IntegerCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS_UPLOAD") is { } canvasUploadProfile) { DeviceCanvasTextureUpdateTests.Run(canvasUploadProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS_SRGB") is { } canvasSRGBProfile) { DeviceCanvasSRGBTests.Run(canvasSRGBProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MIXED_TEXTURE_REPLACEMENT") == "1") { MixedTextureReplacementTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS") == "1") { RenderingDeviceCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }
