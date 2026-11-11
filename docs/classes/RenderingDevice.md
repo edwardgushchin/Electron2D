@@ -9,7 +9,7 @@ contents retain their recorded encoding across output changes and transfer on GP
 new screen lists use the current format. Existing owner/list/window lifetime guards
 and framebuffer-format identities remain in effect.
 
-Last updated: 2026-11-06
+Last updated: 2026-11-11
 
 [Copied native depth/stencil state](../components/depth-stencil-state.md) extends pipeline creation with stored-depth bounds and independent visible-face masks/reference, including derived native variants.
 
@@ -26,7 +26,7 @@ for ownership and verification limits.
 
 ## Description
 
-An owner-thread graphics and compute device created locally by RenderingServer.CreateLocalRenderingDevice or retained by the active GPU renderer through RenderingServer.GetRenderingDevice. The retained renderer device flushes after canvas authoring and before drawing, and completes queued reads before FramePostDraw; Submit, Sync and public disposal are local-only. Renderer-owned image RIDs bind directly to TextureRD/TextureArrayRD canvas resources. RenderingServer.TextureGetRDTexture exports actual renderer-managed ordinary uploads, independent arrays and completed viewport images to the retained device without CPU copying. Compatible authored updates keep the RID; replacing allocation, disposing the source, rebinding the viewport or retiring its target expires it. A viewport RID resolves the completed ping-pong image when each command is recorded. FreeRID releases only the borrowed wrapper; queued native operations retain the old allocation through completion. Device writes change GPU storage, while authored CPU snapshots remain unchanged; the next authored update overwrites device changes. Sampling, raw update/copy/read and supported storage roles reflect actual native allocation flags. Prepare changed uploads before starting a draw list. Empty storage, unrendered targets and the compatibility renderer return an empty RID. Distinct sRGB views still require native format-view ownership. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs (renderer exports own only wrappers); cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
+An owner-thread graphics and compute device. Create a local device with `RenderingServer.CreateLocalRenderingDevice()` or `CreateLocalDevice()`. `RenderingServer.GetRenderingDevice()` returns the active GPU renderer's retained device. The retained renderer device flushes after canvas authoring and before drawing, and completes queued reads before FramePostDraw; Submit, Sync and public disposal are local-only. Renderer-owned image RIDs bind directly to TextureRD/TextureArrayRD canvas resources. RenderingServer.TextureGetRDTexture exports actual renderer-managed ordinary uploads, independent arrays and completed viewport images to the retained device without CPU copying. Compatible authored updates keep the RID; replacing allocation, disposing the source, rebinding the viewport or retiring its target expires it. A viewport RID resolves the completed ping-pong image when each command is recorded. FreeRID releases only the borrowed wrapper; queued native operations retain the old allocation through completion. Device writes change GPU storage, while authored CPU snapshots remain unchanged; the next authored update overwrites device changes. Sampling, raw update/copy/read and supported storage roles reflect actual native allocation flags. Prepare changed uploads before starting a draw list. Empty storage, unrendered targets and the compatibility renderer return an empty RID. Distinct sRGB views still require native format-view ownership. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs (renderer exports own only wrappers); cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
 
 Layered framebuffers execute ordered native passes for each view, with vertex/fragment view indices, copied draw state, per-layer depth/resolve/input operations and untouched extra layers. See [layered multiview](../components/local-compute.md#layered-multiview) for ownership and verification limits.
 
@@ -100,6 +100,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.String GetCapturedTimestampName(System.Int32 index)` | Reads a completed marker name. |
 | `public System.UInt64 GetCapturedTimestampCPUTime(System.Int32 index)` | Reads CPU microseconds. |
 | `public System.UInt64 GetCapturedTimestampGPUTime(System.Int32 index)` | Reads native GPU nanoseconds. |
+| [`public RenderingDevice CreateLocalDevice()`](#createlocaldevice) | Creates a caller-owned local device on the receiver's GPU. |
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
 | [`public System.Byte[] ShaderCompileBinaryFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")`](#member-shader-binary-compile) | Validates and packages copied stages and a strict UTF-8 diagnostic name. |
 | [`public Electron2D.RID ShaderCreateFromBytecode(System.ReadOnlySpan<System.Byte> binaryData, Electron2D.RID placeholderRID = default)`](#member-shader-binary-load) | Loads a complete container and optionally initializes one reserved shader identity. |
@@ -131,6 +132,13 @@ byte[] result = device.BufferGetData(buffer);
 | [`public Electron2D.RDShaderSPIRV ShaderCompileSPIRVFromSource(Electron2D.RDShaderSource shaderSource, System.Boolean allowCache = true)`](#member-c396c1ad031e) | Compiles copied stage sources through the separately installed authoring tool. |
 
 ## Member descriptions
+
+<a id="createlocaldevice"></a>
+### CreateLocalDevice()
+
+`public RenderingDevice CreateLocalDevice()` creates a caller-owned local graphics and compute device from a live local or renderer-owned device. Call it on the receiver's owner thread. The result uses the same active native GPU and has its own RID namespace, command recording, submission and readback state. It stays usable after the receiver or its renderer session retires. The application disposes the returned device.
+
+An expired receiver throws `ObjectDisposedException`. Owner-thread violations, prohibited reentry and native initialization failures throw `InvalidOperationException`. See [GPU device and window lifetime](../components/gpu-device-lifetime.md).
 
 <a id="member-036f43cc63f1"></a>
 ### BufferGetData(Electron2D.RID, System.Span<System.Byte>, System.UInt32)

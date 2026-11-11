@@ -66,7 +66,7 @@ Windows Direct3D 12 creates canvas and device graphics pipelines with private DX
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-11-06
+Last updated: 2026-11-11
 
 [Viewport mipmap bias](../components/viewport-mipmap-bias.md) controls next-image mip selection through scene, RenderingServer and project policies while preserving authored sampler and target identities.
 
@@ -602,6 +602,8 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Native FP64 arithmetic and data](../components/local-compute.md#native-fp64-arithmetic-and-data) now connect double compute/vertex/fragment work, raw buffers, original push layouts and typed specialization to optional Vulkan feature negotiation. The public API family remains unchanged; unsupported feature requests preserve ordinary device creation. Compiler, format and platform limits remain explicit.
 
 [Wide integer GPU execution](../components/local-compute.md#native-64-bit-integer-arithmetic-and-data) now supplies signed/unsigned Int64 arithmetic, raw buffers/push layouts, typed specialization, wide interstage graphics data and independent optional precision negotiation. Existing public type families are extended; compiler, format and platform boundaries remain explicit.
+
+`RenderingDevice.CreateLocalDevice()` creates an independently owned local device from an active GPU receiver. The result keeps its own commands, readbacks and resource identities after the receiver or canvas closes. See [GPU device lifetime](../components/gpu-device-lifetime.md).
 
 [Half shader execution](../components/local-compute.md#native-half-arithmetic-and-packed-data) extends the existing local device API with packed data, typed specialization and explicit optional native features.
 

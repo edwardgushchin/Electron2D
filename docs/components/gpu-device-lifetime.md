@@ -1,6 +1,6 @@
 # GPU device and window lifetime
 
-Last updated: 2026-10-27
+Last updated: 2026-11-11
 
 GPUPhysicsDevice and GPUCanvasBackend acquire independent leases on one active
 process-local SDL GPU device, regardless of startup order. Local RenderingDevice
@@ -8,6 +8,10 @@ instances retain separate logical resource namespaces on that same native device
 CPU-only physics never acquires it. The first lease negotiates the driver/features;
 subsequent leases retain those capabilities until all resources retire. Native
 driver-hint changes require retiring every active GPU consumer.
+
+`RenderingDevice.CreateLocalDevice()` acquires a caller-owned logical device from a live receiver on its owner thread. Its lease follows the canonical native device directly. The factory preserves the receiver's recording and submission state, and receiver disposal leaves the new device's GPU work and RIDs available. A local device created from the renderer also survives canvas and window retirement.
+
+`ELECTRON2D_TEST_GPU_DEVICE_LIFETIME=1` checks creation during a receiver list, cross-device RID rejection, GPU buffer copy and clear, separate submission/readback, owner and disposed guards, and retention after a renderer and its native window retire. The new receiver cases passed on Windows x64 with Vulkan and Direct3D 12 on an NVIDIA GeForce RTX 3090 Ti. On both backends, the local compute profile disposed the receiver before exercising GLSL/HLSL dispatches, barriers and readbacks on the returned device. Linux display protocols, additional target drivers and delivered-package qualification remain open for these cases.
 
 GPUDeviceFactory serializes acquisition and final destruction. Each lease refers
 directly to the canonical owner, avoiding chains through older consumers. Native

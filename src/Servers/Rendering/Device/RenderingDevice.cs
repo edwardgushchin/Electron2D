@@ -504,6 +504,18 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (_serverOwner is not null) throw new InvalidOperationException("Explicit synchronization belongs to local devices.");
         IdleList(); CompleteSubmission(); DeliverReadbacks();
     }
+    /// <summary>Creates a local device on the receiver's active GPU.</summary>
+    /// <returns>A caller-owned device with private resource identities and submission state.</returns>
+    /// <remarks>The returned device belongs to the calling thread and retains its own lease on the
+    /// shared native GPU. It stays usable after the receiver or its canvas session retires.</remarks>
+    /// <exception cref="ObjectDisposedException">The receiver is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The caller cannot access the receiver, or native initialization fails.</exception>
+    public RenderingDevice CreateLocalDevice()
+    {
+        Access();
+        return new();
+    }
+
     /// <summary>Returns the selected compute-device name.</summary>
     /// <returns>The native device description.</returns>
     public string GetDeviceName() { Access(); return _context.DeviceName; }

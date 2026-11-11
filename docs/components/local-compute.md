@@ -4,13 +4,15 @@
 
 [Native FP32 atomics](float-atomics.md) execute load/store/exchange and addition over buffer, shared and R32SFLOAT image storage, including descriptor/layer/sample selection and graphics/address consumers. The linked contract owns independent feature negotiation, ordering, unsupported precision/resource gates and Linux qualification.
 
-Last updated: 2026-11-06
+Last updated: 2026-11-11
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
 [Buffer device addresses](buffer-device-addresses.md) add stable physical-storage pointers, native uniform/storage roles and command-owned synchronization without CPU shadow copies.
 
 ## Lifetime and execution
+
+A live local or renderer-owned device can create a caller-owned device with `CreateLocalDevice()`. The result shares the active native GPU through an independent lease. It has private recording, readback and RID state and remains usable after the source or its window closes. Factory calls follow the receiver's owner and reentry guards.
 
 A local device owns private RID identities and belongs to its creating thread. Buffer/shader/pipeline/set operations reject other-device or freed identities. Pipelines and sets borrow their shader; sets borrow buffers. Freeing a dependency invalidates borrowers. Caller disposal releases the entire device graph. Resource freeing finishes pending work; device disposal cancels unsubmitted commands and waits for submitted work.
 

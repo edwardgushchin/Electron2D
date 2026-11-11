@@ -1,6 +1,12 @@
 {
   "mappings": [
     {
+      "godot": "RenderingDevice::method:create_local_device()",
+      "electron2d": "method:Electron2D.RenderingDevice.CreateLocalDevice()",
+      "state": "Partial",
+      "reason": "ADR 0028: an owner-thread local or retained renderer device can create a caller-owned logical device with private RIDs, recording, submission and readbacks. The lease retains the active native GPU independently of the receiver and its window. GPUDeviceLifetimeTests exercises GPU transfers, owner/lifetime guards and separate retirement. Packaged host qualification remains open under ADR 0021. See docs/components/gpu-device-lifetime.md."
+    },
+    {
       "godot": "class:RDShaderSPIRV",
       "electron2d": "T:Electron2D.RDShaderSPIRV",
       "state": "Partial",

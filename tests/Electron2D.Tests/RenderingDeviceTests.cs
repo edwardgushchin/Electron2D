@@ -5,7 +5,9 @@ internal static partial class RenderingDeviceTests
 {
     internal static void Run()
     {
-        using var device = RenderingServer.CreateLocalRenderingDevice();
+        using var receiver = RenderingServer.CreateLocalRenderingDevice();
+        using var device = receiver.CreateLocalDevice();
+        receiver.Dispose();
         Span<float> settings = stackalloc float[4];
         foreach (var moduleName in new[] { "LocalCompute.comp", "LocalComputeHLSL.comp" })
         {
