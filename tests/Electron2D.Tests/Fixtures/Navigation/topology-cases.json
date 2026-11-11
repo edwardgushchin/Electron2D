@@ -714,5 +714,48 @@
       5
     ],
     "layers": 0
+  },
+  {
+    "name": "fallback_prefers_reached_entry_over_surface",
+    "regions": [
+      {"cells": [[[0,0],[10,0],[10,10],[0,10]]]},
+      {"cells": [[[10,0],[50,0],[50,10],[10,10]]]},
+      {"cells": [[[0,10],[10,10],[10,20],[0,20]]]},
+      {"cells": [[[35,30],[45,30],[45,40],[35,40]]]}
+    ],
+    "start": [8,2],
+    "end": [40,35]
+  },
+  {
+    "name": "fallback_projects_original_target",
+    "regions": [
+      {"cells": [[[0,0],[10,0],[10,10],[0,10]]]},
+      {"cells": [[[10,0],[30,0],[30,10],[10,10]]]},
+      {"cells": [[[18,14],[22,14],[22,15],[18,15]]]}
+    ],
+    "start": [4,5],
+    "end": [24,16]
+  },
+  {
+    "name": "limited_search_publishes_reached_corridor",
+    "regions": [
+      {"cells": [[[0,0],[10,0],[10,10],[0,10]]]},
+      {"cells": [[[10,0],[20,0],[20,10],[10,10]]]},
+      {"cells": [[[20,0],[30,0],[30,10],[20,10]]]},
+      {"cells": [[[30,0],[40,0],[40,10],[30,10]]]}
+    ],
+    "start": [2,5],
+    "end": [38,5],
+    "limits": [
+      {"polygons": 1},
+      {"polygons": 2},
+      {"polygons": 3},
+      {"polygons": 4},
+      {"distance": 7},
+      {"distance": 8},
+      {"distance": 18},
+      {"polygons": -1},
+      {"distance": 18, "polygons": 2}
+    ]
   }
 ]

@@ -85,10 +85,12 @@ public sealed class NavigationPathQueryParameters : ElectronObject
     public float PathReturnMaxRadius { get { lock (_gate) { ThrowIfDisposed(); return _settings.PathReturnMaxRadius; } } set { Number(value); value = Math.Max(0, value); lock (_gate) { ThrowIfDisposed(); _settings = _settings with { PathReturnMaxRadius = value }; } } }
     /// <summary>Gets or changes the maximum processed polygon count; zero or negative is unlimited.</summary>
     /// <value>Default 4096; captured as one immutable query setting snapshot.</value>
+    /// <remarks>After the limit stops the search, a second pass can finish the corridor to a reached polygon.</remarks>
     /// <exception cref="ObjectDisposedException">This object is disposed.</exception>
     public int PathSearchMaxPolygons { get { lock (_gate) { ThrowIfDisposed(); return _settings.PathSearchMaxPolygons; } } set { lock (_gate) { ThrowIfDisposed(); _settings = _settings with { PathSearchMaxPolygons = value }; } } }
     /// <summary>Gets or changes the finite processed-entry distance from projected start, clamped to zero; zero is unlimited.</summary>
     /// <value>Default 0f; captured as one immutable query setting snapshot.</value>
+    /// <remarks>The distance is measured at each reached entry; it does not clip the returned path.</remarks>
     /// <exception cref="ObjectDisposedException">This object is disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Value is nonfinite or an unsupported enum/flag.</exception>
     public float PathSearchMaxDistance { get { lock (_gate) { ThrowIfDisposed(); return _settings.PathSearchMaxDistance; } } set { Number(value); value = Math.Max(0, value); lock (_gate) { ThrowIfDisposed(); _settings = _settings with { PathSearchMaxDistance = value }; } } }

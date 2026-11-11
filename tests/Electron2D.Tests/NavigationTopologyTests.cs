@@ -45,8 +45,35 @@ internal static class NavigationTopologyTests
                     var path = NavigationServer.MapGetPath(map, Point(test.GetProperty("start")), Point(test.GetProperty("end")), optimize, Layers(test)); var wantedPath = result.GetProperty(optimize ? "optimized_path" : "raw_path").EnumerateArray().Select(Point).ToArray();
                     Check(path.Length == wantedPath.Length, name + " path count: " + string.Join(';', path) + " expected " + string.Join(';', wantedPath)); for (var p = 0; p < path.Length; p++) Equal(path[p], wantedPath[p], name + " path");
                 }
+                if (test.TryGetProperty("limits", out var limits))
+                    CheckLimitedPaths(map, regions, test, limits, result.GetProperty("limited_paths"), name);
             }
             finally { foreach (var region in regions) NavigationServer.FreeRID(region); NavigationServer.FreeRID(map); foreach (var resource in resources) resource.Dispose(); NavigationServer.Synchronize(); }
+        }
+    }
+    private static void CheckLimitedPaths(RID map, List<RID> regions, JsonElement test, JsonElement limits, JsonElement expected, string name)
+    {
+        using var query = new NavigationPathQueryParameters
+        {
+            Map = map,
+            StartPosition = Point(test.GetProperty("start")),
+            TargetPosition = Point(test.GetProperty("end")),
+            NavigationLayers = Layers(test),
+            PostProcessing = NavigationPathQueryParameters.PathPostProcessing.EdgeCentered
+        };
+        using var result = new NavigationPathQueryResult();
+        for (var i = 0; i < limits.GetArrayLength(); i++)
+        {
+            query.PathSearchMaxPolygons = limits[i].TryGetProperty("polygons", out var count) ? count.GetInt32() : 0;
+            query.PathSearchMaxDistance = Number(limits[i], "distance", 0);
+            NavigationServer.QueryPath(query, result);
+            var points = expected[i].GetProperty("points").EnumerateArray().Select(Point).ToArray();
+            var owners = expected[i].GetProperty("regions").EnumerateArray().Select(region => regions[region.GetInt32()]);
+            var path = result.Path;
+            var label = $"{name}, limits {limits[i]}";
+            Check(path.Length == points.Length, label + ": path length.");
+            for (var p = 0; p < points.Length; p++) Equal(path[p], points[p], label);
+            Check(result.PathRIDs.SequenceEqual(owners), label + ": region provenance.");
         }
     }
     private static NavigationPolygon Rectangle(float x, float y, float width, float height)

@@ -73,8 +73,19 @@ internal static class NavigationQueryTests
     internal static void RunHost()
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu"; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); Engine.MaxFPS = 60; using var left = NavigationTests.Rectangle(4, 4, 16, 48); using var right = NavigationTests.Rectangle(36, 4, 16, 48); var window = new Window { Size = new(64, 64) };
-        window.AddChild(new NavigationRegion { Name = "Left", NavigationPolygon = left }); window.AddChild(new NavigationRegion { Name = "Right", NavigationPolygon = right }); var link = new NavigationLink { Name = "Teleporter", StartPosition = new(18, 12), EndPosition = new(38, 12), Bidirectional = false }; window.AddChild(link); var actor = new Traveler { Link = link, Position = new(12, 44), PhysicsProcessEnabled = true }; var journey = new Journey { Traveler = actor }; window.AddChild(journey); window.AddChild(actor); var frames = 0; RID map = default;
-        window.Ready += _ => { Check(RenderingServer.GetCurrentRenderingMethod() == backend && RenderingServer.GetCurrentRenderingDriverName() != "software", "Requested hardware backend."); map = window.World!.NavigationMap; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () => { frames++; journey.QueueRedraw(); if (!actor.Done) { Check(frames < 180, "Bounded metadata-driven navigation host."); return; } Check(actor.Teleports == 1, "Native actor executes exactly one metadata-driven teleport."); using var pixels = window.GetTexture().GetImage()!; Check(pixels.GetPixel(44, 44).R > .9f && pixels.GetPixel(44, 44).G > .9f, "Native metadata-driven actor reaches goal pixels."); if (Environment.GetEnvironmentVariable("ELECTRON2D_NAVIGATION_QUERY_SNAPSHOT") is { } capture) pixels.SavePNG(capture); window.Tree!.Quit(); }; };
+        var leftRegion = new NavigationRegion { Name = "Left", NavigationPolygon = left };
+        var rightRegion = new NavigationRegion { Name = "Right", NavigationPolygon = right };
+        window.AddChild(leftRegion); window.AddChild(rightRegion); var link = new NavigationLink { Name = "Teleporter", StartPosition = new(18, 12), EndPosition = new(38, 12), Bidirectional = false }; window.AddChild(link); var actor = new Traveler { Link = link, Position = new(12, 44), PhysicsProcessEnabled = true }; var journey = new Journey { Traveler = actor }; window.AddChild(journey); window.AddChild(actor); var frames = 0; RID map = default;
+        window.Ready += _ =>
+        {
+            Check(RenderingServer.GetCurrentRenderingMethod() == backend && RenderingServer.GetCurrentRenderingDriverName() != "software", "Requested hardware backend.");
+            map = window.World!.NavigationMap;
+            NavigationServer.MapSetUseAsyncIterations(map, false);
+            NavigationServer.RegionSetUseAsyncIterations(leftRegion.GetRID(), false);
+            NavigationServer.RegionSetUseAsyncIterations(rightRegion.GetRID(), false);
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () => { frames++; journey.QueueRedraw(); if (!actor.Done) { Check(frames < 180, "Bounded metadata-driven navigation host."); return; } Check(actor.Teleports == 1, "Native actor executes exactly one metadata-driven teleport."); using var pixels = window.GetTexture().GetImage()!; Check(pixels.GetPixel(44, 44).R > .9f && pixels.GetPixel(44, 44).G > .9f, "Native metadata-driven actor reaches goal pixels."); if (Environment.GetEnvironmentVariable("ELECTRON2D_NAVIGATION_QUERY_SNAPSHOT") is { } capture) pixels.SavePNG(capture); window.Tree!.Quit(); };
+        };
         Engine.Run(window); Check(window.IsDisposed && RenderingServer.Service is null, "Native typed-query scene teardown."); Reject<ArgumentException>(() => NavigationServer.MapGetLinks(map)); Console.WriteLine($"Typed navigation metadata teleport/pixels/cleanup passed: {backend}, {frames} frames.");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }

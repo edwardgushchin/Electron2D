@@ -42,7 +42,7 @@ NavigationServer.FreeRID(map);
 | [`public static RID MapGetClosestPointOwner(RID map, Vector2 point)`](#mapgetclosestpointowner) | Returns the closest committed region identity, or empty for empty topology. |
 | [`public static System.Single MapGetEdgeConnectionMargin(RID map)`](#mapgetedgeconnectionmargin) | Returns the staged region-edge connection margin. |
 | [`public static ulong MapGetIterationID(RID map)`](#mapgetiterationid) | Returns the latest complete published map iteration, initially zero. |
-| [`public static Vector2[] MapGetPath(RID map, Vector2 origin, Vector2 destination, bool optimize, uint navigationLayers = 1)`](#mapgetpath) | Returns a copied committed polygon path, projecting endpoints and returning the closest reached destination when disconnected. |
+| [`public static Vector2[] MapGetPath(RID map, Vector2 origin, Vector2 destination, bool optimize, uint navigationLayers = 1)`](#mapgetpath) | Returns a copied path across the committed polygon map. |
 | [`public static RID[] MapGetRegions(RID map)`](#mapgetregions) | Returns copied staged region memberships of a map. |
 | [`public static bool MapGetUseEdgeConnections(RID map)`](#mapgetuseedgeconnections) | Returns the staged edge-connection setting. |
 | [`public static bool MapIsActive(RID map)`](#mapisactive) | Returns the map's staged active setting. |
@@ -143,9 +143,9 @@ Configuration setters stage the next iteration; configuration getters report sta
 <a id="mapgetpath"></a>
 ### `public static Vector2[] MapGetPath(RID map, Vector2 origin, Vector2 destination, bool optimize, uint navigationLayers = 1)`
 
-Returns a copied committed polygon path, projecting endpoints and returning the closest reached destination when disconnected.
+Returns a copied path across the committed polygon map. For an unreachable target, the search uses the nearest reached portal entry to select a walkable polygon. It rebuilds the corridor to the original target projected onto that polygon. If the start polygon offers a closer projection, the path stays there.
 
-`map`: Live navigation map RID; empty is accepted only when detaching a region. `origin`: Finite world-space route origin. `destination`: Finite world-space requested destination. `optimize`: True selects portal funnel corners; false keeps portal midpoints. `navigationLayers`: Applicable region layer bits, one by default; zero selects no cells.
+`map` is the live navigation map RID. `origin` and `destination` are finite world-space points. With `optimize`, the route uses portal funnel corners. The default route keeps portal midpoints. `navigationLayers` defaults to layer one, and zero selects no cells.
 
 Configuration setters stage the next iteration; configuration getters report staged values. Geometry queries read immutable committed data. Required identities must resolve to the owning kind; absent/stale/wrong-kind RIDs throw `ArgumentException`. Caller-owned identities require `FreeRID`; borrowed World/node identities reject it.
 
@@ -734,7 +734,7 @@ Queries capture settings and one map iteration, then publish selected arrays and
 <a id="querypath"></a>
 ### `public static void QueryPath(NavigationPathQueryParameters parameters, NavigationPathQueryResult result, Action? callback = null)`
 
-Queries one committed map using a captured parameter snapshot and atomically replaces the supplied result. Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication. Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.
+Queries one committed map using a captured parameter snapshot and atomically replaces the supplied result. Disconnection or a search limit can yield a rebuilt corridor to a reached polygon. Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication. Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.
 
 `parameters`: Caller-owned typed settings; copied filter arrays remain stable during the query.
 

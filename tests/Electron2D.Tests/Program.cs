@@ -1311,7 +1311,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_LINK_HOST") =
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_LINKS") == "1") { NavigationLinkTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_CHILD") is { } navChild) { NavigationTests.RunChild(navChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_HOST") == "1") { NavigationTests.RunHost(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_TOPOLOGY_HOST") == "1") { NavigationTopologyRenderingTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_TOPOLOGY_HOST") is { } navigationTopologyHost)
+{
+    if (navigationTopologyHost == "1") { NavigationTopologyRenderingTests.RunHost(); return; }
+    if (navigationTopologyHost == "frontier") { NavigationTopologyRenderingTests.RunFrontierHost(); return; }
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_TOPOLOGY") == "1") { NavigationTopologyTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION") == "1") { NavigationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD_HOST") == "1") { WorldTests.RunHost(); return; }

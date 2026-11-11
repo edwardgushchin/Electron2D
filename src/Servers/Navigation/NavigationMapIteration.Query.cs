@@ -11,26 +11,33 @@ internal sealed partial class NavigationMapIteration
         if (start < 0 || finish < 0) return NavigationPathQueryData.Empty;
         var points = new List<(Vector2 Point, int Cell)>();
         if (start == finish) { Add(points, from, start); Add(points, to, finish); return Complete(points); }
-        var distance = new double[Cells.Length]; Array.Fill(distance, double.PositiveInfinity); distance[start] = 0;
-        var parent = new int[Cells.Length]; Array.Fill(parent, -1); var entry = new Vector2[Cells.Length]; entry[start] = from; var previous = new Portal[Cells.Length];
-        var queue = new PriorityQueue<(int Cell, double Cost), (double Total, double NegativeCost, int Order)>(); queue.Enqueue((start, 0), (Math.Sqrt(DistanceSquared(from, to)) * Cells[start].TravelCost, 0, start));
-        var best = start; var remaining = DistanceSquared(Closest(Cells[start], to), to); var processed = 0;
-        while (queue.TryDequeue(out var current, out _))
+        var distance = new double[Cells.Length];
+        var parent = new int[Cells.Length];
+        var entry = new Vector2[Cells.Length];
+        var previous = new Portal[Cells.Length];
+        var queue = new PriorityQueue<(int Cell, double Cost), (double Total, double NegativeCost, int Order)>();
+        var target = settings.TargetPosition;
+        var nearestReached = -1;
+        var nearestEntryDistance = double.PositiveInfinity;
+        var processed = 0;
+        var limitReached = false;
+        var limitDistanceSquared = (double)settings.PathSearchMaxDistance * settings.PathSearchMaxDistance;
+        var best = finish;
+        if (!FindCorridor(finish, to, trackFrontier: true))
         {
-            var index = current.Cell; if (current.Cost != distance[index]) continue;
-            var d = Cells[index].IsLink ? double.PositiveInfinity : DistanceSquared(Closest(Cells[index], to), to); if (d < remaining) { remaining = d; best = index; }
-            if (index == finish) { best = finish; break; }
-            processed++;
-            if (settings.PathSearchMaxPolygons > 0 && processed >= settings.PathSearchMaxPolygons || settings.PathSearchMaxDistance > 0 && DistanceSquared(from, entry[index]) > (double)settings.PathSearchMaxDistance * settings.PathSearchMaxDistance) break;
-            foreach (var portal in Edges[index])
+            best = start;
+            to = Closest(Cells[start], target);
+            if (nearestReached >= 0)
             {
-                var next = portal.Target; if (!usable[next]) continue; var point = ClosestSegment(entry[index], portal.A, portal.B);
-                var cost = current.Cost + Math.Sqrt(DistanceSquared(entry[index], point)) * Cells[index].TravelCost + (Cells[index].Region != Cells[next].Region ? Cells[next].EnterCost : 0);
-                if (cost >= distance[next]) continue; distance[next] = cost; entry[next] = point; parent[next] = index; previous[next] = portal;
-                queue.Enqueue((next, cost), (cost + Math.Sqrt(DistanceSquared(point, to)) * Cells[next].TravelCost, -cost, next));
+                var reachablePoint = Closest(Cells[nearestReached], target);
+                if (DistanceSquared(reachablePoint, target) <= DistanceSquared(to, target) &&
+                    FindCorridor(nearestReached, reachablePoint, trackFrontier: false))
+                {
+                    best = nearestReached;
+                    to = reachablePoint;
+                }
             }
         }
-        to = Closest(Cells[best], to);
         if (best == start) { Add(points, from, start); Add(points, to, start); return Complete(points); }
         var corridor = new List<(Vector2 Left, Vector2 Right, int Cell)>(); var at = best;
         while (at != start)
@@ -43,6 +50,64 @@ internal sealed partial class NavigationMapIteration
         if (settings.PostProcessing == NavigationPathQueryParameters.PathPostProcessing.CorridorFunnel) points = FunnelWithProvenance(from, to, start, best, corridor);
         else { Add(points, from, start); foreach (var portal in corridor) Add(points, settings.PostProcessing == NavigationPathQueryParameters.PathPostProcessing.EdgeCentered ? previous[portal.Cell].Centered ?? portal.Left * .5f + portal.Right * .5f : entry[portal.Cell], portal.Cell); Add(points, to, best); }
         return Complete(points);
+
+        bool FindCorridor(int goal, Vector2 destination, bool trackFrontier)
+        {
+            Array.Fill(distance, double.PositiveInfinity);
+            distance[start] = 0;
+            entry[start] = from;
+            queue.Clear();
+            queue.Enqueue((start, 0), (Math.Sqrt(DistanceSquared(from, destination)) * Cells[start].TravelCost, 0, start));
+            while (queue.TryDequeue(out var current, out _))
+            {
+                var index = current.Cell;
+                if (current.Cost != distance[index])
+                    continue;
+                if (index == goal)
+                    return true;
+
+                var cell = Cells[index];
+                if (trackFrontier && index != start && !cell.IsLink)
+                {
+                    var remaining = DistanceSquared(entry[index], target);
+                    if (remaining < nearestEntryDistance)
+                    {
+                        nearestEntryDistance = remaining;
+                        nearestReached = index;
+                    }
+                }
+
+                // Once a limit ends exploration, the second pass can finish the corridor to the reached polygon.
+                processed++;
+                if (!limitReached && (settings.PathSearchMaxPolygons > 0 && processed >= settings.PathSearchMaxPolygons ||
+                    limitDistanceSquared > 0 && DistanceSquared(from, entry[index]) > limitDistanceSquared))
+                {
+                    limitReached = true;
+                    return false;
+                }
+
+                foreach (var portal in Edges[index])
+                {
+                    var next = portal.Target;
+                    if (!usable[next])
+                        continue;
+                    var point = ClosestSegment(entry[index], portal.A, portal.B);
+                    var travel = Math.Sqrt(DistanceSquared(entry[index], point)) * cell.TravelCost;
+                    var enter = cell.Region != Cells[next].Region ? Cells[next].EnterCost : 0;
+                    var cost = current.Cost + travel + enter;
+                    if (cost >= distance[next])
+                        continue;
+                    distance[next] = cost;
+                    entry[next] = point;
+                    parent[next] = index;
+                    previous[next] = portal;
+                    var estimate = Math.Sqrt(DistanceSquared(point, destination)) * Cells[next].TravelCost;
+                    queue.Enqueue((next, cost), (cost + estimate, -cost, next));
+                }
+            }
+            return false;
+        }
+
         bool Allowed(RID region) => !settings.ExcludedRegions.AsSpan().Contains(region) && (settings.IncludedRegions.Length == 0 || settings.IncludedRegions.AsSpan().Contains(region));
         int Project(Vector2 point, out Vector2 projected)
         { var selected = -1; projected = Vector2.Zero; var bestDistance = double.PositiveInfinity; for (var i = 0; i < Cells.Length; i++) { if (!usable[i] || Cells[i].IsLink) continue; var p = Closest(Cells[i], point); var d = DistanceSquared(point, p); if (d < bestDistance) { selected = i; projected = p; bestDistance = d; } } return selected; }

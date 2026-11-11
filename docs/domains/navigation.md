@@ -57,7 +57,7 @@ NavigationLink and owned server links now provide directed/bidirectional off-sur
 
 [Reciprocal avoidance](../components/navigation-maps.md#reciprocal-agent-and-obstacle-avoidance) now connects NavigationAgent controls and typed velocity events, NavigationObstacle moving disc/oriented contour geometry, static server state and the physics lane. Managed/source/oracle/allocation and actual GPU/compatibility games are verified separately. Source bake exclusion/carving and global diagnostics have executing producers; wider profiling acceptance remains separate.
 
-Committed [raster topology and surface sampling](../components/navigation-maps.md#geometry-and-routes) now provide cell/scale consumers, directed margin pathways, per-region versions and complete process counters. Quantized ownership follows two-owner grouping; independent pinned-runtime fixtures and real GPU/compatibility actors verify the connected slice. Broad search-tie/fallback acceptance remains open; async map iterations and global controls/diagnostics have executing consumers.
+Committed [raster topology and surface sampling](../components/navigation-maps.md#geometry-and-routes) provide cell/scale consumers, directed margin pathways, per-region versions and complete process counters. Path queries and agents can follow a corridor rebuilt to a reached walkable polygon when a goal is disconnected or exploration reaches a search limit. The component records the remaining mixed-weight, link and tie dependencies.
 
 ## Source geometry producer
 

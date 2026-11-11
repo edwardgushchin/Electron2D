@@ -79,10 +79,10 @@ public sealed partial class NavigationServer
     /// <returns>Returns the closest committed region identity, or empty for empty topology.</returns>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
     public static RID MapGetClosestPointOwner(RID map, Vector2 point) { Finite(point); lock (Shared._gate) return Shared.Map(map).Iteration.Closest(point).Owner; }
-    /// <summary>Returns a copied committed polygon path, projecting endpoints and returning the closest reached destination when disconnected.</summary>
+    /// <summary>Returns a copied path across the committed polygon map.</summary>
     /// <param name="map">Live map identity.</param><param name="origin">Finite world start.</param><param name="destination">Finite world destination.</param>
     /// <param name="optimize">True uses portal funnel; false retains crossed portal midpoints.</param><param name="navigationLayers">Applicable region-layer bits, one by default.</param>
-    /// <returns>Returns a copied committed polygon path, projecting endpoints and returning the closest reached destination when disconnected.</returns>
+    /// <returns>Projected path points. An unreachable goal uses a reachable polygon selected by its reached portal entry.</returns>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
     public static Vector2[] MapGetPath(RID map, Vector2 origin, Vector2 destination, bool optimize, uint navigationLayers = 1)
     { Finite(origin); Finite(destination); NavigationMapIteration snapshot; lock (Shared._gate) snapshot = Shared.Map(map).Iteration; return snapshot.Path(origin, destination, optimize, navigationLayers); }

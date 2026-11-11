@@ -17,6 +17,65 @@ internal static class NavigationTopologyRenderingTests
     {
         protected override void OnDraw() => DrawRect(new(0, 0, 24, 48), new(.1f, .3f, .1f));
     }
+    private sealed class FrontierWalker : Entity
+    {
+        internal NavigationAgent Agent { get; } = new() { PathDesiredDistance = .2f, TargetDesiredDistance = .2f };
+        protected override void OnPhysicsProcess(double delta)
+        {
+            var next = Agent.GetNextPathPosition();
+            Position = Position.MoveToward(next, 1);
+        }
+        protected override void OnDraw() => DrawRect(new(-1, -1, 3, 3), Colors.White);
+    }
+
+    internal static void RunFrontierHost()
+    {
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu";
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        Engine.MaxFPS = 60;
+        using var start = NavigationTests.Rectangle(0, 0, 10, 10);
+        using var east = NavigationTests.Rectangle(10, 0, 40, 10);
+        using var south = NavigationTests.Rectangle(0, 10, 10, 10);
+        using var island = NavigationTests.Rectangle(35, 30, 10, 10);
+        var root = new Window { Size = new(64, 64) };
+        foreach (var polygon in new[] { start, east, south, island })
+        {
+            var region = new NavigationRegion { NavigationPolygon = polygon };
+            NavigationServer.RegionSetUseAsyncIterations(region.GetRID(), false);
+            root.AddChild(region);
+        }
+        var walker = new FrontierWalker { Position = new(8, 2), PhysicsProcessEnabled = true };
+        walker.AddChild(walker.Agent);
+        root.AddChild(walker);
+        var frames = 0;
+        var completions = 0;
+        walker.Agent.NavigationFinished += () => completions++;
+        root.Ready += _ =>
+        {
+            var map = root.World!.NavigationMap;
+            NavigationServer.MapSetUseAsyncIterations(map, false);
+            NavigationServer.MapSetUseEdgeConnections(map, false);
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            walker.Agent.TargetPosition = new(40, 35);
+            RenderingServer.FramePostDraw += () =>
+            {
+                Check(++frames < 240, "The frontier walker finishes within 240 frames.");
+                if (completions == 0)
+                    return;
+                Check(RenderingServer.GetCurrentRenderingMethod() == backend, "The requested renderer is active.");
+                Check(completions == 1 && walker.Agent.GetFinalPosition() == new Vector2(10, 20) &&
+                    !walker.Agent.IsTargetReachable() && !walker.Agent.IsTargetReached(), "The reached frontier completes without reaching the disconnected goal.");
+                using var image = root.GetTexture().GetImage()!;
+                Check(image.GetPixel(10, 20) == Colors.White && image.GetPixel(40, 35) == Colors.Black,
+                    "The visible agent ends at the reached frontier.");
+                root.Tree!.Quit();
+            };
+        };
+        Check(Engine.Run(root) == 0 && completions == 1, "The frontier host terminates after one completion.");
+        Console.WriteLine($"Navigation frontier agent and rendered endpoint passed: {backend}, {frames} frames.");
+    }
+
     internal static void RunHost()
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu"; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); Engine.MaxFPS = 60;

@@ -1942,11 +1942,10 @@
       "godot": [
         "NavigationServer2D::method:map_get_closest_point(RID:,Vector2:)",
         "NavigationServer2D::method:map_get_closest_point_owner(RID:,Vector2:)",
-        "NavigationServer2D::method:map_get_path(RID:,Vector2:,Vector2:,bool:,int:)",
         "NavigationServer2D::method:region_get_closest_point(RID:,Vector2:)",
         "NavigationServer2D::method:region_owns_point(RID:,Vector2:)"
       ],
-      "reason": "Committed quantized two-owner topology and typed projection/paths execute, including twelve pinned-runtime counter/pathway/raw/funnel fixtures. Remaining query dependency: comprehensive weighted search/cost/tie/budget/fallback equivalence beyond these fixed corridors. Projection ownership under broader overlapping geometry retains its precise oracle acceptance trigger."
+      "reason": "Typed projection uses committed quantized two-owner topology. Overlapping geometry still needs projection/owner selection equivalence beyond the fixed corridors."
     },
     {
       "state": "Excluded",
@@ -2073,8 +2072,9 @@
     },
     {
       "state": "Partial",
-      "reason": "Typed query controls and metadata execute over the committed quantized topology. Remaining: comprehensive weighted search/cost/tie/budget/fallback equivalence beyond tested corridors; no setting is inert.",
+      "reason": "ADRs 0097/0095: typed controls, provenance and copied paths use committed topology. Disconnected and search-limited queries select a reached walkable polygon by portal entry distance, project the original target and rebuild the corridor. Pinned-runtime fixtures cover branching fallback, target projection and nine count/distance profiles. Remaining: weighted entry-cost ordering, equal-priority branching and fallback on mixed link/region corridors.",
       "godot": [
+        "NavigationServer2D::method:map_get_path(RID:,Vector2:,Vector2:,bool:,int:)",
         "NavigationServer2D::method:query_path(NavigationPathQueryParameters2D:,NavigationPathQueryResult2D:,Callable:)"
       ]
     },

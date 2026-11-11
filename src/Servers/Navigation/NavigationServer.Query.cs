@@ -6,7 +6,9 @@ public sealed partial class NavigationServer
     /// <param name="parameters">Caller-owned typed settings; copied filter arrays remain stable during the query.</param>
     /// <param name="result">Caller-owned result receiving selected arrays and length together.</param>
     /// <param name="callback">Optional zero-argument completion invoked on this calling thread after publication, outside gates.</param>
-    /// <remarks>Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication.
+    /// <remarks>If the goal is disconnected or a search limit is reached, the query can rebuild a corridor to a reached polygon.
+    /// Its final point projects the original target onto that polygon.
+    /// Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication.
     /// Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.</remarks>
     /// <exception cref="ArgumentNullException">A required object is null.</exception>
     /// <exception cref="ArgumentException">The captured map is absent, stale or of another kind.</exception>

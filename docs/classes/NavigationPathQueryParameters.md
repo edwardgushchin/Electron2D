@@ -165,7 +165,7 @@ Queries capture one settings/map snapshot and publish one complete result before
 <a id="pathsearchmaxdistance"></a>
 ### `public float PathSearchMaxDistance { get; set; }`
 
-Gets or changes the finite processed-entry distance from projected start, clamped to zero; zero is unlimited. Default 0f; captured as one immutable query setting snapshot.
+Gets or changes the finite processed-entry distance from projected start. The default and minimum value of zero allow unlimited distance. The limit applies to exploration. Use PathReturnMaxLength or PathReturnMaxRadius to clip returned points.
 
 `ObjectDisposedException`: This object is disposed.
 
@@ -176,7 +176,7 @@ Queries capture one settings/map snapshot and publish one complete result before
 <a id="pathsearchmaxpolygons"></a>
 ### `public int PathSearchMaxPolygons { get; set; }`
 
-Gets or changes the maximum processed polygon count; zero or negative is unlimited. Default 4096; captured as one immutable query setting snapshot.
+Gets or changes the maximum processed polygon count. The default is 4096. Zero or negative values allow unlimited exploration. After the limit stops the search, a second pass can finish the corridor to a reached polygon.
 
 `ObjectDisposedException`: This object is disposed.
 

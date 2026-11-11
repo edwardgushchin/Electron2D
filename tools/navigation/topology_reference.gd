@@ -61,6 +61,22 @@ func run():
   if test.get("active",true):
    for point in NavigationServer2D.map_get_path(map,vector(test.start),vector(test.end),false,test.get("layers",1)): output.raw_path.append(pair(point))
    for point in NavigationServer2D.map_get_path(map,vector(test.start),vector(test.end),true,test.get("layers",1)): output.optimized_path.append(pair(point))
+  if test.has("limits"):
+   output.limited_paths=[]
+   var query=NavigationPathQueryParameters2D.new()
+   query.map=map
+   query.start_position=vector(test.start)
+   query.target_position=vector(test.end)
+   query.navigation_layers=test.get("layers",1)
+   query.path_postprocessing=NavigationPathQueryParameters2D.PATH_POSTPROCESSING_EDGECENTERED
+   var result=NavigationPathQueryResult2D.new()
+   for limit in test.limits:
+    query.path_search_max_polygons=limit.get("polygons",0)
+    query.path_search_max_distance=limit.get("distance",0.0)
+    NavigationServer2D.query_path(query,result)
+    output.limited_paths.append({"points":[],"regions":[]})
+    for point in result.path: output.limited_paths[-1].points.append(pair(point))
+    for rid in result.path_rids: output.limited_paths[-1].regions.append(regions.find(rid))
   results.append(output)
   for region in regions: NavigationServer2D.free_rid(region)
   NavigationServer2D.free_rid(map)
