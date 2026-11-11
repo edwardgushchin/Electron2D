@@ -1157,6 +1157,16 @@ The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-life
 
 ## Native accessibility integration
 
+<a id="m-electron2d-scenetree-isaccessibilitysupported"></a>
+### `public bool IsAccessibilitySupported()`
+
+Reports whether this tree owns the active native display and its selected, permitted accessibility bridge connects. The first support query may initialize the native connection. A headless or unrelated tree, disabled project policy, dummy driver, or absent bridge returns false. Connected output can accept explicit elements even when automatic scene output is inactive.
+
+<a id="m-electron2d-scenetree-isaccessibilityenabled"></a>
+### `public bool IsAccessibilityEnabled()`
+
+Reports whether automatic accessibility publication is active for this tree. The captured display policy and a live bridge govern this result. In Auto mode the display samples host accessibility status on open. Manually created elements can use the bridge independently. Pausing the scene leaves automatic publication active. Both queries require a live tree and its owner thread.
+
 The ordinary frame completion runs automatic semantic reconciliation after deferred work; physics-only passes do not publish partial semantic updates. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.
 
 Private AccessibilityDrag operations reuse GUIDrag preparation/completion and the connected viewport section. Null/error/departing sources, retired targets and invalid acceptance cannot leave preview or payload ownership active. Focused unhandled GUI input supports the permanent unbound drag command. See [accessible drag](AccessibilityServer.md#custom-actions-and-accessible-drag).

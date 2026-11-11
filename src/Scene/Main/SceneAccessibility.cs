@@ -11,7 +11,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
     private readonly Dictionary<int, RID> _focus = [], _previousFocus = [];
     private readonly Dictionary<RID, int> _childOrder = [];
     internal static SceneAccessibility? Create(SceneTree tree) =>
-        tree.Root is Window window && window.GetWindowID() >= 0 && AccessibilityServer.AutomaticOutput ? new(tree) : null;
+        tree.IsAccessibilityEnabled() ? new(tree) : null;
     internal static Window? NativeWindow(Node node)
     {
         var window = node.GetWindow();

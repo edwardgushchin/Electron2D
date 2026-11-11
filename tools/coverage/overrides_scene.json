@@ -309,6 +309,16 @@
       "reason": "Typed setting sampled before scene-root entry."
     },
     {
+      "electron2d": "method:Electron2D.SceneTree.IsAccessibilityEnabled()",
+      "godot": "SceneTree::method:is_accessibility_enabled()",
+      "reason": "Reads the tree's live native bridge and captured automatic publication policy."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.IsAccessibilitySupported()",
+      "godot": "SceneTree::method:is_accessibility_supported()",
+      "reason": "Reads live permitted bridge availability for the tree's own native display."
+    },
+    {
       "electron2d": "method:Electron2D.SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "godot": "SceneTree::method:create_timer(float:,bool:,bool:,bool:)",
       "reason": "All four arguments and defaults map to one-shot timer scheduling."
@@ -8646,6 +8656,14 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "SceneTree::method:is_accessibility_enabled()",
+        "SceneTree::method:is_accessibility_supported()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0041/0114: the tree's owning display reports permitted bridge support separately from automatic semantic publication. Real AT-SPI sessions and an independent registry client verify Always, enabled and inactive Auto, manual output, disabled policy/driver, pause, snapshot policy, headless isolation and owner/disposal guards. Missing native adapters correctly report unavailable; their implementation remains on the owning platform rows."
+    },
     {
       "godot": [
         "SceneTree::signal:tree_process_mode_changed()"

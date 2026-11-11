@@ -194682,6 +194682,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneTree.IsAccessibilityEnabled()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "IsAccessibilityEnabled",
+    "signature": "public System.Boolean IsAccessibilityEnabled()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneTree.IsAccessibilitySupported()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "IsAccessibilitySupported",
+    "signature": "public System.Boolean IsAccessibilitySupported()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneTree.IsInputHandled()",
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",
