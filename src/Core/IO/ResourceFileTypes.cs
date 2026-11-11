@@ -16,6 +16,8 @@ public static partial class ResourceFileTypes
     private static InstancePlaceholder CreateInstancePlaceholder() => new();
     private static MissingNode CreateMissingNode() => new();
     private static Extension CreateExtension() => new();
+    private static WorldEnvironment CreateWorldEnvironment() => new();
+    private static CanvasEnvironment CreateCanvasEnvironment() => new();
     static ResourceFileTypes()
     {
         RegisterNode("Node", CreateNode);
@@ -23,6 +25,8 @@ public static partial class ResourceFileTypes
         RegisterNode("MissingNode", CreateMissingNode);
         RegisterNode("Entity", CreateEntity);
         RegisterNode("CanvasModulate", CreateCanvasModulate);
+        RegisterNode("WorldEnvironment", CreateWorldEnvironment);
+        RegisterResource("CanvasEnvironment", CreateCanvasEnvironment);
         RegisterNode("ShaderGlobalsOverride", CreateShaderGlobalsOverride);
         RegisterNode("FoldableContainer", CreateFoldableContainer);
         RegisterNode("TouchScreenButton", CreateTouchScreenButton);

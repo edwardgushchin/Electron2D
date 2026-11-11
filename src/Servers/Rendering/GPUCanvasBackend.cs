@@ -162,7 +162,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         return pipeline;
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default, CanvasRenderTiming? timing = null)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default, CanvasRenderTiming? timing = null, GlowSettings glow = default)
     {
         var measured = (GPUTiming?)timing;
         ResetRenderInfo();
@@ -222,6 +222,23 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         if (lightingUsed) PrepareLightingAtlas(lighting, output);
         if (sdfUsed) PrepareSDF(lighting);
         PrepareMaterialLighting(batches, lighting);
+        var glowLevelCount = 0;
+        if (glow.Enabled && glow.Strength > 0)
+            for (var i = 0; i < GlowSettings.LevelCount; i++)
+                if (glow.Levels[i] > 0) glowLevelCount = i + 1;
+        var drawGlow = glow.Enabled && (glowLevelCount > 0 ||
+            glow.Blend is CanvasEnvironment.GlowBlendMode.Replace or CanvasEnvironment.GlowBlendMode.Mix);
+        var mapRegion = default(Rect2);
+        var glowMap = (nint)0;
+        if (drawGlow)
+        {
+            _glowBlurPipeline ??= CreateGlowPipeline(GlowBlurShader);
+            _glowCompositePipeline ??= CreateGlowPipeline(GlowCompositeShader);
+            output.Glow ??= new(CreateTarget(size, default, HDR: true));
+            for (var i = 0; i < glowLevelCount; i++)
+                output.Glow.Levels[i] ??= CreateTarget(GlowBuffers.LevelSize(size, i), default, HDR: true);
+            if (glowLevelCount > 0 && glow.MapStrength > 0) glowMap = PrepareGlowMap(glow.Map, out mapRegion);
+        }
         var lightingBytes = lightingUsed || sdfUsed ? lighting.Bytes : 0;
         var maskFirst = checked(vertices.Length + (sdfUsed ? 6 : 0));
         var seedFirst = checked(maskFirst + (lightingUsed ? (lighting.Masks.Count + lighting.ShadowCount) * 6 : 0));
@@ -284,7 +301,11 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             if (processParticles) PrepareParticleVertices(command, batches, lightingBytes, size);
             PrepareModelPoses(command, batches, modelPoses);
             PrepareInstanceStreams(command, batches);
-            if (!clearEnabled && output.Multisample is null) Blit(command, output.Current.DangerousGetHandle(), output.Next.DangerousGetHandle(), new(0, 0, size.X, size.Y));
+            if (!clearEnabled && output.Multisample is null)
+            {
+                var previous = output.Glow is { HasRawFrame: true } history ? history.Raw : output.Current;
+                Blit(command, previous.DangerousGetHandle(), output.Next.DangerousGetHandle(), new(0, 0, size.X, size.Y));
+            }
             pass = BeginCanvasPass(command, output, false, clearEnabled ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load, clear);
             var inGroup = false; var copied = false;
             var maskSamplers = stackalloc SDL.GPUTextureSamplerBinding[2];
@@ -423,12 +444,19 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 RecordCanvasDraw(batch, drawCalls);
             }
             SDL.EndGPURenderPass(pass); pass = 0;
+            if (drawGlow) DrawGlow(command, output, glow, glowLevelCount, glowMap, mapRegion);
             measured?.End(command);
             var submitted = command; command = 0;
             if (measured is not null) measured.Submit(submitted); else Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
             if (processParticles) { CommitParticleChanges(); particlesCommitted = true; }
             foreach (var texture in _textures.Values) texture.CommitUpload();
-            foreach (var texture in _layeredTextures.Values) texture.CommitUpload(); output.Commit();
+            foreach (var texture in _layeredTextures.Values) texture.CommitUpload();
+            output.Commit();
+            if (output.Glow is { } glowBuffers)
+            {
+                if (drawGlow) glowBuffers.HasRawFrame = true;
+                else { output.Glow = null; glowBuffers.Dispose(); }
+            }
         }
         finally
         {
@@ -763,6 +791,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         _sdfTarget?.Dispose(); _sdfPipeline?.Dispose(); ReleaseParticlePrograms(); ReleaseParticleVertices();
         _litPrograms.Clear(); _usedLitPrograms.Clear();
         ReleaseInstanceStreams(); ReleaseModelPoses(); _pipelines.Clear(); foreach (var pipeline in _clearPipelines) pipeline?.Dispose();
+        _glowBlurPipeline?.Dispose(); _glowCompositePipeline?.Dispose();
         foreach (var pipeline in _seedPipelines) pipeline?.Dispose(); ReleaseTargets(); _vertexBuffer?.Dispose(); _transfer?.Dispose(); _vertexShader.Dispose(); _instancedVertexShader.Dispose(); _lightingVertexShader.Dispose(); _lightingInstancedVertexShader.Dispose();
         if (_windowClaimed) SDL.ReleaseWindowFromGPUDevice(Device, _window);
         _device.Dispose();

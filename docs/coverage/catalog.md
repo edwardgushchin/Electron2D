@@ -286,7 +286,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Engine](classes/Engine.md) | Object | Partial | 34 |
 | [EngineDebugger](classes/EngineDebugger.md) | Object | Blocked | 23 |
 | [EngineProfiler](classes/EngineProfiler.md) | RefCounted | Blocked | 3 |
-| [Environment](classes/Environment.md) | Resource | Excluded | 138 |
+| [Environment](classes/Environment.md) | Resource | Partial | 138 |
 | [Expression](classes/Expression.md) | RefCounted | Blocked | 4 |
 | [ExternalTexture](classes/ExternalTexture.md) | Texture2D | Blocked | 4 |
 | [FABRIK3D](classes/FABRIK3D.md) | IterateIK3D | Excluded | 0 |
@@ -1057,7 +1057,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [World3D](classes/World3D.md) | Resource | Excluded | 7 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | Shape2D | Implemented | 2 |
 | [WorldBoundaryShape3D](classes/WorldBoundaryShape3D.md) | Shape3D | Excluded | 1 |
-| [WorldEnvironment](classes/WorldEnvironment.md) | Node | Blocked | 3 |
+| [WorldEnvironment](classes/WorldEnvironment.md) | Node | Partial | 3 |
 | [X509Certificate](classes/X509Certificate.md) | Resource | Implemented | 4 |
 | [XMLParser](classes/XMLParser.md) | RefCounted | Implemented | 25 |
 | [XRAnchor3D](classes/XRAnchor3D.md) | XRNode3D | Excluded | 2 |

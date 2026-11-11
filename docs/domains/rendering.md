@@ -411,6 +411,8 @@ Renderer-session overrides preserve authored properties and input coordinates. M
 
 Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root project setting select actual linear half-float targets. The same format flows through composition, MSAA, device exports and explicit readback; byte color sampling converts before filtering and native writes remain visible. Root presentation follows the selected [native HDR output](../components/native-hdr-output.md) or SDR policy; movie output applies the SDR transfer. [HDR canvas targets](../components/hdr-canvas.md) records role-specific colors, verified pixels, warm allocation intervals and backend/platform limits.
 
+[Canvas glow](../components/canvas-glow.md) uses the world environment and resolved HDR image to apply a native multilevel blur and blend before texture publication. Viewports sharing a world use the same authored settings and retain independent native scratch targets.
+
 ## Canvas multisample antialiasing
 
 The shared Viewport.MSAA enum, stored MSAA2D scene property, static server selection and typed root project setting execute 2/4/8-sample GPU geometry coverage. Per-sample history survives Never-clear frames and pass restarts; screen/group/clip consumers read resolved pixels. Compatibility rejects enabled MSAA. [Canvas rendering](../components/canvas-rendering.md#canvas-multisample-antialiasing) records target ownership, typed identity, native coverage and warmed allocation evidence.

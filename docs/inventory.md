@@ -1774,6 +1774,7 @@ display metrics, HDR output and foreign-platform acceptance retain separate gate
 | Domain | Component | Type | Source | State | Behavior |
 | --- | --- | --- | --- | --- | --- |
 | [Rendering](domains/rendering.md) | [HDR canvases](components/hdr-canvas.md) | [Viewport](classes/Viewport.md), [RenderingServer](classes/RenderingServer.md), [ProjectSettings](classes/ProjectSettings.md) | [scene selection](../src/Scene/Main/Viewport.HDR.cs), [server selection](../src/Servers/Rendering/RenderingServer.HDR.cs), [GPU color views](../src/Servers/Rendering/GPUCanvasBackend.HDR.cs) | Current | Stored/root/session HDR selection, half-float target and pipeline variants, native linear sampling/composition, explicit readback, SDR presentation and movie transfer. Compatibility rejects enabled HDR. |
+| [Rendering](domains/rendering.md) | [Canvas glow](components/canvas-glow.md) | [CanvasEnvironment](classes/CanvasEnvironment.md), [WorldEnvironment](classes/WorldEnvironment.md) | [resource](../src/Scene/Resources/CanvasEnvironment.cs), [scene selection](../src/Scene/Main/WorldEnvironment.cs), [GPU passes](../src/Servers/Rendering/GPUCanvasBackend.Glow.cs) | Current | Scene-order world selection, stored glow and map settings, native half-float blur and composition, unprocessed history. |
 
 ## Canvas multisample coverage
 

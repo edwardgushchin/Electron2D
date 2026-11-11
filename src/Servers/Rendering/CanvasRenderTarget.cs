@@ -14,6 +14,7 @@ internal sealed class CanvasRenderTarget(RenderHandle current, RenderHandle next
     internal bool ExportPrepared, HasSRGBBacking;
     internal RenderHandle? BackBuffer, MaskBuffer, LightAtlas;
     internal Vector2i LightAtlasSize;
+    internal GlowBuffers? Glow;
     internal void Commit() { (Current, Next) = (Next, Current); HasFrame = true; }
-    public void Dispose() { IsDisposed = true; try { Current.Dispose(); } finally { try { Next.Dispose(); } finally { try { BackBuffer?.Dispose(); } finally { try { MaskBuffer?.Dispose(); } finally { try { Multisample?.Dispose(); } finally { try { MultisampleBackBuffer?.Dispose(); } finally { LightAtlas?.Dispose(); } } } } } } }
+    public void Dispose() { IsDisposed = true; try { Current.Dispose(); } finally { try { Next.Dispose(); } finally { try { BackBuffer?.Dispose(); } finally { try { MaskBuffer?.Dispose(); } finally { try { Multisample?.Dispose(); } finally { try { MultisampleBackBuffer?.Dispose(); } finally { try { LightAtlas?.Dispose(); } finally { Glow?.Dispose(); } } } } } } } }
 }

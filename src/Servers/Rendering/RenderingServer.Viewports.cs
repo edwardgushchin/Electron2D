@@ -21,6 +21,7 @@ public sealed partial class RenderingServer
         internal int? Screen;
         internal Rect2 ScreenRect;
         internal ViewportUpdateMode? Update;
+        internal ViewportEnvironmentMode EnvironmentMode = ViewportEnvironmentMode.Inherit;
         internal ViewportClearMode Clear;
     }
     private readonly Dictionary<Viewport, ServerViewportState> _serverViewports = new(ReferenceEqualityComparer.Instance);

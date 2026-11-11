@@ -321,9 +321,11 @@ public sealed partial class RenderingServer : ElectronObject
             frame.Clear = FrameClear(viewport); frame.ClearEnabled = ClearMode(viewport) != ViewportClearMode.Never;
             if (direct) { PauseRenderCPU(); return; }
             var target = _backend.FindTarget(viewport); if (target is null) return;
+            var glow = SelectGlow(viewport, tree);
+            if (glow.Enabled && glow.MapStrength > 0 && glow.Map is { IsDisposed: false } map) SubmitTexture(map, tree);
             _renderingDevice?.FlushRendererCommands();
             _submittingTextures = true;
-            try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting, modelPoses: CollectionsMarshal.AsSpan(frame.ModelPoses), timing: timing); }
+            try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting, modelPoses: CollectionsMarshal.AsSpan(frame.ModelPoses), timing: timing, glow: glow); }
             finally { _submittingTextures = false; }
             frame.RenderObjects = _backend.RenderObjects; frame.RenderPrimitives = _backend.RenderPrimitives; frame.RenderDrawCalls = _backend.RenderDrawCalls;
             ViewportSubmitted(frame.Viewport);

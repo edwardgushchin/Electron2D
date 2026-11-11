@@ -40,6 +40,10 @@ Warmed owner-thread measurements cover 64 active color redraws, 64 active plus 6
 
 A local public NuGet candidate, `0.1.0-viewporthdr.20261016.2` over the unchanged Linux native package `0.1.0-movie.20261015.4`, passes self-contained CoreCLR and NativeAOT consumers with reflection-based JSON disabled. Both load authored scene/project files in a fresh process, render actual HLSL half-float pixels, inspect borrowed device format/stride and alias expiry, execute movie transfer/PCM callbacks, and reject unsupported Compatibility HDR with cleanup. This verifies local package consumption; package publication and foreign/native-display acceptance are separate.
 
+## World environment glow
+
+A scene-selected [canvas environment](canvas-glow.md) applies glow after the native canvas resolve. The completed texture, readback and window presentation receive the composited linear pixels. Never-clear history and in-pass screen sampling retain the unprocessed canvas.
+
 ## Screen debanding
 
 `Viewport.UseDebanding`, `RenderingServer.ViewportSetUseDebanding` and `ProjectSettings.UseDebanding` form the stored/live/startup contract. Defaults are false. Startup uses the active feature override for an unassigned root; explicit authoring wins. Scene files and project feature values survive fresh-process reconstruction. Session overrides preserve authored getters; even an equal authored assignment republishes the scene selection. Target identity, precision, borrowed native aliases and texture notifications remain unchanged when only debanding changes. Ordinary owner/disposal/capture/submission guards apply, including caller-owned and stale server viewports.
