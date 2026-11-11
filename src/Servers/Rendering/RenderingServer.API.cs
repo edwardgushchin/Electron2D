@@ -347,18 +347,18 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Image? Texture2DGet(RID texture) => RequireService().Texture2DGetCore(texture);
 
-    /// <summary>Updates an owned two-dimensional texture while preserving its allocation parameters.</summary>
+    /// <summary>Updates an owned texture layer while preserving its allocation parameters.</summary>
     /// <param name="texture">A live texture RID owned by this rendering server.</param>
     /// <param name="image">A live image with matching dimensions, format and mipmap state.</param>
-    /// <param name="layer">Zero for the current two-dimensional texture profile.</param>
-    /// <remarks>Input is copied before commit; subsequent retained draws see the new pixels.</remarks>
-    /// <exception cref="ArgumentException">The RID or image configuration is invalid.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">The layer is not zero.</exception>
-    /// <exception cref="NotSupportedException">The image requires an unsupported format.</exception>
+    /// <param name="layer">Zero for an ordinary texture or a zero-based independent array layer.</param>
+    /// <remarks>Input is copied before commit. A device-backed texture requires CanUpdate on its image.
+    /// A mipmapped image supplies every exposed mip level. Subsequent retained draws see the new pixels.</remarks>
+    /// <exception cref="ArgumentException">The texture identity or image configuration is invalid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The layer is outside the texture.</exception>
+    /// <exception cref="NotSupportedException">The device format has no matching image encoding.</exception>
     /// <exception cref="ArgumentNullException">The image is null.</exception>
     /// <exception cref="ObjectDisposedException">The image or renderer is disposed.</exception>
-    /// <exception cref="InvalidOperationException">The RID is resource-owned, or the renderer is off-owner/submitting.</exception>
-    /// <exception cref="InvalidOperationException">The native service is not active.</exception>
+    /// <exception cref="InvalidOperationException">Ownership, usage, or the current renderer state rejects updates.</exception>
     public static void Texture2DUpdate(RID texture, Image image, int layer = 0) => RequireService().Texture2DUpdateCore(texture, image, layer);
 
     /// <summary>Returns a texture's source pixel format.</summary>

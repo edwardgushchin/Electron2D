@@ -674,6 +674,16 @@ Server writes run on the owner thread outside geometry replay/native submission 
 
 [RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) verifies Linux Wayland GPU/compatibility and dummy/software pixel response, update/replace/free without rerecording, atlas/placeholder behavior, lifecycle/failure boundaries and zero managed allocation over 64 active plus 64 retained frames after 20 warmup frames on the owner thread. Resource copying/upload preparation, host event loop, native/backend allocation, other platforms and owner acceptance are outside this measurement. Copied block and UInt16 textures, array resources and borrowed RenderingDevice texture interop execute through their documented backend contracts; drawable targets retain separate coverage dependencies.
 
+## Device-backed texture updates
+
+`RenderingServer.Texture2DUpdate` copies an `Image` into the existing storage of a server-owned ordinary texture or independent array. Ordinary textures use layer zero. Arrays update only the selected layer. The destination keeps its RID and material and canvas bindings. Logical size overrides do not change the physical image dimensions required by an update.
+
+For textures created with `TextureRDCreate`, the retained device records an upload into the original device image. The image must be single-sample and have `CanUpdate`. The caller retains ownership of the native image. Matching normalized, floating-point, unsigned 16-bit, packed and block-compressed formats use their encoded bytes. BGRA uses RGBA8 input and swaps red and blue. The GPU RGBA4444 layout uses the high alpha nibble. Native formats without a supported image encoding use the raw `RenderingDevice.TextureUpdate` API. The ordinary copied-image path retains its original conversion and upload rules.
+
+A mipmapped image supplies the full chain for its physical size. A bounded shared view consumes the prefix for its exposed mip interval. Other layers and mip levels retain their contents. Invalid encodings, dimensions, mipmap state, out-of-range layers, proxies, foreign resources and updates during an active device list fail before recording the update.
+
+Run `ELECTRON2D_TEST_DEVICE_CANVAS_UPLOAD=vulkan` or `direct3d12` with the corresponding SDL GPU backend. [The fixture](../../tests/Electron2D.Tests/DeviceCanvasTextureUpdateTests.cs) compares retained pixels, mip bytes, packed lanes, compressed blocks, layer isolation and guard behavior. The Vulkan profile also checks a bounded shared image view.
+
 ## Texture proxies
 
 RenderingServer.TextureProxyCreate creates an owned alias of live owned/borrowed texture storage; nested creation is supported. TextureProxyUpdate retargets an owned alias to a non-proxy source, rejecting invalid ownership/kind/cycles before publication. Replaying a retained alias resolves its current root once, substitutes that root in geometry/batches and uses ordinary backend cache/sampling. No per-alias native texture is uploaded. Existing normalized source regions and destination geometry remain fixed; source image/size/format edits affect later replay. An explicit proxy display-size override affects new recording and resets at retarget.

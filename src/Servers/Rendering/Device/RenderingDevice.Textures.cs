@@ -254,12 +254,21 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="data">Exact tightly packed layer mip-chain bytes; depth/stencil uses the portable packed encoding and bounded D32 floats.</param>
     public void TextureUpdate(RID texture, uint layer, ReadOnlySpan<byte> data)
     {
-        IdleList(); var entry = Get(texture, Kind.Texture); Layer(entry, layer);
-        if ((entry.Texture!.Usage & TextureUsageBits.CanUpdate) == 0) throw new InvalidOperationException("The texture has no update role.");
-        if (entry.Texture!.Samples != TextureSamples.Samples1) throw new NotSupportedException("Raw multisample updates require an aspect/sample-transfer adapter.");
+        var entry = TextureUpdateTarget(texture, layer);
         if (data.Length != entry.Size) throw new ArgumentException("The layer byte size does not match.", nameof(data));
         UploadTexture(entry, layer, data);
     }
+
+    private Entry TextureUpdateTarget(RID texture, uint layer)
+    {
+        IdleList();
+        var entry = Get(texture, Kind.Texture);
+        Layer(entry, layer);
+        if ((entry.Texture!.Usage & TextureUsageBits.CanUpdate) == 0) throw new InvalidOperationException("The texture has no update role.");
+        if (entry.Texture.Samples != TextureSamples.Samples1) throw new NotSupportedException("Raw multisample updates require an aspect/sample-transfer adapter.");
+        return entry;
+    }
+
     /// <summary>Synchronizes and returns an independent tightly packed layer mip chain.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
     /// <param name="layer">Zero-based layer.</param>

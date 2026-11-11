@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using SDL3;
 
 namespace Electron2D;
@@ -40,6 +41,46 @@ public sealed unsafe partial class RenderingDevice
     {
         IdleList(); if (_fence != 0 || _submittedReadbacks.Count != 0 || _timestampPending) CompleteSubmission(); RetireRendererTextures(); GPUTextureViews.CollectIfActive(Device); CollectAddressBuffers(); DeliverReadbacks();
     }
+    internal void UploadCanvasImage(RID rid, uint layer, Image image)
+    {
+        ArgumentNullException.ThrowIfNull(image);
+        var entry = TextureUpdateTarget(rid, layer);
+        var info = entry.Texture!;
+        var bgra = info.Format is DataFormat.B8G8R8A8UNORM or DataFormat.B8G8R8A8SRGB;
+        var format = info.Format switch
+        {
+            DataFormat.R16UINT => Image.Format.R16I,
+            DataFormat.R16G16UINT => Image.Format.Rg16I,
+            DataFormat.R16G16B16A16UINT => Image.Format.Rgba16I,
+            DataFormat.B5G6R5UNORMPACK16 => Image.Format.Rgb565,
+            DataFormat.B4G4R4A4UNORMPACK16 => Image.Format.Rgba4444,
+            _ => bgra ? Image.Format.Rgba8 : CanvasImageFormat(info.Format)
+        };
+        if (format is null)
+            throw new NotSupportedException("This device texture requires a raw update because it has no matching image encoding.");
+
+        var pixels = image.CopyPixels();
+        if (pixels.Width != info.Width || pixels.Height != info.Height || pixels.Format != format ||
+            pixels.HasMIPMaps != (info.Mips > 1) || pixels.Data.Length < entry.Size)
+            throw new ArgumentException("The image must match the device texture dimensions, format and mipmap state.", nameof(image));
+
+        // Image stores a full chain. A bounded device view consumes only its exposed levels.
+        var data = pixels.Data.AsSpan(0, checked((int)entry.Size));
+        if (bgra)
+            for (var i = 0; i < data.Length; i += 4)
+                (data[i], data[i + 2]) = (data[i + 2], data[i]);
+        else if (format == Image.Format.Rgba4444)
+        {
+            // The GPU layout stores alpha in the high nibble; Image puts it in the low nibble.
+            for (var i = 0; i < data.Length; i += 2)
+            {
+                var value = BinaryPrimitives.ReadUInt16LittleEndian(data[i..]);
+                BinaryPrimitives.WriteUInt16LittleEndian(data[i..], (ushort)((value >> 4) | (value << 12)));
+            }
+        }
+        UploadTexture(entry, layer, data);
+    }
+
     internal Image? CanvasImage(RID rid, uint layer)
     {
         IdleList(); var entry = Get(rid, Kind.Texture); Layer(entry, layer); var info = entry.Texture!;

@@ -121,10 +121,25 @@ public sealed partial class RenderingServer
     {
         EnsureTextureChange();
         var resource = RenderingTextureRegistry.OwnedResource(texture, this);
-        if (resource is ServerTextureArray array) { array.UpdateLayer(image, layer); return; }
+        if (resource is ServerTextureArray array)
+        {
+            if (layer < 0) throw new ArgumentOutOfRangeException(nameof(layer));
+            if (array.DeviceTexture is { } deviceArray)
+                GetRenderingDeviceCore()!.UploadCanvasImage(deviceArray.TextureRDRID, (uint)layer, image);
+            else
+                array.UpdateLayer(image, layer);
+            return;
+        }
+
         if (layer != 0) throw new ArgumentOutOfRangeException(nameof(layer));
-        var target = resource as ServerTexture ?? throw new InvalidOperationException("Update the concrete image-array source of a proxy.");
-        if (target.IsProxy || target.DeviceTexture is not null) throw new InvalidOperationException("Update the concrete pixel source of this texture.");
+        if (resource is not ServerTexture { IsProxy: false } target)
+            throw new InvalidOperationException("Update the concrete pixel source of this texture.");
+        if (target.DeviceTexture is { } deviceTexture)
+        {
+            GetRenderingDeviceCore()!.UploadCanvasImage(deviceTexture.TextureRDRID, 0, image);
+            return;
+        }
+
         var pixels = TexturePixels.FromImage(image);
         var old = target.Pixels.Source; var next = pixels.Source;
         if (old.Width != next.Width || old.Height != next.Height || old.Format != next.Format || old.HasMIPMaps != next.HasMIPMaps)

@@ -6526,8 +6526,8 @@
       "godot": [
         "RenderingServer::method:texture_2d_update(RID:,Image:,int:)"
       ],
-      "state": "Partial",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Only ordinary 2D layer zero executes; nonzero layers enter the first owned 2D-array/layered upload/sampling slice. Compressed/integer upload branches enter their format slice."
+      "state": "Implemented",
+      "reason": "ADR 0028: updates one layer of ordinary or independent-array server-owned storage while preserving its identity. Copied images preserve compatible native allocation. Device-backed storage records real uploads for image-compatible normalized, float, unsigned 16-bit, packed and compressed encodings, including bounded shared-view mip intervals. Proxies, foreign resources, non-updateable storage and incompatible encodings reject before mutation. DeviceCanvasTextureUpdateTests verifies Windows Vulkan and Direct3D 12, and RenderingTextureRIDTests covers copied-image updates. See docs/components/canvas-rendering.md#device-backed-texture-updates."
     },
     {
       "godot": [

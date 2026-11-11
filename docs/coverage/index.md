@@ -1,3 +1,5 @@
+[Device-backed texture updates](../components/canvas-rendering.md#device-backed-texture-updates) upload copied images into ordinary or layered native storage without changing the retained identities. One method moves from Partial to Implemented. Coverage is **13,816/18,853 (73.28%)**, with 1,109 Partial, 348 Unimplemented, 3,580 Blocked, 8,440 Excluded and zero unmapped.
+
 [Texture storage replacement](../components/canvas-rendering.md#texture-storage-replacement) lets retained ordinary and layered textures switch between copied CPU images and borrowed device images. One method moves from Partial to Implemented. Coverage is **13,815/18,853 (73.28%)**, with 1,110 Partial, 348 Unimplemented, 3,580 Blocked, 8,440 Excluded and zero unmapped.
 
 [Native GPU command labels](../components/local-compute.md#native-command-labels) group recorded draw, dispatch and copy commands with a caller-defined name and color on Vulkan. Two operations move from Blocked to Partial. Coverage is **13,814/18,853 (73.27%)**, with 1,111 Partial, 348 Unimplemented, 3,580 Blocked, 8,440 Excluded and zero unmapped.

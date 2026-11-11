@@ -208,7 +208,7 @@ Returns a caller-owned copy of original backing pixels and mipmaps, or null for 
 
 `public static void Texture2DUpdate(RID texture, Image image, int layer = 0)`
 
-Copies and validates matching source width, height, format and mipmap state before publication. A failure preserves prior pixels. Logical size overrides do not change required source dimensions. Compatible updates retain the allocation token for backend reuse; retained commands sample new pixels without QueueRedraw. Only layer zero is integrated; nonzero layers throw ArgumentOutOfRangeException until the 2D array resource/renderer slice.
+Copies and validates the source against the texture’s physical dimensions, encoding and mipmap state. Layer zero selects an ordinary image. Independent arrays accept an existing zero-based layer. Compatible updates preserve the RID and retained draw and material bindings. A device-backed texture uses its existing allocation and requires `CanUpdate`. A full image mip chain supplies the levels exposed by a bounded view. See [device-backed texture updates](../components/canvas-rendering.md#device-backed-texture-updates).
 
 ### TextureProxyCreate
 
