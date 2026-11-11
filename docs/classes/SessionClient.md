@@ -72,7 +72,7 @@ readPending synchronously returns a typed source proposal with the view's observ
 
 ### CreatePreview
 
-expectedSceneRevision must match the live scene. Returns a detached caller-owned duplicate of exact built-in Node/Entity/Polygon/Line/Sprite roles with the unsaved pose overlay. No project class/script/connection or gameplay role is attached; unsupported roles throw NotSupportedException. Ordinary archive construction still has trusted callbacks. This is static authored drawing, not actual game verification. Dispose the projection after removing its view. See [the preview boundary](../components/project-jobs.md#human-and-programmatic-views).
+expectedSceneRevision must match the live scene. Returns a detached caller-owned duplicate of the supported exact built-in roles with the unsaved pose overlay. Camera copies preserve their drawing properties and disable tracking. No project class/script/connection or gameplay role is attached; unsupported roles throw NotSupportedException. Ordinary archive construction still has trusted callbacks. This is static authored drawing, not actual game verification. Dispose the projection after removing its view. See [the preview boundary](../components/project-jobs.md#human-and-programmatic-views).
 
 ### StartJob
 

@@ -119,6 +119,8 @@ AnimatableBody synchronization now shares the current-group pose-authoring bound
 
 [MissingNode](classes/MissingNode.md) now provides loader-created recovery of unavailable compiled node factories and linked scene files. Its bounded typed fields and retained connection records integrate with current archive, scene and duplication lifetimes. The internal UnresolvedSceneConnectionSchema metadata role and Node.RecordedConnectionLease are documented in [scene recovery internals](classes/UnresolvedSceneConnectionSchema.md).
 
+[Camera editor overlays](components/canvas-rendering.md#camera-editor-overlays) extend the existing Camera, retained canvas and passive project preview with three stored drawing properties.
+
 [Shared project jobs](components/project-jobs.md) connect the editor views and public session clients to immutable unsaved builds, fresh headless/native runs and actual capture. Public project/job/scenario/record types and private process/snapshot/UI helpers are [inventoried in the component](components/project-jobs.md#owned-implementation-types), outside Electron2D.dll. Existing TextEdit/CodeEdit gutter rendering now clips partial rows to the content viewport.
 
 [HDR screen debanding](components/hdr-canvas.md#screen-debanding) now connects stored viewport/root-project controls and renderer-session overrides to final GPU dithering before byte output. Linear/offscreen images and movie capture retain their precision; no production type is added.

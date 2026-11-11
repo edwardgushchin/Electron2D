@@ -1,3 +1,5 @@
+[Camera editor overlays](../components/canvas-rendering.md#camera-editor-overlays) draw the authored screen, scroll limits and drag margins in the passive project preview. Three properties move from Blocked to Implemented. Coverage is **13,827/18,849 (73.36%)**, with 1,110 Partial, 345 Unimplemented, 3,567 Blocked, 8,444 Excluded and zero unmapped.
+
 [Host entropy](../components/host-platform.md#host-entropy) exposes the runtime cryptographic random provider through static OS access. One method moves from Unimplemented to Implemented. Coverage is **13,824/18,849 (73.34%)**, with 1,110 Partial, 345 Unimplemented, 3,570 Blocked, 8,444 Excluded and zero unmapped.
 
 [Windows native corner policy](../components/window-runtime.md#native-window-corners) applies a per-window DWM preference and preserves the authored scene value across native recreation. The Windows-only property moves to Implemented. Both general display flag operations move from Blocked to Partial. Coverage is **13,823/18,849 (73.34%)**, with 1,110 Partial, 346 Unimplemented, 3,570 Blocked, 8,444 Excluded and zero unmapped.

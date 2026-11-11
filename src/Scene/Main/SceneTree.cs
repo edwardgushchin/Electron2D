@@ -355,7 +355,9 @@ public sealed partial class SceneTree : MainLoop
             EnsureOwnerThread(); EnsureAcceptingWork();
             if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
             if (value is not null && !ReferenceEquals(value.Tree, this)) throw new ArgumentException("The edited scene must belong to this tree.", nameof(value));
+            if (ReferenceEquals(_editedSceneRoot, value)) return;
             _editedSceneRoot = value;
+            RenderingServer.NotifyRenderMutation();
         }
     }
 

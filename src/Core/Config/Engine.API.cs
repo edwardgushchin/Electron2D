@@ -62,7 +62,11 @@ public sealed partial class Engine
     public static bool IsEditorHint
     {
         get => Volatile.Read(ref Service._editorHint);
-        set => Volatile.Write(ref Service._editorHint, value);
+        set
+        {
+            Volatile.Write(ref Service._editorHint, value);
+            RenderingServer.NotifyRenderMutation();
+        }
     }
 
     /// <summary>Gets or sets the fixed-step callback frequency.</summary>

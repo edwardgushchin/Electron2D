@@ -448,6 +448,9 @@ public partial class Camera : Entity
         new PropertyDescriptor<Camera, float>(nameof(DragRightMargin), c => c.DragRightMargin, (c, v) => c.DragRightMargin = v, _ => 0.2f, stored: true),
         new PropertyDescriptor<Camera, int>(nameof(LimitBottom), c => c.LimitBottom, (c, v) => c.LimitBottom = v, _ => 10_000_000, stored: true),
         new PropertyDescriptor<Camera, float>(nameof(DragBottomMargin), c => c.DragBottomMargin, (c, v) => c.DragBottomMargin = v, _ => 0.2f, stored: true),
+        new PropertyDescriptor<Camera, bool>(nameof(EditorDrawScreen), c => c.EditorDrawScreen, (c, v) => c.EditorDrawScreen = v, _ => true, stored: true),
+        new PropertyDescriptor<Camera, bool>(nameof(EditorDrawLimits), c => c.EditorDrawLimits, (c, v) => c.EditorDrawLimits = v, _ => false, stored: true),
+        new PropertyDescriptor<Camera, bool>(nameof(EditorDrawDragMargin), c => c.EditorDrawDragMargin, (c, v) => c.EditorDrawDragMargin = v, _ => false, stored: true),
         new PropertyDescriptor<Camera, Node?>(nameof(CustomViewport), c => c.CustomViewport, (c, v) => c.CustomViewport = v, _ => null),
     ];
 }

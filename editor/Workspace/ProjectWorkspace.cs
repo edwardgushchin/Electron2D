@@ -20,7 +20,14 @@ internal sealed class ProjectWorkspace : Control
     private readonly OptionButton _history = new() { Name = "History", ClipText = true, CustomMinimumSize = new(220, 32), FocusMode = FocusMode.All };
     private readonly OptionButton _mode = new() { Name = "RunMode", ClipText = true, CustomMinimumSize = new(156, 32), FocusMode = FocusMode.All };
     private readonly SpinBox _frames = new() { Name = "Frames", MinValue = 1, MaxValue = 1000000, Step = 1, Value = 60, CustomMinimumSize = new(90, 32) };
-    private readonly SubViewport _viewport = new() { Name = "SceneViewport", Size = new(320, 180), RenderTargetUpdateMode = ViewportUpdateMode.Always };
+    private readonly SubViewport _viewport = new()
+    {
+        Name = "SceneViewport",
+        Size = new(320, 180),
+        Size2DOverride = new(320, 180),
+        Size2DOverrideStretch = true,
+        RenderTargetUpdateMode = ViewportUpdateMode.Always
+    };
     private readonly TextureRect _capture = new() { Name = "Capture", ExpandMode = TextureRectExpandMode.IgnoreSize, StretchMode = TextureStretchMode.KeepAspectCentered, TextureFilter = TextureFilter.Nearest, CustomMinimumSize = new(180, 110), SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill };
     private readonly List<SessionJob> _jobs = [];
     private readonly List<Resource> _resources = [];
@@ -67,7 +74,15 @@ internal sealed class ProjectWorkspace : Control
             var center = new VSplitContainer { Name = "Center", SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill };
             main.AddChild(center);
             var authored = Column("Authored scene"); authored.AddChild(_previewStatus);
-            var preview = new SubViewportContainer { Name = "Preview", Stretch = true, SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill, CustomMinimumSize = new(300, 180) };
+            var preview = new SubViewportContainer
+            {
+                Name = "Preview",
+                Stretch = true,
+                TextureFilter = TextureFilter.Nearest,
+                SizeFlagsHorizontal = SizeFlags.ExpandFill,
+                SizeFlagsVertical = SizeFlags.ExpandFill,
+                CustomMinimumSize = new(300, 180)
+            };
             preview.AddChild(_viewport); authored.AddChild(preview); center.AddChild(Panel(authored));
             var source = Column(project.CodeFile); source.AddChild(_codeStatus);
             var sourceActions = new HBoxContainer(); source.AddChild(sourceActions);

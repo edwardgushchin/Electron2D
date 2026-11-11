@@ -271129,6 +271129,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Camera.EditorDrawDragMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "EditorDrawDragMargin",
+    "signature": "public System.Boolean EditorDrawDragMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.EditorDrawLimits()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "EditorDrawLimits",
+    "signature": "public System.Boolean EditorDrawLimits { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.EditorDrawScreen()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "EditorDrawScreen",
+    "signature": "public System.Boolean EditorDrawScreen { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Camera.Enabled()",
     "kind": "property",
     "declaringType": "Electron2D.Camera",

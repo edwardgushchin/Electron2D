@@ -47,6 +47,11 @@ public partial class Camera
                 _viewport?.ResetCanvasInterpolationSnapshot();
             }
             if (IsDisposed || _viewport is null) return;
+            if (what == NotificationDraw && ReferenceEquals(CurrentDrawingItem, this))
+            {
+                DrawEditorOverlay();
+                return;
+            }
             var interpolating = IsPhysicsInterpolatedAndEnabled();
             if (what == NotificationInternalProcess && _processCallback == ProcessPhase.Idle && !interpolating ||
                 what == NotificationInternalPhysicsProcess && (_processCallback == ProcessPhase.Physics || interpolating) ||
@@ -121,15 +126,8 @@ public partial class Camera
         }
         var screenOffset = _anchorMode == AnchorMode.DragCenter ? halfSize * scale : Vector2.Zero;
         if (!_ignoreRotation)
-        {
             angle = _rotationSmoothingEnabled ? Mathf.LerpAngle(angle, rotation, _rotationSmoothingSpeed * delta) : rotation;
-            screenOffset = screenOffset.Rotated(angle);
-        }
-        var origin = smoothed - screenOffset;
-        if (_limitEnabled && (!_positionSmoothingEnabled || !_limitSmoothed)) origin = LimitOrigin(origin, screenOffset * 2);
-        origin += _offset;
-        var pose = new Transform(0, scale, 0, origin);
-        if (!_ignoreRotation) pose = new Transform(angle, pose.Scale, 0, origin);
+        var pose = CameraPose(smoothed, angle, screenOffset, scale, _limitEnabled && (!_positionSmoothingEnabled || !_limitSmoothed));
         var center = pose * halfSize;
         if (!target.IsFinite() || !smoothed.IsFinite() || !float.IsFinite(angle) || !pose.IsFinite() || !center.IsFinite())
             throw new InvalidOperationException("Camera tracking overflowed finite coordinates.");
@@ -146,6 +144,16 @@ public partial class Camera
     {
         var position = GlobalPosition; var rotation = GlobalRotation;
         if (_publishedScrollPosition != position || _publishedScrollRotation != rotation) PublishScroll(position, rotation);
+    }
+
+    private Transform CameraPose(Vector2 position, float angle, Vector2 screenOffset, Vector2 scale, bool limit)
+    {
+        if (!_ignoreRotation) screenOffset = screenOffset.Rotated(angle);
+        var origin = position - screenOffset;
+        if (limit) origin = LimitOrigin(origin, screenOffset * 2);
+        origin += _offset;
+        var pose = new Transform(0, scale, 0, origin);
+        return _ignoreRotation ? pose : new Transform(angle, pose.Scale, 0, origin);
     }
 
     private Vector2 LimitOrigin(Vector2 origin, Vector2 extent) => new(

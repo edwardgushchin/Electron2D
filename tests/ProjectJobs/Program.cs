@@ -2,6 +2,7 @@ using Electron2D;
 using Electron2D.Editor;
 using IOPath = System.IO.Path;
 
+if (args is ["--camera-preview", var previewEvidence, var previewBackend]) return CameraPreviewContracts.Run(IOPath.GetFullPath(previewEvidence), previewBackend);
 if (args is ["--owner-child", var root, var marker]) return JobContracts.OwnerChild(root, marker);
 if (args is ["--input-contracts", var inputEvidence]) return JobContracts.Run(IOPath.GetFullPath(inputEvidence), true);
 if (args is ["--contracts", var evidence]) return JobContracts.Run(IOPath.GetFullPath(evidence));

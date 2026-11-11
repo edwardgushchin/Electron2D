@@ -1,6 +1,21 @@
 {
   "mappings": [
     {
+      "godot": "Camera2D::property:editor_draw_screen",
+      "electron2d": "property:Electron2D.Camera.EditorDrawScreen()",
+      "reason": "Stored editor screen outline toggle under ADRs 0008/0027/0090."
+    },
+    {
+      "godot": "Camera2D::property:editor_draw_limits",
+      "electron2d": "property:Electron2D.Camera.EditorDrawLimits()",
+      "reason": "Stored editor scroll-limit outline toggle under ADRs 0008/0027/0090."
+    },
+    {
+      "godot": "Camera2D::property:editor_draw_drag_margin",
+      "electron2d": "property:Electron2D.Camera.EditorDrawDragMargin()",
+      "reason": "Stored editor drag-margin outline toggle under ADRs 0008/0027/0090."
+    },
+    {
       "godot": "RenderingServer::enum:ShaderMode",
       "electron2d": "T:Electron2D.Shader.Mode",
       "reason": "ADRs 0004/0028/0095: Shader.Mode selects the same three executing domains for Shader resources and owned RenderingServer RIDs: CanvasItem (1), Particles (2) and TextureBlit (5). Canvas replay, retained particle dispatch and writable-texture blits use the existing program and material owners."
@@ -923,7 +938,7 @@
       "electron2d": "T:Electron2D.Camera",
       "godot": "class:Camera2D",
       "state": "Partial",
-      "reason": "Root camera implementation is executable and audited; editor preview overlays, inherited node physics interpolation/reset/render interpolation, and independent offscreen/nested/multiwindow viewports remain unimplemented integrations (ADRs 0008, 0021, 0028)."
+      "reason": "Camera tracking, inherited physics interpolation and the three edited-scene overlays execute. The passive project preview uses a logical SubViewport and leaves the source camera configured for gameplay. Complete custom/nested/native multiwindow viewport equivalence and foreign-platform qualification remain open (ADRs 0008/0021/0028/0090)."
     },
     {
       "electron2d": "T:Electron2D.AnchorMode",
@@ -6065,7 +6080,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Root camera implementation is executable and audited; editor preview overlays, inherited node physics interpolation/reset/render interpolation, and independent offscreen/nested/multiwindow viewports remain unimplemented integrations (ADRs 0008, 0021, 0028).",
+      "reason": "Camera tracking, inherited physics interpolation and the three edited-scene overlays execute. The passive project preview uses a logical SubViewport and leaves the source camera configured for gameplay. Complete custom/nested/native multiwindow viewport equivalence and foreign-platform qualification remain open (ADRs 0008/0021/0028/0090).",
       "godot": [
         "class:Camera2D",
         "Camera2D::property:custom_viewport",
@@ -6074,8 +6089,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "First edited-scene preview slice: requires an actual editor-mode/preview viewport, node edited-scene eligibility and redraw/project-size integration. EditedSceneRoot currently scopes warning events only and expressly does not enable editor processing. Implement all three camera overlays together with that preview; no inert flags are exposed. ADRs 0008 and 0027.",
+      "state": "Implemented",
+      "reason": "Stored screen, enabled limit and drag-margin outlines are retained in the selected editor subtree. The authored camera pose and logical viewport produce screen and margin geometry. ProjectJobs CameraPreviewContracts runs the passive public session projection and verifies pixels, role changes, packing, transforms and live logical resize (ADRs 0008/0027/0090).",
       "godot": [
         "Camera2D::property:editor_draw_drag_margin",
         "Camera2D::property:editor_draw_limits",

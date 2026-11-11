@@ -69,7 +69,7 @@ public sealed class SessionClient : IDisposable
     /// <returns>An asynchronous job; submission and process start do not establish success.</returns>
     public SessionJob StartJob(SessionJobOptions options, ulong expectedSceneRevision, ulong expectedCodeRevision) => Session.StartJob(options, expectedSceneRevision, expectedCodeRevision);
     /// <summary>Creates an independent caller-owned static built-in preview without attaching project classes, connections or active gameplay roles.</summary>
-    /// <param name="expectedSceneRevision">Fresh scene token.</param><returns>A detached Node/Entity/Polygon/Line/Sprite hierarchy; unsupported roles reject explicitly.</returns>
+    /// <param name="expectedSceneRevision">Fresh scene token.</param><returns>A detached hierarchy of supported built-in scene roles. Camera copies retain their overlays and disable tracking. Unsupported roles reject explicitly.</returns>
     /// <remarks>Ordinary trusted archive constructors/resource setup can still execute during reconstruction.</remarks>
     public Node CreatePreview(ulong expectedSceneRevision) => Session.CreatePreview(expectedSceneRevision);
     /// <summary>Copies the shared ordered job handles, including UI and transported submissions.</summary>

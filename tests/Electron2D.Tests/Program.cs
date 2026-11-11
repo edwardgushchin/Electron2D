@@ -68,6 +68,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_TEXT_INPUT") is 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_TEXT_INPUT") is { } inputProfile) { NativeTextInputTests.Run(inputProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_SCALE") is { } scaleBackend) { RenderingRuntimeTests.RunCanvasScalePreview(scaleBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_PORTAL") is { } portalProfile) { PortalFileChooserTests.Run(portalProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA") == "1") { CameraTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_ENGINE") == "1") { VerifyEngine(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_FEEDS") is { } cameraProfile) { if (cameraProfile == "boundary") CameraFeedNativeTests.Run(); else CameraFeedContracts.Run(cameraProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_DEVICE_LIFETIME") == "1") { GPUDeviceLifetimeTests.Run(); return; }

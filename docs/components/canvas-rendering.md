@@ -441,7 +441,17 @@ Coordinate-slice commands (2026-09-23):
 
 Only the current camera publishes a finite inverse view pose. Tracking uses global Entity position/rotation, inherited pause/internal processing and the same viewport size as rendering/input. Other node transforms and GlobalCanvasTransform remain unchanged. Camera owns no renderer/native handles, timer or scheduler. PackedScene stores camera configuration, excluding CustomViewport and all tracking/selection state. Viewport input and CanvasItem local conversion automatically use the camera transform.
 
-The [tracking audit](../classes/Camera.md#tracking-details-and-source-audit) records anchor/negative-zoom/limit and smoothing details, including repeated forced updates and reset ordering. Typed validation prevents nonfinite settings and rejects overflowing pose calculations before viewport publication. Camera updates now feed [Parallax](../classes/Parallax.md). Missing editor preview and offscreen/multiwindow integration remain explicit gaps, with no inert API substitutes.
+The [tracking audit](../classes/Camera.md#tracking-details-and-source-audit) records anchor/negative-zoom/limit and smoothing details, including repeated forced updates and reset ordering. Typed validation prevents nonfinite settings and rejects overflowing pose calculations before viewport publication. Camera updates now feed [Parallax](../classes/Parallax.md). Complete nested/custom/multiwindow viewport equivalence retains separate gates.
+
+### Camera editor overlays
+
+The edited subtree records magenta screen, yellow limit and cyan drag-margin outlines when `Engine.IsEditorHint` is true. `EditorDrawScreen` defaults to true. Limits and margins are opt-in. Disabling scroll limits removes the limit outline. The drag-margin outline displays configured values independently of live axis tracking. Current cameras use a wider line.
+
+Screen and margin corners project through the authored camera pose using the viewport's logical rectangle. The geometry uses the shared runtime pose calculation without advancing smoothing or cached tracking state. Limits remain in canvas space. A singular camera transform or an outline with nonfinite projected corners omits the affected drawing. Retained commands refresh when geometry or selection changes.
+
+The editor projects exact built-in Camera nodes through the [shared session preview](project-jobs.md#human-and-programmatic-views). Its 320×180 logical canvas scales to the available preview target. The panel samples that target with nearest filtering on all backends. Camera copies keep their authored pose and drawing properties, with tracking disabled in the preview. The source camera retains its saved tracking policy.
+
+`ProjectJobs.Tests --camera-preview OUTPUT BACKEND` loads a persisted camera through the public session, renders its projected scene, and checks all three colors, disabled flags and limits, logical resize, asymmetric margins, rotated/scaled transforms, overflow isolation and edited-root/runtime transitions. The Windows checks pass on software compatibility, Direct3D 11 compatibility and Vulkan GPU.
 
 Verification: `dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` includes CameraTests; `ELECTRON2D_TEST_RENDER=1 ELECTRON2D_TEST_CAMERA=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` checks both native backends, HLSL/GLSL, six pixel/input/selection stages and warmed rendering allocation. The same command with `dummy` verifies compatibility software. These passed on Linux; physical input, visual acceptance, other platforms and large-scene benchmarks are not claimed.
 

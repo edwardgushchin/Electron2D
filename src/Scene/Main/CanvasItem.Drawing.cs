@@ -303,6 +303,7 @@ public abstract partial class CanvasItem
             if (_canvasEditorHint != editorHint) { _canvasEditorHint = editorHint; QueueRedraw(); }
         }
         if (this is Skeleton skeleton) skeleton.RefreshEditorGizmos();
+        if (this is Camera camera) camera.RefreshEditorOverlay();
         if (this is NavigationAgentDebugCanvas navigationDebug) navigationDebug.Refresh();
         if (this is NavigationDebugCanvas navigationGeometry) navigationGeometry.Refresh();
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
