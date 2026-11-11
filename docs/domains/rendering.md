@@ -466,6 +466,8 @@ Paired compiled Shader stages now execute vertex deformation through existing Ca
 
 Scene-authored global shader values now use [ShaderGlobalsOverride](../classes/ShaderGlobalsOverride.md). Its typed portable values, tree-order arbitration and renderer-session restoration are described in the [global parameter component](../components/global-shader-parameters.md#scene-owned-overrides).
 
+[Owned shader RIDs](../components/shader-materials.md#shader-and-material-identities) use the shared `Shader.Mode` to load canvas, particle compute and writable-texture blit programs. The programs feed the same typed material bindings and execution paths as Shader resources.
+
 Window placement and ResetSize use the existing viewport/native resize lifecycle. Embedded centering remains independent of unavailable Wayland global positions; native root placement is subject to compositor constraints. See [the window runtime](../components/window-runtime.md#initial-placement-and-constrained-reset).
 
 ## Rendering changes and low-processor scheduling

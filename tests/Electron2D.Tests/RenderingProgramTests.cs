@@ -80,7 +80,7 @@ internal static class RenderingProgramTests
                 switch (phase)
                 {
                     case 0: RenderingServer.MaterialSetParam(material, "tint", Colors.Blue); if (backend == "gpu") RenderingServer.MaterialSetParam(textureMaterial, "colorMap", blue.GetRID()); source.Material = authored; Check(!source.ServerState!.MaterialAssigned, "Source setter republishes matching field."); break;
-                    case 1: RenderingServer.ShaderSetSPIRV(shader, Code("MaterialReordered")); RenderingServer.MaterialSetParam(material, "mode", 1); RenderingServer.MaterialSetParam(material, "gain", .5f); if (backend == "gpu") RenderingServer.MaterialSetParam(textureMaterial, "colorMap", default(RID)); break;
+                    case 1: RenderingServer.ShaderSetSPIRV(shader, Code("MaterialReordered"), Shader.Mode.CanvasItem); RenderingServer.MaterialSetParam(material, "mode", 1); RenderingServer.MaterialSetParam(material, "gain", .5f); if (backend == "gpu") RenderingServer.MaterialSetParam(textureMaterial, "colorMap", default(RID)); break;
                     case 2:
                         if (Environment.GetEnvironmentVariable("ELECTRON2D_PROGRAM_SNAPSHOT") is { } snapshot) image.SavePNG(snapshot);
                         Span<float> values = stackalloc float[2];

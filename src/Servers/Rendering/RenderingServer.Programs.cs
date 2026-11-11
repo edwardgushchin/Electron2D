@@ -5,11 +5,11 @@ public sealed partial class RenderingServer
     private readonly List<RID> _ownedShaderRIDs = [], _ownedMaterialRIDs = [];
     internal RID ShaderCreateCore() { EnsureTextureChange(); var shader = new Shader(); var rid = RenderingProgramRegistry<Shader>.Register(shader, this); shader.BindRenderingRID(rid); _ownedShaderRIDs.Add(rid); return rid; }
     internal RID MaterialCreateCore() { EnsureTextureChange(); var material = new ShaderMaterial(); var rid = RenderingProgramRegistry<Material>.Register(material, this); material.BindRenderingRID(rid); _ownedMaterialRIDs.Add(rid); return rid; }
-    internal void ShaderSetSPIRVCore(RID rid, ReadOnlySpan<byte> code)
+    internal void ShaderSetSPIRVCore(RID rid, ReadOnlySpan<byte> code, Shader.Mode mode = Shader.Mode.CanvasItem)
     {
         EnsureTextureChange(); var entry = RenderingProgramRegistry<Shader>.OwnedEntry(rid, this);
-        try { entry.Retained!.SetSPIRV(code); }
-        catch (ArgumentException error) when (entry.PathHint.Length != 0) { throw new ArgumentException($"Shader '{entry.PathHint}' rejected the compiled module: {error.Message}", nameof(code), error); }
+        try { entry.Retained!.SetSPIRV(code, mode); }
+        catch (ArgumentException error) when (entry.PathHint.Length != 0 && error is not ArgumentOutOfRangeException { ParamName: nameof(mode) }) { throw new ArgumentException($"Shader '{entry.PathHint}' rejected the compiled module: {error.Message}", nameof(code), error); }
         catch (NotSupportedException error) when (entry.PathHint.Length != 0) { throw new NotSupportedException($"Shader '{entry.PathHint}' rejected the compiled module: {error.Message}", error); }
     }
     internal void ShaderSetSPIRVCore(RID rid, ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)

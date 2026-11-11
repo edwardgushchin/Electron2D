@@ -178,6 +178,33 @@ internal static class DrawableTextureTests
                 using (var channels = new CanvasTexture { DiffuseTexture = texture })
                     Reject<ArgumentException>(() => texture.BlitRectMulti(new(0, 0, 8, 8), [channels, white], [b], material: material));
                 material.SetShaderParameter("detail", texture); Reject<ArgumentException>(() => texture.BlitRectMulti(new(0, 0, 8, 8), [red, green], [b], material: material));
+
+                var ownedShader = RenderingServer.ShaderCreate();
+                var ownedMaterial = RenderingServer.MaterialCreate();
+                try
+                {
+                    var code = shader.GetSPIRV();
+                    RenderingServer.ShaderSetPathHint(ownedShader, "rid-blit");
+                    RenderingServer.ShaderSetSPIRV(ownedShader, code, Shader.Mode.TextureBlit);
+                    var exportedBlit = RenderingServer.ShaderGetSPIRV(ownedShader, RenderingDevice.ShaderStage.Fragment);
+                    Check(exportedBlit.AsSpan().SequenceEqual(code), "The owned RID exports the authored blit module.");
+                    exportedBlit[0] = 0;
+                    Reject<ArgumentOutOfRangeException>(() => RenderingServer.ShaderSetSPIRV(ownedShader, code, (Shader.Mode)0));
+                    Reject<NotSupportedException>(() => RenderingServer.ShaderSetSPIRV(ownedShader, code, Shader.Mode.CanvasItem));
+                    Reject<InvalidOperationException>(() => RenderingServer.ShaderSetSPIRV(shader.GetRID(), code, Shader.Mode.TextureBlit));
+                    Check(RenderingServer.ShaderGetSPIRV(ownedShader).AsSpan().SequenceEqual(code), "Failed mode changes and edits to exported bytes preserve the owned program.");
+                    RenderingServer.MaterialSetShader(ownedMaterial, ownedShader);
+                    RenderingServer.MaterialSetParam(ownedMaterial, "gain", Vector4.One);
+                    RenderingServer.ShaderSetDefaultTextureParameter(ownedShader, "detail", white.GetRID());
+                    RenderingServer.TextureDrawableBlitRect([texture.GetRID(), b.GetRID()], new(0, 0, 8, 8), ownedMaterial, Colors.White, [red.GetRID(), green.GetRID()]);
+                    Pixel(texture, Colors.Red);
+                    Pixel(b, Colors.Green);
+                }
+                finally
+                {
+                    RenderingServer.FreeRID(ownedMaterial);
+                    RenderingServer.FreeRID(ownedShader);
+                }
             }
             using (var description = new RDTextureFormat { Width = 2, Height = 2, Format = RenderingDevice.DataFormat.R8G8B8A8UINT, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyFrom | RenderingDevice.TextureUsageBits.CanCopyTo })
             using (var view = new RDTextureView())

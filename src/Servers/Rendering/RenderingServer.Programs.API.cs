@@ -21,7 +21,19 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static void ShaderSetSPIRV(RID shader, ReadOnlySpan<byte> bytecode) => RequireService().ShaderSetSPIRVCore(shader, bytecode);
 
-    /// <summary>Returns an independent copy of an owned or borrowed compiled canvas program.</summary>
+    /// <summary>Atomically replaces a caller-owned shader's program and executing domain.</summary>
+    /// <param name="shader">The live shader RID owned by this rendering session.</param>
+    /// <param name="bytecode">Copied fragment or compute SPIR-V for the selected domain, at most 16 MiB.</param>
+    /// <param name="mode">CanvasItem, TextureBlit or Particles.</param>
+    /// <remarks>Canvas and blit fragments use their built-in vertex stage. Particle programs use the particle compute interface.
+    /// Failure preserves the previous program and its material bindings. Matching typed parameters migrate after successful reload.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
+    /// <exception cref="ArgumentException">The shader identity or module is invalid.</exception>
+    /// <exception cref="NotSupportedException">The module's stage or interface is unsupported for the selected mode.</exception>
+    /// <exception cref="InvalidOperationException">The shader is borrowed, the renderer is unavailable or owner/submission rules reject mutation.</exception>
+    public static void ShaderSetSPIRV(RID shader, ReadOnlySpan<byte> bytecode, Shader.Mode mode) => RequireService().ShaderSetSPIRVCore(shader, bytecode, mode);
+
+    /// <summary>Returns an independent copy of an owned or borrowed compiled fragment or particle compute module.</summary>
     /// <param name="shader">Live owned/borrowed shader identity as allowed by the operation; mutations require caller ownership.</param>
     /// <returns>An independent copied SPIR-V byte array.</returns>
     /// <exception cref="ArgumentException">An identity, parameter, destination or payload is invalid.</exception>
@@ -39,10 +51,10 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The shader is borrowed, the renderer is unavailable or owner/submission rules are violated.</exception>
     public static void ShaderSetSPIRV(RID shader, ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode) => RequireService().ShaderSetSPIRVCore(shader, vertexBytecode, fragmentBytecode);
     /// <summary>Copies a selected authored stage from a live owned or borrowed shader.</summary>
-    /// <param name="shader">The live shader RID.</param><param name="stage">Vertex or Fragment.</param>
+    /// <param name="shader">The live shader RID.</param><param name="stage">Vertex or Fragment for canvas/blit, Compute for particles.</param>
     /// <returns>The copied module; empty vertex bytes select the renderer's built-in vertex program.</returns>
     /// <exception cref="ArgumentException">The identity or stage value is invalid.</exception>
-    /// <exception cref="NotSupportedException">The selected stage is outside the canvas domain.</exception>
+    /// <exception cref="NotSupportedException">The selected stage does not belong to the current shader domain.</exception>
     /// <exception cref="InvalidOperationException">The renderer is unavailable or access is off-owner.</exception>
     public static byte[] ShaderGetSPIRV(RID shader, RenderingDevice.ShaderStage stage) => RequireService().ShaderGetSPIRVCore(shader, stage);
 
@@ -53,7 +65,7 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/submission/lifetime rules reject the operation.</exception>
     public static void ShaderSetPathHint(RID shader, string path) => RequireService().ShaderSetPathHintCore(shader, path);
 
-    /// <summary>Returns the immutable typed reflected user-parameter catalog of a live canvas program.</summary>
+    /// <summary>Returns the immutable typed reflected user-parameter catalog of a live shader program.</summary>
     /// <param name="shader">Live owned/borrowed shader identity as allowed by the operation; mutations require caller ownership.</param>
     /// <returns>The immutable typed user-parameter descriptors for the current program.</returns>
     /// <exception cref="ArgumentException">An identity, parameter, destination or payload is invalid.</exception>

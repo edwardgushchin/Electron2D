@@ -14,6 +14,8 @@ Existing RenderingServer, CanvasLightingFrame, GPUCanvasBackend and CanvasRender
 
 ShaderCompiler links private native vertex and fragment signatures for [Windows Direct3D 12](components/shader-materials.md#direct3d-12-stage-linkage), shared by the existing canvas, device and drawable pipeline owners.
 
+RenderingServer delegates [owned shader mode selection](components/shader-materials.md#shader-and-material-identities) to Shader and retains the existing program and material identities.
+
 Existing RenderingDevice, ShaderCompiler and copied blend resources own the complete [native blend factor family](components/blend-factors.md); six enum values complete the public selector without adding a production type.
 
 Existing GPUPhysicsBodyStore now [shares intermediate solver and spatial completion](components/gpu-contact-solver.md#shared-solver-and-spatial-completion-2026-11-06). The continuation is internal state of the existing type; no production type or public declaration is added.

@@ -14,4 +14,4 @@ Last updated: 2026-10-19
 | `Particles` | 2 | Particle compute program with the portable state/frame ABI. |
 | `TextureBlit` | 5 | Fragments drawing into writable textures. |
 
-`GetMode()` returns the validated executing domain. [Particle shaders](../components/particle-shaders.md) execute through public RenderingDevice dispatch and the [retained GPU particle server](../components/gpu-particles.md). [Writable textures](../components/drawable-textures.md) document blit execution. Spatial, sky and fog scene domains are outside the planar product.
+`GetMode()` returns the validated executing domain. [RenderingServer](RenderingServer.md) uses the same enum to load a program into an owned shader RID. [Particle shaders](../components/particle-shaders.md) execute through public RenderingDevice dispatch and the [retained GPU particle server](../components/gpu-particles.md). [Writable textures](../components/drawable-textures.md) document blit execution. Spatial, sky and fog scene domains are outside the planar product.

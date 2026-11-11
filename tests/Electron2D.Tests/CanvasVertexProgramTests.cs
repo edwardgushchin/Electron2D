@@ -45,6 +45,12 @@ internal static class CanvasVertexProgramTests
         Check(material.GetShaderParameter<float>("gain") == .5f && material.GetShaderParameter<Vector2>("offset") == new Vector2(16, 0), "Vertex-only and shared public parameters execute.");
         var changed = 0; shader.Changed += _ => changed++;
         Reject<ArgumentException>(() => shader.SetSPIRV(vertexCode, new byte[20]));
+        using var unpairedSource = typeof(CanvasVertexProgramTests).Assembly.GetManifestResourceStream("Electron2D.Device.DeviceCanvasCustomVarying.frag.spv")!;
+        using var unpairedBytes = new MemoryStream();
+        unpairedSource.CopyTo(unpairedBytes);
+        var unpaired = unpairedBytes.ToArray();
+        Reject<NotSupportedException>(() => Shader.CreateFromSPIRV(unpaired, Shader.Mode.CanvasItem));
+        Reject<NotSupportedException>(() => shader.SetSPIRV(unpaired, Shader.Mode.CanvasItem));
         Check(changed == 0 && shader.GetSPIRV(RenderingDevice.ShaderStage.Vertex).SequenceEqual(vertexCode), "Failed replacement preserves both stages.");
         shader.SetSPIRV(vertexCode, fragmentCode); Check(changed == 1 && material.GetShaderParameter<float>("gain") == .5f, "Pair reload publishes once and retains material values.");
         shader.SetBlockSignals(true); shader.SetSPIRV(vertexCode, fragmentCode);

@@ -1130,7 +1130,9 @@ See [canvas lifetime and replay contract](../components/canvas-rendering.md#call
 | Declaration | Contract |
 | --- | --- |
 | `static RID ShaderCreate()` / `MaterialCreate()` | Retain a unique owned compiled program or empty programmable material until free/teardown. |
-| `static void ShaderSetSPIRV(RID, ReadOnlySpan<byte>)` / `static byte[] ShaderGetSPIRV(RID)` | Validate/copy a compiled canvas program; reads accept borrowed shader RIDs. |
+| `static void ShaderSetSPIRV(RID, ReadOnlySpan<byte>)` | Load a canvas fragment into an owned shader. |
+| `static void ShaderSetSPIRV(RID, ReadOnlySpan<byte>, Shader.Mode)` | Load a canvas fragment, particle compute module or writable-texture blit fragment into an owned shader. |
+| `static byte[] ShaderGetSPIRV(RID)` | Copy the fragment or particle compute module from an owned or borrowed shader. |
 | `static void ShaderSetPathHint(RID, string)` | Diagnostic validation path metadata for an owned shader. |
 | `static IReadOnlyList<PropertyDescriptor> GetShaderParameterList(RID)` | Immutable typed descriptors for current reflected user uniforms. |
 | `static void ShaderSetDefaultTextureParameter(RID, string, RID, int = 0)` / `static RID ShaderGetDefaultTextureParameter(RID, string, int = 0)` | Borrowed indexed sampler default; empty clears, scalars accept zero and fixed descriptor arrays accept their element range. |
@@ -1363,7 +1365,9 @@ See [screen attachment verification and dependencies](../components/canvas-rende
 
 ## Paired canvas program access
 
-`static void ShaderSetSPIRV(RID shader, ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)` validates and atomically replaces both stages of an owned shader under the existing session/owner-thread and submission-mutation rules. Path hints wrap failed stage diagnostics; failed replacement preserves the old pair. `static byte[] ShaderGetSPIRV(RID shader, RenderingDevice.ShaderStage stage)` reads copied Vertex/Fragment bytes from an owned or borrowed live shader. Fragment-only programs return an empty Vertex payload. Stage validation, resources, parameter migration and defaults match Shader; undefined/noncanvas stages and stale identities reject. Parameterless export remains fragment-only.
+`ShaderSetSPIRV(shader, bytecode, mode)` loads a single stage into an owned shader under the session, owner-thread and submission-mutation rules. `CanvasItem` and `TextureBlit` use a built-in vertex stage. `Particles` accepts the particle compute interface. Supply a vertex and fragment pair to atomically replace both stages of a CanvasItem program. Validation failure preserves the previous program and its bindings. Matching typed material values migrate when the program changes. A path hint annotates module-validation errors.
+
+`ShaderGetSPIRV(shader, stage)` copies Vertex or Fragment for canvas and blit programs, and Compute for particles. An empty Vertex payload selects the built-in vertex stage. The getter rejects undefined or incompatible stages and stale identities. See [shader and material identities](../components/shader-materials.md#shader-and-material-identities).
 
 ## Global shader parameters
 

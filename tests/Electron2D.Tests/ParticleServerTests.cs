@@ -53,7 +53,7 @@ internal static partial class ParticleServerTests
         if (profile == "subemitter") { Subemitter(); return; }
         if (profile == "trails") { Trails(); return; }
         if (profile == "simulation") { Simulation(); return; }
-        if (profile is not ("gpu" or "compatibility")) throw new ArgumentException("Unknown particle-server test profile.", nameof(profile));
+        if (profile is not ("gpu" or "compatibility" or "owned-program")) throw new ArgumentException("Unknown particle-server test profile.", nameof(profile));
         ProjectSettings.Set(ProjectSettings.RenderingMethod, profile == "compatibility" ? "compatibility" : "gpu");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var root = new Window { Size = new(64, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
@@ -62,9 +62,11 @@ internal static partial class ParticleServerTests
         mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [new(-2, -2), new(2, -2), new(2, 2), new(-2, 2)], Indices = [0, 1, 2, 0, 2, 3] });
         using var input = typeof(ParticleServerTests).Assembly.GetManifestResourceStream("TestShaders.ParticleHLSL.comp.spv")!;
         using var bytes = new MemoryStream(); input.CopyTo(bytes);
-        using var shader = Shader.CreateFromSPIRV(bytes.ToArray(), Shader.Mode.Particles);
+        var code = bytes.ToArray();
+        using var shader = Shader.CreateFromSPIRV(code, Shader.Mode.Particles);
         using var process = new ShaderMaterial { Shader = shader }; process.SetShaderParameter("Enabled", true); process.SetShaderParameter("Tint", Colors.Blue); process.SetShaderParameter("Drift", Vector2.Zero);
         var particle = default(RID); var canvasItem = default(RID); var frame = 0;
+        RID ownedShader = default, ownedMaterial = default;
         root.Ready += _ =>
         {
             if (profile == "compatibility")
@@ -73,6 +75,19 @@ internal static partial class ParticleServerTests
                 throw new InvalidOperationException("Compatibility accepted GPU particles.");
             }
             RenderingServer.SetDefaultClearColor(Colors.Black);
+            if (profile == "owned-program")
+            {
+                ownedShader = RenderingServer.ShaderCreate();
+                ownedMaterial = RenderingServer.MaterialCreate();
+                RenderingServer.ShaderSetSPIRV(ownedShader, code, Shader.Mode.Particles);
+                Check(RenderingServer.ShaderGetSPIRV(ownedShader).AsSpan().SequenceEqual(code) &&
+                    RenderingServer.ShaderGetSPIRV(ownedShader, RenderingDevice.ShaderStage.Compute).AsSpan().SequenceEqual(code),
+                    "The server-owned particle program exports its compute stage.");
+                RenderingServer.MaterialSetShader(ownedMaterial, ownedShader);
+                RenderingServer.MaterialSetParam(ownedMaterial, "Enabled", true);
+                RenderingServer.MaterialSetParam(ownedMaterial, "Tint", Colors.Blue);
+                RenderingServer.MaterialSetParam(ownedMaterial, "Drift", Vector2.Zero);
+            }
             particle = RenderingServer.ParticlesCreate(); RenderingServer.ParticlesSetAmount(particle, 1); RenderingServer.ParticlesSetFixedFPS(particle, 0);
             RenderingServer.ParticlesSetLifetime(particle, 100); RenderingServer.ParticlesSetCustomAABB(particle, new(0, 0, 64, 64));
             RenderingServer.ParticlesSetDrawPasses(particle, 1); RenderingServer.ParticlesSetDrawPassMesh(particle, 0, mesh.GetRID());
@@ -87,7 +102,7 @@ internal static partial class ParticleServerTests
                 if (frame == 0)
                 {
                     Pixel(capture, 20, 20, Colors.Red);
-                    RenderingServer.ParticlesRestart(particle); RenderingServer.ParticlesSetProcessMaterial(particle, process.GetRID());
+                    RenderingServer.ParticlesRestart(particle); RenderingServer.ParticlesSetProcessMaterial(particle, ownedMaterial.IsValid() ? ownedMaterial : process.GetRID());
                     RenderingServer.ParticlesEmit(particle, new Transform(0, new Vector2(30, 20)), Vector2.Zero, Colors.Green, Colors.White, 31);
                     RenderingServer.ParticlesRequestProcess(particle);
                 }
@@ -102,7 +117,13 @@ internal static partial class ParticleServerTests
                 }
                 else
                 {
-                    Pixel(capture, 30, 20, Colors.Blue); RenderingServer.FreeRID(canvasItem); RenderingServer.FreeRID(particle); root.Tree!.Quit();
+                    Pixel(capture, 30, 20, Colors.Blue); RenderingServer.FreeRID(canvasItem); RenderingServer.FreeRID(particle);
+                    if (ownedShader.IsValid())
+                    {
+                        RenderingServer.FreeRID(ownedShader);
+                        RenderingServer.FreeRID(ownedMaterial);
+                    }
+                    root.Tree!.Quit();
                 }
                 frame++;
             };
