@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Electron2D;
 using HostThread = System.Threading.Thread;
 
@@ -14,6 +15,54 @@ internal static class OSThreadTests
         thread.Start(); thread.Join();
         if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
     }
+    private static void Delays()
+    {
+        Check(Engine.MainLoop is null, "Thread delays can run before engine startup.");
+        Reject<ArgumentOutOfRangeException>(() => OS.DelayMSEC(-1));
+        Reject<ArgumentOutOfRangeException>(() => OS.DelayUSEC(int.MinValue));
+        HostThread.CurrentThread.Interrupt();
+        OS.DelayMSEC(0);
+        OS.DelayUSEC(0);
+        Reject<ThreadInterruptedException>(() => OS.DelayMSEC(30));
+        Measure(() => OS.DelayMSEC(30), TimeSpan.FromMilliseconds(30));
+        OnThread(() => Measure(() => OS.DelayUSEC(750), TimeSpan.FromMicroseconds(750)));
+        Measure(() => OS.DelayMSEC(2148), TimeSpan.FromMilliseconds(2148));
+        OnThread(() => Measure(() => OS.DelayUSEC(2_147_484), TimeSpan.FromMicroseconds(2_147_484)));
+        if (OperatingSystem.IsWindows())
+        {
+            using var process = Process.GetCurrentProcess();
+            for (var i = 0; i < 24; i++) OnThread(static () => { });
+            var before = CountHandles(process);
+            for (var i = 0; i < 24; i++) OnThread(static () => OS.DelayMSEC(1));
+            var after = CountHandles(process);
+            Console.WriteLine($"Windows process handles before/after 24 delayed workers: {before}/{after}.");
+            Check(after <= before + 4, "Thread delays do not leave a timer handle on each retired Windows thread.");
+
+            static int CountHandles(Process process)
+            {
+                // CLR thread wrappers can keep native handles until finalization.
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                process.Refresh();
+                return process.HandleCount;
+            }
+        }
+
+        Console.WriteLine($"Blocking OS delays passed ({_checks} assertions).");
+
+        static void Measure(Action delay, TimeSpan duration)
+        {
+            var thread = OS.GetThreadCallerID();
+            var start = Stopwatch.GetTimestamp();
+            delay();
+            var elapsed = Stopwatch.GetElapsedTime(start);
+            Check(elapsed >= duration && elapsed < duration + TimeSpan.FromMilliseconds(500),
+                $"The delay requested {duration.TotalMilliseconds:F3} ms and returned after {elapsed.TotalMilliseconds:F3} ms.");
+            Check(OS.GetThreadCallerID() == thread, "A synchronous delay returns on its caller.");
+            Console.WriteLine($"Requested {duration.TotalMilliseconds:F3} ms, elapsed {elapsed.TotalMilliseconds:F3} ms.");
+        }
+    }
+
     private sealed class Loop(bool failStart = false, bool failStop = false) : MainLoop
     {
         protected override void OnInitialize()
@@ -39,6 +88,7 @@ internal static class OSThreadTests
     }
     internal static void Run(string profile)
     {
+        if (profile == "delay") { Delays(); return; }
         if (profile != "managed") { Native(profile); return; }
         ulong firstWorker = 0;
         OnThread(() => { firstWorker = OS.GetThreadCallerID(); Check(firstWorker > OS.GetMainThreadID() && firstWorker == OS.GetThreadCallerID(), "A first-use worker cannot become the main thread."); });

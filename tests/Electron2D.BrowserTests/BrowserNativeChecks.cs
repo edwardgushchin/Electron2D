@@ -6,6 +6,7 @@ internal static class BrowserNativeChecks
 {
     internal static async Task RunAsync()
     {
+        CheckThreadDelays();
         var owner = Environment.CurrentManagedThreadId;
         var pcm = new byte[48000 * 2];
         for (var frame = 0; frame < pcm.Length / 2; frame++)
@@ -54,6 +55,19 @@ internal static class BrowserNativeChecks
             finally { Engine.Stop(); }
         }
         Console.WriteLine("Browser native WOFF2/dictionary text, FAudio PCM/output and repeated lifecycle checks passed.");
+    }
+
+    private static void CheckThreadDelays()
+    {
+        var start = Stopwatch.GetTimestamp();
+        OS.DelayMSEC(12);
+        if (Stopwatch.GetElapsedTime(start) < TimeSpan.FromMilliseconds(12))
+            throw new InvalidOperationException("The browser millisecond delay returned before its deadline.");
+
+        start = Stopwatch.GetTimestamp();
+        OS.DelayUSEC(1500);
+        if (Stopwatch.GetElapsedTime(start) < TimeSpan.FromMicroseconds(1500))
+            throw new InvalidOperationException("The browser microsecond delay returned before its deadline.");
     }
 
 }

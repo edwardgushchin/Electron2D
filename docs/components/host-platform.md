@@ -1,6 +1,6 @@
 # Host identity and runtime features
 
-Last updated: 2026-10-21
+Last updated: 2026-11-11
 
 ## Scope and ownership
 
@@ -15,6 +15,12 @@ GetLocale reads current LANG on Linux/FreeBSD, strips the encoding suffix and us
 Host/build/architecture tags are shared with typed settings, including pc/mobile, x86/arm families, pointer bitness, single precision, template configuration and thread profile. Query matching follows the existing case-insensitive typed feature policy. Custom tags are live and runtime-managed; saving settings persists their typed override values, not an implicit activation. OS.HasFeature adds live movie, system-font and renderer observations. Project default overrides use host/custom tags; explicit supplied feature lists preserve their own selection context.
 
 GPU renderer startup captures complete s3tc/rgtc/bptc family support for ordinary native uploads. Compatibility reports no such native upload family and uses existing decoded image input. OS.HasFeature returns false for renderer tags before startup/after shutdown. RenderingServer.HasOSFeature requires an active service, reads immutable data on any thread and returns false for unknown names. A capability query never opens a renderer. Optional system-font discovery can initialize its existing provider on first use.
+
+## Blocking thread delays
+
+`OS.DelayMSEC` and `OS.DelayUSEC` use a monotonic elapsed clock and widen both input units before converting to ticks. A positive delay blocks its caller for at least the requested duration, subject to managed thread interruption. Desktop and mobile runtimes sleep for whole milliseconds and check the remaining fraction against the same clock. The browser runtime polls that clock on its calling thread because the browser UI thread cannot sleep synchronously. A zero duration returns immediately and a negative one throws before waiting. No SDL timer or display is needed.
+
+`ELECTRON2D_TEST_OS_THREADS=delay` checks zero, negative and interrupted waits, both units, values past the 32-bit nanosecond boundary, a separate caller thread and Windows handle cleanup. It runs on Windows x64 and Arch Linux x64 under WSL. The browser suite includes both units on its UI thread. Browser execution, other target hosts and package qualification remain open.
 
 ## Invariants and errors
 

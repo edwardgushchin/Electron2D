@@ -46,7 +46,7 @@ The Android application host supplies [system back navigation](../components/win
 
 [Native permission results](../components/main-loop.md#native-permission-results) now enter the exact Android window's loop through an owner-thread FIFO before its next frame hook. Terminal lifetime discards pending results; listener errors preserve unread results and the original exception. Platform request/query APIs remain separate.
 
-Last updated: 2026-10-27
+Last updated: 2026-11-11
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -391,6 +391,8 @@ Factory construction provenance is shared by resource, script, file and scene cr
 The typed project schema includes ordered LocaleResourceRemaps with compiled JSON persistence. Localization commits Culture/options, then ResourceLoader refreshes associated live file resources before current-MainLoop notification. This is cold allocation-capable file work; a prepared empty map preserves zero owner-managed bytes. String-alias normalization in startup locale settings remains distinct from typed CultureInfo assignment. See [localized resources](../components/localized-resources.md).
 
 ## Host platform integration
+
+`OS.DelayMSEC` and `OS.DelayUSEC` block the calling thread against a monotonic clock independently of engine startup and the scene clock. See [blocking thread delays](../components/host-platform.md#blocking-thread-delays).
 
 OS now exposes actual host platform/distribution/version, native logical CPU count and available model, live system locale and Linux sandbox observations. Shared host features drive typed project overrides; OS also observes current movie/font/rendering capabilities without opening a graphics device. See [host identity and features](../components/host-platform.md). Static `OS.GetMemoryInfo` also queries immutable native physical/free/available/stack budgets without an active lifecycle; platform meanings and independent native verification are in [host memory](../components/host-memory.md).
 

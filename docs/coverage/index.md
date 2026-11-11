@@ -1,3 +1,5 @@
+[Blocking OS delays](../components/host-platform.md#blocking-thread-delays) add millisecond and microsecond waits through a monotonic deadline on the calling thread. Both declarations move from Unimplemented to Partial pending the remaining host checks. Coverage is **13,808/18,853 (73.24%)**, with 1,093 Partial, 364 Unimplemented, 3,588 Blocked, 8,440 Excluded and zero unmapped.
+
 [Embedded archive addresses](../components/resource-files.md#embedded-resource-addresses) add typed selection, synchronous and threaded load, and cache replacement by saved scene ID. The load family remains Partial for its remaining format and integration dependencies. Coverage is **13,808/18,853 (73.24%)**, with 1,091 Partial, 366 Unimplemented, 3,588 Blocked, 8,440 Excluded and zero unmapped.
 
 [Linux desktop portal color selection](../components/color-authoring.md#desktop-and-application-sampling) adds the typed DisplayServer picker and connects it to GUI color authoring on supported Linux sessions. One row moves from Blocked to Partial. Coverage remains **13,808/18,853 (73.24%)**, with 1,091 Partial, 366 Unimplemented, 3,588 Blocked, 8,440 Excluded and zero unmapped.

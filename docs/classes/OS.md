@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-11-07
+Last updated: 2026-11-11
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -250,6 +250,15 @@ Process-wide, thread-safe policy. Engine.Run/RunAsync sample ProjectSettings.Low
 Nonnegative microsecond interval, initially 6900. Zero removes the extra wait; MaxFPS can still require waiting. A negative assignment throws ArgumentOutOfRangeException without changing the interval. The owned host continues pumping events during long waits. Manual AdvanceFrame and movie capture do not apply this delay; precision is host-dependent.
 
 See [change reporting, producer coverage and verification](../components/low-processor-rendering.md).
+
+## Blocking thread delays
+
+| Declaration | Contract |
+| --- | --- |
+| `public static void DelayMSEC(int msec)` | Waits for at least the given number of milliseconds on the calling thread. |
+| `public static void DelayUSEC(int usec)` | Waits for at least the given number of microseconds on the calling thread. |
+
+Both accept nonnegative durations. Zero returns immediately. A negative value throws `ArgumentOutOfRangeException`. A managed interrupt during host sleep propagates as `ThreadInterruptedException`. Timing uses a monotonic clock and actual waits may be longer due to host scheduling. These operations can run before engine startup. Calling them on the scene owner pauses input and frame processing until the call returns. Use a `SceneTreeTimer` to delay scene work while frames continue. See [host timing](../components/host-platform.md#blocking-thread-delays).
 
 ## Frame-delta policy
 
