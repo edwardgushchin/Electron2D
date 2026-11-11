@@ -4,16 +4,17 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
-    private RenderHandle? _glowBlurPipeline, _glowCompositePipeline;
+    private RenderHandle? _glowBlurPipeline;
+    private readonly RenderHandle?[] _glowCompositePipelines = new RenderHandle?[2];
     private static readonly byte[] GlowBlurShader = BuiltInShaders.Read("CanvasGlowBlur.frag.spv");
     private static readonly byte[] GlowCompositeShader = BuiltInShaders.Read("CanvasGlowComposite.frag.spv");
 
-    private RenderHandle CreatePostProcessPipeline(byte[] fragmentCode)
+    private RenderHandle CreatePostProcessPipeline(byte[] fragmentCode, bool HDR)
     {
         var (vertexCode, linkedFragment) = ShaderCompiler.LinkGraphicsStages(Device, BuiltInShaders.DrawableVertex, fragmentCode);
         using var vertex = CreateShader(vertexCode, fragment: false);
         using var fragment = CreateShader(linkedFragment, fragment: true);
-        var target = new SDL.GPUColorTargetDescription { Format = CanvasFormat(true) };
+        var target = new SDL.GPUColorTargetDescription { Format = CanvasFormat(HDR) };
         var info = new SDL.GPUGraphicsPipelineCreateInfo
         {
             VertexShader = vertex.DangerousGetHandle(),
@@ -29,20 +30,11 @@ internal sealed unsafe partial class GPUCanvasBackend
 
     private nint PrepareGlowMap(Texture? map, out Rect2 region)
     {
-        region = new(Vector2.Zero, Vector2.One);
-        if (map is null || map.IsDisposed) return 0;
-        if (map is AtlasTexture atlas)
-        {
-            map = atlas.ResolvePolygonTexture(true, out var atlasRegion);
-            if (map is null) return 0;
-            if (atlasRegion is { } mapped) region = mapped;
-        }
-        if (ShaderTexture.ResourcePixelType(map) != 0) throw new NotSupportedException("Glow maps require a filterable color texture.");
-        var native = PrepareTexture(map);
-        return LinearTexture(map, native);
+        var source = ResolveEnvironmentTexture(map, out region);
+        return source is null ? 0 : PrepareEnvironmentTexture(source);
     }
 
-    private void DrawGlow(nint command, CanvasRenderTarget output, GlowSettings glow, int levelCount, nint map, Rect2 mapRegion,
+    private void DrawGlow(nint command, CanvasRenderTarget output, nint source, GlowSettings glow, int levelCount, nint map, Rect2 mapRegion,
         in TonemapUniforms tone, in AdjustmentUniforms correction, in SDL.GPUTextureSamplerBinding lookup)
     {
         var buffers = output.PostProcess!;
@@ -50,7 +42,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         var raw = buffers.Raw.DangerousGetHandle();
         var next = output.Next.DangerousGetHandle();
         var sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled, bias: 0);
-        var input = raw;
+        var input = source;
         var inputSize = size;
         for (var i = 0; i < levelCount; i++)
         {
@@ -65,7 +57,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         }
 
         Span<SDL.GPUTextureSamplerBinding> bindings = stackalloc SDL.GPUTextureSamplerBinding[GlowSettings.LevelCount + 3];
-        bindings[0] = new() { Texture = raw, Sampler = sampler };
+        bindings[0] = new() { Texture = source, Sampler = sampler };
         for (var i = 0; i < GlowSettings.LevelCount; i++)
             bindings[i + 1] = new() { Texture = i < levelCount ? buffers.Levels![i]!.DangerousGetHandle() : raw, Sampler = sampler };
         // A device alias must not sample the active composite attachment.
@@ -83,7 +75,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         var composite = new GlowCompositeUniforms(new(weights[0], weights[1], weights[2], weights[3]), new(weights[4], weights[5], weights[6], 0),
             new(intensity, map != 0 ? glow.MapStrength : 0, (float)glow.Blend, glow.Bicubic ? 1 : 0),
             new(mapRegion.Position.X, mapRegion.Position.Y, mapRegion.Size.X, mapRegion.Size.Y), tone, correction);
-        DrawPostProcessPass(command, next, size, _glowCompositePipeline!, bindings, in composite);
+        DrawPostProcessPass(command, next, size, _glowCompositePipelines[output.HDR ? 1 : 0]!, bindings, in composite);
     }
 
     private void DrawPostProcessPass<T>(nint command, nint target, Vector2i size, RenderHandle pipeline,
@@ -112,6 +104,8 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
 {
     internal readonly RenderHandle Raw = raw;
     internal RenderHandle?[]? Levels;
+    internal RenderHandle? Linear;
+
     internal bool HasRawFrame;
 
     internal static Vector2i LevelSize(Vector2i size, int index) =>
@@ -119,6 +113,8 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
 
     internal void ReleaseLevels()
     {
+        Linear?.Dispose();
+        Linear = null;
         if (Levels is not { } levels) return;
         Levels = null;
         foreach (var level in levels) level?.Dispose();

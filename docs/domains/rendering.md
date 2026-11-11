@@ -411,11 +411,11 @@ Renderer-session overrides preserve authored properties and input coordinates. M
 
 Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root project setting select actual linear half-float targets. The same format flows through composition, MSAA, device exports and explicit readback; byte color sampling converts before filtering and native writes remain visible. Root presentation follows the selected [native HDR output](../components/native-hdr-output.md) or SDR policy; movie output applies the SDR transfer. [HDR canvas targets](../components/hdr-canvas.md) records role-specific colors, verified pixels, warm allocation intervals and backend/platform limits.
 
-[Canvas glow](../components/canvas-glow.md) uses the world environment and resolved HDR image to apply a native multilevel blur and blend before texture publication. Viewports sharing a world use the same authored settings and retain independent native scratch targets.
+[Canvas glow](../components/canvas-glow.md) uses the world environment and resolved viewport image to apply a native multilevel blur and blend before texture publication. Viewports sharing a world use the same authored settings and retain independent native scratch targets.
 
-[Canvas tone mapping](../components/canvas-tonemapping.md) combines world-selected exposure, five operators and output headroom with the resolved HDR image. The tone and glow passes share raw draw history before publishing the completed texture.
+[Canvas tone mapping](../components/canvas-tonemapping.md) combines world-selected exposure, five operators and output headroom with the resolved GPU image. RGBA8 targets use unit headroom and encode the completed SDR effect. The tone and glow passes share raw draw history before publishing the completed texture.
 
-[Canvas color adjustment](../components/canvas-color-adjustment.md) applies brightness, contrast, saturation and an optional filterable ramp after glow and tone mapping on GPU HDR targets.
+[Canvas color adjustment](../components/canvas-color-adjustment.md) applies brightness, contrast, saturation and an optional filterable ramp after glow and tone mapping on GPU HDR and SDR targets.
 
 ## Canvas multisample antialiasing
 

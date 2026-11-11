@@ -6,6 +6,14 @@ internal sealed unsafe partial class GPUCanvasBackend
 {
     private (nint Texture, Vector4 Region) PrepareAdjustmentLookup(Texture? texture)
     {
+        var source = ResolveEnvironmentTexture(texture, out var region);
+        if (source is null) return default;
+        var native = PrepareEnvironmentTexture(source);
+        return native != 0 ? (native, new(region.Position.X, region.Size.X, region.Position.Y, region.Size.Y)) : default;
+    }
+
+    private static Texture? ResolveEnvironmentTexture(Texture? texture, out Rect2 normalizedRegion)
+    {
         Rect2? region = null;
         while (texture is { IsDisposed: false })
         {
@@ -21,22 +29,26 @@ internal sealed unsafe partial class GPUCanvasBackend
             else break;
         }
 
+        normalizedRegion = default;
         texture = RenderingTextureRegistry.SampledStorage(texture) as Texture;
-        if (texture is null || texture.IsDisposed || texture is ViewportTexture { Bound: null }) return default;
+        if (texture is null || texture.IsDisposed || texture is ViewportTexture { Bound: null }) return null;
         var size = texture.GetSize();
-        if (size.X <= 0 || size.Y <= 0) return default;
-        var row = new Rect2(Vector2.Zero, size);
-        if (region is { } sourceRegion) row = row.Intersection(sourceRegion);
-        if (!row.HasArea()) return default;
-        if (ShaderTexture.ResourcePixelType(texture) != 0)
-            throw new NotSupportedException("Color correction requires a filterable color texture.");
+        if (size.X <= 0 || size.Y <= 0) return null;
+        var available = new Rect2(Vector2.Zero, size);
+        if (region is { } sourceRegion) available = available.Intersection(sourceRegion);
+        if (!available.HasArea()) return null;
+        normalizedRegion = new(available.Position / size, available.Size / size);
+        return texture;
+    }
 
+    private nint PrepareEnvironmentTexture(Texture texture)
+    {
+        if (ShaderTexture.ResourcePixelType(texture) != 0)
+            throw new NotSupportedException("Canvas environment textures require filterable color data.");
         var native = PrepareTexture(texture);
         if (_textures.TryGetValue(texture, out var entry) && ReferenceEquals(entry.Pixels, RenderingTextureRegistry.PlaceholderPixels))
-            return default;
-        var lookup = LinearTexture(texture, native);
-        return (lookup, new(row.Position.X / size.X, row.Size.X / size.X,
-            row.Position.Y / size.Y, row.Size.Y / size.Y));
+            return 0;
+        return LinearTexture(texture, native);
     }
 
     private SDL.GPUTextureSamplerBinding AdjustmentBinding(CanvasRenderTarget output, nint lookup)

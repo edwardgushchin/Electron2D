@@ -29,6 +29,7 @@ cbuffer Glow : register(b0, space3)
     float4 mapRegion;
     float4 tone;
     float4 curve;
+    float4 transfer;
     float4 adjustment;
     float4 lookupRegion;
 };
@@ -63,13 +64,20 @@ float3 SampleLevel(Texture2D<float4> image, SamplerState filter, float2 uv, floa
 float4 main([[vk::location(1)]] float2 uv : TEXCOORD1) : SV_Target0
 {
     float4 source = sourceImage.SampleLevel(sourceSampler, uv, 0);
+    if (transfer.x != 0.0) source.rgb = Electron2D_SRGBToLinear(source.rgb);
     source.rgb = ExposeCanvas(source.rgb, tone.y);
     float3 glow = SampleLevel(level0, sampler0, uv, weights0.x) + SampleLevel(level1, sampler1, uv, weights0.y) +
                   SampleLevel(level2, sampler2, uv, weights0.z) + SampleLevel(level3, sampler3, uv, weights0.w) +
                   SampleLevel(level4, sampler4, uv, weights1.x) + SampleLevel(level5, sampler5, uv, weights1.y) +
                   SampleLevel(level6, sampler6, uv, weights1.z);
     if (options.y != 0)
-        glow *= lerp(1.0, mapImage.SampleLevel(mapSampler, mapRegion.xy + uv * mapRegion.zw, 0).rgb, options.y);
+    {
+        uint width, height;
+        mapImage.GetDimensions(width, height);
+        float2 inset = min(0.5 / float2(width, height), mapRegion.zw * 0.5);
+        float2 mapUV = mapRegion.xy + clamp(uv * mapRegion.zw, inset, mapRegion.zw - inset);
+        glow *= lerp(1.0, mapImage.SampleLevel(mapSampler, mapUV, 0).rgb, options.y);
+    }
     if (options.z == 4) source.rgb = lerp(source.rgb, glow, options.x);
     else
     {
@@ -87,5 +95,6 @@ float4 main([[vk::location(1)]] float2 uv : TEXCOORD1) : SV_Target0
     }
     if (options.z != 2) source.rgb = TonemapCanvas(source.rgb, tone, curve);
     source.rgb = AdjustCanvasColor(source.rgb, adjustment, lookupRegion, lookupImage, lookupSampler);
+    if (transfer.y != 0.0) return float4(Electron2D_LinearToSRGB(saturate(source.rgb)), source.a);
     return float4(clamp(source.rgb, -65504.0, 65504.0), source.a);
 }

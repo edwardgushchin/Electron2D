@@ -3,32 +3,32 @@
     {
       "godot": "Environment::property:adjustment_brightness",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentBrightness()",
-      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "Environment::property:adjustment_color_correction",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentColorCorrection()",
-      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "Environment::property:adjustment_contrast",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentContrast()",
-      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "Environment::property:adjustment_enabled",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentEnabled()",
-      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "Environment::property:adjustment_saturation",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentSaturation()",
-      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "RenderingServer::method:environment_set_adjustment(RID:,bool:,float:,float:,float:,bool:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetAdjustment(Electron2D.RID,System.Boolean,System.Single,System.Single,System.Single,Electron2D.RID)",
-      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md. A borrowed ordinary texture RID selects the applicable ramp role directly; the volume lookup selector is outside ADR 0004."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md. A borrowed ordinary texture RID selects the applicable ramp role directly; the volume lookup selector is outside ADR 0004."
     },
     {
       "godot": "Environment::enum:ToneMapper",
@@ -63,27 +63,27 @@
     {
       "godot": "Environment::property:tonemap_agx_contrast",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapAGXContrast()",
-      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "Environment::property:tonemap_agx_white",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapAGXWhite()",
-      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "Environment::property:tonemap_exposure",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapExposure()",
-      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "Environment::property:tonemap_mode",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapMode()",
-      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "Environment::property:tonemap_white",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapWhite()",
-      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "RenderingServer::enum:EnvironmentToneMapper",
@@ -118,12 +118,12 @@
     {
       "godot": "RenderingServer::method:environment_set_tonemap(RID:,int:RenderingServer.EnvironmentToneMapper,float:,float:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetTonemap(Electron2D.RID,Electron2D.CanvasEnvironment.ToneMapper,System.Single,System.Single)",
-      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "RenderingServer::method:environment_set_tonemap_agx_contrast(RID:,float:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetTonemapAGXContrast(Electron2D.RID,System.Single)",
-      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "WorldEnvironment::property:environment",
@@ -363,17 +363,17 @@
     {
       "godot": "RenderingServer::method:environment_set_glow(RID:,bool:,PackedFloat32Array:,float:,float:,float:,float:,int:RenderingServer.EnvironmentGlowBlendMode,float:,float:,float:,float:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetGlow(Electron2D.RID,System.Boolean,System.ReadOnlySpan<System.Single>,System.Single,System.Single,System.Single,System.Single,Electron2D.CanvasEnvironment.GlowBlendMode,System.Single,System.Single,System.Single,System.Single,Electron2D.RID)",
-      "reason": "ADRs 0004/0028: world-selected HDR canvas glow executes in half-float GPU passes with seven levels, borrowed maps, pre-effect history, retained viewport outputs and checked Windows Vulkan pixels. Byte/compatibility canvas glow needs its canvas-background path and a native low-end filtering/composition pass. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
+      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Compatibility needs a native low-end filtering/composition pass, and layer-limited backgrounds need native canvas-layer composition. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
     },
     {
       "godot": "RenderingServer::method:environment_glow_set_use_bicubic_upscale(bool:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentGlowSetUseBicubicUpscale(System.Boolean)",
-      "reason": "ADRs 0004/0028: world-selected HDR canvas glow executes in half-float GPU passes with seven levels, borrowed maps, pre-effect history, retained viewport outputs and checked Windows Vulkan pixels. Byte/compatibility canvas glow needs its canvas-background path and a native low-end filtering/composition pass. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
+      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Compatibility needs a native low-end filtering/composition pass, and layer-limited backgrounds need native canvas-layer composition. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
     },
     {
       "godot": "RenderingServer::method:viewport_set_environment_mode(RID:,int:RenderingServer.ViewportEnvironmentMode)",
       "electron2d": "method:Electron2D.RenderingServer.ViewportSetEnvironmentMode(Electron2D.RID,Electron2D.RenderingServer.ViewportEnvironmentMode)",
-      "reason": "ADRs 0004/0028: world-selected HDR canvas glow executes in half-float GPU passes with seven levels, borrowed maps, pre-effect history, retained viewport outputs and checked Windows Vulkan pixels. Byte/compatibility canvas glow needs its canvas-background path and a native low-end filtering/composition pass. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
+      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Compatibility needs a native low-end filtering/composition pass, and layer-limited backgrounds need native canvas-layer composition. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
     },
     {
       "godot": "Camera2D::property:editor_draw_screen",
@@ -5839,7 +5839,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0004/0028: world-selected HDR canvas glow executes in half-float GPU passes with seven levels, borrowed maps, pre-effect history, retained viewport outputs and checked Windows Vulkan pixels. Byte/compatibility canvas glow needs its canvas-background path and a native low-end filtering/composition pass. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md.",
+      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Compatibility needs a native low-end filtering/composition pass, and layer-limited backgrounds need native canvas-layer composition. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md.",
       "godot": [
         "class:Environment",
         "class:WorldEnvironment",
@@ -5886,7 +5886,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md.",
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md.",
       "godot": [
         "Environment::property:adjustment_brightness",
         "Environment::property:adjustment_color_correction",
@@ -5916,7 +5916,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0004/0028: live GPU half-float canvas exposure and five tone curves integrate with world selection, glow, viewport publication and SDR presentation. Verified Windows Vulkan pixels against double-precision references. Compatibility/SDR canvas composition, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md.",
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md.",
       "godot": [
         "Environment::property:tonemap_agx_contrast",
         "Environment::property:tonemap_agx_white",
@@ -5929,7 +5929,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Needs world-selected clear, keep, and canvas-layer background composition before viewport post-processing.",
+      "reason": "Needs world-selected clear and keep plus native canvas-layer composition around viewport post-processing. The layer boundary must preserve upper-layer blending and screen reads as well as pre-effect history for Never-clear targets.",
       "godot": [
         "Environment::enum:BGMode",
         "Environment::enum_value:BGMode.BG_CANVAS",

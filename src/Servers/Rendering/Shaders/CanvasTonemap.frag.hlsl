@@ -9,6 +9,7 @@ cbuffer ToneMap : register(b0, space3)
 {
     float4 tone;
     float4 curve;
+    float4 transfer;
     float4 adjustment;
     float4 lookupRegion;
 };
@@ -16,7 +17,9 @@ cbuffer ToneMap : register(b0, space3)
 float4 main([[vk::location(1)]] float2 uv : TEXCOORD1) : SV_Target0
 {
     float4 source = sourceImage.SampleLevel(sourceSampler, uv, 0);
-    float3 color = TonemapCanvas(ExposeCanvas(source.rgb, tone.y), tone, curve);
+    float3 linearColor = transfer.x != 0.0 ? Electron2D_SRGBToLinear(source.rgb) : source.rgb;
+    float3 color = TonemapCanvas(ExposeCanvas(linearColor, tone.y), tone, curve);
     color = AdjustCanvasColor(color, adjustment, lookupRegion, lookupImage, lookupSampler);
+    if (transfer.y != 0.0) return float4(Electron2D_LinearToSRGB(saturate(color)), source.a);
     return float4(clamp(color, -65504.0, 65504.0), source.a);
 }

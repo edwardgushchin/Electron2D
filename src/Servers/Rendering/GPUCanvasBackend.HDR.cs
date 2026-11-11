@@ -43,9 +43,14 @@ internal sealed unsafe partial class GPUCanvasBackend
             view.View?.Dispose(); view = (replacement, size, levels); _linearViews[texture] = view;
         }
         _usedLinearViews.Add(texture); _linearSources[texture] = native;
+        PrepareLinearColorPipeline();
+        return view.View.DangerousGetHandle();
+    }
+
+    private void PrepareLinearColorPipeline()
+    {
         _linearizePipeline ??= CreatePipeline(BuiltInShaders.ColorFragment, BlendMode.Mix, overwrite: true, format: CanvasFormat(true));
         _ = Sampler(TextureFilter.NearestWithMipmaps, TextureRepeat.Disabled);
-        return view.View.DangerousGetHandle();
     }
 
     private void BindColorCopy(nint command, nint pass, RenderHandle pipeline, nint source, Vector4 operation, int vertexOffset, int first)

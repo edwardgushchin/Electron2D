@@ -5,7 +5,7 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUCanvasBackend
 {
     private readonly record struct TonemapCompositeUniforms(TonemapUniforms Tonemap, AdjustmentUniforms Adjustment);
-    private RenderHandle? _tonemapPipeline;
+    private readonly RenderHandle?[] _tonemapPipelines = new RenderHandle?[2];
     private static readonly byte[] TonemapShader = BuiltInShaders.Read("CanvasTonemap.frag.spv");
 
     private void DrawTonemap(nint command, CanvasRenderTarget output, in TonemapUniforms tone,
@@ -19,13 +19,13 @@ internal sealed unsafe partial class GPUCanvasBackend
         };
         bindings[1] = lookup;
         var parameters = new TonemapCompositeUniforms(tone, correction);
-        DrawPostProcessPass(command, output.Next.DangerousGetHandle(), output.Size, _tonemapPipeline!, bindings, in parameters);
+        DrawPostProcessPass(command, output.Next.DangerousGetHandle(), output.Size, _tonemapPipelines[output.HDR ? 1 : 0]!, bindings, in parameters);
     }
 }
 
-internal readonly record struct TonemapUniforms(Vector4 Options, Vector4 Curve)
+internal readonly record struct TonemapUniforms(Vector4 Options, Vector4 Curve, Vector4 Transfer)
 {
-    internal static TonemapUniforms Prepare(TonemapSettings settings, float outputMaximum)
+    internal static TonemapUniforms Prepare(TonemapSettings settings, float outputMaximum, bool byteTarget = false, bool linearSource = false)
     {
         var output = Math.Clamp((double)outputMaximum, 1, 65504);
         var white = (double)settings.White;
@@ -61,6 +61,6 @@ internal readonly record struct TonemapUniforms(Vector4 Options, Vector4 Curve)
                 break;
         }
         var options = new Vector4((float)settings.Mode, settings.Exposure, (float)output, (float)Math.Min(white, 65504));
-        return new(options, curve);
+        return new(options, curve, new(byteTarget && !linearSource ? 1 : 0, byteTarget ? 1 : 0, 0, 0));
     }
 }

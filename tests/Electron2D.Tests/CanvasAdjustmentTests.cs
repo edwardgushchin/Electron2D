@@ -138,13 +138,14 @@ internal static class CanvasAdjustmentTests
                     using var rampSource = ImageTexture.CreateFromImage(rampPixels);
                     producer.AddChild(new Sprite { Texture = rampSource, Centered = false, TextureFilter = TextureFilter.Nearest });
                     root.AddChild(producer);
+                    RenderingServer.ViewportSetEnvironmentMode(producer.GetViewportRID(), RenderingServer.ViewportEnvironmentMode.Disabled);
                     using var produced = producer.GetTexture();
                     environment.AdjustmentColorCorrection = produced;
                     RenderingServer.ForceDraw();
                     Verify(target, c => Expected(c, Ramp), "Sampled SDR viewport renders its current pixels before correction");
                     using var producerImage = produced.GetImage()!;
                     Check(producerImage.PixelFormat == Image.Format.Rgba8 && MathF.Abs(producerImage.GetPixel(0, 0).R - 1) < .006f,
-                        "The GPU byte viewport uses ordinary SDR output with the environment assigned.");
+                        "The GPU byte viewport bypasses the environment when explicitly disabled.");
                 }
                 RenderingServer.ForceDraw();
                 Verify(target, c => Expected(c, null), "Retired viewport lookup keeps scalar adjustments");

@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class RenderingServer
 {
-    /// <summary>Updates the HDR canvas color adjustments of a live environment as one change.</summary>
+    /// <summary>Updates the GPU canvas color adjustments of a live environment as one change.</summary>
     /// <param name="environment">A live borrowed environment identity.</param>
     /// <param name="enabled">Whether to apply the adjustments.</param>
     /// <param name="brightness">A finite linear brightness multiplier.</param>

@@ -22,13 +22,13 @@ public sealed partial class RenderingServer
 
     /// <summary>Updates the glow on an environment resource identified by its borrowed RID.</summary>
     /// <param name="environment">A live canvas environment identity.</param>
-    /// <param name="enabled">Whether to apply glow to its HDR canvas targets.</param>
+    /// <param name="enabled">Whether to apply glow to its GPU canvas targets.</param>
     /// <param name="levels">Seven copied, nonnegative blur weights in increasing radius order.</param>
     /// <param name="intensity">Glow intensity outside Mix mode.</param>
     /// <param name="strength">Blur strength.</param>
     /// <param name="mix">The glow interpolation weight in Mix mode.</param>
     /// <param name="bloomThreshold">The minimum contribution from below-threshold colors.</param>
-    /// <param name="blendMode">How the glow is combined with the HDR canvas.</param>
+    /// <param name="blendMode">How the glow is combined with the canvas.</param>
     /// <param name="HDRBleedThreshold">The linear brightness threshold.</param>
     /// <param name="HDRBleedScale">The brightness transition width.</param>
     /// <param name="HDRLuminanceCap">The maximum extracted channel value.</param>
@@ -78,7 +78,7 @@ public sealed partial class RenderingServer
         RenderingProgramRegistry<CanvasEnvironment>.Resolve(environment).SetServerGlow(settings);
     }
 
-    /// <summary>Selects bicubic upsampling for HDR glow in the active rendering session.</summary>
+    /// <summary>Selects bicubic upsampling for canvas glow in the active rendering session.</summary>
     /// <param name="enable">True for bicubic filtering, false for bilinear filtering.</param>
     /// <exception cref="InvalidOperationException">The rendering service is unavailable, access is off-owner or a submission is in progress.</exception>
     public static void EnvironmentGlowSetUseBicubicUpscale(bool enable)
@@ -115,12 +115,12 @@ public sealed partial class RenderingServer
 
     private CanvasPostProcess SelectPostProcess(Viewport viewport, SceneTree tree)
     {
-        if (!tree.HasWorldEnvironment || _backend is not GPUCanvasBackend || !ViewportHDR(viewport) || !EnvironmentEnabled(viewport) || viewport.FindWorld() is not { } world) return default;
+        if (!tree.HasWorldEnvironment || _backend is not GPUCanvasBackend || !EnvironmentEnabled(viewport) || viewport.FindWorld() is not { } world) return default;
         if (tree.SelectWorldEnvironment(world.Runtime)?.LiveEnvironment is not { } environment) return default;
         var settings = environment.SnapshotPostProcess();
         var glow = settings.Glow;
         if (!glow.Enabled && settings.Tonemap is not { IsIdentity: false } && !settings.Adjustment.Active) return default;
         glow.Bicubic = _bicubicGlow;
-        return settings with { Glow = glow, OutputMaximum = TonemapOutputMaximum(viewport) };
+        return settings with { Glow = glow, OutputMaximum = ViewportHDR(viewport) ? TonemapOutputMaximum(viewport) : 1 };
     }
 }

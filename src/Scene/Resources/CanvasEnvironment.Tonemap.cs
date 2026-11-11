@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class CanvasEnvironment
 {
-    /// <summary>Selects the operator for linear HDR canvas color.</summary>
+    /// <summary>Selects the operator for linear canvas color.</summary>
     public enum ToneMapper
     {
         /// <summary>Applies exposure without compressing highlights.</summary>
@@ -19,7 +19,7 @@ public sealed partial class CanvasEnvironment
 
     private TonemapSettings _tonemap = TonemapSettings.Default;
 
-    /// <summary>Gets or sets the tone operator used by HDR viewports selecting this environment.</summary>
+    /// <summary>Gets or sets the tone operator used by GPU viewports selecting this environment.</summary>
     /// <value>Linear initially.</value>
     /// <exception cref="ArgumentOutOfRangeException">The operator is undefined.</exception>
     /// <exception cref="ObjectDisposedException">This environment is disposed.</exception>

@@ -4,7 +4,7 @@ public sealed partial class CanvasEnvironment
 {
     private CanvasAdjustmentSettings _adjustment = CanvasAdjustmentSettings.Default;
 
-    /// <summary>Gets or sets whether this environment adjusts HDR canvas color after glow and tone mapping.</summary>
+    /// <summary>Gets or sets whether this environment adjusts GPU canvas color after glow and tone mapping.</summary>
     /// <value>False initially.</value>
     /// <exception cref="ObjectDisposedException">This environment is disposed.</exception>
     public bool AdjustmentEnabled

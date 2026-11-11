@@ -1,6 +1,6 @@
 # CanvasEnvironment
 
-`CanvasEnvironment : Resource` stores HDR canvas glow, tone mapping and color adjustment settings. Assign it to a [WorldEnvironment](WorldEnvironment.md). Glow starts disabled. The resource remains valid across renderer sessions and can be shared or stored with a scene.
+`CanvasEnvironment : Resource` stores GPU canvas glow, tone mapping and color adjustment settings. Assign it to a [WorldEnvironment](WorldEnvironment.md). Glow starts disabled. The resource remains valid across renderer sessions and can be shared or stored with a scene.
 
 - `GlowEnabled` enables the effect. `GlowHDRThreshold`, `GlowHDRScale`, `GlowHDRLuminanceCap` and `GlowBloom` control extraction in linear color.
 - `GlowStrength` controls the blur. `SetGlowLevel` and `GetGlowLevel` use zero-based indices 0 through 6. Default weights are 0, 0.8, 0.4, 0.1, 0, 0, 0 from narrow to broad. `GlowNormalized` normalizes their contribution.
@@ -16,6 +16,6 @@ Scalar glow settings accept finite, nonnegative values through 65,504. Mix and m
 
 ## Color adjustment
 
-`AdjustmentEnabled` starts false. `AdjustmentBrightness`, `AdjustmentContrast` and `AdjustmentSaturation` start at one. `AdjustmentColorCorrection` optionally borrows a filterable color ramp. The effect applies after glow and tone mapping on GPU half-float viewports. See [canvas color adjustment](../components/canvas-color-adjustment.md).
+`AdjustmentEnabled` starts false. `AdjustmentBrightness`, `AdjustmentContrast` and `AdjustmentSaturation` start at one. `AdjustmentColorCorrection` optionally borrows a filterable color ramp. The effect applies after glow and tone mapping on GPU RGBA8 and half-float viewports. See [canvas color adjustment](../components/canvas-color-adjustment.md).
 
 The [glow component](../components/canvas-glow.md) describes the native output, world selection and current backend limits.

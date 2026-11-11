@@ -2,9 +2,9 @@ using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
-/// <summary>Stores shared HDR canvas glow, tone mapping and color adjustment settings.</summary>
+/// <summary>Stores shared GPU canvas glow, tone mapping and color adjustment settings.</summary>
 /// <remarks>Assign this resource to a <see cref="WorldEnvironment"/>. Changes affect the next canvas frame.
-/// Resources and textures are borrowed by the scene. Glow is evaluated on linear half-float canvas targets.</remarks>
+/// Resources and textures are borrowed by the scene. The effects work in linear light on GPU viewports with byte or half-float storage.</remarks>
 public sealed partial class CanvasEnvironment : Resource
 {
     /// <summary>Combines the blurred glow and the original canvas color.</summary>
@@ -29,7 +29,7 @@ public sealed partial class CanvasEnvironment : Resource
     /// <summary>Creates a canvas environment with glow disabled.</summary>
     public CanvasEnvironment() { }
 
-    /// <summary>Enables bright-pixel glow on the HDR canvas.</summary>
+    /// <summary>Enables bright-pixel glow on the GPU canvas.</summary>
     /// <value>false initially.</value>
     /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
     public bool GlowEnabled

@@ -227,7 +227,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var adjustment = postProcess.Adjustment;
         var lookup = adjustment.Active ? PrepareAdjustmentLookup(adjustment.Lookup) : default;
         var adjust = adjustment.Enabled && (adjustment.HasScalarChanges || lookup.Texture != 0);
-        var drawTonemap = !toneSettings.IsIdentity || adjust;
+
         var glowLevelCount = 0;
         if (glow.Enabled && glow.Strength > 0)
             for (var i = 0; i < GlowSettings.LevelCount; i++)
@@ -236,18 +236,25 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             glow.Blend is CanvasEnvironment.GlowBlendMode.Replace or CanvasEnvironment.GlowBlendMode.Mix);
         var mapRegion = default(Rect2);
         var glowMap = (nint)0;
-        var drawPostProcess = drawGlow || drawTonemap;
-        if (drawPostProcess) output.PostProcess ??= new(CreateTarget(size, default, HDR: true));
-        if (drawTonemap && !drawGlow) _tonemapPipeline ??= CreatePostProcessPipeline(TonemapShader);
+        var drawPostProcess = drawGlow || !toneSettings.IsIdentity || adjust;
+        var linearizeGlowSource = !output.HDR && glowLevelCount > 0;
+        var storage = output.HDR ? 1 : 0;
+        if (drawPostProcess) output.PostProcess ??= new(CreateTarget(size, default, HDR: output.HDR));
+        if (drawPostProcess && !drawGlow) _tonemapPipelines[storage] ??= CreatePostProcessPipeline(TonemapShader, output.HDR);
         if (drawGlow)
         {
-            if (glowLevelCount > 0) _glowBlurPipeline ??= CreatePostProcessPipeline(GlowBlurShader);
-            _glowCompositePipeline ??= CreatePostProcessPipeline(GlowCompositeShader);
+            if (glowLevelCount > 0) _glowBlurPipeline ??= CreatePostProcessPipeline(GlowBlurShader, HDR: true);
+            _glowCompositePipelines[storage] ??= CreatePostProcessPipeline(GlowCompositeShader, output.HDR);
             if (glowLevelCount > 0)
             {
                 var levels = output.PostProcess!.Levels ??= new RenderHandle?[GlowSettings.LevelCount];
                 for (var i = 0; i < glowLevelCount; i++)
                     levels[i] ??= CreateTarget(PostProcessBuffers.LevelSize(size, i), default, HDR: true);
+            }
+            if (linearizeGlowSource)
+            {
+                output.PostProcess!.Linear ??= CreateTarget(size, default, HDR: true);
+                PrepareLinearColorPipeline();
             }
             if (glowLevelCount > 0 && glow.MapStrength > 0) glowMap = PrepareGlowMap(glow.Map, out mapRegion);
         }
@@ -255,7 +262,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var maskFirst = checked(vertices.Length + (sdfUsed ? 6 : 0));
         var seedFirst = checked(maskFirst + (lightingUsed ? (lighting.Masks.Count + lighting.ShadowCount) * 6 : 0));
         var colorFirst = checked(seedFirst + (samples != SDL.GPUSampleCount.SampleCount1 ? 6 : 0));
-        var colorQuad = _linearSources.Count != 0 || _linearArraySources.Count != 0;
+        var colorQuad = _linearSources.Count != 0 || _linearArraySources.Count != 0 || linearizeGlowSource;
         var vertexBytes = checked((colorFirst + (colorQuad ? 6 : 0)) * sizeof(CanvasVertex));
         var uploadBytes = checked(lightingBytes + vertexBytes + instances.Length * sizeof(CanvasInstance));
         EnsureBuffers(uploadBytes);
@@ -458,11 +465,20 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             SDL.EndGPURenderPass(pass); pass = 0;
             if (drawPostProcess)
             {
-                var tone = TonemapUniforms.Prepare(toneSettings, postProcess.OutputMaximum);
-                Blit(command, output.Next.DangerousGetHandle(), output.PostProcess!.Raw.DangerousGetHandle(), new(0, 0, size.X, size.Y));
+                var tone = TonemapUniforms.Prepare(toneSettings, postProcess.OutputMaximum, byteTarget: !output.HDR, linearSource: linearizeGlowSource);
+                var raw = output.PostProcess!.Raw.DangerousGetHandle();
+                Blit(command, output.Next.DangerousGetHandle(), raw, new(0, 0, size.X, size.Y));
+                var glowSource = raw;
+                if (linearizeGlowSource)
+                {
+                    glowSource = output.PostProcess.Linear!.DangerousGetHandle();
+                    var convert = BeginPass(command, glowSource, SDL.GPULoadOp.DontCare, default);
+                    try { BindColorCopy(command, convert, _linearizePipeline!, raw, new(0, 1, 0, 0), lightingBytes, colorFirst); }
+                    finally { SDL.EndGPURenderPass(convert); }
+                }
                 var correction = new AdjustmentUniforms(new(adjustment.Brightness, adjustment.Contrast, adjustment.Saturation, adjust ? 1 : 0), lookup.Region);
                 var correctionBinding = AdjustmentBinding(output, lookup.Texture);
-                if (drawGlow) DrawGlow(command, output, glow, glowLevelCount, glowMap, mapRegion, in tone, in correction, in correctionBinding);
+                if (drawGlow) DrawGlow(command, output, glowSource, glow, glowLevelCount, glowMap, mapRegion, in tone, in correction, in correctionBinding);
                 else DrawTonemap(command, output, in tone, in correction, in correctionBinding);
             }
             measured?.End(command);
@@ -815,7 +831,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         _sdfTarget?.Dispose(); _sdfPipeline?.Dispose(); ReleaseParticlePrograms(); ReleaseParticleVertices();
         _litPrograms.Clear(); _usedLitPrograms.Clear();
         ReleaseInstanceStreams(); ReleaseModelPoses(); _pipelines.Clear(); foreach (var pipeline in _clearPipelines) pipeline?.Dispose();
-        _glowBlurPipeline?.Dispose(); _glowCompositePipeline?.Dispose(); _tonemapPipeline?.Dispose();
+        _glowBlurPipeline?.Dispose();
+        foreach (var pipeline in _glowCompositePipelines) pipeline?.Dispose();
+        foreach (var pipeline in _tonemapPipelines) pipeline?.Dispose();
         foreach (var pipeline in _seedPipelines) pipeline?.Dispose(); ReleaseTargets(); _vertexBuffer?.Dispose(); _transfer?.Dispose(); _vertexShader.Dispose(); _instancedVertexShader.Dispose(); _lightingVertexShader.Dispose(); _lightingInstancedVertexShader.Dispose();
         if (_windowClaimed) SDL.ReleaseWindowFromGPUDevice(Device, _window);
         _device.Dispose();
