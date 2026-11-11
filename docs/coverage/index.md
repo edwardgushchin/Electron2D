@@ -1,3 +1,5 @@
+[Native GPU resource labels](../components/local-compute.md#native-resource-labels) add Vulkan debug names to live buffers, textures, views, samplers, shaders and pipelines. One method moves to Partial. Coverage is **13,814/18,853 (73.27%)**, with 1,109 Partial, 348 Unimplemented, 3,582 Blocked, 8,440 Excluded and zero unmapped.
+
 [Graphics adapter identity](../components/graphics-adapter-identity.md) exposes the selected hardware and driver through RenderingServer, RenderingDevice and OS. Six enum values become Implemented. The enum and seven methods move to Partial. Coverage is **13,814/18,853 (73.27%)**, with 1,108 Partial, 349 Unimplemented, 3,582 Blocked, 8,440 Excluded and zero unmapped.
 
 [System bell](../components/display-server.md#system-bell) adds desktop-owned feedback through the active display host. One declaration moves from Blocked to Partial. Coverage is **13,808/18,853 (73.24%)**, with 1,100 Partial, 363 Unimplemented, 3,582 Blocked, 8,440 Excluded and zero unmapped.

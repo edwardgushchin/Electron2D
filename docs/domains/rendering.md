@@ -46,6 +46,8 @@ Windows Direct3D 12 creates canvas and device graphics pipelines with private DX
 
 The [graphics adapter identity](../components/graphics-adapter-identity.md) describes the actual renderer and local device, including Vulkan's native device type and pipeline cache UUID.
 
+RenderingDevice [native resource labels](../components/local-compute.md#native-resource-labels) give live Vulkan resources caller-supplied names in graphics diagnostics.
+
 [FP64 atomic accumulation](../components/float-atomics.md#fp64-buffer-and-workgroup-atomics) now executes over buffer/workgroup storage, mixed precision and graphics/address producers. The owning contract records logical gates, legacy-ABI fallback and the remaining full-platform qualification.
 
 [Native FP32 atomics](../components/float-atomics.md) connect existing shader/storage families to parallel floating reductions and accumulation, including image arrays/samples and both writable graphics stages. Unsupported native features reject before publication.

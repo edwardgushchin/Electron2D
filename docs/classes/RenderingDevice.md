@@ -104,6 +104,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
 | `public string GetDeviceVendorName()` | Returns the selected device's hardware vendor when available. |
 | `public string GetDevicePipelineCacheUUID()` | Returns the native cache UUID in lowercase hexadecimal when available. |
+| `public void SetResourceName(RID id, string name)` | Sets or clears a native GPU resource label. |
 | [`public System.Byte[] ShaderCompileBinaryFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")`](#member-shader-binary-compile) | Validates and packages copied stages and a strict UTF-8 diagnostic name. |
 | [`public Electron2D.RID ShaderCreateFromBytecode(System.ReadOnlySpan<System.Byte> binaryData, Electron2D.RID placeholderRID = default)`](#member-shader-binary-load) | Loads a complete container and optionally initializes one reserved shader identity. |
 | [`public Electron2D.RID ShaderCreatePlaceholder()`](#member-shader-binary-placeholder) | Reserves an owned identity for later bytecode loading. |
@@ -324,6 +325,10 @@ Borrowers become invalid; they may still be freed explicitly.
 ### Device identity
 
 `GetDeviceVendorName()` and `GetDevicePipelineCacheUUID()` return empty strings when their native fields are unavailable. [`DeviceType`](RenderingDevice.DeviceType.md) classifies physical adapters. See [graphics adapter identity](../components/graphics-adapter-identity.md).
+
+### SetResourceName
+
+Labels a live device-owned GPU resource through the native debug interface. An empty string clears the label. A retired or foreign RID and a name containing a null character are invalid. A missing backend capability or independently nameable object raises `NotSupportedException`. See [native resource labels](../components/local-compute.md#native-resource-labels).
 
 ### GetDeviceName()
 
