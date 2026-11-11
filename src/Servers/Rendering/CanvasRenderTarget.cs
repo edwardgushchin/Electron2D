@@ -11,6 +11,7 @@ internal sealed class CanvasRenderTarget(RenderHandle current, RenderHandle next
     internal Viewport.MSAA MSAA;
     internal RenderHandle? Multisample, MultisampleBackBuffer;
     internal bool HasFrame, BackBufferMipmaps, IsDisposed;
+    internal bool ExportPrepared, HasSRGBBacking;
     internal RenderHandle? BackBuffer, MaskBuffer, LightAtlas;
     internal Vector2i LightAtlasSize;
     internal void Commit() { (Current, Next) = (Next, Current); HasFrame = true; }

@@ -763,6 +763,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPEN_WITH_PROGRAM") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_PROCESS") == "1") { OSProcessTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERER_TEXTURE_DEVICE") == "1") { RendererTextureDeviceTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERER_TEXTURE_SRGB") is { } rendererSRGBProfile) { RendererTextureSRGBTests.Run(rendererSRGBProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_SRGB") is { } viewportSRGBProfile) { ViewportSRGBTests.Run(viewportSRGBProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_CHILD") is { } missingPath) { MissingResourceTests.RunChild(missingPath, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_MODE") ?? "preserve", Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_RENDER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_NATIVE") == "1") { MissingResourceNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING") == "1") { MissingResourceTests.Run(); return; }

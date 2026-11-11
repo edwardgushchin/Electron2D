@@ -667,13 +667,8 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false, bool HDR = false) => CreateGPUTarget(size, clear, mipmaps, SDL.GPUSampleCount.SampleCount1, HDR);
     private RenderHandle CreateGPUTarget(Vector2i size, Color clear, bool mipmaps, SDL.GPUSampleCount samples, bool HDR, uint levels = 0)
     {
-        var format = CanvasFormat(HDR); if (HDR) clear = LinearColor(clear);
-        if (!SDL.GPUTextureSupportsSampleCount(Device, format, samples)) throw new NotSupportedException("The GPU cannot use the requested canvas format and coverage sample count.");
-        var usage = SDL.GPUTextureUsageFlags.ColorTarget;
-        if (samples == SDL.GPUSampleCount.SampleCount1) usage |= SDL.GPUTextureUsageFlags.Sampler;
-        var storage = SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
-        if (samples == SDL.GPUSampleCount.SampleCount1 && SDL.GPUTextureSupportsFormat(Device, format, SDL.GPUTextureType.TextureType2D, usage | storage)) usage |= storage;
-        var info = new SDL.GPUTextureCreateInfo { Type = SDL.GPUTextureType.TextureType2D, Format = format, Width = (uint)size.X, Height = (uint)size.Y, SampleCount = samples, LayerCountOrDepth = 1, NumLevels = levels != 0 ? levels : mipmaps ? (uint)(1 + System.Numerics.BitOperations.Log2((uint)Math.Max(size.X, size.Y))) : 1, Usage = usage };
+        var info = GPUTargetInfo(size, samples, HDR, levels != 0 ? levels : mipmaps ? (uint)(1 + System.Numerics.BitOperations.Log2((uint)Math.Max(size.X, size.Y))) : 1);
+        if (HDR) clear = LinearColor(clear);
         var target = new RenderHandle(SDL.CreateGPUTexture(Device, in info), h => SDL.ReleaseGPUTexture(Device, h), _device);
         var command = SDL.AcquireGPUCommandBuffer(Device);
         try
@@ -685,6 +680,17 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         }
         catch { target.Dispose(); throw; }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
+    }
+
+    private SDL.GPUTextureCreateInfo GPUTargetInfo(Vector2i size, SDL.GPUSampleCount samples, bool HDR, uint levels)
+    {
+        var format = CanvasFormat(HDR);
+        if (!SDL.GPUTextureSupportsSampleCount(Device, format, samples)) throw new NotSupportedException("The GPU cannot use the requested canvas format and coverage sample count.");
+        var usage = SDL.GPUTextureUsageFlags.ColorTarget;
+        if (samples == SDL.GPUSampleCount.SampleCount1) usage |= SDL.GPUTextureUsageFlags.Sampler;
+        var storage = SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
+        if (samples == SDL.GPUSampleCount.SampleCount1 && SDL.GPUTextureSupportsFormat(Device, format, SDL.GPUTextureType.TextureType2D, usage | storage)) usage |= storage;
+        return new SDL.GPUTextureCreateInfo { Type = SDL.GPUTextureType.TextureType2D, Format = format, Width = (uint)size.X, Height = (uint)size.Y, SampleCount = samples, LayerCountOrDepth = 1, NumLevels = levels, Usage = usage };
     }
 
     private void EnsureBuffers(int size)

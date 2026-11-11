@@ -37,8 +37,19 @@ canvas keep ordinary SDL allocation.
 Renderer uploads support RGBA8 and BC1/2/3/7 when the selected Vulkan device
 supports the sampled format and negotiates Vulkan 1.1 or later with the matching
 native bridge. Other upload formats and backends reject a distinct sRGB request
-when they lack a compatible view. Viewport exports need views for each physical
-ping-pong image and must select the completed image at command recording.
+when they lack a compatible view.
+
+The first export of a completed SDR viewport prepares both physical images for
+compatible views on the same Vulkan adapter. One GPU copy of each physical image
+preserves the completed frame and the alternate buffer before publishing a
+device RID. Later exports reuse that pair. The linear RID retains attachment and
+available storage roles. The sRGB RID uses a sampled view of each physical image
+with raw transfers. Both RIDs and views made with the shared factories select
+the completed buffer when a command is recorded. Multisampled canvases export the
+resolved image. Resize, target replacement and detachment expire the old RIDs.
+Queued reads still complete from the image selected when they were recorded.
+HDR viewport exports retain their linear half-float storage and reject a distinct
+sRGB view.
 
 Run `ELECTRON2D_TEST_DEVICE_CANVAS_SRGB=vulkan` with `SDL_GPU_DRIVER=vulkan` to
 check ordinary, array and swizzled slice sampling in a rendered frame. The
@@ -57,6 +68,13 @@ queued readback. When the device exposes BC1, it also verifies decoded BC1 pixel
 and the unchanged encoded block. The `direct3d12` and `preceding` profiles check distinct-view
 refusal and working linear uploads on Direct3D 12 and the preceding Vulkan bridge.
 All three profiles pass on the tested Windows desktop.
+
+Run `ELECTRON2D_TEST_VIEWPORT_SRGB=vulkan` with `SDL_GPU_DRIVER=vulkan` to check
+[viewport exports](../../tests/Electron2D.Tests/ViewportSRGBTests.cs). The
+fixture checks gamma-decoded canvas pixels, raw writes, buffer swaps, shared
+views, queued reads, resize, MSAA resolve and HDR refusal. The `direct3d12` and
+`preceding` profiles check that distinct-view refusal preserves linear export.
+These profiles pass on the tested Windows desktop.
 
 ## Formats and consumers
 

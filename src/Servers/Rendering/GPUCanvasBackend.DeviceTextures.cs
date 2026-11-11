@@ -1,3 +1,5 @@
+using SDL3;
+
 namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
@@ -32,7 +34,12 @@ internal sealed unsafe partial class GPUCanvasBackend
         {
             var viewport = viewportTexture.Bound; var target = viewport is null ? null : FindTarget(viewport);
             if (target is null || !target.HasFrame || viewportTexture.GetSize().X == 0 || viewportTexture.GetSize().Y == 0) return default;
-            if (SRGB) throw new NotSupportedException("Distinct sRGB renderer views require native format-view integration.");
+            if (!target.ExportPrepared)
+            {
+                target.HasSRGBBacking = !target.HDR && PrepareViewportExport(target);
+                target.ExportPrepared = true;
+            }
+            if (SRGB && !target.HasSRGBBacking) throw new NotSupportedException("The viewport image cannot supply a distinct sRGB view.");
             return device.BorrowRendererTexture(viewportTexture, null, target);
         }
         if (resource is Texture texture)
@@ -68,5 +75,41 @@ internal sealed unsafe partial class GPUCanvasBackend
             return device.BorrowRendererTexture(layered, gpu, null);
         }
         return default;
+    }
+
+    private bool PrepareViewportExport(CanvasRenderTarget target)
+    {
+        var info = GPUTargetInfo(target.Size, SDL.GPUSampleCount.SampleCount1, false, 1);
+        var current = GPUTextureViews.TryCreateSampledFormatStorage(_device, in info, SDL.GPUTextureFormat.R8G8B8A8UnormSRGB);
+        if (current is null) return false;
+        RenderHandle? next = null;
+        try
+        {
+            next = GPUTextureViews.TryCreateSampledFormatStorage(_device, in info, SDL.GPUTextureFormat.R8G8B8A8UnormSRGB);
+            if (next is null) return false;
+            var command = SDL.AcquireGPUCommandBuffer(Device);
+            if (command == 0) throw Failure("prepare viewport device export");
+            try
+            {
+                var copy = SDL.BeginGPUCopyPass(command);
+                if (copy == 0) throw Failure("begin viewport export copy");
+                SDL.CopyGPUTextureToTexture(copy, new() { Texture = target.Current.DangerousGetHandle() }, new() { Texture = current.DangerousGetHandle() }, info.Width, info.Height, 1, false);
+                SDL.CopyGPUTextureToTexture(copy, new() { Texture = target.Next.DangerousGetHandle() }, new() { Texture = next.DangerousGetHandle() }, info.Width, info.Height, 1, false);
+                SDL.EndGPUCopyPass(copy);
+                var submitted = command;
+                command = 0;
+                Check(SDL.SubmitGPUCommandBuffer(submitted), "copy viewport images for device export");
+            }
+            finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
+            // Prepare both images before publishing any device RID for this target.
+            (target.Current, current) = (current, target.Current);
+            (target.Next, next) = (next, target.Next);
+            return true;
+        }
+        finally
+        {
+            current.Dispose();
+            next?.Dispose();
+        }
     }
 }

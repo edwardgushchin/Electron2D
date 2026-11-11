@@ -39,6 +39,9 @@ internal sealed class RendererTextureBorrow : IDisposable
         }
     }
     internal nint Native => Source is DrawableTexture ? _first.DangerousGetHandle() : Target?.Current.DangerousGetHandle() ?? Pixels!.Handle;
+    internal bool HasSRGBBacking => Pixels?.HasSRGBView == true || Target?.HasSRGBBacking == true;
+    internal (RenderHandle First, RenderHandle Second) ViewportImages => (_first, _second!);
+    internal bool UsesSecondViewportImage => ReferenceEquals(Target?.Current, _second);
     internal void RefreshPixels()
     {
         if (Pixels is null) return;

@@ -7,6 +7,15 @@ internal static unsafe partial class GPUTextureViews
 {
     private const string Cache = "Electron2D.render.texture_views";
     internal const uint SampledFormatABI = 4;
+    internal static RenderHandle? TryCreateSampledFormatStorage(RenderHandle owner, in SDL.GPUTextureCreateInfo info, SDL.GPUTextureFormat alternate)
+    {
+        var device = owner.DangerousGetHandle();
+        if (Support(device, SampledFormatABI) != 1 ||
+            !SDL.GPUTextureSupportsFormat(device, alternate, info.Type, SDL.GPUTextureUsageFlags.Sampler)) return null;
+        SDL.GPUTextureFormat* formats = stackalloc SDL.GPUTextureFormat[2] { info.Format, alternate };
+        var image = Create(device, SampledFormatABI, in info, (nint)formats, 2);
+        return image == 0 ? null : new RenderHandle(image, h => Destroy(device, 1, h), owner);
+    }
     private static bool Active(nint device) => SDL.GetPointerProperty(SDL.GetGPUDeviceProperties(device), Cache, 0) != 0;
     internal static void CollectIfActive(nint device) { if (Active(device)) Collect(device, 1); }
     internal static SDL.GPUTextureRegion Region(nint device, SDL.GPUTextureRegion region)

@@ -13,7 +13,7 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Labels a live GPU resource for native graphics diagnostics.</summary>
     /// <param name="id">An owned resource identity on this device.</param>
     /// <param name="name">The UTF-8 debug name. An empty string clears the name.</param>
-    /// <remarks>Labels apply to the existing native object, including aliases of the same compute pipeline.</remarks>
+    /// <remarks>Labels apply to existing native objects, including aliases of a compute pipeline and both physical views of a viewport.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
     /// <exception cref="ArgumentException">The identity is invalid or the name contains a null character.</exception>
     /// <exception cref="NotSupportedException">The backend or resource does not expose a nameable native object.</exception>
@@ -40,6 +40,8 @@ public sealed unsafe partial class RenderingDevice
         };
         var handle = entry.Kind == Kind.Pipeline ? PipelineProgram(entry).Handle : entry.TextureAllocation ?? entry.Handle;
         LabelResource(handle, kind, name);
+        if (entry.SecondTextureView is { } second)
+            LabelResource(second, kind, name);
         if (entry.FragmentHandle is { } fragment)
             LabelResource(fragment, NativeNameKind.Shader, name);
         foreach (var viewPipeline in entry.ViewPipelines)

@@ -43,9 +43,10 @@ public sealed partial class RenderingServer
     /// <remarks>Ordinary uploads, independent arrays and completed viewport images borrow renderer-owned native
     /// storage without copying. Compatible authored updates keep identity; allocation replacement, source disposal
     /// or viewport rebinding expires it. A viewport RID follows its completed ping-pong image at command recording.
-    /// An already-sRGB image returns its source RID. Compatible device and renderer-uploaded images
-    /// return a cached shared view that expires with the source RID. The sRGB view of a renderer upload
-    /// supports sampling and raw transfers. Storage-image access remains on the linear RID.
+    /// An already-sRGB image returns its source RID. Compatible device images, renderer uploads and
+    /// completed SDR viewport images return a cached shared view that expires with the source RID.
+    /// Renderer sRGB views support sampling and raw transfers. Storage-image access remains on the
+    /// linear RID. Both viewport RIDs select the completed image at command recording.
     /// Creating a view requires an idle device.
     /// FreeRID on the rendering device releases a borrowed wrapper or a distinct view independently. Device writes affect native storage; authored CPU
     /// snapshots remain unchanged and a later authored update replaces those writes. Prepare changed uploads before

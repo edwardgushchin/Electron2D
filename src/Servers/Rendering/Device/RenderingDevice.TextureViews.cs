@@ -14,7 +14,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="view">Copied format and sampled component mapping.</param>
     /// <param name="withTexture">A live source identity; an existing shared view resolves to its original owner.</param>
     /// <returns>A device-owned view identity, automatically freed with the original owner.</returns>
-    /// <remarks>No image data is copied. The view includes the owner's complete image/layer/mip extent. FormatOverride must be declared shareable. GetFormat retains the owner's stored format; shader and attachment interfaces consume the selected view format.</remarks>
+    /// <remarks>No image data is copied. The view includes the owner's complete image/layer/mip extent. FormatOverride must be declared shareable. GetFormat retains the owner's stored format; shader and attachment interfaces consume the selected view format. A viewport view selects the completed buffer at command recording.</remarks>
     /// <exception cref="NotSupportedException">The native view adapter or selected format role is unavailable.</exception>
     public RID TextureCreateShared(RDTextureView view, RID withTexture)
     {
@@ -29,6 +29,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="mipmaps">Positive number of included mip levels.</param>
     /// <param name="sliceType">The ordinary image role.</param>
     /// <returns>A device-owned ordinary image view, automatically freed with the original owner.</returns>
+    /// <remarks>A viewport slice selects the completed buffer at command recording.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The layer, mip interval or slice selector is invalid.</exception>
     /// <exception cref="NotSupportedException">The native view adapter or selected format role is unavailable.</exception>
     public RID TextureCreateSharedFromSlice(RDTextureView view, RID withTexture, uint layer, uint mipmap, uint mipmaps = 1, TextureSliceType sliceType = TextureSliceType.Texture)
@@ -53,7 +54,7 @@ public sealed unsafe partial class RenderingDevice
         if (!_entries.TryGetValue(source, out var entry) || entry.Texture is not { } info || !entry.Alive) return default;
         var format = SRGBViewFormat(info.Format);
         if (format == info.Format) return source;
-        var sampledOnly = (entry.TextureSource ?? entry).Borrowed?.Pixels?.HasSRGBView == true;
+        var sampledOnly = (entry.TextureSource ?? entry).Borrowed?.HasSRGBBacking == true;
         if (format == DataFormat.Max || (!sampledOnly && !info.Shareable.Contains(format)))
             throw new NotSupportedException("This texture allocation does not declare a compatible sRGB view.");
         if (entry.SRGBView.IsValid() && _entries.TryGetValue(entry.SRGBView, out var alias) && alias.Alive)
@@ -118,12 +119,23 @@ public sealed unsafe partial class RenderingDevice
         };
         var ownedViews = owner.TextureViews ??= []; ownedViews.EnsureCapacity(ownedViews.Count + 1);
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, TextureOwner = ownerID, TextureSource = owner };
+        var abi = sampledOnly ? GPUTextureViews.SampledFormatABI : 1;
+        var nativeFormat = NativeFormat(format);
+        var array = type == TextureType.TextureArray ? 1u : 0u;
+        RenderHandle CreateNativeView(nint image) =>
+            new(GPUTextureViews.View(Device, abi, image, nativeFormat, layer, layers, mip, mips, array), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);
         try
         {
-            entry.Handle = new(GPUTextureViews.View(Device, sampledOnly ? GPUTextureViews.SampledFormatABI : 1, owner.TextureAllocation?.DangerousGetHandle() ?? owner.NativeHandle, NativeFormat(format), layer, layers, mip, mips, type == TextureType.TextureArray ? 1u : 0u), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);
+            if (owner.Borrowed is { Target: not null } viewport)
+            {
+                var (first, second) = viewport.ViewportImages;
+                entry.Handle = CreateNativeView(first.DangerousGetHandle());
+                entry.SecondTextureView = CreateNativeView(second.DangerousGetHandle());
+            }
+            else entry.Handle = CreateNativeView(owner.TextureAllocation?.DangerousGetHandle() ?? owner.NativeHandle);
             PrepareInputShadow(entry); var rid = Add(entry); ownedViews.Add(rid); return rid;
         }
-        catch { entry.InputShadow?.Dispose(); entry.Handle?.Dispose(); throw; }
+        catch { entry.InputShadow?.Dispose(); entry.SecondTextureView?.Dispose(); entry.Handle?.Dispose(); throw; }
     }
     private static TextureInfo CaptureTextureInfo(DataFormat format, TextureType type, uint width, uint height, uint layers, uint mips, TextureUsageBits usage, DataFormat[] shareable, TextureSamples samples, bool resolve, uint swizzle, DataFormat stored)
     {

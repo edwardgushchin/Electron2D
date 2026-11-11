@@ -1509,6 +1509,8 @@ Vertex-only source/SPIR-V programs now execute with copied `RDPipelineRasterizat
 
 Copies `view` over the original owner resolved from `withTexture`. Includes its complete layer/mip extent. Max retains the stored format. Alternate formats must be declared shareable and native-compatible with every usage/sample role. Returns a device-owned shared RID automatically freed with that owner; freeing an intermediate view preserves siblings. Unknown/freed/foreign sources and disposed/null descriptions reject before publication. Missing native adapter support throws NotSupportedException; native setup failure throws InvalidOperationException. Calls follow the device owner-thread/idle-list contract.
 
+For a viewport export, shared views select the completed physical image when each command is recorded. Pending reads retain the selected image through completion.
+
 <a id="texture-create-shared-from-slice"></a>
 ### TextureCreateSharedFromSlice(RDTextureView, RID, uint, uint, uint, TextureSliceType)
 

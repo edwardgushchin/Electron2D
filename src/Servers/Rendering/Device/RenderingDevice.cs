@@ -68,7 +68,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal bool MeshCommand, MeshExported;
         internal bool Expired;
         internal bool Alive => !Expired && (TextureSource?.Alive ?? true) && (Borrowed?.Alive ?? true) && (MeshOwner?.Alive ?? true) && (!MeshCommand || MeshOwner?.CommandsAlive != false);
-        internal nint NativeHandle => Borrowed?.Native ?? Handle!.DangerousGetHandle();
+        internal nint NativeHandle => Borrowed?.Native ??
+            (SecondTextureView is { } second && TextureSource?.Borrowed?.UsesSecondViewportImage == true ? second : Handle!).DangerousGetHandle();
+        internal RenderHandle? SecondTextureView;
         internal RenderHandle? Handle, Upload, Download, TextureScratch, InputShadow, StorageArrayView;
         internal bool ScratchColorTarget;
         internal byte[] Data = [];
@@ -545,6 +547,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (entry.SRGBView.IsValid() && _entries.TryGetValue(entry.SRGBView, out var alias)) ReleaseEntry(entry.SRGBView, alias);
         if (entry.TextureViews is { } views) while (views.Count != 0) { var child = views[^1]; views.RemoveAt(views.Count - 1); if (_entries.TryGetValue(child, out var owned)) ReleaseEntry(child, owned); }
         if (entry.TextureOwner != default && _entries.TryGetValue(entry.TextureOwner, out var owner)) owner.TextureViews?.Remove(rid);
+        entry.SecondTextureView?.Dispose();
         if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.StorageArrayView?.Dispose(); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseSwizzles(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.TextureAllocation?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
         EvictResourceCaches(rid);
     }
@@ -561,7 +564,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
             ReleaseDepthResolves();
-            foreach (var e in _entries.Values) { e.StorageArrayView?.Dispose(); e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.TextureAllocation?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
+            foreach (var e in _entries.Values) { e.StorageArrayView?.Dispose(); e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.SecondTextureView?.Dispose(); e.TextureAllocation?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
             _entries.Clear(); _generalImages.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _timestampPool?.Dispose(); _timestampPool = null; _context.Dispose();
         }
         base.Dispose(disposing);

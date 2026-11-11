@@ -96,13 +96,9 @@ internal sealed unsafe class GPUTexture : IDisposable
             SDL.GPUTextureFormat.BC7RGBAUnorm => SDL.GPUTextureFormat.BC7RGBAUnormSRGB,
             _ => SDL.GPUTextureFormat.Invalid
         };
-        if (srgb == SDL.GPUTextureFormat.Invalid || GPUTextureViews.Support(_device, GPUTextureViews.SampledFormatABI) != 1 ||
-            !SDL.GPUTextureSupportsFormat(_device, srgb, info.Type, SDL.GPUTextureUsageFlags.Sampler)) return null;
-        SDL.GPUTextureFormat* formats = stackalloc SDL.GPUTextureFormat[2] { info.Format, srgb };
-        var image = GPUTextureViews.Create(_device, GPUTextureViews.SampledFormatABI, in info, (nint)formats, 2);
-        if (image == 0) return null;
-        var handle = new RenderHandle(image, h => GPUTextureViews.Destroy(_device, 1, h), device);
-        HasSRGBView = true;
+        if (srgb == SDL.GPUTextureFormat.Invalid) return null;
+        var handle = GPUTextureViews.TryCreateSampledFormatStorage(device, in info, srgb);
+        HasSRGBView = handle is not null;
         return handle;
     }
 
