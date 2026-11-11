@@ -26,7 +26,7 @@ Identifies a native window policy; values are indices, not a bit mask. Used by [
 | `Popup = 5` | Whether the window is a transient menu popup; requires multiple-window ownership. |
 | `ExtendToTitle = 6` | Whether content extends under the native title bar; requires platform title-bar integration. |
 | `MousePassthrough = 7` | Passes native mouse input to underlying windows, overriding the retained polygon; embedded GUI routing is unchanged. |
-| `SharpCorners = 8` | Whether native rounded window corners are suppressed; requires platform window-style integration. |
+| `SharpCorners = 8` | Whether Windows 11 suppresses rounding for the native window. |
 | `ExcludeFromCapture = 9` | Whether ordinary screen capture excludes the window; requires platform capture-policy integration. |
 | `PopupWmHint = 10` | Whether the window manager treats the window as a popup; requires multiple-window ownership. |
 | `MinimizeDisabled = 11` | Whether native minimization controls are disabled; requires platform window-style integration. |

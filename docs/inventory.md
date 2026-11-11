@@ -6,6 +6,8 @@ The existing static OS service owns [system certificate snapshots](components/sy
 
 The existing Window/DisplayServer family owns [native Windows capture exclusion](components/window-capture.md) through DisplayServer.Capture.cs; no production type is added.
 
+DisplayServer applies and observes [native window corners](components/window-runtime.md#native-window-corners) through [DisplayServer.WindowCorners.cs](../src/Servers/Display/DisplayServer.WindowCorners.cs). Window owns the stored scene request.
+
 [DisplayServer status indicators](components/status-indicators.md) use private per-session indicator/press records and a Windows Shell/GDI observer in DisplayServer.StatusIndicators*.cs. Public API remains on the existing static service; copied HICONs retire before native menus/window ownership.
 
 [NativeMenu](classes/NativeMenu.md) is a display-owned static service for [Windows OS popup trees](components/native-menus.md). Its private Menu/Item/tag/callback records and User32/GDI observer own native lifetime; existing PopupMenu adds persisted native preference and a temporary tree bridge.

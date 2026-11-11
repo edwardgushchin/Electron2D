@@ -307757,6 +307757,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Window.SharpCorners()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "SharpCorners",
+    "signature": "public System.Boolean SharpCorners { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Window.Size()",
     "kind": "property",
     "declaringType": "Electron2D.Window",

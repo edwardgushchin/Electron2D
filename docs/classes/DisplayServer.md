@@ -844,12 +844,12 @@ Reads a supported native window flag.
 
 **Returns:** Whether the policy is enabled in the observed native flags.
 
-**Remarks:** On Wayland, the main window cannot apply `AlwaysOnTop` or `NoFocus`; both flags throw `NotSupportedException` rather than reporting an inert SDL flag.
+**Remarks.** On Wayland, `AlwaysOnTop` and `NoFocus` can be unavailable for the selected window. On Windows 11, `SharpCorners` reads the selected window's DWM preference. It returns true when that preference suppresses rounding.
 
 - `flag`: Policy to inspect.
-- `windowId`: The main-window ID, zero.
+- `windowId` selects a live native window. Zero selects the main window.
 
-**Errors:** `ArgumentOutOfRangeException` — `flag` is not a defined policy.; `NotSupportedException` — The defined policy requires a display capability that is not integrated..
+An undefined flag throws `ArgumentOutOfRangeException`. An unsupported backend throws `NotSupportedException`. A failed DWM read throws `IOException`.
 
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
@@ -860,11 +860,11 @@ Requests a supported native window policy.
 
 - `flag`: Policy to change.
 - `enabled`: Whether to enable the policy.
-- `windowId`: The main-window ID, zero.
+- `windowId` selects a live native window. Zero selects the main window.
 
-**Remarks:** A platform may reject the policy or apply it asynchronously. On Wayland, the main window rejects `AlwaysOnTop` and `NoFocus` before calling SDL, avoiding silent success or a native flag mutation followed by backend failure.
+**Remarks.** A platform may reject the policy or apply it asynchronously. On Windows 11, clearing `SharpCorners` restores the system corner preference. See [native window corners](../components/window-runtime.md#native-window-corners).
 
-**Errors:** `ArgumentOutOfRangeException` — `flag` is not a defined policy.; `NotSupportedException` — The defined policy requires a display capability that is not integrated..
+An undefined flag throws `ArgumentOutOfRangeException`. An unsupported backend throws `NotSupportedException`. A failed DWM write throws `IOException`.
 
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 

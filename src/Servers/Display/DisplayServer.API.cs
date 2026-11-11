@@ -525,8 +525,9 @@ public sealed partial class DisplayServer
     /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <returns>Whether the policy is enabled in the observed native flags.</returns>
     /// <remarks>On Wayland, <see cref="WindowFlag.AlwaysOnTop"/> and <see cref="WindowFlag.NoFocus"/> are unavailable for the selected native window.
-    /// Capture exclusion reads the operating-system policy and requires Windows 10 version 2004 or later with desktop composition.</remarks>
-    /// <exception cref="IOException">Reading the native capture policy fails.</exception>
+    /// Capture exclusion reads the operating-system policy and requires Windows 10 version 2004 or later with desktop composition.
+    /// SharpCorners reads the actual DWM preference on Windows 11.</remarks>
+    /// <exception cref="IOException">Reading a native window policy fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="flag"/> is not a defined policy.</exception>
     /// <exception cref="NotSupportedException">The defined policy requires a display capability that is not integrated.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
@@ -537,8 +538,9 @@ public sealed partial class DisplayServer
     /// <param name="enabled">Whether to enable the policy.</param>
     /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>A platform may reject the policy or apply it asynchronously. Wayland cannot apply <see cref="WindowFlag.AlwaysOnTop"/> to an ordinary top-level window, and SDL can change its internal focusable flag before rejecting <see cref="WindowFlag.NoFocus"/> there; both requests are rejected before native mutation.
-    /// Capture exclusion requires Windows 10 version 2004 or later with desktop composition; it does not restrict engine texture readback or guarantee content security.</remarks>
-    /// <exception cref="IOException">Changing the native capture policy fails.</exception>
+    /// Capture exclusion requires Windows 10 version 2004 or later with desktop composition; it does not restrict engine texture readback or guarantee content security.
+    /// SharpCorners uses the Windows 11 DWM preference. Disabling it restores the system default.</remarks>
+    /// <exception cref="IOException">Changing a native window policy fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="flag"/> is not a defined policy.</exception>
     /// <exception cref="NotSupportedException">The defined policy requires a display capability that is not integrated.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

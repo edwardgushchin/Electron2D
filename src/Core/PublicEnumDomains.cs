@@ -95,7 +95,7 @@ public enum WindowFlag
     ExtendToTitle = 6,
     /// <summary>Whether native mouse input passes to an underlying window.</summary>
     MousePassthrough = 7,
-    /// <summary>Whether native rounded window corners are suppressed; requires platform window-style integration.</summary>
+    /// <summary>Whether Windows 11 suppresses rounding of the native window corners.</summary>
     SharpCorners = 8,
     /// <summary>Whether ordinary operating-system capture excludes the native window.</summary>
     /// <remarks>Requires Windows 10 version 2004 or later with desktop composition. This is not a security guarantee.</remarks>

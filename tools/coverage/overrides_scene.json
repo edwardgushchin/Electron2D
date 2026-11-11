@@ -1645,7 +1645,7 @@
       "electron2d": "method:Electron2D.Window.GetFlag(Electron2D.WindowFlag)",
       "godot": "Window::method:get_flag(int:Window.Flags)",
       "state": "Partial",
-      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Still Partial for remaining native titlebar/sharp-corner policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs. Windows 10 version 2004+ with DWM composition executes per-HWND capture exclusion and observed reads through Set/GetWindowDisplayAffinity. WindowCaptureChecks shares root/package/AOT scenarios and an independent Windows Graphics Capture pixel consumer. Stored Window requests survive packing, duplication and native child recreation; embedded requests do not affect the host. macOS needs its native sharing/capture bridge and actual capture verification; other platform/package/hardware gates remain open (ADRs 0040/0021)."
+      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Windows 11 executes the SharpCorners preference on each native HWND, restores system default, and retains the scene request across packing and child recreation. Still Partial for remaining native titlebar policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs. Windows 10 version 2004+ with DWM composition executes per-HWND capture exclusion and observed reads through Set/GetWindowDisplayAffinity. WindowCaptureChecks shares root/package/AOT scenarios and an independent Windows Graphics Capture pixel consumer. Stored Window requests survive packing, duplication and native child recreation; embedded requests do not affect the host. macOS needs its native sharing/capture bridge and actual capture verification; other platform/package/hardware gates remain open (ADRs 0040/0021)."
     },
     {
       "electron2d": "method:Electron2D.Window.GetPositionWithDecorations()",
@@ -1675,7 +1675,7 @@
       "electron2d": "method:Electron2D.Window.SetFlag(Electron2D.WindowFlag,System.Boolean)",
       "godot": "Window::method:set_flag(int:Window.Flags,bool:)",
       "state": "Partial",
-      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Still Partial for remaining native titlebar/sharp-corner policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs. Windows 10 version 2004+ with DWM composition executes per-HWND capture exclusion and observed reads through Set/GetWindowDisplayAffinity. WindowCaptureChecks shares root/package/AOT scenarios and an independent Windows Graphics Capture pixel consumer. Stored Window requests survive packing, duplication and native child recreation; embedded requests do not affect the host. macOS needs its native sharing/capture bridge and actual capture verification; other platform/package/hardware gates remain open (ADRs 0040/0021)."
+      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Windows 11 executes the SharpCorners preference on each native HWND, restores system default, and retains the scene request across packing and child recreation. Still Partial for remaining native titlebar policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs. Windows 10 version 2004+ with DWM composition executes per-HWND capture exclusion and observed reads through Set/GetWindowDisplayAffinity. WindowCaptureChecks shares root/package/AOT scenarios and an independent Windows Graphics Capture pixel consumer. Stored Window requests survive packing, duplication and native child recreation; embedded requests do not affect the host. macOS needs its native sharing/capture bridge and actual capture verification; other platform/package/hardware gates remain open (ADRs 0040/0021)."
     },
     {
       "electron2d": "method:Electron2D.Window.SetIMEActive(System.Boolean)",
@@ -6090,6 +6090,11 @@
       "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
     },
     {
+      "godot": "Window::property:sharp_corners",
+      "electron2d": "property:Electron2D.Window.SharpCorners()",
+      "reason": "The applicable Windows 11 policy controls each HWND through the DWM corner preference. False restores the system default. The typed request survives packing, duplication and native child recreation. Embedded requests leave the host unchanged. WindowCornerTests verifies actual DWM reads and unsupported-host rollback (ADRs 0008/0040)."
+    },
+    {
       "godot": "Window::property:exclude_from_capture",
       "electron2d": "property:Electron2D.Window.ExcludeFromCapture()",
       "state": "Partial",
@@ -8637,6 +8642,13 @@
   "statusGroups": [
     {
       "state": "Implemented",
+      "reason": "The reference policy applies to native Windows 11 windows. The DWM preference is per HWND and false restores the system default. The request survives scene packing, duplication and native child recreation. WindowCornerTests checks actual DWM reads on software, Direct3D 11, Vulkan and Direct3D 12, and verifies rollback on the unsupported dummy adapter (ADRs 0008/0040).",
+      "godot": [
+        "Window::property:sharp_corners"
+      ]
+    },
+    {
+      "state": "Implemented",
       "reason": "ADRs 0093/0109: current playback selection is distinct from mixer scheduling; IsAnimationActive retains paused/completed selection and Stop clears it. Stop and finite terminal completion emit empty CurrentAnimationChanged after committed state, with revision guards for newer callback controls. AnimationMovieCompletionTests adds selection/state, event ordering, callback restart/Stop and real movie consumers alongside the existing scene/blending profiles. See docs/components/movie-writing.md#animation-completion.",
       "godot": [
         "AnimationPlayer::method:is_animation_active()",
@@ -10383,8 +10395,7 @@
       "state": "Unimplemented",
       "reason": "Next Window native-control projection and platform capability audit over the existing DisplayServer, including modes, flags, IME, native notifications and geometry (ADR 0040).",
       "godot": [
-        "Window::property:extend_to_title",
-        "Window::property:sharp_corners"
+        "Window::property:extend_to_title"
       ]
     },
     {
@@ -10444,7 +10455,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040.",
+      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; Windows 11 uses the DWM corner preference for native Window flags. WindowCornerTests covers startup, root/child/popup isolation, embedded requests, recreation, native observation and unsupported-host rollback. Remaining platform capabilities require their owning native integrations under ADR 0040 and platform validation under ADR 0021.",
       "godot": [
         "Window::signal:files_dropped(PackedStringArray:)",
         "Window::method:get_flag(int:Window.Flags)",

@@ -430,6 +430,7 @@ public sealed partial class DisplayServer
         EnsureOwner();
         var window = GetWindow(windowId);
         if (flag == WindowFlag.MousePassthrough) return _mousePassthrough;
+        if (flag == WindowFlag.SharpCorners) return GetSharpCorners();
         if (flag == WindowFlag.ExcludeFromCapture) return GetCaptureExclusion();
         if (SDL.GetCurrentVideoDriver() == "wayland" && (flag == WindowFlag.AlwaysOnTop || flag == WindowFlag.NoFocus && !IsNativePopup))
             throw new NotSupportedException($"Window flag {flag} is unavailable for a Wayland top-level window.");
@@ -455,6 +456,7 @@ public sealed partial class DisplayServer
         EnsureOwner();
         var window = GetWindow(windowId);
         if (flag == WindowFlag.MousePassthrough) { SetMousePassthrough(enabled); return; }
+        if (flag == WindowFlag.SharpCorners) { SetSharpCorners(enabled); return; }
         if (flag == WindowFlag.ExcludeFromCapture) { SetCaptureExclusion(enabled); return; }
         if (IsNativePopup && flag is WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled or WindowFlag.Borderless or WindowFlag.ResizeDisabled)
         {

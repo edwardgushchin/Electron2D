@@ -71,6 +71,7 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public Vector2[] MousePassthroughPolygon { get; set; }`](#native-mouse-input) | Copies the native client-coordinate polygon accepting mouse input. |
 | [`public bool AlwaysOnTop { get; set; }`](#alwaysontop) | Gets or sets the policy requesting placement above ordinary windows. |
 | [`public bool Unfocusable { get; set; }`](#unfocusable) | Gets or sets the policy preventing keyboard focus. |
+| [`public bool SharpCorners { get; set; }`](#sharp-corners) | Requests square native window corners on Windows 11. |
 | [`public bool ExcludeFromCapture { get; set; }`](#exclude-from-capture) | Excludes the native window from ordinary OS capture where supported. |
 | [`public bool ForceNative { get; set; }`](#forcenative) | Overrides a containing embedding viewport while hidden. |
 | [`public bool TransientToFocused { get; set; }`](#transienttofocused) | Chooses the focused native transient owner on the next show. |
@@ -149,6 +150,14 @@ Creates a detached visible window with an empty title and a 100 by 100 client ar
 No native resources are acquired until `Engine.Run(Window)`.
 
 ## Property Descriptions
+
+<a id="sharp-corners"></a>
+### `public bool SharpCorners { get; set; }`
+
+The default of false uses the system corner policy. This stored property shares
+the request used by `GetFlag` and `SetFlag`. Windows 11 applies it to the native
+window. Embedded windows retain the value without affecting the native host.
+See [native window corners](../components/window-runtime.md#native-window-corners).
 
 <a id="exclude-from-capture"></a>
 ### `public bool ExcludeFromCapture { get; set; }`

@@ -19,6 +19,14 @@ Engine reserves its idle state, opens the native window through DisplayServer an
 
 Window properties configure title, positive client size, minimum/maximum constraints, optional desktop position and screen, mode, native input/presentation policies and visibility. Mode queries report observed native state; flag queries retain accepted configuration and are stored in PackedScene. Unsupported policies reject use, and platform refusal does not commit a requested flag. Native calls inherit DisplayServer platform capability failures. Window.Position is the native desktop position and is rejected on Wayland. Window declares its own Visible, Show/Hide and VisibilityChanged API; it has no Entity transform or CanvasItem drawing surface; inherited viewport transforms place child canvases. GetVisibleRect uses a zero client origin. SizeChanged follows client-size updates, never mere desktop movement.
 
+### Native window corners
+
+On Windows 11 (build 22000 or later), `Window.SharpCorners` and the corresponding flag request square corners through the native window's DWM preference. Enabling it sets `DWMWCP_DONOTROUND`. Disabling it restores `DWMWCP_DEFAULT`, which lets Windows choose the shape for the current frame and window mode. The value is a per-window preference. [DWM corner preferences](https://learn.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwm_window_corner_preference)
+
+The scene property stores the accepted request across scene saves, duplication and native child recreation. An embedded window keeps its own request without changing its host. `DisplayServer.WindowGetFlag` reads the current preference from the selected native window, including external changes. Direct display requests affect that window for its current native lifetime and leave scene authoring intact. Active unsupported native hosts reject the request. An operating-system error leaves the previous scene value intact.
+
+The `ELECTRON2D_TEST_WINDOW_CORNERS` profiles verify scene round-trip and duplication, rejection on the dummy adapter, and actual Win32 preference reads on root, child and popup windows. On the tested Windows 11 host, the native profiles pass with software, Direct3D 11, Vulkan and Direct3D 12 rendering. They also change DWM independently and verify the display getter, including after child recreation.
+
 Interactive `Window.StartDrag` and `StartResize` remain blocked with their DisplayServer counterparts: SDL hit testing identifies draggable edges but does not start an interactive move or resize. An X11 window-manager request or Wayland xdg_toplevel request with the initiating pointer serial, followed by compositor verification, is required.
 
 Window also forwards effective mouse entry/exit, content-scale changes and completed file-drop snapshots before frame callbacks. Native IME activation/caret placement, taskbar progress requests, decorated geometry, maximization capability and centering are available on Window with the existing platform limits. Signal failures remain visible after the native queue drains; scene and native cleanup still run.
@@ -35,7 +43,7 @@ Viewport shares SceneTree's current handled-input flag. PushInput accepts client
 - Native services opened directly through DisplayServer must finish before shutdown. Pending asynchronous file dialogs can reject native disposal under the existing DisplayServer contract; Run reports the cleanup failure and DisplayServer remains available for completion/release. Window exposes no asynchronous dialog API yet.
 - Engine remains reserved throughout scene exit, disposal and native cleanup. Manual frame/stop/tree-disposal interference is rejected. All owned cleanup stages are attempted and failures remain observable.
 - Validation/busy-engine rejection preserves caller ownership. After reservation, failed startup also disposes the transferred root. A later run uses a new Window.
-- PackedScene stores the title and size/limit configuration plus inherited stored Node properties. Position is an optional platform startup request, not stored scene data. CurrentScreen follows the same optional-request rule. Mode and the four supported policies are stored; unset/default policies do not issue unsupported startup requests.
+- PackedScene stores the title and size/limit configuration plus inherited stored Node properties. Position is an optional platform startup request, not stored scene data. CurrentScreen follows the same optional-request rule. Mode and the supported policies are stored; unset/default policies do not issue unsupported startup requests.
 
 ## Verification and limits
 
