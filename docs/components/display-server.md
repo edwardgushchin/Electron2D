@@ -170,6 +170,16 @@ On Windows, the display reads the Win32 screen-reader flag and checks the Narrat
 
 Run the public test program with `ELECTRON2D_TEST_DESKTOP_ACCESSIBILITY=windows` on an interactive Windows desktop. The profile compares live values with Win32 and checks changes and handle retirement with a temporary Narrator session marker when no reader is registered. The `unavailable` profile uses `SDL_VIDEODRIVER=dummy` to verify unknown values and display ownership. On Linux, use Python with D-Bus bindings and PyGObject. Set `SDL_VIDEODRIVER=x11` or `wayland` for an available display and run `dbus-run-session -- python3 -B tests/Electron2D.Tests/check-desktop-accessibility.py dotnet <path-to-Electron2D.Tests.dll>`. The isolated providers exercise state changes, portal versions one and two, future values, unavailable and malformed replies. Native desktop transitions outside these fixtures and full package qualification remain separate under [ADR 0021](../decisions/product.md#adr-0021).
 
+## Screen density
+
+`DisplayServer.ScreenGetDPI(screen)` accepts an indexed display and the same main-window, primary, mouse-focus and keyboard-focus selectors as `ScreenGetSize`. The default selects the main window's display. An invalid selector or unavailable native measurement returns 96. The query runs on the display opening thread.
+
+Windows reads effective DPI from the selected SDL display's Win32 monitor and averages the native axes. This value includes the Windows scaling policy. Linux X11 matches the selected SDL display bounds to an active RandR monitor on the SDL connection's X screen. It calculates pixels per inch from the native millimeter dimensions and truncates the mean to an integer. One available axis is sufficient. When monitor dimensions are unavailable, the X screen's dimensions apply to a sole display covering that entire root. Independent X screens lack an unambiguous SDL root mapping.
+
+Wayland needs a bridge that associates the physical geometry of the same `wl_output` with the SDL display. Cocoa and mobile require their native density providers. Those drivers currently return the default. Content scale and `WindowDpiChanged` continue to describe native window or display scaling.
+
+Run the `ELECTRON2D_TEST_SCREEN_DPI=windows` profile on Windows to compare indexed and special selectors with native monitor hit testing and DPI. The Windows test matched three monitors at 96 DPI. Mixed-DPI hardware remains unverified. The `x11` profile takes the expected density as its argument. Use a private 1024×768 Xvfb display with an explicit RandR monitor. `xrandr --setmonitor E2D_DPI 1024/257x768/190+0+0 screen` yields 101 DPI at unit content scale. A monitor with `1024/0x768/177+0+0` reports 110 DPI using one axis. Xvfb at `-dpi 123 -extension RANDR` reported 211×159 mm and yielded 122 DPI after truncation. The `fallback` profile verifies 96 DPI on dummy, WSLg Wayland and Xvfb with independent roots. Each profile also checks invalid selectors and display ownership.
+
 ## Windowed lifecycle
 
 Window now delegates native operations to DisplayServer under Engine.Run. Startup happens before scene ready, teardown after scene finalization. The manual DisplayServer API remains available. Native backend event probes live in tests, including WindowRuntimeTests; examples no longer own a duplicate frame loop.

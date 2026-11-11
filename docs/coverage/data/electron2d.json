@@ -111019,6 +111019,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.ScreenGetDPI(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ScreenGetDPI",
+    "signature": "public static System.Int32 ScreenGetDPI(System.Int32 screen = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.ScreenGetImage(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",

@@ -40,6 +40,8 @@ Own the native display connection, borrowed operating-system display/window and 
 
 [Desktop accessibility queries](../components/display-server.md#desktop-accessibility-preferences) read live native screen-reader activity and contrast, motion and transparency preferences through the display owner. The available values depend on the desktop provider.
 
+[`ScreenGetDPI`](../classes/DisplayServer.md#method-screengetdpi) reads effective Win32 monitor density and physical X11 density through the shared screen selectors. The [screen density contract](../components/display-server.md#screen-density) covers unavailable measurements and driver support.
+
 The existing `TextInput` and `TextEditing` events remain the native full-string/preedit boundary. During Engine.Run, root Window forwards them to SceneTree after DisplayServer commits IME state; focused Control receives the typed text stream. DisplayServer does not synthesize or attribute an InputEventKey from a later SDL commit.
 
 ## Dependency direction

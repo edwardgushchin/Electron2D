@@ -1,3 +1,5 @@
+[Native screen density](../components/display-server.md#screen-density) reads effective Win32 DPI and physical X11 DPI using the existing screen selectors. One declaration moves from Blocked to Partial. Coverage is **13,808/18,853 (73.24%)**, with 1,099 Partial, 363 Unimplemented, 3,583 Blocked, 8,440 Excluded and zero unmapped.
+
 [Desktop accessibility preferences](../components/display-server.md#desktop-accessibility-preferences) add live tri-state queries for screen-reader activity, contrast, motion and transparency. Four declarations move from Blocked to Partial. Coverage is **13,808/18,853 (73.24%)**, with 1,098 Partial, 363 Unimplemented, 3,584 Blocked, 8,440 Excluded and zero unmapped.
 
 [Receiver-created local GPU devices](../components/gpu-device-lifetime.md) add caller-owned graphics and compute devices with separate RIDs and submission state on the active GPU. One declaration moves from Unimplemented to Partial. Coverage is **13,808/18,853 (73.24%)**, with 1,094 Partial, 363 Unimplemented, 3,588 Blocked, 8,440 Excluded and zero unmapped.

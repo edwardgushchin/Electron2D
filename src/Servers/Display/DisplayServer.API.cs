@@ -703,6 +703,13 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i ScreenGetSize(int screen = ScreenOfMainWindow) => RequireService().ScreenGetSizeCore(screen);
 
+    /// <summary>Gets the pixel density of a display in dots per inch.</summary>
+    /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
+    /// <returns>Native display DPI, or 96 when the display is invalid or its density is unavailable.</returns>
+    /// <remarks>Windows reports effective monitor DPI. X11 calculates density from display pixels and native millimeter dimensions. Call on the opening thread.</remarks>
+    /// <exception cref="InvalidOperationException">The display service is inactive or the caller is off its opening thread.</exception>
+    public static int ScreenGetDPI(int screen = ScreenOfMainWindow) => RequireService().ScreenGetDPICore(screen);
+
     /// <summary>Gets the usable desktop rectangle of a display.</summary>
     /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
     /// <returns>The work area after platform-reserved bars are excluded; empty if the display is invalid. On Wayland, the full display position and physical pixel size are returned.</returns>

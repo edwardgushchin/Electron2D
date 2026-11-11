@@ -192,6 +192,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`](#method-screengetsize) | Gets the full size of a display. |
 | [`public static Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)`](#method-screengetusablerect) | Gets the usable desktop rectangle of a display. |
 | [`public static float ScreenGetScale(int screen = ScreenOfMainWindow)`](#method-screengetscale) | Gets the display content scale reported by the native video system. |
+| [`public static int ScreenGetDPI(int screen = ScreenOfMainWindow)`](#method-screengetdpi) | Gets the native density in dots per inch, or 96 when unavailable. |
 | [`public static void WindowSetTitle(string title, int windowId = MainWindowId)`](#method-windowsettitle) | Requests a new main-window title. |
 | [`public static Vector2i WindowGetSize(int windowId = MainWindowId)`](#method-windowgetsize) | Gets the main window's client size. |
 | [`public static void WindowSetSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetsize) | Requests a new main-window client size. |
@@ -1034,6 +1035,11 @@ Gets the usable desktop rectangle of a display.
 - `screen`: Display index or one of the negative display selectors; defaults to the main window's display.
 
 **Source:** `src/Servers/Display/DisplayServer.cs`.
+
+<a id="method-screengetdpi"></a>
+#### `public static int ScreenGetDPI(int screen = ScreenOfMainWindow)`
+
+Gets native dots per inch for a display index or a special screen selector. Windows reports effective monitor DPI. Linux X11 reports pixel density from native millimeter dimensions. Invalid selectors and unavailable measurements return 96. Call on the active display's opening thread. See [screen density](../components/display-server.md#screen-density).
 
 <a id="method-screengetscale"></a>
 #### `public static float ScreenGetScale(int screen = ScreenOfMainWindow)`

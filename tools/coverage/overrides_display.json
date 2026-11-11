@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:screen_get_dpi(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.ScreenGetDPI(System.Int32)",
+      "reason": "Shared screen selectors resolve the SDL display. Windows reads the selected HMONITOR's effective DPI. Linux X11 reads matched RandR monitor millimeters with a sole-root fallback. Invalid or unknown returns 96."
+    },
+    {
       "godot": "DisplayServer::method:accessibility_screen_reader_active()",
       "electron2d": "method:Electron2D.DisplayServer.AccessibilityScreenReaderActive()",
       "reason": "Win32 reader registration and the Narrator session marker, plus AT-SPI IsEnabled and ScreenReaderEnabled on Linux. Tri-state values preserve unknown status. macOS requires NSWorkspace observation and native verification (ADRs 0021/0040/0041)."
@@ -1366,8 +1371,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First native display-metrics bridge mapping SDL displays to physical size and pixel resolution, with invalid/unknown fallback 96 and per-driver tests. SDL content scale is not physical DPI.",
+      "state": "Partial",
+      "reason": "Win32 effective DPI and X11 physical DPI are executable. Wayland needs same-output wl_output physical geometry mapped to SDL display identities. Cocoa and mobile need native display density adapters and target checks. See docs/components/display-server.md#screen-density (ADRs 0021/0040/0044).",
       "godot": [
         "DisplayServer::method:screen_get_dpi(int:)"
       ]
