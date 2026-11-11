@@ -58,7 +58,7 @@ internal static class NavigationQueryTests
         private readonly NavigationPathQueryParameters _parameters = new() { PostProcessing = NavigationPathQueryParameters.PathPostProcessing.None }; private readonly NavigationPathQueryResult _result = new();
         protected override void OnPhysicsProcess(double delta)
         {
-            if (Path.Length == 0) { _parameters.Map = GetWorld()!.NavigationMap; _parameters.StartPosition = Position; _parameters.TargetPosition = new(44, 44); NavigationServer.QueryPath(_parameters, _result); Path = _result.Path; _types = _result.PathTypes; _rids = _result.PathRIDs; _owners = _result.PathOwnerIDs; Check(Path.SequenceEqual(new Vector2[] { new(12, 44), new(18, 12), new(38, 12), new(44, 44) }), "Native typed query produces the linked route."); }
+            if (Path.Length == 0) { _parameters.Map = GetWorld()!.NavigationMap; _parameters.StartPosition = Position; _parameters.TargetPosition = new(44, 44); NavigationServer.QueryPath(_parameters, _result); Path = _result.Path; _types = _result.PathTypes; _rids = _result.PathRIDs; _owners = _result.PathOwnerIDs; Check(Path.SequenceEqual(new Vector2[] { new(12, 44), Link.StartPosition, Link.EndPosition, new(44, 44) }), "Native typed query chooses the link with the cheaper complete route."); }
             var remaining = (float)(delta * 200); while (_next < Path.Length && remaining > 0) { var difference = Path[_next] - Position; var distance = difference.Length(); if (distance > remaining) { Position += difference / distance * remaining; break; } Position = Path[_next]; remaining -= distance; if (_types[_next] == NavigationPathQueryResult.PathSegmentType.Link) { Check(_rids[_next] == Link.GetRID() && _owners[_next] == Link.InstanceID, "Native transition resolves exact link/scene owner metadata."); Position = Path[_next + 1]; _next += 2; Teleports++; } else _next++; }
             Done = _next == Path.Length;
         }
@@ -68,14 +68,24 @@ internal static class NavigationQueryTests
     private sealed class Journey : Entity
     {
         internal Traveler Traveler = null!;
-        protected override void OnDraw() { DrawRect(new(4, 4, 16, 48), new(.2f, .2f, .2f)); DrawRect(new(36, 4, 16, 48), new(.2f, .2f, .2f)); if (Traveler.Path.Length > 1) DrawPolyline(Traveler.Path, Colors.Green, 2); DrawCircle(new(18, 12), 2, Colors.Cyan); DrawCircle(new(38, 12), 2, Colors.Cyan); }
+        protected override void OnDraw() { DrawRect(new(4, 4, 16, 48), new(.2f, .2f, .2f)); DrawRect(new(36, 4, 16, 48), new(.2f, .2f, .2f)); if (Traveler.Path.Length > 1) DrawPolyline(Traveler.Path, Colors.Green, 2); DrawCircle(Traveler.Link.StartPosition, 2, Colors.Cyan); DrawCircle(Traveler.Link.EndPosition, 2, Colors.Cyan); }
     }
     internal static void RunHost()
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu"; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); Engine.MaxFPS = 60; using var left = NavigationTests.Rectangle(4, 4, 16, 48); using var right = NavigationTests.Rectangle(36, 4, 16, 48); var window = new Window { Size = new(64, 64) };
         var leftRegion = new NavigationRegion { Name = "Left", NavigationPolygon = left };
         var rightRegion = new NavigationRegion { Name = "Right", NavigationPolygon = right };
-        window.AddChild(leftRegion); window.AddChild(rightRegion); var link = new NavigationLink { Name = "Teleporter", StartPosition = new(18, 12), EndPosition = new(38, 12), Bidirectional = false }; window.AddChild(link); var actor = new Traveler { Link = link, Position = new(12, 44), PhysicsProcessEnabled = true }; var journey = new Journey { Traveler = actor }; window.AddChild(journey); window.AddChild(actor); var frames = 0; RID map = default;
+        window.AddChild(leftRegion);
+        window.AddChild(rightRegion);
+        window.AddChild(new NavigationLink { Name = "DistantExit", StartPosition = new(12, 44), EndPosition = new(38, 6), Bidirectional = false, TravelCost = 0 });
+        var link = new NavigationLink { Name = "NearExit", StartPosition = new(18, 32), EndPosition = new(38, 44), Bidirectional = false, TravelCost = 0 };
+        window.AddChild(link);
+        var actor = new Traveler { Link = link, Position = new(12, 44), PhysicsProcessEnabled = true };
+        var journey = new Journey { Traveler = actor };
+        window.AddChild(journey);
+        window.AddChild(actor);
+        var frames = 0;
+        RID map = default;
         window.Ready += _ =>
         {
             Check(RenderingServer.GetCurrentRenderingMethod() == backend && RenderingServer.GetCurrentRenderingDriverName() != "software", "Requested hardware backend.");

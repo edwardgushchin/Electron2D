@@ -36,10 +36,115 @@ internal static class NavigationLinkTests
         var allocated = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 2000; i++) { _ = NavigationServer.LinkGetStartPosition(link); NavigationServer.LinkSetStartPosition(link, new(8, 5)); NavigationServer.Synchronize(); }
         Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "2000 unchanged link identity/setting/sync cycles allocate zero bytes.");
         NavigationServer.FreeRID(map); Check(NavigationServer.LinkGetMap(link) == default, "Map free detaches surviving caller-owned links."); NavigationServer.FreeRID(link); Reject<ArgumentException>(() => NavigationServer.LinkGetIterationID(link)); NavigationServer.FreeRID(a); NavigationServer.FreeRID(b);
-        WeightedRoutes(); SameRegion(); SceneAndStorage(); WeakLifetime();
+        WeightedRoutes(); CompleteRouteCosts(); SameRegion(); SceneAndStorage(); WeakLifetime();
         Console.WriteLine("Navigation links, direction/layers/costs/radius, surface ownership, scene transforms/storage and zero-allocation idle cycles passed.");
         void Bind(RID region, NavigationPolygon polygon) { NavigationServer.RegionSetMap(region, map); NavigationServer.RegionSetNavigationPolygon(region, polygon); }
         Vector2[] Path(Vector2 start, Vector2 end) => NavigationServer.MapGetPath(map, start, end, true);
+    }
+    private static void CompleteRouteCosts()
+    {
+        using var left = NavigationTests.Rectangle(0, 0, 10, 40);
+        using var right = NavigationTests.Rectangle(90, 0, 10, 90);
+        using var relay = NavigationTests.Rectangle(0, 45, 10, 10);
+        var map = NavigationServer.MapCreate();
+        var owned = new List<RID>();
+        using var parameters = new NavigationPathQueryParameters
+        {
+            Map = map,
+            StartPosition = new(5, 5),
+            TargetPosition = new(95, 5),
+            PostProcessing = NavigationPathQueryParameters.PathPostProcessing.None
+        };
+        using var result = new NavigationPathQueryResult();
+        try
+        {
+            NavigationServer.MapSetActive(map, true);
+            Bind(left);
+            var destination = Bind(right);
+            Bind(relay);
+            var cheapEntry = Link(new(9, 5), new(91, 80), 0);
+            var cheapFinish = Link(new(9, 20), new(91, 5), 0);
+            NavigationServer.Synchronize();
+            var includesFinishLeg = Uses(cheapFinish) && !result.PathRIDs.Contains(cheapEntry);
+
+            NavigationServer.RegionSetTravelCost(destination, 0);
+            var usesCommittedCost = Uses(cheapFinish);
+            NavigationServer.Synchronize();
+            var updatesFinishCost = Uses(cheapEntry) && !result.PathRIDs.Contains(cheapFinish);
+            NavigationServer.RegionSetTravelCost(destination, 1);
+            NavigationServer.LinkSetEnabled(cheapEntry, false);
+            NavigationServer.LinkSetEnabled(cheapFinish, false);
+
+            var direct = Link(new(8, 5), new(92, 5), 1);
+            var first = Link(new(8, 5), new(2, 50), 0);
+            var second = Link(new(2, 50), new(92, 5), 0);
+            NavigationServer.Synchronize();
+            var exploresCheapDetour = Uses(first) && result.PathRIDs.Contains(second) && !result.PathRIDs.Contains(direct);
+            var sharedPath = NavigationServer.MapGetPath(map, parameters.StartPosition, parameters.TargetPosition, true);
+            var preservesBothTransitions = sharedPath.Contains(new Vector2(2, 50)) && sharedPath[^1] == parameters.TargetPosition;
+
+            NavigationServer.LinkSetEnterCost(second, 100);
+            NavigationServer.Synchronize();
+            var includesEnteredOwner = Uses(direct) && !result.PathRIDs.Contains(second);
+            Check(includesFinishLeg && usesCommittedCost && updatesFinishCost && exploresCheapDetour &&
+                preservesBothTransitions && includesEnteredOwner,
+                $"Weighted routes: finish leg={includesFinishLeg}, committed cost={usesCommittedCost}, updated cost={updatesFinishCost}, " +
+                $"cheap detour={exploresCheapDetour}, shared transitions={preservesBothTransitions}, owner entry={includesEnteredOwner}.");
+
+            NavigationServer.LinkSetEnterCost(second, 0);
+            NavigationServer.LinkSetTravelCost(direct, 0);
+            NavigationServer.Synchronize();
+            NavigationServer.QueryPath(parameters, result);
+            var tiedRoute = result.PathRIDs;
+            Check(tiedRoute.Contains(direct) && !tiedRoute.Contains(first), "The first completed equal-cost arrival keeps its corridor.");
+            for (var i = 0; i < 16; i++)
+            {
+                NavigationServer.QueryPath(parameters, result);
+                Check(result.PathRIDs.SequenceEqual(tiedRoute), "Equal complete route costs retain deterministic link order.");
+            }
+
+            NavigationServer.LinkSetEnabled(direct, false);
+            NavigationServer.LinkSetEnabled(second, false);
+            NavigationServer.Synchronize();
+            parameters.TargetPosition = new(95, 75);
+            parameters.PathSearchMaxPolygons = 3;
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.PathRIDs.Contains(first) && result.Path[^1] == new Vector2(10, 55),
+                "A bounded disconnected route retains its link transition to the reached walkable surface.");
+        }
+        finally
+        {
+            foreach (var rid in owned)
+                NavigationServer.FreeRID(rid);
+            NavigationServer.FreeRID(map);
+            NavigationServer.Synchronize();
+        }
+
+        RID Bind(NavigationPolygon polygon)
+        {
+            var region = NavigationServer.RegionCreate();
+            owned.Add(region);
+            NavigationServer.RegionSetMap(region, map);
+            NavigationServer.RegionSetNavigationPolygon(region, polygon);
+            return region;
+        }
+
+        RID Link(Vector2 start, Vector2 end, float cost)
+        {
+            var link = NavigationServer.LinkCreate();
+            owned.Add(link);
+            NavigationServer.LinkSetMap(link, map);
+            NavigationServer.LinkSetStartPosition(link, start);
+            NavigationServer.LinkSetEndPosition(link, end);
+            NavigationServer.LinkSetTravelCost(link, cost);
+            return link;
+        }
+
+        bool Uses(RID link)
+        {
+            NavigationServer.QueryPath(parameters, result);
+            return result.PathRIDs.Contains(link) && result.Path[^1] == parameters.TargetPosition;
+        }
     }
     private static void WeightedRoutes()
     {

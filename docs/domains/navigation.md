@@ -51,6 +51,8 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 
 NavigationLink and owned server links now provide directed/bidirectional off-surface travel, finite strict-radius attachment and weighted routes. [The map contract](../components/navigation-maps.md#links-across-separated-surfaces) records transforms, source storage, publication, typed query metadata and remaining raster/search equivalence.
 
+[Weighted route selection](../components/navigation-maps.md#geometry-and-routes) includes the destination approach and considers cheap link detours. Agents and direct queries consume the same selected corridor.
+
 [Typed query objects](../components/navigation-maps.md#typed-query-objects-and-transition-metadata) now supply copied filters, real search/output controls, transition provenance and completion. The native consumer performs a metadata-driven link action; agent diagnostics and baking use their connected producers; global diagnostics consume the current scene geometry.
 
 [NavigationAgent](../classes/NavigationAgent.md) now supplies getter-driven Entity-parent movement targets, typed waypoint/link events, target completion, real server agent map membership and fresh-process source settings. [Its contract](../components/navigation-maps.md#agent-path-following) separates managed checks and actual GPU/compatibility rendered consumers from independently requested global diagnostics.

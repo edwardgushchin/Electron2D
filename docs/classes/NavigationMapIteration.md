@@ -8,7 +8,7 @@ Last updated: 2026-10-10
 
 ## Description
 
-Immutable committed cells/portals, projection, weighted corridor search and funnel output.
+Immutable committed cells and portals support projection, weighted corridor search and funnel output. Each accepted search arrival retains its predecessor and portal point. Goal arrivals compare the complete weighted cost.
 
 ## Verification
 

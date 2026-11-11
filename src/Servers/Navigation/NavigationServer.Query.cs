@@ -8,6 +8,8 @@ public sealed partial class NavigationServer
     /// <param name="callback">Optional zero-argument completion invoked on this calling thread after publication, outside gates.</param>
     /// <remarks>If the goal is disconnected or a search limit is reached, the query can rebuild a corridor to a reached polygon.
     /// Its final point projects the original target onto that polygon.
+    /// Search scores travel along the route including the final segment and charges the entered owner at a transition.
+    /// The result's path length measures world distance after output processing.
     /// Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication.
     /// Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.</remarks>
     /// <exception cref="ArgumentNullException">A required object is null.</exception>
