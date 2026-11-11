@@ -102,6 +102,13 @@ internal static class RenderingTextureRegistry
         }
     }
 
+    internal static Resource? SampledStorage(Resource? texture) => texture switch
+    {
+        ServerTexture { DeviceTexture: { } device } => device,
+        ServerTextureArray { DeviceTexture: { } array } => array,
+        _ => texture
+    };
+
     internal static void Remove(RID rid) { lock (Gate) Entries.Remove(rid); }
 }
 
@@ -111,11 +118,23 @@ internal sealed class ServerTexture : Texture
     {
         _pixels = pixels; Size = new(pixels.Source.Width, pixels.Source.Height); RetainRendererCache = true;
     }
+    internal ServerTexture(TextureRD texture) => DeviceTexture = texture;
+
     internal ServerTexture(RID target, Texture source)
     {
         IsProxy = true; SetProxyTarget(target, source);
     }
     private TexturePixels? _pixels;
+    internal TextureRD? DeviceTexture { get; private set; }
+
+    internal void TakeStorage(ServerTexture source)
+    {
+        (DeviceTexture, source.DeviceTexture) = (source.DeviceTexture, DeviceTexture);
+        _pixels = source._pixels;
+        Size = source.Size;
+        Path = source.Path;
+        RetainRendererCache = DeviceTexture is null;
+    }
     internal TexturePixels Pixels { get { ThrowIfDisposed(); return _pixels!; } set => _pixels = value; }
     internal Vector2i Size;
     internal string Path = string.Empty;
@@ -131,25 +150,32 @@ internal sealed class ServerTexture : Texture
     public override int GetWidth()
     {
         ThrowIfDisposed(); var source = IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget) : null;
-        return source is null || _proxySizeOverride ? Size.X : source.GetSize() == Vector2.Zero ? 4 : source.GetWidth();
+        return source is null || _proxySizeOverride ? DeviceTexture?.GetWidth() ?? Size.X : source.GetSize() == Vector2.Zero ? 4 : source.GetWidth();
     }
     public override int GetHeight()
     {
         ThrowIfDisposed(); var source = IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget) : null;
-        return source is null || _proxySizeOverride ? Size.Y : source.GetSize() == Vector2.Zero ? 4 : source.GetHeight();
+        return source is null || _proxySizeOverride ? DeviceTexture?.GetHeight() ?? Size.Y : source.GetSize() == Vector2.Zero ? 4 : source.GetHeight();
     }
     public override Vector2 GetSize()
     {
         ThrowIfDisposed();
         return IsProxy && !_proxySizeOverride && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is { } source
-            ? ProxySize(source) : new(Size.X, Size.Y);
+            ? ProxySize(source) : DeviceTexture?.GetSize() ?? new(Size.X, Size.Y);
     }
-    public override Image? GetImage() => IsProxy && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is { } source ? source.GetImage() : CapturePixels()?.CopyImage();
-    public override Image.Format PixelFormat => IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.PixelFormat ?? _proxyFormat : base.PixelFormat;
+    public override Image? GetImage()
+    {
+        ThrowIfDisposed();
+        if (IsProxy && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is { } source) return source.GetImage();
+        return DeviceTexture is { } device ? device.GetImage() : CapturePixels()?.CopyImage();
+    }
+    public override Image.Format PixelFormat => IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.PixelFormat ?? _proxyFormat : DeviceTexture?.PixelFormat ?? base.PixelFormat;
+    public override bool HasMIPMaps => DeviceTexture?.HasMIPMaps ?? base.HasMIPMaps;
+    public override int MIPMapCount => DeviceTexture?.MIPMapCount ?? base.MIPMapCount;
     internal override TexturePixels? CapturePixels()
     {
         ThrowIfDisposed();
-        return IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.CapturePixels() : Pixels;
+        return IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.CapturePixels() : _pixels;
     }
     internal void SetProxyTarget(RID target, Texture source)
     {
@@ -163,7 +189,11 @@ internal sealed class ServerTexture : Texture
         ProxyTarget = target; Size = size; _proxyFormat = format; Path = path; _proxySizeOverride = false;
     }
     internal void RedirectProxy(RID target) => ProxyTarget = target;
-    internal void SetDisplaySize(Vector2i size) { Size = size; _proxySizeOverride = IsProxy; }
+    internal void SetDisplaySize(Vector2i size)
+    {
+        if (DeviceTexture is { } device) device.DisplaySize = size;
+        else { Size = size; _proxySizeOverride = IsProxy; }
+    }
     private static Vector2 ProxySize(Texture source)
     {
         var size = source.GetSize();
@@ -180,7 +210,7 @@ internal sealed class ServerTexture : Texture
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { _pixels = null; Size = default; Path = string.Empty; ProxyTarget = default; }
+        if (disposing) { DeviceTexture?.Dispose(); DeviceTexture = null; _pixels = null; Size = default; Path = string.Empty; ProxyTarget = default; }
         base.Dispose(disposing);
     }
 }

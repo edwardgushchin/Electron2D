@@ -19,6 +19,14 @@ public sealed unsafe partial class RenderingDevice
         if ((info.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("The image has no sampling role.", nameof(rid));
         return info;
     }
+    internal void ValidateCanvasReplacement(RID rid, bool array, Resource destination)
+    {
+        ValidateCanvasImage(rid, array);
+        var entry = Get(rid, Kind.Texture);
+        if (ReferenceEquals((entry.TextureSource ?? entry).Borrowed?.Source, destination))
+            throw new InvalidOperationException("The replacement image borrows the allocation that this operation would retire.");
+    }
+
     internal nint CanvasHandle(RID rid, nint device)
     {
         Access(true); if (Device != device) throw new InvalidOperationException("The image belongs to a different native renderer.");

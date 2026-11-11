@@ -986,9 +986,11 @@ def main():
     for name in ('texture_2d_create(', 'texture_2d_placeholder_create(', 'texture_set_size_override(', 'texture_get_path(', 'texture_set_path('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Implemented | ' in row and 'RenderingTextureRIDTests' in row, row
-    for name in ('texture_2d_get(', 'texture_2d_update(', 'texture_get_format(', 'texture_replace(', 'free_rid('):
+    for name in ('texture_2d_get(', 'texture_2d_update(', 'texture_get_format(', 'free_rid('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Partial | ' in row and 'RenderingTextureRIDTests' in row, row
+    replacement, = [line for line in rendering_rows if line.startswith('| [`method texture_replace(')]
+    assert ' | Implemented | ' in replacement and 'MixedTextureReplacementTests' in replacement, replacement
     device_factory = next(row for row in rendering_rows if "get_rendering_device(" in row)
     assert " | Partial | " in device_factory and "renderer-owned" in device_factory
     for resource, target in (("TextureRD", "TextureRD"), ("TextureLayeredRD", "TextureLayeredRD"), ("TextureArrayRD", "TextureArrayRD")):

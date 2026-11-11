@@ -30,7 +30,7 @@ public sealed partial class RenderingServer
     {
         EnsureTextureChange(); if (type != TextureLayered.LayeredType.Array) throw new ArgumentOutOfRangeException(nameof(type));
         var resource = new TextureArray();
-        try { resource.CreateFromImages(layers); return OwnLayered(resource); }
+        try { resource.CreateFromImages(layers); return OwnLayered(new ServerTextureArray(resource)); }
         catch { resource.ServerReleased = true; resource.Dispose(); throw; }
     }
     internal RID Texture2DLayeredPlaceholderCreateCore(TextureLayered.LayeredType type)

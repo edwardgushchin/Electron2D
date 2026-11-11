@@ -381,11 +381,12 @@ public abstract partial class CanvasItem
             var replay = command;
             if (command.Texture is ServerTexture { IsProxy: true } proxy)
             {
-                var source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
+                var source = (Texture?)RenderingTextureRegistry.SampledStorage(RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget));
                 if (source is null) continue;
                 if (source is not (ViewportTexture or TextureRD) && source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
                 replay = command with { Texture = source };
             }
+            if (replay.Texture is ServerTexture { DeviceTexture: { } deviceTexture }) replay = replay with { Texture = deviceTexture };
             if (replay.Texture is DPITexture dpiTexture)
             {
                 var raster = dpiTexture.ForScale(ServerState is { Owned: true, TileOwner: null } ? viewport?.DPIScaleKey ?? 64 : ItemRasterScaleKey); if (raster is null) continue;

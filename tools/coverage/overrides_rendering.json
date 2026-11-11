@@ -4488,8 +4488,7 @@
     {
       "godot": "RenderingServer::method:texture_replace(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureReplace(Electron2D.RID,Electron2D.RID)",
-      "state": "Partial",
-      "reason": "ADRs 0028/0095: same-role ordinary/array device-wrapper replacement preserves destination resource/RID, copies borrowed image identity/path/display metadata, redirects aliases and consumes only replacement wrapper. Existing CPU-image replacement remains executable. Mixed CPU-backed/device wrapper storage replacement requires the native export/cache lifetime adapter and rejects atomically until then. Native direct/atlas/proxy and layered HLSL/GLSL tests exercise current roles. RenderingTextureRIDTests and TextureArrayRenderingTests retain CPU-backed update/replacement coverage; RenderingDeviceCanvasTests exercises the borrowed device roles."
+      "reason": "Stable destination identity for ordinary, independent-array and drawable storage under ADR 0028."
     },
     {
       "godot": "CanvasItem::method:get_instance_shader_parameter(StringName:)",
@@ -6494,6 +6493,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0080/0038: registered permanent typed Home/End keyboard action defaults feed actual Slider input through the existing InputMap. Project reload, exact matching and endpoint behavior are part of the connected slider slice."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_replace(RID:,RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: ordinary and independent-array replacements switch between copied and borrowed backing in either direction. Retained draw and material identities survive, proxies redirect, consumed RIDs expire, old upload exports retire, and caller-owned device images remain live. Cyclic borrowed storage and incompatible roles reject before publication. MixedTextureReplacementTests verifies Windows Vulkan and Direct3D 12 pixels and metadata, with RenderingTextureRIDTests covering existing CPU replacements. See docs/components/canvas-rendering.md#texture-storage-replacement."
     },
     {
       "godot": [

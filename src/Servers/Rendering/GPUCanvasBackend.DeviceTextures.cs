@@ -2,6 +2,25 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
+    internal void RetireReplacedUpload(Resource resource)
+    {
+        if (resource is Texture texture)
+        {
+            ReleaseTemporaryTexture(texture);
+            _linearSources.Remove(texture);
+            _usedLinearViews.Remove(texture);
+            if (_linearViews.Remove(texture, out var view)) view.View.Dispose();
+        }
+        else if (resource is TextureLayered layered)
+        {
+            _usedLayeredTextures.Remove(layered);
+            if (_layeredTextures.Remove(layered, out var upload)) upload.Dispose();
+            _linearArraySources.Remove(layered);
+            _usedLinearArrayViews.Remove(layered);
+            if (_linearArrayViews.Remove(layered, out var view)) view.View.Dispose();
+        }
+    }
+
     internal RID ExportTexture(Resource resource, RenderingDevice device, bool SRGB)
     {
         if (resource is DrawableTexture drawable)

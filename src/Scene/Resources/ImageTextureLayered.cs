@@ -72,7 +72,6 @@ public abstract class ImageTextureLayered : TextureLayered
         EmitChanged();
     }
     internal override LayeredTexturePixels? CaptureLayers() { lock (_gate) { ThrowIfDisposed(); return _pixels; } }
-    internal void ReplaceLayers(LayeredTexturePixels? pixels) { lock (_gate) { ThrowIfDisposed(); _pixels = pixels; } }
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {

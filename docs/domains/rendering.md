@@ -46,6 +46,8 @@ Windows Direct3D 12 creates canvas and device graphics pipelines with private DX
 
 The [graphics adapter identity](../components/graphics-adapter-identity.md) describes the actual renderer and local device, including Vulkan's native device type and pipeline cache UUID.
 
+[Texture storage replacement](../components/canvas-rendering.md#texture-storage-replacement) switches ordinary textures and arrays between copied images and borrowed device images while keeping retained canvas and material identities.
+
 RenderingDevice [native command labels](../components/local-compute.md#native-command-labels) mark ranges of draw, compute and copy work in the Vulkan command stream.
 
 RenderingDevice [native resource labels](../components/local-compute.md#native-resource-labels) give live Vulkan resources caller-supplied names in graphics diagnostics.

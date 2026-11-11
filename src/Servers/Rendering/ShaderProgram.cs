@@ -88,7 +88,7 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
             if (texture is null && requireAtlasSource) throw new InvalidOperationException("A sampled atlas has no source texture.");
         }
         if (texture is CanvasTexture channels) texture = Source(channels.DiffuseTexture, requireAtlasSource);
-        return texture;
+        return RenderingTextureRegistry.SampledStorage(texture);
     }
     internal static int ResourcePixelType(Resource? texture) => Source(texture) switch
     {

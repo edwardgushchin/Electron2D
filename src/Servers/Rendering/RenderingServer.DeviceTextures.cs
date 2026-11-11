@@ -30,10 +30,10 @@ public sealed partial class RenderingServer
         var info = device.CanvasInfo(rid) ?? throw new ArgumentException("The device image identity is not live.", nameof(rid));
         if (info.Type == RenderingDevice.TextureType.TextureArray)
         {
-            var array = new TextureArrayRD { TextureRDRID = rid }; return OwnLayered(array);
+            return OwnLayered(new ServerTextureArray(new TextureArrayRD { TextureRDRID = rid }));
         }
-        var texture = new TextureRD { TextureRDRID = rid, ServerOwner = this };
-        var result = RenderingTextureRegistry.Register(texture, this); texture.BindRenderingRID(result); _ownedTextureRIDs.Add(result); return result;
+        var texture = new ServerTexture(new TextureRD { TextureRDRID = rid });
+        var result = RenderingTextureRegistry.Register(texture, this); texture.Bind(result); _ownedTextureRIDs.Add(result); return result;
     }
     /// <summary>Gets the borrowed device image identity represented by a canvas texture.</summary>
     /// <param name="texture">A live ordinary or layered canvas texture RID.</param>
@@ -55,6 +55,7 @@ public sealed partial class RenderingServer
         EnsureOwner(); var resource = RenderingTextureRegistry.ResolveResource(texture);
         if (resource is ServerTexture { IsProxy: true } proxy) resource = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget) ?? resource;
         if (resource is LayeredTextureProxy arrayProxy) resource = RenderingTextureRegistry.ResolveLayeredProxySource(arrayProxy.ProxyTarget) ?? resource;
+        resource = RenderingTextureRegistry.SampledStorage(resource)!;
         var result = resource switch { TextureRD ordinary => ordinary.TextureRDRID, TextureLayeredRD layered => layered.TextureRDRID, _ => default };
         if (!result.IsValid() && _backend is GPUCanvasBackend gpu) { EnsureDeviceAccess(); var device = GetRenderingDeviceCore()!; device.ValidateCanvasMutation(); result = gpu.ExportTexture(resource, device, SRGB); }
         if (!result.IsValid()) return default;

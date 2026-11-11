@@ -7,9 +7,6 @@ public sealed class TextureRD : Texture
 {
     private RenderingDevice? _device;
     private RID _texture;
-    internal RenderingServer? ServerOwner;
-    internal bool ServerReleased;
-    internal string ServerPath = string.Empty;
     internal Vector2i? DisplaySize;
     /// <summary>Creates an unbound device texture with zero logical dimensions.</summary>
     public TextureRD() { }
@@ -21,7 +18,7 @@ public sealed class TextureRD : Texture
         get { ThrowIfDisposed(); return _texture; }
         set
         {
-            ThrowIfDisposed(); ServerOwner?.EnsureDeviceAccess(); if (_device is { IsDisposed: false }) _device.ValidateCanvasMutation();
+            ThrowIfDisposed(); if (_device is { IsDisposed: false }) _device.ValidateCanvasMutation();
             var device = value.IsValid() ? RenderingServer.GetRenderingDevice() ?? throw new InvalidOperationException("A GPU renderer is required.") : null;
             if (device is not null) device.ValidateCanvasImage(value, false);
             _texture = value; _device = device; EmitChanged();
@@ -57,7 +54,7 @@ public sealed class TextureRD : Texture
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
         [new PropertyDescriptor<TextureRD, RID>(nameof(TextureRDRID), p => p.TextureRDRID, (p, v) => p.TextureRDRID = v, _ => default)]);
     /// <inheritdoc />
-    protected override void ValidateDisposal() { if (ServerOwner is not null && !ServerReleased) throw new InvalidOperationException("The rendering server owns this texture."); if (_device is { IsDisposed: false }) _device.ValidateCanvasDisposal(); base.ValidateDisposal(); }
+    protected override void ValidateDisposal() { if (_device is { IsDisposed: false }) _device.ValidateCanvasDisposal(); base.ValidateDisposal(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) { _texture = default; _device = null; } base.Dispose(disposing); }
 }

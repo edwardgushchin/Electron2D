@@ -326,15 +326,14 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void TextureProxyUpdate(RID texture, RID proxyTo) => RequireService().TextureProxyUpdateCore(texture, proxyTo);
 
-    /// <summary>Transfers an owned texture's pixels and metadata into another stable owned identity.</summary>
+    /// <summary>Transfers an owned texture's storage and metadata into another stable owned identity.</summary>
     /// <param name="texture">The destination RID whose identity and retained draw references survive.</param>
     /// <param name="byTexture">The replacement RID, consumed after the transfer.</param>
     /// <remarks>Both RIDs must belong to this renderer. Replacing a texture with itself does nothing.
-    /// Different dimensions, formats and mipmap state are allowed; old recorded geometry remains fixed.</remarks>
+    /// Ordinary textures and independent arrays can switch between copied images and borrowed device images. Different dimensions, formats and mipmap state are allowed; old recorded geometry remains fixed.</remarks>
     /// <exception cref="ArgumentException">A RID is stale or not a texture.</exception>
-    /// <exception cref="InvalidOperationException">A RID is resource-owned or the renderer is off-owner/submitting.</exception>
+    /// <exception cref="InvalidOperationException">An identity is resource-owned, the texture roles differ, the replacement depends on the retired allocation, or the active renderer state rejects mutation.</exception>
     /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
-    /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void TextureReplace(RID texture, RID byTexture) => RequireService().TextureReplaceCore(texture, byTexture);
 
     /// <summary>Returns an independent image copy of a live rendering texture.</summary>

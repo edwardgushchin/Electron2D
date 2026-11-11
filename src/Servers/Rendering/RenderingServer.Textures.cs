@@ -62,39 +62,39 @@ public sealed partial class RenderingServer
             if (texture == byTexture) return;
             drawableTarget.TakeStorage(drawableSource); RedirectTextureAliases(byTexture, texture); FreeRIDCore(byTexture); drawableTarget.NotifyStorageChanged(); return;
         }
-        if (destination is TextureRD deviceTarget && replacement is TextureRD deviceSource)
+        if (destination is ServerTextureArray array && replacement is ServerTextureArray byArray)
         {
             if (texture == byTexture) return;
-            deviceTarget.TextureRDRID = deviceSource.TextureRDRID; deviceTarget.ServerPath = deviceSource.ServerPath; deviceTarget.DisplaySize = deviceSource.DisplaySize;
-            RedirectTextureAliases(byTexture, texture); FreeRIDCore(byTexture); return;
+            ValidateReplacementStorage(array, array.DeviceTexture?.TextureRDRID ?? default,
+                byArray.DeviceTexture?.TextureRDRID ?? default, array: true);
+            var retireUpload = array.DeviceTexture is null && byArray.DeviceTexture is not null;
+            array.TakeStorage(byArray);
+            if (retireUpload && _backend is GPUCanvasBackend gpu) gpu.RetireReplacedUpload(array);
+            RedirectTextureAliases(byTexture, texture);
+            FreeRIDCore(byTexture);
+            return;
         }
-        if (destination is TextureArrayRD arrayTarget && replacement is TextureArrayRD arraySource)
-        {
-            if (texture == byTexture) return;
-            arrayTarget.TextureRDRID = arraySource.TextureRDRID; arrayTarget.ServerPath = arraySource.ServerPath;
-            RedirectTextureAliases(byTexture, texture); FreeRIDCore(byTexture); return;
-        }
-        if (destination is TextureArray array && replacement is TextureArray byArray)
-        {
-            if (texture == byTexture) return;
-            array.ReplaceLayers(byArray.CaptureLayers()); array.ServerPath = byArray.ServerPath;
-            foreach (var rid in _ownedTextureRIDs)
-                if (RenderingTextureRegistry.OwnedResource(rid, this) is LayeredTextureProxy proxy && proxy.ProxyTarget == byTexture) proxy.SetTarget(texture);
-            FreeRIDCore(byTexture); return;
-        }
-        var target = destination as ServerTexture ?? throw new InvalidOperationException("Replacement requires matching concrete texture roles.");
-        var source = replacement as ServerTexture ?? throw new InvalidOperationException("Replacement requires matching concrete texture roles.");
-        if (target.IsProxy || source.IsProxy) throw new InvalidOperationException("A proxy cannot be replaced or consumed as replacement pixels.");
+        if (destination is not ServerTexture { IsProxy: false } target ||
+            replacement is not ServerTexture { IsProxy: false } source)
+            throw new InvalidOperationException("Replacement requires matching concrete texture roles.");
         if (texture == byTexture) return;
-        target.Pixels = source.Pixels; target.Size = source.Size; target.Path = source.Path;
-        foreach (var rid in _ownedTextureRIDs)
-        {
-            var proxy = RenderingTextureRegistry.OwnedResource(rid, this) as ServerTexture;
-            if (proxy is { IsProxy: true } && proxy.ProxyTarget == byTexture) proxy.RedirectProxy(texture);
-        }
+
+        ValidateReplacementStorage(target, target.DeviceTexture?.TextureRDRID ?? default,
+            source.DeviceTexture?.TextureRDRID ?? default, array: false);
+        var retireOrdinaryUpload = target.DeviceTexture is null && source.DeviceTexture is not null;
+        target.TakeStorage(source);
+        if (retireOrdinaryUpload && _backend is GPUCanvasBackend backend) backend.RetireReplacedUpload(target);
+        RedirectTextureAliases(byTexture, texture);
         FreeRIDCore(byTexture);
     }
 
+    private void ValidateReplacementStorage(Resource target, RID previous, RID incoming, bool array)
+    {
+        if (!previous.IsValid() && !incoming.IsValid()) return;
+        var device = GetRenderingDeviceCore() ?? throw new InvalidOperationException("A GPU renderer is required.");
+        if (incoming.IsValid()) device.ValidateCanvasReplacement(incoming, array, target);
+        else device.ValidateCanvasMutation();
+    }
     private void RedirectTextureAliases(RID source, RID target)
     {
         foreach (var rid in _ownedTextureRIDs)
@@ -114,17 +114,17 @@ public sealed partial class RenderingServer
             source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
             if (source is null) return null;
         }
-        return source is DrawableTexture drawable ? drawable.GetImage() : source is TextureRD deviceTexture ? deviceTexture.GetImage() : source is ViewportTexture view ? view.GetImage() : (source.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels).CopyImage();
+        return source is DrawableTexture or TextureRD or ViewportTexture or ServerTexture { DeviceTexture: not null } ? source.GetImage() : (source.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels).CopyImage();
     }
 
     internal void Texture2DUpdateCore(RID texture, Image image, int layer = 0)
     {
         EnsureTextureChange();
         var resource = RenderingTextureRegistry.OwnedResource(texture, this);
-        if (resource is TextureArray array) { array.UpdateLayer(image, layer); return; }
+        if (resource is ServerTextureArray array) { array.UpdateLayer(image, layer); return; }
         if (layer != 0) throw new ArgumentOutOfRangeException(nameof(layer));
         var target = resource as ServerTexture ?? throw new InvalidOperationException("Update the concrete image-array source of a proxy.");
-        if (target.IsProxy) throw new InvalidOperationException("Update the source pixels of a proxy texture.");
+        if (target.IsProxy || target.DeviceTexture is not null) throw new InvalidOperationException("Update the concrete pixel source of this texture.");
         var pixels = TexturePixels.FromImage(image);
         var old = target.Pixels.Source; var next = pixels.Source;
         if (old.Width != next.Width || old.Height != next.Height || old.Format != next.Format || old.HasMIPMaps != next.HasMIPMaps)
@@ -138,7 +138,7 @@ public sealed partial class RenderingServer
         EnsureOwner(); var resource = RenderingTextureRegistry.ResolveResource(texture);
         if (resource is TextureLayered array) return array.GetFormat();
         var source = (Texture)resource;
-        return source is DrawableTexture drawable ? drawable.PixelFormat : source is TextureRD deviceTexture ? deviceTexture.PixelFormat : source is ServerTexture { IsProxy: true } proxy ? proxy.PixelFormat : source.CapturePixels()?.Source.Format ?? Image.Format.Rgba8;
+        return source is DrawableTexture drawable ? drawable.PixelFormat : source is TextureRD deviceTexture ? deviceTexture.PixelFormat : source is ServerTexture serverTexture ? serverTexture.PixelFormat : source.CapturePixels()?.Source.Format ?? Image.Format.Rgba8;
     }
 
     internal void TextureSetSizeOverrideCore(RID texture, int width, int height)
@@ -148,7 +148,6 @@ public sealed partial class RenderingServer
         if (height is < 1 or > 16384) throw new ArgumentOutOfRangeException(nameof(height));
         var resource = RenderingTextureRegistry.OwnedResource(texture, this);
         if (resource is DrawableTexture drawable) drawable.DisplaySize = new(width, height);
-        else if (resource is TextureRD deviceTexture) deviceTexture.DisplaySize = new(width, height);
         else (resource as ServerTexture ?? throw new ArgumentException("A size override requires an ordinary texture.", nameof(texture))).SetDisplaySize(new(width, height));
     }
 
@@ -156,13 +155,13 @@ public sealed partial class RenderingServer
     {
         EnsureTextureChange(); ArgumentNullException.ThrowIfNull(path);
         var resource = RenderingTextureRegistry.OwnedResource(texture, this);
-        if (resource is DrawableTexture drawable) drawable.ServerPath = path; else if (resource is TextureLayered array) array.ServerPath = path; else if (resource is TextureRD deviceTexture) deviceTexture.ServerPath = path; else ((ServerTexture)resource).Path = path;
+        if (resource is DrawableTexture drawable) drawable.ServerPath = path; else if (resource is TextureLayered array) array.ServerPath = path; else ((ServerTexture)resource).Path = path;
     }
 
     internal string TextureGetPathCore(RID texture)
     {
         EnsureOwner(); var target = RenderingTextureRegistry.ResolveResource(texture);
-        return target is DrawableTexture { ServerOwner: not null } drawable ? drawable.ServerPath : target is TextureRD { ServerOwner: not null } deviceTexture ? deviceTexture.ServerPath : target is ServerTexture owned ? owned.Path : target is TextureLayered { ServerOwner: not null } array ? array.ServerPath : target is CompressedTextureLayered imported ? imported.RenderingPath : target is CompressedTexture compressed ? compressed.RenderingPath : target.ResourcePath;
+        return target is DrawableTexture { ServerOwner: not null } drawable ? drawable.ServerPath : target is ServerTexture owned ? owned.Path : target is TextureLayered { ServerOwner: not null } array ? array.ServerPath : target is CompressedTextureLayered imported ? imported.RenderingPath : target is CompressedTexture compressed ? compressed.RenderingPath : target.ResourcePath;
     }
 
     internal void FreeRIDCore(RID rid)
@@ -175,7 +174,7 @@ public sealed partial class RenderingServer
         _ownedTextureRIDs.Remove(rid); RenderingTextureRegistry.Remove(rid);
         if (rid == _testTextureRID) _testTextureRID = default;
         if (rid == _whiteTextureRID) _whiteTextureRID = default;
-        if (texture is DrawableTexture drawable) drawable.ServerReleased = true; else if (texture is TextureRD deviceTexture) deviceTexture.ServerReleased = true; else if (texture is ServerTexture ordinary) ordinary.Released = true; else if (texture is TextureLayered layered) layered.ServerReleased = true;
+        if (texture is DrawableTexture drawable) drawable.ServerReleased = true; else if (texture is ServerTexture ordinary) ordinary.Released = true; else if (texture is TextureLayered layered) layered.ServerReleased = true;
         texture.Dispose();
     }
 
@@ -194,7 +193,7 @@ public sealed partial class RenderingServer
             var rid = _ownedTextureRIDs[^1]; _ownedTextureRIDs.RemoveAt(_ownedTextureRIDs.Count - 1);
             var texture = RenderingTextureRegistry.OwnedResource(rid, this);
             RenderingTextureRegistry.Remove(rid);
-            if (texture is DrawableTexture drawable) drawable.ServerReleased = true; else if (texture is TextureRD deviceTexture) deviceTexture.ServerReleased = true; else if (texture is ServerTexture ordinary) ordinary.Released = true; else if (texture is TextureLayered layered) layered.ServerReleased = true;
+            if (texture is DrawableTexture drawable) drawable.ServerReleased = true; else if (texture is ServerTexture ordinary) ordinary.Released = true; else if (texture is TextureLayered layered) layered.ServerReleased = true;
             try { texture.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
         }
         if (errors is not null) throw new AggregateException("Texture cleanup failed.", errors);
