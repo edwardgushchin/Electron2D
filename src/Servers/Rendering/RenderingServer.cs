@@ -324,6 +324,7 @@ public sealed partial class RenderingServer : ElectronObject
             var postProcess = SelectPostProcess(viewport, tree);
             var glow = postProcess.Glow;
             if (glow.Enabled && glow.MapStrength > 0 && glow.Map is { IsDisposed: false } map) SubmitTexture(map, tree);
+            if (postProcess.Adjustment.Enabled && postProcess.Adjustment.Lookup is { IsDisposed: false } lookup) SubmitTexture(lookup, tree);
             _renderingDevice?.FlushRendererCommands();
             _submittingTextures = true;
             try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting, modelPoses: CollectionsMarshal.AsSpan(frame.ModelPoses), timing: timing, postProcess: postProcess); }

@@ -415,6 +415,8 @@ Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root p
 
 [Canvas tone mapping](../components/canvas-tonemapping.md) combines world-selected exposure, five operators and output headroom with the resolved HDR image. The tone and glow passes share raw draw history before publishing the completed texture.
 
+[Canvas color adjustment](../components/canvas-color-adjustment.md) applies brightness, contrast, saturation and an optional filterable ramp after glow and tone mapping on GPU HDR targets.
+
 ## Canvas multisample antialiasing
 
 The shared Viewport.MSAA enum, stored MSAA2D scene property, static server selection and typed root project setting execute 2/4/8-sample GPU geometry coverage. Per-sample history survives Never-clear frames and pass restarts; screen/group/clip consumers read resolved pixels. Compatibility rejects enabled MSAA. [Canvas rendering](../components/canvas-rendering.md#canvas-multisample-antialiasing) records target ownership, typed identity, native coverage and warmed allocation evidence.

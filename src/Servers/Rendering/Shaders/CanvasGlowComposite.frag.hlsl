@@ -1,4 +1,5 @@
 #include "Includes/electron2d/tonemap.hlslinc"
+#include "Includes/electron2d/adjustment.hlslinc"
 
 Texture2D<float4> sourceImage : register(t0, space2);
 Texture2D<float4> level0 : register(t1, space2);
@@ -9,6 +10,7 @@ Texture2D<float4> level4 : register(t5, space2);
 Texture2D<float4> level5 : register(t6, space2);
 Texture2D<float4> level6 : register(t7, space2);
 Texture2D<float4> mapImage : register(t8, space2);
+Texture2D<float4> lookupImage : register(t9, space2);
 SamplerState sourceSampler : register(s0, space2);
 SamplerState sampler0 : register(s1, space2);
 SamplerState sampler1 : register(s2, space2);
@@ -18,6 +20,7 @@ SamplerState sampler4 : register(s5, space2);
 SamplerState sampler5 : register(s6, space2);
 SamplerState sampler6 : register(s7, space2);
 SamplerState mapSampler : register(s8, space2);
+SamplerState lookupSampler : register(s9, space2);
 cbuffer Glow : register(b0, space3)
 {
     float4 weights0;
@@ -26,6 +29,8 @@ cbuffer Glow : register(b0, space3)
     float4 mapRegion;
     float4 tone;
     float4 curve;
+    float4 adjustment;
+    float4 lookupRegion;
 };
 
 float3 SampleLevel(Texture2D<float4> image, SamplerState filter, float2 uv, float weight)
@@ -81,5 +86,6 @@ float4 main([[vk::location(1)]] float2 uv : TEXCOORD1) : SV_Target0
         else source.rgb = glow;
     }
     if (options.z != 2) source.rgb = TonemapCanvas(source.rgb, tone, curve);
+    source.rgb = AdjustCanvasColor(source.rgb, adjustment, lookupRegion, lookupImage, lookupSampler);
     return float4(clamp(source.rgb, -65504.0, 65504.0), source.a);
 }

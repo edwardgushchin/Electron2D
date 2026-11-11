@@ -1,0 +1,15 @@
+# Canvas color adjustment
+
+A [WorldEnvironment](../classes/WorldEnvironment.md) selects the [CanvasEnvironment](../classes/CanvasEnvironment.md) for the world. Enable `AdjustmentEnabled` on the resource and HDR canvas storage on the GPU viewport. The viewport's environment mode controls selection and inheritance. Adjustment runs after MSAA resolve, [glow](canvas-glow.md) and [tone mapping](canvas-tonemapping.md), before the completed viewport texture is published.
+
+Brightness multiplies linear RGB. The pass encodes RGB to sRGB, adjusts contrast around 0.5, and adjusts saturation around the arithmetic mean of the encoded channels. All three controls default to one and accept finite values. The result converts back to linear RGB for the half-float target. Alpha passes through unchanged.
+
+`AdjustmentColorCorrection` optionally borrows a filterable `Texture`. A `GradientRampTexture` can generate it from a `Gradient`. Each corrected channel uses its own encoded value, clamped to the nominal zero-to-one range, to sample the same channel in the first row. Sampling interpolates linear color values. Byte color textures decode before filtering, and float ramps remain linear. Atlas views use the first row of their resolved region and clamp the filter footprint within the region. A viewport lookup samples its completed texture through the regular viewport dependency path. The ramp's alpha is ignored. Missing or disposed lookups leave scalar adjustment active.
+
+The resource retains authored settings when disabled. Packed scenes store those settings and the texture link, and resource copies follow the existing subresource policy. `RenderingServer.EnvironmentSetAdjustment` validates and publishes all settings on a borrowed environment RID on the renderer owner thread. An empty texture RID clears the lookup. The pass shares existing native scratch storage and preserves unprocessed history for `Never`-clear viewports. Canvas screen-texture sampling remains inside the scene pass, before the environment effects.
+
+## Verification and remaining profiles
+
+Run the Release test executable with `ELECTRON2D_TEST_ADJUSTMENT` set to `managed`, `gpu` or `compatibility`. The `managed` profile checks defaults, validation, duplication and typed scene files. The Windows Vulkan profile checks linear pixels with scalar controls and gradient, atlas and viewport lookups against double-precision references, including 4x MSAA, alpha, effect order, empty ramps, stable viewport texture identity, raw history, inherited bypass, finite extremes and a warmed owner-thread allocation measurement. The Direct3D 11 Compatibility profile checks ordinary SDR pixels with adjustment authored.
+
+The effect currently applies to GPU half-float targets. SDR and Compatibility need executing environment composition paths. Layer-limited backgrounds need native canvas-layer composition. Native HDR display, other GPU drivers and platforms, native allocations and release-package qualification retain their own verification gates.

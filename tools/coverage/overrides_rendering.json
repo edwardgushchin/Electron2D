@@ -1,6 +1,36 @@
 {
   "mappings": [
     {
+      "godot": "Environment::property:adjustment_brightness",
+      "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentBrightness()",
+      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+    },
+    {
+      "godot": "Environment::property:adjustment_color_correction",
+      "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentColorCorrection()",
+      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+    },
+    {
+      "godot": "Environment::property:adjustment_contrast",
+      "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentContrast()",
+      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+    },
+    {
+      "godot": "Environment::property:adjustment_enabled",
+      "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentEnabled()",
+      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+    },
+    {
+      "godot": "Environment::property:adjustment_saturation",
+      "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentSaturation()",
+      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+    },
+    {
+      "godot": "RenderingServer::method:environment_set_adjustment(RID:,bool:,float:,float:,float:,bool:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetAdjustment(Electron2D.RID,System.Boolean,System.Single,System.Single,System.Single,Electron2D.RID)",
+      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md. A borrowed ordinary texture RID selects the applicable ramp role directly; the volume lookup selector is outside ADR 0004."
+    },
+    {
       "godot": "Environment::enum:ToneMapper",
       "electron2d": "T:Electron2D.CanvasEnvironment.ToneMapper",
       "reason": "ADRs 0004/0051: a shared canvas tone-operator identity serves the resource and server APIs."
@@ -5855,8 +5885,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Needs a canvas color-adjustment pass with linear/perceptual conversion and typed color-correction lookup ownership after HDR glow.",
+      "state": "Partial",
+      "reason": "ADRs 0004/0028: GPU half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows Vulkan verifies native pixels. SDR/Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md.",
       "godot": [
         "Environment::property:adjustment_brightness",
         "Environment::property:adjustment_color_correction",

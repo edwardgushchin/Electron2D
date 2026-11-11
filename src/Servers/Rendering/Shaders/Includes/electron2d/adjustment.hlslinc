@@ -1,0 +1,27 @@
+#include "color.hlslinc"
+
+float3 AdjustCanvasColor(float3 color, float4 options, float4 region, Texture2D<float4> lookup, SamplerState filter)
+{
+    if (options.w == 0.0) return color;
+
+    // Keep extreme finite controls within the range of the transfer functions.
+    color = clamp(color * options.x, -1e15, 1e15);
+    float3 encoded = Electron2D_LinearToSRGB(color);
+    if (options.y != 1.0) encoded = clamp(0.5 + (encoded - 0.5) * options.y, -1e15, 1e15);
+    if (options.z != 1.0)
+    {
+        float gray = (encoded.r + encoded.g + encoded.b) / 3.0;
+        encoded = clamp(gray + (encoded - gray) * options.z, -1e15, 1e15);
+    }
+    if (region.w == 0.0) return Electron2D_SRGBToLinear(encoded);
+
+    // Clamp the footprint to the ramp, including when it occupies part of an atlas.
+    uint width, height;
+    lookup.GetDimensions(width, height);
+    float inset = min(0.5 / width, region.y * 0.5);
+    float y = region.z + min(0.5 / height, region.w * 0.5);
+    float3 x = region.x + clamp(saturate(encoded) * region.y, inset, region.y - inset);
+    return float3(lookup.SampleLevel(filter, float2(x.r, y), 0).r,
+                  lookup.SampleLevel(filter, float2(x.g, y), 0).g,
+                  lookup.SampleLevel(filter, float2(x.b, y), 0).b);
+}

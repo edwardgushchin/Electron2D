@@ -4,17 +4,22 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
+    private readonly record struct TonemapCompositeUniforms(TonemapUniforms Tonemap, AdjustmentUniforms Adjustment);
     private RenderHandle? _tonemapPipeline;
     private static readonly byte[] TonemapShader = BuiltInShaders.Read("CanvasTonemap.frag.spv");
 
-    private void DrawTonemap(nint command, CanvasRenderTarget output, in TonemapUniforms tone)
+    private void DrawTonemap(nint command, CanvasRenderTarget output, in TonemapUniforms tone,
+        in AdjustmentUniforms correction, in SDL.GPUTextureSamplerBinding lookup)
     {
-        var binding = new SDL.GPUTextureSamplerBinding
+        Span<SDL.GPUTextureSamplerBinding> bindings = stackalloc SDL.GPUTextureSamplerBinding[2];
+        bindings[0] = new()
         {
             Texture = output.PostProcess!.Raw.DangerousGetHandle(),
             Sampler = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled, bias: 0)
         };
-        DrawPostProcessPass(command, output.Next.DangerousGetHandle(), output.Size, _tonemapPipeline!, new(in binding), in tone);
+        bindings[1] = lookup;
+        var parameters = new TonemapCompositeUniforms(tone, correction);
+        DrawPostProcessPass(command, output.Next.DangerousGetHandle(), output.Size, _tonemapPipeline!, bindings, in parameters);
     }
 }
 

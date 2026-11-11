@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
-/// <summary>Stores shared HDR canvas glow and tone mapping settings.</summary>
+/// <summary>Stores shared HDR canvas glow, tone mapping and color adjustment settings.</summary>
 /// <remarks>Assign this resource to a <see cref="WorldEnvironment"/>. Changes affect the next canvas frame.
 /// Resources and textures are borrowed by the scene. Glow is evaluated on linear half-float canvas targets.</remarks>
 public sealed partial class CanvasEnvironment : Resource
@@ -235,7 +235,7 @@ public sealed partial class CanvasEnvironment : Resource
 
     internal CanvasPostProcess SnapshotPostProcess()
     {
-        lock (_gate) return IsDisposed ? default : new(_glow, _tonemap);
+        lock (_gate) return IsDisposed ? default : new(_glow, _tonemap, _adjustment);
     }
 
     private T Read<T>(ref T value)
@@ -284,17 +284,23 @@ public sealed partial class CanvasEnvironment : Resource
     {
         var settings = SnapshotPostProcess();
         var glow = settings.Glow;
-        if (deep) glow.Map = (Texture?)duplicateSubresource(glow.Map);
+        var adjustment = settings.Adjustment;
+        if (deep)
+        {
+            glow.Map = (Texture?)duplicateSubresource(glow.Map);
+            adjustment.Lookup = (Texture?)duplicateSubresource(adjustment.Lookup);
+        }
         var copy = (CanvasEnvironment)target;
         lock (copy._gate)
         {
             copy._glow = glow;
+            copy._adjustment = adjustment;
             copy._tonemap = settings.Tonemap.GetValueOrDefault(TonemapSettings.Default);
         }
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties).Concat(LevelProperties).Concat(TonemapProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties).Concat(LevelProperties).Concat(TonemapProperties).Concat(AdjustmentProperties);
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
@@ -308,6 +314,7 @@ public sealed partial class CanvasEnvironment : Resource
                 if (_rid.IsValid()) RenderingProgramRegistry<CanvasEnvironment>.Remove(_rid);
                 _rid = default;
                 _glow.Map = null;
+                _adjustment.Lookup = null;
             }
             RenderingServer.NotifyRenderMutation();
         }

@@ -224,7 +224,10 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         PrepareMaterialLighting(batches, lighting);
         var glow = postProcess.Glow;
         var toneSettings = postProcess.Tonemap.GetValueOrDefault(TonemapSettings.Default);
-        var drawTonemap = !toneSettings.IsIdentity;
+        var adjustment = postProcess.Adjustment;
+        var lookup = adjustment.Active ? PrepareAdjustmentLookup(adjustment.Lookup) : default;
+        var adjust = adjustment.Enabled && (adjustment.HasScalarChanges || lookup.Texture != 0);
+        var drawTonemap = !toneSettings.IsIdentity || adjust;
         var glowLevelCount = 0;
         if (glow.Enabled && glow.Strength > 0)
             for (var i = 0; i < GlowSettings.LevelCount; i++)
@@ -457,8 +460,10 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             {
                 var tone = TonemapUniforms.Prepare(toneSettings, postProcess.OutputMaximum);
                 Blit(command, output.Next.DangerousGetHandle(), output.PostProcess!.Raw.DangerousGetHandle(), new(0, 0, size.X, size.Y));
-                if (drawGlow) DrawGlow(command, output, glow, glowLevelCount, glowMap, mapRegion, in tone);
-                else DrawTonemap(command, output, in tone);
+                var correction = new AdjustmentUniforms(new(adjustment.Brightness, adjustment.Contrast, adjustment.Saturation, adjust ? 1 : 0), lookup.Region);
+                var correctionBinding = AdjustmentBinding(output, lookup.Texture);
+                if (drawGlow) DrawGlow(command, output, glow, glowLevelCount, glowMap, mapRegion, in tone, in correction, in correctionBinding);
+                else DrawTonemap(command, output, in tone, in correction, in correctionBinding);
             }
             measured?.End(command);
             var submitted = command; command = 0;

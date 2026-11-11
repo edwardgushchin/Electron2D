@@ -46,7 +46,7 @@ A scene-selected [canvas environment](canvas-glow.md) applies glow after the nat
 
 ## World environment tone mapping
 
-An authored [canvas environment](canvas-tonemapping.md) applies exposure and its selected operator after canvas resolve and before publishing the completed HDR texture. The default Linear operator with unit exposure leaves the ordinary viewport path active.
+An authored [canvas environment](canvas-tonemapping.md) applies exposure and its selected operator after canvas resolve and before publishing the completed HDR texture. The default Linear operator with unit exposure leaves the ordinary viewport path active when other environment effects are inactive. [Color adjustment](canvas-color-adjustment.md) can use the same GPU pass after tone mapping.
 
 ## Screen debanding
 

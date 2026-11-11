@@ -42,7 +42,8 @@ internal sealed unsafe partial class GPUCanvasBackend
         return LinearTexture(map, native);
     }
 
-    private void DrawGlow(nint command, CanvasRenderTarget output, GlowSettings glow, int levelCount, nint map, Rect2 mapRegion, in TonemapUniforms tone)
+    private void DrawGlow(nint command, CanvasRenderTarget output, GlowSettings glow, int levelCount, nint map, Rect2 mapRegion,
+        in TonemapUniforms tone, in AdjustmentUniforms correction, in SDL.GPUTextureSamplerBinding lookup)
     {
         var buffers = output.PostProcess!;
         var size = output.Size;
@@ -63,13 +64,14 @@ internal sealed unsafe partial class GPUCanvasBackend
             inputSize = levelSize;
         }
 
-        Span<SDL.GPUTextureSamplerBinding> bindings = stackalloc SDL.GPUTextureSamplerBinding[GlowSettings.LevelCount + 2];
+        Span<SDL.GPUTextureSamplerBinding> bindings = stackalloc SDL.GPUTextureSamplerBinding[GlowSettings.LevelCount + 3];
         bindings[0] = new() { Texture = raw, Sampler = sampler };
         for (var i = 0; i < GlowSettings.LevelCount; i++)
             bindings[i + 1] = new() { Texture = i < levelCount ? buffers.Levels![i]!.DangerousGetHandle() : raw, Sampler = sampler };
         // A device alias must not sample the active composite attachment.
         if (map == next) map = output.Current.DangerousGetHandle();
-        bindings[^1] = new() { Texture = map != 0 ? map : raw, Sampler = sampler };
+        bindings[^2] = new() { Texture = map != 0 ? map : raw, Sampler = sampler };
+        bindings[^1] = lookup;
         var weights = levelCount == 0 ? default : glow.Levels;
         var sum = 0f;
         if (glow.Normalized)
@@ -80,7 +82,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         var intensity = glow.Blend == CanvasEnvironment.GlowBlendMode.Mix ? glow.Mix : glow.Intensity;
         var composite = new GlowCompositeUniforms(new(weights[0], weights[1], weights[2], weights[3]), new(weights[4], weights[5], weights[6], 0),
             new(intensity, map != 0 ? glow.MapStrength : 0, (float)glow.Blend, glow.Bicubic ? 1 : 0),
-            new(mapRegion.Position.X, mapRegion.Position.Y, mapRegion.Size.X, mapRegion.Size.Y), tone);
+            new(mapRegion.Position.X, mapRegion.Position.Y, mapRegion.Size.X, mapRegion.Size.Y), tone, correction);
         DrawPostProcessPass(command, next, size, _glowCompositePipeline!, bindings, in composite);
     }
 
@@ -103,7 +105,7 @@ internal sealed unsafe partial class GPUCanvasBackend
 
     private readonly record struct GlowVertexUniforms(Vector4 Rectangle, Vector4 Modulation, Vector4 Size);
     private readonly record struct GlowBlurUniforms(Vector4 Sample, Vector4 Threshold);
-    private readonly record struct GlowCompositeUniforms(Vector4 FirstLevels, Vector4 LastLevels, Vector4 Options, Vector4 MapRegion, TonemapUniforms Tonemap);
+    private readonly record struct GlowCompositeUniforms(Vector4 FirstLevels, Vector4 LastLevels, Vector4 Options, Vector4 MapRegion, TonemapUniforms Tonemap, AdjustmentUniforms Adjustment);
 }
 
 internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable

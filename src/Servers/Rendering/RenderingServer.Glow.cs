@@ -119,7 +119,7 @@ public sealed partial class RenderingServer
         if (tree.SelectWorldEnvironment(world.Runtime)?.LiveEnvironment is not { } environment) return default;
         var settings = environment.SnapshotPostProcess();
         var glow = settings.Glow;
-        if (!glow.Enabled && settings.Tonemap is not { IsIdentity: false }) return default;
+        if (!glow.Enabled && settings.Tonemap is not { IsIdentity: false } && !settings.Adjustment.Active) return default;
         glow.Bicubic = _bicubicGlow;
         return settings with { Glow = glow, OutputMaximum = TonemapOutputMaximum(viewport) };
     }
