@@ -1,6 +1,72 @@
 {
   "mappings": [
     {
+      "electron2d": "T:Electron2D.PackedSceneEditState",
+      "godot": "SceneState::enum:GenEditState",
+      "state": "Partial",
+      "reason": "Typed shared edit-state enum under ADR 0023. Disabled and MainInherited execute; Instance and Main need distinct editor policies."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PackedSceneEditState.Disabled()",
+      "godot": "SceneState::enum_value:GenEditState.GEN_EDIT_STATE_DISABLED",
+      "state": "Implemented",
+      "reason": "Identity zero and ordinary detached instantiation execute for concrete and derived scenes."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PackedSceneEditState.Instance()",
+      "godot": "SceneState::enum_value:GenEditState.GEN_EDIT_STATE_INSTANCE",
+      "state": "Partial",
+      "reason": "Identity one; execution requires nested editable instance scope, inherited property pin/revert and editor-local resource policy under ADR 0023."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PackedSceneEditState.Main()",
+      "godot": "SceneState::enum_value:GenEditState.GEN_EDIT_STATE_MAIN",
+      "state": "Partial",
+      "reason": "Identity two; execution requires main-scene editable metadata, pin/revert and main-scene resource policy under ADR 0023."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PackedSceneEditState.MainInherited()",
+      "godot": "SceneState::enum_value:GenEditState.GEN_EDIT_STATE_MAIN_INHERITED",
+      "state": "Implemented",
+      "reason": "Identity three; editor-context instantiation prepares an immediate base link, sparse typed overlays and v10 archives under ADR 0023."
+    },
+    {
+      "electron2d": "T:Electron2D.PackedSceneEditState",
+      "godot": "PackedScene::enum:GenEditState",
+      "state": "Partial",
+      "reason": "Typed shared edit-state enum under ADR 0023. Disabled and MainInherited execute; Instance and Main need distinct editor policies."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PackedSceneEditState.Disabled()",
+      "godot": "PackedScene::enum_value:GenEditState.GEN_EDIT_STATE_DISABLED",
+      "state": "Implemented",
+      "reason": "Identity zero and ordinary detached instantiation execute for concrete and derived scenes."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PackedSceneEditState.Instance()",
+      "godot": "PackedScene::enum_value:GenEditState.GEN_EDIT_STATE_INSTANCE",
+      "state": "Partial",
+      "reason": "Identity one; execution requires nested editable instance scope, inherited property pin/revert and editor-local resource policy under ADR 0023."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PackedSceneEditState.Main()",
+      "godot": "PackedScene::enum_value:GenEditState.GEN_EDIT_STATE_MAIN",
+      "state": "Partial",
+      "reason": "Identity two; execution requires main-scene editable metadata, pin/revert and main-scene resource policy under ADR 0023."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PackedSceneEditState.MainInherited()",
+      "godot": "PackedScene::enum_value:GenEditState.GEN_EDIT_STATE_MAIN_INHERITED",
+      "state": "Implemented",
+      "reason": "Identity three; editor-context instantiation prepares an immediate base link, sparse typed overlays and v10 archives under ADR 0023."
+    },
+    {
+      "electron2d": "method:Electron2D.PackedScene.Instantiate(Electron2D.PackedSceneEditState)",
+      "godot": "PackedScene::method:instantiate(int:PackedScene.GenEditState)",
+      "state": "Partial",
+      "reason": "ADR 0023: Disabled executes concrete, nested and derived scenes with original identity, typed resources and connections. MainInherited prepares a detached derived authoring root with sparse overrides. Instance and Main still require their own editor metadata, pin/revert and resource policies."
+    },
+    {
       "godot": "Window::method:start_drag()",
       "electron2d": "method:Electron2D.Window.StartDrag()",
       "reason": "Embedded windows reuse the viewport decoration gesture and constrained client geometry, including custom borderless chrome. Native windows share the Win32 system move/size loop, X11 EWMH and Wayland xdg-toplevel pointer-seat handoff. Native scene fixtures exercise the handoff and rendering. macOS needs a native event handoff and backend verification (ADRs 0008/0040/0021)."
@@ -1145,14 +1211,14 @@
     {
       "electron2d": "method:Electron2D.PackedScene.GetState()",
       "godot": "PackedScene::method:get_state()",
-      "state": "Partial",
-      "reason": "Typed live SceneState for in-memory scenes; ADR 0023."
+      "state": "Implemented",
+      "reason": "ADR 0023: live typed SceneState observes repacks and path changes, survives scene disposal with the ordinary file lease, and reports the immediate base and stored override graph for derived scenes."
     },
     {
       "electron2d": "method:Electron2D.SceneState.GetBaseSceneState()",
       "godot": "SceneState::method:get_base_scene_state()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "state": "Implemented",
+      "reason": "ADR 0023: live state of the immediate inherited template, shared with the base PackedScene; null for concrete and empty scenes. Runtime and editor instances, multi-level links and version-10 external and bundled files exercise the same state path."
     },
     {
       "electron2d": "method:Electron2D.SceneState.GetConnectionCount()",
@@ -5829,42 +5895,42 @@
     {
       "godot": "Node::method:is_displayed_folded()",
       "electron2d": "property:Electron2D.Node.DisplayFolded()",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": "Node::method:set_display_folded(bool:)",
       "electron2d": "property:Electron2D.Node.DisplayFolded()",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": "Node::method:is_editable_instance(Node:)",
       "electron2d": "method:Electron2D.Node.IsEditableInstance(Electron2D.Node)",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": "Node::method:set_editable_instance(Node:,bool:)",
       "electron2d": "method:Electron2D.Node.SetEditableInstance(Electron2D.Node,System.Boolean)",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": "Node::method:is_part_of_edited_scene()",
       "electron2d": "property:Electron2D.Node.IsPartOfEditedScene()",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": "Node::property:editor_description",
       "electron2d": "property:Electron2D.Node.EditorDescription()",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": "Node::signal:editor_description_changed(Node:)",
       "electron2d": "event:Electron2D.Node.EditorDescriptionChanged()",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": "Node::signal:editor_state_changed()",
       "electron2d": "event:Electron2D.Node.EditorStateChanged()",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": "class:InstancePlaceholder",
@@ -11974,7 +12040,7 @@
         "Node::signal:editor_state_changed()"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Flattened capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; linked nested/inherited overrides and non-Disabled PackedSceneEditState remain separate gaps. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
+      "reason": "ADRs 0008/0023/0090: executable typed Node authoring state. Stored descriptions emit after ordinal change; folding is transient. EditedSceneRoot explicitly selects root-inclusive subtree membership and state events instead of a global editor hint. Editable flags live on strict descendant targets, follow reparenting and false unfolds the receiver. Capture includes enabled descendant-owned nodes and preserves nonroot instance origin/flag through typed archives; nested instances and sparse inherited roots use ADR 0023. The Instance and Main edit modes remain separate. Pinned Node.cpp/Node.xml/node.h/packed_scene.cpp audit; owning type and declarations have no deprecated metadata. Public consumer checks errors, rollback/paired cleanup failures, signal blocking, worker membership and persistent groups, physical borrowing/capture guards, canceled disposal, fresh-process scene reconstruction, actual motion/queries and 128 warmed frames with 0 owner/all-thread managed bytes. Linux JIT/NativeAOT CPU, software Vulkan and registered provider owner/separate profiles are the verification gate; no hardware/render/editor-UI acceptance is claimed."
     },
     {
       "godot": [
@@ -11983,7 +12049,7 @@
         "SceneState::method:get_node_type(int:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0023: actual linked PackedScene identity, inserted/overridden sibling placement and empty type names for linked/reused records execute through version-5 typed archives. LinkedSceneTests covers template updates, original paths/name swaps, local aliases/cycles and RID reuse, inherited/additional connections, deep copies, failure cleanup, fresh external/relative/bundled graphs, legacy layouts and both Wayland renderers. Each renderer measures 64 active redraw/event frames at zero owner-thread managed bytes. Root inheritance/editor/deferred/native-allocation and foreign acceptance remain separate."
+      "reason": "ADR 0023: actual linked PackedScene identity, inserted/overridden sibling placement and empty type names for linked/reused records execute through version-5 typed archives. LinkedSceneTests covers template updates, original paths/name swaps, local aliases/cycles and RID reuse, inherited/additional connections, deep copies, failure cleanup, fresh external/relative/bundled graphs, legacy layouts and both Wayland renderers. Each renderer measures 64 active redraw/event frames at zero owner-thread managed bytes. Version-10 root links also expose the immediate base and an empty linked-root type; inherited placement, sparse overrides and fresh files execute in the same focused runner. Foreign package and native-allocation acceptance remain separate."
     },
     {
       "godot": [

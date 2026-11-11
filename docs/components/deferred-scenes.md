@@ -1,6 +1,6 @@
 # Deferred scene instances
 
-Last updated: 2026-10-18
+Last updated: 2026-11-12
 
 ## Selection
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-18
 | --- | --- | --- |
 | Deferred scenes | Six reference declarations connect Node flags, placeholder inspection and explicit scene construction. Enables lazy actors and levels after linked templates. | Selected: existing typed archives, scene ownership and runtime factories supply the complete path. |
 | Node duplication | Eight declarations cover live subtree copying and scripts/signals/groups policies. | Live Script identity and ownership still need the ADR 0091 contract; a stored scene snapshot cannot implement the Scripts flag. |
-| Root inheritance | Derived authored scenes and base-state inspection. | Needs a distinct base/override and deletion-record contract rather than interpreting an ordinary runtime snapshot as an inherited root. |
+| Root inheritance | Derived authored scenes and base-state inspection. | The base and override contract executes through [inherited roots](linked-scenes.md#inherited-roots). Deferred instances retain their own materialization rules. |
 
 ## Authoring and inspection
 

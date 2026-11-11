@@ -4,6 +4,7 @@ public partial class Node
 {
     internal Dictionary<ulong, string>? SceneInstancePaths;
     internal HashSet<SceneConnectionRuntime>? SceneInstanceConnections;
+    internal SceneInheritance? InheritedScene;
     internal void RecordSceneInstance(PackedScene scene, IReadOnlyList<Node> nodes)
     {
         SpawnSceneIdentity = scene;

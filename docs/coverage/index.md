@@ -1,3 +1,5 @@
+[Inherited scene roots](../components/linked-scenes.md#inherited-roots) retain an immediate base, sparse typed overrides and external or bundled version-10 archives. Live base-state queries and both edit-state declarations reflect the executable modes. Coverage is **13,836/18,849 (73.40%)**, with 1,111 Partial, 339 Unimplemented, 3,563 Blocked, 8,444 Excluded and zero unmapped.
+
 [Scene tree accessibility state](../classes/SceneTree.md#native-accessibility-integration) reports native support and automatic scene publication. Two methods move from Blocked to Implemented. Coverage is **13,832/18,849 (73.38%)**, with 1,110 Partial, 344 Unimplemented, 3,563 Blocked, 8,444 Excluded and zero unmapped.
 
 [Direct viewport presentation](../components/canvas-rendering.md#direct-viewport-presentation) draws directly into native windows with Compatibility. One operation moves from Blocked to Partial for remaining host and driver verification. Coverage is **13,830/18,849 (73.37%)**, with 1,110 Partial, 344 Unimplemented, 3,565 Blocked, 8,444 Excluded and zero unmapped.

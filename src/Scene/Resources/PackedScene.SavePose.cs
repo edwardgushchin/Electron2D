@@ -25,28 +25,19 @@ public sealed partial class PackedScene
             try
             {
                 sourceGuard = root.BeginSceneCapture();
+                var selected = GetOwnedSceneNodes(root);
                 var source = Capture(root);
-                if (!source.Nodes.Any(n => root.GetNode(n.Path) is AnimationMixer mixer && mixer.ResetOnSave && mixer.HasAnimation("RESET")))
+                if (!selected.Any(node => node is AnimationMixer mixer && mixer.ResetOnSave && mixer.HasAnimation("RESET")))
                     prepared = source;
                 else
                 {
                     isolated = true;
                     using var staging = new PackedScene(); staging.LoadFileData(source);
                     temporary = staging.InstantiateCore(PackedSceneEditState.Disabled, false);
-                    var temporaryNodes = source.Nodes.Select(n => temporary.GetNode(n.Path)).ToArray();
-                    var identities = temporaryNodes.Select(n => n.InstanceID).ToArray();
-                    foreach (var node in temporaryNodes)
-                        if (node is AnimationMixer mixer) mixer.ApplyResetForSave();
-                    staging.Pack(temporary); var result = staging.FileData;
-                    if (result.Nodes.Length != source.Nodes.Length) throw new InvalidOperationException("RESET changed the saved hierarchy.");
-                    var nodes = new SceneNodeData[source.Nodes.Length];
-                    for (var i = 0; i < nodes.Length; i++)
-                    {
-                        if (result.Nodes[i].Factory.SourceInstanceID != identities[i] || result.Nodes[i].ParentIndex != source.Nodes[i].ParentIndex || result.Nodes[i].OwnerIndex != source.Nodes[i].OwnerIndex) throw new InvalidOperationException("RESET changed the saved hierarchy.");
-                        nodes[i] = result.Nodes[i] with { Factory = source.Nodes[i].Factory };
-                    }
-                    prepared = new(nodes, result.Connections); owned = temporary.ReleaseSceneResourcesForSave();
+                    prepared = CaptureResetPose(temporary, source);
+                    owned = temporary.ReleaseSceneResourcesForSave();
                 }
+                _ = PrepareTemplates(this, prepared);
             }
             catch (Exception caught) { error = caught; }
             finally
@@ -59,5 +50,31 @@ public sealed partial class PackedScene
         }
         if (error is not null) ExceptionDispatchInfo.Capture(error).Throw();
         EmitChanged();
+    }
+
+    private static PackedSceneData CaptureResetPose(Node temporary, PackedSceneData source)
+    {
+        var before = GetOwnedSceneNodes(temporary).Select(node => (Node: node, node.Parent, node.Owner)).ToArray();
+        var factories = source.Nodes.ToDictionary(record => temporary.GetNode(record.Path).InstanceID, record => record.Factory);
+        foreach (var entry in before)
+            if (entry.Node is AnimationMixer mixer) mixer.ApplyResetForSave();
+
+        var guard = temporary.BeginSceneCapture();
+        try
+        {
+            var after = GetOwnedSceneNodes(temporary);
+            if (after.Count != before.Length) throw new InvalidOperationException("RESET changed the saved hierarchy.");
+            for (var i = 0; i < after.Count; i++)
+            {
+                var node = after[i];
+                if (node != before[i].Node || node.Parent != before[i].Parent || node.Owner != before[i].Owner)
+                    throw new InvalidOperationException("RESET changed the saved hierarchy.");
+            }
+            var result = Capture(temporary);
+            var nodes = result.Nodes.Select(node => factories.TryGetValue(node.Factory.SourceInstanceID, out var factory)
+                ? node with { Factory = factory } : node).ToArray();
+            return new(nodes, result.Connections);
+        }
+        finally { Node.EndSceneCapture(guard); }
     }
 }

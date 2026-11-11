@@ -2,8 +2,8 @@ namespace Electron2D;
 
 /// <summary>Controls editor metadata applied while a packed scene is instantiated.</summary>
 /// <remarks>
-/// Runtime builds support only <see cref="Disabled"/>. The remaining values retain stable serialized identities for a
-/// future editor and are rejected explicitly until that domain exists.
+/// Gameplay uses <see cref="Disabled"/>. <see cref="MainInherited"/> is available in editor context.
+/// <see cref="Instance"/> and <see cref="Main"/> are reserved and rejected explicitly.
 /// </remarks>
 public enum PackedSceneEditState
 {
@@ -16,6 +16,6 @@ public enum PackedSceneEditState
     /// <summary>Requests main-scene editing metadata from an editor build.</summary>
     Main = 2,
 
-    /// <summary>Requests inherited-main-scene editing metadata from an editor build.</summary>
+    /// <summary>Creates a detached editable root that packs as a new scene derived from the source template.</summary>
     MainInherited = 3
 }

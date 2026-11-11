@@ -417,6 +417,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         if (left is string[] strings && right is string[] otherStrings) return strings.AsSpan().SequenceEqual(otherStrings);
         if (left is int[] integers && right is int[] otherIntegers) return integers.AsSpan().SequenceEqual(otherIntegers);
         if (left is float[] numbers && right is float[] otherNumbers) return numbers.AsSpan().SequenceEqual(otherNumbers);
+        if (left is double[] doubles && right is double[] otherDoubles) return doubles.AsSpan().SequenceEqual(otherDoubles);
         if (left is uint[] unsigned && right is uint[] otherUnsigned) return unsigned.AsSpan().SequenceEqual(otherUnsigned);
         if (left is bool[] flags && right is bool[] otherFlags) return flags.AsSpan().SequenceEqual(otherFlags);
         if (left is Vector2[] points && right is Vector2[] otherPoints) return points.AsSpan().SequenceEqual(otherPoints);

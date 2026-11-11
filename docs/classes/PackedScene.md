@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-17
+Last updated: 2026-11-12
 
 **Inherits:** [Resource](Resource.md)
 
@@ -20,7 +20,7 @@ RestoreProperties honors the internal force-copy descriptor for a Skeleton stack
 
 Descriptions are stored; folded presentation resets to false. A selected nonroot node with a nonempty SceneFilePath retains its source origin and, when enabled, its editable-instance flag. This metadata uses reserved typed scene fields `__SceneInstanceOrigin` and `__EditableInstance`; conflicting consumer property descriptors reject packing/restoration. Ordinary noninstance flags and the root's flag are not stored. SceneState exposes these captured typed fields through its existing property queries.
 
-Editable owners extend graph selection. [Linked runtime subscenes](../components/linked-scenes.md) retain actual templates, reused-node identities and placement; selected nodes still capture complete typed state. Root inheritance, non-Disabled edit modes and editor UI remain unsupported. Public CPU, software Vulkan and registered-provider consumers verify in-memory duplication, fresh-process file reconstruction, actual body motion/point queries and 128 warmed physical frames. This establishes authoring and headless simulation only; it is not rendered or hardware GPU acceptance.
+Editable owners extend graph selection. [Linked runtime subscenes](../components/linked-scenes.md) retain actual templates, reused-node identities and placement; selected nodes still capture complete typed state. [Inherited roots](../components/linked-scenes.md#inherited-roots) save a base link and sparse overrides. Instance and Main editor modes remain unavailable. Public CPU, software Vulkan and registered-provider consumers verify in-memory duplication, fresh-process file reconstruction, actual body motion/point queries and 128 warmed physical frames. This establishes authoring and headless simulation only; it is not rendered or hardware GPU acceptance.
 
 ## Description
 
@@ -36,6 +36,18 @@ files use the typed archive; inherited-root authoring and editor instantiation m
 The node automatic-translation mode is stored. Translation domains are stored only when explicitly assigned; an inheriting descendant continues to resolve the current parent domain after instantiation.
 
 ## Examples
+
+This authoring example uses a loaded PackedScene named baseScene and a destination scene path.
+
+```csharp
+Engine.IsEditorHint = true;
+using var root = baseScene.Instantiate(PackedSceneEditState.MainInherited);
+root.Name = "Derived";
+using var derived = new PackedScene();
+derived.PackForSave(root);
+ResourceSaver.Save(derived, destination, SaverFlags.RelativePaths);
+```
+
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
@@ -106,14 +118,14 @@ Creates an independent detached node hierarchy from the stored scene.
 
 **Parameters**
 
-- `editState`: The editor-state policy. Runtime instantiation accepts only [`PackedSceneEditState.Disabled`](PackedSceneEditState.md#f-electron2d-packedsceneeditstate-disabled).
+- `editState`: Use [`Disabled`](PackedSceneEditState.md#f-electron2d-packedsceneeditstate-disabled) for gameplay. In editor context, [`MainInherited`](PackedSceneEditState.md#f-electron2d-packedsceneeditstate-maininherited) prepares a new derived scene for packing.
 
 **Returns:** The live, detached root node. It has not entered a [`SceneTree`](SceneTree.md).
 
 **Exceptions**
 
 - `ArgumentOutOfRangeException`: `editState` is not defined.
-- `NotSupportedException`: `editState` requests editor-only behavior.
+- `NotSupportedException`: The mode is unavailable or requires [`Engine.IsEditorHint`](Engine.md).
 - `InvalidOperationException`: The scene is empty or stored node schema cannot be reconstructed safely.
 - `ObjectDisposedException`: The resource or a referenced stored resource is disposing or disposed.
 - `Exception`: A factory, property setter, setup callback, notification, or cleanup operation fails.
@@ -260,7 +272,7 @@ No hard real-time or allocation-free guarantee is made for packing or instantiat
 
 `tests/Electron2D.Tests/Program.cs` covers empty state, runtime and invalid edit modes, owned-branch pruning, paths/owners/groups, typed state queries including `Color`, all six vector values, `Rect2`, `Rect2i`, `Transform`, and Timer configuration restoration, source disposal independence, scene-local aliasing and setup, repeated independent instances, packed-scene duplication, live-state replacement and disposal races, concurrent path updates, failed capture clearing, capture mutation rejection, capturing/source-returning/wrong-type/reused factories, detached-parent and active-tree escape rollback, setup failure cleanup, and state survival after packed-scene disposal.
 
-Typed `.e2dscene` persistence, registered authored connections and generic/mesh/ordinary-texture missing-resource recovery execute through the version-6 resource archive. Actual linked templates, complete typed runtime overrides and editable-owner capture execute. Root inheritance, import remapping, script state, non-Disabled edit modes and full editor UI remain absent. Deferred scene materialization executes through [deferred scenes](../components/deferred-scenes.md). SceneState exposes origin/flag fields through typed property queries; unsupported inherited-base metadata retains its empty/null answer; deferred records expose actual paths and markers.
+Typed `.e2dscene` persistence uses the [version-10 resource archive](../components/resource-files.md#version-10-inherited-root-links). SceneState exposes actual base metadata, typed node properties and deferred instance paths. Import remapping, live script attachment and full editor UI retain separate prerequisites.
 
 ## Decision
 

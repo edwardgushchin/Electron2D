@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-11-11
+Last updated: 2026-11-12
 
 ## Live-scene authoring save
 
@@ -176,7 +176,7 @@ Mounted res:// resources now share [resource pack resolution](resource-packs.md)
 
 ## Version 5 linked scene records
 
-Version 5 introduced linked scene headers; the current writer uses version 9 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
+Version 5 introduced linked scene headers; the current writer uses version 10 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
 
 ## Version 6 deferred scene records
 
@@ -213,3 +213,7 @@ Version 8 adds Material as resource role 3, without bounds; resource provenance/
 ## Version 9 compiled owner sources
 
 Version 9 adds a signed resource-table index after each resource definition UID and after each scene node type ID. Minus one records no association. A nonnegative index must identify a Script whose compiled type exactly matches its owner. The writer includes source edges in the ordinary resource table, preserving aliases, source text and shared/bundled/external policy. Loading prepares sealed scalar-only Script assets before invoking compiled owner constructors. Scene-local instantiation and cache publication remap these edges through their existing resource scopes. Same-type resource replacement retains the owner and adopts the restored source in its change batch. Metadata, dependency rewriting and class inspection preserve the new fields. Versions 1–8 remain readable with their original absent source association; no class-name inference occurs. See [the compiled owner contract](scripting.md#compiled-owner-source-identity).
+
+## Version 10 inherited root links
+
+Version 10 permits the existing scene link field on the root record to refer to an immediate base PackedScene. Nonroot links and record layouts retain their previous encoding. The shared metadata and archive readers validate root links with the same version rule. The normal resource table retains relative/external or bundled bases. The loader rejects a missing base even in tolerant mode, while versions 1–9 keep their original layouts and root constraints. See [inherited roots](linked-scenes.md#inherited-roots).

@@ -1,10 +1,10 @@
 # Linked packed scenes
 
-Last updated: 2026-10-21
+Last updated: 2026-11-12
 
 ## Scope and selection
 
-PackedScene now retains actual runtime subscene templates, reconstructs their complete branches and overlays the selected typed state. This extends executable reuse and scene files on the existing node, resource and rendering backends. Deferred materialization now executes through [deferred scenes](deferred-scenes.md). Root inheritance and non-Disabled PackedSceneEditState modes retain their separate contracts.
+PackedScene now retains actual runtime subscene templates, reconstructs their complete branches and overlays the selected typed state. This extends executable reuse and scene files on the existing node, resource and rendering backends. Deferred materialization now executes through [deferred scenes](deferred-scenes.md). Derived roots use the same reconstruction and resource ownership with sparse typed overrides.
 
 | Candidate | Public value and dependent slices | Current feasibility |
 | --- | --- | --- |
@@ -16,11 +16,19 @@ PackedScene now retains actual runtime subscene templates, reconstructs their co
 
 A real instantiated root retains its borrowed PackedScene identity and original node paths. Packing it as an owned nonroot stores that template reference. An editable inherited child stores its original relative identity, allowing a renamed child to be reused rather than constructed again. New local nodes retain ordinary exact factories. Additions inside an instance store their sibling position.
 
-Owner selection and complete stored-property capture remain the existing contract. Selected nodes save their full current state; unselected subscene contents come from the current template. This is runtime snapshot capture, not a sparse editor-diff or inherited-root authoring model. Removing inherited nodes/groups does not create deletion records. A metadata-only legacy origin path remains a concrete capture until an actual template identity exists.
+Owner selection and complete stored-property capture remain the existing contract. Selected nodes save their full current state; unselected subscene contents come from the current template. This full snapshot policy applies to nested runtime instances. Removing inherited nodes/groups does not create deletion records. A metadata-only legacy origin path remains a concrete capture until an actual template identity exists.
 
-GetNodeInstance returns the borrowed linked template only for a recorded subscene root. GetNodeIndex returns recorded placement or -1 for an ordinary local node. GetNodeType returns an empty string for a linked root/reused override and the diagnostic unqualified type name for a fresh local node. GetNodeCount counts stored records, including overrides; it does not expand unselected template contents.
+GetNodeInstance returns the borrowed template for a recorded subscene root or an inherited scene root. GetNodeIndex returns recorded placement or -1 for an ordinary local node. GetNodeType returns an empty string for a linked root/reused override and the diagnostic unqualified type name for a fresh local node. GetNodeCount counts stored records, including overrides; it does not expand unselected template contents.
 
 Template and stored-resource references retain ordinary Resource lifetime. Disposing a borrowed template makes capture/instantiation fail. Consumers that return instantiated hierarchies must keep their templates and borrowed source resources alive through later captures; portable snapshots of path-only fixture templates use BundleResources. File-backed instances retain their decoded graphs through the existing leases. Deep copying remaps links through the same resource identity session; repeated references retain aliases.
+
+## Inherited roots
+
+Set Engine.IsEditorHint before calling the base template's Instantiate(PackedSceneEditState.MainInherited). Edit the detached root, set the Owner of local additions and pack it into a separate PackedScene. PackForSave also evaluates RESET tracks in the isolated authoring copy. The same derived resource instantiates with Disabled in a game or a headless host.
+
+The derived asset stores its immediate base plus changed typed properties, added persistent groups, authored connections, local nodes and recorded changes to name, parenting, ownership or position. In-place edits to stored scene-local resource state are included with their aliases. Unchanged inherited records are omitted unless needed for topology or connection endpoints. The base can add or remove implicit children and change untouched values. An overridden node is identified by its original relative path; changing that path in the base file requires reconciling the override. Removing a node or group from the derived preview allows the base to supply it again when the scene is instantiated.
+
+GetBaseSceneState returns the immediate base's live state. GetNodeInstance(0) returns that base resource, GetNodeType(0) returns an empty string, and ordinary runtime capture of a concrete root still has no base. A derived root's SceneFilePath is its own external path, or empty for an unsaved derived asset.
 
 ## Reconstruction and failure
 
@@ -38,10 +46,12 @@ Archive version 5 retains version-4 resource roles/provenance and adds three fie
 
 Relative external references follow saved template files and normal deep-cache policy. BundleResources embeds independent snapshots. Unknown/malformed schemas and unsupported missing exact scene substitutions reject before publication. Class/dependency metadata queries understand the same versioned record format.
 
+Version 10 permits the root record to use its resource reference for the immediate base. Older versions continue to reject linked root records. A missing base rejects the derived archive even when missing nested scenes may be recovered.
+
 ## Verification
 
 ELECTRON2D_TEST_LINKED_SCENES=managed/gpu/compatibility selects the focused runner. Checks cover template identity/updates, implicit children, three levels, full typed overlays, placement/name swaps, local pixel and recorded-resource alias/cycle remapping, independent instances, inherited/additional bindings, deep graph copying, failure cleanup, external/relative/bundled fresh processes, versions 1–4 and corrupt-link cache rejection.
 
-Wayland GPU and Compatibility profiles load an archived scene, inspect actual blue/red pixels and a retained local RID, and exercise redraw plus inherited event delivery for 64 prepared active frames. Instantiation/capture are allocating cold operations; the frame check concerns owner-thread managed allocation. Physical GPUs, foreign platforms, native allocation totals, editor UI and owner acceptance remain separate gates. Current results are retained in the slice verification manifest.
+The native profiles load an archived derivative, verify its root transform in actual pixels, check a retained local RID and exercise redraw plus inherited event delivery for 64 prepared active frames. Windows Direct3D 11 Compatibility and Vulkan GPU passed at zero owner-thread managed bytes per measured interval. Earlier linked-scene checks also passed both renderers on Wayland. The managed profile also exercises multi-level inheritance, live base state, overrides and additions, local texture mutation, typed bindings, recursive-cycle rejection, a missing external base, a downgraded header and relative/bundled reconstruction in separate processes. RESET save tests cover implicit inherited mixers. Instantiation/capture are allocating cold operations; the frame check concerns owner-thread managed allocation. Physical GPUs, foreign platforms, native allocation totals, editor UI and owner acceptance remain separate gates. Current results are retained in the slice verification manifest.
 
 [MissingNode](../classes/MissingNode.md) retains unavailable compiled endpoints and connection metadata without invoking a callback. Version-seven files restore actual registered connections when both endpoint roles and adapter return. Missing linked templates produce a recovery node; saving that role discards the absent instance and its inherited overrides while retaining ordinary outer-owned additions.

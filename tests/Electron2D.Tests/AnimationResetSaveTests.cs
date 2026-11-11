@@ -58,6 +58,7 @@ internal static class AnimationResetSaveTests
             f.Mixer.ResetOnSave = true; _failReset = true; try { Reject<ApplicationException>(() => packed.PackForSave(root)); } finally { _failReset = false; }
             using (var old = packed.Instantiate()) Check(((Box)old.GetNode("target")).Gain == 40, "Failed preparation preserves prior packed data."); Check(f.Target.Gain == 40, "Failed setter preserves live preview.");
         }
+        InheritedPose();
         Check(_events == events, "RESET save suppresses method event tracks.");
         Guards();
         Check(_ready == ready, "Authoring never activates scene lifecycle.");
@@ -65,6 +66,37 @@ internal static class AnimationResetSaveTests
         try { var path = Path.Combine(directory, "scene.e2dscene"); WriteFixture(path); Child(path); }
         finally { Directory.Delete(directory, true); }
         Console.WriteLine("RESET save pose: all controller families, coupled properties, ordinary/disabled policies, failure atomicity, detached authoring and fresh files passed.");
+    }
+
+    private static void InheritedPose()
+    {
+        var fixture = Make(1);
+        using var root = fixture.Root;
+        using var memo = fixture.Target.State;
+        using var reset = fixture.Reset;
+        using var library = fixture.Library;
+        using var template = new PackedScene();
+        template.Pack(root);
+        Node instance;
+        var previous = Engine.IsEditorHint;
+        Engine.IsEditorHint = true;
+        try { instance = template.Instantiate(PackedSceneEditState.MainInherited); }
+        finally { Engine.IsEditorHint = previous; }
+        using var authored = instance;
+        var fromNewBase = new Node { Name = "new-base-child" };
+        root.AddChild(fromNewBase);
+        fromNewBase.Owner = root;
+        template.Pack(root);
+        using var derived = new PackedScene();
+        derived.PackForSave(authored);
+        Check(((Box)authored.GetNode("target")).Gain == 40, "Derived RESET preparation leaves the live inherited preview unchanged.");
+        var state = derived.GetState();
+        Check(state.GetBaseSceneState() == template.GetState() && state.GetNodeCount() == 2 && state.GetNodeName(1) == "target",
+            "An inherited mixer is evaluated without recording an unchanged controller.");
+        using var result = derived.Instantiate();
+        var target = (Box)result.GetNode("target");
+        Check(target.Gain == 16 && target.Position == new Vector2(16, 16) && target.State!.Value == 16 &&
+              result.HasNode("new-base-child"), "RESET persists an implicit-node override and keeps later base additions.");
     }
     private static void Guards()
     {

@@ -2,7 +2,7 @@
 
 [Custom decoration input](../classes/Window.md#custom-decoration-input) connects stored Window rectangles to blocked-parent mouse reception across native and embedded modal children. Typed event lifetime, final viewport ownership and scene persistence share the existing scene pipeline.
 
-[Linked runtime scenes](../components/linked-scenes.md) now reconstruct actual templates with selected typed overrides, local ownership, inserted positions and original node identities. Version-5 files preserve external/bundled links; root inheritance and editor instantiation modes remain separate.
+[Linked runtime scenes](../components/linked-scenes.md) now reconstruct actual templates with selected typed overrides, local ownership, inserted positions and original node identities. Version-10 files also preserve an [inherited root](../components/linked-scenes.md#inherited-roots) with an immediate base and sparse overrides.
 
 # Scene domain
 
@@ -12,7 +12,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-10-27
+Last updated: 2026-11-12
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -147,7 +147,7 @@ The Control branch uses shared [`RecursiveBehavior`](../classes/RecursiveBehavio
 - `Tween` and tweeners: typed SceneTree-driven sequential/parallel interpolation, callbacks, waits, nested timelines, looping, pause/lane/time-scale policy, and completion events. Every own Tween and Tweener member and type row now has a pinned semantic audit, including 96 easing samples and near-limit Int64. Inherited lifetime roles, native cadence and other domains retain their separate coverage status.
 - `PackedScene`: `Resource` that captures any reusable typed owned-node hierarchy, from one composed game object through a complete level, and reconstructs independent detached instances.
 - `SceneState`: live read-only typed metadata view for current packed data.
-- `PackedSceneEditState`: instantiation policy whose runtime `Disabled` value is implemented and whose editor values fail explicitly.
+- `PackedSceneEditState`: instantiation policy with runtime `Disabled` and editor-context `MainInherited`.
 
 The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape, CollisionPolygon and RayCast descendants on the existing Entity branch. An enabled RayCast samples through the internal physics callback before SceneTree steps the registered space; its result remains cached until another eligible frame or forced sample. SceneTree owns the space step before timers, tweens and interpolation end capture. Attached CanvasItems access the same space through [World](../classes/World.md); Physics owns RID/server/query behavior while Scene remains the scheduling and lifetime owner.
 
@@ -193,7 +193,7 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 - Canvas membership emits entry/exit notifications; local and inherited visibility delivery includes Hidden, and showing schedules redraw. Manual tree notifications do not mutate membership.
 - Visibility and canvas-root, behind-parent, nested local Y and effective Z ordering govern retained commands. Rendering order does not change process/input scheduling.
 - Root-window drawing and its input/client Viewport are integrated. Root viewport Control hit testing, mouse bubbling and focused keyboard delivery run; complete GUI routing remains absent. Scene switching and file loading/reloading execute through typed PackedScene templates and internal instance leases. There is no independent offscreen viewport, wider physics server/area/joint API, RPC/multiplayer, accessibility backend, or scripting. Tweening is runtime-only and has no editor/serialization surface.
-- Packed scenes support in-memory capture and typed archive persistence. Programmatic Node metadata, flattened editable-owner capture and registered persistent event endpoints execute. Deferred materialization executes through [deferred scenes](../components/deferred-scenes.md). Root inheritance, import integration and non-Disabled editor edit modes remain absent.
+- Packed scenes support in-memory capture and typed archive persistence. Programmatic Node metadata, flattened editable-owner capture and registered persistent event endpoints execute. Deferred materialization executes through [deferred scenes](../components/deferred-scenes.md). Derived root capture and base-state inspection execute through MainInherited. Import integration and the Instance/Main editor modes remain separate.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.
 - There is no complete target host/package/test matrix; current executable verification is Linux-only.

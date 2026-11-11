@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-18
+Last updated: 2026-11-12
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -285,7 +285,7 @@ ADR 0023 is maintained in [Packed scenes and runtime hierarchy duplication](pack
 <a id="adr-0031"></a>
 ## ADR 0031: Make Node trees and reusable scenes the primary game-object model
 
-Last updated: 2026-10-17
+Last updated: 2026-11-12
 
 - Status: Accepted
 - Scope: Public game-object, world-composition, and scene-reuse model
@@ -310,7 +310,7 @@ The intended model follows the proven Node-based, scene-oriented structure famil
 
 ### Current implementation boundary
 
-The implemented `PackedScene` contract captures a typed owned Node hierarchy and creates independent detached instances. Typed scene-file persistence and file-based change/reload execute under ADR 0013; registered persistent typed connections execute under ADR 0010. Programmatic Node authoring metadata and flattened editable-owner selection execute under ADRs 0008/0023. Linked runtime templates and complete selected overrides execute under ADR 0023. Root inheritance, non-Disabled edit modes, live scripting attachment and full editor UI remain prerequisites. Ordinary parenting and packing remain the composition model.
+The implemented `PackedScene` contract captures a typed owned Node hierarchy and creates independent detached instances. Typed scene-file persistence and file-based change/reload execute under ADR 0013; registered persistent typed connections execute under ADR 0010. Programmatic Node authoring metadata and flattened editable-owner selection execute under ADRs 0008/0023. Linked runtime templates, complete selected overrides and inherited roots execute under ADR 0023. The Instance/Main editor modes, live scripting attachment and full editor UI retain separate prerequisites. Ordinary parenting and packing remain the composition model.
 
 ### Consequences
 

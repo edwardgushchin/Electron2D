@@ -34,12 +34,12 @@ public sealed class SceneState : ElectronObject
         finally { base.Dispose(disposing); }
     }
     /// <summary>Gets the inherited base scene state.</summary>
-    /// <returns>Always <see langword="null"/> until scene inheritance is available.</returns>
-    /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
+    /// <returns>The base template's live read-only state, or <see langword="null"/> for an empty or concrete scene.</returns>
+    /// <exception cref="ObjectDisposedException">This state or its base template has been disposed.</exception>
     public SceneState? GetBaseSceneState()
     {
-        ThrowIfDisposed();
-        return null;
+        var template = Read(static data => data.Nodes.Length == 0 ? null : data.Nodes[0].Instance);
+        return template?.GetState();
     }
 
     /// <summary>Gets the number of persistent authored connections, including inactive recovery records, captured in this state.</summary>
@@ -106,7 +106,7 @@ public sealed class SceneState : ElectronObject
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public int GetNodeIndex(int nodeIndex) => ReadNode(nodeIndex).SiblingIndex;
 
-    /// <summary>Gets the nested packed scene associated with a node.</summary>
+    /// <summary>Gets the base or nested packed scene associated with a node.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
     /// <returns>The borrowed linked template, or <see langword="null"/> for a local node or reused child override.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>

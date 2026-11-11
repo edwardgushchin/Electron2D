@@ -41,7 +41,7 @@ public sealed partial class PackedScene
     }
 
     private Node InstantiateLinked(PackedSceneData data, string path, bool setupLocalResources,
-        List<Node>? parentNodes, Dictionary<PackedScene, PackedSceneData> templates)
+        List<Node>? parentNodes, Dictionary<PackedScene, PackedSceneData> templates, bool authorInherited)
     {
         IDisposable? lease = RetainFileResources();
         var nodes = new Node[data.Nodes.Length];
@@ -86,6 +86,7 @@ public sealed partial class PackedScene
                     }
                     inherited.Add(i, original);
                     if (node.SceneInstanceConnections is { } supplied) connections.UnionWith(supplied);
+                    if (i == 0 && !authorInherited) node.InheritedScene = new(instance, node, original.Values);
                 }
                 else
                 {
@@ -98,7 +99,8 @@ public sealed partial class PackedScene
                 if (stored.Instance is not null || stored.InstanceRootIndex >= 0)
                 {
                     var localRoot = stored.Instance is not null ? node : node.Owner ?? nodes[stored.InstanceRootIndex];
-                    if (!scopes.TryGetValue(localRoot, out scope)) scopes.Add(localRoot, scope = CreateSceneDuplicationScope(isolateAllResources: !setupLocalResources));
+                    if (!ReferenceEquals(localRoot, nodes[0]) && !scopes.TryGetValue(localRoot, out scope))
+                        scopes.Add(localRoot, scope = CreateSceneDuplicationScope(isolateAllResources: !setupLocalResources));
                     RestoreProperties(node, stored.Properties, scope, localRoot: localRoot);
                 }
                 else RestoreProperties(node, stored.Properties, scope);
@@ -126,7 +128,8 @@ public sealed partial class PackedScene
             }
             for (var i = 0; i < nodes.Length; i++) if (!skipped[i]) RestoreProperties(nodes[i], data.Nodes[i].Properties, resources, nodeReferences: true);
             var root = nodes[0];
-            if (!IsBuiltInPath(path)) root.SetSceneFilePath(path);
+            if (!authorInherited && !IsBuiltInPath(path)) root.SetSceneFilePath(path);
+            else if (authorInherited || data.Nodes[0].Instance is not null) root.SetSceneFilePath(string.Empty);
             foreach (var node in created) node.ValidateSceneInstance();
             foreach (var connection in data.Connections)
             {
@@ -142,7 +145,7 @@ public sealed partial class PackedScene
                 resources.SetupLocalResources();
                 foreach (var scope in scopes.Values) scope.SetupLocalResources();
             }
-            root.AdoptSceneResources(resources.ReleaseCreated());
+            root.AppendSceneResources(resources.ReleaseCreated());
             foreach (var (localRoot, scope) in scopes) localRoot.AppendSceneResources(scope.ReleaseCreated());
             if (lease is not null)
                 foreach (var node in created)
@@ -152,6 +155,7 @@ public sealed partial class PackedScene
             if (setupLocalResources) root.Notify(Node.NotificationSceneInstantiated);
             topology.Validate();
             root.RecordSceneInstance(this, created);
+            if (authorInherited) root.InheritedScene = new(this, root, created);
             if (parentNodes is null) EndSceneInstantiation(created.ToArray(), created.Count);
             else parentNodes.AddRange(created);
             return root;

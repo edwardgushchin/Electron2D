@@ -64,7 +64,7 @@ internal static partial class ResourceArchive
         if (version < 5) return (-1, -1, string.Empty, string.Empty);
         var reference = stream.Get32(); var root = stream.Get32(); var path = ResourceArchiveStrings.Read(stream);
         var placeholder = version >= 6 ? ResourceArchiveStrings.Read(stream) : string.Empty;
-        if (reference < -1 || reference >= resources || reference >= 0 && (index == 0 || root >= 0) ||
+        if (reference < -1 || reference >= resources || reference >= 0 && (index == 0 && version < 10 || root >= 0) ||
             root < -1 || root >= index || root >= 0 && (!linkedRoots[root] || path.Length == 0 || path.Split('/').Any(part => !Node.IsValidStoredNodeName(part))) ||
             root < 0 && path.Length != 0 || placeholder.Length != 0 && (reference >= 0 || root >= 0)) throw new InvalidDataException("Invalid linked scene record.");
         linkedRoots[index] = reference >= 0 || placeholder.Length != 0;

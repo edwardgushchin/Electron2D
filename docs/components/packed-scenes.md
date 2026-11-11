@@ -1,6 +1,6 @@
 # Packed scenes component
 
-Last updated: 2026-10-21
+Last updated: 2026-11-12
 
 ## Scope
 
@@ -12,7 +12,7 @@ This Scene component provides the common reuse boundary for Electron2D's Node-ba
 | --- | --- |
 | [`PackedScene`](../classes/PackedScene.md) | Resource that captures a reusable owned-node snapshot and constructs independent detached hierarchies |
 | [`SceneState`](../classes/SceneState.md) | Live read-only typed metadata view over current packed data |
-| [`PackedSceneEditState`](../classes/PackedSceneEditState.md) | Runtime/editor instantiation policy; only runtime `Disabled` is implemented |
+| [`PackedSceneEditState`](../classes/PackedSceneEditState.md) | Runtime/editor instantiation policy; `Disabled` for runtime instances and `MainInherited` for derived authoring |
 
 All three types ship in `Electron2D.dll`. Production sources live in `src/Scene/Resources/`.
 
@@ -120,7 +120,7 @@ The final active-body cohort also passes strict current-source NativeAOT publica
 
 ## Linked runtime instances
 
-[Linked scenes](linked-scenes.md) retain actual borrowed templates, reconstruct implicit children and apply complete selected typed state to original relative identities. Nested local-resource ownership, stable fallback aliases/RIDs, inherited connection omission, sibling placement, fresh external/bundled files and construction rollback execute on current backends. Deferred materialization now executes through [deferred scenes](deferred-scenes.md). Root inheritance and non-Disabled editor modes remain separate gaps.
+[Linked scenes](linked-scenes.md) retain actual borrowed templates, reconstruct implicit children and apply complete selected typed state to original relative identities. Nested local-resource ownership, stable fallback aliases/RIDs, inherited connection omission, sibling placement, fresh external/bundled files and construction rollback execute on current backends. Deferred materialization now executes through [deferred scenes](deferred-scenes.md). [Inherited roots](linked-scenes.md#inherited-roots) retain an immediate base, apply sparse typed overrides and support authoring through MainInherited. Instance and Main remain separate editor modes.
 
 ## Missing-node recovery
 

@@ -129,7 +129,16 @@ public partial class Node
                 catch (Exception error) { CollectException(ref errors, error); }
             }
             for (var ancestor = parent; ancestor is not null; ancestor = ancestor.Parent)
+            {
                 if (ancestor.SceneInstancePaths is { } paths && paths.Remove(InstanceID, out var path)) paths[node.InstanceID] = path;
+                ancestor.InheritedScene?.ReplaceNode(InstanceID, node.InstanceID);
+            }
+            if (InheritedScene is { } inherited)
+            {
+                inherited.ReplaceNode(InstanceID, node.InstanceID);
+                node.InheritedScene = inherited;
+                InheritedScene = null;
+            }
             if (SceneInstancePaths is { } origins)
             {
                 node.SceneInstancePaths = new(origins); node.SceneInstancePaths.Remove(InstanceID); node.SceneInstancePaths[node.InstanceID] = ".";

@@ -118,6 +118,7 @@ internal static partial class LinkedSceneTests
     {
         if (mode == "produce") Produce(folder);
         else if (mode is "read" or "updated" or "bundled") ReadFiles(folder, mode == "updated", mode == "bundled");
+        else if (mode is "inherited-relative" or "inherited-bundled") ReadInheritedFile(folder, mode == "inherited-bundled");
         else throw new ArgumentException("Unknown linked scene child mode.");
     }
 }

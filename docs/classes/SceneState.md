@@ -1,6 +1,6 @@
 # SceneState
 
-Last updated: 2026-10-21
+Last updated: 2026-11-12
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -49,7 +49,7 @@ int nodeCount = state.GetNodeCount();
 | [`public int GetNodeCount()`](#m-electron2d-scenestate-getnodecount) | Gets the number of stored nodes. |
 | [`public IReadOnlyList<string> GetNodeGroups(int nodeIndex)`](#m-electron2d-scenestate-getnodegroups-system-int32) | Gets the persistent groups stored for a node. |
 | [`public int GetNodeIndex(int nodeIndex)`](#m-electron2d-scenestate-getnodeindex-system-int32) | Gets the stored sibling index used by an instanced subscene override. |
-| [`public PackedScene GetNodeInstance(int nodeIndex)`](#m-electron2d-scenestate-getnodeinstance-system-int32) | Gets the nested packed scene associated with a node. |
+| [`public PackedScene GetNodeInstance(int nodeIndex)`](#m-electron2d-scenestate-getnodeinstance-system-int32) | Gets the base or nested packed scene associated with a node. |
 | [`public string GetNodeInstancePlaceholder(int nodeIndex)`](#m-electron2d-scenestate-getnodeinstanceplaceholder-system-int32) | Gets the resource path represented by a node placeholder. |
 | [`public string GetNodeName(int nodeIndex)`](#m-electron2d-scenestate-getnodename-system-int32) | Gets a stored node's name. |
 | [`public string GetNodeOwnerPath(int nodeIndex)`](#m-electron2d-scenestate-getnodeownerpath-system-int32) | Gets the path of a stored node's owner. |
@@ -68,11 +68,11 @@ int nodeCount = state.GetNodeCount();
 
 Gets the inherited base scene state.
 
-**Returns:** Always `null` until scene inheritance is available.
+**Returns:** The immediate base template’s live read-only state, or `null` for an empty or concrete scene. The base template owns the state identity.
 
 **Exceptions**
 
-- `ObjectDisposedException`: This state has been disposed.
+- `ObjectDisposedException`: This state or its base template has been disposed.
 
 <a id="m-electron2d-scenestate-getconnectioncount"></a>
 ### `public int GetConnectionCount()`
@@ -131,7 +131,7 @@ Gets the stored sibling index used by an instanced subscene override.
 <a id="m-electron2d-scenestate-getnodeinstance-system-int32"></a>
 ### `public PackedScene GetNodeInstance(int nodeIndex)`
 
-Gets the nested packed scene associated with a node.
+Gets the base or nested packed scene associated with a node.
 
 **Parameters**
 
@@ -331,7 +331,7 @@ Disposing the source packed scene does not dispose externally held states. Such 
 
 ## Verification and limitations
 
-The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, registered connection and absent placeholder/inheritance metadata, typed property name/type/value access including Timer configuration, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
+The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, registered connections and metadata for concrete, inherited and deferred scenes, typed property name/type/value access including Timer configuration, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
 
 Registered connection accessors and typed captured Node authoring fields execute. Linked template identity, inserted sibling positions and reused-node type omission execute; deferred path/marker and typed pending queries execute through [deferred scenes](../components/deferred-scenes.md); inherited base state remains absent; file-format internals stay private. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
 

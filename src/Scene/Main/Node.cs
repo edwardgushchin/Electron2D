@@ -2121,7 +2121,7 @@ public partial class Node : ElectronObject
 
                 _ownedSceneResources = null;
             }
-            SceneInstancePaths = null; SceneInstanceConnections = null; SpawnSceneIdentity = null;
+            SceneInstancePaths = null; SceneInstanceConnections = null; SpawnSceneIdentity = null; InheritedScene = null;
             _rpcMethods = null; _removedRPCMethods = null; _rpcPolicies = null;
             try { AdoptSceneFileLease(null); } catch (Exception error) { CollectException(ref errors, error); }
 
