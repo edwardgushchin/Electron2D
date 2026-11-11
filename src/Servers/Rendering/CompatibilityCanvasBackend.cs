@@ -40,6 +40,8 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             int.TryParse(SDL.GetHint(SDL.Hints.RenderLineMethod), out var lineMethod);
             _nativeLineMethod = lineMethod;
             _rasterAttributeLines = Driver == "software" || lineMethod is not (2 or 3);
+            if (Driver is "opengl" or "opengles2")
+                AdapterIdentity = GraphicsAdapterIdentity.ReadGL(window.DangerousGetHandle());
             CaptureGraphicsHandles(window.DangerousGetHandle());
             Check(SDL.SetRenderDrawBlendMode(_renderer.DangerousGetHandle(), SDL.BlendMode.Blend), "set canvas blending");
         }

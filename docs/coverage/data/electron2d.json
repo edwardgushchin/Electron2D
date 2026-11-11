@@ -10846,6 +10846,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingDevice.DeviceType",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.DeviceType",
+    "name": "DeviceType",
+    "signature": "public enum Electron2D.RenderingDevice.DeviceType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingDevice.DrawFlags",
     "kind": "type",
     "declaringType": "Electron2D.RenderingDevice.DrawFlags",
@@ -54596,6 +54614,84 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.DataFormat",
     "value": "124"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DeviceType.CPU()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DeviceType",
+    "name": "CPU",
+    "signature": "public const Electron2D.RenderingDevice.DeviceType CPU = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DeviceType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DeviceType.DiscreteGPU()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DeviceType",
+    "name": "DiscreteGPU",
+    "signature": "public const Electron2D.RenderingDevice.DeviceType DiscreteGPU = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DeviceType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DeviceType.IntegratedGPU()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DeviceType",
+    "name": "IntegratedGPU",
+    "signature": "public const Electron2D.RenderingDevice.DeviceType IntegratedGPU = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DeviceType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DeviceType.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DeviceType",
+    "name": "Max",
+    "signature": "public const Electron2D.RenderingDevice.DeviceType Max = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DeviceType",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DeviceType.Other()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DeviceType",
+    "name": "Other",
+    "signature": "public const Electron2D.RenderingDevice.DeviceType Other = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DeviceType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DeviceType.VirtualGPU()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DeviceType",
+    "name": "VirtualGPU",
+    "signature": "public const Electron2D.RenderingDevice.DeviceType VirtualGPU = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DeviceType",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearAll()",
@@ -154677,6 +154773,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetVideoAdapterDriverInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetVideoAdapterDriverInfo",
+    "signature": "public static System.String[] GetVideoAdapterDriverInfo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.HasEnvironment(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -179529,6 +179638,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.GetDevicePipelineCacheUUID()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetDevicePipelineCacheUUID",
+    "signature": "public System.String GetDevicePipelineCacheUUID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.GetDeviceVendorName()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetDeviceVendorName",
+    "signature": "public System.String GetDeviceVendorName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.GetMemoryUsage(Electron2D.RenderingDevice.MemoryType)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -183591,6 +183726,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GetVideoAdapterAPIVersion()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GetVideoAdapterAPIVersion",
+    "signature": "public static System.String GetVideoAdapterAPIVersion()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GetVideoAdapterName()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GetVideoAdapterName",
+    "signature": "public static System.String GetVideoAdapterName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GetVideoAdapterType()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GetVideoAdapterType",
+    "signature": "public static Electron2D.RenderingDevice.DeviceType GetVideoAdapterType()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DeviceType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GetVideoAdapterVendor()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GetVideoAdapterVendor",
+    "signature": "public static System.String GetVideoAdapterVendor()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

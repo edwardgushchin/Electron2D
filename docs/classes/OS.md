@@ -23,6 +23,10 @@ Process argv, Linux MIDI names and GIO paths use [tracked UTF8 input storage](..
 | `public static System.Void ShellShowInFileManager(System.String fileOrDirPath, System.Boolean openFolder = true)` | Requests the file manager for an ordinary filesystem path; globalize project paths first. Windows enters a directory when openFolder is true, otherwise selects the file/directory in its parent. Existing directory views retain native selection state. Invalid empty/null/NUL input fails before external work; Windows Shell rejection throws IOException. The macOS backend remains unavailable. See [native behavior and verification](../components/file-manager.md). |
 | `protected override System.Void ValidateDisposal()` | Inherited dialog/tree/scene lifecycle extension point; see the owning base reference. |
 
+## Graphics driver
+
+`GetVideoAdapterDriverInfo()` returns the active renderer's reported driver name and version on Windows and desktop Linux. Each available pair is caller-owned. See [graphics adapter identity](../components/graphics-adapter-identity.md) for unavailable values.
+
 ## Storage, verification and decisions
 
 FileDialogTests, DisplayServerDialogTests and FileDialogRenderingTests exercise the connected owner workflow, saved fresh-process scenes, current Linux native keyboard/pointer/pixels and retained rendering. Their exact measured boundaries and absent native chooser/platform prerequisites are recorded in the [component](../components/file-dialogs.md). [ADR 0051](../decisions/enum-identities.md#adr-0051) controls enum identity; [ADR 0095](../decisions/singleton-services.md#adr-0095) controls static retained service access.

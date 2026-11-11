@@ -139,6 +139,10 @@ Largest accepted CanvasLayer.Layer value. It draws after every smaller layer ind
 | `static bool RenderLoopEnabled { get; set; }` | Enables frame submission; initially true. |
 | `string GetCurrentRenderingMethod()` | Actual `gpu` or `compatibility` method after fallback. |
 | `string GetCurrentRenderingDriverName()` | Actual native driver name. |
+| `string GetVideoAdapterName()` | Active native adapter or GL renderer name. |
+| `string GetVideoAdapterVendor()` | Active adapter vendor when reported. |
+| `string GetVideoAdapterAPIVersion()` | Active graphics API version when reported. |
+| `RenderingDevice.DeviceType GetVideoAdapterType()` | Active physical device classification when reported. |
 | `Color GetDefaultClearColor()` | Current clear color. |
 | `void SetDefaultClearColor(Color color)` | Sets a finite clear color for later frames. |
 | [`public static RID Texture2DCreate(Image image)`](#texture2dcreate) | Copies a live nonempty image, validates axes 1..16384 and supported sampling formats, and returns a renderer-owned identity. |

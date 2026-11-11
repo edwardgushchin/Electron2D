@@ -4,6 +4,7 @@ EXPORTS
     e2d_render_filter_support
     e2d_render_texture_format
     e2d_render_limits
+    e2d_render_adapter_identity
     e2d_render_memory
     e2d_render_sampler
     e2d_render_sampler_view

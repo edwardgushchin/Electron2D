@@ -1,6 +1,7 @@
 _e2d_render_filter_support
 _e2d_render_texture_format
 _e2d_render_limits
+_e2d_render_adapter_identity
 _e2d_render_float_atomic_support
 _e2d_render_memory
 _e2d_render_sampler

@@ -1,0 +1,11 @@
+# Graphics adapter identity
+
+The rendering server publishes an immutable snapshot of its selected adapter when the renderer opens. `GetVideoAdapterName`, `GetVideoAdapterVendor`, `GetVideoAdapterAPIVersion` and `GetVideoAdapterType` read that snapshot without creating a device or consulting another GPU. Calls before startup and after shutdown return empty strings and `DeviceType.Other`. The snapshot can be read from worker threads.
+
+SDL GPU supplies the selected device name and any driver name and version it publishes. The pinned Vulkan bridge reads hardware vendor ID, classification, API version and the 16-byte pipeline cache UUID from the selected physical device's properties. The cache UUID is emitted as 32 lowercase hexadecimal digits. The retained and local `RenderingDevice` queries read their device's identity under the normal owner and lifetime rules.
+
+The OpenGL compatibility path captures the renderer, vendor and version strings while the owned window context is current. Software reports no graphics adapter. On Windows and desktop Linux, `OS.GetVideoAdapterDriverInfo()` returns a caller-owned pair when either driver field is known. An unavailable field is empty. With neither field, it returns an empty array.
+
+A preceding native module without the identity export still reports the public SDL properties. Direct3D 12 currently supplies its native name and driver version through SDL. Its hardware vendor, type, API version and cache UUID require an adapter tied to the owned DXGI/D3D12 device. Metal and browser identity, missing compatibility driver fields and release packages retain their native verification dependencies under [ADR 0021](../decisions/product.md#adr-0021).
+
+The `ELECTRON2D_TEST_ADAPTER_IDENTITY` profile checks the renderer after drawing a frame. The `vulkan` profile takes the expected model, API version, lowercase cache UUID without separators, driver name, hardware vendor and device type from an independent adapter inventory. It also checks local-device ownership and retirement, and the caller-owned driver array. The `direct3d12` profile takes the expected model. The `opengl` profile compares strings with the current native context, and `software` verifies unavailable identity. Use `vulkan-no-identity` with a preceding native module and the same Vulkan inventory to check missing-export behavior.

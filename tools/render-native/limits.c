@@ -8,6 +8,21 @@
 #define E2D_EXPORT __attribute__((visibility("default")))
 #endif
 
+E2D_EXPORT int e2d_render_adapter_identity(SDL_GPUDevice *device, uint32_t abi, uint32_t *vendor,
+    uint32_t *type, uint32_t *version, uint8_t *uuid)
+{
+    if (!device || abi != 1 || !vendor || !type || !version || !uuid) return -1;
+    const char *driver = SDL_GetGPUDeviceDriver(device);
+    if (!e2d_render_pinned_core() || !driver || SDL_strcmp(driver, "vulkan") != 0) return 0;
+    const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
+    const VkPhysicalDeviceProperties *properties = &renderer->physicalDeviceProperties.properties;
+    *vendor = properties->vendorID;
+    *type = (uint32_t)properties->deviceType;
+    *version = properties->apiVersion;
+    SDL_memcpy(uuid, properties->pipelineCacheUUID, VK_UUID_SIZE);
+    return 1;
+}
+
 E2D_EXPORT int e2d_render_limits(SDL_GPUDevice *device, uint32_t abi, uint64_t *out, uint32_t count)
 {
     if (!device || !out || abi != 1 || count != 37) return -1;

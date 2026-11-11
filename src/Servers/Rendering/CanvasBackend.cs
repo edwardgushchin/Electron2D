@@ -21,6 +21,7 @@ internal readonly record struct CanvasPresentation(CanvasRenderTarget Target, Re
 internal abstract partial class CanvasBackend : IDisposable
 {
     internal virtual bool HasOSFeature(string feature) => false;
+    internal GraphicsAdapterIdentity AdapterIdentity { get; private protected init; } = GraphicsAdapterIdentity.Empty;
     private CanvasRenderTarget? _presentation;
     protected CanvasRenderTarget PreparePresentation(bool HDR = false) => PreparePresentation(GetPixelSize(), ref _presentation, HDR);
     protected CanvasRenderTarget PreparePresentation(Vector2i size, ref CanvasRenderTarget? storage, bool HDR = false)

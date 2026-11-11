@@ -102,6 +102,8 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.UInt64 GetCapturedTimestampGPUTime(System.Int32 index)` | Reads native GPU nanoseconds. |
 | [`public RenderingDevice CreateLocalDevice()`](#createlocaldevice) | Creates a caller-owned local device on the receiver's GPU. |
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
+| `public string GetDeviceVendorName()` | Returns the selected device's hardware vendor when available. |
+| `public string GetDevicePipelineCacheUUID()` | Returns the native cache UUID in lowercase hexadecimal when available. |
 | [`public System.Byte[] ShaderCompileBinaryFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")`](#member-shader-binary-compile) | Validates and packages copied stages and a strict UTF-8 diagnostic name. |
 | [`public Electron2D.RID ShaderCreateFromBytecode(System.ReadOnlySpan<System.Byte> binaryData, Electron2D.RID placeholderRID = default)`](#member-shader-binary-load) | Loads a complete container and optionally initializes one reserved shader identity. |
 | [`public Electron2D.RID ShaderCreatePlaceholder()`](#member-shader-binary-placeholder) | Reserves an owned identity for later bytecode loading. |
@@ -319,6 +321,10 @@ Borrowers become invalid; they may still be freed explicitly.
 `rid`: A live identity owned by this device.
 
 <a id="member-6a41660f977d"></a>
+### Device identity
+
+`GetDeviceVendorName()` and `GetDevicePipelineCacheUUID()` return empty strings when their native fields are unavailable. [`DeviceType`](RenderingDevice.DeviceType.md) classifies physical adapters. See [graphics adapter identity](../components/graphics-adapter-identity.md).
+
 ### GetDeviceName()
 
 ```csharp

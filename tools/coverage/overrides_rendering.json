@@ -1,6 +1,30 @@
 {
   "mappings": [
     {
+      "godot": "RenderingServer::method:get_video_adapter_name()",
+      "electron2d": "method:Electron2D.RenderingServer.GetVideoAdapterName()",
+      "state": "Partial",
+      "reason": "The active SDL GPU reports its native name and the active GL context reports its renderer string. Software and inactive renderers report empty. Browser and foreign target qualification remains open."
+    },
+    {
+      "godot": "RenderingServer::method:get_video_adapter_vendor()",
+      "electron2d": "method:Electron2D.RenderingServer.GetVideoAdapterVendor()",
+      "state": "Partial",
+      "reason": "ADR 0028: active OpenGL context reports this field. Vulkan uses the selected SDL adapter and the guarded Vulkan identity bridge. Other GPU backends need their native identity fields. See docs/components/graphics-adapter-identity.md."
+    },
+    {
+      "godot": "RenderingServer::method:get_video_adapter_api_version()",
+      "electron2d": "method:Electron2D.RenderingServer.GetVideoAdapterAPIVersion()",
+      "state": "Partial",
+      "reason": "ADR 0028: active OpenGL context reports this field. Vulkan uses the selected SDL adapter and the guarded Vulkan identity bridge. Other GPU backends need their native identity fields. See docs/components/graphics-adapter-identity.md."
+    },
+    {
+      "godot": "RenderingServer::method:get_video_adapter_type()",
+      "electron2d": "method:Electron2D.RenderingServer.GetVideoAdapterType()",
+      "state": "Partial",
+      "reason": "Selected Vulkan device type maps to the typed Vulkan identities. OpenGL and software use Other. Direct3D 12 and Metal need native classification tied to the active device."
+    },
+    {
       "godot": "Shader::enum_value:Mode.MODE_PARTICLES",
       "electron2d": "enumValue:Electron2D.Shader.Mode.Particles()",
       "reason": "ADR 0028: the executable particle compute prerequisite provides a validated 64-lane HLSL/GLSL state/frame ABI, optional bounded GPU subemission, import/MSBuild, typed ShaderMaterial state and graph archives, with explicit public RenderingDevice execution. ParticleShaderTests checks source metadata, malformed layouts, atomic reload, copies/lifetime, native state updates and concurrent bounded queues on Linux software Vulkan. Retained particle scheduling and canvas consumers now execute through their existing layers; hardware/native-memory and foreign-platform acceptance remain separate gates."
