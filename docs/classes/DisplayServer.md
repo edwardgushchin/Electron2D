@@ -175,6 +175,10 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static int GetScreenCount()`](#method-getscreencount) | Gets the current number of connected displays. |
 | [`public static bool IsDarkMode()`](#method-isdarkmode) | Reports whether the current native system theme is dark. |
 | [`public static bool IsDarkModeSupported()`](#method-isdarkmodesupported) | Reports Linux Wayland/X11 Settings portal support, or a known native theme on other drivers. |
+| [`public static int AccessibilityScreenReaderActive()`](#method-accessibilityscreenreaderactive) | Reads desktop screen-reader activity. |
+| [`public static int AccessibilityShouldIncreaseContrast()`](#method-accessibilityshouldincreasecontrast) | Reads the desktop preference for increased contrast. |
+| [`public static int AccessibilityShouldReduceAnimation()`](#method-accessibilityshouldreduceanimation) | Reads the desktop preference for reduced animation. |
+| [`public static int AccessibilityShouldReduceTransparency()`](#method-accessibilityshouldreducetransparency) | Reads the desktop preference for reduced transparency. |
 | [`public static bool HasHardwareKeyboard()`](#method-hashardwarekeyboard) | Reports whether a physical keyboard is connected. |
 | [`public static bool ScreenIsKeptOn()`](#method-screeniskepton) | Reports whether native screen blanking is disabled. |
 | [`public static void ScreenSetKeepOn(bool enable)`](#method-screensetkeepon) | Requests screen wakefulness for this process. |
@@ -326,6 +330,28 @@ On Linux Wayland and X11, returns whether the desktop Settings portal supports a
 **Errors:** `InvalidOperationException` off the opening thread; `ObjectDisposedException` while disposing or after disposal.
 
 **Source:** `src/Servers/Display/DisplayServer.cs`.
+
+<a id="method-accessibilityscreenreaderactive"></a>
+#### `public static int AccessibilityScreenReaderActive()`
+
+Returns `1` when the desktop reports assistive software active, `0` when it reports inactive and `-1` when the status is unknown. Reads the live Windows or Linux screen-reader signal on the display opening thread.
+
+<a id="method-accessibilityshouldincreasecontrast"></a>
+#### `public static int AccessibilityShouldIncreaseContrast()`
+
+Returns `1` when increased contrast is requested, `0` when it is inactive and `-1` when it is unknown. Reads the live Windows or Linux appearance preference on the display opening thread.
+
+<a id="method-accessibilityshouldreduceanimation"></a>
+#### `public static int AccessibilityShouldReduceAnimation()`
+
+Returns `1` when reduced animation is requested, `0` when it is inactive and `-1` when it is unknown. Reads the live Windows or Linux motion preference on the display opening thread.
+
+<a id="method-accessibilityshouldreducetransparency"></a>
+#### `public static int AccessibilityShouldReduceTransparency()`
+
+Returns `1` when reduced transparency or overlapping content is requested, `0` when it is inactive and `-1` when it is unknown. Reads the live Windows preference on the display opening thread.
+
+All four queries require an active display and throw `InvalidOperationException` outside its lifetime or off its opening thread. See [desktop accessibility preferences](../components/display-server.md#desktop-accessibility-preferences) for provider details and verification.
 
 <a id="method-screeniskepton"></a>
 #### `public static bool ScreenIsKeptOn()`

@@ -640,6 +640,26 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static bool IsDarkModeSupported() => RequireService().IsDarkModeSupportedCore();
 
+    /// <summary>Reads the current desktop screen-reader activity.</summary>
+    /// <returns>1 if the desktop reports assistive technology active, 0 if inactive, or -1 if the status is unknown.</returns>
+    /// <exception cref="InvalidOperationException">The display is inactive or the caller is off its opening thread.</exception>
+    public static int AccessibilityScreenReaderActive() => RequireService().ReadAccessibilityPreference(AccessibilityPreference.ScreenReader);
+
+    /// <summary>Reads the current desktop preference for increased contrast.</summary>
+    /// <returns>1 if increased contrast is requested, 0 if it is not requested, or -1 if the preference is unknown.</returns>
+    /// <exception cref="InvalidOperationException">The display is inactive or the caller is off its opening thread.</exception>
+    public static int AccessibilityShouldIncreaseContrast() => RequireService().ReadAccessibilityPreference(AccessibilityPreference.Contrast);
+
+    /// <summary>Reads the current desktop preference for reduced animation.</summary>
+    /// <returns>1 if reduced animation is requested, 0 if it is not requested, or -1 if the preference is unknown.</returns>
+    /// <exception cref="InvalidOperationException">The display is inactive or the caller is off its opening thread.</exception>
+    public static int AccessibilityShouldReduceAnimation() => RequireService().ReadAccessibilityPreference(AccessibilityPreference.Animation);
+
+    /// <summary>Reads the current desktop preference for reduced transparency and overlapping content.</summary>
+    /// <returns>1 if reduced transparency is requested, 0 if it is not requested, or -1 if the preference is unknown.</returns>
+    /// <exception cref="InvalidOperationException">The display is inactive or the caller is off its opening thread.</exception>
+    public static int AccessibilityShouldReduceTransparency() => RequireService().ReadAccessibilityPreference(AccessibilityPreference.Transparency);
+
     /// <summary>Gets the current number of connected displays.</summary>
     /// <returns>The display count, which may change after hotplug events.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

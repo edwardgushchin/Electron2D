@@ -110046,6 +110046,58 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.AccessibilityScreenReaderActive()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "AccessibilityScreenReaderActive",
+    "signature": "public static System.Int32 AccessibilityScreenReaderActive()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.AccessibilityShouldIncreaseContrast()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "AccessibilityShouldIncreaseContrast",
+    "signature": "public static System.Int32 AccessibilityShouldIncreaseContrast()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.AccessibilityShouldReduceAnimation()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "AccessibilityShouldReduceAnimation",
+    "signature": "public static System.Int32 AccessibilityShouldReduceAnimation()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.AccessibilityShouldReduceTransparency()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "AccessibilityShouldReduceTransparency",
+    "signature": "public static System.Int32 AccessibilityShouldReduceTransparency()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.ClipboardGet()",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",

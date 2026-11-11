@@ -1,6 +1,26 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:accessibility_screen_reader_active()",
+      "electron2d": "method:Electron2D.DisplayServer.AccessibilityScreenReaderActive()",
+      "reason": "Win32 reader registration and the Narrator session marker, plus AT-SPI IsEnabled and ScreenReaderEnabled on Linux. Tri-state values preserve unknown status. macOS requires NSWorkspace observation and native verification (ADRs 0021/0040/0041)."
+    },
+    {
+      "godot": "DisplayServer::method:accessibility_should_increase_contrast()",
+      "electron2d": "method:Electron2D.DisplayServer.AccessibilityShouldIncreaseContrast()",
+      "reason": "Win32 high contrast and the Linux Settings portal contrast preference. Tri-state values preserve unknown status. macOS requires NSWorkspace observation and native verification (ADRs 0021/0040/0041)."
+    },
+    {
+      "godot": "DisplayServer::method:accessibility_should_reduce_animation()",
+      "electron2d": "method:Electron2D.DisplayServer.AccessibilityShouldReduceAnimation()",
+      "reason": "Win32 client animation and the Linux Settings portal reduced-motion preference. Tri-state values preserve unknown status. macOS requires NSWorkspace observation and native verification (ADRs 0021/0040/0041)."
+    },
+    {
+      "godot": "DisplayServer::method:accessibility_should_reduce_transparency()",
+      "electron2d": "method:Electron2D.DisplayServer.AccessibilityShouldReduceTransparency()",
+      "reason": "Win32 disabled overlapping content. Linux currently has no corresponding provider in this adapter. Tri-state values preserve unknown status. macOS requires NSWorkspace observation and native verification (ADRs 0021/0040/0041)."
+    },
+    {
       "godot": "DisplayServer::method:color_picker(Callable:)",
       "electron2d": "method:Electron2D.DisplayServer.ColorPicker(System.Action<System.Boolean, Electron2D.Color>)",
       "reason": "Typed status/color callback and display-owner delivery. The Linux desktop portal supplies the selected pixel."
@@ -1416,8 +1436,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "ADR 0041/0114: core semantic tree/AT-SPI output now executes. These nondeprecated host queries still require actual platform reader-process, high-contrast, reduced-animation and reduced-transparency preference observation, change/lifetime tests and defined unavailable-value behavior. Per-application Always output and the accessibility-enabled bus setting do not establish those desktop preference values.",
+      "state": "Partial",
+      "reason": "Native desktop accessibility preferences are executable. macOS requires NSWorkspace observation and native verification. See docs/components/display-server.md#desktop-accessibility-preferences (ADRs 0021/0041).",
       "godot": [
         "DisplayServer::method:accessibility_screen_reader_active()",
         "DisplayServer::method:accessibility_should_increase_contrast()",

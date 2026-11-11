@@ -7,6 +7,88 @@ internal static unsafe partial class LinuxPortalDBus
     internal const string Library = "libdbus-1.so.3", Destination = "org.freedesktop.portal.Desktop", DesktopPath = "/org/freedesktop/portal/desktop";
     internal const int StringType = 's', PathType = 'o', UInt32Type = 'u', DoubleType = 'd', BooleanType = 'b', ArrayType = 'a', StructType = 'r', VariantType = 'v', DictEntryType = 'e';
 
+    internal static int ReadAppearancePreference(string key) => ReadAccessibilityPreference(key, appearance: true);
+    internal static int ReadScreenReader() => ReadAccessibilityPreference("ScreenReaderEnabled", appearance: false);
+
+    private static int ReadAccessibilityPreference(string key, bool appearance)
+    {
+        const string settings = "org.freedesktop.portal.Settings";
+        nint connection = 0;
+        try
+        {
+            Check(ThreadsInitDefault());
+            connection = BusGetPrivate(0, 0);
+            if (connection == 0)
+                return -1;
+            SetExitOnDisconnect(connection, 0);
+
+            if (!appearance)
+            {
+                var enabled = ReadATSPIStatus(connection, "IsEnabled");
+                return enabled == 1 ? ReadATSPIStatus(connection, key) : enabled;
+            }
+
+            var version = QueryVersion(connection, settings, out var owner);
+            if (version == 0 || owner.Length == 0)
+                return -1;
+            var legacyRead = version == 1;
+            var message = NewMethodCall(owner, DesktopPath, settings, legacyRead ? "Read" : "ReadOne");
+            return ReadPreferenceValue(connection, message, "org.freedesktop.appearance", key, UInt32Type, legacyRead);
+        }
+        catch (Exception error) when (error is DllNotFoundException or EntryPointNotFoundException)
+        {
+            return -1;
+        }
+        finally
+        {
+            if (connection != 0)
+            {
+                ConnectionClose(connection);
+                ConnectionUnref(connection);
+            }
+        }
+    }
+
+    private static int ReadATSPIStatus(nint connection, string key)
+    {
+        var message = NewMethodCall("org.a11y.Bus", "/org/a11y/bus", "org.freedesktop.DBus.Properties", "Get");
+        return ReadPreferenceValue(connection, message, "org.a11y.Status", key, BooleanType);
+    }
+
+    private static int ReadPreferenceValue(nint connection, nint message, string group, string key, int type, bool legacyRead = false)
+    {
+        if (message == 0)
+            throw new OutOfMemoryException();
+        nint reply = 0;
+        try
+        {
+            InitAppend(message, out var args);
+            AppendString(ref args, group);
+            AppendString(ref args, key);
+            reply = SendWithReplyAndBlock(connection, message, 250, 0);
+            if (reply == 0 || MessageType(reply) != 2 || Init(reply, out var result) == 0 || GetArgType(ref result) != VariantType)
+                return -1;
+            Recurse(ref result, out var value);
+            var valueType = GetArgType(ref value);
+            if ((legacyRead && valueType == VariantType) || (type == BooleanType && valueType == StructType))
+            {
+                Recurse(ref value, out var inner);
+                value = inner;
+                valueType = GetArgType(ref value);
+            }
+
+            if (valueType != type)
+                return -1;
+            GetBasic(ref value, out uint preference);
+            return preference == 1 ? 1 : 0;
+        }
+        finally
+        {
+            if (reply != 0) MessageUnref(reply);
+            MessageUnref(message);
+        }
+    }
+
     internal static uint QueryVersion(string portal)
     {
         nint connection = 0;
