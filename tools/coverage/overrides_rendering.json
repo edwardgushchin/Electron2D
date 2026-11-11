@@ -3794,6 +3794,11 @@
       "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
     },
     {
+      "godot": "Light2D::property:editor_only",
+      "electron2d": "property:Electron2D.Light.EditorOnly()",
+      "reason": "Stored scene-light eligibility in the editor role under ADRs 0008/0028/0090."
+    },
+    {
       "godot": "class:Light2D",
       "electron2d": "T:Electron2D.Light",
       "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
@@ -7201,15 +7206,15 @@
       "godot": [
         "class:Light2D"
       ],
-      "reason": "Runtime light family executes all common members except EditorOnly. Exact prerequisite: an editor scene-rendering host and editor-hint ownership; the current branded editor screen has no such consumer.",
-      "state": "Partial"
+      "reason": "ADRs 0008/0028/0090: the scene light family executes common lighting and shadow settings for point and directional sources, including stored editor-only eligibility. The workspace uses actual GPU lighting and reports the capability limit on compatibility. See docs/components/canvas-lights.md.",
+      "state": "Implemented"
     },
     {
       "godot": [
         "Light2D::property:editor_only"
       ],
-      "reason": "Requires an executable editor scene-rendering host and editor-hint ownership. No inert EditorOnly switch is exposed in the runtime slice.",
-      "state": "Blocked"
+      "reason": "ADRs 0008/0028/0090: stored EditorOnly requires editor mode and edited-root identity or exact authoring ownership, together with Enabled and inherited visibility. Windows workspace pixels verify both light types, shadows, owner and role transitions, packed state and the compatibility panel's explicit capability behavior.",
+      "state": "Implemented"
     },
     {
       "state": "Implemented",

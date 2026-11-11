@@ -24,8 +24,11 @@ public sealed partial class RenderingServer
     {
         _lighting.Clear();
         _lighting.ShadowSize = _canvasShadowTextureSize;
+        var editedRoot = Engine.IsEditorHint ? CanvasSceneTree?.EditedSceneRoot : null;
         foreach (var node in _nodes)
-            if (node is Light { Enabled: true } light && light.RenderCanvas() is { } canvas && canvas.View(_viewport, out var basis, out _, out _, _interpolationFraction))
+            if (node is Light { Enabled: true } light &&
+                (!light.EditorOnly || editedRoot is not null && (ReferenceEquals(light, editedRoot) || ReferenceEquals(light.Owner, editedRoot))) &&
+                light.RenderCanvas() is { } canvas && canvas.View(_viewport, out var basis, out _, out _, _interpolationFraction))
                 _lighting.AddLight(light, framebuffer * basis * light.RenderGlobal(_interpolationFraction), ViewportHDR(_viewport));
         foreach (var light in _retainedLights.Values)
             if (light.Enabled && RenderingCanvasRegistry.ResolveOrNull(light.Canvas) is { } canvas && canvas.View(_viewport, out var basis, out _, out _, _interpolationFraction))

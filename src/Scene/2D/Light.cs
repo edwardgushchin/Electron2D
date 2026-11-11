@@ -33,6 +33,7 @@ public abstract class Light : Entity
     private LightBlendMode _blendMode = LightBlendMode.Add;
     private Color _color = Colors.White;
     private bool _enabled = true;
+    private bool _editorOnly;
     private float _energy = 1;
     private uint _rangeItemCullMask = 1u;
     private int _rangeLayerMin = 0;
@@ -70,6 +71,16 @@ public abstract class Light : Entity
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _enabled; }
         set { EnsureMutable(); _enabled = value; }
+    }
+
+    /// <summary>Gets or sets whether this light emits only while editing its scene.</summary>
+    /// <value>False initially. Stored in packed scenes.</value>
+    /// <remarks>An editor-only light must be the current edited root or have that node as its scene owner.
+    /// The editor hint, inherited visibility and <see cref="Enabled"/> also apply. Changes affect the next rendered frame.</remarks>
+    public bool EditorOnly
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _editorOnly; }
+        set { EnsureMutable(); _editorOnly = value; }
     }
 
     /// <summary>Gets or sets the finite energy multiplier.</summary>
@@ -177,6 +188,7 @@ public abstract class Light : Entity
         new PropertyDescriptor<Light, LightBlendMode>(nameof(BlendMode), n => n.BlendMode, (n, v) => n.BlendMode = v, _ => LightBlendMode.Add, stored: true),
         new PropertyDescriptor<Light, Color>(nameof(Color), n => n.Color, (n, v) => n.Color = v, _ => Colors.White, stored: true),
         new PropertyDescriptor<Light, bool>(nameof(Enabled), n => n.Enabled, (n, v) => n.Enabled = v, _ => true, stored: true),
+        new PropertyDescriptor<Light, bool>(nameof(EditorOnly), n => n.EditorOnly, (n, v) => n.EditorOnly = v, _ => false, stored: true),
         new PropertyDescriptor<Light, float>(nameof(Energy), n => n.Energy, (n, v) => n.Energy = v, _ => 1, stored: true),
         new PropertyDescriptor<Light, uint>(nameof(RangeItemCullMask), n => n.RangeItemCullMask, (n, v) => n.RangeItemCullMask = v, _ => 1u, stored: true),
         new PropertyDescriptor<Light, int>(nameof(RangeLayerMin), n => n.RangeLayerMin, (n, v) => n.RangeLayerMin = v, _ => 0, stored: true),

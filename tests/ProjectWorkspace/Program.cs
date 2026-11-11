@@ -2,6 +2,7 @@ using Electron2D;
 using Electron2D.Editor;
 using IOPath = System.IO.Path;
 
+if (args is ["--light-preview", var lightingEvidence, var lightingBackend]) return LightWorkspaceTests.Run(IOPath.GetFullPath(lightingEvidence), lightingBackend);
 if (args is ["--canvas-guides", var guideOutput, var guideRenderer]) return CanvasGuideWorkspaceTests.Run(IOPath.GetFullPath(guideOutput), guideRenderer);
 if (args is ["--skeletal-gizmos", var gizmoOutput, var gizmoRenderer]) return GizmoWorkspaceTests.Run(IOPath.GetFullPath(gizmoOutput), gizmoRenderer);
 

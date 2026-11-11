@@ -283310,6 +283310,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Light.EditorOnly()",
+    "kind": "property",
+    "declaringType": "Electron2D.Light",
+    "name": "EditorOnly",
+    "signature": "public System.Boolean EditorOnly { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Light.Enabled()",
     "kind": "property",
     "declaringType": "Electron2D.Light",

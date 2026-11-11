@@ -422,7 +422,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Label](classes/Label.md) | Control | Implemented | 42 |
 | [Label3D](classes/Label3D.md) | GeometryInstance3D | Excluded | 49 |
 | [LabelSettings](classes/LabelSettings.md) | Resource | Implemented | 33 |
-| [Light2D](classes/Light2D.md) | Node2D | Partial | 25 |
+| [Light2D](classes/Light2D.md) | Node2D | Implemented | 25 |
 | [Light3D](classes/Light3D.md) | VisualInstance3D | Excluded | 57 |
 | [LightOccluder2D](classes/LightOccluder2D.md) | Node2D | Implemented | 3 |
 | [LightmapGI](classes/LightmapGI.md) | VisualInstance3D | Excluded | 51 |

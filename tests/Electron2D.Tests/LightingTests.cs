@@ -24,11 +24,11 @@ internal static partial class LightingTests
         using var contour = new OccluderPolygon(); var points = new[] { new Vector2(0, 0), new Vector2(8, 0), new Vector2(8, 8) }; contour.Polygon = points; points[0] = new(9, 9);
         var returned = contour.Polygon; returned[0] = new(10, 10); Check(contour.Polygon[0] == Vector2.Zero, "Contour arrays are copied in both directions");
         Reject<ArgumentException>(() => contour.Polygon = [new(float.NaN, 0)]); Check(contour.Polygon.Length == 3, "Invalid contour preserves state");
-        using var light = new PointLight(); Check(light.Enabled && light.Energy == 1 && light.Height == 0 && light.ShadowFilter == LightShadowFilter.None, "Light defaults");
+        using var light = new PointLight(); Check(light.Enabled && !light.EditorOnly && light.Energy == 1 && light.Height == 0 && light.ShadowFilter == LightShadowFilter.None, "Light defaults");
         light.TextureScale = 0; Check(light.TextureScale == 0.00001f, "Zero scale preserves invertible mask"); Reject<ArgumentOutOfRangeException>(() => light.Energy = float.NaN);
         using var material = new CanvasItemMaterial { LightMode = LightMode.LightOnly }; using var materialCopy = (CanvasItemMaterial)material.Duplicate(); Check(materialCopy.LightMode == LightMode.LightOnly, "Copied shading policy");
-        using var root = new Entity(); var packedLight = new PointLight { Height = 14, RangeItemCullMask = uint.MaxValue, Energy = 2, Offset = new(3, 4) }; root.AddChild(packedLight); packedLight.Owner = root;
-        using var packed = new PackedScene(); packed.Pack(root); using var instance = (Entity)packed.Instantiate(); var restored = (PointLight)instance.GetChild(0); Check(restored.Height == 14 && restored.Offset == new Vector2(3, 4) && restored.RangeItemCullMask == uint.MaxValue, "Typed scene factory and descriptors");
+        using var root = new Entity(); var packedLight = new PointLight { Height = 14, EditorOnly = true, RangeItemCullMask = uint.MaxValue, Energy = 2, Offset = new(3, 4) }; root.AddChild(packedLight); packedLight.Owner = root;
+        using var packed = new PackedScene(); packed.Pack(root); using var instance = (Entity)packed.Instantiate(); var restored = (PointLight)instance.GetChild(0); Check(restored.Height == 14 && restored.EditorOnly && restored.Offset == new Vector2(3, 4) && restored.RangeItemCullMask == uint.MaxValue, "Typed scene factory and descriptors");
         var interpolation = new CanvasTransformInterpolation { Enabled = true };
         interpolation.Reset(new Transform(0, new Vector2(2, 0))); interpolation.Tick(new Transform(0, new Vector2(2, 0)), true); interpolation.Tick(new Transform(0, new Vector2(10, 0)), false);
         Check(interpolation.Render(Transform.Identity, .5f, true).Origin == new Vector2(6, 0), "Retained physics snapshot midpoint");

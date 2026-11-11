@@ -10,6 +10,10 @@ Last updated: 2026-11-06
 
 Shared illumination, receiving ranges, independent shadow selection and height methods. See the component for defaults, ownership, sampling, masks, persistence and renderer limits. Public members follow the attached scene's owner-thread rules; resources reject disposed inputs and preserve borrowed ownership. GPU lighting is executable; compatibility rejects affected lighting passes explicitly.
 
+## EditorOnly
+
+`public bool EditorOnly { get; set; }` defaults to false and is stored in packed scenes. When enabled, the light emits only in the editor role and only when it is the edited root or its `Owner` is the edited root. Visibility and `Enabled` also apply. [Editor-only lighting](../components/canvas-lights.md#editor-only-lighting)
+
 ## Verification
 
 `LightingTests` and native lighting checks cover resource metadata, actual pixels and prepared frame reuse. Foreign-platform and owner acceptance remain separate.

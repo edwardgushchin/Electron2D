@@ -81,15 +81,21 @@ public sealed partial class ProjectSession
         {
             Expected(SessionDocumentKind.Scene, expectedSceneRevision);
             using var source = Decode(_storage, _state.Scene, PathFor(SessionDocumentKind.Scene), _state.Nodes);
-            foreach (var node in Flatten(source))
+            var sourceNodes = Flatten(source);
+            foreach (var node in sourceNodes)
                 if (node.GetType() != typeof(Node) && node.GetType() != typeof(Entity) && node.GetType() != typeof(Polygon) && node.GetType() != typeof(Line) && node.GetType() != typeof(Sprite) && node.GetType() != typeof(Skeleton) && node.GetType() != typeof(Bone)
-                    && node.GetType() != typeof(Camera) && node.GetType() != typeof(Marker) && node.GetType() != typeof(ReferenceRect) && node.GetType() != typeof(VisibleOnScreenNotifier))
+                    && node.GetType() != typeof(Camera) && node.GetType() != typeof(Marker) && node.GetType() != typeof(ReferenceRect) && node.GetType() != typeof(VisibleOnScreenNotifier)
+                    && node.GetType() != typeof(PointLight) && node.GetType() != typeof(DirectionalLight) && node.GetType() != typeof(CanvasModulate) && node.GetType() != typeof(LightOccluder))
                     throw new NotSupportedException($"Authoring preview has no passive projection for {node.GetType().Name}; run the frozen snapshot for actual gameplay output.");
                 else if (node is Skeleton skeleton) ValidatePreviewStack(skeleton.GetModificationStack(), 0, []);
             // Static built-in drawing only: no project classes, event connections or active gameplay node roles.
             var copy = source.Duplicate(0);
             try
             {
+                // Editor-only lighting depends on the exact scene owner, including nested owners.
+                foreach (var node in sourceNodes)
+                    if (node is Light && node.Owner is { } owner)
+                        copy.GetNode(source.GetPathTo(node)).Owner = copy.GetNode(source.GetPathTo(owner));
                 SceneOverlay.Apply(copy, _state.Nodes);
                 foreach (var node in Flatten(copy))
                 {

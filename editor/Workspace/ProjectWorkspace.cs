@@ -16,7 +16,7 @@ internal sealed class ProjectWorkspace : Control
     private readonly VBoxContainer _conflictPane = new() { Name = "SourceConflict", Visible = false, SizeFlagsHorizontal = SizeFlags.ExpandFill };
     private readonly SpinBox _x = Coordinate("PositionX"), _y = Coordinate("PositionY");
     private readonly Label _selection = new("Select an Entity"), _sceneStatus = new(""), _codeStatus = new(""), _feedback = new("");
-    private readonly Label _previewStatus = new("Authored scene"), _jobStatus = new("No snapshot job") { Name = "JobStatus" }, _captureStatus = new("No completed capture") { Name = "CaptureStatus" };
+    private readonly Label _previewStatus = new("Authored scene") { Name = "PreviewStatus" }, _jobStatus = new("No snapshot job") { Name = "JobStatus" }, _captureStatus = new("No completed capture") { Name = "CaptureStatus" };
     private readonly OptionButton _history = new() { Name = "History", ClipText = true, CustomMinimumSize = new(220, 32), FocusMode = FocusMode.All };
     private readonly OptionButton _mode = new() { Name = "RunMode", ClipText = true, CustomMinimumSize = new(156, 32), FocusMode = FocusMode.All };
     private readonly SpinBox _frames = new() { Name = "Frames", MinValue = 1, MaxValue = 1000000, Step = 1, Value = 60, CustomMinimumSize = new(90, 32) };
@@ -238,8 +238,8 @@ internal sealed class ProjectWorkspace : Control
                 try
                 {
                     var next = _human.CreatePreview(scene.Revision); _instance?.Dispose(); _instance = next; _viewport.AddChild(next);
-                    if (Tree is { } treeOwner) treeOwner.EditedSceneRoot = next;
                     _previewStatus.Text = "Authored scene · r" + scene.Revision;
+                    ActivatePreview();
                 }
                 catch (NotSupportedException error) { _instance?.Dispose(); _instance = null; _previewStatus.Text = error.Message; }
                 _previewRevision = scene.Revision;
@@ -253,12 +253,23 @@ internal sealed class ProjectWorkspace : Control
         finally { _binding = false; }
         BindInspector(); _refresh = false;
     }
+    private void ActivatePreview()
+    {
+        if (_instance is not { IsInsideTree: true } preview || Tree is not { } tree) return;
+        tree.EditedSceneRoot = preview;
+        if (!RenderingServer.IsAvailable || RenderingServer.GetCurrentRenderingMethod() != "compatibility") return;
+        var muted = false;
+        if (preview is Light { Enabled: true } rootLight) { rootLight.Enabled = false; muted = true; }
+        foreach (var light in preview.FindChildren<Light>(owned: false))
+            if (light.Enabled) { light.Enabled = false; muted = true; }
+        if (muted) _previewStatus.Text = "Authored scene · lighting requires the GPU renderer";
+    }
+
     protected override void OnNotification(int what)
     {
         var reversed = IsNotificationReversed;
         if (!reversed) base.OnNotification(what);
-        if (what == NotificationPostEnterTree && _instance is { IsInsideTree: true } && Tree is { } owner)
-            owner.EditedSceneRoot = _instance;
+        if (what == NotificationPostEnterTree) ActivatePreview();
         if (reversed) base.OnNotification(what);
     }
 
