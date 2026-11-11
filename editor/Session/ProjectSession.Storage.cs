@@ -148,6 +148,10 @@ internal sealed class SessionStorage : IDisposable
             if (!OperatingSystem.IsWindows() && File.Exists(path)) File.SetUnixFileMode(temporary, File.GetUnixFileMode(path));
             File.Move(temporary, path, overwrite: true);
         }
+        catch (UnauthorizedAccessException error) when (OperatingSystem.IsWindows() && Directory.Exists(path))
+        {
+            throw new IOException("The session write destination is a directory.", error);
+        }
         finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
 

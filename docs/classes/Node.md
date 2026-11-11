@@ -10,7 +10,7 @@ Without `DuplicateFlags.Scripts`, fresh copies keep the nearest constructible ru
 
 [Object lifetime monitors](../components/object-lifetime-monitors.md) read volatile tree membership without acquiring scene ownership. Attached-node counts select Engine.MainLoop; independent trees remain outside that count.
 
-Last updated: 2026-10-26
+Last updated: 2026-11-12
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -69,7 +69,7 @@ SubtreeResourceAuthoringTests verifies path/error/null/last-resource semantics, 
 
 `SetEditableInstance(node, isEditable)` requires a live strict descendant. Its flag belongs to the target and follows reparenting; any current ancestor can query it with `IsEditableInstance`. Null queries return false; invalid nonnull relationships throw `ArgumentException`. Disabling also unfolds the receiver. Both mutation guards run before writes. Every accepted call, even an equal flag, requests `EditorStateChanged` on the selected target.
 
-Selected nodes also emit `EditorStateChanged(this)` for attached process-mode changes, nonnull owner changes, unique-name changes, successful persistent group add/remove, source-path assignment and authored connection changes. Folding, selection, ordinary runtime groups and CLR subscriptions emit no state event. Delivery is synchronous on the mutating thread outside internal locks and respects signal blocking. A process-mode callback failure joins other notification failures; owner/unique/group operations retain committed progress when a callback throws. A failed authored subscription rolls back without a second authoring event; rollback errors are preserved. Manual disconnection emits once, while consumed one-shots and endpoint teardown do not.
+Selected nodes also emit `EditorStateChanged(this)` for attached process-mode changes, nonnull owner changes, unique-name changes, successful persistent group add/remove, source-path assignment, property pins and authored connection changes. Folding, selection, ordinary runtime groups and CLR subscriptions emit no state event. Delivery is synchronous on the mutating thread outside internal locks and respects signal blocking. A process-mode callback failure joins other notification failures; owner/unique/group operations retain committed progress when a callback throws. A failed authored subscription rolls back without a second authoring event; rollback errors are preserved. Manual disconnection emits once, while consumed one-shots and endpoint teardown do not.
 
 Attached reads require the owner or current processing group. Description/folding/editability writes require the scene owner and reject capture or physical borrowing. Persistent group changes retain current-group access and deliver state events on that worker. Committed disposal clears the new events; canceled disposal preserves them.
 
@@ -147,6 +147,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`protected virtual RID OnGetFocusedAccessibilityElement()`](#ongetfocusedaccessibilityelement) | Selects the same-window semantic focus target. |
 | [`public void SetEditableInstance(Node node, bool isEditable)`](#m-electron2d-node-seteditableinstance-electron2d-node-system-boolean) | Sets the strict descendant's flag; false also unfolds the receiver. |
 | [`public bool IsEditableInstance(Node? node)`](#m-electron2d-node-iseditableinstance-electron2d-node) | Queries the target flag through a current ancestor; null is false. |
+| [`public void SetPropertyPinned(PropertyDescriptor property, bool pinned)`](#scene-property-pins) | Keeps an exposed stored property explicit in this authored layer. |
+| [`public bool IsPropertyPinned(PropertyDescriptor property)`](#scene-property-pins) | Checks a property pin in the current authored layer. |
 | [`public void UpdateConfigurationWarnings()`](#diagnostics-updateconfigurationwarnings) | Requests a configuration-warning refresh for this node in the selected edited scene. |
 | [`public virtual string[] GetConfigurationWarnings()`](#diagnostics-getconfigurationwarnings) | Returns this node's current configuration warnings for tooling. |
 | [`public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled)`](#m-electron2d-node-addchild-electron2d-scenenode) | Adds an ordinary or front/back internal direct child. |
@@ -1994,6 +1996,15 @@ Null returns false. Any live strict ancestor reads the same target flag; invalid
 ### `public event Action<Node>? EditorDescriptionChanged`
 
 Emits this node after a changed description, independently of selection. Signal blocking applies.
+
+<a id="scene-property-pins"></a>
+### `public void SetPropertyPinned(PropertyDescriptor property, bool pinned)`
+
+Pins or unpins a currently exposed writable stored property. A pin keeps the value in the authored layer when it equals the source value. The operation requires authoring and scene-owner access. A changed pin emits EditorStateChanged after commitment in the selected subtree.
+
+### `public bool IsPropertyPinned(PropertyDescriptor property)`
+
+Returns the current layer's pin for a writable stored descriptor. Both methods reject null, incompatible, transient or unavailable descriptors. Main restores saved pins. See [editor scene modes](../components/linked-scenes.md#editor-modes).
 
 <a id="e-electron2d-node-editorstatechanged"></a>
 ### `public event Action<Node>? EditorStateChanged`

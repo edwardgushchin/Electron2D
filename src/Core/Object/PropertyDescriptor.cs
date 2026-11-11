@@ -101,6 +101,8 @@ public abstract partial class PropertyDescriptor
         throw new NotSupportedException($"Property descriptor '{Name}' does not support scene storage.");
 
     internal virtual StoredPropertyValue CaptureReloadValue(ElectronObject owner) => CaptureStoredValue(owner);
+    internal virtual void RestoreReloadValue(ElectronObject owner, StoredPropertyValue value) =>
+        RestoreStoredValue(owner, value, static r => r);
     internal virtual StoredPropertyValue CaptureCopyValue(ElectronObject owner) => CaptureStoredValue(owner);
     internal virtual void RestoreCopyValue(ElectronObject owner, StoredPropertyValue value) => RestoreStoredValue(owner, value, static r => r);
     internal virtual bool MatchesStoredValue(ElectronObject owner, StoredPropertyValue value) => false;
@@ -271,6 +273,13 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         typeof(Node).IsAssignableFrom(typeof(TValue))
             ? new StoredLiveNodeReferenceValue(typeof(TValue), (StoredGetter ?? _getter)(GetOwner(owner)) as Node)
             : CaptureStoredValue(owner);
+
+    internal override void RestoreReloadValue(ElectronObject owner, StoredPropertyValue value)
+    {
+        if (!value.TryGetValue<TValue>(out var restored))
+            throw new InvalidOperationException($"Stored property '{Name}' has an incompatible value type.");
+        SetValue(GetOwner(owner), restored);
+    }
 
     internal override bool MatchesStoredValue(ElectronObject owner, StoredPropertyValue value)
     {

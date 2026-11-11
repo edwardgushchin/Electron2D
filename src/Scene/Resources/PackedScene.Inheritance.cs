@@ -12,23 +12,29 @@ internal sealed class SceneInheritance
     internal HashSet<SceneConnectionRuntime>? Connections { get; }
     private readonly Dictionary<Resource, LocalResource> _localResources = new(ReferenceEqualityComparer.Instance);
 
-    internal SceneInheritance(PackedScene template, Node root, IEnumerable<Node> nodes)
+    internal SceneInheritance(PackedScene template, Node root, IEnumerable<Node> nodes, bool trackResourceChanges = true)
     {
-        if (root is InstancePlaceholder)
-            throw new InvalidOperationException("A deferred placeholder cannot serve as an inherited scene root.");
         Template = template;
         Connections = root.SceneInstanceConnections;
         Nodes = nodes.ToDictionary(node => node.InstanceID, node => new Origin(
             root.GetPathTo(node), node.Name, node.GetType(), node.Parent?.InstanceID ?? 0, node.Owner?.InstanceID ?? 0,
             ReferenceEquals(node, root) ? -1 : node.GetIndex(),
             new(node.GetPersistentGroups(), StringComparer.Ordinal),
-            PackedScene.CaptureDescriptors(node, root).ToDictionary(p => p.Name, p => CaptureValue(node, p), StringComparer.Ordinal)));
+            PackedScene.CaptureDescriptors(node, root).ToDictionary(p => p.Name,
+                p => trackResourceChanges ? CaptureValue(node, p) : p.CaptureReloadValue(node), StringComparer.Ordinal)));
     }
 
     internal bool Matches(Node node, PropertyDescriptor descriptor, Origin origin) =>
         origin.Properties.TryGetValue(descriptor.Name, out var value) &&
         value.ValueType == descriptor.ValueType && descriptor.MatchesStoredValue(node, value) &&
         (!value.HasResourceReferences || !ResourcesChanged(value, new(ReferenceEqualityComparer.Instance)));
+
+    internal void ApplyEditorOrigins(IEnumerable<Node> nodes)
+    {
+        foreach (var node in nodes)
+            if (Nodes.TryGetValue(node.InstanceID, out var origin))
+                node.ScenePropertyOrigin = origin;
+    }
 
     internal void ReplaceNode(ulong previous, ulong replacement)
     {
@@ -100,6 +106,16 @@ internal sealed class SceneInheritance
 
 public sealed partial class PackedScene
 {
+    private void RecordEditorState(Node root, IReadOnlyList<Node> nodes, PackedSceneEditState editState)
+    {
+        if (editState is not (PackedSceneEditState.Instance or PackedSceneEditState.MainInherited)) return;
+        if (editState == PackedSceneEditState.MainInherited && root is InstancePlaceholder)
+            throw new InvalidOperationException("A deferred placeholder cannot serve as an inherited scene root.");
+        var state = new SceneInheritance(this, root, nodes, trackResourceChanges: editState == PackedSceneEditState.MainInherited);
+        if (editState == PackedSceneEditState.MainInherited) root.InheritedScene = state;
+        state.ApplyEditorOrigins(nodes);
+    }
+
     private static PackedSceneData OmitUnchangedInheritedNodes(PackedSceneData data, bool[] keep)
     {
         foreach (var connection in data.Connections)

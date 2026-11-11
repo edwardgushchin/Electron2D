@@ -16,7 +16,7 @@ Last updated: 2026-11-12
 
 Controls editor metadata applied while a packed scene is instantiated.
 
-`PackedSceneEditState` is the stable typed policy accepted by [`PackedScene.Instantiate()`](PackedScene.md). Gameplay uses Disabled. In editor context, MainInherited prepares an editable root whose capture retains the base template. Instance and Main are reserved and rejected explicitly.
+`PackedSceneEditState` is the stable typed policy accepted by [`PackedScene.Instantiate()`](PackedScene.md). Gameplay uses Disabled. In editor context, Instance opens an editable subscene, Main opens the current authored layer and MainInherited creates a new derived layer.
 
 ## Examples
 
@@ -34,8 +34,8 @@ derived.Pack(root);
 | Member | Description |
 | --- | --- |
 | [`Disabled = 0`](#f-electron2d-packedsceneeditstate-disabled) | Creates a runtime scene instance without editable-scene metadata. |
-| [`Instance = 1`](#f-electron2d-packedsceneeditstate-instance) | Requests local editable-instance metadata from an editor build. |
-| [`Main = 2`](#f-electron2d-packedsceneeditstate-main) | Requests main-scene editing metadata from an editor build. |
+| [`Instance = 1`](#f-electron2d-packedsceneeditstate-instance) | Creates an editable instance with independent scene-local resources and source property revert values. |
+| [`Main = 2`](#f-electron2d-packedsceneeditstate-main) | Opens the main authored scene with saved pins and its original scene-local resources. |
 | [`MainInherited = 3`](#f-electron2d-packedsceneeditstate-maininherited) | Creates a detached editable root that packs as a new scene derived from the source template. |
 
 ## Constant Descriptions
@@ -48,12 +48,12 @@ Creates a runtime scene instance without editable-scene metadata.
 <a id="f-electron2d-packedsceneeditstate-instance"></a>
 ### `Instance = 1`
 
-Requests local editable-instance metadata from an editor build.
+Creates an editable instance with independent scene-local resources and source property revert values.
 
 <a id="f-electron2d-packedsceneeditstate-main"></a>
 ### `Main = 2`
 
-Requests main-scene editing metadata from an editor build.
+Opens the main authored scene with saved pins and its original scene-local resources.
 
 <a id="f-electron2d-packedsceneeditstate-maininherited"></a>
 ### `MainInherited = 3`
@@ -66,11 +66,11 @@ The enum has no mutable state, lifetime, ownership, allocation, or thread-affini
 
 ## Dependencies and limitations
 
-The type has no dependencies beyond the CLR enum contract. MainInherited uses the [inherited-root contract](../components/linked-scenes.md#inherited-roots). Instance and Main require their own editor instance and main-scene metadata policies.
+The type has no dependencies beyond the CLR enum contract. MainInherited uses the [inherited-root contract](../components/linked-scenes.md#inherited-roots). Instance and Main follow the [editor mode ownership and revert rules](../components/linked-scenes.md#editor-modes).
 
 ## Verification
 
-The executable harness verifies Disabled, MainInherited in editor context, rejection of MainInherited in gameplay, and an undefined numeric value.
+The executable harness verifies all four modes, runtime rejection of editor modes, an undefined numeric value, nested revert, pinned override round-trip and borrowed-resource cleanup.
 
 ## Decision
 

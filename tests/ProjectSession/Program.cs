@@ -64,6 +64,7 @@ internal static class Program
             SaveCrash(Fixture(parent, "save-crash", true));
             HistoryBounds(Fixture(parent, "history-bounds"));
             RecoveryValidation(Fixture(parent, "invalid-recovery"));
+            EditorScenePins(Fixture(parent, "editor-scene-pins"));
             Console.WriteLine($"PASS project session: {_checks} checks; public runtime only; no native window or SceneTree."); return 0;
         }
         catch (Exception error) { Console.Error.WriteLine(error); return 1; }
@@ -247,6 +248,40 @@ internal static class Program
         Check(client.InspectScene().HasExternalChange, "Deleted scene not external.");
         Reject<SessionConflictException>(() => client.Save(SessionDocumentKind.Scene, client.InspectScene().Revision));
         Reject<FileNotFoundException>(() => client.Refresh(SessionDocumentKind.Scene, client.InspectScene().Revision));
+    }
+
+    private static void EditorScenePins(string root)
+    {
+        var previous = Engine.IsEditorHint;
+        Engine.IsEditorHint = true;
+        try
+        {
+            using var basis = new Entity { Name = "Base", Position = new(4, 5) };
+            using var template = new PackedScene();
+            template.Pack(basis);
+            using var derived = (Entity)template.Instantiate(PackedSceneEditState.MainInherited);
+            derived.Name = "Root";
+            var position = derived.GetPropertyList().Single(p => p.Name == nameof(Entity.Position));
+            derived.SetPropertyPinned(position, true);
+            var added = new Entity { Name = "A" };
+            derived.AddChild(added);
+            added.Owner = derived;
+            ResourceSaver.SaveScene(derived, ScenePath(root), SaverFlags.BundleResources);
+
+            using (var owner = Open(root))
+            using (var client = owner.Connect("editor"))
+            {
+                var a = Find(client, "A");
+                client.Apply("Move another node", new SessionTransformEdit(a.ID, a.Revision, Pose(11)));
+                client.Save(SessionDocumentKind.Scene, client.InspectScene().Revision);
+            }
+
+            using var reloaded = ResourceLoader.Load<PackedScene>(ScenePath(root), ResourceLoader.CacheMode.IgnoreDeep);
+            using var main = (Entity)reloaded.Instantiate(PackedSceneEditState.Main);
+            Check(main.IsPropertyPinned(position) && main.Position == new Vector2(4, 5) &&
+                  ((Entity)main.GetNode("A")).Position == new Vector2(11, 0), "Editor session open/edit/save keeps typed pins and unrelated edits.");
+        }
+        finally { Engine.IsEditorHint = previous; }
     }
     private static void Callbacks(string root)
     {

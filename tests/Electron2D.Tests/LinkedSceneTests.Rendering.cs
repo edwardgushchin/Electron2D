@@ -16,11 +16,18 @@ internal static partial class LinkedSceneTests
             {
                 Check(authoringRoot.SceneFilePath.Length == 0, "An unsaved derivative has no path to the source file.");
                 authoringRoot.Position = new(5, 0);
+                authoringRoot.SetPropertyPinned(Stored(authoringRoot, nameof(Entity.Position)), true);
                 derived.Pack(authoringRoot);
                 ResourceSaver.Save(derived, derivedPath, SaverFlags.RelativePaths);
             }
             using var scene = ResourceLoader.Load<PackedScene>(derivedPath, ResourceLoader.CacheMode.IgnoreDeep);
-            var root = scene.Instantiate(); var one = (Probe)root.GetNode("One"); var two = (Probe)root.GetNode("Two"); var visual = (Sprite)one.GetNode("Visual"); var receiver = (Probe)one.GetNode("Receiver"); var texture = visual.Texture!;
+            var previous = Engine.IsEditorHint;
+            Node root;
+            Engine.IsEditorHint = true;
+            try { root = scene.Instantiate(PackedSceneEditState.Main); }
+            finally { Engine.IsEditorHint = previous; }
+            Check(root.IsPropertyPinned(Stored(root, nameof(Entity.Position))), "The native consumer starts from the main scene's saved edit layer.");
+            var one = (Probe)root.GetNode("One"); var two = (Probe)root.GetNode("Two"); var visual = (Sprite)one.GetNode("Visual"); var receiver = (Probe)one.GetNode("Receiver"); var texture = visual.Texture!;
             Check(texture.GetRID() == one.PrimedTextureRID && texture.GetLocalScene() == one && ((Sprite)two.GetNode("Visual")).Texture!.GetLocalScene() == two, "Native overrides retain the nested resource identity and association established before the overlay.");
             var window = new Window { Size = new(72, 24), Title = "Linked scene runtime" }; window.AddChild(root); using var target = window.GetTexture();
             var frames = 0; var calls = 0; long before = 0, bytes = 0;
@@ -55,7 +62,7 @@ internal static partial class LinkedSceneTests
             }
             Engine.Run(window);
             Check(window.IsDisposed && one.IsDisposed && texture.IsDisposed, "Native shutdown releases linked nodes and their copied local resources.");
-            Console.WriteLine($"Inherited scene {backend}: fresh-file derived transform, linked pixels, retained local RID and 64 active frames at {bytes} owner-thread managed bytes passed.");
+            Console.WriteLine($"Edited scene {backend}: fresh-file main layer, derived transform, linked pixels, retained local RID and 64 active frames at {bytes} owner-thread managed bytes passed.");
         }
         finally { Directory.Delete(folder, true); }
     }

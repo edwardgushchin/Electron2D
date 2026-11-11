@@ -26,9 +26,15 @@ Template and stored-resource references retain ordinary Resource lifetime. Dispo
 
 Set Engine.IsEditorHint before calling the base template's Instantiate(PackedSceneEditState.MainInherited). Edit the detached root, set the Owner of local additions and pack it into a separate PackedScene. PackForSave also evaluates RESET tracks in the isolated authoring copy. The same derived resource instantiates with Disabled in a game or a headless host.
 
-The derived asset stores its immediate base plus changed typed properties, added persistent groups, authored connections, local nodes and recorded changes to name, parenting, ownership or position. In-place edits to stored scene-local resource state are included with their aliases. Unchanged inherited records are omitted unless needed for topology or connection endpoints. The base can add or remove implicit children and change untouched values. An overridden node is identified by its original relative path; changing that path in the base file requires reconciling the override. Removing a node or group from the derived preview allows the base to supply it again when the scene is instantiated.
+The derived asset stores its immediate base plus changed typed properties, added persistent groups, authored connections, local nodes and recorded changes to name, parenting, ownership or position. In-place edits to stored scene-local resource state are included with their aliases. Unchanged inherited records are omitted unless needed for topology or connection endpoints. The base can add or remove implicit children and change untouched values. Recapturing a reopened derivative keeps its locally authored nodes in the derived layer. An overridden node is identified by its original relative path; changing that path in the base file requires reconciling the override. Removing a node or group from the derived preview allows the base to supply it again when the scene is instantiated.
 
 GetBaseSceneState returns the immediate base's live state. GetNodeInstance(0) returns that base resource, GetNodeType(0) returns an empty string, and ordinary runtime capture of a concrete root still has no base. A derived root's SceneFilePath is its own external path, or empty for an unsaved derived asset.
+
+## Editor modes
+
+In an editor context, Instance opens an independent subscene with source values for ElectronObject.PropertyCanRevert and RevertProperty. It duplicates scene-local resources. A linked child opened from Main receives the same Instance policy. Main opens the authored scene and uses its original local resources. A second live main scene cannot claim the same borrowed resource. Disposal and construction rollback release the claim.
+
+A pin on a writable stored property keeps its value explicit even when it equals the inherited value. Use Node.SetPropertyPinned and Node.IsPropertyPinned with the exposed typed descriptor. Main restores the saved pins of the current layer. Instance, MainInherited and gameplay start with an empty pin set. ProjectSession uses Main for editor-context open and decode, so pins survive an unrelated edit and save through the shared session.
 
 ## Reconstruction and failure
 
@@ -49,6 +55,8 @@ Relative external references follow saved template files and normal deep-cache p
 Version 10 permits the root record to use its resource reference for the immediate base. Older versions continue to reject linked root records. A missing base rejects the derived archive even when missing nested scenes may be recovered.
 
 ## Verification
+
+The managed profile checks Main and Instance context gating, typed scalar and node-reference revert, pinned overrides after a base update, resource aliases, live-main conflicts, failed-notification rollback and archive reload. ProjectSession.Tests exercises open, edit, save and reload of an inherited scene with a pin through the public editor consumer.
 
 ELECTRON2D_TEST_LINKED_SCENES=managed/gpu/compatibility selects the focused runner. Checks cover template identity/updates, implicit children, three levels, full typed overlays, placement/name swaps, local pixel and recorded-resource alias/cycle remapping, independent instances, inherited/additional bindings, deep graph copying, failure cleanup, external/relative/bundled fresh processes, versions 1–4 and corrupt-link cache rejection.
 

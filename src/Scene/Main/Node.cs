@@ -2121,7 +2121,14 @@ public partial class Node : ElectronObject
 
                 _ownedSceneResources = null;
             }
+            if (_authoredSceneResources is { } authoredResources)
+            {
+                foreach (var resource in authoredResources) resource.ReleaseAuthoredLocalScene(this);
+                _authoredSceneResources = null;
+            }
             SceneInstancePaths = null; SceneInstanceConnections = null; SpawnSceneIdentity = null; InheritedScene = null;
+            ScenePropertyOrigin = null;
+            _pinnedSceneProperties = null;
             _rpcMethods = null; _removedRPCMethods = null; _rpcPolicies = null;
             try { AdoptSceneFileLease(null); } catch (Exception error) { CollectException(ref errors, error); }
 

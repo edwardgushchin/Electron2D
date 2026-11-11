@@ -5,6 +5,21 @@ public partial class Node
     internal Dictionary<ulong, string>? SceneInstancePaths;
     internal HashSet<SceneConnectionRuntime>? SceneInstanceConnections;
     internal SceneInheritance? InheritedScene;
+    internal SceneInheritance.Origin? ScenePropertyOrigin;
+    private List<Resource>? _authoredSceneResources;
+
+    internal void BorrowAuthoredSceneResource(Resource resource)
+    {
+        resource.AssignLocalScene(this, exclusive: true);
+        (_authoredSceneResources ??= []).Add(resource);
+    }
+
+    internal bool TryGetSceneRevertValue(PropertyDescriptor property, out StoredPropertyValue value)
+    {
+        value = null!;
+        return !property.IsReadOnly && property.IsStored &&
+            ScenePropertyOrigin?.Properties.TryGetValue(property.Name, out value!) == true && value.ValueType == property.ValueType;
+    }
     internal void RecordSceneInstance(PackedScene scene, IReadOnlyList<Node> nodes)
     {
         SpawnSceneIdentity = scene;

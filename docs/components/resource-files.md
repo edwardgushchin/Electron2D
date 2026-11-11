@@ -217,3 +217,5 @@ Version 9 adds a signed resource-table index after each resource definition UID 
 ## Version 10 inherited root links
 
 Version 10 permits the existing scene link field on the root record to refer to an immediate base PackedScene. Nonroot links and record layouts retain their previous encoding. The shared metadata and archive readers validate root links with the same version rule. The normal resource table retains relative/external or bundled bases. The loader rejects a missing base even in tolerant mode, while versions 1–9 keep their original layouts and root constraints. See [inherited roots](linked-scenes.md#inherited-roots).
+
+Editor property pins are a reserved typed string-array field in the ordinary stored-property table. Main restores the current layer’s names and filters unavailable descriptors. The existing record layout is unchanged.

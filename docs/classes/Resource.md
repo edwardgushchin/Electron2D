@@ -4,7 +4,7 @@ Validated duplication factories also bind registered extension ancestors before 
 
 [Performance.ObjectResourceCount](Performance.Monitor.md) counts current live registered path owners, excluding uncached resources and unregistered aliases.
 
-Last updated: 2026-11-11
+Last updated: 2026-11-12
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -193,6 +193,8 @@ local-resource prefix; otherwise `false`.
 
 <a id="m-electron2d-resource-getlocalscene"></a>
 ### `public Node GetLocalScene()`
+
+Main-scene authoring associates borrowed local assets with the live edited root. Disposal or failed construction releases that association. Nested instances have their own local copies.
 
 Gets the root node whose scene instance owns this scene-local resource.
 

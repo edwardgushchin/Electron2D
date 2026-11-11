@@ -6,7 +6,7 @@ public sealed partial class ProjectSession
     {
         SessionStorage.Read(path, SessionStorage.MaxSceneBytes);
         using var packed = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.IgnoreDeep);
-        return packed.Instantiate();
+        return packed.Instantiate(Engine.IsEditorHint ? PackedSceneEditState.Main : PackedSceneEditState.Disabled);
     }
 
     private static Node Decode(SessionStorage storage, byte[] bytes, string scenePath, NodeState[]? nodes = null)

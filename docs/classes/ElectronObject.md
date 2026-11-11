@@ -2,7 +2,7 @@
 
 Registered extension instances receive `NotificationExtensionReloaded` (2) only after every surviving binding and compatible stored value has been restored. Ordinary CLR updates do not produce this event. Their deterministic disposal follows manager-thread admission, pre-delete veto, binding retirement and owner cleanup; errors preserve committed cleanup. See [module lifetime](../components/extensions.md).
 
-Last updated: 2026-10-28
+Last updated: 2026-11-12
 
 **Inherits:** —
 
@@ -128,7 +128,7 @@ sealed class Meter : ElectronObject
 | [`public Script? GetScript()`](#m-electron2d-electronobject-getscript) | Gets the borrowed compiled source association. |
 | [`public IReadOnlyList<PropertyDescriptor> GetPropertyList()`](#m-electron2d-electronobject-getpropertylist) | Builds the current validated list of typed properties exposed to tooling. |
 | [`public bool PropertyCanRevert(PropertyDescriptor property)`](#m-electron2d-electronobject-propertycanrevert-electron2d-propertydescriptor) | Reports whether a tooling property currently differs from its revert value. |
-| [`public void RevertProperty(PropertyDescriptor property)`](#m-electron2d-electronobject-revertproperty-electron2d-propertydescriptor) | Restores a tooling property to its current typed revert value. |
+| [`public void RevertProperty(PropertyDescriptor property)`](#m-electron2d-electronobject-revertproperty-electron2d-propertydescriptor) | Restores a tooling property to its typed source assignment in an editable scene instance. Ordinary properties restore the descriptor revert value. |
 | [`public string Tr(string message, string context = null)`](#m-electron2d-electronobject-tr-system-string-system-string) | Translates a singular message using this object's translation domain. |
 | [`public string TrN(string singular, string plural, long count, string context = null)`](#m-electron2d-electronobject-trn-system-string-system-string-system-int64-system-string) | Translates a plural message using this object's translation domain. |
 | [`public void Dispose()`](#m-electron2d-electronobject-dispose) | Deterministically releases resources owned by this object. |
@@ -366,6 +366,8 @@ Reports whether a tooling property currently differs from its revert value.
 - `Exception`: A descriptor delegate or custom revert-policy override throws.
 
 <a id="m-electron2d-electronobject-revertproperty-electron2d-propertydescriptor"></a>
+In an editable scene instance, the default availability policy compares the typed source assignment. A script availability callback or protected override can supply its own policy.
+
 ### `public void RevertProperty(PropertyDescriptor property)`
 
 Restores a tooling property to its current typed revert value.

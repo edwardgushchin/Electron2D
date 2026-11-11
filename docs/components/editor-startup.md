@@ -1,6 +1,6 @@
 # Editor startup component
 
-Last updated: 2026-10-26
+Last updated: 2026-11-12
 
 The separate [editor executable](../../editor/Electron2D.Editor.csproj) starts Electron2D through its public API. [Program.cs](../../editor/Program.cs) loads the current [character](../design/assets/sprite/mark-dark.svg), [open pixel sparkle](../design/assets/sprite/sparkle.svg), [app icon](../design/assets/sprite/app-icon.svg) and two bundled IBM Plex Sans fonts from Assets. It limits the loop to 60 FPS. EditorApplication adds the project bar and binds the [shared project workflow](project-jobs.md) around [EditorScene](../classes/EditorScene.md)'s root before Engine.Run. Launch with no arguments for the home screen or --project DIRECTORY to open a version-two source project.
 
@@ -45,3 +45,5 @@ python3 -B tools/editor/check_desktop.py editor/bin/Debug/net10.0/Electron2D.Edi
 The refreshed scene passed Linux x64/Wayland GPU and compatibility checks with four PNG captures, including resize and native close. The Debug apphost/desktop launcher check passed with exact app-icon bytes and GTK/GIO loading of the absolute PNG at 48×48. Foreign host execution, physical F5 input and Windows/macOS taskbar/Dock appearance remain separate under ADR 0021. Existing launcher and bundle metadata remain in place; refreshed icon containers alone do not verify another OS. Signing, notarization and public distribution are outside this branding change. No project/scene authoring or batch tooling is supplied by this screen.
 
 The project shell now supplies create/open, shared tree/inspector/code/preview, history and immutable job results. [ApplicationTests](../../tests/ProjectWorkspace/ApplicationTests.cs) exercises the actual shell on Linux Wayland GPU/compatibility: create, failed open preserving pending text, same-project no-op, switch, released owners and unsaved recovery. [Workspace checks](../../tests/ProjectWorkspace/Program.cs) cover native input/history, jobs, capture and stale/clear display. Original brand composition tests retain their separate scope. The [real agent workflow](project-agent.md) now has its own executed native-panel acceptance; owner visual assessment remains open.
+
+Project sessions opened in editor context load authored snapshots through [PackedScene Main mode](linked-scenes.md#editor-modes). Pins survive session open, unrelated edits and scene save. Gameplay jobs use the ordinary runtime instantiation policy. Session writes report a destination directory as an I/O failure, leaving the recovery state and live document revision intact.

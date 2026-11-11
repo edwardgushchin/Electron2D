@@ -25,6 +25,7 @@ internal static partial class LinkedSceneTests
         Check(((Sprite)overridden.GetNode("One/Visual")).Position == new Vector2(22, 23), "Editable instance state applies to reused template nodes.");
         Behavior();
         Inheritance();
+        EditorModes();
         Files();
         Console.WriteLine("Linked scenes: template identity, implicit children, template updates and typed overrides passed.");
     }

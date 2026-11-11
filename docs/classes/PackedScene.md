@@ -20,7 +20,7 @@ RestoreProperties honors the internal force-copy descriptor for a Skeleton stack
 
 Descriptions are stored; folded presentation resets to false. A selected nonroot node with a nonempty SceneFilePath retains its source origin and, when enabled, its editable-instance flag. This metadata uses reserved typed scene fields `__SceneInstanceOrigin` and `__EditableInstance`; conflicting consumer property descriptors reject packing/restoration. Ordinary noninstance flags and the root's flag are not stored. SceneState exposes these captured typed fields through its existing property queries.
 
-Editable owners extend graph selection. [Linked runtime subscenes](../components/linked-scenes.md) retain actual templates, reused-node identities and placement; selected nodes still capture complete typed state. [Inherited roots](../components/linked-scenes.md#inherited-roots) save a base link and sparse overrides. Instance and Main editor modes remain unavailable. Public CPU, software Vulkan and registered-provider consumers verify in-memory duplication, fresh-process file reconstruction, actual body motion/point queries and 128 warmed physical frames. This establishes authoring and headless simulation only; it is not rendered or hardware GPU acceptance.
+Editable owners extend graph selection. [Linked runtime subscenes](../components/linked-scenes.md) retain actual templates, reused-node identities and placement; selected nodes still capture complete typed state. [Inherited roots](../components/linked-scenes.md#inherited-roots) save a base link and sparse overrides. Instance supplies nested edit baselines and Main opens the current authored layer with its pins and local resources. Public CPU, software Vulkan and registered-provider consumers verify in-memory duplication, fresh-process file reconstruction, actual body motion/point queries and 128 warmed physical frames. This establishes authoring and headless simulation only; it is not rendered or hardware GPU acceptance.
 
 ## Description
 
@@ -118,19 +118,19 @@ Creates an independent detached node hierarchy from the stored scene.
 
 **Parameters**
 
-- `editState`: Use [`Disabled`](PackedSceneEditState.md#f-electron2d-packedsceneeditstate-disabled) for gameplay. In editor context, [`MainInherited`](PackedSceneEditState.md#f-electron2d-packedsceneeditstate-maininherited) prepares a new derived scene for packing.
+- `editState`: Use Disabled for gameplay or select an [editor mode](PackedSceneEditState.md) while Engine.IsEditorHint is true.
 
 **Returns:** The live, detached root node. It has not entered a [`SceneTree`](SceneTree.md).
 
 **Exceptions**
 
 - `ArgumentOutOfRangeException`: `editState` is not defined.
-- `NotSupportedException`: The mode is unavailable or requires [`Engine.IsEditorHint`](Engine.md).
+- `NotSupportedException`: An editor mode requires [`Engine.IsEditorHint`](Engine.md).
 - `InvalidOperationException`: The scene is empty or stored node schema cannot be reconstructed safely.
 - `ObjectDisposedException`: The resource or a referenced stored resource is disposing or disposed.
 - `Exception`: A factory, property setter, setup callback, notification, or cleanup operation fails.
 
-**Remarks:** Nodes are constructed parent-first. Stored properties and persistent groups are restored before parenting;
+**Remarks:** Main borrows authored scene-local resources. A resource already associated with another live scene causes instantiation to fail. Nodes are constructed parent-first. Stored properties and persistent groups are restored before parenting;
 owners and scene-local resources are assigned after the hierarchy is complete. Only the root receives
 [`Node.NotificationSceneInstantiated`](Node.md#f-electron2d-node-notificationsceneinstantiated).
 

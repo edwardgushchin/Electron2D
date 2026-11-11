@@ -582,7 +582,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PackedFloat64Array](classes/PackedFloat64Array.md) | — | Excluded | 30 |
 | [PackedInt32Array](classes/PackedInt32Array.md) | — | Excluded | 30 |
 | [PackedInt64Array](classes/PackedInt64Array.md) | — | Excluded | 30 |
-| [PackedScene](classes/PackedScene.md) | Resource | Partial | 9 |
+| [PackedScene](classes/PackedScene.md) | Resource | Implemented | 9 |
 | [PackedStringArray](classes/PackedStringArray.md) | — | Excluded | 30 |
 | [PackedVector2Array](classes/PackedVector2Array.md) | — | Excluded | 31 |
 | [PackedVector3Array](classes/PackedVector3Array.md) | — | Excluded | 31 |

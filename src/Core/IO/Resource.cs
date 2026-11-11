@@ -302,11 +302,11 @@ public class Resource : ElectronObject
         }
     }
 
-    /// <summary>Gets the root node whose scene instance owns this scene-local resource.</summary>
-    /// <returns>The live owning scene root after scene instantiation, or <see langword="null"/> for other resources or retired roots.</returns>
-    /// <remarks>The association is assigned before <see cref="OnSetupLocalToScene"/> runs. Replacing the owning
-    /// root through <see cref="Node.ReplaceBy"/> transfers it to the replacement. The association borrows immutable
-    /// object identity without retaining the root; it returns null once root disposal starts or the root is collected.</remarks>
+    /// <summary>Gets the live root associated with this scene-local resource.</summary>
+    /// <returns>The associated scene root after instantiation, or <see langword="null"/> for other resources or retired roots.</returns>
+    /// <remarks>The association is assigned before <see cref="OnSetupLocalToScene"/> runs, including when
+    /// <see cref="PackedSceneEditState.Main"/> borrows the authored resource. Replacing the root through
+    /// <see cref="Node.ReplaceBy"/> transfers the association. The weak identity expires when the root is disposed or collected.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
     public Node? GetLocalScene()
     {
@@ -555,7 +555,8 @@ public class Resource : ElectronObject
         ThrowCombined(cacheError, changedError);
     }
 
-    internal static SceneDuplicationScope CreateSceneDuplicationScope(bool isolateAllResources = false) => new(isolateAllResources);
+    internal static SceneDuplicationScope CreateSceneDuplicationScope(bool isolateAllResources = false, bool borrowAuthoredResources = false) =>
+        new(isolateAllResources, borrowAuthoredResources);
 
     private void SetupLocalToSceneCore()
     {
@@ -943,14 +944,20 @@ public class Resource : ElectronObject
     {
         private readonly DuplicationSession _session;
         private readonly bool _isolateAllResources;
-        internal SceneDuplicationScope(bool isolateAllResources)
+        private readonly HashSet<Resource>? _authoredResources;
+        internal SceneDuplicationScope(bool isolateAllResources, bool borrowAuthoredResources)
         {
             _isolateAllResources = isolateAllResources;
+            if (borrowAuthoredResources) _authoredResources = new(ReferenceEqualityComparer.Instance);
             _session = new(deep: true, isolateAllResources ? DeepDuplicateMode.All : DeepDuplicateMode.Internal,
                 isolateAllResources ? static _ => true : static resource => resource.ResourceLocalToScene);
         }
 
-        internal Resource Resolve(Resource source)
+        internal Resource Resolve(Resource source) => Resolve(source, borrow: true);
+
+        internal Resource ResolveLinked(Resource source) => Resolve(source, borrow: false);
+
+        private Resource Resolve(Resource source, bool borrow)
         {
             ArgumentNullException.ThrowIfNull(source);
             source.ThrowIfDisposed();
@@ -961,10 +968,41 @@ public class Resource : ElectronObject
             if (_session.TryGetDuplicate(source, out var duplicate))
                 return duplicate;
 
+            if (_authoredResources is not null && (borrow || _authoredResources.Contains(source)))
+                return TrackAuthoredResource(source);
+
             return _isolateAllResources || source.ResourceLocalToScene ? _session.DuplicateRoot(source) : source;
         }
 
         internal Resource ResolveForced(Resource source) { ArgumentNullException.ThrowIfNull(source); source.ThrowIfDisposed(); return _session.TryGetDuplicate(source, out var duplicate) ? duplicate : _session.DuplicateRoot(source); }
+
+        private Resource TrackAuthoredResource(Resource source)
+        {
+            source.ThrowIfDisposed();
+            var authored = _authoredResources!;
+            if (!source.ResourceLocalToScene || !authored.Add(source)) return source;
+            var pending = new Stack<Resource>();
+            pending.Push(source);
+            while (pending.TryPop(out var current))
+            {
+                if (current.GetScript() is { } script) _ = Enqueue(script);
+                foreach (var property in current.GetPropertyList())
+                {
+                    if (!property.IsStored || !(typeof(Resource).IsAssignableFrom(property.ValueType) ||
+                        typeof(Resource[]).IsAssignableFrom(property.ValueType))) continue;
+                    var value = property.CaptureStoredValue(current);
+                    if (value.HasResourceReferences) _ = value.TransformResources(Enqueue);
+                }
+            }
+            return source;
+
+            Resource Enqueue(Resource resource)
+            {
+                resource.ThrowIfDisposed();
+                if (resource.ResourceLocalToScene && authored.Add(resource)) pending.Push(resource);
+                return resource;
+            }
+        }
 
         internal void PrepareFallbacks(StoredPropertyValue source, StoredPropertyValue current, Node root)
         {
@@ -975,7 +1013,8 @@ public class Resource : ElectronObject
                 for (var i = 0; i < Math.Min(sources.Length, fallbacks.Length); i++) Reuse(sources[i], fallbacks[i]);
             void Reuse(Resource? resource, Resource? fallback)
             {
-                if (resource is not null && resource.ResourceLocalToScene && fallback is not null && fallback.ResourceLocalToScene &&
+                if (resource is not null && _authoredResources?.Contains(resource) != true && resource.ResourceLocalToScene &&
+                    fallback is not null && fallback.ResourceLocalToScene &&
                     fallback.GetLocalScene() == root && resource.GetType() == fallback.GetType()) _session.CopyIntoLocal(resource, fallback, root);
             }
         }
@@ -984,7 +1023,9 @@ public class Resource : ElectronObject
         {
             List<Exception>? errors = null;
 
-            foreach (var resource in _session.SceneLocalDuplicates)
+            IEnumerable<Resource> localResources = _session.SceneLocalDuplicates;
+            if (_authoredResources is not null) localResources = localResources.Concat(_authoredResources);
+            foreach (var resource in localResources)
             {
                 try
                 {
@@ -1011,6 +1052,9 @@ public class Resource : ElectronObject
 
             foreach (var resource in _session.SceneLocalDuplicates)
                 resource.AssignLocalScene(root);
+            if (_authoredResources is not null)
+                foreach (var resource in _authoredResources)
+                    root.BorrowAuthoredSceneResource(resource);
         }
 
         internal IReadOnlyList<Resource> ReleaseCreated() => _session.ReleaseCreated();
@@ -1018,14 +1062,22 @@ public class Resource : ElectronObject
         internal List<Exception> DisposeCreated() => _session.DisposeCreated();
     }
 
-    private void AssignLocalScene(Node root)
+    internal void AssignLocalScene(Node root, bool exclusive = false)
     {
         ThrowIfDisposed();
         lock (_stateGate)
         {
             ThrowIfDisposed();
+            if (exclusive && _localScene.Target is Node existing && !ReferenceEquals(existing, root))
+                throw new InvalidOperationException("An authored local resource already belongs to a live scene.");
             _localScene = root.BorrowIdentity();
         }
+    }
+
+    internal void ReleaseAuthoredLocalScene(Node root)
+    {
+        lock (_stateGate)
+            if (_localScene.ID == root.InstanceID) _localScene = default;
     }
 
     internal void ReassignLocalScene(Node oldRoot, Node newRoot)

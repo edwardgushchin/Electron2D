@@ -60,8 +60,8 @@ public sealed partial class PackedScene : Resource
     }
 
     /// <summary>Creates an independent detached node hierarchy from the stored scene.</summary>
-    /// <param name="editState">Use <see cref="PackedSceneEditState.Disabled"/> to instantiate for gameplay.
-    /// In editor context, <see cref="PackedSceneEditState.MainInherited"/> prepares a new derived scene for packing.</param>
+    /// <param name="editState">Use <see cref="PackedSceneEditState.Disabled"/> for gameplay or select an editor
+    /// instantiation policy while <see cref="Engine.IsEditorHint"/> is true.</param>
     /// <returns>The live, detached root node. It has not entered a <see cref="SceneTree"/>.</returns>
     /// <remarks>
     /// Nodes are constructed parent-first. Validated stored names retain internal generated identities without
@@ -69,6 +69,8 @@ public sealed partial class PackedScene : Resource
     /// owners and typed node references are resolved after the hierarchy is complete, followed by scene-local resources. Only the root receives
     /// <see cref="Node.NotificationSceneInstantiated"/> for this template. Each linked child finishes its own notification
     /// before outer overrides; its construction barrier remains active until the enclosing instance completes.
+    /// <see cref="PackedSceneEditState.Main"/> borrows local resources authored in the main scene.
+    /// A resource already associated with another live scene causes instantiation to fail.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="editState"/> is not defined.</exception>
     /// <exception cref="NotSupportedException">The mode is unavailable or requires <see cref="Engine.IsEditorHint"/>.</exception>
@@ -96,9 +98,8 @@ public sealed partial class PackedScene : Resource
         if (!Enum.IsDefined(editState))
             throw new ArgumentOutOfRangeException(nameof(editState), editState, "The packed-scene edit state is not defined.");
 
-        var authorInherited = editState == PackedSceneEditState.MainInherited && Engine.IsEditorHint;
-        if (editState != PackedSceneEditState.Disabled && !authorInherited)
-            throw new NotSupportedException("This scene-instantiation mode is unavailable in the current context.");
+        if (parentNodes is null && setupLocalResources && editState != PackedSceneEditState.Disabled && !Engine.IsEditorHint)
+            throw new NotSupportedException("Editor scene-instantiation modes require editor context.");
 
         PackedSceneData data;
         string resourcePath;
@@ -115,12 +116,13 @@ public sealed partial class PackedScene : Resource
         templates ??= PrepareTemplates(this, data);
         data = templates[this];
         if (data.Nodes.Any(node => node.Instance is not null || node.InstanceRootIndex >= 0 || node.Factory.RuntimeType == typeof(InstancePlaceholder)))
-            return InstantiateLinked(data, resourcePath, setupLocalResources, parentNodes, templates, authorInherited);
+            return InstantiateLinked(data, resourcePath, setupLocalResources, parentNodes, templates, editState);
 
         IDisposable? fileLease = RetainFileResources();
         var nodes = new Node[data.Nodes.Length];
         var createdCount = 0;
-        var resources = CreateSceneDuplicationScope(isolateAllResources: !setupLocalResources);
+        var resources = CreateSceneDuplicationScope(isolateAllResources: !setupLocalResources,
+            borrowAuthoredResources: setupLocalResources && editState == PackedSceneEditState.Main);
 
         try
         {
@@ -134,7 +136,7 @@ public sealed partial class PackedScene : Resource
                 ValidateFactoryResult(stored, node);
 
                 node.RestoreSceneName(stored.Name);
-                RestoreProperties(node, stored.Properties, resources);
+                RestoreProperties(node, stored.Properties, resources, restorePins: editState == PackedSceneEditState.Main);
 
                 foreach (var group in stored.Groups)
                     node.AddToGroup(group, persistent: true);
@@ -154,10 +156,14 @@ public sealed partial class PackedScene : Resource
                 RestoreProperties(nodes[index], data.Nodes[index].Properties, resources, nodeReferences: true);
 
             var root = nodes[0];
-            if (!authorInherited && !IsBuiltInPath(resourcePath))
+            if (editState != PackedSceneEditState.MainInherited && !IsBuiltInPath(resourcePath))
                 root.SetSceneFilePath(resourcePath);
 
-            foreach (var node in nodes) node.ValidateSceneInstance();
+            foreach (var node in nodes)
+            {
+                node.SanitizeScenePropertyPins();
+                node.ValidateSceneInstance();
+            }
 
             foreach (var connection in data.Connections)
                 connection.Schema.Restore(nodes[connection.PublisherIndex], nodes[connection.SubscriberIndex],
@@ -171,7 +177,7 @@ public sealed partial class PackedScene : Resource
             if (setupLocalResources) root.Notify(Node.NotificationSceneInstantiated);
             ValidateInstantiatedHierarchy(data, nodes);
             root.RecordSceneInstance(this, nodes);
-            if (authorInherited) root.InheritedScene = new(this, root, nodes);
+            RecordEditorState(root, nodes, editState);
             if (parentNodes is null) EndSceneInstantiation(nodes, createdCount);
             else parentNodes.AddRange(nodes);
             return root;
@@ -385,7 +391,7 @@ public sealed partial class PackedScene : Resource
             if (origin is not null && origin.RuntimeType != node.GetType())
                 throw new InvalidOperationException("An inherited node cannot replace its original compiled type.");
             var properties = CaptureDescriptors(node, root)
-                .Where(property => origin is null || !inheritance!.Matches(node, property, origin))
+                .Where(property => origin is null || node.HasScenePropertyPin(property.Name) || !inheritance!.Matches(node, property, origin))
                 .Select(property => new ScenePropertyData(property.Name, property.CaptureStoredValue(node)))
                 .ToArray();
             var groups = node.GetPersistentGroups();
@@ -396,6 +402,8 @@ public sealed partial class PackedScene : Resource
             if (index > 0 && instanceRoot < 0)
                 for (var ancestor = node.Parent; ancestor is not null; ancestor = ancestor.Parent)
                 {
+                    // The capture root's instance paths describe the entire derivative, including its own additions.
+                    if (inheritance is not null && ReferenceEquals(ancestor, root)) break;
                     if (indices.TryGetValue(ancestor, out var candidate) && (nodes[candidate].Instance is not null || nodes[candidate].InstancePlaceholder.Length != 0) &&
                         ancestor.SceneInstancePaths is { } origins && origins.TryGetValue(node.InstanceID, out var originalPath))
                     { instanceRoot = candidate; instancePath = originalPath; break; }
@@ -462,12 +470,15 @@ public sealed partial class PackedScene : Resource
 
     internal static IEnumerable<PropertyDescriptor> CaptureDescriptors(Node node, Node root) =>
         node.GetPropertyList()
-            .Where(property => property.IsStored && property.Name != nameof(Node.Name) &&
-                !(property.Name == nameof(Node.TranslationDomain) && node.IsTranslationDomainInherited) &&
-                !(node is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition) &&
-                !(node is FoldableContainer && property.Name.StartsWith("__TitleControl/", StringComparison.Ordinal)))
+            .Where(property => CapturesProperty(node, property))
             .Concat(node is FoldableContainer foldable ? foldable.CapturedTitleProperties(root) : [])
             .Concat(node.CapturedEditorProperties(root));
+
+    internal static bool CapturesProperty(Node node, PropertyDescriptor property) =>
+        property.IsStored && property.Name != nameof(Node.Name) &&
+        !(property.Name == nameof(Node.TranslationDomain) && node.IsTranslationDomainInherited) &&
+        !(node is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition) &&
+        !(node is FoldableContainer && property.Name.StartsWith("__TitleControl/", StringComparison.Ordinal));
 
     private static List<Node> GetOwnedSceneNodes(Node root)
     {
@@ -517,8 +528,11 @@ public sealed partial class PackedScene : Resource
         Resource.SceneDuplicationScope resources,
         bool? nodeReferences = false, Node? localRoot = null, Func<string, Node?>? externalReference = null,
         bool includeInternal = false, bool skipUnavailable = false,
-        Func<Resource, Resource>? resolveResource = null, Func<Resource, Resource>? resolveForcedResource = null)
+        Func<Resource, Resource>? resolveResource = null, Func<Resource, Resource>? resolveForcedResource = null,
+        bool restorePins = false)
     {
+        if (!restorePins && properties.Any(property => property.Name == Node.StoredPinnedSceneProperties))
+            properties = properties.Where(property => property.Name != Node.StoredPinnedSceneProperties).ToArray();
         if (node is MissingNode missing)
         {
             PropertyDescriptor? NativeDescriptor(ScenePropertyData property) => missing.BaseDescriptor(property.Name, includeInternal)

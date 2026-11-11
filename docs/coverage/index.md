@@ -1,3 +1,5 @@
+[Packed-scene editor modes](../components/linked-scenes.md#editor-modes) open the main authored layer with its pins and local resources and provide typed source revert for nested instances. The PackedScene family and immediate base-state query now have executable coverage. Coverage is **13,844/18,849 (73.45%)**, with 1,103 Partial, 339 Unimplemented, 3,563 Blocked, 8,444 Excluded and zero unmapped.
+
 [Inherited scene roots](../components/linked-scenes.md#inherited-roots) retain an immediate base, sparse typed overrides and external or bundled version-10 archives. Live base-state queries and both edit-state declarations reflect the executable modes. Coverage is **13,836/18,849 (73.40%)**, with 1,111 Partial, 339 Unimplemented, 3,563 Blocked, 8,444 Excluded and zero unmapped.
 
 [Scene tree accessibility state](../classes/SceneTree.md#native-accessibility-integration) reports native support and automatic scene publication. Two methods move from Blocked to Implemented. Coverage is **13,832/18,849 (73.38%)**, with 1,110 Partial, 344 Unimplemented, 3,563 Blocked, 8,444 Excluded and zero unmapped.

@@ -1,6 +1,6 @@
 # Typed editor properties component
 
-Last updated: 2026-10-22
+Last updated: 2026-11-12
 
 ## Stored physical state
 
@@ -51,6 +51,10 @@ The C# integration selected by [ADR 0091](../decisions/scripting.md#adr-0091) re
 ## Current implementation status
 
 Implemented and covered by executable checks. [`PackedScene`](../classes/PackedScene.md) consumes the explicit storage flag at runtime; no editor application currently consumes the tooling surface.
+
+## Packed-scene authoring
+
+In the [editor scene modes](linked-scenes.md#editor-modes), object-level revert compares a writable stored descriptor with the typed source value when an instance supplies one. For other properties, the descriptor provides its revert value. Node.SetPropertyPinned keeps an explicit authored value even when it matches the source. Node.IsPropertyPinned reports the current layer's pin. The saved pin is restored by Main.
 
 ## Dependencies
 

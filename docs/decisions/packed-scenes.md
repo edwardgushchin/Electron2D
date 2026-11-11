@@ -29,7 +29,7 @@ Add one runtime-only packed-scene component to the Scene domain and the existing
 
 - `PackedScene : Resource` stores one in-memory typed hierarchy and creates detached instances.
 - `SceneState : ElectronObject` exposes a live read-only typed metadata view.
-- `PackedSceneEditState` retains stable runtime/editor mode identities; only `Disabled` executes.
+- `PackedSceneEditState` retains its stable numeric identities. `Disabled` is the runtime policy. `Instance`, `Main` and `MainInherited` require editor context.
 
 #### Capture and storage
 
@@ -43,7 +43,15 @@ In editor context, Instantiate(MainInherited) prepares a detached authoring root
 
 The typed baseline is the materialized base graph before applying the derived layer. Capture stores changed descriptor values, in-place changes to stored scene-local resource data, added persistent groups, structural edits and local owned nodes. Original paths identify reused nodes, including renamed nodes. Unchanged nodes remain implicit unless a stored record needs them as parents, owners or connection endpoints. An inherited connection is supplied by the base. RESET save preparation can evaluate an implicit inherited mixer in isolation and store the resulting overrides.
 
-Version 10 permits a PackedScene reference in the root scene record. It uses the existing link fields and validated graph, applies relative/external or bundled resolution normally, and requires an available base. The runtime rejects missing bases and stale overridden source paths. Earlier versions keep their existing root-record restrictions. Main and Instance retain their separate editor-state prerequisites.
+Version 10 permits a PackedScene reference in the root scene record. It uses the existing link fields and validated graph, applies relative/external or bundled resolution normally, and requires an available base. The runtime rejects missing bases and stale overridden source paths. Earlier versions keep their existing root-record restrictions. Main and Instance apply the authoring policies below.
+
+#### Editor instantiation
+
+Instance creates a detached editable subscene with independent scene-local resources. It records typed source values per node for property revert and starts a new layer of editor pins. Nested templates in any editor mode instantiate as Instance. Persistent authored connections and editable descendant flags retain their linked-scene semantics.
+
+Main opens the current authored layer and restores its valid property pins. Locally authored scene-local resources are borrowed in place and associated with the edited root before their setup callback. Alias and cycle identity follow the ordinary typed resource edges. Linked/inherited overrides use their local copies or their existing fallback; an explicit force-duplicate role still duplicates. A borrowed resource can serve one live main root at a time under the weak scene-association rule. Disposal or failed construction releases the association while preserving the caller's resource. Replacing the root transfers that association. Isolated RESET save preparation retains pins and copies resources before evaluating tracks.
+
+The editor's pin controls use typed Node.SetPropertyPinned and Node.IsPropertyPinned. Pins apply to writable properties selected by the storage schema. They force an explicit authored value even when it equals an inherited baseline. The reserved typed string array records the names in the authored layer. Main restores pins and filters names that are no longer storable. Disabled, Instance and a new MainInherited layer start without pins from the source. Typed object-level revert uses an editable instance's source assignment or the immediate base of a derived main scene. Ordinary properties retain descriptor defaults. Node-reference baselines preserve live identity without keeping removed nodes alive.
 
 #### Deferred linked instances
 
@@ -103,7 +111,7 @@ Archive version 7 makes connection labels, delivery policy and the single bound 
 
 Ordinary C# event subscribers and EventConnection tokens remain runtime objects. Authored SceneConnectionBinding subscriptions store only registered compiled schema IDs, selected endpoint indices and typed bound payloads under ADR 0010. They are restored before lifecycle notification; source delegates and Nodes are never serialized.
 
-ResourceSaver/ResourceLoader persist the typed PackedScene model as version-10 archives under ADR 0013, with version-1 through version-9 layouts retained. Registered compiled factory IDs replace in-memory delegates in files. Version 9 and later can associate registered compiled Script sources under ADR 0091. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping and the Instance/Main editor modes remain separate. Missing-node recovery executes as specified above. Deferred linked instances execute as specified above. Actual linked runtime subscenes execute as specified above. Programmatic descriptions, transient folding, explicit edited-scene membership and flattened editable-owner capture execute as described above. Generic, Mesh, ordinary Texture and Material missing-resource recovery executes under ADR 0013, including version-4 missing-payload provenance and the version-8 Material role; other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
+ResourceSaver/ResourceLoader persist the typed PackedScene model as version-10 archives under ADR 0013, with version-1 through version-9 layouts retained. Registered compiled factory IDs replace in-memory delegates in files. Version 9 and later can associate registered compiled Script sources under ADR 0091. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping remains separate. Missing-node recovery executes as specified above. Deferred linked instances execute as specified above. Actual linked runtime subscenes execute as specified above. Programmatic descriptions, transient folding, explicit edited-scene membership and flattened editable-owner capture execute as described above. Generic, Mesh, ordinary Texture and Material missing-resource recovery executes under ADR 0013, including version-4 missing-payload provenance and the version-8 Material role; other exact asset substitutions retain their stated prerequisites.
 
 ### Consequences
 

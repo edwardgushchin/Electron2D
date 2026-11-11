@@ -145,6 +145,18 @@ public partial class Node
             }
             if (SpawnSceneIdentity is not null) node.SpawnSceneIdentity = SpawnSceneIdentity;
             if (SceneInstanceConnections is not null) node.SceneInstanceConnections = SceneInstanceConnections;
+            if (node.GetType() == GetType())
+            {
+                node.ScenePropertyOrigin = ScenePropertyOrigin;
+                if (_pinnedSceneProperties is not null) node._pinnedSceneProperties = new(_pinnedSceneProperties, StringComparer.Ordinal);
+            }
+            if (_authoredSceneResources is { } authoredResources)
+            {
+                foreach (var resource in authoredResources)
+                    if (!resource.IsDisposed) resource.ReassignLocalScene(this, node);
+                (node._authoredSceneResources ??= []).AddRange(authoredResources);
+                _authoredSceneResources = null;
+            }
             node._sceneFilePath = _sceneFilePath;
             if (_sceneFileLeases is { } leases) { (node._sceneFileLeases ??= []).AddRange(leases); _sceneFileLeases = null; }
             if (_ownedSceneResources is { Count: > 0 } resources)

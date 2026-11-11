@@ -4,12 +4,18 @@ public partial class Node
 {
     private string _editorDescription = string.Empty;
     private bool _displayFolded, _editableInstance;
+    private HashSet<string>? _pinnedSceneProperties;
     private const string StoredSceneOrigin = "__SceneInstanceOrigin";
     private const string StoredEditableInstance = "__EditableInstance";
+    internal const string StoredPinnedSceneProperties = "__PinnedSceneProperties";
     private static readonly PropertyDescriptor<Node, string> SceneOriginProperty = new(StoredSceneOrigin,
         node => node.SceneFilePath, (node, value) => node.SetSceneFilePath(value), _ => string.Empty, stored: true);
     private static readonly PropertyDescriptor<Node, bool> EditableInstanceProperty = new(StoredEditableInstance,
         node => node._editableInstance, (node, value) => { node.EnsureMutable(); node._editableInstance = value; }, _ => false, stored: true);
+    private static readonly PropertyDescriptor<Node, string[]> PinnedSceneProperties = new(StoredPinnedSceneProperties,
+        node => node._pinnedSceneProperties?.Order(StringComparer.Ordinal).ToArray() ?? [],
+        (node, value) => node._pinnedSceneProperties = new(value, StringComparer.Ordinal),
+        _ => [], (_, value) => value is not null && value.All(name => !string.IsNullOrEmpty(name)), stored: true);
 
     /// <summary>Gets or sets the description used by scene-authoring tools.</summary>
     /// <value>An empty string initially; arbitrary nonnull text is stored with the node.</value>
@@ -61,7 +67,7 @@ public partial class Node
 
     /// <summary>Occurs after an authoring-relevant state change in the selected edited-scene subtree.</summary>
     /// <remarks>The argument is this node. Relevant changes include process mode, owner, unique name,
-    /// persistent groups, source path, editable-instance policy and authored connections. Selection changes,
+    /// persistent groups, source path, editable-instance policy, property pins and authored connections. Selection changes,
     /// folding and ordinary CLR subscriptions do not emit this event. Delivery is synchronous on the mutating
     /// thread and respects signal blocking. A callback may observe already committed state.</remarks>
     public event Action<Node>? EditorStateChanged { add => _publisherEditorStateChanged.Add(value); remove => _publisherEditorStateChanged.Remove(value); }
@@ -105,6 +111,60 @@ public partial class Node
         return node._editableInstance;
     }
 
+    /// <summary>Sets whether this scene explicitly stores a writable property even when it matches its base value.</summary>
+    /// <param name="property">A currently exposed writable stored descriptor.</param>
+    /// <param name="pinned">Whether to keep the property in the scene's authored layer.</param>
+    /// <remarks>The pin follows the descriptor's storage name. Main-scene editing restores saved pins.
+    /// A changed pin emits <see cref="EditorStateChanged"/> in the selected subtree after commitment.</remarks>
+    /// <exception cref="ArgumentNullException">The descriptor is null.</exception>
+    /// <exception cref="ArgumentException">The descriptor is incompatible, read-only, transient or unavailable.</exception>
+    /// <exception cref="InvalidOperationException">The node rejects authoring or the caller lacks owner access.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposing or disposed.</exception>
+    public void SetPropertyPinned(PropertyDescriptor property, bool pinned)
+    {
+        EnsureMutable();
+        EnsureEditorAuthoringCommit();
+        ValidatePinnableProperty(property);
+        if (pinned ? (_pinnedSceneProperties ??= new(StringComparer.Ordinal)).Add(property.Name) :
+            _pinnedSceneProperties?.Remove(property.Name) == true)
+            EmitEditorStateChanged();
+    }
+
+    /// <summary>Reports whether an exposed writable stored property is pinned in this scene's authored layer.</summary>
+    /// <param name="property">A currently exposed writable stored descriptor.</param>
+    /// <returns>Whether the property will be explicitly stored even when it matches the base value.</returns>
+    /// <exception cref="ArgumentNullException">The descriptor is null.</exception>
+    /// <exception cref="ArgumentException">The descriptor is incompatible, read-only, transient or unavailable.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is outside the owner/current processing group.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposing on another thread or disposed.</exception>
+    public bool IsPropertyPinned(PropertyDescriptor property)
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureProcessingAccess(this);
+        ValidatePinnableProperty(property);
+        return HasScenePropertyPin(property.Name);
+    }
+
+    private void ValidatePinnableProperty(PropertyDescriptor property)
+    {
+        ArgumentNullException.ThrowIfNull(property);
+        property.EnsureCompatible(this);
+        if (!CanPin(property) || !GetPropertyList().Any(candidate => CanPin(candidate) &&
+            candidate.Name == property.Name && candidate.ValueType == property.ValueType))
+            throw new ArgumentException("A property pin requires an exposed writable stored descriptor.", nameof(property));
+    }
+
+    private bool CanPin(PropertyDescriptor property) => !property.IsReadOnly && PackedScene.CapturesProperty(this, property);
+
+    internal bool HasScenePropertyPin(string name) => _pinnedSceneProperties?.Contains(name) == true;
+
+    internal void SanitizeScenePropertyPins()
+    {
+        if (_pinnedSceneProperties is not { Count: > 0 } pins) return;
+        var valid = GetPropertyList().Where(CanPin).Select(p => p.Name).ToHashSet(StringComparer.Ordinal);
+        pins.IntersectWith(valid);
+    }
+
     private void EnsureEditorAuthoringCommit()
     {
         EnsureNotSceneCapture();
@@ -127,6 +187,7 @@ public partial class Node
     internal IEnumerable<PropertyDescriptor> CapturedEditorProperties(Node root)
     {
         ValidateEditorPropertyNames(GetPropertyList());
+        if (_pinnedSceneProperties is { Count: > 0 }) yield return PinnedSceneProperties;
         if (ReferenceEquals(this, root)) yield break;
         if (_sceneFilePath.Length != 0) yield return SceneOriginProperty;
         if (_editableInstance && (_sceneFilePath.Length != 0 || SpawnSceneIdentity is not null)) yield return EditableInstanceProperty;
@@ -135,11 +196,12 @@ public partial class Node
     internal static void ValidateEditorPropertyNames(IEnumerable<PropertyDescriptor> descriptors)
     {
         foreach (var descriptor in descriptors)
-            if (descriptor.Name is StoredSceneOrigin or StoredEditableInstance)
+            if (descriptor.Name is StoredSceneOrigin or StoredEditableInstance or StoredPinnedSceneProperties)
                 throw new InvalidOperationException($"Property '{descriptor.Name}' is reserved for scene authoring metadata.");
     }
 
     internal static PropertyDescriptor? StoredEditorProperty(string name, Type type) =>
         name == StoredSceneOrigin && type == typeof(string) ? SceneOriginProperty :
+        name == StoredPinnedSceneProperties && type == typeof(string[]) ? PinnedSceneProperties :
         name == StoredEditableInstance && type == typeof(bool) ? EditableInstanceProperty : null;
 }

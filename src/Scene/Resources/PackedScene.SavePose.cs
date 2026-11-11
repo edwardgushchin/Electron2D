@@ -33,7 +33,7 @@ public sealed partial class PackedScene
                 {
                     isolated = true;
                     using var staging = new PackedScene(); staging.LoadFileData(source);
-                    temporary = staging.InstantiateCore(PackedSceneEditState.Disabled, false);
+                    temporary = staging.InstantiateCore(PackedSceneEditState.Main, false);
                     prepared = CaptureResetPose(temporary, source);
                     owned = temporary.ReleaseSceneResourcesForSave();
                 }

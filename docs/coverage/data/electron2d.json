@@ -152962,6 +152962,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.IsPropertyPinned(Electron2D.PropertyDescriptor)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "IsPropertyPinned",
+    "signature": "public System.Boolean IsPropertyPinned(Electron2D.PropertyDescriptor property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.PropertyDescriptor",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.MoveChild(Electron2D.Node,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -153638,6 +153657,30 @@
         "name": "recursive",
         "type": "System.Boolean",
         "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.SetPropertyPinned(Electron2D.PropertyDescriptor,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "SetPropertyPinned",
+    "signature": "public System.Void SetPropertyPinned(Electron2D.PropertyDescriptor property, System.Boolean pinned)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.PropertyDescriptor",
+        "default": null
+      },
+      {
+        "name": "pinned",
+        "type": "System.Boolean",
+        "default": null
       }
     ],
     "returnType": "System.Void",

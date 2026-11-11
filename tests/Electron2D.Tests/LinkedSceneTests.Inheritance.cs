@@ -93,6 +93,8 @@ internal static partial class LinkedSceneTests
                 recaptured.PackForSave(runtime);
                 Check(recaptured.GetState().GetBaseSceneState() == state.GetBaseSceneState() &&
                       recaptured.GetState().GetConnectionCount() == 1, "Runtime save retains the immediate base and only outer bindings.");
+                using var reopened = (Probe)recaptured.Instantiate();
+                CheckDerived(reopened, updated: true);
                 CheckDerived(runtime, updated: true);
             }
 

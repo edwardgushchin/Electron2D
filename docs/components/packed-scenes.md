@@ -12,7 +12,7 @@ This Scene component provides the common reuse boundary for Electron2D's Node-ba
 | --- | --- |
 | [`PackedScene`](../classes/PackedScene.md) | Resource that captures a reusable owned-node snapshot and constructs independent detached hierarchies |
 | [`SceneState`](../classes/SceneState.md) | Live read-only typed metadata view over current packed data |
-| [`PackedSceneEditState`](../classes/PackedSceneEditState.md) | Runtime/editor instantiation policy; `Disabled` for runtime instances and `MainInherited` for derived authoring |
+| [`PackedSceneEditState`](../classes/PackedSceneEditState.md) | Runtime/editor instantiation policy; `Disabled` for runtime and `Instance`, `Main` and `MainInherited` for editor context |
 
 All three types ship in `Electron2D.dll`. Production sources live in `src/Scene/Resources/`.
 
@@ -120,7 +120,7 @@ The final active-body cohort also passes strict current-source NativeAOT publica
 
 ## Linked runtime instances
 
-[Linked scenes](linked-scenes.md) retain actual borrowed templates, reconstruct implicit children and apply complete selected typed state to original relative identities. Nested local-resource ownership, stable fallback aliases/RIDs, inherited connection omission, sibling placement, fresh external/bundled files and construction rollback execute on current backends. Deferred materialization now executes through [deferred scenes](deferred-scenes.md). [Inherited roots](linked-scenes.md#inherited-roots) retain an immediate base, apply sparse typed overrides and support authoring through MainInherited. Instance and Main remain separate editor modes.
+[Linked scenes](linked-scenes.md) retain actual borrowed templates, reconstruct implicit children and apply complete selected typed state to original relative identities. Nested local-resource ownership, stable fallback aliases/RIDs, inherited connection omission, sibling placement, fresh external/bundled files and construction rollback execute on current backends. Deferred materialization now executes through [deferred scenes](deferred-scenes.md). [Inherited roots](linked-scenes.md#inherited-roots) retain an immediate base, apply sparse typed overrides and support authoring through MainInherited. The [editor modes](linked-scenes.md#editor-modes) also support nested instance revert and main-scene pins and resources.
 
 ## Missing-node recovery
 

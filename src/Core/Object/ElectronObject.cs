@@ -265,7 +265,8 @@ public partial class ElectronObject : IDisposable
     /// <param name="property">A descriptor compatible with this object.</param>
     /// <returns><see langword="true"/> when the property has a distinct revert value; otherwise <see langword="false"/>.</returns>
     /// <remarks>An installed live Script availability callback precedes the protected policy.
-    /// Typed descriptors retain their actual revert values and writes.</remarks>
+    /// The default policy uses the source value for stored properties on an editable scene instance.
+    /// Other typed properties use their descriptor's revert value.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="property"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="property"/> is not compatible with this object.</exception>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
@@ -280,6 +281,7 @@ public partial class ElectronObject : IDisposable
 
     /// <summary>Restores a tooling property to its current typed revert value.</summary>
     /// <param name="property">A writable descriptor compatible with this object.</param>
+    /// <remarks>An editable scene instance uses its typed source assignment. Other properties use the descriptor's revert value.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="property"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="property"/> is not compatible with this object.</exception>
     /// <exception cref="InvalidOperationException">The descriptor has no writable revert value.</exception>
@@ -290,7 +292,9 @@ public partial class ElectronObject : IDisposable
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(property);
         property.EnsureCompatible(this);
-        property.Revert(this);
+        if (this is Node node && node.TryGetSceneRevertValue(property, out var original))
+            property.RestoreReloadValue(this, original);
+        else property.Revert(this);
     }
 
     /// <summary>Translates a singular message using this object's translation domain.</summary>
@@ -472,7 +476,10 @@ public partial class ElectronObject : IDisposable
     /// <summary>Determines whether a property has a distinct revert value.</summary>
     /// <param name="property">A descriptor already validated for this object.</param>
     /// <returns><see langword="true"/> when the property can currently be reverted; otherwise <see langword="false"/>.</returns>
-    protected virtual bool CanRevertProperty(PropertyDescriptor property) => property.CanRevert(this);
+    protected virtual bool CanRevertProperty(PropertyDescriptor property) =>
+        this is Node node && node.TryGetSceneRevertValue(property, out var original)
+            ? !property.MatchesStoredValue(this, original)
+            : property.CanRevert(this);
 
     /// <summary>Synchronously raises <see cref="PropertyListChanged"/>.</summary>
     /// <remarks>Publishes a tooling metadata notification on the caller's thread. Signal blocking suppresses delivery.

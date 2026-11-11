@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class PackedScene
 {
-    private static void ConfigurePlaceholder(InstancePlaceholder placeholder, SceneNodeData record, Resource.SceneDuplicationScope resources)
+    private static void ConfigurePlaceholder(InstancePlaceholder placeholder, SceneNodeData record, Resource.SceneDuplicationScope resources, bool restorePins)
     {
         var descriptors = placeholder.GetPropertyList().Where(descriptor => !placeholder.PendingFields.Fields.ContainsKey(descriptor.Name))
             .ToDictionary(descriptor => descriptor.Name, StringComparer.Ordinal);
@@ -17,7 +17,7 @@ public sealed partial class PackedScene
             }
             else pending.Add(field);
         }
-        RestoreProperties(placeholder, direct.ToArray(), resources);
+        RestoreProperties(placeholder, direct.ToArray(), resources, restorePins: restorePins);
         var path = record.InstancePlaceholder.Length == 0 ? placeholder.GetInstancePath() : record.InstancePlaceholder;
         placeholder.InitializePending(path, pending);
         if (path.Length != 0) placeholder.SetSceneInstanceLoadPlaceholder(true);
