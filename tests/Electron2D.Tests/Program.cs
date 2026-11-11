@@ -92,6 +92,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_INPUT_REGION") is
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_MODELS") is { } modelProfile) { if (modelProfile == "managed") AccessibilityModelTests.Managed(); else AccessibilityModelTests.Native(modelProfile); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_PROCESS_MODE") == "1") { EditorProcessModeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_HINT") is { } hintProfile) { if (hintProfile == "managed") EditorHintTests.Managed(); else EditorHintTests.Native(hintProfile); return; }
 
 if (args.Length == 2 && args[0] == "--canvas-point-contract") { CanvasPointTests.Run(args[1]); return; }

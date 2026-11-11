@@ -128,6 +128,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public event Action<SceneTree> ProcessFrameStarted`](#e-electron2d-scenetree-processframestarted) | Occurs before the idle transform-delivery phase and eligible node process callbacks. |
 | [`public event Action<SceneTree> PhysicsFrameStarted`](#e-electron2d-scenetree-physicsframestarted) | Occurs after pending transform delivery and before eligible node physics-process callbacks. |
 | [`public event Action<SceneTree> TreeChanged`](#e-electron2d-scenetree-treechanged) | Occurs after the active hierarchy is structurally changed or an active node is renamed. |
+| [`public event Action<SceneTree>? TreeProcessModeChanged`](#e-electron2d-scenetree-treeprocessmodechanged) | Observes attached process-mode changes throughout an editor tree. |
 | [`public event Action<SceneTree>? SceneChanged`](#e-electron2d-scenetree-scenechanged) | Occurs after a pending scene enters successfully. |
 
 ## Constructor Descriptions
@@ -763,6 +764,13 @@ Occurs after pending transform delivery and before eligible node physics-process
 Occurs after the active hierarchy is structurally changed or an active node is renamed.
 
 **Remarks:** Delivery is synchronous after the corresponding state change. A throwing subscriber prevents later subscribers of that invocation; the state change is not rolled back.
+
+<a id="e-electron2d-scenetree-treeprocessmodechanged"></a>
+### `public event Action<SceneTree>? TreeProcessModeChanged`
+
+Occurs when [an editor host](Engine.md#editor-authoring-mode) changes `ProcessMode` on a node attached to this tree. The tree is the sender. Delivery follows the numeric transition notifications and precedes the node's [EditorStateChanged](Node.md#e-electron2d-node-editorstatechanged) event. Every changed assignment emits once even if the effective mode stays the same. The event applies to the whole tree and respects its signal blocking. Equal writes, detached changes, and setting `Paused` produce no event. If a transition callback removes the node from its original attachment, that assignment skips this event.
+
+A throwing subscriber stops later subscribers of the same invocation. The mode stays committed and the setter attempts the node's editor-state event before reporting collected failures. See [the editor preview consumer](../components/project-jobs.md#human-and-programmatic-views).
 
 ## Inherited API
 

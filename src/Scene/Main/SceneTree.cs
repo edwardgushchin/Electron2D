@@ -433,6 +433,15 @@ public sealed partial class SceneTree : MainLoop
     public event Action<SceneTree>? TreeChanged { add => _publisherTreeChanged.Add(value); remove => _publisherTreeChanged.Remove(value); }
     private EventPublisher<Action<SceneTree>> _publisherTreeChanged;
 
+    /// <summary>Occurs in an editor host after the process mode of an attached node changes.</summary>
+    /// <remarks>Delivery is synchronous on the scene owner, after process transition notifications and before
+    /// the node's editor-state event. The tree is the sender and the event applies throughout its hierarchy.
+    /// Assignments that leave the value unchanged and changes to tree pause do not raise this event.
+    /// A node that leaves its original attachment during a transition does not publish for that attachment.
+    /// A throwing subscriber stops later subscribers of this invocation. The assignment remains committed.</remarks>
+    public event Action<SceneTree>? TreeProcessModeChanged { add => _publisherTreeProcessModeChanged.Add(value); remove => _publisherTreeProcessModeChanged.Remove(value); }
+    private EventPublisher<Action<SceneTree>> _publisherTreeProcessModeChanged;
+
     /// <summary>Thread-safely queues an action for a future deferred flush while the tree remains live.</summary>
     /// <param name="action">The action to invoke.</param>
     /// <remarks>
@@ -1382,6 +1391,12 @@ public sealed partial class SceneTree : MainLoop
         ThrowCollected("Tree change callbacks failed.", errors);
     }
 
+    internal void NotifyTreeProcessModeChanged()
+    {
+        if (Engine.IsEditorHint)
+            BeginEventEmission(_publisherTreeProcessModeChanged.Handlers)?.Invoke(this);
+    }
+
     private void RunFrame(double delta, double unscaledDelta, bool physics)
     {
         ThrowIfDisposed();
@@ -2146,6 +2161,7 @@ public sealed partial class SceneTree : MainLoop
         _publisherProcessFrameStarted.Handlers = null;
         _publisherPhysicsFrameStarted.Handlers = null;
         _publisherTreeChanged.Handlers = null;
+        _publisherTreeProcessModeChanged.Handlers = null;
         _publisherSceneChanged.Handlers = null;
         _currentScene = null;
     }

@@ -71438,6 +71438,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.SceneTree.TreeProcessModeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "TreeProcessModeChanged",
+    "signature": "public event System.Action\u003CElectron2D.SceneTree\u003E TreeProcessModeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.SceneTree\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.SceneTreeTimer.Timeout()",
     "kind": "event",
     "declaringType": "Electron2D.SceneTreeTimer",

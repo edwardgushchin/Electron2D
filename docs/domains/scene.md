@@ -135,7 +135,7 @@ The Control branch uses shared [`RecursiveBehavior`](../classes/RecursiveBehavio
 - `ParallaxBackground : CanvasLayer` and `ParallaxLayer : Entity`: independent canvas and direct spatial children with camera/manual scroll, zoom policy, limits and one additional retained drawing copy per enabled mirror axis. The layer restores its original transform on exit.
 - `Path` / `PathFollow`: borrowed Curve2D containment, attached direct-parent sampling, loop/clamp and ratio controls, offsets, rotation, deferred worker resource changes and packed state.
 - `AnimatedSprite`: named SpriteFrames playback through the internal idle lane, reverse/custom speed, loop and progress events, retained texture/atlas drawing and packed state. Its [timing contract](../classes/AnimatedSprite.md#timing-contract-and-source-audit) includes exact-boundary and ping-pong details.
-- `ProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
+- [`ProcessMode`](../classes/Node.md) selects inherited, pausable, paused-only, always, or disabled process policies. [Editor trees publish committed changes.](../classes/SceneTree.md#e-electron2d-scenetree-treeprocessmodechanged)
 - `NodeAutoTranslateMode`: inherited, always-on, and disabled automatic translation policies.
 - `PhysicsInterpolationMode`: inherited, On and Off 2D presentation policies, with Control defaulting Off.
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, in-memory current-scene replacement, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.

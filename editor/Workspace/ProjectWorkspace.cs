@@ -35,6 +35,8 @@ internal sealed class ProjectWorkspace : Control
     private SessionCode _source;
     private SessionOperation[] _operations = [];
     private readonly Dictionary<Guid, TreeItem> _treeItems = [];
+    private readonly List<(Node Node, TreeItem Item)> _previewRows = [];
+    private bool _previewProcessingDirty;
     private Guid _selected;
     private bool _binding, _refresh = true, _draft;
     private double _poll;
@@ -230,6 +232,7 @@ internal sealed class ProjectWorkspace : Control
             if (changed)
             {
                 var collapsed = _treeItems.Where(p => p.Value.Collapsed).Select(p => p.Key).ToHashSet();
+                _previewRows.Clear();
                 _nodes.Clear(); _treeItems.Clear(); var map = _treeItems;
                 foreach (var node in scene.Nodes)
                 {
@@ -237,11 +240,25 @@ internal sealed class ProjectWorkspace : Control
                 }
                 try
                 {
-                    var next = _human.CreatePreview(scene.Revision); _instance?.Dispose(); _instance = next; _viewport.AddChild(next);
+                    var next = _human.CreatePreview(scene.Revision); _instance?.Dispose(); _instance = next;
+                    // CreatePreview validates the projection against the scene catalog in preorder.
+                    var index = 0;
+                    BindPreviewRows(next);
+                    _viewport.AddChild(next);
+                    void BindPreviewRows(Node node)
+                    {
+                        _previewRows.Add((node, map[scene.Nodes[index++].ID]));
+                        for (var i = 0; i < node.GetChildCount(); i++)
+                            BindPreviewRows(node.GetChild(i));
+                    }
                     _previewStatus.Text = "Authored scene · r" + scene.Revision;
                     ActivatePreview();
                 }
-                catch (NotSupportedException error) { _instance?.Dispose(); _instance = null; _previewStatus.Text = error.Message; }
+                catch (NotSupportedException error)
+                {
+                    _previewRows.Clear();
+                    _instance?.Dispose(); _instance = null; _previewStatus.Text = error.Message;
+                }
                 _previewRevision = scene.Revision;
             }
             _nodes.DeselectAll(); if (_treeItems.TryGetValue(_selected, out var selected)) selected.Select(0);
@@ -257,6 +274,7 @@ internal sealed class ProjectWorkspace : Control
     {
         if (_instance is not { IsInsideTree: true } preview || Tree is not { } tree) return;
         tree.EditedSceneRoot = preview;
+        _previewProcessingDirty = true;
         if (!RenderingServer.IsAvailable || RenderingServer.GetCurrentRenderingMethod() != "compatibility") return;
         var muted = false;
         if (preview is Light { Enabled: true } rootLight) { rootLight.Enabled = false; muted = true; }
@@ -265,11 +283,41 @@ internal sealed class ProjectWorkspace : Control
         if (muted) _previewStatus.Text = "Authored scene · lighting requires the GPU renderer";
     }
 
+    private void PreviewProcessingChanged(SceneTree tree) => _previewProcessingDirty = true;
+
+    private void RefreshPreviewProcessing()
+    {
+        const string inactive = "Processing inactive in the preview";
+        _previewProcessingDirty = false;
+        var disabledColor = _nodes.GetThemeColor("font_disabled_color");
+        foreach (var (node, item) in _previewRows)
+        {
+            var tooltip = item.GetTooltipText(0);
+            if (!node.IsDisposed && ReferenceEquals(node.Tree, Tree) && !node.CanProcess())
+            {
+                if (tooltip != inactive || item.GetCustomColor(0) != disabledColor)
+                    item.SetCustomColor(0, disabledColor);
+                if (tooltip != inactive) item.SetTooltipText(0, inactive);
+            }
+            else if (tooltip == inactive)
+            {
+                item.ClearCustomColor(0);
+                item.SetTooltipText(0, "");
+            }
+        }
+    }
+
     protected override void OnNotification(int what)
     {
         var reversed = IsNotificationReversed;
         if (!reversed) base.OnNotification(what);
-        if (what == NotificationPostEnterTree) ActivatePreview();
+        if (what == NotificationPostEnterTree)
+        {
+            Tree!.TreeProcessModeChanged += PreviewProcessingChanged;
+            ActivatePreview();
+        }
+        else if (what == NotificationExitTree) Tree!.TreeProcessModeChanged -= PreviewProcessingChanged;
+        else if (what is NotificationThemeChanged or NotificationUnpaused) _previewProcessingDirty = true;
         if (reversed) base.OnNotification(what);
     }
 
@@ -287,6 +335,7 @@ internal sealed class ProjectWorkspace : Control
         if (_layoutPhase == 0 && _body.Size.X > 800) { _body.SplitOffset = (int)(220 - _body.Size.X / 2); _layoutPhase++; }
         else if (_layoutPhase == 1) { _main.SplitOffset = (int)(_main.Size.X / 2 - 280); _layoutPhase++; }
         if (_refresh || _poll > 1) { _poll = 0; Guard(RefreshViews); }
+        if (_previewProcessingDirty) RefreshPreviewProcessing();
         _build.Disabled = _run.Disabled = _draft || _job is { Completion.IsCompleted: false };
         _cancel.Disabled = _job is not { Completion.IsCompleted: false };
         if (_job is { } job)

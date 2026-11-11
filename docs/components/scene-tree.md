@@ -8,6 +8,8 @@ Last updated: 2026-10-25
 
 EditedSceneRoot also selects Node.IsPartOfEditedScene and EditorStateChanged membership. The selected live root, including this tree's Root, and all its descendants participate. Detached nodes do not. Selection changes emit no Node authoring event and create no editor UI or simulation mode. See [Node authoring state](../classes/Node.md#scene-authoring-state).
 
+An attached `ProcessMode` change publishes [TreeProcessModeChanged](../classes/SceneTree.md#e-electron2d-scenetree-treeprocessmodechanged) in an editor host. This observes committed mode changes across the full tree, following descendant transition callbacks. The [project workspace](project-jobs.md#human-and-programmatic-views) uses it to refresh processing eligibility on retained rows.
+
 ## Scope
 
 This Scene component provides the concrete [Main loop](main-loop.md), owns one active hierarchy and an optional current scene child, propagates typed input and system notifications, delivers lifecycle and pause changes, accepts direct or [Engine](engine-runtime.md)-scheduled process/physics frame boundaries, frame counters and events, tree-change events, reusable Node timers, lightweight one-shot timers, frame-driven [tweening](tweening.md), typed group operations, deferred work, and queued deletion. Per-node hierarchy and 2D state belong to the [Scene hierarchy component](scene-hierarchy.md).

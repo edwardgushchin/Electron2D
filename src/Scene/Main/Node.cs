@@ -673,6 +673,7 @@ public partial class Node : ElectronObject
     /// and inheriting descendants parent-first: Paused/Unpaused when callback eligibility changes, then Disabled/Enabled
     /// when the effective disabled state changes. Explicit descendant modes stop propagation. Failures are collected
     /// after remaining notifications. Nested changes supersede stale outer delivery; moved or retired attachments skip.
+    /// In an editor host, <see cref="SceneTree.TreeProcessModeChanged"/> follows these transitions.
     /// Prepare subtree capacity and reentrancy depth before a measured hot interval.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned enum value is undefined.</exception>
     /// <exception cref="InvalidOperationException">Access is outside the scene owner/current processing group,
@@ -696,6 +697,7 @@ public partial class Node : ElectronObject
                 throw new InvalidOperationException("An attached root cannot inherit its process mode.");
             if (_processMode == value) return;
             if (tree is null) { _processMode = value; return; }
+            var attachment = TreeAttachmentVersion;
             var depth = _processModeDepth++;
             if (depth == _processModeSnapshots.Count) _processModeSnapshots.Add([]);
             var states = _processModeSnapshots[depth];
@@ -726,6 +728,11 @@ public partial class Node : ElectronObject
                         catch (Exception error) { CollectException(ref errors, error); }
                     }
                     bool Current() => !node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.TreeAttachmentVersion == state.Attachment;
+                }
+                if (!IsDisposed && ReferenceEquals(Tree, tree) && TreeAttachmentVersion == attachment)
+                {
+                    try { tree.NotifyTreeProcessModeChanged(); }
+                    catch (Exception error) { CollectException(ref errors, error); }
                 }
                 try { EmitEditorStateChanged(); }
                 catch (Exception error) { CollectException(ref errors, error); }
