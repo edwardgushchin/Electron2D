@@ -12,6 +12,7 @@
 #endif
 
 #define VIEW_CACHE "Electron2D.render.texture_views"
+#define VULKAN_API_VERSION "Electron2D.gpu.vulkan_api_version"
 typedef struct View {
     SDL_GPUTexture *handle, *root;
     VulkanTexture *native, *source;
@@ -33,10 +34,12 @@ static bool compatible(SDL_GPUDevice *device)
 }
 E2D_EXPORT int e2d_render_view_support(SDL_GPUDevice *device, uint32_t abi)
 {
-    if (!device || (abi != 1 && abi != 2)) return -1;
+    if (!device || (abi != 1 && abi != 2 && abi != 4)) return -1;
     if (!compatible(device)) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     if (!r || !r->vkCreateImage || !r->vkCreateImageView || !r->vkAllocateMemory || !r->vkBindImageMemory || !r->vkCmdPipelineBarrier) return 0;
+    if (abi == 4 && (r->physicalDeviceProperties.properties.apiVersion < VK_API_VERSION_1_1 ||
+        SDL_GetNumberProperty(SDL_GetGPUDeviceProperties(device), VULKAN_API_VERSION, 0) < VK_API_VERSION_1_1)) return 0;
     PFN_vkGetInstanceProcAddr instance = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
     PFN_vkGetDeviceProcAddr proc = instance ? (PFN_vkGetDeviceProcAddr)instance(r->instance, "vkGetDeviceProcAddr") : NULL;
     if (!proc || !proc(r->logicalDevice, "vkCreateImageView") || !proc(r->logicalDevice, "vkAllocateMemory")) return 0;
@@ -109,9 +112,9 @@ static VkImageAspectFlags aspects(VkFormat format)
     if (!depth_format(format)) return VK_IMAGE_ASPECT_COLOR_BIT;
     return VK_IMAGE_ASPECT_DEPTH_BIT | ((format == VK_FORMAT_D24_UNORM_S8_UINT || format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D16_UNORM_S8_UINT) ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
 }
-static bool image_view(VulkanRenderer *r, VkImage image, VkFormat format, VkComponentMapping channels, VkImageAspectFlags aspect, uint32_t layer, uint32_t layers, uint32_t level, uint32_t levels, VkImageViewType type, VkImageView *out)
+static bool image_view(VulkanRenderer *r, VkImage image, VkFormat format, VkComponentMapping channels, VkImageAspectFlags aspect, uint32_t layer, uint32_t layers, uint32_t level, uint32_t levels, VkImageViewType type, const void *next, VkImageView *out)
 {
-    VkImageViewCreateInfo info = {.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO, .image = image, .viewType = type, .format = format, .components = channels,
+    VkImageViewCreateInfo info = {.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO, .pNext = next, .image = image, .viewType = type, .format = format, .components = channels,
         .subresourceRange = {.aspectMask = aspect, .baseMipLevel = level, .levelCount = levels, .baseArrayLayer = layer, .layerCount = layers}};
     PFN_vkGetInstanceProcAddr instance = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
     PFN_vkGetDeviceProcAddr proc = instance ? (PFN_vkGetDeviceProcAddr)instance(r->instance, "vkGetDeviceProcAddr") : NULL;
@@ -142,7 +145,7 @@ static void destroy_unpublished(SDL_GPUDevice *device, View *view)
     if (view->source) (void)SDL_AtomicDecRef(&view->source->referenceCount);
     SDL_free(view);
 }
-static bool wrap(SDL_GPUDevice *device, View *v, VkImage image, const SDL_GPUTextureCreateInfo *info)
+static bool wrap(SDL_GPUDevice *device, View *v, VkImage image, const SDL_GPUTextureCreateInfo *info, bool sampled_only)
 {
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     VulkanTextureContainer *c = SDL_calloc(1, sizeof(*c)); v->handle = (SDL_GPUTexture *)c;
@@ -157,18 +160,19 @@ static bool wrap(SDL_GPUDevice *device, View *v, VkImage image, const SDL_GPUTex
     t->subresourceCount = info->num_levels * info->layer_count_or_depth;
     t->subresources = SDL_calloc(t->subresourceCount, sizeof(*t->subresources)); if (!t->subresources) { t->subresourceCount = 0; return false; }
     VkImageAspectFlags sampled_aspect = (t->aspectFlags & VK_IMAGE_ASPECT_DEPTH_BIT) ? VK_IMAGE_ASPECT_DEPTH_BIT : t->aspectFlags;
-    if (!image_view(r, image, info_format(info), t->swizzle, sampled_aspect, v->base_layer, info->layer_count_or_depth, v->base_level, info->num_levels, info->type == SDL_GPU_TEXTURETYPE_2D ? VK_IMAGE_VIEW_TYPE_2D : VK_IMAGE_VIEW_TYPE_2D_ARRAY, &t->fullView)) return false;
+    VkImageViewUsageCreateInfo sampled = {.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO, .usage = VK_IMAGE_USAGE_SAMPLED_BIT};
+    if (!image_view(r, image, info_format(info), t->swizzle, sampled_aspect, v->base_layer, info->layer_count_or_depth, v->base_level, info->num_levels, info->type == SDL_GPU_TEXTURETYPE_2D ? VK_IMAGE_VIEW_TYPE_2D : VK_IMAGE_VIEW_TYPE_2D_ARRAY, sampled_only ? &sampled : NULL, &t->fullView)) return false;
     for (uint32_t layer = 0; layer < info->layer_count_or_depth; layer++) for (uint32_t level = 0; level < info->num_levels; level++) {
         VulkanTextureSubresource *s = &t->subresources[layer * info->num_levels + level];
         s->parent = t; s->layer = v->base_layer + layer; s->level = v->base_level + level;
         if (info->usage & SDL_GPU_TEXTUREUSAGE_COLOR_TARGET) {
             s->renderTargetViews = SDL_calloc(1, sizeof(VkImageView));
-            if (!s->renderTargetViews || !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, 1, s->level, 1, VK_IMAGE_VIEW_TYPE_2D, s->renderTargetViews)) return false;
+            if (!s->renderTargetViews || !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, 1, s->level, 1, VK_IMAGE_VIEW_TYPE_2D, NULL, s->renderTargetViews)) return false;
         }
         if ((info->usage & (SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE)) && (!v->storage_array || layer == 0) &&
-            !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, v->storage_array ? info->layer_count_or_depth : 1, s->level, 1, v->storage_array ? VK_IMAGE_VIEW_TYPE_2D_ARRAY : VK_IMAGE_VIEW_TYPE_2D, &s->computeWriteView)) return false;
+            !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, v->storage_array ? info->layer_count_or_depth : 1, s->level, 1, v->storage_array ? VK_IMAGE_VIEW_TYPE_2D_ARRAY : VK_IMAGE_VIEW_TYPE_2D, NULL, &s->computeWriteView)) return false;
         if ((info->usage & SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET) &&
-            !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, 1, s->level, 1, VK_IMAGE_VIEW_TYPE_2D, &s->depthStencilView)) return false;
+            !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, 1, s->level, 1, VK_IMAGE_VIEW_TYPE_2D, NULL, &s->depthStencilView)) return false;
     }
     return true;
 }
@@ -231,10 +235,13 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_
 {
     if (e2d_render_view_support(device, abi) != 1 || !source || !layers || !levels || array > 2 || (!array && layers != 1) || (array == 2 && (abi != 2 || levels != 1))) return NULL;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData; VulkanTextureContainer *src = (VulkanTextureContainer *)source;
+    bool sampled_only = abi == 4;
+    if (sampled_only && (!(src->header.info.usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) || e2d_stencil_info(&src->header.info))) return NULL;
+    SDL_GPUTextureUsageFlags usage = sampled_only ? SDL_GPU_TEXTUREUSAGE_SAMPLER : src->header.info.usage;
     if (!src->activeTexture || !compatible_format(src->header.info.format, format) ||
         layer >= src->header.info.layer_count_or_depth || layers > src->header.info.layer_count_or_depth - layer || level >= src->header.info.num_levels || levels > src->header.info.num_levels - level) return NULL;
     if (e2d_stencil_info(&src->header.info)) { if (format != SDL_GPU_TEXTUREFORMAT_R8_UINT || e2d_render_stencil_support(device, 1, src->header.info.usage, src->header.info.sample_count) != 1) return NULL; }
-    else if (!format_supported(device, format, array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D, src->header.info.usage)) return NULL;
+    else if (!format_supported(device, format, array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D, usage)) return NULL;
     View *v = SDL_calloc(1, sizeof(*v)); if (!v) return NULL;
     v->root = source; v->base_layer = layer; v->base_level = level; v->storage_array = array == 2;
     ViewCache *cache = view_cache(device, false);
@@ -257,20 +264,26 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_
     src->canBeCycled = false;
     SDL_UnlockRWLock(r->defragLock); SDL_UnlockMutex(r->allocatorLock);
     SDL_GPUTextureCreateInfo info = src->header.info; info.type = array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D;
-    info.format = format; info.width = SDL_max(1, info.width >> level); info.height = SDL_max(1, info.height >> level); info.layer_count_or_depth = layers; info.num_levels = levels;
-    if (!wrap(device, v, v->source->image, &info) || !publish(device, v)) { destroy_unpublished(device, v); return NULL; }
+    info.format = format; info.usage = usage; info.width = SDL_max(1, info.width >> level); info.height = SDL_max(1, info.height >> level); info.layer_count_or_depth = layers; info.num_levels = levels;
+    if (!wrap(device, v, v->source->image, &info, sampled_only) || !publish(device, v)) { destroy_unpublished(device, v); return NULL; }
     return v->handle;
 }
 E2D_EXPORT SDL_GPUTexture *e2d_render_texture_create(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextureCreateInfo *info, const SDL_GPUTextureFormat *formats, uint32_t count)
 {
-    if ((abi != 1 && abi != 2 && abi != 3) || e2d_render_view_support(device, abi == 3 ? 2 : abi) != 1 || !info) return NULL;
+    if (e2d_render_view_support(device, abi == 3 ? 2 : abi) != 1 || !info) return NULL;
     bool stencil = e2d_stencil_info(info);
     if (stencil && (abi != 3 || count != 1 || info->format != SDL_GPU_TEXTUREFORMAT_R8_UINT || e2d_render_stencil_support(device, 1, info->usage, info->sample_count) != 1)) return NULL;
     if (!stencil && abi == 3) return NULL;
     if (!formats || !count || count > 256 || !info->width || !info->height || !info->num_levels || !info->layer_count_or_depth || info->num_levels > 32 || info->layer_count_or_depth > 2048 ||
         (info->type != SDL_GPU_TEXTURETYPE_2D && info->type != SDL_GPU_TEXTURETYPE_2D_ARRAY) || (info->type == SDL_GPU_TEXTURETYPE_2D && info->layer_count_or_depth != 1) || info->sample_count > SDL_GPU_SAMPLECOUNT_8) return NULL;
+    if (abi == 4 && (count != 2 || formats[0] != info->format || formats[1] == info->format ||
+        !(info->usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) || info->sample_count != SDL_GPU_SAMPLECOUNT_1)) return NULL;
     bool base = false;
-    for (uint32_t i = 0; i < count; i++) { base |= formats[i] == info->format; if (!compatible_format(info->format, formats[i]) || (!stencil && !format_supported(device, formats[i], info->type, info->usage))) return NULL; }
+    for (uint32_t i = 0; i < count; i++) {
+        base |= formats[i] == info->format;
+        SDL_GPUTextureUsageFlags usage = abi == 4 && i == 1 ? SDL_GPU_TEXTUREUSAGE_SAMPLER : info->usage;
+        if (!compatible_format(info->format, formats[i]) || (!stencil && !format_supported(device, formats[i], info->type, usage))) return NULL;
+    }
     if (!base) return NULL;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     View *v = SDL_calloc(1, sizeof(*v)); if (!v) return NULL;
@@ -296,7 +309,7 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_texture_create(SDL_GPUDevice *device, uint
     VkMemoryAllocateInfo memory = {.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO, .allocationSize = requirements.size, .memoryTypeIndex = memory_type};
     if (r->vkAllocateMemory(r->logicalDevice, &memory, NULL, &v->memory) != VK_SUCCESS || r->vkBindImageMemory(r->logicalDevice, v->image, v->memory, 0) != VK_SUCCESS) goto fail;
     v->bytes = requirements.size;
-    if (!wrap(device, v, v->image, info)) goto fail;
+    if (!wrap(device, v, v->image, info, false)) goto fail;
     v->root = v->handle;
     SDL_GPUCommandBuffer *commands = SDL_AcquireGPUCommandBuffer(device); if (!commands) goto fail;
     VkImageLayout layout = (info->usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL :

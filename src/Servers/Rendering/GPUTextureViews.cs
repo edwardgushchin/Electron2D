@@ -6,6 +6,7 @@ namespace Electron2D;
 internal static unsafe partial class GPUTextureViews
 {
     private const string Cache = "Electron2D.render.texture_views";
+    internal const uint SampledFormatABI = 4;
     private static bool Active(nint device) => SDL.GetPointerProperty(SDL.GetGPUDeviceProperties(device), Cache, 0) != 0;
     internal static void CollectIfActive(nint device) { if (Active(device)) Collect(device, 1); }
     internal static SDL.GPUTextureRegion Region(nint device, SDL.GPUTextureRegion region)

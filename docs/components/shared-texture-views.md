@@ -24,11 +24,21 @@ raw readback and updates use the encoded bytes. Creating a new view requires an
 idle device. Freeing the export allows a fresh export from the same source.
 Freeing its source RID, including a slice, expires the cached export.
 
-An unavailable or undeclared distinct view rejects. Renderer-managed ordinary
-and array uploads still need mutable backing that preserves existing GPU writes,
-storage roles and compatible-update identity. Viewport exports need views for each
-physical ping-pong image and must select the completed image at command recording.
-Distinct views currently use the Vulkan adapter.
+The first device export of a compatible renderer upload prepares mutable backing
+for the ordinary image or array. This includes first requests for a linear RID.
+Any subsequent sRGB export samples the same GPU bytes with an sRGB image view.
+The linear RID keeps its native storage-image roles, and the sRGB RID supports
+sampling and encoded transfers. Compatible authored updates preserve both RIDs
+and overwrite device writes. Source disposal or allocation replacement expires
+both. If the canvas already drew the upload, preparation at first export can
+allocate new backing and upload the authored bytes again. Images used only by the
+canvas keep ordinary SDL allocation.
+
+Renderer uploads support RGBA8 and BC1/2/3/7 when the selected Vulkan device
+supports the sampled format and negotiates Vulkan 1.1 or later with the matching
+native bridge. Other upload formats and backends reject a distinct sRGB request
+when they lack a compatible view. Viewport exports need views for each physical
+ping-pong image and must select the completed image at command recording.
 
 Run `ELECTRON2D_TEST_DEVICE_CANVAS_SRGB=vulkan` with `SDL_GPU_DRIVER=vulkan` to
 check ordinary, array and swizzled slice sampling in a rendered frame. The
@@ -37,6 +47,16 @@ reads and writes, mip/layer isolation, proxy identity, active-list refusal and
 view retirement. The `direct3d12` profile checks already-sRGB export and refusal
 to create mutable format backing on that adapter. Both profiles pass on the
 tested Windows desktop.
+
+Run `ELECTRON2D_TEST_RENDERER_TEXTURE_SRGB=vulkan` with `SDL_GPU_DRIVER=vulkan`
+to check the [renderer upload profile](../../tests/Electron2D.Tests/RendererTextureSRGBTests.cs).
+It draws the upload before its first export, writes the linear allocation with a
+compute shader before asking for sRGB, checks ordinary and array samples against
+decoded values, and tests raw bytes, compatible updates, source retirement and
+queued readback. When the device exposes BC1, it also verifies decoded BC1 pixels
+and the unchanged encoded block. The `direct3d12` and `preceding` profiles check distinct-view
+refusal and working linear uploads on Direct3D 12 and the preceding Vulkan bridge.
+All three profiles pass on the tested Windows desktop.
 
 ## Formats and consumers
 

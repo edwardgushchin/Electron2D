@@ -16,6 +16,13 @@ concurrency/allocation check. Run test_generate_layout.py with Python -B for
 bounded extraction and modified-source rejection. Runtime acceptance requires
 the selected matching core; a successful compilation alone does not qualify it.
 
+Texture-view ABI 4 creates mutable single-sample backing with the base image's
+usage and one alternate sampling format. The alternate view restricts Vulkan
+usage to sampling through `VkImageViewUsageCreateInfo`. Encoded transfers resolve
+to the original image. The adapter requires Vulkan 1.1 on the physical device
+and the version negotiated by the engine. Earlier ABI requests retain their
+original format and usage checks. See [shared texture views](../../docs/components/shared-texture-views.md).
+
 `e2d_render_sampler` uses ABI 1, copies the SDL sampler fields, normalized
 U/V address identities (0..4), border color (0..5), and a zero/one unnormalized
 flag. It validates the pinned Vulkan core, physical LOD-bias bounds and the

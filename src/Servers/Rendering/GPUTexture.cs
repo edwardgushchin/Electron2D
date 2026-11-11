@@ -5,24 +5,27 @@ namespace Electron2D;
 internal sealed unsafe class GPUTexture : IDisposable
 {
     private readonly nint _device;
-    private readonly RenderHandle _texture;
+    private RenderHandle _texture;
     private readonly RenderHandle _transfer;
+    private readonly SDL.GPUTextureUsageFlags _nativeUsage;
     private readonly bool _blockUpload;
     private readonly int _transferBytes;
     private object? _uploaded;
     private object? _recorded;
     private ulong _uploadedRevision, _recordedRevision;
+    private bool _exportPrepared;
     internal bool IsDisposed => _texture.IsClosed;
     internal RenderHandle Allocation => _texture;
     internal RenderingDevice.TextureUsageBits DeviceUsage { get; private set; }
     internal LayeredTexturePixels? ArrayPixels;
     internal TexturePixels Pixels;
     internal SDL.GPUTextureFormat NativeTextureFormat { get; }
+    internal bool HasSRGBView { get; private set; }
     internal nint Handle => _texture.DangerousGetHandle();
 
-    internal GPUTexture(RenderHandle device, TexturePixels pixels) : this(device, pixels, 1, pixels.Upload.Data.Length, false) { }
-    internal GPUTexture(RenderHandle device, LayeredTexturePixels pixels) : this(device, pixels.First, pixels.Layers.Length, pixels.UploadBytes, true) { ArrayPixels = pixels; }
-    private GPUTexture(RenderHandle device, TexturePixels pixels, int layers, int bytes, bool array)
+    internal GPUTexture(RenderHandle device, TexturePixels pixels, bool export = false) : this(device, pixels, 1, pixels.Upload.Data.Length, false, export) { }
+    internal GPUTexture(RenderHandle device, LayeredTexturePixels pixels, bool export = false) : this(device, pixels.First, pixels.Layers.Length, pixels.UploadBytes, true, export) { ArrayPixels = pixels; }
+    private GPUTexture(RenderHandle device, TexturePixels pixels, int layers, int bytes, bool array, bool export)
     {
         _device = device.DangerousGetHandle();
         Pixels = pixels;
@@ -43,23 +46,64 @@ internal sealed unsafe class GPUTexture : IDisposable
         DeviceUsage = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyFrom | RenderingDevice.TextureUsageBits.CanCopyTo | RenderingDevice.TextureUsageBits.CanUpdate;
         var storage = SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
         if (SDL.GPUTextureSupportsFormat(_device, format, type, usage | storage)) { usage |= storage; DeviceUsage |= RenderingDevice.TextureUsageBits.Storage; }
-        var info = new SDL.GPUTextureCreateInfo
-        {
-            Type = type,
-            Format = format,
-            Width = (uint)pixels.Source.Width,
-            Height = (uint)pixels.Source.Height,
-            LayerCountOrDepth = (uint)layers,
-            NumLevels = (uint)pixels.Levels,
-            Usage = usage
-        };
-        _texture = new RenderHandle(SDL.CreateGPUTexture(_device, in info), h => SDL.ReleaseGPUTexture(_device, h), device);
+        _nativeUsage = usage;
+        var info = AllocationInfo(layers, array);
+        _texture = (export ? TryCreateExportStorage(device, in info) : null) ??
+            new RenderHandle(SDL.CreateGPUTexture(_device, in info), h => SDL.ReleaseGPUTexture(_device, h), device);
+        _exportPrepared = export;
         try
         {
             var transfer = new SDL.GPUTransferBufferCreateInfo { Usage = SDL.GPUTransferBufferUsage.Upload, Size = (uint)_transferBytes };
             _transfer = new RenderHandle(SDL.CreateGPUTransferBuffer(_device, in transfer), h => SDL.ReleaseGPUTransferBuffer(_device, h), device);
         }
         catch { _texture.Dispose(); throw; }
+    }
+
+    private SDL.GPUTextureCreateInfo AllocationInfo(int layers, bool array) => new()
+    {
+        Type = array ? SDL.GPUTextureType.TextureType2DArray : SDL.GPUTextureType.TextureType2D,
+        Format = NativeTextureFormat,
+        Width = (uint)Pixels.Source.Width,
+        Height = (uint)Pixels.Source.Height,
+        LayerCountOrDepth = (uint)layers,
+        NumLevels = (uint)Pixels.Levels,
+        Usage = _nativeUsage
+    };
+
+    internal void PrepareForExport(RenderHandle device)
+    {
+        if (_exportPrepared) return;
+        // Before the first device RID exists, the authored upload still owns all of this image's pixels.
+        var info = AllocationInfo(ArrayPixels?.Layers.Length ?? 1, ArrayPixels is not null);
+        var replacement = TryCreateExportStorage(device, in info);
+        if (replacement is not null)
+        {
+            _texture.Dispose();
+            _texture = replacement;
+            _uploaded = _recorded = null;
+        }
+        _exportPrepared = true;
+    }
+
+    private RenderHandle? TryCreateExportStorage(RenderHandle device, in SDL.GPUTextureCreateInfo info)
+    {
+        var srgb = info.Format switch
+        {
+            SDL.GPUTextureFormat.R8G8B8A8Unorm => SDL.GPUTextureFormat.R8G8B8A8UnormSRGB,
+            SDL.GPUTextureFormat.BC1RGBAUnorm => SDL.GPUTextureFormat.BC1RGBAUnormSRGB,
+            SDL.GPUTextureFormat.BC2RGBAUnorm => SDL.GPUTextureFormat.BC2RGBAUnormSRGB,
+            SDL.GPUTextureFormat.BC3RGBAUnorm => SDL.GPUTextureFormat.BC3RGBAUnormSRGB,
+            SDL.GPUTextureFormat.BC7RGBAUnorm => SDL.GPUTextureFormat.BC7RGBAUnormSRGB,
+            _ => SDL.GPUTextureFormat.Invalid
+        };
+        if (srgb == SDL.GPUTextureFormat.Invalid || GPUTextureViews.Support(_device, GPUTextureViews.SampledFormatABI) != 1 ||
+            !SDL.GPUTextureSupportsFormat(_device, srgb, info.Type, SDL.GPUTextureUsageFlags.Sampler)) return null;
+        SDL.GPUTextureFormat* formats = stackalloc SDL.GPUTextureFormat[2] { info.Format, srgb };
+        var image = GPUTextureViews.Create(_device, GPUTextureViews.SampledFormatABI, in info, (nint)formats, 2);
+        if (image == 0) return null;
+        var handle = new RenderHandle(image, h => GPUTextureViews.Destroy(_device, 1, h), device);
+        HasSRGBView = true;
+        return handle;
     }
 
     private object Version => (object?)ArrayPixels ?? Pixels;

@@ -6,6 +6,7 @@ namespace Electron2D;
 internal static unsafe partial class GPUDeviceFactory
 {
     internal const string DepthResolveProperty = "Electron2D.gpu.depth_resolve";
+    private const string VulkanAPIVersionProperty = "Electron2D.gpu.vulkan_api_version";
     internal const string FloatAtomic64Property = "Electron2D.gpu.float64_atomics";
     internal const string FloatAtomicProperty = "Electron2D.gpu.float32_atomics";
     internal const string AddressProperty = "Electron2D.gpu.buffer_device_address";
@@ -312,7 +313,8 @@ internal static unsafe partial class GPUDeviceFactory
                     if (selected == 0) return 0;
                 }
                 if (SDL.GetGPUDeviceDriver(device) == "vulkan" &&
-                    (depthResolve != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), DepthResolveProperty, depthResolve) ||
+                    (!SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), VulkanAPIVersionProperty, options.VulkanApiVersion) ||
+                     depthResolve != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), DepthResolveProperty, depthResolve) ||
                      (floating & 63) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), FloatAtomicProperty, floating & 63) ||
                      (floating >> 6) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), FloatAtomic64Property, floating >> 6) ||
                      addresses != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), AddressProperty, true) ||

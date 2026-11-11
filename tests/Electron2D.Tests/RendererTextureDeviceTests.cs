@@ -53,7 +53,7 @@ internal static class RendererTextureDeviceTests
         window.Ready += _ =>
         {
             RenderingServer.SetDefaultClearColor(Colors.Black); device = RenderingServer.GetRenderingDevice()!;
-            Reject<NotSupportedException>(() => RenderingServer.TextureGetRDTexture(source.GetRID(), true)); imported = RenderingServer.TextureGetRDTexture(source.GetRID()); Check(imported.IsValid() && imported == RenderingServer.TextureGetRDTexture(alias.GetRID()), "Ordinary/atlas exports share actual native allocation.");
+            imported = RenderingServer.TextureGetRDTexture(source.GetRID()); Check(imported.IsValid() && imported == RenderingServer.TextureGetRDTexture(alias.GetRID()), "Ordinary/atlas exports share actual native allocation.");
             var info = device.TextureGetFormat(imported); Check(info.Width == 4 && info.Height == 4 && info.Format == RenderingDevice.DataFormat.R8G8B8A8UNORM, "Native allocation metadata."); Check(device.TextureGetData(imported, 0).AsSpan(0, 4).SequenceEqual(new byte[] { 255, 0, 0, 255 }), "Initial authored upload precedes device read.");
             Compute(device, imported); ColdEdges(device, imported); wrapper.TextureRDRID = imported; layers = RenderingServer.TextureGetRDTexture(array.GetRID()); Check(device.TextureGetFormat(layers).ArrayLayers == 2 && device.TextureGetData(layers, 1).AsSpan(0, 4).SequenceEqual(new byte[] { 0, 0, 255, 255 }), "Layered exports retain all layers.");
             proxy = RenderingServer.TextureProxyCreate(source.GetRID()); Check(RenderingServer.TextureGetRDTexture(proxy) == imported, "Proxy source identity."); Check(!RenderingServer.TextureGetRDTexture(sub.GetTexture().GetRID()).IsValid(), "An unrendered viewport has no completed native image.");

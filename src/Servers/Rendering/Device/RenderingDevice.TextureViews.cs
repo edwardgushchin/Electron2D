@@ -53,14 +53,15 @@ public sealed unsafe partial class RenderingDevice
         if (!_entries.TryGetValue(source, out var entry) || entry.Texture is not { } info || !entry.Alive) return default;
         var format = SRGBViewFormat(info.Format);
         if (format == info.Format) return source;
-        if (format == DataFormat.Max || !info.Shareable.Contains(format))
+        var sampledOnly = (entry.TextureSource ?? entry).Borrowed?.Pixels?.HasSRGBView == true;
+        if (format == DataFormat.Max || (!sampledOnly && !info.Shareable.Contains(format)))
             throw new NotSupportedException("This texture allocation does not declare a compatible sRGB view.");
         if (entry.SRGBView.IsValid() && _entries.TryGetValue(entry.SRGBView, out var alias) && alias.Alive)
             return entry.SRGBView;
 
         IdleList();
         var (ownerID, owner) = TextureViewOwner(source);
-        entry.SRGBView = CreateTextureView(format, info.Swizzle, ownerID, owner, info.BaseLayer, info.Layers, info.BaseMip, info.Mips, info.Type);
+        entry.SRGBView = CreateTextureView(format, info.Swizzle, ownerID, owner, info.BaseLayer, info.Layers, info.BaseMip, info.Mips, info.Type, sampledOnly);
         return entry.SRGBView;
     }
     private static DataFormat SRGBViewFormat(DataFormat format) => format switch
@@ -96,19 +97,20 @@ public sealed unsafe partial class RenderingDevice
     {
         if (GPUTextureViews.Support(Device, 1) != 1) throw new NotSupportedException("This texture role requires the pinned native image/view adapter.");
     }
-    private RID CreateTextureView(DataFormat formatOverride, uint swizzle, RID ownerID, Entry owner, uint layer, uint layers, uint mip, uint mips, TextureType type)
+    private RID CreateTextureView(DataFormat formatOverride, uint swizzle, RID ownerID, Entry owner, uint layer, uint layers, uint mip, uint mips, TextureType type, bool sampledOnly = false)
     {
         RequireTextureViews(); var original = owner.Texture!; var stored = original.StoredFormat == DataFormat.Max ? original.Format : original.StoredFormat;
         var format = formatOverride == DataFormat.Max ? stored : formatOverride;
-        if (format != stored && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", "view");
+        if (format != stored && !sampledOnly && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", "view");
         var create = NativeTextureInfo(original with { Format = stored });
         if (stored == DataFormat.S8UINT)
         {
             if (format != DataFormat.S8UINT || !StencilSupported(original.Usage, original.Samples)) throw new NotSupportedException("A stencil-only view retains its native format and supported roles.");
         }
-        else if (GPUTextureViews.FormatSupport(Device, 1, in create, NativeFormat(format)) != 1) throw new NotSupportedException("The shared native format is incompatible or lacks the requested usage/sample roles.");
+        else if (!sampledOnly && GPUTextureViews.FormatSupport(Device, 1, in create, NativeFormat(format)) != 1) throw new NotSupportedException("The shared native format is incompatible or lacks the requested usage/sample roles.");
+        var usage = sampledOnly ? original.Usage & (TextureUsageBits.Sampling | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead) : original.Usage;
         var info = CaptureTextureInfo(format, type, Math.Max(1, original.Width >> (int)mip), Math.Max(1, original.Height >> (int)mip),
-            layers, mips, original.Usage, original.Shareable, original.Samples, original.Resolve, swizzle, stored)
+            layers, mips, usage, original.Shareable, original.Samples, original.Resolve, swizzle, stored)
         with
         {
             BaseLayer = layer,
@@ -118,7 +120,7 @@ public sealed unsafe partial class RenderingDevice
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, TextureOwner = ownerID, TextureSource = owner };
         try
         {
-            entry.Handle = new(GPUTextureViews.View(Device, 1, owner.TextureAllocation?.DangerousGetHandle() ?? owner.NativeHandle, NativeFormat(format), layer, layers, mip, mips, type == TextureType.TextureArray ? 1u : 0u), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);
+            entry.Handle = new(GPUTextureViews.View(Device, sampledOnly ? GPUTextureViews.SampledFormatABI : 1, owner.TextureAllocation?.DangerousGetHandle() ?? owner.NativeHandle, NativeFormat(format), layer, layers, mip, mips, type == TextureType.TextureArray ? 1u : 0u), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);
             PrepareInputShadow(entry); var rid = Add(entry); ownedViews.Add(rid); return rid;
         }
         catch { entry.InputShadow?.Dispose(); entry.Handle?.Dispose(); throw; }

@@ -38,23 +38,33 @@ internal sealed unsafe partial class GPUCanvasBackend
         if (resource is Texture texture)
         {
             var pixels = texture.CapturePixels(); if (pixels is null) return default;
-            if (SRGB) throw new NotSupportedException("Distinct sRGB renderer views require native format-view integration.");
             if (!_textures.TryGetValue(texture, out var gpu) || !ReferenceEquals(gpu.Pixels.Allocation, pixels.Allocation))
             {
-                var replacement = new GPUTexture(_device, pixels); gpu?.Dispose(); _textures[texture] = gpu = replacement;
+                var replacement = new GPUTexture(_device, pixels, export: true);
+                gpu?.Dispose(); _textures[texture] = gpu = replacement;
             }
-            else gpu.Pixels = pixels;
+            else
+            {
+                gpu.Pixels = pixels;
+                gpu.PrepareForExport(_device);
+            }
+            if (SRGB && !gpu.HasSRGBView) throw new NotSupportedException("The renderer upload cannot supply an sRGB view.");
             return device.BorrowRendererTexture(texture, gpu, null);
         }
         if (resource is TextureLayered layered)
         {
             var pixels = layered.CaptureLayers(); if (pixels is null) return default;
-            if (SRGB) throw new NotSupportedException("Distinct sRGB renderer views require native format-view integration.");
             if (!_layeredTextures.TryGetValue(layered, out var gpu) || !ReferenceEquals(gpu.ArrayPixels!.Allocation, pixels.Allocation))
             {
-                var replacement = new GPUTexture(_device, pixels); gpu?.Dispose(); _layeredTextures[layered] = gpu = replacement;
+                var replacement = new GPUTexture(_device, pixels, export: true);
+                gpu?.Dispose(); _layeredTextures[layered] = gpu = replacement;
             }
-            else { gpu.ArrayPixels = pixels; gpu.Pixels = pixels.First; }
+            else
+            {
+                gpu.ArrayPixels = pixels; gpu.Pixels = pixels.First;
+                gpu.PrepareForExport(_device);
+            }
+            if (SRGB && !gpu.HasSRGBView) throw new NotSupportedException("The renderer array cannot supply an sRGB view.");
             return device.BorrowRendererTexture(layered, gpu, null);
         }
         return default;
