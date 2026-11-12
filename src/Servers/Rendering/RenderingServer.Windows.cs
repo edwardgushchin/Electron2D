@@ -76,6 +76,7 @@ public sealed partial class RenderingServer
 
     private void BeginNativeFrames()
     {
+        Volatile.Write(ref _drawingCameraBackground, false);
         _renderingDevice?.AdvanceDrawableSamplerEpoch();
         foreach (var surface in _nativeWindows.Values)
             if (surface.Presentation is null)
@@ -101,6 +102,7 @@ public sealed partial class RenderingServer
         foreach (var surface in _nativeWindows.Values)
             if (surface.Presentation is null) surface.Backend.EndFrame();
         _backend.EndFrame();
+        ReleaseUnusedCameraBackgrounds();
     }
 
     private void ReleaseNativeTarget(Viewport viewport)

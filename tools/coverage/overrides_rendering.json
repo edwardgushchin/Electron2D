@@ -1,14 +1,29 @@
 {
   "mappings": [
     {
+      "godot": "Environment::enum_value:BGMode.BG_CAMERA_FEED",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.CameraFeed()",
+      "reason": "ADRs 0028/0051/0115: active registered camera backgrounds draw before the canvas on GPU and Compatibility with the feed transform, RGB, packed and separate YCbCr, retained conversion, and viewport lifecycle. Windows verifies live caller-owned feed pixels. Physical capture permission, external images, and unqualified platforms remain open. See docs/components/canvas-environment-background.md#camera-feed."
+    },
+    {
+      "godot": "Environment::property:background_camera_feed_id",
+      "electron2d": "property:Electron2D.CanvasEnvironment.BackgroundCameraFeedID()",
+      "reason": "ADRs 0028/0051/0115: active registered camera backgrounds draw before the canvas on GPU and Compatibility with the feed transform, RGB, packed and separate YCbCr, retained conversion, and viewport lifecycle. Windows verifies live caller-owned feed pixels. Physical capture permission, external images, and unqualified platforms remain open. See docs/components/canvas-environment-background.md#camera-feed."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentBG.ENV_BG_CAMERA_FEED",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.CameraFeed()",
+      "reason": "ADRs 0028/0051/0115: active registered camera backgrounds draw before the canvas on GPU and Compatibility with the feed transform, RGB, packed and separate YCbCr, retained conversion, and viewport lifecycle. Windows verifies live caller-owned feed pixels. Physical capture permission, external images, and unqualified platforms remain open. See docs/components/canvas-environment-background.md#camera-feed."
+    },
+    {
       "godot": "Environment::enum:BGMode",
       "electron2d": "T:Electron2D.CanvasBackgroundMode",
-      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. The shared mode family still needs the canvas-layer boundary and camera source."
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection is available. The shared mode family still needs the canvas-layer boundary."
     },
     {
       "godot": "RenderingServer::enum:EnvironmentBG",
       "electron2d": "T:Electron2D.CanvasBackgroundMode",
-      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. The shared mode family still needs the canvas-layer boundary and camera source."
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection is available. The shared mode family still needs the canvas-layer boundary."
     },
     {
       "godot": "Environment::enum_value:BGMode.BG_CLEAR_COLOR",
@@ -53,7 +68,7 @@
     {
       "godot": "Environment::property:background_mode",
       "electron2d": "property:Electron2D.CanvasEnvironment.BackgroundMode()",
-      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. The shared mode family still needs the canvas-layer boundary and camera source."
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection is available. The shared mode family still needs the canvas-layer boundary."
     },
     {
       "godot": "Environment::property:background_color",
@@ -6021,7 +6036,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. The shared mode family still needs the canvas-layer boundary and camera source.",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection is available. The shared mode family still needs the canvas-layer boundary.",
       "godot": [
         "Environment::enum:BGMode",
         "RenderingServer::enum:EnvironmentBG",
@@ -6052,8 +6067,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Needs a live world-background camera producer with feed lifetime, feed transform, and color interpretation of RGB and applicable YCbCr data. CameraTexture already supplies ordinary texture planes.",
+      "state": "Partial",
+      "reason": "ADRs 0028/0051/0115: active registered camera backgrounds draw before the canvas on GPU and Compatibility with the feed transform, RGB, packed and separate YCbCr, retained conversion, and viewport lifecycle. Windows verifies live caller-owned feed pixels. Physical capture permission, external images, and unqualified platforms remain open. See docs/components/canvas-environment-background.md#camera-feed.",
       "godot": [
         "Environment::enum_value:BGMode.BG_CAMERA_FEED",
         "Environment::property:background_camera_feed_id",

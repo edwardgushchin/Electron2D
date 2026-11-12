@@ -139,6 +139,7 @@ public sealed class CameraServer : ElectronObject
     }
     private void NotifyViews(ref List<Exception>? errors)
     {
+        RenderingServer.NotifyCameraBackgroundMutation();
         lock (_viewGate)
             for (var i = _views.Count - 1; i >= 0; i--)
             {

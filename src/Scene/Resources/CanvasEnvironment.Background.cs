@@ -9,6 +9,8 @@ public enum CanvasBackgroundMode
     Color = 1,
     /// <summary>Retains the preceding unprocessed canvas unless a one-time clear is requested.</summary>
     Keep = 4,
+    /// <summary>Draws the selected camera feed behind the canvas.</summary>
+    CameraFeed = 5,
     /// <summary>Terminal marker. It cannot be selected as a mode.</summary>
     Max = 6
 }
@@ -57,9 +59,24 @@ public sealed partial class CanvasEnvironment
         }
     }
 
+    /// <summary>Gets or sets the process-local camera feed ID used in CameraFeed mode.</summary>
+    /// <value>One initially. Zero selects no source.</value>
+    /// <remarks>Only an active registered feed with a supported frame supplies pixels. Selection never activates the camera.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The ID is negative.</exception>
+    /// <exception cref="ObjectDisposedException">This environment is disposed.</exception>
+    public int BackgroundCameraFeedID
+    {
+        get => Read(ref _background.CameraFeedID);
+        set
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
+            Set(ref _background.CameraFeedID, value);
+        }
+    }
+
     internal static void ValidateBackgroundMode(CanvasBackgroundMode mode)
     {
-        if (mode is not (CanvasBackgroundMode.ClearColor or CanvasBackgroundMode.Color or CanvasBackgroundMode.Keep))
+        if (mode is not (CanvasBackgroundMode.ClearColor or CanvasBackgroundMode.Color or CanvasBackgroundMode.Keep or CanvasBackgroundMode.CameraFeed))
             throw new ArgumentOutOfRangeException(nameof(mode));
     }
 
@@ -79,7 +96,8 @@ public sealed partial class CanvasEnvironment
     [
         new PropertyDescriptor<CanvasEnvironment, CanvasBackgroundMode>(nameof(BackgroundMode), e => e.BackgroundMode, (e, value) => e.BackgroundMode = value, _ => CanvasBackgroundMode.ClearColor, stored: true),
         new PropertyDescriptor<CanvasEnvironment, Color>(nameof(BackgroundColor), e => e.BackgroundColor, (e, value) => e.BackgroundColor = value, _ => Colors.Black, stored: true),
-        new PropertyDescriptor<CanvasEnvironment, float>(nameof(BackgroundEnergyMultiplier), e => e.BackgroundEnergyMultiplier, (e, value) => e.BackgroundEnergyMultiplier = value, _ => 1f, stored: true)
+        new PropertyDescriptor<CanvasEnvironment, float>(nameof(BackgroundEnergyMultiplier), e => e.BackgroundEnergyMultiplier, (e, value) => e.BackgroundEnergyMultiplier = value, _ => 1f, stored: true),
+        new PropertyDescriptor<CanvasEnvironment, int>(nameof(BackgroundCameraFeedID), e => e.BackgroundCameraFeedID, (e, value) => e.BackgroundCameraFeedID = value, _ => 1, stored: true)
     ];
 }
 
@@ -88,5 +106,6 @@ internal struct CanvasBackgroundSettings
     internal CanvasBackgroundMode Mode;
     internal Color Color;
     internal float Energy, Exposure;
-    internal static CanvasBackgroundSettings Default => new() { Color = Colors.Black, Energy = 1, Exposure = 1 };
+    internal int CameraFeedID;
+    internal static CanvasBackgroundSettings Default => new() { Color = Colors.Black, Energy = 1, Exposure = 1, CameraFeedID = 1 };
 }

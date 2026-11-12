@@ -54,7 +54,7 @@ public sealed partial class RenderingServer
             frame.ClearEnabled = clearMode == ViewportClearMode.Once;
             return;
         }
-        if (viewport.TransparentBG) return;
+        if (viewport.TransparentBG || background.Mode == CanvasBackgroundMode.CameraFeed) return;
 
         if (background.Mode == CanvasBackgroundMode.Color) frame.Clear = background.Color with { A = 1 };
         var energy = (double)background.Energy * background.Exposure;
@@ -69,5 +69,61 @@ public sealed partial class RenderingServer
             return (float)Math.Clamp(linear * energy, minimum, maximum);
         }
         frame.Clear = new Color(Scale(color.R), Scale(color.G), Scale(color.B), 1).LinearToSRGB();
+    }
+
+    private readonly Dictionary<int, CameraBackgroundTexture> _cameraBackgroundTextures = [];
+    private bool _cameraBackgroundSelected, _drawingCameraBackground;
+
+    internal static void NotifyCameraBackgroundMutation()
+    {
+        if (Service is { } server &&
+            (Volatile.Read(ref server._cameraBackgroundSelected) || Volatile.Read(ref server._drawingCameraBackground)))
+            server.MarkChanged();
+    }
+
+    private void AppendCameraBackground(int feedID, Vector2i size)
+    {
+        if (feedID == 0) return;
+        Volatile.Write(ref _drawingCameraBackground, true);
+        if (!_cameraBackgroundTextures.TryGetValue(feedID, out var texture) || texture.CapturedFrame != _particleFrame)
+        {
+            var feed = CameraServer.Find(feedID);
+            if (texture is null)
+            {
+                if (feed is null) return;
+                _cameraBackgroundTextures.Add(feedID, texture = new());
+            }
+            texture.CapturedFrame = _particleFrame;
+            texture.HasFrame = feed is not null && feed.CaptureBackground(texture, out texture.FeedTransform);
+            if (!texture.HasFrame) texture.ClearFrame();
+        }
+        if (!texture.HasFrame) return;
+
+        var transform = texture.FeedTransform;
+        var upperLeft = transform * Vector2.Zero;
+        var upperRight = transform * new Vector2(1, 0);
+        var lowerRight = transform * Vector2.One;
+        var lowerLeft = transform * new Vector2(0, 1);
+        if (!upperLeft.IsFinite() || !upperRight.IsFinite() || !lowerRight.IsFinite() || !lowerLeft.IsFinite()) return;
+
+        var first = _vertices.Count;
+        var a = new CanvasVertex(Vector2.Zero, Colors.White, upperLeft);
+        var b = new CanvasVertex(new(size.X, 0), Colors.White, upperRight);
+        var c = new CanvasVertex(size, Colors.White, lowerRight);
+        var d = new CanvasVertex(new(0, size.Y), Colors.White, lowerLeft);
+        _vertices.Add(a); _vertices.Add(b); _vertices.Add(c);
+        _vertices.Add(a); _vertices.Add(c); _vertices.Add(d);
+        _batches.Add(new(first, 6, null, texture, TextureFilter.Nearest, TextureRepeat.Disabled));
+    }
+
+    private void ReleaseUnusedCameraBackgrounds()
+    {
+        Volatile.Write(ref _cameraBackgroundSelected, _drawingCameraBackground);
+        foreach (var pair in _cameraBackgroundTextures)
+        {
+            if (pair.Value.CapturedFrame == _particleFrame) continue;
+            pair.Value.Dispose();
+            _cameraBackgroundTextures.Remove(pair.Key);
+        }
     }
 }

@@ -1,3 +1,5 @@
+using SDL3;
+
 namespace Electron2D;
 
 /// <summary>Describes one camera source format without exposing native backend identifiers.</summary>
@@ -54,10 +56,11 @@ public class CameraFeed : ElectronObject
     private readonly object _gate = new();
     private TexturePixels? _first, _second;
     private FeedDataType _dataType = FeedDataType.RGB;
+    private SDL.Colorspace _backgroundColorspace = SDL.Colorspace.BT601Full;
     private string _name = "???";
     private FeedPosition _position;
     private Transform _transform = new(1, 0, 0, -1, 0, 1);
-    private bool _active, _calling, _emitting, _framePending, _formatPending;
+    private bool _active, _calling, _emitting, _framePending, _formatPending, _backgroundFrameCurrent;
     private EventPublisher<Action> _frameChanged, _formatChanged;
 
     /// <summary>Creates a caller-owned inactive source with no pixels.</summary>
@@ -93,9 +96,9 @@ public class CameraFeed : ElectronObject
             try
             {
                 if (value) { if (OnActivateFeed()) lock (_gate) _active = true; }
-                else { lock (_gate) _active = false; OnDeactivateFeed(); }
+                else { lock (_gate) { _active = false; _backgroundFrameCurrent = false; } OnDeactivateFeed(); }
             }
-            finally { _calling = false; }
+            finally { _calling = false; RenderingServer.NotifyCameraBackgroundMutation(); }
         }
     }
     /// <summary>Gets or sets finite normalized image-coordinate metadata.</summary>
@@ -103,7 +106,13 @@ public class CameraFeed : ElectronObject
     public Transform FeedTransform
     {
         get { lock (_gate) { ThrowIfDisposed(); return _transform; } }
-        set { CheckMutation(); if (!value.IsFinite()) throw new ArgumentException("Camera transform must be finite.", nameof(value)); lock (_gate) _transform = value; }
+        set
+        {
+            CheckMutation();
+            if (!value.IsFinite()) throw new ArgumentException("Camera transform must be finite.", nameof(value));
+            lock (_gate) { if (_transform == value) return; _transform = value; }
+            RenderingServer.NotifyCameraBackgroundMutation();
+        }
     }
     /// <summary>Gets a copied list of supported formats from the source hook.</summary><value>Empty for a plain authored-image source.</value>
     public CameraFeedFormat[] Formats
@@ -163,10 +172,12 @@ public class CameraFeed : ElectronObject
         {
             ThrowIfDisposed(); if (!_active) return;
             _formatPending |= _dataType != type || !SameFormat(_first, first) || !SameFormat(_second, second);
-            _first = first; _second = second; _dataType = type; _framePending = true;
+            _first = first; _second = second; _dataType = type; _framePending = _backgroundFrameCurrent = true;
+            _backgroundColorspace = SDL.Colorspace.BT601Full;
         }
     }
-    internal void SubmitPrepared(TexturePixels first, TexturePixels? second, FeedDataType type)
+    internal void SubmitPrepared(TexturePixels first, TexturePixels? second, FeedDataType type,
+        SDL.Colorspace backgroundColorspace = SDL.Colorspace.BT601Full)
     {
         lock (_gate)
         {
@@ -175,7 +186,8 @@ public class CameraFeed : ElectronObject
             var a = _first is { Mutable: true } && SameFormat(_first, first) ? _first : TexturePixels.PreparedPlane(first.Source.Width, first.Source.Height, first.Source.Format);
             var b = second is null ? null : _second is { Mutable: true } && SameFormat(_second, second) ? _second : TexturePixels.PreparedPlane(second.Source.Width, second.Source.Height, second.Source.Format);
             Copy(first, a); if (second is not null) Copy(second, b!);
-            _first = a; _second = b; _dataType = type; _formatPending |= changed; _framePending = true;
+            _first = a; _second = b; _dataType = type; _formatPending |= changed; _framePending = _backgroundFrameCurrent = true;
+            _backgroundColorspace = backgroundColorspace;
         }
         static void Copy(TexturePixels source, TexturePixels target)
         {
@@ -183,6 +195,15 @@ public class CameraFeed : ElectronObject
         }
     }
     private static bool SameFormat(TexturePixels? a, TexturePixels? b) => a is null ? b is null : b is not null && a.Source.Width == b.Source.Width && a.Source.Height == b.Source.Height && a.Source.Format == b.Source.Format && a.Source.HasMIPMaps == b.Source.HasMIPMaps;
+    internal bool CaptureBackground(CameraBackgroundTexture target, out Transform transform)
+    {
+        lock (_gate)
+        {
+            transform = _transform;
+            if (IsDisposed || !_active || !_backgroundFrameCurrent || _first is not { } pixels) return false;
+            return target.Prepare(pixels, _second, _dataType, _backgroundColorspace);
+        }
+    }
     internal TexturePixels? Pixels(CameraServer.FeedImage image) { lock (_gate) { ThrowIfDisposed(); return (int)image == 0 ? _first : _second; } }
     internal Image? CopyImage(CameraServer.FeedImage image) { lock (_gate) { ThrowIfDisposed(); return ((int)image == 0 ? _first : _second)?.CopyImage(); } }
     internal Vector2i Dimensions { get { lock (_gate) { ThrowIfDisposed(); return _first is { } p ? new(p.Source.Width, p.Source.Height) : Vector2i.Zero; } } }
@@ -194,6 +215,7 @@ public class CameraFeed : ElectronObject
     {
         bool format, frame;
         lock (_gate) { if (IsDisposed) return; format = _formatPending; frame = _framePending; _formatPending = _framePending = false; }
+        if (frame) RenderingServer.NotifyCameraBackgroundMutation();
         List<Exception>? errors = null; _emitting = true;
         try
         {

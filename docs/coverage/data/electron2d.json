@@ -35114,6 +35114,19 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.CanvasBackgroundMode.CameraFeed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasBackgroundMode",
+    "name": "CameraFeed",
+    "signature": "public const Electron2D.CanvasBackgroundMode CameraFeed = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasBackgroundMode",
+    "value": "5"
+  },
+  {
     "id": "enumValue:Electron2D.CanvasBackgroundMode.ClearColor()",
     "kind": "enumValue",
     "declaringType": "Electron2D.CanvasBackgroundMode",
@@ -272600,6 +272613,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.BackgroundCameraFeedID()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "BackgroundCameraFeedID",
+    "signature": "public System.Int32 BackgroundCameraFeedID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

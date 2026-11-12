@@ -89,10 +89,11 @@ internal sealed class NativeCameraFeed : CameraFeed
             data = *(SDL.Surface*)surface;
             if (data.Pixels == 0 || data.Pitch <= 0 || _output != CameraFeedOutput.RGB && data.Pitch < data.Width * 2)
                 throw new InvalidDataException("Locked camera surface has invalid pixel storage.");
+            var colorspace = SDL.GetSurfaceColorspace(surface);
             if (_output == CameraFeedOutput.RGB)
             {
                 var rgba = BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888;
-                if (!SDL.ConvertPixelsAndColorspace(data.Width, data.Height, data.Format, SDL.GetSurfaceColorspace(surface), SDL.GetSurfaceProperties(surface), data.Pixels, data.Pitch, rgba, SDL.Colorspace.SRGB, 0, _first!.Source.Data.AsSpan(), data.Width * 4))
+                if (!SDL.ConvertPixelsAndColorspace(data.Width, data.Height, data.Format, colorspace, SDL.GetSurfaceProperties(surface), data.Pixels, data.Pitch, rgba, SDL.Colorspace.SRGB, 0, _first!.Source.Data.AsSpan(), data.Width * 4))
                     throw new IOException("Cannot convert camera frame: " + SDL.GetError());
             }
             else for (var y = 0; y < data.Height; y++)
@@ -107,7 +108,7 @@ internal sealed class NativeCameraFeed : CameraFeed
                     }
                 }
             Upload(_first!); if (_second is not null) Upload(_second);
-            SubmitPrepared(_first!, _second, _output switch { CameraFeedOutput.Copy => FeedDataType.YCBCR, CameraFeedOutput.Separate => FeedDataType.YCBCRSeparate, _ => FeedDataType.RGB });
+            SubmitPrepared(_first!, _second, _output switch { CameraFeedOutput.Copy => FeedDataType.YCBCR, CameraFeedOutput.Separate => FeedDataType.YCBCRSeparate, _ => FeedDataType.RGB }, colorspace);
         }
         finally { SDL.UnlockSurface(surface); }
     }

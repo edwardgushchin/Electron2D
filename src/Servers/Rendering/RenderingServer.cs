@@ -309,7 +309,8 @@ public sealed partial class RenderingServer : ElectronObject
         try
         {
             timing?.BeginFrame(); _cpuRenderTiming = timing; if (timing is not null) _cpuRenderStart = Stopwatch.GetTimestamp();
-            frame.State = 1; BuildFrame(frame, tree, size, direct);
+            frame.State = 1;
+            var environment = BuildFrame(frame, tree, size, direct);
             foreach (var batch in frame.Batches)
             {
                 SubmitTexture(batch.Texture, tree);
@@ -318,7 +319,6 @@ public sealed partial class RenderingServer : ElectronObject
             SubmitParticleTextures(frame, tree);
             foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
             foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
-            var environment = SelectEnvironment(viewport, tree)?.SnapshotEnvironment();
             PrepareFrameBackground(frame, environment?.Background);
             if (direct) { PauseRenderCPU(); return; }
             var target = _backend.FindTarget(viewport); if (target is null) return;
@@ -375,7 +375,7 @@ public sealed partial class RenderingServer : ElectronObject
             Array.Clear(frame.TextureScratch);
         }
     }
-    private void BuildFrame(CanvasFrame frame, SceneTree tree, Vector2i pixels, bool direct)
+    private (CanvasBackgroundSettings Background, CanvasPostProcess Effects)? BuildFrame(CanvasFrame frame, SceneTree tree, Vector2i pixels, bool direct)
     {
         UseFrame(frame); _instances.Clear(); _modelPoses.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _repeatModels.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
         var viewport = frame.Viewport;
@@ -427,7 +427,11 @@ public sealed partial class RenderingServer : ElectronObject
         _submittingTextures = true;
         CaptureCanvasLighting(framebufferTransform);
         _lighting.ConfigureSDF(viewport, pixels);
+        var environment = SelectEnvironment(viewport, tree)?.SnapshotEnvironment();
+        if (environment?.Background is { Mode: CanvasBackgroundMode.CameraFeed } background)
+            AppendCameraBackground(background.CameraFeedID, pixels);
         ComposeFrame(pixels);
+        return environment;
     }
 
     private static (Vector2 Size, int Times) RepeatSettings(CanvasItem item)
@@ -678,6 +682,8 @@ public sealed partial class RenderingServer : ElectronObject
                 try { ReleaseOwnedMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseOwnedTextures(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { _renderingDevice?.Dispose(); _renderingDevice = null; } catch (Exception error) { (errors ??= []).Add(error); }
+                foreach (var texture in _cameraBackgroundTextures.Values) texture.Dispose();
+                _cameraBackgroundTextures.Clear();
                 try { _backend.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
             }
             finally

@@ -107,3 +107,5 @@ permission and conversion-failure cleanup, and prepared allocations. They acquir
 personal camera images. Native hardware capture, permission prompts, other platforms,
 native allocator measurements and owner acceptance remain separate gates.
 Actual local receipts are retained in `bin/camera-feeds/2026-10-27/`.
+
+The [canvas environment](canvas-environment-background.md#camera-feed) draws a selected active feed as a viewport background on GPU and Compatibility. This consumer applies the feed transform and interprets the supported YCbCr layouts.
