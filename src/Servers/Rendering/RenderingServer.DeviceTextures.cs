@@ -94,32 +94,8 @@ public sealed partial class RenderingServer
         return deviceTexture.IsValid() ? device.GetDriverResource(RenderingDevice.DriverResource.Texture, deviceTexture, 0) : 0;
     }
 
-    private static Resource? ResolveTextureExportSource(RID texture)
-    {
-        Resource? source = RenderingTextureRegistry.ResolveResource(texture);
-        for (var depth = 0; depth <= 1024; depth++)
-        {
-            switch (source)
-            {
-                case null or { IsDisposed: true }: return null;
-                case ServerTexture { IsProxy: true } proxy:
-                    source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
-                    break;
-                case LayeredTextureProxy proxy:
-                    source = RenderingTextureRegistry.ResolveLayeredProxySource(proxy.ProxyTarget);
-                    break;
-                case AtlasTexture atlas:
-                    source = atlas.RenderingTexture;
-                    break;
-                case CanvasTexture channels:
-                    source = channels.DiffuseTexture;
-                    break;
-                default:
-                    return RenderingTextureRegistry.SampledStorage(source);
-            }
-        }
-        throw new InvalidOperationException("Texture view depth exceeds 1024.");
-    }
+    private static Resource? ResolveTextureExportSource(RID texture) =>
+        RenderingTextureRegistry.ResolveSampledStorage(RenderingTextureRegistry.ResolveResource(texture));
 
     private RID ExportRDTexture(Resource resource, bool SRGB)
     {

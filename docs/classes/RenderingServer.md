@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-11-06
+Last updated: 2026-11-12
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs), [RenderingServer.Threads.cs](../../src/Servers/Rendering/RenderingServer.Threads.cs)
@@ -121,6 +121,7 @@ GetRenderingDevice returns the active GPU renderer's retained device, or null wh
 | --- | --- |
 | `public static RenderingDevice? GetRenderingDevice()` | Retained global device for the active GPU session; never caller-owned. |
 | `public static RID TextureRDCreate(RID deviceTexture, TextureLayered.LayeredType layerType = TextureLayered.LayeredType.Array)` | Owns an ordinary or independent-array canvas wrapper, inferred from image allocation. |
+| [`public static RID TextureCreateFromNativeHandle(TextureType type, Image.Format format, ulong nativeHandle, int width, int height, int depth, int layers = 1, TextureLayered.LayeredType layeredType = TextureLayered.LayeredType.Array)`](#texturecreatefromnativehandle) | Retains a native texture on the active Direct3D 11 Compatibility device. |
 | `public static ulong TextureGetNativeHandle(RID texture, bool SRGB = false)` | Borrowed native allocation of a sampled canvas texture. See [native texture handles](../components/native-texture-handles.md). |
 | `public static RID TextureGetRDTexture(RID texture, bool SRGB = false)` | Borrowed global image of a canvas resource/alias; exports native uploads/arrays/completed viewports; empty for unavailable storage. |
 
@@ -217,17 +218,25 @@ Copies a live nonempty image, validates axes 1..16384 and supported sampling for
 
 Creates a drawable 4×4 RGBA8 magenta/black checkerboard. It supports the same update, size/path, replacement and free operations as an ordinary server texture.
 
+### TextureCreateFromNativeHandle
+
+`public static RID TextureCreateFromNativeHandle(TextureType type, Image.Format format, ulong nativeHandle, int width, int height, int depth, int layers = 1, TextureLayered.LayeredType layeredType = TextureLayered.LayeredType.Array)`
+
+Imports a live, same-device `ID3D11Texture2D*` on the scene owner. Use [`TextureType.Texture`](RenderingServer.TextureType.md), portable RGBA8, the physical dimensions, unit depth and one layer. The server retains the allocation through the returned texture RID. Order native producer writes on the same immediate context before submitting canvas work. Use `FreeRID` when the wrapper is no longer needed. Invalid shapes, dimensions or device identities throw argument exceptions. Unsupported backends or allocation roles throw `NotSupportedException`. See [native texture import](../components/native-texture-handles.md#importing-direct3d-11-textures).
+
 ### Texture2DGet
 
 `public static Image? Texture2DGet(RID texture)`
 
-Returns a caller-owned copy of original backing pixels and mipmaps, or null for a live proxy whose source has been released. Atlas RIDs expose their full backing image, while object-based atlas drawing retains the view. Empty resource RIDs return the 4×4 rendering placeholder without initializing the resource or changing its own GetImage result. Readback uses the authoritative managed snapshot, not a GPU stall.
+Returns a caller-owned copy of original backing pixels and mipmaps, or null for a live proxy whose source has been released. Atlas RIDs expose their full backing image, while object-based atlas drawing retains the view. Empty resource RIDs return the 4×4 rendering placeholder without initializing the resource or changing its own GetImage result. Authored uploads use the managed snapshot. Direct3D 11 imports synchronously read current native pixels.
 
 ### Texture2DUpdate
 
 `public static void Texture2DUpdate(RID texture, Image image, int layer = 0)`
 
 Copies and validates the source against the texture’s physical dimensions, encoding and mipmap state. Layer zero selects an ordinary image. Independent arrays accept an existing zero-based layer. Compatible updates preserve the RID and retained draw and material bindings. A device-backed texture uses its existing allocation and requires `CanUpdate`. A full image mip chain supplies the levels exposed by a bounded view. See [device-backed texture updates](../components/canvas-rendering.md#device-backed-texture-updates).
+
+Direct3D 11 imports accept a matching RGBA8 image without mipmaps and write into the retained native allocation.
 
 ### TextureProxyCreate
 

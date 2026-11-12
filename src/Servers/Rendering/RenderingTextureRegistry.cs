@@ -109,6 +109,23 @@ internal static class RenderingTextureRegistry
         _ => texture
     };
 
+    internal static Resource? ResolveSampledStorage(Resource? source)
+    {
+        for (var depth = 0; depth <= 1024; depth++)
+        {
+            switch (source)
+            {
+                case null or { IsDisposed: true }: return null;
+                case ServerTexture { IsProxy: true } proxy: source = ResolveProxySource(proxy.ProxyTarget); break;
+                case LayeredTextureProxy proxy: source = ResolveLayeredProxySource(proxy.ProxyTarget); break;
+                case AtlasTexture atlas: source = atlas.RenderingTexture; break;
+                case CanvasTexture canvas: source = canvas.DiffuseTexture; break;
+                default: return SampledStorage(source);
+            }
+        }
+        throw new InvalidOperationException("Texture view depth exceeds 1024.");
+    }
+
     internal static void Remove(RID rid) { lock (Gate) Entries.Remove(rid); }
 }
 
@@ -119,6 +136,11 @@ internal sealed class ServerTexture : Texture
         _pixels = pixels; Size = new(pixels.Source.Width, pixels.Source.Height); RetainRendererCache = true;
     }
     internal ServerTexture(TextureRD texture) => DeviceTexture = texture;
+    internal ServerTexture(D3D11CanvasTexture texture)
+    {
+        NativeTexture = texture;
+        Size = texture.Size;
+    }
 
     internal ServerTexture(RID target, Texture source)
     {
@@ -126,14 +148,16 @@ internal sealed class ServerTexture : Texture
     }
     private TexturePixels? _pixels;
     internal TextureRD? DeviceTexture { get; private set; }
+    internal D3D11CanvasTexture? NativeTexture { get; private set; }
 
     internal void TakeStorage(ServerTexture source)
     {
         (DeviceTexture, source.DeviceTexture) = (source.DeviceTexture, DeviceTexture);
+        (NativeTexture, source.NativeTexture) = (source.NativeTexture, NativeTexture);
         _pixels = source._pixels;
         Size = source.Size;
         Path = source.Path;
-        RetainRendererCache = DeviceTexture is null;
+        RetainRendererCache = DeviceTexture is null && NativeTexture is null;
     }
     internal TexturePixels Pixels { get { ThrowIfDisposed(); return _pixels!; } set => _pixels = value; }
     internal Vector2i Size;
@@ -167,9 +191,11 @@ internal sealed class ServerTexture : Texture
     {
         ThrowIfDisposed();
         if (IsProxy && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is { } source) return source.GetImage();
-        return DeviceTexture is { } device ? device.GetImage() : CapturePixels()?.CopyImage();
+        return NativeTexture is { } native ? native.Read() : DeviceTexture is { } device ? device.GetImage() : CapturePixels()?.CopyImage();
     }
-    public override Image.Format PixelFormat => IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.PixelFormat ?? _proxyFormat : DeviceTexture?.PixelFormat ?? base.PixelFormat;
+    public override Image.Format PixelFormat => IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.PixelFormat ?? _proxyFormat
+        : NativeTexture is not null ? Image.Format.Rgba8 : DeviceTexture?.PixelFormat ?? base.PixelFormat;
+    public override bool HasAlpha => NativeTexture is not null || (IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.HasAlpha ?? false : base.HasAlpha);
     public override bool HasMIPMaps => DeviceTexture?.HasMIPMaps ?? base.HasMIPMaps;
     public override int MIPMapCount => DeviceTexture?.MIPMapCount ?? base.MIPMapCount;
     internal override TexturePixels? CapturePixels()
@@ -210,7 +236,12 @@ internal sealed class ServerTexture : Texture
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { DeviceTexture?.Dispose(); DeviceTexture = null; _pixels = null; Size = default; Path = string.Empty; ProxyTarget = default; }
+        if (disposing)
+        {
+            DeviceTexture?.Dispose(); DeviceTexture = null;
+            NativeTexture?.Dispose(); NativeTexture = null;
+            _pixels = null; Size = default; Path = string.Empty; ProxyTarget = default;
+        }
         base.Dispose(disposing);
     }
 }

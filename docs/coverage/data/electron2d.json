@@ -11524,6 +11524,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingServer.TextureType",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingServer.TextureType",
+    "name": "TextureType",
+    "signature": "public enum Electron2D.RenderingServer.TextureType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingServer.ViewportEnvironmentMode",
     "kind": "type",
     "declaringType": "Electron2D.RenderingServer.ViewportEnvironmentMode",
@@ -58205,6 +58223,19 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingServer.TextureDrawableFormat",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.TextureType.Texture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.TextureType",
+    "name": "Texture",
+    "signature": "public const Electron2D.RenderingServer.TextureType Texture = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.TextureType",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.RenderingServer.ViewportEnvironmentMode.Disabled()",
@@ -188933,6 +188964,60 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.TextureCreateFromNativeHandle(Electron2D.RenderingServer.TextureType,Electron2D.Image.Format,System.UInt64,System.Int32,System.Int32,System.Int32,System.Int32,Electron2D.TextureLayered.LayeredType)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureCreateFromNativeHandle",
+    "signature": "public static Electron2D.RID TextureCreateFromNativeHandle(Electron2D.RenderingServer.TextureType type, Electron2D.Image.Format format, System.UInt64 nativeHandle, System.Int32 width, System.Int32 height, System.Int32 depth, System.Int32 layers = 1, Electron2D.TextureLayered.LayeredType layeredType = Array)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "Electron2D.RenderingServer.TextureType",
+        "default": null
+      },
+      {
+        "name": "format",
+        "type": "Electron2D.Image.Format",
+        "default": null
+      },
+      {
+        "name": "nativeHandle",
+        "type": "System.UInt64",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "height",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "depth",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "layers",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "layeredType",
+        "type": "Electron2D.TextureLayered.LayeredType",
+        "default": "Array"
+      }
+    ],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {

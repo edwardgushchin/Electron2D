@@ -185,7 +185,8 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                 if (batch.Repeat == TextureRepeat.Mirror)
                     throw new NotSupportedException("The compatibility renderer cannot use mirrored texture repeat.");
                 texture = CanvasSample(texture);
-                if (texture is not ViewportTexture && _usedTextures.Add(texture)) PrepareTexture(texture);
+                if (texture is ServerTexture { NativeTexture: { } imported }) ValidateImportedTexture(imported);
+                else if (texture is not ViewportTexture && _usedTextures.Add(texture)) PrepareTexture(texture);
                 var dimensions = texture.GetSize();
                 if (batch.Repeat == TextureRepeat.Enabled && (((int)dimensions.X & ((int)dimensions.X - 1)) != 0 || ((int)dimensions.Y & ((int)dimensions.Y - 1)) != 0) &&
                     !SDL.GetBooleanProperty(SDL.GetRendererProperties(renderer), SDL.Props.RendererTextureWrappingBoolean, false))
@@ -644,7 +645,18 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     {
         texture = CanvasSample(texture);
         if (texture is ViewportTexture view) { var viewport = view.Bound ?? throw new InvalidOperationException("The sampled viewport texture is unresolved."); return (FindTarget(viewport) ?? throw new InvalidOperationException("The sampled viewport has no native target.")).Current.DangerousGetHandle(); }
+        if (texture is ServerTexture { NativeTexture: { } imported }) return imported.Handle;
         return _textures[texture].Handle.DangerousGetHandle();
+    }
+
+    internal D3D11CanvasTexture ImportD3D11Texture(nint native, int width, int height) => new(this, _renderer, native, width, height);
+
+    internal void FlushImportedTexture() => Check(SDL.FlushRenderer(_renderer.DangerousGetHandle()), "flush native texture commands");
+
+    private void ValidateImportedTexture(D3D11CanvasTexture texture)
+    {
+        if (!ReferenceEquals(texture.Backend, this))
+            throw new NotSupportedException("The imported texture belongs to a different Compatibility renderer.");
     }
     internal override RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false, bool HDR = false)
     {
@@ -677,6 +689,11 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
 
     internal ulong ExportNativeTexture(Resource resource)
     {
+        if (resource is ServerTexture { NativeTexture: { } imported })
+        {
+            ValidateImportedTexture(imported);
+            return unchecked((ulong)(nuint)imported.Native);
+        }
         var (property, pointer) = Driver switch
         {
             "direct3d11" => (SDL.Props.TextureD3D11TexturePointer, true),

@@ -76,7 +76,7 @@ RenderingDevice [native resource labels](../components/local-compute.md#native-r
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-11-11
+Last updated: 2026-11-12
 
 [Viewport mipmap bias](../components/viewport-mipmap-bias.md) controls next-image mip selection through scene, RenderingServer and project policies while preserving authored sampler and target identities.
 
@@ -635,7 +635,7 @@ Ordinary writable graphics storage now connects vertex/fragment producers to ord
 
 Formatted graphics producers now store encoded ImageBuffer elements and execute R32 atomics before sampled draw, compute/readback and retained canvas consumption. [Contract and limits](../components/local-compute.md#writable-formatted-graphics-producers).
 
-[Native texture handles](../components/native-texture-handles.md) resolve a canvas texture RID to the current native GPU Vulkan or Compatibility allocation. The renderer retains ownership.
+[Native texture handles](../components/native-texture-handles.md) resolve a canvas texture RID to the current native GPU Vulkan or Compatibility allocation. Direct3D 11 Compatibility also imports same-device ordinary textures for direct canvas sampling, retaining a native reference through the server-owned RID.
 
 [Native driver resources](../components/driver-resources.md) expose the current Vulkan device, queue and active GPU resources to integrations under the borrowed lifetime contract.
 

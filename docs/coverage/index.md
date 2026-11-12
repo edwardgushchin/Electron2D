@@ -1,3 +1,5 @@
+[Direct3D 11 native texture import](../components/native-texture-handles.md#importing-direct3d-11-textures) wraps same-device RGBA8 and BGRA8 images for direct canvas sampling, update, readback and alias lifetime. The ordinary shape becomes Implemented, while the import and shape enum move to Partial. Coverage is **13,895/18,904 (73.50%)**, with 1,165 Partial, 289 Unimplemented, 3,555 Blocked, 8,389 Excluded and zero unmapped.
+
 [Native texture export](../components/native-texture-handles.md) returns borrowed sampled allocations on GPU Vulkan and supported SDL Compatibility drivers. One row moves from Blocked to Partial. Coverage is **13,894/18,904 (73.50%)**, with 1,163 Partial, 290 Unimplemented, 3,557 Blocked, 8,389 Excluded and zero unmapped.
 
 [Native driver resources](../components/driver-resources.md) expose the current Vulkan device, queue, image, buffer and pipeline objects. The typed family gains thirteen Implemented rows, and the query is Partial for other drivers and retained descriptor sets. Coverage is **13,894/18,904 (73.50%)**, with 1,162 Partial, 290 Unimplemented, 3,558 Blocked, 8,389 Excluded and zero unmapped.

@@ -384,7 +384,10 @@ public abstract partial class CanvasItem
             {
                 var source = (Texture?)RenderingTextureRegistry.SampledStorage(RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget));
                 if (source is null) continue;
-                if (source is not (ViewportTexture or TextureRD) && source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
+                if (source is not (ViewportTexture or TextureRD or ServerTexture { NativeTexture: not null }) &&
+                    source.CapturePixels() is null &&
+                    RenderingTextureRegistry.ResolveSampledStorage(source) is not ServerTexture { NativeTexture: not null })
+                    source = RenderingTextureRegistry.PlaceholderTexture;
                 replay = command with { Texture = source };
             }
             if (replay.Texture is ServerTexture { DeviceTexture: { } deviceTexture }) replay = replay with { Texture = deviceTexture };

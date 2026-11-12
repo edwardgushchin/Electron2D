@@ -84,6 +84,7 @@ public sealed partial class RenderingServer
         var retireOrdinaryUpload = target.DeviceTexture is null && source.DeviceTexture is not null;
         target.TakeStorage(source);
         if (retireOrdinaryUpload && _backend is GPUCanvasBackend backend) backend.RetireReplacedUpload(target);
+        if (target.NativeTexture is not null) _backend.ReleaseTemporaryTexture(target);
         RedirectTextureAliases(byTexture, texture);
         FreeRIDCore(byTexture);
     }
@@ -114,6 +115,11 @@ public sealed partial class RenderingServer
             source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
             if (source is null) return null;
         }
+        if (RenderingTextureRegistry.ResolveSampledStorage(source) is ServerTexture { NativeTexture: { } imported })
+        {
+            EnsureDeviceAccess();
+            return imported.Read();
+        }
         return source is DrawableTexture or TextureRD or ViewportTexture or ServerTexture { DeviceTexture: not null } ? source.GetImage() : (source.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels).CopyImage();
     }
 
@@ -137,6 +143,11 @@ public sealed partial class RenderingServer
         if (target.DeviceTexture is { } deviceTexture)
         {
             GetRenderingDeviceCore()!.UploadCanvasImage(deviceTexture.TextureRDRID, 0, image);
+            return;
+        }
+        if (target.NativeTexture is { } imported)
+        {
+            imported.Update(image);
             return;
         }
 
