@@ -9,7 +9,8 @@ public sealed partial class DisplayServer
     /// <summary>Starts the system picker for a color on the desktop.</summary>
     /// <param name="callback">Receives the selection status and opaque sRGB color on the display owner thread. An unsuccessful request reports false with black.</param>
     /// <returns><see langword="true"/> when the request was accepted, or <see langword="false"/> when it could not start.</returns>
-    /// <remarks>Each accepted request delivers at most one callback. Display shutdown retires outstanding requests.</remarks>
+    /// <remarks>Each accepted request delivers at most one callback. On Windows the foreground application owns one selection at a time.
+    /// Left click selects, while right click, Escape or leaving the application cancels. Display shutdown retires outstanding requests.</remarks>
     /// <exception cref="InvalidOperationException">The display is inactive or the caller is off its owner thread.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="callback"/> is null.</exception>
     public static bool ColorPicker(Action<bool, Color> callback)
@@ -17,6 +18,7 @@ public sealed partial class DisplayServer
         var display = RequireService();
         display.EnsureOwner();
         ArgumentNullException.ThrowIfNull(callback);
+        if (display.UsesWindowsScreenCapture) return display.BeginWindowsColorPick(callback);
         return display.BeginPortalColorPick(color => callback(color.HasValue, color ?? Colors.Black)) is not null;
     }
 

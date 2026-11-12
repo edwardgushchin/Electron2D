@@ -1,3 +1,5 @@
+[Windows desktop color selection](../components/color-authoring.md#desktop-and-application-sampling) exposes the native picker through the display API and delivers owner-thread results. The row remains Partial for remaining provider and platform qualification.
+
 [Windows MIDI input](../components/midi-input.md) adds WinMM device sessions and owner-thread scene delivery. Three OS operations remain Partial for real Windows endpoints, remaining adapters and platform qualification.
 
 [Viewport mesh LOD thresholds](../components/meshes.md#authored-lod-indices-and-scale-selection) select authored detail from a per-target framebuffer error bound. The root samples a typed project setting unless assigned in the scene. Two rows move from Blocked to Implemented. Coverage is **13,903/18,904 (73.55%)**, with 1,177 Partial, 281 Unimplemented, 3,543 Blocked, 8,389 Excluded and zero unmapped.

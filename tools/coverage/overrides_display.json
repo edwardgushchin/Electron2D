@@ -1398,7 +1398,7 @@
     },
     {
       "state": "Partial",
-      "reason": "The Linux Screenshot portal accepts asynchronous native pixel selection through a typed owner-thread status/color callback with cancellation and request retirement. Native Sway exercises selection and cancellation. A Linux X11 session with an authorized PickColor provider still needs an end-to-end check (ADRs 0021/0040).",
+      "reason": "The Windows native swatch and foreground selection session and the Linux Screenshot portal deliver typed owner-thread color results with cancellation and request retirement. Windows standalone display and native Sway exercise selection and cancellation. macOS needs a native picker and permission bridge; X11 needs an authorized PickColor provider for end-to-end qualification (ADRs 0021/0040).",
       "godot": [
         "DisplayServer::method:color_picker(Callable:)"
       ]

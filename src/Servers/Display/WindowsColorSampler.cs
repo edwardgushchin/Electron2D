@@ -25,6 +25,8 @@ internal sealed unsafe partial class WindowsColorSampler : IDesktopColorSampler
         _thread = new Thread(Run) { IsBackground = true, Name = "Electron2D color sampler" };
     }
 
+    internal static bool HasForeground => GetWindowThreadProcessId(GetForegroundWindow(), out var pid) != 0 && pid == ProcessID;
+
     internal static WindowsColorSampler Open()
     {
         var sampler = new WindowsColorSampler();
@@ -100,7 +102,7 @@ internal sealed unsafe partial class WindowsColorSampler : IDesktopColorSampler
     {
         if (code == 0 && message is LeftDown or LeftUp or RightDown or RightUp &&
             _active is { _result: 0 } sampler &&
-            GetWindowThreadProcessId(GetForegroundWindow(), out var foregroundPID) != 0 && foregroundPID == ProcessID)
+            HasForeground)
         {
             ref var pressed = ref (message is LeftDown or LeftUp ? ref sampler._leftDown : ref sampler._rightDown);
             if (message is LeftDown or RightDown)

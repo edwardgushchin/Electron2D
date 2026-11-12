@@ -5,7 +5,9 @@ using Electron2D;
 
 internal static partial class DesktopColorSamplerTests
 {
-    internal static void RunWindows(string[] args)
+    internal static void RunWindows(string[] args) => WithWindowsActor(args, WindowsScene);
+
+    private static void WithWindowsActor(string[] args, Action<nint, string> run)
     {
         Check(OperatingSystem.IsWindows() && args.Length is 1 or 2, "Provide the native Windows color sampling actor.");
         var backend = args.Length == 2 ? args[1] : "compatibility";
@@ -21,7 +23,7 @@ internal static partial class DesktopColorSamplerTests
             var reply = actor.StandardOutput.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
             target = nint.Parse(reply!, CultureInfo.InvariantCulture);
             Check(GetWindowThreadProcessId(target, out var pid) != 0 && pid == (uint)actor.Id, "The pixel source belongs to the independent native actor.");
-            WindowsScene(target, backend);
+            run(target, backend);
         }
         finally
         {
@@ -36,7 +38,7 @@ internal static partial class DesktopColorSamplerTests
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         Engine.MaxFPS = 30;
-        var root = new Window { Title = "Windows desktop color sampler", Position = new(40, 60), Size = new(650, 730), Borderless = true };
+        var root = new Window { Title = "Windows desktop color sampler", Position = new(40, 60), Size = new(650, 730), Borderless = true, AlwaysOnTop = true };
         var button = new ColorPickerButton { Position = new(100, 65), Size = new(100, 35), Color = Colors.Red };
         root.AddChild(button);
         button.GetPopup().Transparent = false;
@@ -63,6 +65,10 @@ internal static partial class DesktopColorSamplerTests
                     ClickControl(button);
                     break;
                 case 1 when button.GetPopup().Visible:
+                    // Keep the owned fixture above ambient windows before sending physical-style clicks.
+                    var popup = DisplayServer.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle, button.GetPopup().GetWindowID());
+                    const uint noSize = 1, noMove = 2, noActivate = 0x10;
+                    Check(SetWindowPos(popup, -1, 0, 0, 0, 0, noSize | noMove | noActivate) != 0, "Raise the fixture popup without changing its placement.");
                     Check(pick.TooltipText == "Pick a color from the desktop.", "The picker advertises desktop sampling.");
                     Move(ControlPoint(pick));
                     break;
@@ -195,6 +201,7 @@ internal static partial class DesktopColorSamplerTests
     [StructLayout(LayoutKind.Sequential)]
     private struct MouseInputEvent { internal uint Type; internal MouseInput Mouse; }
 
+    [LibraryImport(User32)] private static partial int SetWindowPos(nint window, nint insertAfter, int x, int y, int width, int height, uint flags);
     [LibraryImport(User32)] private static partial int GetCursorPos(out WindowsPoint point);
     [LibraryImport(User32)] private static partial int SetCursorPos(int x, int y);
     [LibraryImport(User32)] private static partial int ClientToScreen(nint window, ref WindowsPoint point);

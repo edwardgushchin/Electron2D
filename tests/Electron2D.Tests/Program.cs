@@ -53,6 +53,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_GESTURES") is { }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FOREGROUND_GRANT") is { } foregroundGrantProfile) { ForegroundGrantTests.Run(foregroundGrantProfile, args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DESKTOP_COLOR_SAMPLER") == "windows") { DesktopColorSamplerTests.RunWindows(args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DESKTOP_COLOR_SAMPLER") == "x11") { DesktopColorSamplerTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_COLOR_PICKER") == "windows") { DesktopColorSamplerTests.RunWindowsPublicPicker(args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_COLOR_PICKER") is { } colorPortalProfile) { PortalColorPickerTests.Run(colorPortalProfile, args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCREEN_CAPTURE") is { } desktopCaptureProfile) { DesktopScreenCaptureTests.Run(desktopCaptureProfile, args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCREEN_DPI") is { } dpiProfile) { ScreenDPITests.Run(dpiProfile, args); return; }

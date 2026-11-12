@@ -1003,7 +1003,7 @@ Gets the index of the current primary display.
 
 #### Native desktop color selection
 
-`public static bool ColorPicker(Action<bool, Color> callback)` requests a desktop pixel from the system picker. On Linux the Screenshot portal owns the selection interaction. A true result means the request started. The callback receives the selection status and opaque sRGB color on the display owner thread. Unsuccessful requests report false with black. Display shutdown retires outstanding requests. [Color sampling](../components/color-authoring.md#desktop-and-application-sampling)
+`public static bool ColorPicker(Action<bool, Color> callback)` starts a desktop pixel selection on Windows or through the Linux Screenshot portal. On Windows, one foreground selection owns the pointer. Left click selects, and right click, Escape or leaving the application cancels. A true result means the request started. The display owner thread delivers the status and opaque sRGB color after draining native events. Unsuccessful selections report false with black. Display shutdown retires outstanding requests. [Color sampling](../components/color-authoring.md#desktop-and-application-sampling)
 
 ## Desktop capture
 

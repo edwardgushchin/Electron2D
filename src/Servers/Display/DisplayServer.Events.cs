@@ -104,6 +104,7 @@ public sealed partial class DisplayServer
                    AdvanceNativeInput(ref failures) && SDL.PollEvent(out nativeEvent))
             {
                 var type = (SDL.EventType)nativeEvent.Type;
+                if (ConsumeWindowsColorPickKey(type, nativeEvent)) continue;
                 DisplayServer? gestureRelease = null;
                 if (_windowGestureRelease is { } owner && type is SDL.EventType.MouseButtonDown or SDL.EventType.MouseButtonUp &&
                     nativeEvent.Button.Button == 1 && nativeEvent.Button.Which == 0)
@@ -208,6 +209,7 @@ public sealed partial class DisplayServer
             }
             try
             {
+                PollWindowsColorPick(ref failures);
                 PollPortalColorPickers(ref failures);
             }
             catch (Exception exception)

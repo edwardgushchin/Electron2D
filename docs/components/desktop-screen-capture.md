@@ -14,7 +14,7 @@ Wayland rectangles use each output's logical origin and physical pixel dimension
 
 Other Wayland compositors require an authorized provider that can resolve the requested output and return pixels without changing the screen selection contract. XWayland additionally needs a mapping from SDL's X11 screen identities to the compositor outputs. macOS needs its native capture and permission bridge.
 
-[ColorPicker desktop sampling](color-authoring.md#desktop-and-application-sampling) uses the X11 pixel reader or the Windows desktop reader and capture exclusion while the picker owns modal input.
+[Desktop color selection](color-authoring.md#desktop-and-application-sampling) uses the Windows desktop reader and excludes its swatch from capture where available. With no exclusion, the swatch is moved clear of the point and hidden before a selection through its own bounds. The scene ColorPicker uses the same Windows and X11 pixel readers for live desktop sampling.
 
 ## Verification
 
