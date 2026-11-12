@@ -11,6 +11,7 @@ internal static unsafe partial class GPUTextureViews
     internal const uint Direct3DArrayABI = 7;
     internal const uint Direct3DSampledFormatABI = 8;
     internal const uint Direct3DMutableFormatABI = 9;
+    internal const uint Direct3DTransferTargetViewABI = 10;
     internal static RenderHandle? TryCreateSampledFormatStorage(RenderHandle owner, in SDL.GPUTextureCreateInfo info, SDL.GPUTextureFormat alternate)
     {
         var device = owner.DangerousGetHandle();

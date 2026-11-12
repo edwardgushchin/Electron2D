@@ -161,14 +161,37 @@ The original RID retires all sibling views after pending work. No persistent
 image allocation is added for a view. The native setup briefly allocates a
 staging texture to acquire SDL's descriptors.
 
-An ordinary view of one layer in a multi-layer resource needs a shader binding
-that translates an ordinary sampled image to a one-layer array SRV. The existing
-[Direct3D 12 array descriptor](https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_tex2d_array_srv)
-provides a first-layer field. Depth/stencil, multisample and input attachments
-retain their native adapters as prerequisites. [Direct3D 12 compute array UAVs](graphics-storage-images.md#direct3d-12-compute-arrays)
+A texture array created without Sampling, Storage or StorageAtomic can expose
+an ordinary view of any layer and mip interval through
+`TextureCreateSharedFromSlice`. Transfers resolve the view to the original
+subresources. For a one-mip ColorAttachment view the native RTV selects that
+layer and mip. Disjoint layer views may be attached to one framebuffer.
+Declared linear/sRGB formats use the corresponding typed RTV. The view shares
+the original allocation and retains its transfer permissions.
+[Direct3D 12 array RTV fields](https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_tex2d_array_rtv)
+
+Sampled and storage slices of multi-layer allocations require shader lowering
+to one-layer array SRVs and UAVs. Imported arrays require Sampling, so this
+layer target path applies to device-owned allocations. Depth/stencil,
+multisample and input attachments retain their native prerequisites.
+[Direct3D 12 compute array UAVs](graphics-storage-images.md#direct3d-12-compute-arrays)
 use a cached base-mip view and transition every writable layer.
 
 ## Verification and remaining limits
+
+On Windows x64, build the [Direct3D 12 producer fixture](native-texture-handles.md#verification)
+and run the Release root runner with `SDL_GPU_DRIVER=direct3d12` and
+`ELECTRON2D_TEST_NATIVE_TEXTURE_IMPORT=gpu-direct3d12-layer-targets`. The profile compares the native
+resource identity and encoded bytes of each layer/mip before and after a
+two-attachment render pass, a disjoint sibling copy, an interval update and a
+typed sRGB clear. It checks invalid intervals, duplicate output and copy
+overlap refusal, sampling refusal and original-owner retirement. Set
+`ELECTRON2D_D3D12_IMPORT_DEBUG=1` to check the device's native debug queue. Use
+`gpu-direct3d12-layer-targets-preceding` with the previous native adapter to
+verify refusal and preservation of transfer behavior.
+The Windows x64 check used a source-built render bridge and the pinned SDL
+core with the existing local engine module. Release package qualification
+remains open.
 
 [DeviceGraphicsStorage.Consumer](../../tests/DeviceGraphicsStorage.Consumer/README.md)
 provides `views`, `views-source`, `views-canvas`, `views-unavailable` and

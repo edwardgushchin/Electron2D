@@ -1522,12 +1522,14 @@ Pass a same-device native image after the producer has completed its work. The d
 
 Copies `view` over the original owner resolved from `withTexture`. Includes its complete layer/mip extent. Max retains the stored format. Alternate formats must be declared shareable and native-compatible with every usage/sample role. Returns a device-owned shared RID automatically freed with that owner; freeing an intermediate view preserves siblings. Unknown/freed/foreign sources and disposed/null descriptions reject before publication. Missing native adapter support throws NotSupportedException; native setup failure throws InvalidOperationException. Calls follow the device owner-thread/idle-list contract.
 
-For a viewport export, shared views select the completed physical image when each command is recorded. Pending reads retain the selected image through completion. Direct3D 12 supports single-sample sampled color images and full arrays, including declared RGBA8, BGRA8 and BC1/2/3/7 linear/sRGB pairs when both formats support the declared roles. Ordinary mip views require a single-layer source. See [Direct3D 12 color views](../components/shared-texture-views.md#direct3d-12-color-views).
+For a viewport export, shared views select the completed physical image when each command is recorded. Pending reads retain the selected image through completion. Direct3D 12 supports single-sample color images and full arrays, including declared RGBA8, BGRA8 and BC1/2/3/7 linear/sRGB pairs when both formats support the declared roles. See [Direct3D 12 color views](../components/shared-texture-views.md#direct3d-12-color-views).
 
 <a id="texture-create-shared-from-slice"></a>
 ### TextureCreateSharedFromSlice(RDTextureView, RID, uint, uint, uint, TextureSliceType)
 
 Same ownership/format contract, selecting `layer`, first `mipmap` and `mipmaps` (default 1) from the original owner. `sliceType` defaults to Texture. Invalid selectors, layers or zero/overflowing mip intervals throw ArgumentOutOfRangeException. The new ordinary image reports selected dimensions and one layer. GetFormat preserves stored format, while shaders and attachments validate the effective view encoding. No pixel copies occur. See [shared texture views](../components/shared-texture-views.md) for transfers, physical feedback guards, renderer-source expiration and actual native verification.
+
+On Direct3D 12, an ordinary slice of a multi-layer color allocation supports its declared transfer roles and can serve as a color attachment when it covers one mip. Allocate the array without Sampling, Storage or StorageAtomic for this use.
 
 [Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) retains all layers of one mip and follows original/renderer lifetime. Vulkan executes compute, vertex and fragment roles. Direct3D 12 executes typed array compute access on local and imported single-sample images. Canvas sampling borrows the same GPU storage.
 

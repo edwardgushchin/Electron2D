@@ -24,6 +24,11 @@ retains the COM allocation and the managed owner governs root lifetime. ABI 1
 region and overlap queries resolve those views to their original coordinates.
 See [Direct3D 12 color views](../../docs/components/shared-texture-views.md#direct3d-12-color-views).
 
+View ABI 10 supports Direct3D 12 color attachment and transfer views of
+device-owned arrays without shader roles. Each one-mip ordinary view binds
+one array RTV at the physical layer and mip. Transfers continue to resolve
+through the original resource. ABI 6 releases the wrapper.
+
 ABI 7 creates a single-mip Direct3D 12 array storage view. SDL supplies
 the UAV slot, records the first-layer transitions and retains the wrapper.
 `e2d_render_prepare_compute_images` with ABI 7 transitions the remaining

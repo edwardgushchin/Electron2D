@@ -29,7 +29,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="mipmaps">Positive number of included mip levels.</param>
     /// <param name="sliceType">The ordinary image role.</param>
     /// <returns>A device-owned ordinary image view, automatically freed with the original owner.</returns>
-    /// <remarks>A viewport slice selects the completed buffer at command recording. On Direct3D 12 an ordinary mip view requires a single-layer color allocation.</remarks>
+    /// <remarks>A viewport slice selects the completed buffer at command recording. On Direct3D 12 a layer of a multi-layer color allocation without sampling or storage usage supports transfers and single-mip color attachment use.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The layer, mip interval or slice selector is invalid.</exception>
     /// <exception cref="NotSupportedException">The native view adapter or selected format role is unavailable.</exception>
     public RID TextureCreateSharedFromSlice(RDTextureView view, RID withTexture, uint layer, uint mipmap, uint mipmaps = 1, TextureSliceType sliceType = TextureSliceType.Texture)
@@ -114,13 +114,17 @@ public sealed unsafe partial class RenderingDevice
         if (format != stored && !sampledOnly && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", "view");
         var destroyABI = direct3D ? GPUTextureViews.Direct3DViewABI : 1u;
         var abi = destroyABI;
+        var direct3DTransferTarget = direct3D && !DepthFormat(stored) &&
+            ((original.Usage & TextureUsageBits.ColorAttachment) != 0 || type == TextureType.Texture && original.Layers != 1) &&
+            (original.Usage & (TextureUsageBits.Sampling | TextureUsageBits.Storage | TextureUsageBits.StorageAtomic | TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) == 0;
         if (sampledOnly) abi = direct3D ? GPUTextureViews.Direct3DSampledFormatABI : GPUTextureViews.SampledFormatABI;
+        else if (direct3DTransferTarget) abi = GPUTextureViews.Direct3DTransferTargetViewABI;
         else if (direct3D && format != stored) abi = GPUTextureViews.Direct3DMutableFormatABI;
         if (GPUTextureViews.Support(Device, abi) != 1)
             throw new NotSupportedException("This texture role requires the pinned native image/view adapter.");
-        if (direct3D && (type == TextureType.Texture && original.Layers != 1 ||
+        if (direct3D && (type == TextureType.Texture && original.Layers != 1 && abi != GPUTextureViews.Direct3DTransferTargetViewABI ||
             (original.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0))
-            throw new NotSupportedException("Direct3D 12 views require a supported sampled color texture and native view shape.");
+            throw new NotSupportedException("Direct3D 12 views do not support this texture shape or usage.");
         if (direct3D && !sampledOnly && type == TextureType.TextureArray && (original.Usage & TextureUsageBits.Storage) != 0)
             RequireStorageArrayViews();
         var create = NativeTextureInfo(original with { Format = stored });

@@ -16,6 +16,8 @@ internal static unsafe partial class NativeTextureImportTests
             Marshal.ThrowExceptionForHR(((delegate* unmanaged[Cdecl]<int>)NativeLibrary.GetExport(fixture, "EnableDebug"))());
         if (profile == "gpu-direct3d12") VerifyGPUCanvas(fixture, debug);
         else if (profile == "gpu-direct3d12-sampled-abi") VerifyGPUWritableRefusal(fixture, debug);
+        else if (profile is "gpu-direct3d12-layer-targets" or "gpu-direct3d12-layer-targets-preceding")
+            VerifyGPULayerTargets(fixture, debug, profile == "gpu-direct3d12-layer-targets-preceding");
         else
         {
             var preceding = profile == "gpu-direct3d12-preceding";
