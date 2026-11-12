@@ -42,6 +42,8 @@ def d3d12_layout(source):
         block(text, "typedef struct WinPixEventRuntimeFns"),
         prefix(text, "struct D3D12Renderer\n{", "ID3D12CommandQueue *commandQueue;"),
         "typedef struct D3D12Renderer D3D12Renderer;",
+        "typedef struct D3D12CommandBuffer D3D12CommandBuffer;",
+        prefix(text, "struct D3D12CommandBuffer\n{", "ID3D12GraphicsCommandList *graphicsCommandList;"),
         "typedef struct D3D12Texture D3D12Texture;",
         "typedef struct D3D12TextureSubresource D3D12TextureSubresource;",
         "typedef struct D3D12DescriptorHeap D3D12DescriptorHeap;",

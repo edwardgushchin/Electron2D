@@ -113,9 +113,10 @@ public sealed unsafe partial class RenderingDevice
         if (GPUTextureViews.Support(Device, nativeABI) != 1)
             throw new NotSupportedException("This texture role requires the pinned native image/view adapter.");
         if (direct3D && (sampledOnly || type == TextureType.Texture && original.Layers != 1 ||
-            (original.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0 ||
-            type == TextureType.TextureArray && (original.Usage & TextureUsageBits.Storage) != 0))
+            (original.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0))
             throw new NotSupportedException("Direct3D 12 views require a supported exact-format sampled color texture and native view shape.");
+        if (direct3D && type == TextureType.TextureArray && (original.Usage & TextureUsageBits.Storage) != 0)
+            RequireStorageArrayViews();
         var stored = original.StoredFormat == DataFormat.Max ? original.Format : original.StoredFormat;
         var format = formatOverride == DataFormat.Max ? stored : formatOverride;
         if (format != stored && !sampledOnly && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", "view");

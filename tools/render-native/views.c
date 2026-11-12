@@ -35,7 +35,7 @@ static bool compatible(SDL_GPUDevice *device)
 E2D_EXPORT int e2d_render_view_support(SDL_GPUDevice *device, uint32_t abi)
 {
     if (!device) return -1;
-    if (abi == E2D_D3D12_VIEW_ABI) return e2d_d3d12_device(device);
+    if (abi == E2D_D3D12_VIEW_ABI || abi == E2D_D3D12_ARRAY_ABI) return e2d_d3d12_device(device);
     if (abi != 1 && abi != 2 && abi != 4 && abi != 5) return -1;
     if (!compatible(device)) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
@@ -272,7 +272,7 @@ E2D_EXPORT void e2d_render_views_collect(SDL_GPUDevice *device, uint32_t abi)
 E2D_EXPORT void e2d_render_view_destroy(SDL_GPUDevice *device, uint32_t abi, SDL_GPUTexture *texture)
 {
     if (!texture || !device) return;
-    if (abi == E2D_D3D12_VIEW_ABI) { if (e2d_d3d12_device(device)) SDL_ReleaseGPUTexture(device, texture); return; }
+    if (abi == E2D_D3D12_VIEW_ABI || abi == E2D_D3D12_ARRAY_ABI) { if (e2d_d3d12_device(device)) SDL_ReleaseGPUTexture(device, texture); return; }
     if (abi != 1 || !compatible(device)) return;
     ViewCache *cache = view_cache(device, false); if (!cache) return;
     SDL_LockMutex(cache->lock);
@@ -290,8 +290,11 @@ E2D_EXPORT void e2d_render_views_release(SDL_GPUDevice *device, uint32_t abi)
 }
 E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_t abi, SDL_GPUTexture *source, SDL_GPUTextureFormat format, uint32_t layer, uint32_t layers, uint32_t level, uint32_t levels, uint32_t array)
 {
-    if (e2d_render_view_support(device, abi) != 1 || !source || !layers || !levels || array > 2 || (!array && layers != 1) || (array == 2 && (abi != 2 || levels != 1))) return NULL;
-    if (abi == E2D_D3D12_VIEW_ABI) return e2d_d3d12_view_create(device, source, format, layer, layers, level, levels, array);
+    if (e2d_render_view_support(device, abi) != 1 || !source || !layers || !levels || array > 2 || (!array && layers != 1)) return NULL;
+    if ((array == 2 && (levels != 1 || (abi != 2 && abi != E2D_D3D12_ARRAY_ABI))) ||
+        (abi == E2D_D3D12_ARRAY_ABI && array != 2)) return NULL;
+    if (abi == E2D_D3D12_VIEW_ABI || abi == E2D_D3D12_ARRAY_ABI)
+        return e2d_d3d12_view_create(device, source, format, layer, layers, level, levels, array);
     VulkanRenderer *r = (VulkanRenderer *)device->driverData; VulkanTextureContainer *src = (VulkanTextureContainer *)source;
     bool sampled_only = abi == 4;
     if (sampled_only && (!(src->header.info.usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) || e2d_stencil_info(&src->header.info))) return NULL;

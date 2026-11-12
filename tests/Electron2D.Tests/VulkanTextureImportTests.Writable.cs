@@ -115,9 +115,9 @@ internal static unsafe partial class VulkanTextureImportTests
         }
     }
 
-    internal static void WriteImportedImage(RenderingDevice device, RID texture, uint layers)
+    internal static void WriteImportedImage(RenderingDevice device, RID texture, uint layers, bool array = false, uint width = 1, uint height = 1)
     {
-        var name = layers == 1 ? "VulkanImportWrite" : "VulkanImportWriteArray";
+        var name = layers == 1 && !array ? "VulkanImportWrite" : "VulkanImportWriteArray";
         using var stream = typeof(VulkanTextureImportTests).Assembly.GetManifestResourceStream($"Electron2D.Compute.{name}.comp.spv")!;
         using var bytes = new MemoryStream();
         stream.CopyTo(bytes);
@@ -134,7 +134,7 @@ internal static unsafe partial class VulkanTextureImportTests
             {
                 device.ComputeListBindComputePipeline(list, pipeline);
                 device.ComputeListBindUniformSet(list, set, 0);
-                device.ComputeListDispatch(list, 1, 1, layers);
+                device.ComputeListDispatch(list, width, height, layers);
             }
             finally { device.ComputeListEnd(); }
         }

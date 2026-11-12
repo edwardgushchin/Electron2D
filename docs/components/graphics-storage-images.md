@@ -64,7 +64,7 @@ remain separate from image layers: a guarded descriptor index selects an image,
 then its three-component coordinate selects a texel and layer. Scope, memory
 semantics and atomic prior values follow the existing image lowering.
 
-A sampler may read a disjoint layer or mip of the same physical allocation. The
+On Vulkan, a sampler may read a disjoint layer or mip of the same physical allocation. The
 compute adapter binds cached image-write views and transitions each deduplicated
 physical root, across every layer/mip, to GENERAL and back. This bypasses SDL’s
 single-subresource image-write transition. Shared samplers use GENERAL and
@@ -79,6 +79,28 @@ sampler directly, including arrays exported from authored `TextureArray` storage
 Compatible authored updates preserve the borrowed identity; disposal/replacement
 expires private views, sets and canvas metadata. Explicit snapshots remain copied
 raw readbacks, and renderer recreation requires a new live binding.
+
+### Direct3D 12 compute arrays
+
+The pinned Windows GPU adapter binds a typed UAV for every layer of one base mip
+of a single-sample storage array. Both local allocations and same-device imports
+use the existing `UniformType.Image` binding. One-layer arrays retain their array
+shape. Native transfers and the canvas read the original allocation after
+dispatch. No higher mip is included in the UAV.
+
+The cached view keeps SDL's descriptor ownership. SDL transitions layer zero
+and tracks the texture for command retirement. The bridge records the remaining
+layer transitions before dispatch and restores them before SDL ends the pass.
+Direct3D 12 rejects writable slots or sampled ranges that overlap any bound
+layer of that mip. Disjoint subresources can remain sampled. The native array
+UAV carries its layer extent. [Direct3D 12 array UAV](https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_tex2d_array_uav)
+
+The Windows local import profile checks one- and two-layer RGBA8 imports,
+framebuffer interoperation, untouched mips, previous-ABI refusal and producer
+reuse. It also exercises unsigned R32 atomics on a 66-layer device-owned
+storage-only array. The native canvas profile samples compute output from the
+imported array. Vertex/fragment storage arrays, multisample arrays and full
+native/package qualification retain their own gates.
 
 ## Verification
 

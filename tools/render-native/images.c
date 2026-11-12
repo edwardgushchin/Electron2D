@@ -1,4 +1,5 @@
 #include "pinned-core.h"
+#include "d3d12-views.h"
 #include <stdint.h>
 #include "memory-layout.h"
 #include <SDL3/SDL_vulkan.h>
@@ -207,6 +208,7 @@ ready:
 }
 E2D_EXPORT int e2d_render_prepare_compute_images(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, SDL_GPUTexture *const *general, uint32_t count, uint32_t prepare)
 {
+    if (abi == E2D_D3D12_ARRAY_ABI) return e2d_d3d12_compute_arrays(device, commands, general, count, prepare);
     if (prepare > 1 || abi != 2 || !general || count > 8) { SDL_SetError("Invalid compute image adapter ABI or image count"); return -1; }
     VulkanCommandBuffer *command = checked_command(device, 1, commands);
     if (!command || !command->currentComputePipeline || (device->debug_mode && !command->common.compute_pass.in_progress)) { SDL_SetError("Compute image descriptors require an active owned compute pipeline"); return -1; }

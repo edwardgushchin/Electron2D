@@ -156,8 +156,11 @@ public sealed unsafe partial class RenderingDevice
         if ((usageFlags & TextureUsageBits.InputAttachment) != 0 && (DepthFormat(format) ? !DepthTransfersSupported(format, graphicsInputs: true) : native == SDL.GPUTextureFormat.Invalid || !SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, SDL.GPUTextureUsageFlags.ColorTarget | SDL.GPUTextureUsageFlags.Sampler))) return false;
         var privateTarget = DepthFormat(format) && (usageFlags & TextureUsageBits.InputAttachment) != 0 ? TextureUsageBits.DepthStencilAttachment : 0;
         var nativeUsage = NativeUsage(usageFlags | privateTarget);
-        // Readonly graphics images allocate sampled storage; query that exact role.
-        if ((nativeUsage & SDL.GPUTextureUsageFlags.GraphicsStorageRead) != 0) nativeUsage = (nativeUsage & ~SDL.GPUTextureUsageFlags.GraphicsStorageRead) | SDL.GPUTextureUsageFlags.Sampler;
+        // Readonly input images allocate sampled storage. Writable storage retains its native
+        // shader-load role, which does not require the format to support filtered sampling.
+        if ((nativeUsage & SDL.GPUTextureUsageFlags.GraphicsStorageRead) != 0 &&
+            (usageFlags & (TextureUsageBits.Storage | TextureUsageBits.StorageAtomic)) == 0)
+            nativeUsage = (nativeUsage & ~SDL.GPUTextureUsageFlags.GraphicsStorageRead) | SDL.GPUTextureUsageFlags.Sampler;
         return native != SDL.GPUTextureFormat.Invalid && SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, nativeUsage);
     }
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>

@@ -35,8 +35,8 @@ public sealed unsafe partial class RenderingDevice
     /// GPU Direct3D 12 imports require a same-device typed color resource on a non-shared default heap
     /// visible to the renderer queue. Color attachments require ALLOW_RENDER_TARGET. Ordinary color
     /// mip chains require the native shared-view adapter and a single-mip view for the framebuffer.
-    /// Multi-layer color attachments require one mip. Ordinary compute
-    /// storage images require ALLOW_UNORDERED_ACCESS. Array storage bindings and resources with
+    /// Multi-layer color attachments require one mip. Compute storage images require ALLOW_UNORDERED_ACCESS.
+    /// The native array adapter exposes all layers of the base mip to compute. Resources with
     /// simultaneous access are unsupported on Direct3D 12.
     /// The producer completes all work and leaves every subresource in ALL_SHADER_RESOURCE. The wrapper
     /// retains one COM reference and restores that state after rendering, compute and transfers. Keep external heaps alive and
@@ -80,7 +80,7 @@ public sealed unsafe partial class RenderingDevice
         if (driver == "direct3d12")
         {
             if (type == TextureType.TextureArray && (usageFlags & TextureUsageBits.Storage) != 0)
-                throw new NotSupportedException("Direct3D 12 storage arrays require a native array storage binding adapter.");
+                RequireStorageArrayViews();
             if (MIPMaps != 1 && (usageFlags & TextureUsageBits.ColorAttachment) != 0 &&
                 (layers != 1 || GPUTextureViews.Support(Device, GPUTextureViews.Direct3DViewABI) != 1))
                 throw new NotSupportedException("Direct3D 12 mip-chain color attachments require a native ordinary shared texture view.");

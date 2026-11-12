@@ -155,6 +155,16 @@ internal static unsafe partial class NativeTextureImportTests
                     "The sampled-only ABI still imports and reads the same resource.");
             }
             finally { device.FreeRID(sampled); }
+
+            var array = CreateGPUResource(device, fixture, 2, Levels, options: 8);
+            try
+            {
+                Reject<NotSupportedException>(() => ImportGPU(device, array, usage: GPUTransfer | Usage.Storage));
+                var linearArray = ImportGPU(device, array);
+                try { Check(device.TextureGetData(linearArray, 1).AsSpan().SequenceEqual(GPUMipColors(2)), "The old ABI retains sampled array imports."); }
+                finally { device.FreeRID(linearArray); }
+            }
+            finally { Marshal.Release(array); }
             CheckGPUDebug(fixture, resource, debug);
         }
         finally { Marshal.Release(resource); }
@@ -166,23 +176,23 @@ internal static unsafe partial class NativeTextureImportTests
         VerifyGPUWritable(device, fixture, debug, layers: 1);
         VerifyGPUWritable(device, fixture, debug, layers: 2);
         VerifyGPUWritable(device, fixture, debug, layers: 1, color: false);
+        VerifyGPUStorageArrayAtomics(device);
+        VerifyGPUImportedStorageArray(device, fixture, debug, layers: 1);
+        VerifyGPUImportedStorageArray(device, fixture, debug, layers: 2);
         VerifyGPUSharedMips(device, fixture, debug);
     }
 
     private static void VerifyGPUWritable(RenderingDevice device, nint fixture, bool debug, uint layers, bool color = true)
     {
-        var usage = GPUTransfer;
+        var usage = GPUTransfer | Usage.Storage;
         if (color) usage |= Usage.ColorAttachment;
-        if (layers == 1) usage |= Usage.Storage;
         var levels = color ? 1u : Levels;
         const uint nativeRenderTarget = 4, nativeUAV = 8;
         var resource = CreateGPUResource(device, fixture, layers, levels, nativeRenderTarget | nativeUAV);
         RID imported = default;
         try
         {
-            if (layers > 1)
-                Reject<NotSupportedException>(() => ImportGPU(device, resource, layers, levels, usage: usage | Usage.Storage));
-            else if (color)
+            if (layers == 1 && color)
             {
                 var noTarget = CreateGPUResource(device, fixture, 1, levels, nativeUAV);
                 var noUAV = CreateGPUResource(device, fixture, 1, levels, nativeRenderTarget);
@@ -203,20 +213,20 @@ internal static unsafe partial class NativeTextureImportTests
                 var framebuffer = device.FramebufferCreate([imported], viewCount: (int)layers);
                 try
                 {
-                    device.DrawListBegin(framebuffer, RenderingDevice.DrawFlags.ClearColor0, [Colors.Magenta]);
+                    device.DrawListBegin(framebuffer, RenderingDevice.DrawFlags.ClearColor0, [layers == 1 ? Colors.Magenta : Colors.Yellow]);
                     device.DrawListEnd();
                 }
                 finally { device.FreeRID(framebuffer); }
             }
 
-            if (layers == 1) VulkanTextureImportTests.WriteImportedImage(device, imported, layers);
+            VulkanTextureImportTests.WriteImportedImage(device, imported, layers);
             for (uint layer = 0; layer < layers; layer++)
             {
                 var expected = GPUMipColors((int)layer * 2).AsSpan();
                 if (color) expected = expected[..(Width * Height * 4)];
                 var texels = MemoryMarshal.Cast<byte, uint>(expected);
-                if (color) texels.Fill(0xffff00ffu);
-                if (layers == 1) texels[0] = color ? 0xff0000ffu : 0xff000000u;
+                if (color) texels.Fill(layers == 1 ? 0xffff00ffu : 0xff00ffffu);
+                texels[0] = layers == 1 ? (color ? 0xff0000ffu : 0xff000000u) : 0xffffff00u;
                 Check(device.TextureGetData(imported, layer).AsSpan().SequenceEqual(expected),
                     "Native framebuffer/compute writes must preserve untouched mips.");
             }
@@ -336,7 +346,8 @@ internal static unsafe partial class NativeTextureImportTests
                 for (var i = 0; i < 8; i++) device.ComputeListDispatch(list, 1, 1, 1);
                 var before = GC.GetAllocatedBytesForCurrentThread();
                 for (var i = 0; i < 64; i++) device.ComputeListDispatch(list, 1, 1, 1);
-                Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed shared-view compute dispatches allocate no managed owner bytes.");
+                var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+                Check(allocated == 0, $"64 warmed shared-view dispatches allocated {allocated} managed owner bytes.");
             }
             finally { device.ComputeListEnd(); }
         }
@@ -471,6 +482,27 @@ internal static unsafe partial class NativeTextureImportTests
                     rids.Remove(mipCanvas);
                 }
                 finally { device.FreeRID(mipRoot); }
+
+                var writableArray = CreateGPUResource(device, fixture, 2, Levels, options: 8);
+                resources.Add(writableArray);
+                var writableRoot = ImportGPU(device, writableArray, usage: GPUTransfer | Usage.Storage);
+                try
+                {
+                    VulkanTextureImportTests.WriteImportedImage(device, writableRoot, 2, array: true, width: Width, height: Height);
+                    var writableCanvas = Track(RenderingServer.TextureRDCreate(writableRoot));
+                    try
+                    {
+                        RenderingServer.MaterialSetParam(material, "layers", writableCanvas);
+                        Draw(Colors.Red, Colors.Red);
+                    }
+                    finally
+                    {
+                        RenderingServer.MaterialSetParam(material, "layers", layeredProxy);
+                        RenderingServer.FreeRID(writableCanvas);
+                        rids.Remove(writableCanvas);
+                    }
+                }
+                finally { device.FreeRID(writableRoot); }
 
                 using (var layer = RenderingServer.Texture2DLayerGet(layeredProxy, 1))
                     Check(layer?.GetPixel(0, 0) == Colors.Blue, "Layered readback samples the producer's second layer.");

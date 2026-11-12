@@ -24,6 +24,13 @@ retains the COM allocation and the managed owner governs root lifetime. ABI 1
 region and overlap queries resolve those views to their original coordinates.
 See [Direct3D 12 color views](../../docs/components/shared-texture-views.md#direct3d-12-color-views).
 
+ABI 7 creates a single-mip Direct3D 12 array storage view. SDL supplies
+the UAV slot, records the first-layer transitions and retains the wrapper.
+`e2d_render_prepare_compute_images` with ABI 7 transitions the remaining
+physical layers to UAV and restores them in the same compute pass. The
+pinned command prefix supplies the active command list. See
+[Direct3D 12 compute arrays](../../docs/components/graphics-storage-images.md#direct3d-12-compute-arrays).
+
 The current native adapter is Vulkan. It locks the native allocator without
 submitting, waiting for GPU work or invoking application callbacks.
 

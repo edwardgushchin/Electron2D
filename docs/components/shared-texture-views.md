@@ -161,8 +161,9 @@ An ordinary view of one layer in a multi-layer resource needs a shader binding
 that translates an ordinary sampled image to a one-layer array SRV. The existing
 [Direct3D 12 array descriptor](https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_tex2d_array_srv)
 provides a first-layer field. Alternate formats need typed views over a compatible
-typeless resource. Depth/stencil, multisample, input attachments and array UAV
-views retain their native adapters as prerequisites.
+typeless resource. Depth/stencil, multisample and input attachments retain their native
+adapters as prerequisites. [Direct3D 12 compute array UAVs](graphics-storage-images.md#direct3d-12-compute-arrays)
+use a cached base-mip view and transition every writable layer.
 
 ## Verification and remaining limits
 

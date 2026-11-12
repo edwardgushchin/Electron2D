@@ -417,7 +417,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="zGroups">Positive Z group count, at most 65535.</param>
     /// <remarks>Runtime storage-buffer lengths reflect each resource bound for this dispatch, including rebinding within one submission.
     /// Array storage images address every retained layer of one base mip. Sampled aliases use the same native image with coherent descriptor layouts;
-    /// unsupported native adapters reject before dispatch, and callers retain their ordinary command-list lifetime. Direct3D 12 rejects sampled ranges that overlap the writable mip.</remarks>
+    /// unsupported native adapters reject before dispatch, and callers retain their ordinary command-list lifetime. Direct3D 12 rejects sampled ranges and other writable slots that overlap any layer written by the dispatch.</remarks>
     public void ComputeListDispatch(long computeList, uint xGroups, uint yGroups, uint zGroups)
     {
         List(computeList);
@@ -434,13 +434,22 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         Span<uint> bufferSizes = stackalloc uint[8];
         var images = stackalloc SDL.GPUStorageTextureReadWriteBinding[8]; var imageCount = 0;
         var imageHandles = stackalloc nint[8];
+        Span<uint> imageLayers = stackalloc uint[8];
+        var arrayImages = false;
         var samplers = stackalloc SDL.GPUTextureSamplerBinding[16]; var samplerCount = 0;
         foreach (var descriptor in _pipeline.Layout)
         {
             if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != Get(_pushPipeline).Shader) throw new InvalidOperationException("Bind each pipeline resource set first.");
             var ids = set.Bindings[descriptor.Slot];
             ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var buffer = Get(ids[ResourceID(descriptor, BufferID(descriptor.Type))]);
-            if (descriptor.Type == UniformType.Image) { imageHandles[descriptor.Native] = StorageImageHandle(buffer, descriptor.Array); images[descriptor.Native] = new() { Texture = imageHandles[descriptor.Native] }; imageCount++; }
+            if (descriptor.Type == UniformType.Image)
+            {
+                imageHandles[descriptor.Native] = StorageImageHandle(buffer, descriptor.Array);
+                images[descriptor.Native] = new() { Texture = imageHandles[descriptor.Native] };
+                imageLayers[descriptor.Native] = descriptor.Array ? buffer.Texture!.Layers : 1;
+                arrayImages |= descriptor.Array;
+                imageCount++;
+            }
             else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[ResourceID(descriptor, 1)]).NativeHandle }; samplerCount++; }
             else if (StorageBinding(descriptor.Type)) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; bufferSizes[descriptor.Native] = buffer.Size; count++; }
             else if (HostUniform(buffer)) { fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size); }
@@ -448,9 +457,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         foreach (var link in _pipeline.Samplers) { samplers[link.Native.Native] = LinkedSampler(link, false); samplerCount++; }
         PushUniforms(_pipeline);
         _pipeline.Compute?.PrepareBufferSizes(_command, ReadOnlySpan<uint>.Empty, bufferSizes[..count]);
-        var nativeImages = UseNativeComputeImages(imageHandles, (uint)imageCount, samplers, (uint)samplerCount); var preparedImages = false;
+        var imageABI = ComputeImageABI(imageHandles, imageLayers[..imageCount], arrayImages, samplers, (uint)samplerCount);
+        var preparedImages = false;
         if (_pipeline.PhysicalAddresses || NativeUniformsUsed(_pipeline)) PrepareAddressBuffers();
-        var pass = SDL.BeginGPUComputePass(_command, (nint)images, nativeImages ? 0 : (uint)imageCount, (nint)buffers, (uint)count);
+        var pass = SDL.BeginGPUComputePass(_command, (nint)images, imageABI == VulkanComputeImageABI ? 0 : (uint)imageCount, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
         try
         {
@@ -459,12 +469,16 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
                 { var uniform = Get(_sets[descriptor.Set].Bindings[descriptor.Slot][ResourceID(descriptor)]); if (!HostUniform(uniform)) BindAddressUniform(uniform, ShaderStage.Compute, descriptor.Native); }
             _pipeline.Compute?.BindBufferSizes(pass);
             if (samplerCount != 0) SDL.BindGPUComputeSamplers(pass, 0, (nint)samplers, (uint)samplerCount);
-            if (nativeImages) { PrepareComputeImages(imageHandles, (uint)imageCount, true); preparedImages = true; }
+            if (imageABI != 0)
+            {
+                PrepareComputeImages(imageABI, imageHandles, (uint)imageCount, true);
+                preparedImages = true;
+            }
             if (indirect is null) SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups);
             else SDL.DispatchGPUComputeIndirect(pass, indirect.Handle!.DangerousGetHandle(), offset);
             _timestampListUsed = true;
         }
-        finally { try { if (preparedImages) PrepareComputeImages(imageHandles, (uint)imageCount, false); } finally { try { RestoreAddressUniforms(); } finally { SDL.EndGPUComputePass(pass); if (_pipeline.PhysicalAddresses) StorageBarrier(); } } }
+        finally { try { if (preparedImages) PrepareComputeImages(imageABI, imageHandles, (uint)imageCount, false); } finally { try { RestoreAddressUniforms(); } finally { SDL.EndGPUComputePass(pass); if (_pipeline.PhysicalAddresses) StorageBarrier(); } } }
     }
     /// <summary>Establishes a full dependency after prior dispatches in this list.</summary>
     /// <param name="computeList">The active list.</param>

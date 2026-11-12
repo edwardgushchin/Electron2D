@@ -4704,7 +4704,7 @@
       "godot": [
         "RenderingDevice::method:texture_create_from_extension(int:RenderingDevice.TextureType,int:RenderingDevice.DataFormat,int:RenderingDevice.TextureSamples,int:RenderingDevice.TextureUsageBits,int:,int:,int:,int:,int:,int:)"
       ],
-      "reason": "ADR 0028: Vulkan and desktop GPU Direct3D 12 wrap sampled single-sample color images and arrays with native transfer and canvas consumers. The sampled handoff uses SHADER_READ_ONLY_OPTIMAL or ALL_SHADER_RESOURCE. Both execute native color attachments and ordinary compute storage. Direct3D 12 can render to an exact-format ordinary mip view. Vulkan also supplies independent layer attachments and array storage. Direct3D 12 needs array layer sampling and array UAV bindings. Other drivers, depth/stencil, multisample and additional writable roles require native import adapters. See docs/components/native-texture-handles.md."
+      "reason": "ADR 0028: Vulkan and desktop GPU Direct3D 12 wrap sampled single-sample color images and arrays with native transfer and canvas consumers. The sampled handoff uses SHADER_READ_ONLY_OPTIMAL or ALL_SHADER_RESOURCE. Both execute native color attachments and ordinary and array compute storage. Direct3D 12 uses an array-wide base-mip UAV and can render to an exact-format ordinary mip view. Vulkan also supplies independent layer attachments. Direct3D 12 requires a shader binding for ordinary layer slices and a graphics array storage adapter. Other drivers, depth/stencil, multisample and additional writable roles require native import adapters. See docs/components/native-texture-handles.md."
     },
     {
       "state": "Blocked",

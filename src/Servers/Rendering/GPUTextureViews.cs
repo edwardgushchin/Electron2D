@@ -8,6 +8,7 @@ internal static unsafe partial class GPUTextureViews
     private const string Cache = "Electron2D.render.texture_views";
     internal const uint SampledFormatABI = 4;
     internal const uint Direct3DViewABI = 6;
+    internal const uint Direct3DArrayABI = 7;
     internal static RenderHandle? TryCreateSampledFormatStorage(RenderHandle owner, in SDL.GPUTextureCreateInfo info, SDL.GPUTextureFormat alternate)
     {
         var device = owner.DangerousGetHandle();
