@@ -45,6 +45,10 @@ The GPU effect requires root HDR output to affect 2D pixels; offscreen/SDR image
 
 ## Root canvas antialiasing
 
+`ProjectSettings.FrameQueueSize` accepts one through three frames and defaults
+to two. The GPU renderer samples `rendering/rendering_device/vsync/frame_queue_size`
+and its feature overrides at startup. See [the GPU frame queue](../components/canvas-rendering.md#gpu-frame-queue).
+
 `ProjectSettings.ScreenSpaceAA` registers the typed
 `rendering/anti_aliasing/quality/screen_space_aa` setting. Disabled is the default.
 Engine startup samples feature overrides for the unassigned root. FXAA and SMAA

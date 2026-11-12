@@ -535,6 +535,14 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         return new();
     }
 
+    /// <summary>Returns the maximum number of GPU frames retained by this device.</summary>
+    /// <returns>The renderer's startup frame queue size, or one for a local device.</returns>
+    /// <remarks>The renderer waits for its oldest pending frame before filling a slot. A local device
+    /// tracks one submission at a time through Submit and Sync. This query reads the capacity without waiting.</remarks>
+    /// <exception cref="ObjectDisposedException">The device is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The caller cannot access the device on this thread or during native submission.</exception>
+    public int GetFrameDelay() { Access(); return _serverOwner?.FrameQueueSize ?? 1; }
+
     /// <summary>Returns the selected compute-device name.</summary>
     /// <returns>The native device description.</returns>
     public string GetDeviceName() { Access(); return _context.DeviceName; }

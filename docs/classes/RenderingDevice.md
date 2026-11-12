@@ -1459,6 +1459,12 @@ device.DrawListEnd();
 
 The clear appears once in the native main window. Later canvas output resumes unless another screen list is recorded. See the shared screen section for size changes, ForceDraw(false), window retirement and the backend visibility boundary.
 
+## Frame delay
+
+`GetFrameDelay()` returns the active GPU renderer queue capacity or one on a
+local device. It reads the capacity on the owning thread without waiting.
+See [the GPU frame queue](../components/canvas-rendering.md#gpu-frame-queue).
+
 ## Canvas point integration
 
 See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.

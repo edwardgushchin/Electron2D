@@ -83,7 +83,9 @@ internal sealed unsafe partial class GPUCanvasBackend
                     SDL.BlitGPUTexture(command, in blit);
                 }
             }
-            var submitted = command; command = 0; Check(SDL.SubmitGPUCommandBuffer(submitted), "submit presentation");
+            var submitted = command;
+            command = 0;
+            SubmitPresentation(submitted);
             presentation.Commit(); return acquired;
         }
         finally

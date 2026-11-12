@@ -114,6 +114,39 @@ Evidence: bin/physics-top-level/2026-10-18/validation.json, SHA-256
 
 [HDR canvas targets](hdr-canvas.md) connect stored UseHDR2D authoring, server-session overrides and the typed root project setting to actual half-float/linear rendering, color-role sampling, composition/MSAA, device readback, SDR presentation and movie transfer. Compatibility rejects enabled HDR.
 
+## GPU frame queue
+
+`ProjectSettings.FrameQueueSize` registers
+`rendering/rendering_device/vsync/frame_queue_size`. It accepts one through
+three frames and defaults to two. The GPU renderer samples the effective
+project setting, including feature overrides, at startup. Before claiming
+the window it applies the same limit to SDL presentation. A later renderer
+session can select a different limit on a retained physical device.
+
+Each rendered frame occupies one slot, shared by all of its offscreen and
+window submissions. The renderer waits for and releases the oldest fence
+before reusing a full slot, before emitting FramePreDraw. The last successful
+presentation fence covers earlier work on the shared queue. A frame drawn
+without presentation records a completion marker, and interrupted frames
+record a marker after any submitted work. Renderer shutdown drains the queue.
+
+`RenderingDevice.GetFrameDelay()` returns the configured renderer capacity
+without a native wait. A local device reports one because its Submit and Sync
+contract owns a single submission. The setting governs renderer work and
+presentation on GPU; Compatibility uses its SDL_Renderer presentation policy.
+Swapchain image count follows the native backend. In particular Direct3D 12
+allocates at least two swapchain images even with one renderer frame in flight.
+[SDL queue configuration](https://wiki.libsdl.org/SDL3/SDL_SetGPUAllowedFramesInFlight)
+
+Run `ELECTRON2D_TEST_GPU_FRAME_QUEUE=managed` for setting validation. The
+`vulkan` and `direct3d12` profiles use the matching `SDL_GPU_DRIVER` and
+observe the actual SDL calls. They check depths 1, 3 and 2 on a shared device,
+FIFO fence reuse for offscreen and presented frames, an interrupted frame,
+startup snapshots, rendered pixels and local submission isolation. Both GPU profiles passed
+on Windows x64 with an RTX 3090 Ti. Native child windows also passed on both
+drivers, including 64 changing and 64 unchanged frames with zero managed
+owner-thread bytes. Remaining platforms and packages follow ADR 0021.
+
 ## Screen-space antialiasing
 
 `Viewport.ScreenSpaceAA` selects Disabled, FXAA or SMAA.

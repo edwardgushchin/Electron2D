@@ -1,6 +1,16 @@
 {
   "mappings": [
     {
+      "godot": "ProjectSettings::property:rendering/rendering_device/vsync/frame_queue_size",
+      "electron2d": "property:Electron2D.ProjectSettings.FrameQueueSize()",
+      "reason": "ADR 0028. The GPU renderer applies the startup depth to SDL presentation and fences completed or interrupted frames across viewports and windows. The local device tracks one submission. Windows Vulkan and Direct3D 12 exercise depths 1, 3 and 2. Platform and package qualification remain open. See docs/components/canvas-rendering.md#gpu-frame-queue."
+    },
+    {
+      "godot": "RenderingDevice::method:get_frame_delay()",
+      "electron2d": "method:Electron2D.RenderingDevice.GetFrameDelay()",
+      "reason": "ADR 0028. The GPU renderer applies the startup depth to SDL presentation and fences completed or interrupted frames across viewports and windows. The local device tracks one submission. Windows Vulkan and Direct3D 12 exercise depths 1, 3 and 2. Platform and package qualification remain open. See docs/components/canvas-rendering.md#gpu-frame-queue."
+    },
+    {
       "godot": "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_SMAA",
       "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.SMAA()",
       "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
@@ -6037,6 +6047,21 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:rendering/rendering_device/vsync/frame_queue_size",
+        "RenderingDevice::method:get_frame_delay()"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0028. The GPU renderer applies the startup depth to SDL presentation and fences completed or interrupted frames across viewports and windows. The local device tracks one submission. Windows Vulkan and Direct3D 12 exercise depths 1, 3 and 2. Platform and package qualification remain open. See docs/components/canvas-rendering.md#gpu-frame-queue."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:rendering/rendering_device/vsync/swapchain_image_count"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0028. SDL GPU derives the swapchain image count from its driver and presentation policy. A dedicated image-count adapter must negotiate the native buffer count independently of frame tracking."
+    },
     {
       "godot": [
         "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_DISABLED",

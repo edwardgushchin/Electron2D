@@ -49,11 +49,12 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal bool SupportsSizedPoints { get; }
     private nint Device => _device.DangerousGetHandle();
 
-    internal GPUCanvasBackend(SafeHandle window)
+    internal GPUCanvasBackend(SafeHandle window, int frameQueueSize)
     {
         if ((SDL.GetWindowFlags(window.DangerousGetHandle()) & SDL.WindowFlags.Transparent) != 0)
             throw new NotSupportedException("The SDL GPU API cannot present transparent native windows; use compatibility rendering.");
         _window = window.DangerousGetHandle();
+        _frameFences = new nint[frameQueueSize];
         var (device, relaxed, sizedPoints) = GPUDeviceFactory.Acquire(true);
         _relaxedAndroidDevice = relaxed;
         SupportsSizedPoints = sizedPoints;
@@ -62,6 +63,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         RenderHandle? vertex = null, instancedVertex = null, lightingVertex = null, lightingInstanced = null;
         try
         {
+            Check(SDL.SetGPUAllowedFramesInFlight(Device, (uint)FrameQueueSize), "configure GPU presentation queue");
             Check(SDL.ClaimWindowForGPUDevice(Device, _window), "claim window for GPU rendering");
             claimed = _windowClaimed = true;
             Driver = SDL.GetGPUDeviceDriver(Device) ?? "unknown";
@@ -851,6 +853,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         if (_disposed) return;
         _disposed = true;
         var idle = SDL.WaitForGPUIdle(Device);
+        ReleaseFrameQueue();
         foreach (var child in _childPresentations.ToArray()) child.Dispose();
         foreach (var pipeline in _pipelines.Values) pipeline.Dispose();
         foreach (var texture in _textures.Values) texture.Dispose();

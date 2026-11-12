@@ -60,6 +60,7 @@ public sealed partial class RenderingServer : ElectronObject
     internal static RenderingServer? Service => Volatile.Read(ref _instance);
     internal bool SupportsSizedPoints => _backend is GPUCanvasBackend gpu && gpu.SupportsSizedPoints;
     internal bool NativePoints => _backend is GPUCanvasBackend;
+    internal int FrameQueueSize => ((GPUCanvasBackend)_backend).FrameQueueSize;
 
     internal bool RenderLoopEnabledCore
     {
@@ -95,7 +96,7 @@ public sealed partial class RenderingServer : ElectronObject
         if (method == "compatibility") backend = new CompatibilityCanvasBackend(nativeWindow);
         else
         {
-            try { backend = new GPUCanvasBackend(nativeWindow); }
+            try { backend = new GPUCanvasBackend(nativeWindow, settings.GetWithOverrideCore(ProjectSettings.FrameQueueSize)); }
             catch (Exception gpuError) when (gpuError is InvalidOperationException or NotSupportedException or DllNotFoundException &&
                 settings.GetWithOverrideCore(ProjectSettings.RenderingFallback))
             {
@@ -196,6 +197,7 @@ public sealed partial class RenderingServer : ElectronObject
         _rendering = true;
         _swapBuffers = swapBuffers;
         long capturedRevision = 0;
+        var gpu = _backend as GPUCanvasBackend;
         try
         {
             AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
@@ -204,6 +206,7 @@ public sealed partial class RenderingServer : ElectronObject
                 CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
                 return;
             }
+            gpu?.BeginFrameQueue();
             capturedRevision = Volatile.Read(ref _changeRevision);
             _continuousCanvas = false;
             BeginEventEmission(_publisherFramePreDrawCore.Handlers)?.Invoke();
@@ -238,6 +241,7 @@ public sealed partial class RenderingServer : ElectronObject
             _continuousCanvas |= HasVisibleTextureRedraw();
             EndNativeFrames();
             _nativeFrameStarted = false;
+            gpu?.EndFrameQueue(completed: true);
             PublishRenderInfo();
             setupTicks += Stopwatch.GetTimestamp() - setupStart;
             _frameSetupCPU = setupTicks * 1000d / Stopwatch.Frequency;
@@ -257,6 +261,8 @@ public sealed partial class RenderingServer : ElectronObject
             if (!_frameSubmitted) MarkChanged();
             if (_nativeFrameStarted) foreach (var surface in _nativeWindows.Values) surface.NeedsSeed = true;
             AddCanvasVisibilityError(ref frameError, error);
+            try { gpu?.EndFrameQueue(completed: false); }
+            catch (Exception fenceError) { AddCanvasVisibilityError(ref frameError, fenceError); }
         }
         finally
         {

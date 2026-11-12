@@ -379,6 +379,14 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<bool> RenderingFallback { get; } =
         new("rendering/rendering_device/fallback_to_opengl3", true);
 
+    /// <summary>Limits how many renderer frames can be pending on the GPU.</summary>
+    /// <value>rendering/rendering_device/vsync/frame_queue_size; two frames by default.</value>
+    /// <remarks>GPU rendering samples this value at renderer startup. Values from one through three are supported.
+    /// The limit applies across the renderer's viewports and windows, including draws with presentation disabled.
+    /// Local devices each track their own submission.</remarks>
+    public static ProjectSetting<int> FrameQueueSize { get; } =
+        new("rendering/rendering_device/vsync/frame_queue_size", 2, value => value is >= 1 and <= 3);
+
     /// <summary>Selects canvas multisample antialiasing for the root window at engine startup.</summary>
     /// <value>rendering/anti_aliasing/quality/msaa_2d; Disabled initially.</value>
     /// <remarks>Scene and caller-owned offscreen viewports keep their own selections. Enabled MSAA requires a GPU backend with the requested sample count.</remarks>

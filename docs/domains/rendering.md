@@ -421,6 +421,11 @@ Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root p
 
 ## Canvas multisample antialiasing
 
+[The GPU frame queue](../components/canvas-rendering.md#gpu-frame-queue)
+bounds pending rendered frames across all windows and viewports. The renderer
+samples the typed project setting at startup and exposes it through
+`RenderingDevice.GetFrameDelay()`.
+
 [Canvas FXAA and SMAA](../components/canvas-rendering.md#screen-space-antialiasing)
 filter completed viewport color after MSAA resolve and environment composition.
 Scene, RID and root project settings select the same mode contract. GPU
