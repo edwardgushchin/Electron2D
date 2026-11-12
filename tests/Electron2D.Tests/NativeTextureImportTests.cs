@@ -21,7 +21,7 @@ internal static unsafe partial class NativeTextureImportTests
     internal static void Run(string profile)
     {
         Reject<InvalidOperationException>(() => Import(1));
-        var gpu = profile is "gpu-direct3d12" or "gpu-direct3d12-local" or "gpu-direct3d12-preceding";
+        var gpu = profile is "gpu-direct3d12" or "gpu-direct3d12-local" or "gpu-direct3d12-preceding" or "gpu-direct3d12-sampled-abi";
         var d3d12 = gpu || profile == "direct3d12";
         var supported = d3d12 || profile == "direct3d11";
         var fixturePath = Environment.GetEnvironmentVariable("ELECTRON2D_D3D12_IMPORT_FIXTURE");

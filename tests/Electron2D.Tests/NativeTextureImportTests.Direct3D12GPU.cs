@@ -15,7 +15,13 @@ internal static unsafe partial class NativeTextureImportTests
         if (debug)
             Marshal.ThrowExceptionForHR(((delegate* unmanaged[Cdecl]<int>)NativeLibrary.GetExport(fixture, "EnableDebug"))());
         if (profile == "gpu-direct3d12") VerifyGPUCanvas(fixture, debug);
-        else VerifyGPUDevice(fixture, debug, profile == "gpu-direct3d12-preceding");
+        else if (profile == "gpu-direct3d12-sampled-abi") VerifyGPUWritableRefusal(fixture, debug);
+        else
+        {
+            var preceding = profile == "gpu-direct3d12-preceding";
+            VerifyGPUDevice(fixture, debug, preceding);
+            if (!preceding) VerifyGPUWritable(fixture, debug);
+        }
     }
 
     private static nint CreateGPUResource(RenderingDevice device, nint fixture, uint layers, uint levels, uint options = 0)
@@ -130,6 +136,97 @@ internal static unsafe partial class NativeTextureImportTests
         {
             if (imported.IsValid() && device.TextureIsValid(imported)) device.FreeRID(imported);
             if (resource != 0) Marshal.Release(resource);
+        }
+    }
+
+    private static void VerifyGPUWritableRefusal(nint fixture, bool debug)
+    {
+        using var device = RenderingServer.CreateLocalRenderingDevice();
+        var resource = CreateGPUResource(device, fixture, 1, 1, options: 4);
+        try
+        {
+            Reject<NotSupportedException>(() => ImportGPU(device, resource, 1, 1, usage: GPUTransfer | Usage.ColorAttachment));
+            var sampled = ImportGPU(device, resource, 1, 1);
+            try { Check(device.TextureGetData(sampled, 0).AsSpan().SequenceEqual(GPUMipColors(0).AsSpan(0, Width * Height * 4)), "The sampled-only ABI still imports and reads the same resource."); }
+            finally { device.FreeRID(sampled); }
+            CheckGPUDebug(fixture, resource, debug);
+        }
+        finally { Marshal.Release(resource); }
+    }
+
+    private static void VerifyGPUWritable(nint fixture, bool debug)
+    {
+        using var device = RenderingServer.CreateLocalRenderingDevice();
+        VerifyGPUWritable(device, fixture, debug, layers: 1);
+        VerifyGPUWritable(device, fixture, debug, layers: 2);
+        VerifyGPUWritable(device, fixture, debug, layers: 1, color: false);
+    }
+
+    private static void VerifyGPUWritable(RenderingDevice device, nint fixture, bool debug, uint layers, bool color = true)
+    {
+        var usage = GPUTransfer;
+        if (color) usage |= Usage.ColorAttachment;
+        if (layers == 1) usage |= Usage.Storage;
+        var levels = color ? 1u : Levels;
+        const uint nativeRenderTarget = 4, nativeUAV = 8;
+        var resource = CreateGPUResource(device, fixture, layers, levels, nativeRenderTarget | nativeUAV);
+        RID imported = default;
+        try
+        {
+            if (layers > 1)
+                Reject<NotSupportedException>(() => ImportGPU(device, resource, layers, levels, usage: usage | Usage.Storage));
+            else if (color)
+            {
+                var noTarget = CreateGPUResource(device, fixture, 1, levels, nativeUAV);
+                var noUAV = CreateGPUResource(device, fixture, 1, levels, nativeRenderTarget);
+                try
+                {
+                    Reject<ArgumentException>(() => ImportGPU(device, noTarget, 1, levels, usage: usage));
+                    Reject<ArgumentException>(() => ImportGPU(device, noUAV, 1, levels, usage: usage));
+                }
+                finally { Marshal.Release(noTarget); Marshal.Release(noUAV); }
+            }
+
+            imported = ImportGPU(device, resource, layers, levels, usage: usage);
+            Check(device.GetDriverResource(DriverResource.Texture, imported, 0) == (ulong)resource, "Writable operations must target the producer's allocation.");
+            using (var format = device.TextureGetFormat(imported))
+                Check(format.UsageBits == usage, "The imported RID retains its exact usage flags.");
+            if (color)
+            {
+                var framebuffer = device.FramebufferCreate([imported], viewCount: (int)layers);
+                try
+                {
+                    device.DrawListBegin(framebuffer, RenderingDevice.DrawFlags.ClearColor0, [Colors.Magenta]);
+                    device.DrawListEnd();
+                }
+                finally { device.FreeRID(framebuffer); }
+            }
+
+            if (layers == 1) VulkanTextureImportTests.WriteImportedImage(device, imported, layers);
+            for (uint layer = 0; layer < layers; layer++)
+            {
+                var expected = GPUMipColors((int)layer * 2).AsSpan();
+                if (color) expected = expected[..(Width * Height * 4)];
+                var texels = MemoryMarshal.Cast<byte, uint>(expected);
+                if (color) texels.Fill(0xffff00ffu);
+                if (layers == 1) texels[0] = color ? 0xff0000ffu : 0xff000000u;
+                Check(device.TextureGetData(imported, layer).AsSpan().SequenceEqual(expected),
+                    "Native framebuffer/compute writes must preserve untouched mips.");
+            }
+
+            device.FreeRID(imported);
+            imported = default;
+            RewriteGPUResource(fixture, resource, 3);
+            imported = ImportGPU(device, resource, layers, levels, usage: usage);
+            var rewritten = GPUMipColors(3).AsSpan();
+            if (color) rewritten = rewritten[..(Width * Height * 4)];
+            Check(device.TextureGetData(imported, 0).AsSpan().SequenceEqual(rewritten), "Retirement must restore the producer's sampled state.");
+            CheckGPUDebug(fixture, resource, debug);
+        }
+        finally
+        {
+            if (imported.IsValid()) device.FreeRID(imported);
+            Marshal.Release(resource);
         }
     }
 

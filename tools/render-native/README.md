@@ -10,6 +10,14 @@ an unsupported core/revision/driver, and -1 for invalid arguments or inconsisten
 allocator data. Output contains three uint64 fields: textures, buffers and total.
 `e2d_render_driver_resource` uses ABI 1 and writes one uint64 on success. Invalid ABI, pointers, kind or native resource return -1, unavailable backends return 0, and success returns 1. Image and buffer queries hold the native defragmentation read lock. See [driver resources](../../docs/components/driver-resources.md).
 
+`e2d_render_d3d12_texture_import` uses ABI 1 for sampled imports. ABI 2 adds
+color targets and ordinary compute storage. It validates the matching producer
+resource flags and replaces the temporary resource in an SDL wrapper. SDL owns
+its SRV, per-subresource RTV and ordinary UAV slots and restores the sampled
+state after each pass. Unsupported core or ABI returns 0, incompatible resource
+descriptions return -1 and native wrapper setup failures return -2. See
+[GPU Direct3D 12 texture import](../../docs/components/native-texture-handles.md#importing-gpu-direct3d-12-textures).
+
 The current native adapter is Vulkan. It locks the native allocator without
 submitting, waiting for GPU work or invoking application callbacks.
 

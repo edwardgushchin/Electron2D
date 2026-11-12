@@ -115,7 +115,7 @@ internal static unsafe partial class VulkanTextureImportTests
         }
     }
 
-    private static void WriteImportedImage(RenderingDevice device, RID texture, uint layers)
+    internal static void WriteImportedImage(RenderingDevice device, RID texture, uint layers)
     {
         var name = layers == 1 ? "VulkanImportWrite" : "VulkanImportWriteArray";
         using var stream = typeof(VulkanTextureImportTests).Assembly.GetManifestResourceStream($"Electron2D.Compute.{name}.comp.spv")!;

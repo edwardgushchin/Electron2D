@@ -13,7 +13,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="type">An ordinary image or independent image array.</param>
     /// <param name="format">The native allocation's exact data format.</param>
     /// <param name="samples">The native sample count. Imports require one sample.</param>
-    /// <param name="usageFlags">Sampling, declared transfer roles, and Vulkan color-attachment and storage roles.</param>
+    /// <param name="usageFlags">Sampling, declared transfer roles, color attachments, and supported storage images.</param>
     /// <param name="image">The live VkImage or ID3D12Resource pointer bits from the device returned by <see cref="GetDriverResource"/>.</param>
     /// <param name="width">The base mip width in texels.</param>
     /// <param name="height">The base mip height in texels.</param>
@@ -33,9 +33,11 @@ public sealed unsafe partial class RenderingDevice
     /// queue family requires a new ownership transfer. Destroy producer-owned objects before the
     /// logical device closes.
     /// GPU Direct3D 12 imports require a same-device typed color resource on a non-shared default heap
-    /// visible to the renderer queue. Resources with simultaneous access are unsupported.
+    /// visible to the renderer queue. Color attachments require one mip and ALLOW_RENDER_TARGET. Ordinary compute
+    /// storage images require ALLOW_UNORDERED_ACCESS. Array storage bindings and resources with
+    /// simultaneous access are unsupported on Direct3D 12.
     /// The producer completes all work and leaves every subresource in ALL_SHADER_RESOURCE. The wrapper
-    /// retains one COM reference and restores that state after transfers. Keep external heaps alive and
+    /// retains one COM reference and restores that state after rendering, compute and transfers. Keep external heaps alive and
     /// grant exclusive resource access until retirement. FreeRID drains the GPU before releasing the wrapper.
     /// Neither backend initializes the producer's pixels.
     /// </remarks>
@@ -73,8 +75,13 @@ public sealed unsafe partial class RenderingDevice
         if (driver is not ("vulkan" or "direct3d12"))
             throw new NotSupportedException("The GPU backend does not provide a native texture importer.");
         var writableImport = (usageFlags & writable) != 0;
-        if (writableImport && driver != "vulkan")
-            throw new NotSupportedException("Writable native texture import requires Vulkan.");
+        if (driver == "direct3d12")
+        {
+            if (type == TextureType.TextureArray && (usageFlags & TextureUsageBits.Storage) != 0)
+                throw new NotSupportedException("Direct3D 12 storage arrays require a native array storage binding adapter.");
+            if (MIPMaps != 1 && (usageFlags & TextureUsageBits.ColorAttachment) != 0)
+                throw new NotSupportedException("Direct3D 12 mip-chain color attachments require native shared texture views.");
+        }
         if (driver == "direct3d12" && image > nuint.MaxValue) throw new ArgumentOutOfRangeException(nameof(image));
         if (ValidationLimits is { } limits && (width > limits[12] || height > limits[12] || layers > limits[10]))
             throw new ArgumentOutOfRangeException(nameof(width), "Texture dimensions or layers exceed device limits.");
@@ -100,7 +107,7 @@ public sealed unsafe partial class RenderingDevice
                     existing == image)
                     throw new ArgumentException("The image already belongs to a live resource of this device.", nameof(image));
             handle = driver == "direct3d12"
-                ? ImportDirect3DTexture(device, in create, image)
+                ? ImportDirect3DTexture(device, in create, image, writableImport ? 2u : 1u)
                 : new RenderHandle(GPUTextureViews.Import(device, 1, in create, image),
                     value => GPUTextureViews.Destroy(device, 1, value), _context.Handle);
         }
@@ -112,7 +119,7 @@ public sealed unsafe partial class RenderingDevice
         catch { handle.Dispose(); throw; }
     }
 
-    private RenderHandle ImportDirect3DTexture(nint device, in SDL.GPUTextureCreateInfo create, ulong image)
+    private RenderHandle ImportDirect3DTexture(nint device, in SDL.GPUTextureCreateInfo create, ulong image, uint abi)
     {
         lock (Direct3DImports)
             if (!Direct3DImports.Add(image))
@@ -120,10 +127,10 @@ public sealed unsafe partial class RenderingDevice
         nint native;
         try
         {
-            var status = ImportDirect3DTextureNative(device, 1, in create, image, out native);
+            var status = ImportDirect3DTextureNative(device, abi, in create, image, out native);
             if (status == 0) throw new NotSupportedException("The native module cannot import this Direct3D 12 resource.");
             if (status == -1)
-                throw new ArgumentException("The Direct3D 12 resource device, description or heap does not match the import contract.", nameof(image));
+                throw new ArgumentException("The Direct3D 12 resource device, description, flags or heap does not match the import contract.", nameof(image));
             if (status != 1) throw GPUPhysicsDevice.Failure("import a Direct3D 12 texture");
         }
         catch

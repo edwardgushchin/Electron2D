@@ -149,7 +149,9 @@ extern "C" __declspec(dllexport) HRESULT __cdecl CreateGPUSample(ID3D12Device* d
     const D3D12_HEAP_PROPERTIES heap{ D3D12_HEAP_TYPE_DEFAULT, D3D12_CPU_PAGE_PROPERTY_UNKNOWN,
         D3D12_MEMORY_POOL_UNKNOWN, 1, 1 };
     ComPtr<ID3D12Resource> texture;
-    if (options & 2) description.Flags = D3D12_RESOURCE_FLAG_ALLOW_SIMULTANEOUS_ACCESS;
+    if (options & 2) description.Flags |= D3D12_RESOURCE_FLAG_ALLOW_SIMULTANEOUS_ACCESS;
+    if (options & 4) description.Flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+    if (options & 8) description.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
     HRESULT result = device->CreateCommittedResource(&heap, options & 1 ? D3D12_HEAP_FLAG_SHARED : D3D12_HEAP_FLAG_NONE,
         &description, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&texture));
     if (FAILED(result)) return result;
