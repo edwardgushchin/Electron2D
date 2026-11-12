@@ -177,6 +177,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FLOAT_ATOMICS") is { } f
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_ATOMICS") is { } imageAtomicProfile) { if (imageAtomicProfile == "1") RenderingDeviceImageAtomicTests.Run(); else RenderingDeviceImageAtomicTests.Canvas(imageAtomicProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_TEXTURE_HANDLE") is { } nativeTextureHandleProfile) { NativeTextureHandleTests.Run(nativeTextureHandleProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_TEXTURE_IMPORT") is { } nativeTextureImportProfile) { NativeTextureImportTests.Run(nativeTextureImportProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VULKAN_TEXTURE_IMPORT") is { } vulkanTextureImportProfile) { VulkanTextureImportTests.Run(vulkanTextureImportProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DRIVER_RESOURCE") is { } driverResourceProfile) { DriverResourceTests.Run(driverResourceProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_ARRAYS") is { } descriptorProfile) { if (descriptorProfile == "1") RenderingDeviceDescriptorArrayTests.Run(); else RenderingDeviceDescriptorArrayTests.Canvas(descriptorProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXEL_BUFFERS") is { } texelProfile) { if (texelProfile == "1") RenderingDeviceTexelTests.Run(); else RenderingDeviceTexelTests.Canvas(texelProfile); return; }

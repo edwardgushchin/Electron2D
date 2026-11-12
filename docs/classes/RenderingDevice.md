@@ -9,7 +9,7 @@ contents retain their recorded encoding across output changes and transfer on GP
 new screen lists use the current format. Existing owner/list/window lifetime guards
 and framebuffer-format identities remain in effect.
 
-Last updated: 2026-11-11
+Last updated: 2026-11-12
 
 [Copied native depth/stencil state](../components/depth-stencil-state.md) extends pipeline creation with stored-depth bounds and independent visible-face masks/reference, including derived native variants.
 
@@ -121,6 +121,7 @@ byte[] result = device.BufferGetData(buffer);
 | `protected override System.Void ValidateDisposal()` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
 | [`public Electron2D.RID SamplerCreate(Electron2D.RDSamplerState state)`](#member-fa590dca9f47) | Creates a device-owned sampler from copied filtering, addressing and LOD state. |
 | [`public Electron2D.RID TextureCreate(Electron2D.RDTextureFormat format, Electron2D.RDTextureView view, System.ReadOnlySpan<System.Byte[]> data = default)`](#member-e8e129d5af5f) | Creates a device-owned two-dimensional image or image array with copied mip data. |
+| [`public RID TextureCreateFromExtension(TextureType type, DataFormat format, TextureSamples samples, TextureUsageBits usageFlags, ulong image, uint width, uint height, uint depth, uint layers, uint MIPMaps = 1)`](#texturecreatefromextension) | Wraps a sampled native image allocated by a producer on the current Vulkan device. |
 | `public System.Byte[] TextureGetData(Electron2D.RID texture, System.UInt32 layer)` | Synchronizes and returns an independent tightly packed layer mip chain. |
 | `public System.Void TextureGetData(Electron2D.RID texture, System.UInt32 layer, System.Span<System.Byte> destination)` | Synchronizes and reads one layer mip chain into caller-owned storage. |
 | `public System.Void TextureGetDataAsync(Electron2D.RID texture, System.UInt32 layer, System.Action<System.Byte[]> callback)` | Queues a request-time layer snapshot and delivers an independent mip chain at local completion. |
@@ -1503,6 +1504,12 @@ Vertex-only source/SPIR-V programs now execute with copied `RDPipelineRasterizat
 [Copied graphics line width](../components/wide-lines.md) executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping and retained width across discard, views/passes and sampled component variants. Foreign backend and native-allocation limits remain explicit.
 
 [Native sample controls](../components/multisample-state.md) execute copied masks, sample shading/fraction and alpha-to-one, with independent feature refusal, sample-rate shader publication guards and real resolve/storage/canvas consumers. Keep nonempty mask vector shape, copied variant state and the native/platform qualification limits together.
+
+### TextureCreateFromExtension
+
+`public RID TextureCreateFromExtension(TextureType type, DataFormat format, TextureSamples samples, TextureUsageBits usageFlags, ulong image, uint width, uint height, uint depth, uint layers, uint MIPMaps = 1)`
+
+Pass a same-device Vulkan image in the sampled layout after the producer has completed its work. The declared format and shape must match the native allocation. The wrapper owns the RID and views and preserves the producer's image and memory. Free it on the creating thread outside an active list before the producer resumes use or destroys the allocation. Single-sample sampled color images and arrays can declare optional transfer roles. Unsupported formats, roles or drivers throw `NotSupportedException`. See the [producer handoff and retirement contract](../components/native-texture-handles.md#importing-vulkan-device-images).
 
 <a id="texture-create-shared"></a>
 ### TextureCreateShared(RDTextureView, RID)

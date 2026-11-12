@@ -22,7 +22,7 @@ typedef struct View {
     uint64_t bytes;
     uint32_t base_level, base_layer, levels, layers, format_count;
     SDL_GPUTextureFormat formats[256];
-    bool retired, storage_array;
+    bool retired, storage_array, imported;
     struct View *next;
 } View;
 typedef struct ViewCache { SDL_Mutex *lock; View *views; uint64_t bytes; } ViewCache;
@@ -181,8 +181,57 @@ static bool publish(SDL_GPUDevice *device, View *view)
     ViewCache *cache = view_cache(device, true); if (!cache) return false;
     SDL_LockMutex(cache->lock);
     bool valid = view->bytes <= UINT64_MAX - cache->bytes;
+    if (view->imported) {
+        for (View *existing = cache->views; existing; existing = existing->next) {
+            if (existing->native->image == view->native->image) {
+                valid = SDL_SetError("The Vulkan image already has a live texture wrapper");
+                break;
+            }
+        }
+    }
     if (valid) { cache->bytes += view->bytes; view->next = cache->views; cache->views = view; }
     SDL_UnlockMutex(cache->lock); return valid;
+}
+
+E2D_EXPORT SDL_GPUTexture *e2d_render_texture_import(SDL_GPUDevice *device, uint32_t abi,
+    const SDL_GPUTextureCreateInfo *info, uint64_t image_bits)
+{
+    if (abi != 1 || e2d_render_view_support(device, 1) != 1 || !info || !image_bits) return NULL;
+    VkFormat format = native_format(info->format);
+    if (!format || depth_format(format) || info->usage != SDL_GPU_TEXTUREUSAGE_SAMPLER ||
+        info->sample_count != SDL_GPU_SAMPLECOUNT_1 || !info->width || !info->height ||
+        !info->num_levels || info->num_levels > 32 || !info->layer_count_or_depth ||
+        info->layer_count_or_depth > 2048 ||
+        (info->type != SDL_GPU_TEXTURETYPE_2D && info->type != SDL_GPU_TEXTURETYPE_2D_ARRAY) ||
+        (info->type == SDL_GPU_TEXTURETYPE_2D && info->layer_count_or_depth != 1)) {
+        SDL_SetError("Unsupported Vulkan texture import description");
+        return NULL;
+    }
+    if (!format_supported(device, info->format, info->type, info->usage)) {
+        SDL_SetError("The Vulkan format cannot be sampled with this image shape");
+        return NULL;
+    }
+    View *view = SDL_calloc(1, sizeof(*view)); if (!view) return NULL;
+    view->levels = info->num_levels;
+    view->layers = info->layer_count_or_depth;
+    view->format_count = 1;
+    view->formats[0] = info->format;
+    view->imported = true;
+    VkImage image;
+    _Static_assert(sizeof(image) == sizeof(image_bits), "Unexpected Vulkan image handle size");
+    SDL_memcpy(&image, &image_bits, sizeof(image));
+    // Keep the owned image and memory fields zero. Only views are owned, and the
+    // producer already transitioned every subresource to SDL's sampled layout.
+    if (!wrap(device, view, image, info, false)) {
+        destroy_unpublished(device, view);
+        return NULL;
+    }
+    view->root = view->handle;
+    if (!publish(device, view)) {
+        destroy_unpublished(device, view);
+        return NULL;
+    }
+    return view->handle;
 }
 E2D_EXPORT void e2d_render_views_collect(SDL_GPUDevice *device, uint32_t abi)
 {

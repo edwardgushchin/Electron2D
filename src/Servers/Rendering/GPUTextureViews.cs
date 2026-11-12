@@ -52,6 +52,9 @@ internal static unsafe partial class GPUTextureViews
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_texture_create")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial nint Create(nint device, uint abi, in SDL.GPUTextureCreateInfo info, nint formats, uint count);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_texture_import")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    internal static partial nint Import(nint device, uint abi, in SDL.GPUTextureCreateInfo info, ulong image);
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_view_create")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial nint View(nint device, uint abi, nint source, SDL.GPUTextureFormat format, uint layer, uint layers, uint level, uint levels, uint array);

@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "RenderingDevice::method:texture_create_from_extension(int:RenderingDevice.TextureType,int:RenderingDevice.DataFormat,int:RenderingDevice.TextureSamples,int:RenderingDevice.TextureUsageBits,int:,int:,int:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureCreateFromExtension(Electron2D.RenderingDevice.TextureType,Electron2D.RenderingDevice.DataFormat,Electron2D.RenderingDevice.TextureSamples,Electron2D.RenderingDevice.TextureUsageBits,System.UInt64,System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32)",
+      "reason": "ADR 0028: same-device Vulkan VkImage wrapping with owned views, producer-owned allocation, completed handoff in sampled layout and real mip/layer transfer and canvas consumers."
+    },
+    {
       "godot": "RenderingDevice::enum:DriverResource",
       "electron2d": "T:Electron2D.RenderingDevice.DriverResource",
       "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
@@ -4695,11 +4700,11 @@
       "reason": "ADR 0028: reports live original-owner views, bounded slices and sRGB exports. Allocation owners, non-device identities and expired views return false. DeviceCanvasSRGBTests exercises real Vulkan aliases and retirement."
     },
     {
-      "state": "Blocked",
+      "state": "Partial",
       "godot": [
         "RenderingDevice::method:texture_create_from_extension(int:RenderingDevice.TextureType,int:RenderingDevice.DataFormat,int:RenderingDevice.TextureSamples,int:RenderingDevice.TextureUsageBits,int:,int:,int:,int:,int:,int:)"
       ],
-      "reason": "ADR 0028: needs native image import on the receiving device, with a producer contract for initial layout and queue ownership, acquire/release synchronization, and borrowed allocation lifetime."
+      "reason": "ADR 0028: the pinned Vulkan adapter wraps single-sample sampled color images and arrays, preserving native contents, optional copy/update/readback, original-owner views and canvas sampling. Producer completes its work and transfers exclusive queue-family access in SHADER_READ_ONLY_OPTIMAL. Depth/stencil, multisample, attachment and storage roles require corresponding native view and layout contracts. Other GPU drivers need their own import adapters. See docs/components/native-texture-handles.md."
     },
     {
       "state": "Blocked",

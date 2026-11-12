@@ -181250,6 +181250,70 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.TextureCreateFromExtension(Electron2D.RenderingDevice.TextureType,Electron2D.RenderingDevice.DataFormat,Electron2D.RenderingDevice.TextureSamples,Electron2D.RenderingDevice.TextureUsageBits,System.UInt64,System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "TextureCreateFromExtension",
+    "signature": "public Electron2D.RID TextureCreateFromExtension(Electron2D.RenderingDevice.TextureType type, Electron2D.RenderingDevice.DataFormat format, Electron2D.RenderingDevice.TextureSamples samples, Electron2D.RenderingDevice.TextureUsageBits usageFlags, System.UInt64 image, System.UInt32 width, System.UInt32 height, System.UInt32 depth, System.UInt32 layers, System.UInt32 MIPMaps = 1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "Electron2D.RenderingDevice.TextureType",
+        "default": null
+      },
+      {
+        "name": "format",
+        "type": "Electron2D.RenderingDevice.DataFormat",
+        "default": null
+      },
+      {
+        "name": "samples",
+        "type": "Electron2D.RenderingDevice.TextureSamples",
+        "default": null
+      },
+      {
+        "name": "usageFlags",
+        "type": "Electron2D.RenderingDevice.TextureUsageBits",
+        "default": null
+      },
+      {
+        "name": "image",
+        "type": "System.UInt64",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "height",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "depth",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "layers",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "MIPMaps",
+        "type": "System.UInt32",
+        "default": "1"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.TextureCreateShared(Electron2D.RDTextureView,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
