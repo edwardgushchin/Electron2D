@@ -417,7 +417,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="zGroups">Positive Z group count, at most 65535.</param>
     /// <remarks>Runtime storage-buffer lengths reflect each resource bound for this dispatch, including rebinding within one submission.
     /// Array storage images address every retained layer of one base mip. Sampled aliases use the same native image with coherent descriptor layouts;
-    /// unsupported native adapters reject before dispatch, and callers retain their ordinary command-list lifetime.</remarks>
+    /// unsupported native adapters reject before dispatch, and callers retain their ordinary command-list lifetime. Direct3D 12 rejects sampled ranges that overlap the writable mip.</remarks>
     public void ComputeListDispatch(long computeList, uint xGroups, uint yGroups, uint zGroups)
     {
         List(computeList);

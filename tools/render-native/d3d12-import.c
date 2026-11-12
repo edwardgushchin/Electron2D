@@ -1,4 +1,5 @@
 #include "pinned-core.h"
+#include "d3d12-views.h"
 #include <stdint.h>
 #define COBJMACROS
 #define E2D_RENDER_DRIVER_D3D12
@@ -10,7 +11,23 @@
 #define E2D_EXPORT __attribute__((visibility("default")))
 #endif
 
+bool e2d_d3d12_device(SDL_GPUDevice *device)
+{
 #if defined(SDL_PLATFORM_WIN32)
+    if (!device || SDL_strcmp(SDL_GetGPUDeviceDriver(device), "direct3d12") != 0 || !e2d_render_pinned_core()) return false;
+    const D3D12Renderer *renderer = (const D3D12Renderer *)device->driverData;
+    return renderer && renderer->sdlGPUDevice == device && renderer->device && renderer->commandQueue;
+#else
+    (void)device;
+    return false;
+#endif
+}
+
+#if defined(SDL_PLATFORM_WIN32)
+#define VIEW_SOURCE "Electron2D.render.d3d12_view_source"
+static const SDL_GPUTextureUsageFlags storage = SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ |
+    SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE;
+
 static const IID device_iid = { 0x189819f1, 0x1db6, 0x4b57, { 0xbe, 0x54, 0x18, 0x21, 0x33, 0x9b, 0x85, 0xf7 } };
 
 static bool resource_matches(ID3D12Resource *resource, const D3D12Renderer *renderer,
@@ -45,17 +62,20 @@ static bool resource_matches(ID3D12Resource *resource, const D3D12Renderer *rend
     return (visible & node) == node;
 }
 
-static void write_srv(ID3D12Device *device, D3D12Texture *texture, const SDL_GPUTextureCreateInfo *info, DXGI_FORMAT format)
+static void write_srv(ID3D12Device *device, D3D12Texture *texture, const SDL_GPUTextureCreateInfo *info, DXGI_FORMAT format, uint32_t layer, uint32_t level)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC desc = { 0 };
     desc.Format = format;
     desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     if (info->type == SDL_GPU_TEXTURETYPE_2D_ARRAY) {
         desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+        desc.Texture2DArray.MostDetailedMip = level;
+        desc.Texture2DArray.FirstArraySlice = layer;
         desc.Texture2DArray.MipLevels = info->num_levels;
         desc.Texture2DArray.ArraySize = info->layer_count_or_depth;
     } else {
         desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+        desc.Texture2D.MostDetailedMip = level;
         desc.Texture2D.MipLevels = info->num_levels;
     }
     ID3D12Device_CreateShaderResourceView(device, texture->resource, &desc, texture->srvHandle.cpuHandle);
@@ -88,6 +108,94 @@ static void write_target_views(ID3D12Device *device, D3D12Texture *texture, bool
     }
 }
 
+
+static D3D12TextureContainer *make_wrapper(SDL_GPUDevice *device, const SDL_GPUTextureCreateInfo *info)
+{
+    const bool target = (info->usage & SDL_GPU_TEXTUREUSAGE_COLOR_TARGET) != 0;
+    const bool uav = (info->usage & storage) != 0;
+    // Let SDL own every descriptor slot and its retirement. A writable stub needs the
+    // same subresource grid but only the minimum width required for its mip count.
+    SDL_GPUTextureCreateInfo stub = *info;
+    if (target || uav) {
+        stub.width = 1u << (info->num_levels - 1);
+        stub.height = 1;
+    } else {
+        stub.type = SDL_GPU_TEXTURETYPE_2D;
+        stub.width = stub.height = 4;
+        stub.layer_count_or_depth = stub.num_levels = 1;
+    }
+    stub.props = 0;
+    SDL_GPUTexture *handle = SDL_CreateGPUTexture(device, &stub);
+    if (!handle) return NULL;
+    D3D12TextureContainer *container = (D3D12TextureContainer *)handle;
+    D3D12Texture *texture = container->activeTexture;
+    if (!texture || !texture->srvHandle.heap || !texture->srvHandle.cpuHandle.ptr || !texture->subresources) {
+        SDL_ReleaseGPUTexture(device, handle);
+        SDL_WaitForGPUIdle(device);
+        SDL_SetError("The Direct3D 12 wrapper needs an SDL sampled descriptor");
+        return NULL;
+    }
+
+    const uint32_t count = info->num_levels * info->layer_count_or_depth;
+    if (!(target || uav) && count > 1) {
+        D3D12TextureSubresource *subresources = SDL_calloc(count, sizeof(*subresources));
+        if (!subresources) {
+            SDL_ReleaseGPUTexture(device, handle);
+            SDL_WaitForGPUIdle(device);
+            return NULL;
+        }
+        for (uint32_t index = 0; index < count; index++) {
+            subresources[index].parent = texture;
+            subresources[index].layer = index / info->num_levels;
+            subresources[index].level = index % info->num_levels;
+            subresources[index].depth = 1;
+            subresources[index].index = index;
+        }
+        SDL_free(texture->subresources);
+        texture->subresources = subresources;
+        texture->subresourceCount = count;
+    }
+
+    if (target || uav) {
+        for (uint32_t index = 0; index < count; ++index) {
+            const D3D12TextureSubresource *sub = &texture->subresources[index];
+            if ((target && (!sub->rtvHandles || !sub->rtvHandles[0].heap || !sub->rtvHandles[0].cpuHandle.ptr)) ||
+                (uav && (!sub->uavHandle.heap || !sub->uavHandle.cpuHandle.ptr))) {
+                SDL_ReleaseGPUTexture(device, handle);
+                SDL_WaitForGPUIdle(device);
+                SDL_SetError("The Direct3D 12 wrapper needs SDL writable descriptors");
+                return NULL;
+            }
+        }
+    }
+
+    return container;
+}
+
+static void bind_resource(D3D12TextureContainer *container, ID3D12Device *device, ID3D12Resource *resource,
+    const SDL_GPUTextureCreateInfo *info, DXGI_FORMAT format, uint32_t layer, uint32_t level, uint32_t resource_levels)
+{
+    D3D12Texture *texture = container->activeTexture;
+    for (uint32_t i = 0; i < texture->subresourceCount; ++i) {
+        D3D12TextureSubresource *sub = &texture->subresources[i];
+        sub->layer += layer;
+        sub->level += level;
+        sub->index = sub->layer * resource_levels + sub->level;
+    }
+
+    SDL_PropertiesID props = container->header.info.props;
+    container->header.info = *info;
+    container->header.info.props = props;
+    container->canBeCycled = false;
+    ID3D12Resource_AddRef(resource);
+    ID3D12Resource *stub_resource = texture->resource;
+    texture->resource = resource;
+    write_srv(device, texture, info, format, layer, level);
+    if (info->usage & (SDL_GPU_TEXTUREUSAGE_COLOR_TARGET | storage))
+        write_target_views(device, texture, info->type == SDL_GPU_TEXTURETYPE_2D_ARRAY, format);
+    ID3D12Resource_Release(stub_resource);
+}
+
 #endif
 
 E2D_EXPORT int e2d_render_d3d12_texture_import(SDL_GPUDevice *device, uint32_t abi,
@@ -96,12 +204,8 @@ E2D_EXPORT int e2d_render_d3d12_texture_import(SDL_GPUDevice *device, uint32_t a
     if (!out) return -1;
     *out = NULL;
 #if defined(SDL_PLATFORM_WIN32)
-    if (!device || (abi != 1 && abi != 2) || !e2d_render_pinned_core() ||
-        SDL_strcmp(SDL_GetGPUDeviceDriver(device), "direct3d12") != 0) return 0;
+    if ((abi != 1 && abi != 2) || !e2d_d3d12_device(device)) return 0;
     const D3D12Renderer *renderer = (const D3D12Renderer *)device->driverData;
-    if (!renderer || renderer->sdlGPUDevice != device || !renderer->device || !renderer->commandQueue) return 0;
-    const SDL_GPUTextureUsageFlags storage = SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ |
-        SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE;
     const SDL_GPUTextureUsageFlags allowed = SDL_GPU_TEXTUREUSAGE_SAMPLER |
         (abi == 2 ? SDL_GPU_TEXTUREUSAGE_COLOR_TARGET | storage : 0);
     if (!info || !bits || bits > UINTPTR_MAX || (uint32_t)info->format >= SDL_arraysize(SDLToD3D12_TextureFormat) ||
@@ -118,82 +222,96 @@ E2D_EXPORT int e2d_render_d3d12_texture_import(SDL_GPUDevice *device, uint32_t a
     ID3D12Resource *resource = (ID3D12Resource *)(uintptr_t)bits;
     const bool target = (info->usage & SDL_GPU_TEXTUREUSAGE_COLOR_TARGET) != 0;
     const bool uav = (info->usage & storage) != 0;
-    if (target && info->num_levels != 1) return -1;
     if (uav && (info->type != SDL_GPU_TEXTURETYPE_2D || (info->usage & storage) != storage)) return -1;
     const D3D12_RESOURCE_FLAGS required = (target ? D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET : 0) |
         (uav ? D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS : 0);
     if (!resource_matches(resource, renderer, info, format, required)) return -1;
 
-    // Let SDL own every descriptor slot and its retirement. A writable stub needs the
-    // same subresource grid but only the minimum width required for its mip count.
-    SDL_GPUTextureCreateInfo stub = *info;
-    if (required) {
-        stub.width = 1u << (info->num_levels - 1);
-        stub.height = 1;
-    } else {
-        stub.type = SDL_GPU_TEXTURETYPE_2D;
-        stub.width = stub.height = 4;
-        stub.layer_count_or_depth = stub.num_levels = 1;
-    }
-    stub.props = 0;
-    SDL_GPUTexture *handle = SDL_CreateGPUTexture(device, &stub);
-    if (!handle) return -2;
-    D3D12TextureContainer *container = (D3D12TextureContainer *)handle;
-    D3D12Texture *texture = container->activeTexture;
-    if (!texture || !texture->srvHandle.heap || !texture->srvHandle.cpuHandle.ptr || !texture->subresources) {
-        SDL_ReleaseGPUTexture(device, handle);
-        SDL_WaitForGPUIdle(device);
-        SDL_SetError("The Direct3D 12 import needs an SDL sampled descriptor");
-        return -2;
-    }
-
-    const uint32_t count = info->num_levels * info->layer_count_or_depth;
-    if (!required && count > 1) {
-        D3D12TextureSubresource *subresources = SDL_calloc(count, sizeof(*subresources));
-        if (!subresources) {
-            SDL_ReleaseGPUTexture(device, handle);
-            SDL_WaitForGPUIdle(device);
-            return -2;
-        }
-        for (uint32_t index = 0; index < count; index++) {
-            subresources[index].parent = texture;
-            subresources[index].layer = index / info->num_levels;
-            subresources[index].level = index % info->num_levels;
-            subresources[index].depth = 1;
-            subresources[index].index = index;
-        }
-        SDL_free(texture->subresources);
-        texture->subresources = subresources;
-        texture->subresourceCount = count;
-    }
-
-    if (required) {
-        for (uint32_t index = 0; index < count; ++index) {
-            const D3D12TextureSubresource *sub = &texture->subresources[index];
-            if ((target && (!sub->rtvHandles || !sub->rtvHandles[0].heap || !sub->rtvHandles[0].cpuHandle.ptr)) ||
-                (uav && (!sub->uavHandle.heap || !sub->uavHandle.cpuHandle.ptr))) {
-                SDL_ReleaseGPUTexture(device, handle);
-                SDL_WaitForGPUIdle(device);
-                SDL_SetError("The Direct3D 12 import needs SDL writable descriptors");
-                return -2;
-            }
-        }
-    }
-
-    SDL_PropertiesID props = container->header.info.props;
-    container->header.info = *info;
-    container->header.info.props = props;
-    container->canBeCycled = false;
-    ID3D12Resource_AddRef(resource);
-    ID3D12Resource *stub_resource = texture->resource;
-    texture->resource = resource;
-    write_srv(renderer->device, texture, info, format);
-    if (required) write_target_views(renderer->device, texture, info->type == SDL_GPU_TEXTURETYPE_2D_ARRAY, format);
-    ID3D12Resource_Release(stub_resource);
-    *out = handle;
+    D3D12TextureContainer *container = make_wrapper(device, info);
+    if (!container) return -2;
+    bind_resource(container, renderer->device, resource, info, format, 0, 0, info->num_levels);
+    *out = (SDL_GPUTexture *)container;
     return 1;
 #else
     (void)device; (void)abi; (void)info; (void)bits;
     return 0;
+#endif
+}
+
+
+int e2d_d3d12_view_format(SDL_GPUDevice *device, const SDL_GPUTextureCreateInfo *info, SDL_GPUTextureFormat format)
+{
+#if defined(SDL_PLATFORM_WIN32)
+    const SDL_GPUTextureUsageFlags allowed = SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_COLOR_TARGET |
+        SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ | storage;
+    return info && format == info->format && info->sample_count == SDL_GPU_SAMPLECOUNT_1 &&
+        (info->type == SDL_GPU_TEXTURETYPE_2D || info->type == SDL_GPU_TEXTURETYPE_2D_ARRAY) &&
+        (info->usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) && !(info->usage & ~allowed) &&
+        (uint32_t)format < SDL_arraysize(SDLToD3D12_TextureFormat) &&
+        SDLToD3D12_TextureFormat[format] != DXGI_FORMAT_UNKNOWN &&
+        SDL_GPUTextureSupportsFormat(device, format, info->type, info->usage);
+#else
+    (void)device; (void)info; (void)format;
+    return 0;
+#endif
+}
+
+SDL_GPUTexture *e2d_d3d12_view_region(SDL_GPUTexture *texture, uint32_t *layer, uint32_t *level)
+{
+#if defined(SDL_PLATFORM_WIN32)
+    D3D12TextureContainer *container = (D3D12TextureContainer *)texture;
+    if (!container->activeTexture || *layer >= container->header.info.layer_count_or_depth ||
+        *level >= container->header.info.num_levels) return NULL;
+    SDL_GPUTexture *source = SDL_GetPointerProperty(container->header.info.props, VIEW_SOURCE, NULL);
+    if (!source) return texture;
+    *layer += container->activeTexture->subresources[0].layer;
+    *level += container->activeTexture->subresources[0].level;
+    return source;
+#else
+    (void)texture; (void)layer; (void)level;
+    return NULL;
+#endif
+}
+
+SDL_GPUTexture *e2d_d3d12_view_create(SDL_GPUDevice *device, SDL_GPUTexture *source,
+    SDL_GPUTextureFormat format, uint32_t layer, uint32_t layers, uint32_t level, uint32_t levels, uint32_t array)
+{
+#if defined(SDL_PLATFORM_WIN32)
+    D3D12TextureContainer *container = (D3D12TextureContainer *)source;
+    SDL_GPUTextureCreateInfo info = container->header.info;
+    if (!e2d_d3d12_view_format(device, &info, format) || array > 1 || !layers || !levels ||
+        layer >= info.layer_count_or_depth || layers > info.layer_count_or_depth - layer ||
+        level >= info.num_levels || levels > info.num_levels - level ||
+        (!array && (layers != 1 || info.layer_count_or_depth != 1)) ||
+        (array && (info.usage & storage))) { SDL_SetError("Unsupported Direct3D 12 source view format, usage or range"); return NULL; }
+
+    // Resolve nested native wrappers to the same physical owner and coordinates.
+    source = e2d_d3d12_view_region(source, &layer, &level);
+    if (!source) return NULL;
+    container = (D3D12TextureContainer *)source;
+    const SDL_GPUTextureCreateInfo *root = &container->header.info;
+    info.type = array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D;
+    info.width = SDL_max(1u, root->width >> level);
+    info.height = SDL_max(1u, root->height >> level);
+    info.layer_count_or_depth = layers;
+    info.num_levels = levels;
+    info.props = 0;
+
+    D3D12TextureContainer *view = make_wrapper(device, &info);
+    if (!view) return NULL;
+    if (!SDL_SetPointerProperty(view->header.info.props, VIEW_SOURCE, source) ||
+        !SDL_SetPointerProperty(SDL_GetGPUDeviceProperties(device), E2D_VIEW_CACHE, device)) {
+        SDL_ReleaseGPUTexture(device, (SDL_GPUTexture *)view);
+        return NULL;
+    }
+
+    const D3D12Renderer *renderer = (const D3D12Renderer *)device->driverData;
+    bind_resource(view, renderer->device, container->activeTexture->resource,
+        &info, SDLToD3D12_TextureFormat[format], layer, level, root->num_levels);
+    container->canBeCycled = false;
+    return (SDL_GPUTexture *)view;
+#else
+    (void)device; (void)source; (void)format; (void)layer; (void)layers; (void)level; (void)levels; (void)array;
+    return NULL;
 #endif
 }

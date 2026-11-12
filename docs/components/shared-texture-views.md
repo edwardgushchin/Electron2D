@@ -1,6 +1,6 @@
 # Shared texture views
 
-Last updated: 2026-11-11
+Last updated: 2026-11-12
 
 `RenderingDevice.TextureCreateShared` exposes the original allocation through a copied
 `RDTextureView`. `TextureCreateSharedFromSlice` selects one original layer and a
@@ -140,6 +140,30 @@ Owned implementation: `RenderingDevice.TextureViews.cs`, `GPUTextureViews.cs`,
 `tools/render-native/views.c` and the existing texture/transfer/descriptor/renderer
 lifetime paths. [ADR 0028](../decisions/rendering.md#adr-0028) owns this boundary.
 
+## Direct3D 12 color views
+
+On the pinned Windows GPU backend, exact-format views share a single-sample
+sampled color allocation. The full view preserves the owner's shape, including
+arrays. A single-layer allocation supports ordinary views over a selected mip
+interval. A one-mip view can serve as a color attachment. A view of an ordinary
+storage image can receive a compute write at its selected base mip. Direct3D 12
+allows disjoint sampled and writable mip ranges in one dispatch and rejects
+overlapping ranges and duplicate writable bindings before entering the native pass.
+
+The wrapper owns SDL descriptor slots and a COM reference to the original
+resource. Color and storage descriptors and barriers address physical
+subresources. Copies and readbacks resolve to the same original coordinates.
+The original RID retires all sibling views after pending work. No persistent
+image allocation is added for a view. The native setup briefly allocates a
+staging texture to acquire SDL's descriptors.
+
+An ordinary view of one layer in a multi-layer resource needs a shader binding
+that translates an ordinary sampled image to a one-layer array SRV. The existing
+[Direct3D 12 array descriptor](https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_tex2d_array_srv)
+provides a first-layer field. Alternate formats need typed views over a compatible
+typeless resource. Depth/stencil, multisample, input attachments and array UAV
+views retain their native adapters as prerequisites.
+
 ## Verification and remaining limits
 
 [DeviceGraphicsStorage.Consumer](../../tests/DeviceGraphicsStorage.Consumer/README.md)
@@ -152,8 +176,12 @@ owner-family retirement, refusal rollback and warmed owner-thread allocations.
 `Electron2DRenderCheck` additionally checks defragmentation pins, direct native
 nested views, deferred unsubmitted commands and mutable allocation accounting.
 
-Linux/Wayland Vulkan is the current exercised platform gate. Native heap churn,
-Metal/D3D12/browser behavior and owner visual acceptance are separate. Native
+Linux/Wayland Vulkan verifies the full Vulkan view profile. The Windows x64
+`gpu-direct3d12-local` and `gpu-direct3d12` import profiles exercise ordinary
+mip views and exact array views with the Direct3D 12 debug layer, including
+physical overlap, framebuffer and compute writes, canvas pixels, and pending
+readback at owner retirement. Native heap churn, Metal/browser behavior,
+release-package qualification and owner visual acceptance retain separate gates. Native
 HLSL input attachments may declare an unspecified depth role; the lowering accepts
 that valid role while retaining explicit depth-input rejection, following
 [SPIR-V OpTypeImage](https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html#OpTypeImage).

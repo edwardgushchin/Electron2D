@@ -18,6 +18,12 @@ state after each pass. Unsupported core or ABI returns 0, incompatible resource
 descriptions return -1 and native wrapper setup failures return -2. See
 [GPU Direct3D 12 texture import](../../docs/components/native-texture-handles.md#importing-gpu-direct3d-12-textures).
 
+View ABI 6 supports exact-format Direct3D 12 color views. SDL-owned slots
+describe the physical SRV, RTV and ordinary UAV subresources. The wrapper
+retains the COM allocation and the managed owner governs root lifetime. ABI 1
+region and overlap queries resolve those views to their original coordinates.
+See [Direct3D 12 color views](../../docs/components/shared-texture-views.md#direct3d-12-color-views).
+
 The current native adapter is Vulkan. It locks the native allocator without
 submitting, waiting for GPU work or invoking application callbacks.
 

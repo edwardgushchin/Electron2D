@@ -147,7 +147,13 @@ internal static unsafe partial class NativeTextureImportTests
         {
             Reject<NotSupportedException>(() => ImportGPU(device, resource, 1, 1, usage: GPUTransfer | Usage.ColorAttachment));
             var sampled = ImportGPU(device, resource, 1, 1);
-            try { Check(device.TextureGetData(sampled, 0).AsSpan().SequenceEqual(GPUMipColors(0).AsSpan(0, Width * Height * 4)), "The sampled-only ABI still imports and reads the same resource."); }
+            try
+            {
+                using var view = new RDTextureView();
+                Reject<NotSupportedException>(() => device.TextureCreateShared(view, sampled));
+                Check(device.TextureGetData(sampled, 0).AsSpan().SequenceEqual(GPUMipColors(0).AsSpan(0, Width * Height * 4)),
+                    "The sampled-only ABI still imports and reads the same resource.");
+            }
             finally { device.FreeRID(sampled); }
             CheckGPUDebug(fixture, resource, debug);
         }
@@ -160,6 +166,7 @@ internal static unsafe partial class NativeTextureImportTests
         VerifyGPUWritable(device, fixture, debug, layers: 1);
         VerifyGPUWritable(device, fixture, debug, layers: 2);
         VerifyGPUWritable(device, fixture, debug, layers: 1, color: false);
+        VerifyGPUSharedMips(device, fixture, debug);
     }
 
     private static void VerifyGPUWritable(RenderingDevice device, nint fixture, bool debug, uint layers, bool color = true)
@@ -227,6 +234,126 @@ internal static unsafe partial class NativeTextureImportTests
         {
             if (imported.IsValid()) device.FreeRID(imported);
             Marshal.Release(resource);
+        }
+    }
+
+    private static void VerifyGPUSharedMips(RenderingDevice device, nint fixture, bool debug)
+    {
+        var resource = CreateGPUResource(device, fixture, 1, Levels, options: 4 | 8);
+        RID imported = default;
+        try
+        {
+            imported = ImportGPU(device, resource, 1, usage: GPUTransfer | Usage.ColorAttachment | Usage.Storage);
+            using var view = new RDTextureView();
+            var whole = device.TextureCreateShared(view, imported);
+            var slice = device.TextureCreateSharedFromSlice(view, whole, 0, 1);
+            var twin = device.TextureCreateSharedFromSlice(view, slice, 0, 1);
+            var baseMip = device.TextureCreateSharedFromSlice(view, slice, 0, 0);
+            var tail = device.TextureCreateSharedFromSlice(view, slice, 0, 2);
+            Check(device.TextureIsShared(slice) && device.GetDriverResource(DriverResource.Texture, slice, 0) == (ulong)resource,
+                "Mip views retain the native producer allocation.");
+            using (var format = device.TextureGetFormat(slice))
+                Check(format.Width == Width >> 1 && format.Height == Height >> 1 && format.MIPMaps == 1, "The selected mip has its own logical extent.");
+
+            var initial = GPUMipColors(0);
+            const int baseBytes = Width * Height * 4, mipBytes = (Width >> 1) * (Height >> 1) * 4;
+            Check(device.TextureGetData(slice, 0).AsSpan().SequenceEqual(initial.AsSpan(baseBytes, mipBytes)), "Readback addresses the physical mip.");
+            Reject<ArgumentException>(() => device.FramebufferCreate([slice, twin]));
+            Reject<ArgumentException>(() => device.TextureCopy(imported, slice, default, default, new(1, 1, 1), 1, 0, 0, 0));
+
+            device.FreeRID(whole);
+            var framebuffer = device.FramebufferCreate([slice]);
+            try
+            {
+                device.DrawListBegin(framebuffer, RenderingDevice.DrawFlags.ClearColor0, [Colors.Magenta]);
+                device.DrawListEnd();
+            }
+            finally { device.FreeRID(framebuffer); }
+
+            var expected = GPUMipColors(0);
+            var mip = MemoryMarshal.Cast<byte, uint>(expected.AsSpan(baseBytes, mipBytes));
+            mip.Fill(0xffff00ffu);
+            Check(device.TextureGetData(imported, 0).AsSpan().SequenceEqual(expected), "Only the selected mip receives the framebuffer clear.");
+
+            var expectedTexels = MemoryMarshal.Cast<byte, uint>(expected.AsSpan());
+            device.TextureCopy(slice, tail, default, default, new(1, 1, 1), 0, 0, 0, 0);
+            expectedTexels[^1] = 0xffff00ffu;
+            Check(device.TextureGetData(imported, 0).AsSpan().SequenceEqual(expected), "Copy between sibling views resolves both physical mip levels.");
+
+            VerifyGPUComputeAliases(device, slice, twin, baseMip, tail);
+            mip[0] = 0xff0000ffu;
+            expectedTexels[^1] = 0xffffffffu;
+            Check(device.TextureGetData(imported, 0).AsSpan().SequenceEqual(expected),
+                "The compute shader reads mip zero and writes mips one and two of the same allocation.");
+
+            byte[]? readback = null;
+            device.TextureGetDataAsync(twin, 0, bytes => readback = bytes);
+            device.FreeRID(imported);
+            imported = default;
+            Check(!device.TextureIsValid(slice) && !device.TextureIsShared(twin) && !device.TextureIsValid(baseMip) && !device.TextureIsValid(tail) &&
+                readback is not null && readback.AsSpan().SequenceEqual(expected.AsSpan(baseBytes, mipBytes)),
+                "Owner retirement drains the view readback and expires every sibling.");
+            RewriteGPUResource(fixture, resource, 3);
+            imported = ImportGPU(device, resource, 1);
+            Check(device.TextureGetData(imported, 0).AsSpan().SequenceEqual(GPUMipColors(3)), "The producer can rewrite all returned mip states.");
+            CheckGPUDebug(fixture, resource, debug);
+        }
+        finally
+        {
+            if (imported.IsValid()) device.FreeRID(imported);
+            Marshal.Release(resource);
+        }
+    }
+
+    private static void VerifyGPUComputeAliases(RenderingDevice device, RID destination, RID overlapping, RID disjoint, RID tail)
+    {
+        using var stream = typeof(NativeTextureImportTests).Assembly.GetManifestResourceStream("Electron2D.Compute.Direct3DSharedView.comp.spv")!;
+        using var bytes = new MemoryStream();
+        stream.CopyTo(bytes);
+        using var module = new RDShaderSPIRV { BytecodeCompute = bytes.ToArray() };
+        using var image = new RDUniform { Binding = 0, UniformType = RenderingDevice.UniformType.Image };
+        using var sample = new RDUniform { Binding = 1, UniformType = RenderingDevice.UniformType.SamplerWithTexture };
+        using var other = new RDUniform { Binding = 2, UniformType = RenderingDevice.UniformType.Image };
+        using var state = new RDSamplerState();
+        image.AddID(destination);
+        var shader = device.ShaderCreateFromSPIRV(module);
+        var sampler = device.SamplerCreate(state);
+        try
+        {
+            var pipeline = device.ComputePipelineCreate(shader);
+            var overlapSample = Bind(overlapping, tail);
+            var overlapWrite = Bind(disjoint, overlapping);
+            var valid = Bind(disjoint, tail);
+            var list = device.ComputeListBegin();
+            try
+            {
+                device.ComputeListBindComputePipeline(list, pipeline);
+                device.ComputeListBindUniformSet(list, overlapSample, 0);
+                Reject<NotSupportedException>(() => device.ComputeListDispatch(list, 1, 1, 1));
+                device.ComputeListBindUniformSet(list, overlapWrite, 0);
+                Reject<NotSupportedException>(() => device.ComputeListDispatch(list, 1, 1, 1));
+                device.ComputeListBindUniformSet(list, valid, 0);
+                for (var i = 0; i < 8; i++) device.ComputeListDispatch(list, 1, 1, 1);
+                var before = GC.GetAllocatedBytesForCurrentThread();
+                for (var i = 0; i < 64; i++) device.ComputeListDispatch(list, 1, 1, 1);
+                Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed shared-view compute dispatches allocate no managed owner bytes.");
+            }
+            finally { device.ComputeListEnd(); }
+        }
+        finally
+        {
+            device.FreeRID(shader);
+            device.FreeRID(sampler);
+        }
+
+        RID Bind(RID sampled, RID secondWrite)
+        {
+            sample.ClearIDs();
+            sample.AddID(sampler);
+            sample.AddID(sampled);
+            other.ClearIDs();
+            other.AddID(secondWrite);
+            return device.UniformSetCreate([image, sample, other], shader, 0);
         }
     }
 
@@ -305,11 +432,64 @@ internal static unsafe partial class NativeTextureImportTests
                 RenderingServer.CanvasItemAddRect(arrayItem, new(24, 0, 20, 12), Colors.White);
 
                 Draw(Colors.Red, Colors.Blue);
+                using var view = new RDTextureView();
+                Reject<NotSupportedException>(() => device.TextureCreateSharedFromSlice(view, arrayDevice, 1, 0));
+                var singleDevice = RenderingServer.TextureGetRDTexture(singleLayer);
+                var singleView = device.TextureCreateSharedFromSlice(view, singleDevice, 0, 0);
+                using (var singleFormat = device.TextureGetFormat(singleView))
+                    Check(singleFormat.TextureType == DeviceShape.Texture, "A one-layer array can provide an ordinary view.");
+                device.FreeRID(singleView);
+                var arrayView = device.TextureCreateShared(view, arrayDevice);
+                var viewCanvas = Track(RenderingServer.TextureRDCreate(arrayView));
+                RenderingServer.MaterialSetParam(material, "layers", viewCanvas);
+                Draw(Colors.Red, Colors.Blue);
+                for (var i = 0; i < 24; i++) RenderingServer.ForceDraw(swapBuffers: false);
+                var beforeView = GC.GetAllocatedBytesForCurrentThread();
+                for (var i = 0; i < 64; i++) RenderingServer.ForceDraw(swapBuffers: false);
+                Check(GC.GetAllocatedBytesForCurrentThread() == beforeView, "Warmed array view sampling allocates no managed owner bytes.");
+                RenderingServer.MaterialSetParam(material, "layers", layeredProxy);
+                RenderingServer.FreeRID(viewCanvas);
+                rids.Remove(viewCanvas);
+                device.FreeRID(arrayView);
+
+                var mipResource = CreateGPUResource(device, fixture, 1, Levels);
+                resources.Add(mipResource);
+                var mipRoot = ImportGPU(device, mipResource, 1);
+                try
+                {
+                    var mipView = device.TextureCreateSharedFromSlice(view, mipRoot, 0, 1);
+                    var mipCanvas = Track(RenderingServer.TextureRDCreate(mipView));
+                    var mipItem = Track(RenderingServer.CanvasItemCreate());
+                    RenderingServer.CanvasItemSetParent(mipItem, canvas);
+                    RenderingServer.CanvasItemAddTextureRect(mipItem, new(0, 12, 12, 8), mipCanvas);
+                    RenderingServer.ForceDraw();
+                    using var pixels = output.GetImage();
+                    Check(pixels?.GetPixel(5, 16) == Colors.Green, "Canvas sampling selects mip one of the native image.");
+                    RenderingServer.FreeRID(mipItem);
+                    rids.Remove(mipItem);
+                    RenderingServer.FreeRID(mipCanvas);
+                    rids.Remove(mipCanvas);
+                }
+                finally { device.FreeRID(mipRoot); }
+
                 using (var layer = RenderingServer.Texture2DLayerGet(layeredProxy, 1))
                     Check(layer?.GetPixel(0, 0) == Colors.Blue, "Layered readback samples the producer's second layer.");
                 RenderingServer.Texture2DUpdate(imageRID, source);
                 RenderingServer.Texture2DUpdate(arrayRID, source, 1);
                 Draw(Colors.Yellow, Colors.Yellow);
+
+                var viewportDevice = RenderingServer.TextureGetRDTexture(output.GetRID());
+                var viewportView = device.TextureCreateShared(view, viewportDevice);
+                try
+                {
+                    var first = device.GetDriverResource(DriverResource.Texture, viewportView, 0);
+                    RenderingServer.Texture2DUpdate(imageRID, source);
+                    Draw(Colors.Yellow, Colors.Yellow);
+                    var next = device.GetDriverResource(DriverResource.Texture, viewportView, 0);
+                    Check(first != next && next == device.GetDriverResource(DriverResource.Texture, viewportDevice, 0),
+                        "Viewport views follow each completed Direct3D 12 buffer.");
+                }
+                finally { device.FreeRID(viewportView); }
 
                 RenderingServer.TextureReplace(oldCPU, imageRID);
                 rids.Remove(imageRID);

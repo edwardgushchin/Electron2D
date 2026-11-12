@@ -1,4 +1,5 @@
 #include "pinned-core.h"
+#include "d3d12-views.h"
 #include <stdint.h>
 #define E2D_RENDER_FILTERING
 #include "memory-layout.h"
@@ -11,7 +12,6 @@
 #define E2D_EXPORT __attribute__((visibility("default")))
 #endif
 
-#define VIEW_CACHE "Electron2D.render.texture_views"
 #define VULKAN_API_VERSION "Electron2D.gpu.vulkan_api_version"
 typedef struct View {
     SDL_GPUTexture *handle, *root;
@@ -34,7 +34,9 @@ static bool compatible(SDL_GPUDevice *device)
 }
 E2D_EXPORT int e2d_render_view_support(SDL_GPUDevice *device, uint32_t abi)
 {
-    if (!device || (abi != 1 && abi != 2 && abi != 4 && abi != 5)) return -1;
+    if (!device) return -1;
+    if (abi == E2D_D3D12_VIEW_ABI) return e2d_d3d12_device(device);
+    if (abi != 1 && abi != 2 && abi != 4 && abi != 5) return -1;
     if (!compatible(device)) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     if (!r || !r->vkCreateImage || !r->vkCreateImageView || !r->vkAllocateMemory || !r->vkBindImageMemory || !r->vkCmdPipelineBarrier) return 0;
@@ -58,15 +60,15 @@ static void SDLCALL free_cache(void *unused, void *value)
 static ViewCache *view_cache(SDL_GPUDevice *device, bool create)
 {
     SDL_PropertiesID props = SDL_GetGPUDeviceProperties(device);
-    if (!create) return SDL_GetPointerProperty(props, VIEW_CACHE, NULL);
+    if (!create) return SDL_GetPointerProperty(props, E2D_VIEW_CACHE, NULL);
     if (!SDL_LockProperties(props)) return NULL;
-    ViewCache *cache = SDL_GetPointerProperty(props, VIEW_CACHE, NULL);
+    ViewCache *cache = SDL_GetPointerProperty(props, E2D_VIEW_CACHE, NULL);
     if (!cache && create) {
         cache = SDL_calloc(1, sizeof(*cache));
         if (cache) {
             cache->lock = SDL_CreateMutex();
             if (!cache->lock) { SDL_free(cache); cache = NULL; }
-            else if (!SDL_SetPointerPropertyWithCleanup(props, VIEW_CACHE, cache, free_cache, NULL)) cache = NULL;
+            else if (!SDL_SetPointerPropertyWithCleanup(props, E2D_VIEW_CACHE, cache, free_cache, NULL)) cache = NULL;
         }
     }
     SDL_UnlockProperties(props); return cache;
@@ -269,7 +271,9 @@ E2D_EXPORT void e2d_render_views_collect(SDL_GPUDevice *device, uint32_t abi)
 }
 E2D_EXPORT void e2d_render_view_destroy(SDL_GPUDevice *device, uint32_t abi, SDL_GPUTexture *texture)
 {
-    if (!texture || !device || abi != 1 || !compatible(device)) return;
+    if (!texture || !device) return;
+    if (abi == E2D_D3D12_VIEW_ABI) { if (e2d_d3d12_device(device)) SDL_ReleaseGPUTexture(device, texture); return; }
+    if (abi != 1 || !compatible(device)) return;
     ViewCache *cache = view_cache(device, false); if (!cache) return;
     SDL_LockMutex(cache->lock);
     for (View *v = cache->views; v; v = v->next) if (v->handle == texture) { v->retired = true; break; }
@@ -282,11 +286,12 @@ E2D_EXPORT void e2d_render_views_release(SDL_GPUDevice *device, uint32_t abi)
     SDL_LockMutex(cache->lock); for (View *v = cache->views; v; v = v->next) v->retired = true; SDL_UnlockMutex(cache->lock);
     e2d_render_views_collect(device, 1);
     if (cache->views) SDL_LogError(SDL_LOG_CATEGORY_GPU, "Unsubmitted commands retain native texture views");
-    else SDL_ClearProperty(SDL_GetGPUDeviceProperties(device), VIEW_CACHE);
+    else SDL_ClearProperty(SDL_GetGPUDeviceProperties(device), E2D_VIEW_CACHE);
 }
 E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_t abi, SDL_GPUTexture *source, SDL_GPUTextureFormat format, uint32_t layer, uint32_t layers, uint32_t level, uint32_t levels, uint32_t array)
 {
     if (e2d_render_view_support(device, abi) != 1 || !source || !layers || !levels || array > 2 || (!array && layers != 1) || (array == 2 && (abi != 2 || levels != 1))) return NULL;
+    if (abi == E2D_D3D12_VIEW_ABI) return e2d_d3d12_view_create(device, source, format, layer, layers, level, levels, array);
     VulkanRenderer *r = (VulkanRenderer *)device->driverData; VulkanTextureContainer *src = (VulkanTextureContainer *)source;
     bool sampled_only = abi == 4;
     if (sampled_only && (!(src->header.info.usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) || e2d_stencil_info(&src->header.info))) return NULL;
@@ -384,7 +389,9 @@ fail:
 
 E2D_EXPORT SDL_GPUTexture *e2d_render_view_region(SDL_GPUDevice *device, uint32_t abi, SDL_GPUTexture *texture, uint32_t *layer, uint32_t *level)
 {
-    if (!texture || !layer || !level || abi != 1 || !compatible(device)) return NULL;
+    if (!texture || !layer || !level || abi != 1) return NULL;
+    if (e2d_d3d12_device(device)) return e2d_d3d12_view_region(texture, layer, level);
+    if (!compatible(device)) return NULL;
     const SDL_GPUTextureCreateInfo *info = &((VulkanTextureContainer *)texture)->header.info;
     if (*layer >= info->layer_count_or_depth || *level >= info->num_levels) return NULL;
     ViewCache *cache = view_cache(device, false); if (!cache) return texture;
@@ -400,6 +407,7 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_region(SDL_GPUDevice *device, uint32_
 E2D_EXPORT int e2d_render_view_format_support(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextureCreateInfo *info, SDL_GPUTextureFormat format)
 {
     if (!info || e2d_render_view_support(device, abi) != 1) return 0;
+    if (abi == E2D_D3D12_VIEW_ABI) return e2d_d3d12_view_format(device, info, format);
     if (info->sample_count > SDL_GPU_SAMPLECOUNT_8) return 0;
     if (e2d_stencil_info(info)) return info->format == SDL_GPU_TEXTUREFORMAT_R8_UINT && format == info->format ? e2d_render_stencil_support(device, 1, info->usage, info->sample_count) : 0;
     if (!compatible_format(info->format, format) || !format_supported(device, format, info->type, info->usage)) return 0;
@@ -416,7 +424,22 @@ E2D_EXPORT int e2d_render_view_format_support(SDL_GPUDevice *device, uint32_t ab
 typedef struct TextureRange { SDL_GPUTexture *texture; uint32_t layer, layers, level, levels; } TextureRange;
 E2D_EXPORT int e2d_render_view_overlap(SDL_GPUDevice *device, uint32_t abi, const TextureRange *a, const TextureRange *b)
 {
-    if (!a || !b || !a->texture || !b->texture || !a->layers || !b->layers || !a->levels || !b->levels || abi != 1 || !compatible(device)) return -1;
+    if (!a || !b || !a->texture || !b->texture || !a->layers || !b->layers || !a->levels || !b->levels || abi != 1) return -1;
+    if (e2d_d3d12_device(device)) {
+        uint32_t al = a->layer, bl = b->layer, am = a->level, bm = b->level;
+        SDL_GPUTexture *x = e2d_d3d12_view_region(a->texture, &al, &am);
+        SDL_GPUTexture *y = e2d_d3d12_view_region(b->texture, &bl, &bm);
+        if (!x || !y) return -1;
+        if (x != y) return 0;
+        const SDL_GPUTextureCreateInfo *ai = &((const TextureCommonHeader *)a->texture)->info;
+        const SDL_GPUTextureCreateInfo *bi = &((const TextureCommonHeader *)b->texture)->info;
+        const uint32_t a_layers = SDL_min(a->layers, ai->layer_count_or_depth - a->layer);
+        const uint32_t b_layers = SDL_min(b->layers, bi->layer_count_or_depth - b->layer);
+        const uint32_t a_levels = SDL_min(a->levels, ai->num_levels - a->level);
+        const uint32_t b_levels = SDL_min(b->levels, bi->num_levels - b->level);
+        return al < bl + b_layers && bl < al + a_layers && am < bm + b_levels && bm < am + a_levels;
+    }
+    if (!compatible(device)) return -1;
     VulkanTexture *x = ((VulkanTextureContainer *)a->texture)->activeTexture, *y = ((VulkanTextureContainer *)b->texture)->activeTexture;
     if (!x || !y) return -1;
     if (x->image != y->image) return 0;

@@ -20,7 +20,21 @@ public sealed unsafe partial class RenderingDevice
     }
     private bool UseNativeComputeImages(nint* images, uint imageCount, SDL.GPUTextureSamplerBinding* samplers, uint samplerCount)
     {
-        if (TextureDriver != "vulkan" || imageCount == 0) return false;
+        if (imageCount == 0) return false;
+        if (TextureDriver == "direct3d12")
+        {
+            // SDL transitions each writable slot. An aliased mip would be transitioned twice.
+            for (var i = 0; i < imageCount; i++)
+                for (var j = 0; j < i; j++)
+                    if (GPUTextureViews.Overlap(Device, images[i], 1, 1, images[j], 1, 1))
+                        throw new NotSupportedException("Direct3D 12 cannot bind one subresource to multiple writable compute slots.");
+            for (var i = 0; i < samplerCount; i++)
+                for (var j = 0; j < imageCount; j++)
+                    if (GPUTextureViews.Overlap(Device, images[j], 1, 1, samplers[i].Texture, uint.MaxValue, uint.MaxValue))
+                        throw new NotSupportedException("Direct3D 12 cannot sample a subresource during a compute write to it.");
+            return false;
+        }
+        if (TextureDriver != "vulkan") return false;
         if ((_storageArrayViewSupport ??= GPUTextureViews.Support(Device, 2)) != 1)
         {
             for (var i = 0; i < samplerCount; i++) for (var j = 0; j < imageCount; j++)
