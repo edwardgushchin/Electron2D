@@ -1,6 +1,81 @@
 {
   "mappings": [
     {
+      "godot": "RenderingDevice::enum:DriverResource",
+      "electron2d": "T:Electron2D.RenderingDevice.DriverResource",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_LOGICAL_DEVICE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.LogicalDevice()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_PHYSICAL_DEVICE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.PhysicalDevice()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_TOPMOST_OBJECT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.TopmostObject()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_COMMAND_QUEUE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.CommandQueue()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_QUEUE_FAMILY",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.QueueFamily()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_TEXTURE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.Texture()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_TEXTURE_VIEW",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.TextureView()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_TEXTURE_DATA_FORMAT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.TextureDataFormat()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_SAMPLER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.Sampler()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_UNIFORM_SET",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.UniformSet()",
+      "reason": "ADR 0028: logical sets copy managed bindings. SDL allocates and recycles native descriptor sets per recorded command and pipeline layout. An independently queryable set needs a retained native descriptor producer and retirement contract. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_BUFFER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.Buffer()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_COMPUTE_PIPELINE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.ComputePipeline()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_RENDER_PIPELINE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DriverResource.RenderPipeline()",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md."
+    },
+    {
+      "godot": "RenderingDevice::method:get_driver_resource(int:RenderingDevice.DriverResource,RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.GetDriverResource(Electron2D.RenderingDevice.DriverResource,Electron2D.RID,System.Int32)",
+      "reason": "ADR 0028: the pinned SDL Vulkan bridge returns borrowed native instance, devices, queue and family, image, view, effective format, sampler, buffer and pipelines. The query observes current storage without recording work. Other native drivers need their adapters. Logical uniform sets need a retained native descriptor-set lifetime. See docs/components/driver-resources.md."
+    },
+    {
       "godot": "RenderingDevice::method:draw_command_begin_label(String:,Color:)",
       "electron2d": "method:Electron2D.RenderingDevice.DrawCommandBeginLabel(System.String,Electron2D.Color)",
       "state": "Partial",
@@ -4454,6 +4529,39 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities and resolve actual Vulkan objects or driver numbers on the matched native core. See docs/components/driver-resources.md.",
+      "godot": [
+        "RenderingDevice::enum:DriverResource",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_LOGICAL_DEVICE",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_PHYSICAL_DEVICE",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_TOPMOST_OBJECT",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_COMMAND_QUEUE",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_QUEUE_FAMILY",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_TEXTURE",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_TEXTURE_VIEW",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_TEXTURE_DATA_FORMAT",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_SAMPLER",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_BUFFER",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_COMPUTE_PIPELINE",
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_RENDER_PIPELINE"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0028: the pinned SDL Vulkan bridge returns borrowed native instance, devices, queue and family, image, view, effective format, sampler, buffer and pipelines. The query observes current storage without recording work. Other native drivers need their adapters. Logical uniform sets need a retained native descriptor-set lifetime. See docs/components/driver-resources.md.",
+      "godot": [
+        "RenderingDevice::method:get_driver_resource(int:RenderingDevice.DriverResource,RID:,int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0028: logical sets copy managed bindings. SDL allocates and recycles native descriptor sets per recorded command and pipeline layout. An independently queryable set needs a retained native descriptor producer and retirement contract. See docs/components/driver-resources.md.",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_UNIFORM_SET"
+      ]
+    },
     {
       "godot": [
         "RDSamplerState::property:repeat_u",

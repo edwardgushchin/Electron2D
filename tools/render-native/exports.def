@@ -6,6 +6,7 @@ EXPORTS
     e2d_render_limits
     e2d_render_adapter_identity
     e2d_render_resource_name
+    e2d_render_driver_resource
     e2d_render_command_label
     e2d_render_memory
     e2d_render_sampler

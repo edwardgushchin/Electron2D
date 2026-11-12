@@ -1553,3 +1553,7 @@ Multisample sampled color/depth targets now support explicit compute/vertex/frag
 [Stencil-only S8UINT](../components/stencil-textures.md) executes one-byte data, stencil state, unsigned sampling/inputs and sample-zero resolve with the existing ownership rules.
 
 Direct3D 12 links vertex/fragment signatures on private native copies before compiling DXIL. Sparse fragment inputs retain their locations and interpolation, including when pipeline specialization or output remapping creates a new pair. See [Direct3D 12 stage linkage](../components/shader-materials.md#direct3d-12-stage-linkage).
+
+## Native driver resources
+
+`GetDriverResource` queries the current native device, queue, image, image view, effective format, sampler, buffer or pipeline. Use a typed `DriverResource` selector and a live device-owned RID for resource-specific queries. See [driver resources](../components/driver-resources.md).

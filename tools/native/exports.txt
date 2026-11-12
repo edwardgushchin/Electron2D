@@ -91,6 +91,7 @@ e2d_render_images_pipeline
 e2d_render_limits
 e2d_render_adapter_identity
 e2d_render_resource_name
+e2d_render_driver_resource
 e2d_render_command_label
 e2d_render_line_pipeline
 e2d_render_line_support

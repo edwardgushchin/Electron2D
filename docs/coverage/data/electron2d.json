@@ -10951,6 +10951,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingDevice.DriverResource",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "DriverResource",
+    "signature": "public enum Electron2D.RenderingDevice.DriverResource",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingDevice.Features",
     "kind": "type",
     "declaringType": "Electron2D.RenderingDevice.Features",
@@ -55392,6 +55410,175 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.DrawFlags",
     "value": "524288"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.Buffer()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "Buffer",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource Buffer = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.CommandQueue()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "CommandQueue",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource CommandQueue = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.ComputePipeline()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "ComputePipeline",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource ComputePipeline = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.LogicalDevice()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "LogicalDevice",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource LogicalDevice = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.PhysicalDevice()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "PhysicalDevice",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource PhysicalDevice = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.QueueFamily()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "QueueFamily",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource QueueFamily = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.RenderPipeline()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "RenderPipeline",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource RenderPipeline = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.Sampler()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "Sampler",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource Sampler = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.Texture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "Texture",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource Texture = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.TextureDataFormat()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "TextureDataFormat",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource TextureDataFormat = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.TextureView()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "TextureView",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource TextureView = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.TopmostObject()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "TopmostObject",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource TopmostObject = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DriverResource.UniformSet()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DriverResource",
+    "name": "UniformSet",
+    "signature": "public const Electron2D.RenderingDevice.DriverResource UniformSet = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DriverResource",
+    "value": "9"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.Features.SupportsBufferDeviceAddress()",
@@ -180314,6 +180501,35 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.GetDriverResource(Electron2D.RenderingDevice.DriverResource,Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetDriverResource",
+    "signature": "public System.UInt64 GetDriverResource(Electron2D.RenderingDevice.DriverResource resource, Electron2D.RID rid, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "resource",
+        "type": "Electron2D.RenderingDevice.DriverResource",
+        "default": null
+      },
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
