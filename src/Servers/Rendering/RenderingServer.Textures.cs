@@ -10,8 +10,15 @@ public sealed partial class RenderingServer
     {
         EnsureTextureChange();
         var texture = new ServerTexture(TexturePixels.FromImage(image));
+        return OwnTexture(texture);
+    }
+
+    private RID OwnTexture(ServerTexture texture)
+    {
+        _ownedTextureRIDs.EnsureCapacity(_ownedTextureRIDs.Count + 1);
         var rid = RenderingTextureRegistry.Register(texture, this);
-        texture.Bind(rid); _ownedTextureRIDs.Add(rid);
+        texture.Bind(rid);
+        _ownedTextureRIDs.Add(rid);
         return rid;
     }
 
@@ -66,12 +73,14 @@ public sealed partial class RenderingServer
         {
             if (texture == byTexture) return;
             ValidateReplacementStorage(array, array.DeviceTexture?.TextureRDRID ?? default,
-                byArray.DeviceTexture?.TextureRDRID ?? default, array: true);
+                byArray.DeviceTexture?.TextureRDRID ?? default, array.OwnedDeviceImage, array: true);
+            var retiredImport = RetireTextureImport(array);
             var retireUpload = array.DeviceTexture is null && byArray.DeviceTexture is not null;
             array.TakeStorage(byArray);
             if (retireUpload && _backend is GPUCanvasBackend gpu) gpu.RetireReplacedUpload(array);
             RedirectTextureAliases(byTexture, texture);
             FreeRIDCore(byTexture);
+            retiredImport?.DeliverCanvasImportReadbacks();
             return;
         }
         if (destination is not ServerTexture { IsProxy: false } target ||
@@ -80,20 +89,22 @@ public sealed partial class RenderingServer
         if (texture == byTexture) return;
 
         ValidateReplacementStorage(target, target.DeviceTexture?.TextureRDRID ?? default,
-            source.DeviceTexture?.TextureRDRID ?? default, array: false);
+            source.DeviceTexture?.TextureRDRID ?? default, target.OwnedDeviceImage, array: false);
+        var retiredOrdinaryImport = RetireTextureImport(target);
         var retireOrdinaryUpload = target.DeviceTexture is null && source.DeviceTexture is not null;
         target.TakeStorage(source);
         if (retireOrdinaryUpload && _backend is GPUCanvasBackend backend) backend.RetireReplacedUpload(target);
         if (target.NativeTexture is not null) _backend.ReleaseTemporaryTexture(target);
         RedirectTextureAliases(byTexture, texture);
         FreeRIDCore(byTexture);
+        retiredOrdinaryImport?.DeliverCanvasImportReadbacks();
     }
 
-    private void ValidateReplacementStorage(Resource target, RID previous, RID incoming, bool array)
+    private void ValidateReplacementStorage(Resource target, RID previous, RID incoming, RID retiringImport, bool array)
     {
         if (!previous.IsValid() && !incoming.IsValid()) return;
         var device = GetRenderingDeviceCore() ?? throw new InvalidOperationException("A GPU renderer is required.");
-        if (incoming.IsValid()) device.ValidateCanvasReplacement(incoming, array, target);
+        if (incoming.IsValid()) device.ValidateCanvasReplacement(incoming, array, target, retiringImport);
         else device.ValidateCanvasMutation();
     }
     private void RedirectTextureAliases(RID source, RID target)
@@ -197,11 +208,29 @@ public sealed partial class RenderingServer
         if (RenderingMeshRegistry.Contains(rid)) { var mesh = RenderingMeshRegistry.Owned(rid, this); _ownedMeshRIDs.Remove(rid); RenderingMeshRegistry.Remove(rid); mesh.Dispose(); return; }
         var texture = RenderingTextureRegistry.OwnedResource(rid, this);
         if (texture is DrawableTexture writable) writable.EnsureCanRelease();
+        var retiredImport = RetireTextureImport(texture);
         _ownedTextureRIDs.Remove(rid); RenderingTextureRegistry.Remove(rid);
         if (rid == _testTextureRID) _testTextureRID = default;
         if (rid == _whiteTextureRID) _whiteTextureRID = default;
         if (texture is DrawableTexture drawable) drawable.ServerReleased = true; else if (texture is ServerTexture ordinary) ordinary.Released = true; else if (texture is TextureLayered layered) layered.ServerReleased = true;
         texture.Dispose();
+        retiredImport?.DeliverCanvasImportReadbacks();
+    }
+
+    private RenderingDevice? RetireTextureImport(Resource texture)
+    {
+        var imported = texture switch
+        {
+            ServerTexture ordinary => ordinary.OwnedDeviceImage,
+            ServerTextureArray array => array.OwnedDeviceImage,
+            _ => default
+        };
+        if (!imported.IsValid()) return null;
+        var device = _renderingDevice!;
+        device.RetireCanvasImport(imported);
+        if (texture is ServerTexture ordinaryTexture) ordinaryTexture.OwnedDeviceImage = default;
+        else ((ServerTextureArray)texture).OwnedDeviceImage = default;
+        return device;
     }
 
     private void EnsureTextureChange()

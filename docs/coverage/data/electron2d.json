@@ -58225,6 +58225,19 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.RenderingServer.TextureType.Layered()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.TextureType",
+    "name": "Layered",
+    "signature": "public const Electron2D.RenderingServer.TextureType Layered = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.TextureType",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingServer.TextureType.Texture()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingServer.TextureType",

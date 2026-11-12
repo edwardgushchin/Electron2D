@@ -330,7 +330,10 @@ public sealed partial class RenderingServer
     /// <param name="texture">The destination RID whose identity and retained draw references survive.</param>
     /// <param name="byTexture">The replacement RID, consumed after the transfer.</param>
     /// <remarks>Both RIDs must belong to this renderer. Replacing a texture with itself does nothing.
-    /// Ordinary textures and independent arrays can switch between copied images and borrowed device images. Different dimensions, formats and mipmap state are allowed; old recorded geometry remains fixed.</remarks>
+    /// Ordinary textures and independent arrays can switch between copied, borrowed or imported device images.
+    /// An imported image's device ownership moves with its storage. Retiring a previous import completes pending work
+    /// before callbacks observe the committed replacement. Dimensions, formats and mipmap state may differ; old recorded geometry remains fixed.</remarks>
+    /// <exception cref="AggregateException">A readback callback failed after an imported image was replaced.</exception>
     /// <exception cref="ArgumentException">A RID is stale or not a texture.</exception>
     /// <exception cref="InvalidOperationException">An identity is resource-owned, the texture roles differ, the replacement depends on the retired allocation, or the active renderer state rejects mutation.</exception>
     /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
@@ -404,12 +407,14 @@ public sealed partial class RenderingServer
     /// <summary>Releases a caller-owned rendering texture, mesh, instance, palette, shader, material, canvas, canvas item, environment or offscreen viewport identity.</summary>
     /// <param name="rid">A live supported RID owned by this renderer.</param>
     /// <remarks>Resource-owned identities must be released by their resource. Retained commands stop drawing freed
-    /// server textures; drawing a disposed mesh reports the borrowed-resource lifetime error. Freed palettes
+    /// server textures. Freeing a native Vulkan import also retires its device identity and views, and drains pending
+    /// work before readback callbacks run. Drawing a disposed mesh reports the borrowed-resource lifetime error. Freed palettes
     /// restore unskinned geometry. Freed materials select ordinary canvas colors; freeing a shader clears its owned material bindings. Freeing a canvas/item disconnects its render children without freeing their identities; they can be reparented. Borrowed scene canvas/skeleton identities remain scene-owned. Owned viewport release retires its native targets and texture view and detaches rendering children; scene viewports remain scene-owned. Freeing an owned environment restores scene selection in its bound worlds. Active palette replay forbids free.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or not a supported rendering resource.</exception>
     /// <exception cref="InvalidOperationException">The owner is different or the renderer is off-owner/submitting.</exception>
     /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
+    /// <exception cref="AggregateException">A readback callback failed after an imported image was released.</exception>
     public static void FreeRID(RID rid) => RequireService().FreeRIDCore(rid);
 
     /// <summary>Gets or sets whether Engine.Run submits canvas frames.</summary>

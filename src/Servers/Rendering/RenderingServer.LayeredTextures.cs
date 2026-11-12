@@ -40,7 +40,11 @@ public sealed partial class RenderingServer
     }
     private RID OwnLayered(TextureLayered resource)
     {
-        resource.ServerOwner = this; var rid = resource.GetRID(); _ownedTextureRIDs.Add(rid); return rid;
+        _ownedTextureRIDs.EnsureCapacity(_ownedTextureRIDs.Count + 1);
+        resource.ServerOwner = this;
+        var rid = resource.GetRID();
+        _ownedTextureRIDs.Add(rid);
+        return rid;
     }
     internal Image? Texture2DLayerGetCore(RID rid, int layer) { EnsureOwner(); return RenderingTextureRegistry.ResolveLayered(rid).GetLayerData(layer); }
 }

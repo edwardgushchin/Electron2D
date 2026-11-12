@@ -66,7 +66,11 @@ internal static unsafe partial class NativeTextureImportTests
             }
             else
             {
-                Reject<NotSupportedException>(() => Import(1));
+                if (profile == "vulkan")
+                    Reject<NotSupportedException>(() => RenderingServer.TextureCreateFromNativeHandle(
+                        RenderingServer.TextureType.Texture, Image.Format.Rgb8, 1, Width, Height, 1));
+                else
+                    Reject<NotSupportedException>(() => Import(1));
                 RenderingServer.ForceDraw();
                 using var image = output.GetImage();
                 Check(image is not null, "Explicit refusal preserves ordinary rendering.");

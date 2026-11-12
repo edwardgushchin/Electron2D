@@ -64,6 +64,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal List<RID>? TextureViews;
         internal RenderHandle? TextureAllocation;
         internal RendererTextureBorrow? Borrowed;
+        internal bool ServerOwnsTexture;
         internal MultiMeshGPUState? MeshOwner;
         internal bool MeshCommand, MeshExported;
         internal bool Expired;
@@ -526,18 +527,28 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <summary>Frees a resource after completing pending work.</summary>
     /// <param name="rid">A live identity owned by this device.</param>
     /// <remarks>Borrowed renderer image identities release their wrapper and leases, preserving source ownership.
-    /// Live renderer-owned instance buffers retain their resource lifetime and cannot be freed directly.
+    /// Live renderer-owned instance buffers and server-imported texture roots cannot be freed directly.
     /// Expired borrowed identities may still be freed. Shared texture views are automatically freed with their original owner.
     /// Cached sRGB exports also expire when their source view is freed. Other borrowers become invalid and may still be freed explicitly. Pending readbacks complete
     /// before removal; their callbacks run after the resource is removed.</remarks>
     /// <exception cref="AggregateException">One or more completed readback callbacks failed.</exception>
-    /// <exception cref="InvalidOperationException">A live instance buffer has resource-owned lifetime, or owner/list/native state is invalid.</exception>
+    /// <exception cref="InvalidOperationException">Another resource owns the RID lifetime, or owner/list/native state is invalid.</exception>
     public void FreeRID(RID rid)
     {
-        IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); if (entry.MeshOwner is not null && entry.Alive) throw new InvalidOperationException("The instance resource owns this retained buffer lifetime."); CompleteSubmission();
+        IdleList();
+        if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid));
+        if (entry.MeshOwner is not null && entry.Alive) throw new InvalidOperationException("The instance resource owns this retained buffer lifetime.");
+        if (entry.ServerOwnsTexture) throw new InvalidOperationException("The rendering server owns this imported texture lifetime.");
+        RetireRID(rid, entry);
+        DeliverReadbacks();
+    }
+
+    private void RetireRID(RID rid, Entry entry)
+    {
+        CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         RenderingServer.NotifyRenderMutation();
-        ReleaseEntry(rid, entry); DeliverReadbacks();
+        ReleaseEntry(rid, entry);
     }
     private void ReleaseEntry(RID rid, Entry entry)
     {

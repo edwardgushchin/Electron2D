@@ -20,11 +20,12 @@ public sealed unsafe partial class RenderingDevice
         if ((info.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("The image has no sampling role.", nameof(rid));
         return info;
     }
-    internal void ValidateCanvasReplacement(RID rid, bool array, Resource destination)
+    internal void ValidateCanvasReplacement(RID rid, bool array, Resource destination, RID retiringImport)
     {
         ValidateCanvasImage(rid, array);
         var entry = Get(rid, Kind.Texture);
-        if (ReferenceEquals((entry.TextureSource ?? entry).Borrowed?.Source, destination))
+        if ((retiringImport.IsValid() && (retiringImport == rid || retiringImport == entry.TextureOwner)) ||
+            ReferenceEquals((entry.TextureSource ?? entry).Borrowed?.Source, destination))
             throw new InvalidOperationException("The replacement image borrows the allocation that this operation would retire.");
     }
 
@@ -177,6 +178,35 @@ public sealed unsafe partial class RenderingDevice
         if (!complete && info.Mips > 1) bytes = bytes.AsSpan(0, Image.GetRequiredDataSize((int)info.Width, (int)info.Height, format, false)).ToArray();
         return Image.CreateFromData((int)info.Width, (int)info.Height, complete && info.Mips > 1, format, bytes);
     }
+    internal static DataFormat CanvasImportFormat(Image.Format format) => format switch
+    {
+        Image.Format.R8 => DataFormat.R8UNORM,
+        Image.Format.Rg8 => DataFormat.R8G8UNORM,
+        Image.Format.Rgba8 => DataFormat.R8G8B8A8UNORM,
+        Image.Format.R16 => DataFormat.R16UNORM,
+        Image.Format.Rg16 => DataFormat.R16G16UNORM,
+        Image.Format.Rgba16 => DataFormat.R16G16B16A16UNORM,
+        Image.Format.Rh => DataFormat.R16SFLOAT,
+        Image.Format.Rgh => DataFormat.R16G16SFLOAT,
+        Image.Format.Rgbah => DataFormat.R16G16B16A16SFLOAT,
+        Image.Format.Rf => DataFormat.R32SFLOAT,
+        Image.Format.Rgf => DataFormat.R32G32SFLOAT,
+        Image.Format.Rgbaf => DataFormat.R32G32B32A32SFLOAT,
+        Image.Format.Dxt1 => DataFormat.BC1RGBAUNORMBLOCK,
+        Image.Format.Dxt3 => DataFormat.BC2UNORMBLOCK,
+        Image.Format.Dxt5 => DataFormat.BC3UNORMBLOCK,
+        Image.Format.RgtcR => DataFormat.BC4UNORMBLOCK,
+        Image.Format.RgtcRg => DataFormat.BC5UNORMBLOCK,
+        Image.Format.BptcRgbf => DataFormat.BC6HSFLOATBLOCK,
+        Image.Format.BptcRgbfu => DataFormat.BC6HUFLOATBLOCK,
+        Image.Format.BptcRgba => DataFormat.BC7UNORMBLOCK,
+        Image.Format.Astc4X4 => DataFormat.ASTC4X4UNORMBLOCK,
+        Image.Format.Astc4X4Hdr => DataFormat.ASTC4X4SFLOATBLOCK,
+        Image.Format.Astc8X8 => DataFormat.ASTC8X8UNORMBLOCK,
+        Image.Format.Astc8X8Hdr => DataFormat.ASTC8X8SFLOATBLOCK,
+        _ => DataFormat.Max
+    };
+
     internal static Image.Format? CanvasImageFormat(DataFormat format) => format switch
     {
         DataFormat.R8UNORM => Image.Format.R8,

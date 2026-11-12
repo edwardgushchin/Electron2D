@@ -135,7 +135,11 @@ internal sealed class ServerTexture : Texture
     {
         _pixels = pixels; Size = new(pixels.Source.Width, pixels.Source.Height); RetainRendererCache = true;
     }
-    internal ServerTexture(TextureRD texture) => DeviceTexture = texture;
+    internal ServerTexture(TextureRD texture, RID ownedDeviceImage)
+    {
+        DeviceTexture = texture;
+        OwnedDeviceImage = ownedDeviceImage;
+    }
     internal ServerTexture(NativeCanvasTexture texture)
     {
         NativeTexture = texture;
@@ -148,11 +152,13 @@ internal sealed class ServerTexture : Texture
     }
     private TexturePixels? _pixels;
     internal TextureRD? DeviceTexture { get; private set; }
+    internal RID OwnedDeviceImage;
     internal NativeCanvasTexture? NativeTexture { get; private set; }
 
     internal void TakeStorage(ServerTexture source)
     {
         (DeviceTexture, source.DeviceTexture) = (source.DeviceTexture, DeviceTexture);
+        (OwnedDeviceImage, source.OwnedDeviceImage) = (source.OwnedDeviceImage, OwnedDeviceImage);
         (NativeTexture, source.NativeTexture) = (source.NativeTexture, NativeTexture);
         _pixels = source._pixels;
         Size = source.Size;
@@ -195,7 +201,9 @@ internal sealed class ServerTexture : Texture
     }
     public override Image.Format PixelFormat => IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.PixelFormat ?? _proxyFormat
         : NativeTexture is not null ? Image.Format.Rgba8 : DeviceTexture?.PixelFormat ?? base.PixelFormat;
-    public override bool HasAlpha => NativeTexture is not null || (IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.HasAlpha ?? false : base.HasAlpha);
+    public override bool HasAlpha => NativeTexture is not null || (IsProxy
+        ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.HasAlpha ?? false
+        : OwnedDeviceImage.IsValid() ? Image.TextureHasAlpha(PixelFormat) : base.HasAlpha);
     public override bool HasMIPMaps => DeviceTexture?.HasMIPMaps ?? base.HasMIPMaps;
     public override int MIPMapCount => DeviceTexture?.MIPMapCount ?? base.MIPMapCount;
     internal override TexturePixels? CapturePixels()

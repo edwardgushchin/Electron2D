@@ -6,7 +6,7 @@
 
 [Sampled component views](local-compute.md#sampled-component-views) follow device-backed command/material images through paired stages, lighting, glyphs, clipping and particle consumers. Raw snapshots preserve storage channels.
 
-Last updated: 2026-10-27
+Last updated: 2026-11-12
 
 [Viewport mipmap bias](viewport-mipmap-bias.md) supplies scene, server and project level offsets through retained native canvas/material samplers, with bounded configuration retirement and explicit backend limits.
 
@@ -704,7 +704,7 @@ TextureReplace redirects links to a consumed source before releasing it. [Storag
 
 ## Texture storage replacement
 
-`RenderingServer.TextureReplace` keeps the destination resource and RID stable while moving the source storage and metadata into it. Ordinary textures and independent arrays can switch between copied CPU images and borrowed images of the retained rendering device. Existing draw commands, materials and proxies use the new backing. The command's recorded geometry and normalized texture coordinates keep their recorded values. Proxies of the consumed RID redirect to the destination. Direct retained commands for the consumed ordinary RID stop drawing.
+`RenderingServer.TextureReplace` keeps the destination resource and RID stable while moving the source storage and metadata into it. Ordinary textures and independent arrays can switch between copied CPU images, borrowed device images and [owned Vulkan imports](native-texture-handles.md#importing-vulkan-canvas-textures). Existing draw commands, materials and proxies use the new backing. The command's recorded geometry and normalized texture coordinates keep their recorded values. Proxies of the consumed RID redirect to the destination. Direct retained commands for the consumed ordinary RID stop drawing.
 
 Device-backed replacements preserve the caller-owned native image, including images without a CPU readback role. A previous CPU upload and its device exports expire when the CPU backing is replaced. Replacing a borrowing wrapper leaves its previous caller-owned image valid. The new backing supplies the path, dimensions, format, snapshot availability and CPU-update rules. A replacement that would retire its own borrowed source, or that crosses ordinary, array and drawable roles, rejects before mutation. Matching drawable storage has its [own transfer rules](drawable-textures.md).
 

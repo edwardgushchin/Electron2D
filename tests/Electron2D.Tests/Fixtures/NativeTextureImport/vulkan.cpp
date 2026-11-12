@@ -113,7 +113,7 @@ extern "C" __declspec(dllexport) VkResult __cdecl ClearImage(const Context& cont
 }
 
 extern "C" __declspec(dllexport) VkResult __cdecl CreateImage(const Context& context, uint32_t width,
-    uint32_t height, uint32_t layers, uint32_t levels, Image& image)
+    uint32_t height, uint32_t layers, uint32_t levels, VkFormat format, Image& image)
 {
     image = {};
     const auto instance = InstanceProc();
@@ -127,7 +127,7 @@ extern "C" __declspec(dllexport) VkResult __cdecl CreateImage(const Context& con
     DEVICE_PROC(vkBindImageMemory);
     VkImageCreateInfo info{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
     info.imageType = VK_IMAGE_TYPE_2D;
-    info.format = VK_FORMAT_R8G8B8A8_UNORM;
+    info.format = format;
     info.extent = { width, height, 1 };
     info.mipLevels = levels;
     info.arrayLayers = layers;

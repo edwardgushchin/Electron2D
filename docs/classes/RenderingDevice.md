@@ -321,7 +321,7 @@ public System.Void FreeRID(Electron2D.RID rid)
 
 Frees a resource after completing pending work.
 
-Borrowers become invalid; they may still be freed explicitly.
+Borrowers become invalid and may still be freed explicitly. The root device identity exported by a direct Vulkan canvas import is server-owned. Free that root through its canvas RID with `RenderingServer.FreeRID`.
 
 `rid`: A live identity owned by this device.
 

@@ -22,18 +22,18 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">No active GPU renderer exists or the owner/list state rejects mutation.</exception>
     /// <exception cref="NotSupportedException">The image requires an integer canvas descriptor interface.</exception>
     public static RID TextureRDCreate(RID deviceTexture, TextureLayered.LayeredType layerType = TextureLayered.LayeredType.Array) => RequireService().TextureRDCreateCore(deviceTexture, layerType);
-    internal RID TextureRDCreateCore(RID rid, TextureLayered.LayeredType layerType)
+    internal RID TextureRDCreateCore(RID rid, TextureLayered.LayeredType layerType, bool ownDeviceImage = false)
     {
         EnsureTextureChange();
         if (layerType != TextureLayered.LayeredType.Array) throw new ArgumentOutOfRangeException(nameof(layerType));
         var device = GetRenderingDeviceCore() ?? throw new InvalidOperationException("A GPU renderer is required.");
         var info = device.CanvasInfo(rid) ?? throw new ArgumentException("The device image identity is not live.", nameof(rid));
+        var ownedDeviceImage = ownDeviceImage ? rid : default;
         if (info.Type == RenderingDevice.TextureType.TextureArray)
-        {
-            return OwnLayered(new ServerTextureArray(new TextureArrayRD { TextureRDRID = rid }));
-        }
-        var texture = new ServerTexture(new TextureRD { TextureRDRID = rid });
-        var result = RenderingTextureRegistry.Register(texture, this); texture.Bind(result); _ownedTextureRIDs.Add(result); return result;
+            return OwnLayered(new ServerTextureArray(new TextureArrayRD { TextureRDRID = rid }, ownedDeviceImage));
+
+        var texture = new ServerTexture(new TextureRD { TextureRDRID = rid }, ownedDeviceImage);
+        return OwnTexture(texture);
     }
     /// <summary>Gets the borrowed device image identity represented by a canvas texture.</summary>
     /// <param name="texture">A live ordinary or layered canvas texture RID.</param>
@@ -48,7 +48,9 @@ public sealed partial class RenderingServer
     /// Renderer sRGB views support sampling and raw transfers. Storage-image access remains on the
     /// linear RID. Both viewport RIDs select the completed image at command recording.
     /// Creating a view requires an idle device.
-    /// FreeRID on the rendering device releases a borrowed wrapper or a distinct view independently. Device writes affect native storage; authored CPU
+    /// FreeRID on the rendering device releases a borrowed wrapper or a distinct view independently.
+    /// For a direct native import, the root device identity is owned by the canvas texture and cannot be freed on the device.
+    /// Device writes affect native storage; authored CPU
     /// snapshots remain unchanged and a later authored update replaces those writes. Prepare changed uploads before
     /// beginning a draw list. Access belongs to the scene owner thread.</remarks>
     /// <exception cref="ArgumentException">The canvas texture RID is not live.</exception>

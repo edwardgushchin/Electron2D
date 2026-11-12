@@ -639,7 +639,7 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 
 [Native driver resources](../components/driver-resources.md) expose the current Vulkan device, queue and active GPU resources to integrations under the borrowed lifetime contract.
 
-[Vulkan device image import](../components/native-texture-handles.md#importing-vulkan-device-images) wraps ordinary and array images on that device after a completed producer handoff. Existing device transfers, views and the canvas bridge consume the original storage.
+[Vulkan device image import](../components/native-texture-handles.md#importing-vulkan-device-images) wraps ordinary and array images on that device after a completed producer handoff. [Direct canvas import](../components/native-texture-handles.md#importing-vulkan-canvas-textures) owns the device root through the server texture, including alias redirection and storage replacement. The producer retains the native allocation.
 
 [Attachmentless graphics](../components/local-compute.md#attachmentless-graphics) now executes explicit raster extents and exact available samples without dummy image attachments. Existing graphics storage writes feed following compute, ordinary graphics and canvas consumers; raster discard remains a separate state adapter.
 

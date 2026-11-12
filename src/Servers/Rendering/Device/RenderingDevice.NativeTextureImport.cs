@@ -31,7 +31,11 @@ public sealed unsafe partial class RenderingDevice
     /// <exception cref="InvalidOperationException">The caller is off-owner, a list is active, or a native wrapper could not be created.</exception>
     /// <exception cref="ObjectDisposedException">This device is disposed.</exception>
     public RID TextureCreateFromExtension(TextureType type, DataFormat format, TextureSamples samples,
-        TextureUsageBits usageFlags, ulong image, uint width, uint height, uint depth, uint layers, uint MIPMaps = 1)
+        TextureUsageBits usageFlags, ulong image, uint width, uint height, uint depth, uint layers, uint MIPMaps = 1) =>
+        ImportTexture(type, format, samples, usageFlags, image, width, height, depth, layers, MIPMaps, serverOwned: false);
+
+    internal RID ImportTexture(TextureType type, DataFormat format, TextureSamples samples, TextureUsageBits usageFlags,
+        ulong image, uint width, uint height, uint depth, uint layers, uint MIPMaps, bool serverOwned)
     {
         IdleList();
         if (image == 0) throw new ArgumentOutOfRangeException(nameof(image));
@@ -76,7 +80,15 @@ public sealed unsafe partial class RenderingDevice
             throw new NotSupportedException("The native module does not provide Vulkan texture import.", error);
         }
         var handle = new RenderHandle(native, value => GPUTextureViews.Destroy(device, 1, value), _context.Handle);
-        try { return Add(new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, Handle = handle }); }
+        try { return Add(new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, Handle = handle, ServerOwnsTexture = serverOwned }); }
         catch { handle.Dispose(); throw; }
     }
+
+    internal void RetireCanvasImport(RID rid)
+    {
+        IdleList();
+        RetireRID(rid, _entries[rid]);
+    }
+
+    internal void DeliverCanvasImportReadbacks() => DeliverReadbacks();
 }

@@ -6,7 +6,7 @@ using Samples = Electron2D.RenderingDevice.TextureSamples;
 using Shape = Electron2D.RenderingDevice.TextureType;
 using Usage = Electron2D.RenderingDevice.TextureUsageBits;
 
-internal static unsafe class VulkanTextureImportTests
+internal static unsafe partial class VulkanTextureImportTests
 {
     private const uint Width = 7, Height = 5, Levels = 3;
     private const Usage Transfers = Usage.Sampling | Usage.CanCopyFrom | Usage.CanCopyTo | Usage.CanUpdate | Usage.CPURead;
@@ -33,6 +33,7 @@ internal static unsafe class VulkanTextureImportTests
         try
         {
             if (profile == "canvas") Canvas(library);
+            else if (profile == "server") Server(library);
             else
             {
                 using var device = RenderingServer.CreateLocalRenderingDevice();
@@ -222,21 +223,21 @@ internal static unsafe class VulkanTextureImportTests
         (nint)device.GetDriverResource(ResourceKind.CommandQueue, default, 0),
         checked((uint)device.GetDriverResource(ResourceKind.QueueFamily, default, 0)));
 
-    private static ProducerImage Create(nint library, ProducerContext context, uint layers)
+    private static ProducerImage Create(nint library, ProducerContext context, uint layers, uint levels = Levels, uint format = 37)
     {
         ProducerImage image;
-        var create = (delegate* unmanaged[Cdecl]<ProducerContext*, uint, uint, uint, uint, ProducerImage*, int>)
+        var create = (delegate* unmanaged[Cdecl]<ProducerContext*, uint, uint, uint, uint, uint, ProducerImage*, int>)
             NativeLibrary.GetExport(library, "CreateImage");
-        var result = create(&context, Width, Height, layers, Levels, &image);
+        var result = create(&context, Width, Height, layers, levels, format, &image);
         Check(result == 0 && image.Image != 0 && image.Memory != 0, $"The external Vulkan producer returned {result}.");
         return image;
     }
 
-    private static void Clear(nint library, ProducerContext context, ProducerImage image, uint layers, uint phase)
+    private static void Clear(nint library, ProducerContext context, ProducerImage image, uint layers, uint phase, uint levels = Levels)
     {
         var clear = (delegate* unmanaged[Cdecl]<ProducerContext*, ProducerImage*, uint, uint, uint, uint, int>)
             NativeLibrary.GetExport(library, "ClearImage");
-        var result = clear(&context, &image, layers, Levels, phase, 5); // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+        var result = clear(&context, &image, layers, levels, phase, 5); // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
         Check(result == 0, $"The external producer reused the returned image with result {result}.");
     }
 

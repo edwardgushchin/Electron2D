@@ -1,13 +1,15 @@
 namespace Electron2D;
 
-internal sealed class ServerTextureArray(TextureLayered storage) : TextureLayered
+internal sealed class ServerTextureArray(TextureLayered storage, RID ownedDeviceImage = default) : TextureLayered
 {
     private TextureLayered _storage = storage;
+    internal RID OwnedDeviceImage = ownedDeviceImage;
     internal TextureArrayRD? DeviceTexture => _storage as TextureArrayRD;
 
     internal void TakeStorage(ServerTextureArray source)
     {
         (_storage, source._storage) = (source._storage, _storage);
+        (OwnedDeviceImage, source.OwnedDeviceImage) = (source.OwnedDeviceImage, OwnedDeviceImage);
         ServerPath = source.ServerPath;
     }
 
