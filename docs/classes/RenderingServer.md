@@ -73,6 +73,10 @@ The current backend profile implements one RGBA8 image layer. ViewportSetSize re
 
 Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon skin replay. FreeRID rejects it on an active owner rather than disposing a scene node. Caller-created palette storage and actual scene-canvas attachment now execute through the mesh skin API below, with distinct borrowed/owned lifetime and replay callback guards. Caller-owned canvases and Mesh/MultiMesh command authoring now execute through the API below.
 
+## Canvas background
+
+`EnvironmentSetBackground` and `EnvironmentSetBGColor` update a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. `EnvironmentSetBGEnergy` applies a finite nonnegative energy multiplier and runtime exposure factor together. `ViewportSetEnvironmentMode` controls background and effects selection for the viewport. See [canvas environment backgrounds](../components/canvas-environment-background.md).
+
 ## Canvas glow
 
 `EnvironmentSetGlow` updates a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. It copies seven weights and validates settings before publication. `EnvironmentGlowSetUseBicubicUpscale` switches the upsampling filter for the active session. `ViewportSetEnvironmentMode` enables, disables or inherits the effect per viewport. See [canvas glow](../components/canvas-glow.md).

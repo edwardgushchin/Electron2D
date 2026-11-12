@@ -318,10 +318,11 @@ public sealed partial class RenderingServer : ElectronObject
             SubmitParticleTextures(frame, tree);
             foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
             foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
-            frame.Clear = FrameClear(viewport); frame.ClearEnabled = ClearMode(viewport) != ViewportClearMode.Never;
+            var environment = SelectEnvironment(viewport, tree)?.SnapshotEnvironment();
+            PrepareFrameBackground(frame, environment?.Background);
             if (direct) { PauseRenderCPU(); return; }
             var target = _backend.FindTarget(viewport); if (target is null) return;
-            var postProcess = SelectPostProcess(viewport, tree);
+            var postProcess = SelectPostProcess(viewport, environment?.Effects ?? default);
             var glow = postProcess.Glow;
             if (glow.Enabled && glow.MapStrength > 0 && glow.Map is { IsDisposed: false } map) SubmitTexture(map, tree);
             if (postProcess.Adjustment.Enabled && postProcess.Adjustment.Lookup is { IsDisposed: false } lookup) SubmitTexture(lookup, tree);

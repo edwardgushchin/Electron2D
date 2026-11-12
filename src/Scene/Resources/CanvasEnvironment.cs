@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
-/// <summary>Stores shared GPU canvas glow, tone mapping and color adjustment settings.</summary>
+/// <summary>Stores shared canvas background, glow, tone mapping and color adjustment settings.</summary>
 /// <remarks>Assign this resource to a <see cref="WorldEnvironment"/>. Changes affect the next canvas frame.
 /// Resources and textures are borrowed by the scene. The effects work in linear light on GPU viewports with byte or half-float storage.</remarks>
 public sealed partial class CanvasEnvironment : Resource
@@ -233,9 +233,9 @@ public sealed partial class CanvasEnvironment : Resource
         }
     }
 
-    internal CanvasPostProcess SnapshotPostProcess()
+    internal (CanvasBackgroundSettings Background, CanvasPostProcess Effects) SnapshotEnvironment()
     {
-        lock (_gate) return IsDisposed ? default : new(_glow, _tonemap, _adjustment);
+        lock (_gate) return IsDisposed ? (CanvasBackgroundSettings.Default, default) : (_background, new(_glow, _tonemap, _adjustment));
     }
 
     private T Read<T>(ref T value)
@@ -282,7 +282,7 @@ public sealed partial class CanvasEnvironment : Resource
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        var settings = SnapshotPostProcess();
+        var (background, settings) = SnapshotEnvironment();
         var glow = settings.Glow;
         var adjustment = settings.Adjustment;
         if (deep)
@@ -293,6 +293,8 @@ public sealed partial class CanvasEnvironment : Resource
         var copy = (CanvasEnvironment)target;
         lock (copy._gate)
         {
+            background.Exposure = 1;
+            copy._background = background;
             copy._glow = glow;
             copy._adjustment = adjustment;
             copy._tonemap = settings.Tonemap.GetValueOrDefault(TonemapSettings.Default);
@@ -300,7 +302,7 @@ public sealed partial class CanvasEnvironment : Resource
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties).Concat(LevelProperties).Concat(TonemapProperties).Concat(AdjustmentProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(Properties).Concat(LevelProperties).Concat(TonemapProperties).Concat(AdjustmentProperties).Concat(BackgroundProperties);
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

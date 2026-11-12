@@ -2999,6 +2999,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CanvasBackgroundMode",
+    "kind": "type",
+    "declaringType": "Electron2D.CanvasBackgroundMode",
+    "name": "CanvasBackgroundMode",
+    "signature": "public enum Electron2D.CanvasBackgroundMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CanvasEnvironment",
     "kind": "type",
     "declaringType": "Electron2D.CanvasEnvironment",
@@ -35094,6 +35112,58 @@
     "parameters": [],
     "returnType": "Electron2D.CameraServer.FeedImage",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasBackgroundMode.ClearColor()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasBackgroundMode",
+    "name": "ClearColor",
+    "signature": "public const Electron2D.CanvasBackgroundMode ClearColor = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasBackgroundMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasBackgroundMode.Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasBackgroundMode",
+    "name": "Color",
+    "signature": "public const Electron2D.CanvasBackgroundMode Color = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasBackgroundMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasBackgroundMode.Keep()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasBackgroundMode",
+    "name": "Keep",
+    "signature": "public const Electron2D.CanvasBackgroundMode Keep = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasBackgroundMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasBackgroundMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasBackgroundMode",
+    "name": "Max",
+    "signature": "public const Electron2D.CanvasBackgroundMode Max = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasBackgroundMode",
+    "value": "6"
   },
   {
     "id": "enumValue:Electron2D.CanvasEnvironment.GlowBlendMode.Additive()",
@@ -184220,6 +184290,83 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.EnvironmentSetBGColor(Electron2D.RID,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "EnvironmentSetBGColor",
+    "signature": "public static System.Void EnvironmentSetBGColor(Electron2D.RID environment, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "environment",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.EnvironmentSetBGEnergy(Electron2D.RID,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "EnvironmentSetBGEnergy",
+    "signature": "public static System.Void EnvironmentSetBGEnergy(Electron2D.RID environment, System.Single multiplier, System.Single exposureValue)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "environment",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "multiplier",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "exposureValue",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.EnvironmentSetBackground(Electron2D.RID,Electron2D.CanvasBackgroundMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "EnvironmentSetBackground",
+    "signature": "public static System.Void EnvironmentSetBackground(Electron2D.RID environment, Electron2D.CanvasBackgroundMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "environment",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.CanvasBackgroundMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.EnvironmentSetGlow(Electron2D.RID,System.Boolean,System.ReadOnlySpan\u003CSystem.Single\u003E,System.Single,System.Single,System.Single,System.Single,Electron2D.CanvasEnvironment.GlowBlendMode,System.Single,System.Single,System.Single,System.Single,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -272453,6 +272600,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.BackgroundColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "BackgroundColor",
+    "signature": "public Electron2D.Color BackgroundColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.BackgroundEnergyMultiplier()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "BackgroundEnergyMultiplier",
+    "signature": "public System.Single BackgroundEnergyMultiplier { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.BackgroundMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "BackgroundMode",
+    "signature": "public Electron2D.CanvasBackgroundMode BackgroundMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasBackgroundMode",
     "value": null
   },
   {

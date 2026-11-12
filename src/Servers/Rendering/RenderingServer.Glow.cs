@@ -91,7 +91,7 @@ public sealed partial class RenderingServer
     /// <summary>Selects environment rendering for a live viewport in the active session.</summary>
     /// <param name="viewport">The live viewport identity.</param>
     /// <param name="mode">Disable, enable, or inherit the parent viewport's selection.</param>
-    /// <remarks>The mode gates the world environment. Enabling it still requires a live environment and compatible canvas storage.</remarks>
+    /// <remarks>The mode gates the world background and any effects supported by the active backend.</remarks>
     /// <exception cref="ArgumentException">The viewport identity is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The mode is invalid.</exception>
     /// <exception cref="InvalidOperationException">The renderer is unavailable, the caller is off-owner or a submission is in progress.</exception>
@@ -113,11 +113,15 @@ public sealed partial class RenderingServer
         return true;
     }
 
-    private CanvasPostProcess SelectPostProcess(Viewport viewport, SceneTree tree)
+    private CanvasEnvironment? SelectEnvironment(Viewport viewport, SceneTree tree)
     {
-        if (!tree.HasWorldEnvironment || _backend is not GPUCanvasBackend || !EnvironmentEnabled(viewport) || viewport.FindWorld() is not { } world) return default;
-        if (tree.SelectWorldEnvironment(world.Runtime)?.LiveEnvironment is not { } environment) return default;
-        var settings = environment.SnapshotPostProcess();
+        if (!tree.HasWorldEnvironment || !EnvironmentEnabled(viewport) || viewport.FindWorld() is not { } world) return null;
+        return tree.SelectWorldEnvironment(world.Runtime)?.LiveEnvironment;
+    }
+
+    private CanvasPostProcess SelectPostProcess(Viewport viewport, CanvasPostProcess settings)
+    {
+        if (_backend is not GPUCanvasBackend) return default;
         var glow = settings.Glow;
         if (!glow.Enabled && settings.Tonemap is not { IsIdentity: false } && !settings.Adjustment.Active) return default;
         glow.Bicubic = _bicubicGlow;

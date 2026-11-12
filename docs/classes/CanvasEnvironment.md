@@ -1,6 +1,6 @@
 # CanvasEnvironment
 
-`CanvasEnvironment : Resource` stores GPU canvas glow, tone mapping and color adjustment settings. Assign it to a [WorldEnvironment](WorldEnvironment.md). Glow starts disabled. The resource remains valid across renderer sessions and can be shared or stored with a scene.
+`CanvasEnvironment : Resource` stores the canvas background and GPU glow, tone mapping and color adjustment settings. Assign it to a [WorldEnvironment](WorldEnvironment.md). Glow starts disabled. The resource remains valid across renderer sessions and can be shared or stored with a scene.
 
 - `GlowEnabled` enables the effect. `GlowHDRThreshold`, `GlowHDRScale`, `GlowHDRLuminanceCap` and `GlowBloom` control extraction in linear color.
 - `GlowStrength` controls the blur. `SetGlowLevel` and `GetGlowLevel` use zero-based indices 0 through 6. Default weights are 0, 0.8, 0.4, 0.1, 0, 0, 0 from narrow to broad. `GlowNormalized` normalizes their contribution.
@@ -9,6 +9,10 @@
 - `GetRID()` returns a borrowed resource identity usable with the rendering server glow, tone mapping and color adjustment methods. Disposing the resource retires the identity.
 
 Scalar glow settings accept finite, nonnegative values through 65,504. Mix and map strength accept 0 through 1.
+
+## Background
+
+`BackgroundMode` selects `ClearColor`, `Color` or `Keep`. `BackgroundColor` defaults to black and `BackgroundEnergyMultiplier` defaults to one. See [canvas environment backgrounds](../components/canvas-environment-background.md) for clear policy, retention and color transfer.
 
 ## Tone mapping
 

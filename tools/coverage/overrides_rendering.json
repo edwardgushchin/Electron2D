@@ -1,6 +1,86 @@
 {
   "mappings": [
     {
+      "godot": "Environment::enum:BGMode",
+      "electron2d": "T:Electron2D.CanvasBackgroundMode",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. The shared mode family still needs the canvas-layer boundary and camera source."
+    },
+    {
+      "godot": "RenderingServer::enum:EnvironmentBG",
+      "electron2d": "T:Electron2D.CanvasBackgroundMode",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. The shared mode family still needs the canvas-layer boundary and camera source."
+    },
+    {
+      "godot": "Environment::enum_value:BGMode.BG_CLEAR_COLOR",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.ClearColor()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentBG.ENV_BG_CLEAR_COLOR",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.ClearColor()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "Environment::enum_value:BGMode.BG_COLOR",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Color()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentBG.ENV_BG_COLOR",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Color()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "Environment::enum_value:BGMode.BG_MAX",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Max()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentBG.ENV_BG_MAX",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Max()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "Environment::enum_value:BGMode.BG_KEEP",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Keep()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentBG.ENV_BG_KEEP",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Keep()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "Environment::property:background_mode",
+      "electron2d": "property:Electron2D.CanvasEnvironment.BackgroundMode()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. The shared mode family still needs the canvas-layer boundary and camera source."
+    },
+    {
+      "godot": "Environment::property:background_color",
+      "electron2d": "property:Electron2D.CanvasEnvironment.BackgroundColor()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "Environment::property:background_energy_multiplier",
+      "electron2d": "property:Electron2D.CanvasEnvironment.BackgroundEnergyMultiplier()",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "RenderingServer::method:environment_set_background(RID:,int:RenderingServer.EnvironmentBG)",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetBackground(Electron2D.RID,Electron2D.CanvasBackgroundMode)",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "RenderingServer::method:environment_set_bg_color(RID:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetBGColor(Electron2D.RID,Electron2D.Color)",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
+      "godot": "RenderingServer::method:environment_set_bg_energy(RID:,float:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetBGEnergy(Electron2D.RID,System.Single,System.Single)",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md."
+    },
+    {
       "godot": "Environment::property:adjustment_brightness",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentBrightness()",
       "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
@@ -5928,20 +6008,28 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Needs world-selected clear and keep plus native canvas-layer composition around viewport post-processing. The layer boundary must preserve upper-layer blending and screen reads as well as pre-effect history for Never-clear targets.",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028/0051: shared default-clear, authored-color and terminal identities execute or validate through the resource and server API.",
+      "godot": [
+        "Environment::enum_value:BGMode.BG_CLEAR_COLOR",
+        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_CLEAR_COLOR",
+        "Environment::enum_value:BGMode.BG_COLOR",
+        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_COLOR",
+        "Environment::enum_value:BGMode.BG_MAX",
+        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_MAX"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. The shared mode family still needs the canvas-layer boundary and camera source.",
       "godot": [
         "Environment::enum:BGMode",
-        "Environment::enum_value:BGMode.BG_CANVAS",
-        "Environment::enum_value:BGMode.BG_CLEAR_COLOR",
-        "Environment::enum_value:BGMode.BG_COLOR",
+        "RenderingServer::enum:EnvironmentBG",
         "Environment::enum_value:BGMode.BG_KEEP",
-        "Environment::enum_value:BGMode.BG_MAX",
-        "Environment::property:background_canvas_max_layer",
+        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_KEEP",
+        "Environment::property:background_mode",
         "Environment::property:background_color",
         "Environment::property:background_energy_multiplier",
-        "Environment::property:background_intensity",
-        "Environment::property:background_mode",
         "RenderingServer::method:environment_set_background(RID:,int:RenderingServer.EnvironmentBG)",
         "RenderingServer::method:environment_set_bg_color(RID:,Color:)",
         "RenderingServer::method:environment_set_bg_energy(RID:,float:,float:)"
@@ -5949,10 +6037,34 @@
     },
     {
       "state": "Blocked",
-      "reason": "Needs an environment background stage that consumes a live camera feed identity, including capture permission and lifetime. Canvas camera textures already draw through ordinary textures.",
+      "reason": "Needs a native canvas-layer composition boundary that preserves upper-layer blend and screen reads and unprocessed Never-clear history.",
+      "godot": [
+        "Environment::enum_value:BGMode.BG_CANVAS",
+        "Environment::property:background_canvas_max_layer",
+        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_CANVAS"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Authored intensity in nits requires a physical light-units setting and an applicable canvas exposure normalization. The server's explicit linear factor already affects pixels.",
+      "godot": [
+        "Environment::property:background_intensity"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Needs a live world-background camera producer with feed lifetime, feed transform, and color interpretation of RGB and applicable YCbCr data. CameraTexture already supplies ordinary texture planes.",
       "godot": [
         "Environment::enum_value:BGMode.BG_CAMERA_FEED",
-        "Environment::property:background_camera_feed_id"
+        "Environment::property:background_camera_feed_id",
+        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_CAMERA_FEED"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Sky background requires spatial sky rendering outside ADR 0004.",
+      "godot": [
+        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_SKY"
       ]
     },
     {
