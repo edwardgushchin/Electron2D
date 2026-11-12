@@ -5,9 +5,10 @@ namespace Electron2D;
 internal static class DeviceImageArrays
 {
     internal readonly record struct Source(uint Set, int Binding, int Count, int Element, bool Dynamic);
-    private sealed record Slot(uint Image, uint Variable, uint Selector);
+    private sealed record Slot(uint Image, uint Variable, uint Selector, uint NativeImage);
 
-    internal static (byte[] Code, Dictionary<(uint Set, int Binding), Source> Sources) Lower(byte[] code, bool symbolic)
+    internal static (byte[] Code, Dictionary<(uint Set, int Binding), Source> Sources, HashSet<(uint Set, int Binding)> Slices)
+        Lower(byte[] code, bool symbolic, IReadOnlyDictionary<(uint Set, int Binding, int Element), uint>? views = null)
     {
         var module = new Module(code); var source = module.Instructions;
         var types = source.Where(i => Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
@@ -22,11 +23,16 @@ internal static class DeviceImageArrays
             throw new ArgumentException("The image descriptor type graph is cyclic.", nameof(code));
         }
         var resources = source.Where(i => Op(i) == 59 && i[3] == 0 && Opaque(i[1])).ToArray();
-        if (!resources.Any(i => Op(types[types[i[1]][3]]) is 28 or 29)) return (code, []);
+        if (resources.Length == 0) return (code, [], []);
+        var locations = source.Where(i => Op(i) == 71 && i.Length == 4 && i[2] is 33 or 34).GroupBy(i => i[1]).ToDictionary(g => g.Key, g => g.ToDictionary(i => i[2], i => i[3]));
+        var sliceBindings = views?.Where(p => (p.Value & TextureSwizzles.ArraySlice) != 0).Select(p => (p.Key.Set, p.Key.Binding)).ToHashSet();
+        var hasSlices = sliceBindings is { Count: > 0 } && resources.Any(i => locations.TryGetValue(i[2], out var location) &&
+            location.TryGetValue(34, out var set) && location.TryGetValue(33, out var binding) && binding <= int.MaxValue &&
+            sliceBindings.Contains((set, (int)binding)));
+        if (!hasSlices && !resources.Any(i => Op(types[types[i[1]][3]]) is 28 or 29)) return (code, [], []);
         uint Image(uint id) { var i = types[id]; return Op(i) == 25 ? id : Image(i[Op(i) == 32 ? 3 : 2]); }
         var lengths = source.Where(i => Op(i) == 43 && i.Length == 4).ToDictionary(i => i[2], i => i[3]);
         var valueTypes = source.Where(i => i.Length > 2 && (Op(i) == 12 || Op(i) >= 41) && Category(Op(i)) != 9 && types.ContainsKey(i[1])).ToDictionary(i => i[2], i => i[1]);
-        var locations = source.Where(i => Op(i) == 71 && i.Length == 4 && i[2] is 33 or 34).GroupBy(i => i[1]).ToDictionary(g => g.Key, g => g.ToDictionary(i => i[2], i => i[3]));
         var usedSets = locations.Values.Where(d => d.ContainsKey(34)).Select(d => d[34]).ToHashSet(); uint privateSet = 0; while (usedSets.Contains(privateSet)) privateSet++;
         var declarations = new List<uint[]>(); var annotations = new List<uint[]>(); var functions = new List<uint[]>(); var helpers = new List<uint[]>(); var next = module.Header[3];
         uint Type(uint op, params uint[] operands)
@@ -40,7 +46,8 @@ internal static class DeviceImageArrays
         uint Constant(uint value) { if (constants.TryGetValue(value, out var id)) return id; id = next++; constants.Add(value, id); declarations.Add(Instruction(43, integer, id, value)); return id; }
         uint Zero(uint type) { if (zeroes.TryGetValue(type, out var id)) return id; id = next++; zeroes.Add(type, id); declarations.Add(Instruction(46, type, id)); return id; }
         uint Emit(List<uint[]> body, uint op, uint type, params uint[] operands) { var id = next++; body.Add(Instruction(op, [type, id, .. operands])); return id; }
-        var origins = new Dictionary<(uint, int), Source>(); var slots = new List<Slot>(); var ids = resources.Select(i => i[2]).ToHashSet();
+        var origins = new Dictionary<(uint, int), Source>(); var slices = new HashSet<(uint, int)>();
+        var slots = new List<Slot>(); var ids = resources.Select(i => i[2]).ToHashSet();
         foreach (var resource in resources)
         {
             var shape = DescriptorShape(resource[1], types, lengths, symbolic);
@@ -48,8 +55,18 @@ internal static class DeviceImageArrays
             declarations.Add(Instruction(43, integer, resource[2], (uint)slots.Count));
             for (var element = 0; element < shape.Count; element++)
             {
-                var selector = (uint)slots.Count; var variable = next++; var image = Image(resource[1]); slots.Add(new(image, variable, selector));
-                declarations.Add(Instruction(59, Type(32, 0, image), variable, 0)); annotations.Add(Instruction(71, variable, 33, selector)); annotations.Add(Instruction(71, variable, 34, privateSet));
+                var selector = (uint)slots.Count; var variable = next++; var image = Image(resource[1]); var native = image;
+                if ((views?.GetValueOrDefault((set, (int)binding, element)) & TextureSwizzles.ArraySlice) is > 0)
+                {
+                    var operands = types[image].AsSpan(2).ToArray();
+                    if (operands[1] != 1 || operands[3] != 0 || operands[4] != 0)
+                        throw new NotSupportedException("A layer slice requires an ordinary single-sample storage image.");
+                    operands[3] = 1;
+                    native = Type(25, operands);
+                    slices.Add((privateSet, (int)selector));
+                }
+                slots.Add(new(image, variable, selector, native));
+                declarations.Add(Instruction(59, Type(32, 0, native), variable, 0)); annotations.Add(Instruction(71, variable, 33, selector)); annotations.Add(Instruction(71, variable, 34, privateSet));
                 origins.Add((privateSet, (int)selector), new(set, (int)binding, shape.Count, element, shape.Dynamic));
                 foreach (var d in source.Where(i => Op(i) == 71 && i[1] == resource[2] && i[2] is not (33 or 34)))
                 {
@@ -81,7 +98,12 @@ internal static class DeviceImageArrays
                 {
                     // Ordinary image texel pointers require a constant-zero sample, even inside a selected helper.
                     var sample = types[pointer.Image][6] == 0 ? pointer.Sample : parameters[2];
-                    helper.Add(Instruction(248, labels[n])); var address = Emit(helper, 60, pointer.PointerType, choices[n].Variable, parameters[1], sample);
+                    var choice = choices[n];
+                    helper.Add(Instruction(248, labels[n]));
+                    var address = next++;
+                    var texelPointer = Instruction(60, pointer.PointerType, address, choice.Variable, parameters[1], sample);
+                    if (choice.NativeImage == pointer.Image) helper.Add(texelPointer);
+                    else CanvasSamplerArrays.EmitLayerImageOperation(texelPointer, valueTypes[pointer.Coordinate], types, Type, Zero, helper, ref next);
                     var operands = new uint[] { address }.Concat(memory).Concat(parameters.Skip(3)).ToArray();
                     if (store) helper.Add(Instruction(opcode, operands)); else { incoming.Add(Emit(helper, opcode, resultType, operands)); incoming.Add(labels[n]); }
                     helper.Add(Instruction(249, merge));
@@ -125,10 +147,13 @@ internal static class DeviceImageArrays
                     helper.Add(Instruction(247, merge, 0)); helper.Add(Instruction(251, [selector, fallback, .. choices.SelectMany((s, n) => new uint[] { s.Selector, labels[n] }).ToArray()]));
                     for (var n = 0; n < choices.Length; n++)
                     {
-                        helper.Add(Instruction(248, labels[n])); var loaded = Emit(helper, 61, image, choices[n].Variable); var operation = (uint[])i.Clone(); operation[imageOperand] = loaded;
+                        var choice = choices[n];
+                        helper.Add(Instruction(248, labels[n])); var loaded = Emit(helper, 61, choice.NativeImage, choice.Variable); var operation = (uint[])i.Clone(); operation[imageOperand] = loaded;
                         for (var a = 0; a < arguments.Length; a++) operation[arguments[a]] = parameters[a];
                         if (op != 99) { operation[2] = next++; incoming.Add(operation[2]); incoming.Add(labels[n]); }
-                        helper.Add(operation); helper.Add(Instruction(249, merge));
+                        if (choice.NativeImage == image) helper.Add(operation);
+                        else CanvasSamplerArrays.EmitLayerImageOperation(operation, op == 104 ? 0 : valueTypes[i[imageOperand + 1]], types, Type, Zero, helper, ref next);
+                        helper.Add(Instruction(249, merge));
                     }
                     helper.Add(Instruction(248, fallback)); helper.Add(Instruction(249, merge)); helper.Add(Instruction(248, merge));
                     if (op == 99) helper.Add(Instruction(253)); else { incoming.Add(Zero(resultType)); incoming.Add(fallback); helper.Add(Instruction(254, Emit(helper, 245, resultType, incoming.ToArray()))); }
@@ -154,6 +179,6 @@ internal static class DeviceImageArrays
         }
         globals.RemoveAll(i => Op(i) is 5 or 71 && atomicPointers.ContainsKey(i[1]));
         module.Header[3] = next; module.Instructions.Clear(); module.Instructions.AddRange(globals.Concat(annotations).OrderBy(i => Category(Op(i))).Concat(declarations).Concat(functions).Concat(helpers));
-        return (module.Write(), origins);
+        return (module.Write(), origins, slices);
     }
 }

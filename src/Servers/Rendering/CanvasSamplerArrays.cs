@@ -34,6 +34,16 @@ internal static partial class CanvasSamplerArrays
             var i = types[type]; return Op(i) == 32 ? Element(i[3]) : Op(i) == 28 ? Element(i[2]) : type;
         }
         uint Image(uint type) { type = Element(type); return Op(types[type]) == 27 ? types[type][2] : type; }
+        uint NativeType(uint type, uint flags)
+        {
+            if ((flags & TextureSwizzles.ArraySlice) == 0) return type;
+            var image = types[Image(type)];
+            if (image[3] != 1 || image[5] != 0 || image[6] != 0) throw new NotSupportedException("A layer slice requires an ordinary single-sample image.");
+            var operands = image.AsSpan(2).ToArray();
+            operands[3] = 1;
+            var array = Type(25, operands);
+            return Op(types[type]) == 27 ? Type(27, array) : array;
+        }
         var valueTypes = source.Where(i => i.Length > 2 && (Op(i) == 12 || Op(i) >= 41) && Category(Op(i)) != 9 && types.ContainsKey(i[1])).ToDictionary(i => i[2], i => i[1]);
         var constants = source.Where(i => Op(i) is >= 41 and <= 52).Select(i => i[2]).ToHashSet();
         var unsigned = source.Where(i => Op(i) == 43 && i[1] == integer).GroupBy(i => i[3]).ToDictionary(g => g.Key, g => g.First()[2]);
@@ -72,7 +82,8 @@ internal static partial class CanvasSamplerArrays
             for (var index = 0; index < device.Pairs.Length; index++)
             {
                 var pair = device.Pairs[index]; var resource = resources.Single(r => r[2] == pair.Image); var element = Element(resource[1]);
-                var variable = next++; declarations.Add(Instruction(59, Type(32, 0, element), variable, 0)); interfaces.Add(variable);
+                var flags = device.Swizzles?[index] ?? 0;
+                var variable = next++; declarations.Add(Instruction(59, Type(32, 0, NativeType(element, flags)), variable, 0)); interfaces.Add(variable);
                 annotations.Add(Instruction(71, variable, 33, (uint)index)); annotations.Add(Instruction(71, variable, 34, device.Set));
                 slots.Add(new(element, variable, index, pair.ImageIndex * device.Stride + pair.SamplerIndex, pair.ImageIndex, device.Swizzles?[index] ?? 0));
                 if (Op(types[element]) == 25)
@@ -91,7 +102,7 @@ internal static partial class CanvasSamplerArrays
                 if (first < 0 || Op(types[element]) == 26 || !native && names.GetValueOrDefault(resource[2]) != textures[first].NativeName) continue;
                 for (var index = first; index < textures.Length && textures[index].Binding == binding; index++)
                 {
-                    var variable = next++; declarations.Add(Instruction(59, Type(32, 0, element), variable, 0)); interfaces.Add(variable);
+                    var variable = next++; declarations.Add(Instruction(59, Type(32, 0, NativeType(element, swizzles?[index] ?? 0)), variable, 0)); interfaces.Add(variable);
                     annotations.Add(Instruction(71, variable, 33, (uint)index));
                     annotations.Add(Instruction(71, variable, 34, d![34])); Name(variable, $"EDSampler{index}_{element}");
                     slots.Add(new(element, variable, index, (uint)index, (uint)index, swizzles?[index] ?? 0));
@@ -119,12 +130,14 @@ internal static partial class CanvasSamplerArrays
         var samples = new Dictionary<string, uint>(StringComparer.Ordinal);
         uint Load(Slot slot, uint wanted, List<uint[]> body)
         {
-            var loaded = next++; body.Add(Instruction(61, slot.Type, loaded, slot.Variable));
-            if (slot.Type == wanted && Op(types[slot.Type]) == 27) return loaded;
-            if (Op(types[slot.Type]) == 25)
+            var type = NativeType(slot.Type, slot.Swizzle);
+            if ((slot.Swizzle & TextureSwizzles.ArraySlice) != 0) wanted = NativeType(wanted, slot.Swizzle);
+            var loaded = next++; body.Add(Instruction(61, type, loaded, slot.Variable));
+            if (type == wanted && Op(types[type]) == 27) return loaded;
+            if (Op(types[type]) == 25)
             {
                 var loadedSampler = next++; body.Add(Instruction(61, Type(26), loadedSampler, samplers[slot.Index]));
-                var combined = next++; var combinedType = Type(27, slot.Type); body.Add(Instruction(86, combinedType, combined, loaded, loadedSampler));
+                var combined = next++; var combinedType = Type(27, type); body.Add(Instruction(86, combinedType, combined, loaded, loadedSampler));
                 loaded = combined;
                 if (wanted == combinedType) return loaded;
             }
@@ -152,11 +165,18 @@ internal static partial class CanvasSamplerArrays
                 helper.Add(Instruction(248, next++));
                 uint Invoke(Slot slot)
                 {
-                    var swizzle = slot.Swizzle;
+                    var swizzle = slot.Swizzle & (TextureSwizzles.ArraySlice - 1);
+                    var sliced = (slot.Swizzle & TextureSwizzles.ArraySlice) != 0;
+                    uint Execute(uint[] operation)
+                    {
+                        operation[2] = next++;
+                        if (!sliced) { helper.Add(operation); return operation[2]; }
+                        return EmitLayerImageOperation(operation, instruction.Length > 4 ? valueTypes.GetValueOrDefault(instruction[4]) : 0,
+                            types, Type, Zero, helper, ref next);
+                    }
                     if (swizzle == 0 || op is < 87 or > 97)
-                    { var unchanged = (uint[])template.Clone(); unchanged[2] = next++; unchanged[3] = Load(slot, resourceType, helper); helper.Add(unchanged); return unchanged[2]; }
+                    { var unchanged = (uint[])template.Clone(); unchanged[3] = Load(slot, resourceType, helper); return Execute(unchanged); }
                     var sample = (uint[])template.Clone(); sample[3] = Load(slot, resourceType, helper);
-                    uint Execute(uint[] operation) { operation[2] = next++; helper.Add(operation); return operation[2]; }
                     int Component(int lane) { var selected = (int)((swizzle >> (lane * 3)) & 7); return selected == 0 ? lane + 3 : selected; }
                     var resultType = types[instruction[1]]; var scalar = Op(resultType) == 23 ? resultType[2] : instruction[1];
                     uint Literal(uint value, uint type)

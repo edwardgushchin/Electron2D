@@ -29,7 +29,9 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="mipmaps">Positive number of included mip levels.</param>
     /// <param name="sliceType">The ordinary image role.</param>
     /// <returns>A device-owned ordinary image view, automatically freed with the original owner.</returns>
-    /// <remarks>A viewport slice selects the completed buffer at command recording. On Direct3D 12 a layer of a multi-layer color allocation without sampling or storage usage supports transfers and single-mip color attachment use.</remarks>
+    /// <remarks>A viewport slice selects the completed buffer at command recording. On Direct3D 12 single-sample
+    /// color array slices support sampling, compute storage, read-only graphics storage, transfers and single-mip
+    /// color attachments according to the owner's usage and format. The view retains ordinary image coordinates.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The layer, mip interval or slice selector is invalid.</exception>
     /// <exception cref="NotSupportedException">The native view adapter or selected format role is unavailable.</exception>
     public RID TextureCreateSharedFromSlice(RDTextureView view, RID withTexture, uint layer, uint mipmap, uint mipmaps = 1, TextureSliceType sliceType = TextureSliceType.Texture)
@@ -114,16 +116,17 @@ public sealed unsafe partial class RenderingDevice
         if (format != stored && !sampledOnly && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", "view");
         var destroyABI = direct3D ? GPUTextureViews.Direct3DViewABI : 1u;
         var abi = destroyABI;
+        var direct3DLayer = direct3D && type == TextureType.Texture && original.Type == TextureType.TextureArray;
         var direct3DTransferTarget = direct3D && !DepthFormat(stored) &&
-            ((original.Usage & TextureUsageBits.ColorAttachment) != 0 || type == TextureType.Texture && original.Layers != 1) &&
+            ((original.Usage & TextureUsageBits.ColorAttachment) != 0 || direct3DLayer) &&
             (original.Usage & (TextureUsageBits.Sampling | TextureUsageBits.Storage | TextureUsageBits.StorageAtomic | TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) == 0;
-        if (sampledOnly) abi = direct3D ? GPUTextureViews.Direct3DSampledFormatABI : GPUTextureViews.SampledFormatABI;
+        if (direct3DLayer && !direct3DTransferTarget) abi = sampledOnly ? GPUTextureViews.Direct3DLayerSampledABI : GPUTextureViews.Direct3DLayerViewABI;
+        else if (sampledOnly) abi = direct3D ? GPUTextureViews.Direct3DSampledFormatABI : GPUTextureViews.SampledFormatABI;
         else if (direct3DTransferTarget) abi = GPUTextureViews.Direct3DTransferTargetViewABI;
         else if (direct3D && format != stored) abi = GPUTextureViews.Direct3DMutableFormatABI;
         if (GPUTextureViews.Support(Device, abi) != 1)
             throw new NotSupportedException("This texture role requires the pinned native image/view adapter.");
-        if (direct3D && (type == TextureType.Texture && original.Layers != 1 && abi != GPUTextureViews.Direct3DTransferTargetViewABI ||
-            (original.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0))
+        if (direct3D && (original.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0)
             throw new NotSupportedException("Direct3D 12 views do not support this texture shape or usage.");
         if (direct3D && !sampledOnly && type == TextureType.TextureArray && (original.Usage & TextureUsageBits.Storage) != 0)
             RequireStorageArrayViews();
@@ -139,7 +142,8 @@ public sealed unsafe partial class RenderingDevice
         with
         {
             BaseLayer = layer,
-            BaseMip = mip
+            BaseMip = mip,
+            NativeArraySlice = abi is GPUTextureViews.Direct3DLayerViewABI or GPUTextureViews.Direct3DLayerSampledABI,
         };
         var ownedViews = owner.TextureViews ??= []; ownedViews.EnsureCapacity(ownedViews.Count + 1);
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, TextureOwner = ownerID, TextureSource = owner };

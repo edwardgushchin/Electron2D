@@ -11,12 +11,12 @@ public sealed unsafe partial class RenderingDevice
     private static (byte[] Code, Binding[] Layout, PushStage[] Push, SamplerLink[] Samplers) RemapCore(byte[] code, ShaderStage stage, bool template, IReadOnlyDictionary<(uint Set, int Binding, int Element), uint>? swizzles = null)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
-        var imageArrays = DeviceImageArrays.Lower(code, template); code = imageArrays.Code;
+        var imageArrays = DeviceImageArrays.Lower(code, template, swizzles); code = imageArrays.Code;
         var texelTranslation = TexelBufferProgram.Lower(code, template); code = texelTranslation.Code;
         var samplerTranslation = CanvasSamplerArrays.LowerDevice(code, template, swizzles); code = samplerTranslation.Code;
         var unnormalizedUnsafe = CanvasSamplerArrays.CoordinateSamplingRequirements(code);
         var inputTranslation = LowerInputAttachments(code, stage); code = inputTranslation.Code;
-        var readonlyTranslation = LowerReadOnlyImages(code, stage); code = readonlyTranslation.Code;
+        var readonlyTranslation = LowerReadOnlyImages(code, stage, imageArrays.Slices); code = readonlyTranslation.Code;
         (byte[] Code, uint Variable, uint Size) translated;
         try { translated = template ? (code, 0u, 0u) : new PushLowering(code).Translate(); }
         catch (OverflowException error) { throw new ArgumentException("The push layout exceeds module bounds.", nameof(code), error); }
@@ -153,7 +153,15 @@ public sealed unsafe partial class RenderingDevice
         var restored = RestoreSamplerLayout(layout, samplerTranslation.Plan, stage);
         var texelSources = texelTranslation.Sources.ToDictionary(s => (s.NativeSet, s.NativeBinding));
         var finalLayout = restored.Layout.Select(b => texelSources.TryGetValue((b.Set, b.Slot), out var s) ? b with { Set = s.Set, Slot = s.Binding, Type = s.Type, ImageFormat = s.Format, PixelType = s.PixelType, Count = s.Count, Element = s.Element, DynamicCount = s.DynamicCount } : b).ToArray();
-        finalLayout = finalLayout.Select(b => imageArrays.Sources.TryGetValue((b.Set, b.Slot), out var s) ? b with { Set = s.Set, Slot = s.Binding, Count = s.Count, Element = s.Element, DynamicCount = s.Dynamic } : b).ToArray();
+        finalLayout = finalLayout.Select(b => imageArrays.Sources.TryGetValue((b.Set, b.Slot), out var s) ? b with
+        {
+            Set = s.Set,
+            Slot = s.Binding,
+            Count = s.Count,
+            Element = s.Element,
+            DynamicCount = s.Dynamic,
+            Array = b.Array && !imageArrays.Slices.Contains((b.Set, b.Slot)),
+        } : b).ToArray();
         return (code, finalLayout, push is null ? [] : [push], restored.Links);
     }
 }

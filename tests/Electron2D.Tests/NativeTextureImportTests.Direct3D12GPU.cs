@@ -69,7 +69,7 @@ internal static unsafe partial class NativeTextureImportTests
             Reject<ArgumentException>(() => ImportGPU(device, resource, levels: 2));
             Reject<ArgumentException>(() => ImportGPU(device, resource, layers: 1));
             Reject<ArgumentException>(() => ImportGPU(device, resource, format: DeviceFormat.R8G8B8A8SRGB));
-            Reject<NotSupportedException>(() => ImportGPU(device, resource, usage: Usage.Sampling | Usage.ColorAttachment));
+            Reject<ArgumentException>(() => ImportGPU(device, resource, usage: Usage.Sampling | Usage.ColorAttachment));
             Reject<InvalidOperationException>(() => Task.Run(() => ImportGPU(device, resource)).GetAwaiter().GetResult());
             device.ComputeListBegin();
             try { Reject<InvalidOperationException>(() => ImportGPU(device, resource)); }
@@ -105,6 +105,10 @@ internal static unsafe partial class NativeTextureImportTests
                 UsageBits = GPUTransfer,
             };
             using var view = new RDTextureView();
+            var layerView = device.TextureCreateSharedFromSlice(view, imported, 1, 1, 2);
+            Check(device.GetDriverResource(DriverResource.Texture, layerView, 0) == (ulong)resource &&
+                device.TextureGetData(layerView, 0).AsSpan().SequenceEqual(GPUMipColors(2).AsSpan(Width * Height * 4)),
+                "The imported layer view retains the producer allocation and physical mip interval.");
             var copy = device.TextureCreate(format, view);
             try
             {
@@ -182,6 +186,32 @@ internal static unsafe partial class NativeTextureImportTests
         VerifyGPUImportedStorageArray(device, fixture, debug, layers: 1);
         VerifyGPUImportedStorageArray(device, fixture, debug, layers: 2);
         VerifyGPUSharedMips(device, fixture, debug);
+        VerifyGPUImportedLayerTarget(device, fixture, debug);
+    }
+
+    private static void VerifyGPUImportedLayerTarget(RenderingDevice device, nint fixture, bool debug)
+    {
+        var resource = CreateGPUResource(device, fixture, 2, Levels, options: 4);
+        try
+        {
+            var imported = ImportGPU(device, resource, usage: GPUTransfer | Usage.ColorAttachment);
+            using var view = new RDTextureView();
+            var layer = device.TextureCreateSharedFromSlice(view, imported, 1, 1);
+            var target = device.FramebufferCreate([layer]);
+            device.DrawListBegin(target, RenderingDevice.DrawFlags.ClearColorAll, [Colors.Magenta]);
+            device.DrawListEnd();
+            device.FreeRID(target);
+            var expected = GPUMipColors(2);
+            MemoryMarshal.Cast<byte, uint>(expected.AsSpan()).Slice(Width * Height, (Width >> 1) * (Height >> 1)).Fill(0xffff00ff);
+            var actual = device.TextureGetData(imported, 1);
+            Check(actual.AsSpan().SequenceEqual(expected),
+                "Imported array framebuffer writes only its selected layer and mip.");
+            Check(device.TextureGetData(imported, 0).AsSpan().SequenceEqual(GPUMipColors(0)),
+                "Imported attachment writes preserve other layers.");
+            device.FreeRID(imported);
+            CheckGPUDebug(fixture, resource, debug);
+        }
+        finally { Marshal.Release(resource); }
     }
 
     private static void VerifyGPUWritable(RenderingDevice device, nint fixture, bool debug, uint layers, bool color = true)

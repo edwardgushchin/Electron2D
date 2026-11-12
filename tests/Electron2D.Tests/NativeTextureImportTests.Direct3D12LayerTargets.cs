@@ -80,9 +80,21 @@ internal static unsafe partial class NativeTextureImportTests
 
         format.UsageBits = Transfer | Usage.Sampling;
         var sampled = device.TextureCreate(format, view, [a, b]);
-        Reject<NotSupportedException>(() => device.TextureCreateSharedFromSlice(view, sampled, 1, 1));
-        Check(device.TextureGetData(sampled, 1).AsSpan().SequenceEqual(b), "Refusing an unsupported sampled slice preserves its owner.");
+        var sampledLayer = device.TextureCreateSharedFromSlice(view, sampled, 1, 1);
+        Check(device.TextureGetData(sampledLayer, 0).AsSpan().SequenceEqual(b.AsSpan(MIP1 * 4, 16)),
+            "The sampled slice retains the same encoded transfer path.");
         device.FreeRID(sampled);
+
+        format.UsageBits |= Usage.Storage;
+        var compute = device.TextureCreate(format, view, [MakePixels(Red), MakePixels(Green)]);
+        var destination = device.TextureCreateSharedFromSlice(view, compute, 1, 1);
+        var disjoint = device.TextureCreateSharedFromSlice(view, compute, 0, 1);
+        var computeTail = device.TextureCreateSharedFromSlice(view, compute, 1, 2);
+        VerifyGPUComputeAliases(device, destination, destination, disjoint, computeTail);
+        var computed = MemoryMarshal.Cast<byte, uint>(device.TextureGetData(compute, 1).AsSpan());
+        Check(computed[MIP1] == Red && computed[MIP1 + 1] == Green && computed[MIP2] == White,
+            $"Disjoint layer and mip writes preserve neighbors: {computed[MIP1]:X8}, {computed[MIP1 + 1]:X8}, {computed[MIP2]:X8}.");
+        device.FreeRID(compute);
 
         format.UsageBits = Transfer | Usage.ColorAttachment;
         format.AddShareableFormat(Format.R8G8B8A8UNORM);

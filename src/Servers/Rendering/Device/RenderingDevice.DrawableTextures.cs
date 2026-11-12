@@ -38,7 +38,7 @@ public sealed unsafe partial class RenderingDevice
             if (descriptor is { UsesSampler: true } && material?.Samplers[i] is { UnnormalizedUVW: true }) SamplerConfiguration.RequireUnnormalizedView(Device, sample.NativeHandle);
             var integer = PixelType(sample.Texture.Format) != 0;
             if (descriptor is null || descriptor.UsesSampler) ValidateFormatFilter(sample.NativeHandle, material?.Samplers[i]?.LinearFilter ?? !integer, material?.Samplers[i]?.EnableCompare ?? false);
-            swizzles[i] = sample.Texture.Swizzle; mapped |= swizzles[i] != 0;
+            swizzles[i] = TextureSwizzles.Sampling(sample.Texture); mapped |= swizzles[i] != 0;
             bindings[i] = new()
             {
                 Texture = sample.NativeHandle,

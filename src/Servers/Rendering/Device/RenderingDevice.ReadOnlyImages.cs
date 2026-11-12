@@ -4,7 +4,8 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private static (byte[] Code, Dictionary<uint, uint> Images) LowerReadOnlyImages(byte[] code, ShaderStage stage)
+    private static (byte[] Code, Dictionary<uint, uint> Images) LowerReadOnlyImages(byte[] code, ShaderStage stage,
+        HashSet<(uint Set, int Binding)> slices)
     {
         if (stage == ShaderStage.Compute) return (code, []);
         var words = MemoryMarshal.Cast<byte, uint>(code.AsSpan()); var instructions = new List<uint[]>();
@@ -21,7 +22,14 @@ public sealed unsafe partial class RenderingDevice
         var variables = instructions.Where(i => Op(i) == 59 && i.Length >= 4 && i[3] == 0 && pointers.TryGetValue(i[1], out var image) && images.ContainsKey(image)).ToArray();
         if (images.Values.Any(i => i[4] == 1 || i[5] > 1 || i[6] > 1)) throw new NotSupportedException("Graphics storage images require ordinary color image types.");
         // Layered and multisample storage retain native descriptors instead of readonly snapshots.
-        if (images.Values.Any(i => i[5] != 0 || i[6] != 0)) return (code, []);
+        if (images.Values.Any(i => i[6] != 0)) return (code, []);
+        if (images.Values.Any(i => i[5] != 0))
+        {
+            var locations = instructions.Where(i => Op(i) == 71 && i.Length == 4 && i[2] is 33 or 34)
+                .GroupBy(i => i[1]).ToDictionary(g => g.Key, g => g.ToDictionary(i => i[2], i => i[3]));
+            if (slices.Count == 0 || variables.Any(v => images[pointers[v[1]]][5] != 0 &&
+                (!locations.TryGetValue(v[2], out var location) || !slices.Contains((location[34], checked((int)location[33])))))) return (code, []);
+        }
         if (variables.Any(v => !readOnly.Contains(v[2]))) return (code, []);
         var formats = variables.ToDictionary(v => v[2], v => images[pointers[v[1]]][8]);
         var translated = images.Keys.ToHashSet();
@@ -30,7 +38,8 @@ public sealed unsafe partial class RenderingDevice
         var integer = instructions.FirstOrDefault(i => Op(i) == 21 && i.Length == 4 && i[2] == 32 && i[3] == 1)?[1] ?? 0;
         if (integer == 0) { integer = Fresh(); definitions.Add([(4u << 16) | 21, integer, 32, 1]); }
         var zero = Fresh(); definitions.Add([(4u << 16) | 43, integer, zero, 0]);
-        var values = instructions.Where(i => i.Length >= 3 && translated.Contains(i[1])).ToDictionary(i => i[2], i => i[1]);
+        var values = instructions.Where(i => i.Length >= 4 && Op(i) is 55 or 57 or 61 or 83 or 169 or 245 &&
+            translated.Contains(i[1])).Select(i => i[2]).ToHashSet();
         var output = new List<uint>(words.Length); output.AddRange(words[..5].ToArray()); var emitted = false;
         foreach (var item in instructions)
         {
@@ -38,13 +47,13 @@ public sealed unsafe partial class RenderingDevice
             if (!emitted && op == 54) { foreach (var definition in definitions) output.AddRange(definition); emitted = true; }
             if (op == 71 && item.Length == 3 && item[2] == 24 && formats.ContainsKey(item[1])) continue;
             if (op == 25 && translated.Contains(item[1])) { item[7] = 1; item[8] = 0; output.AddRange(item); continue; }
-            if (op == 98 && item.Length >= 5 && values.ContainsKey(item[3]))
+            if (op == 98 && item.Length >= 5 && values.Contains(item[3]))
             {
                 if (item.Length != 5 && !(item.Length == 6 && item[5] == 0)) throw new NotSupportedException("Readonly graphics image operands require their native image-load adapter.");
                 output.AddRange([(7u << 16) | 95, item[1], item[2], item[3], item[4], 2, zero]); continue;
             }
-            if (op == 104 && item.Length == 4 && values.ContainsKey(item[3])) { output.AddRange([(5u << 16) | 103, item[1], item[2], item[3], zero]); continue; }
-            if (op == 99 && item.Length >= 4 && values.ContainsKey(item[1])) throw new ArgumentException("A readonly graphics image cannot be written.", nameof(code));
+            if (op == 104 && item.Length == 4 && values.Contains(item[3])) { output.AddRange([(5u << 16) | 103, item[1], item[2], item[3], zero]); continue; }
+            if (op == 99 && item.Length >= 4 && values.Contains(item[1])) throw new ArgumentException("A readonly graphics image cannot be written.", nameof(code));
             output.AddRange(item);
         }
         output[3] = next; return (MergeReadOnlyImageTypes(output), formats);

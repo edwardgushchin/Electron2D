@@ -1,6 +1,6 @@
 # Shared texture views
 
-Last updated: 2026-11-12
+Last updated: 2026-11-13
 
 `RenderingDevice.TextureCreateShared` exposes the original allocation through a copied
 `RDTextureView`. `TextureCreateSharedFromSlice` selects one original layer and a
@@ -170,10 +170,19 @@ Declared linear/sRGB formats use the corresponding typed RTV. The view shares
 the original allocation and retains its transfer permissions.
 [Direct3D 12 array RTV fields](https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_tex2d_array_rtv)
 
-Sampled and storage slices of multi-layer allocations require shader lowering
-to one-layer array SRVs and UAVs. Imported arrays require Sampling, so this
-layer target path applies to device-owned allocations. Depth/stencil,
-multisample and input attachments retain their native prerequisites.
+Sampled and storage slices of single-sample color arrays also keep the original
+allocation, including sampled imports. The private native view binds a
+one-layer array SRV or UAV. Shader variants preserve ordinary image coordinates,
+mip intervals and component maps. Sampling, texel fetch and dimension queries
+address the selected view. Compute storage operations address its base mip
+and read-only graphics storage loads use the same selected subresource.
+Disjoint sampled and written subresources can share an allocation. Overlap
+and duplicate writable slots reject before recording the dispatch.
+[Direct3D 12 array SRV fields](https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_tex2d_array_srv)
+
+Imported color arrays with multiple mips can render through a single-mip layer
+view. Depth/stencil, multisample, input attachments and writable graphics
+storage retain their native prerequisites.
 [Direct3D 12 compute array UAVs](graphics-storage-images.md#direct3d-12-compute-arrays)
 use a cached base-mip view and transition every writable layer.
 
@@ -185,13 +194,18 @@ and run the Release root runner with `SDL_GPU_DRIVER=direct3d12` and
 resource identity and encoded bytes of each layer/mip before and after a
 two-attachment render pass, a disjoint sibling copy, an interval update and a
 typed sRGB clear. It checks invalid intervals, duplicate output and copy
-overlap refusal, sampling refusal and original-owner retirement. Set
+overlap refusal, sampled transfers and original-owner retirement. Set
 `ELECTRON2D_D3D12_IMPORT_DEBUG=1` to check the device's native debug queue. Use
 `gpu-direct3d12-layer-targets-preceding` with the previous native adapter to
 verify refusal and preservation of transfer behavior.
-The Windows x64 check used a source-built render bridge and the pinned SDL
-core with the existing local engine module. Release package qualification
-remains open.
+The `ELECTRON2D_TEST_ARRAY_SLICES=direct3d12` and `vulkan` profiles check
+resource identity, two selected mips, GPU texel fetch, an atomic write, and
+unchanged neighboring layers and mips. The Direct3D 12 profile reads the
+storage slice from vertex and fragment stages. Its `unavailable` profile
+checks refusal with the preceding native module. The sRGB canvas fixture
+also draws a swizzled slice from an actual array and checks rendered pixels.
+Windows x64 testing uses the source-built render bridge and the pinned SDL
+core with the existing local engine module. Release package qualification remains open.
 
 [DeviceGraphicsStorage.Consumer](../../tests/DeviceGraphicsStorage.Consumer/README.md)
 provides `views`, `views-source`, `views-canvas`, `views-unavailable` and

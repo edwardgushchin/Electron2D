@@ -10,7 +10,7 @@ internal readonly record struct TextureSwizzleKey(ulong A, ulong B, ulong C, ulo
         Span<ulong> packed = stackalloc ulong[8]; packed.Clear();
         for (var i = 0; i < values.Length; i++)
         {
-            if ((values[i] & ~4095u) != 0) throw new ArgumentOutOfRangeException(nameof(values));
+            if ((values[i] & ~8191u) != 0) throw new ArgumentOutOfRangeException(nameof(values));
             packed[i / 4] |= (ulong)values[i] << ((i % 4) * 16);
         }
         return new(packed[0], packed[1], packed[2], packed[3], packed[4], packed[5], packed[6], packed[7]);
@@ -19,6 +19,10 @@ internal readonly record struct TextureSwizzleKey(ulong A, ulong B, ulong C, ulo
 
 internal static class TextureSwizzles
 {
+    internal const uint ArraySlice = 1u << 12;
+    internal static uint Sampling(RenderingDevice.TextureInfo info) =>
+        info.Swizzle | (info.NativeArraySlice ? ArraySlice : 0);
+
     internal static uint Capture(RDTextureView view)
     {
         static uint Lane(RenderingDevice.TextureSwizzle value, int lane) => value == RenderingDevice.TextureSwizzle.Identity || (int)value == lane + 3 ? 0 : (uint)value;
@@ -26,8 +30,8 @@ internal static class TextureSwizzles
     }
     internal static uint Source(Resource? resource) => ShaderTexture.Source(resource) switch
     {
-        TextureRD texture => texture.DeviceInfo?.Swizzle ?? 0,
-        TextureLayeredRD texture => texture.DeviceInfo?.Swizzle ?? 0,
+        TextureRD { DeviceInfo: { } info } => Sampling(info),
+        TextureLayeredRD { DeviceInfo: { } info } => Sampling(info),
         _ => 0
     };
 }

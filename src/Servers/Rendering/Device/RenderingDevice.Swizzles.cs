@@ -11,15 +11,23 @@ public sealed unsafe partial class RenderingDevice
     {
         if (!_sets.TryGetValue(set, out var resources) || resources.Shader != shader || !resources.Bindings.TryGetValue(binding, out var ids)) throw new InvalidOperationException("Bind every sampled resource set before selecting its component maps.");
         if (ids.Length != count * ResourceWidth(type)) throw new ArgumentException("Incorrect sampled descriptor resource count.", nameof(binding));
-        return Get(ids[element * ResourceWidth(type) + (type == UniformType.SamplerWithTexture ? 1 : 0)], Kind.Texture).Texture!.Swizzle;
+        return TextureSwizzles.Sampling(Get(ids[element * ResourceWidth(type) + (type == UniformType.SamplerWithTexture ? 1 : 0)], Kind.Texture).Texture!);
     }
-    private TextureSwizzleKey BoundSwizzles(Entry pipeline, Entry program, Dictionary<(uint Set, int Binding, int Element), uint>? descriptions = null)
+    private (TextureSwizzleKey Sampled, TextureSwizzleKey Storage) BoundSwizzles(Entry pipeline, Entry program, Dictionary<(uint Set, int Binding, int Element), uint>? descriptions = null)
     {
         Span<uint> values = stackalloc uint[32]; values.Clear(); var count = 0;
+        Span<uint> storage = stackalloc uint[16]; var storageCount = 0;
         foreach (var descriptor in program.Layout)
         {
-            if (descriptor.Type != UniformType.SamplerWithTexture || descriptor.Native < 0) continue;
+            if (descriptor.Type != UniformType.SamplerWithTexture && (descriptor.Type != UniformType.Image || _context.Driver != "direct3d12") || descriptor.Native < 0) continue;
             var value = BoundSwizzle(descriptor.Set, descriptor.Slot, descriptor.Element, descriptor.Type, pipeline.Shader, descriptor.Count);
+            if (descriptor.Type == UniformType.Image)
+            {
+                value &= TextureSwizzles.ArraySlice;
+                storage[storageCount++] = value;
+                if (value != 0 && descriptions is not null) descriptions[(descriptor.Set, descriptor.Slot, descriptor.Element)] = value;
+                continue;
+            }
             if (count == values.Length) throw new NotSupportedException("A graphics program exceeds its native sampled capacity.");
             values[count++] = value; if (descriptions is not null) descriptions[(descriptor.Set, descriptor.Slot, descriptor.Element)] = value;
         }
@@ -29,7 +37,7 @@ public sealed unsafe partial class RenderingDevice
             if (count == values.Length) throw new NotSupportedException("A graphics program exceeds its native sampled capacity.");
             values[count++] = value; if (descriptions is not null) descriptions[(source.Set, source.Binding, source.Element)] = value;
         }
-        return TextureSwizzleKey.Create(values[..count]);
+        return (TextureSwizzleKey.Create(values[..count]), TextureSwizzleKey.Create(storage[..storageCount]));
     }
     private SwizzleVariant? SampledVariant(Entry pipeline)
     {
@@ -50,7 +58,7 @@ public sealed unsafe partial class RenderingDevice
             var variant = new SwizzleVariant(programs, handles); var variants = pipeline.SwizzleVariants ??= [];
             if (variants.Count >= 64)
             {
-                var oldest = default(TextureSwizzleKey); foreach (var pair in variants) { oldest = pair.Key; break; }
+                var oldest = default((TextureSwizzleKey, TextureSwizzleKey)); foreach (var pair in variants) { oldest = pair.Key; break; }
                 var retired = variants[oldest]; variants.Remove(oldest); ReleaseSwizzle(retired);
             }
             variants.Add(key, variant); return variant;

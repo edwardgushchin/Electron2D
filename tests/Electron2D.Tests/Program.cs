@@ -62,6 +62,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ADAPTER_IDENTITY") is { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMMAND_LABELS") is { } commandLabelProfile) { GPUCommandLabelTests.Run(commandLabelProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_NAMES") is { } resourceNameProfile) { GPUResourceNameTests.Run(resourceNameProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_UNIFORMS") is { } nativeUniformProfile) { NativeUniformTests.Run(nativeUniformProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ARRAY_SLICES") is { } arraySliceProfile) { DeviceArraySliceTests.Run(arraySliceProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DESKTOP_ACCESSIBILITY") is { } desktopAccessibilityProfile) { DesktopAccessibilityTests.Run(desktopAccessibilityProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_X11_LAYOUTS") is { } x11LayoutProfile) { X11KeyboardLayoutTests.Run(x11LayoutProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WAYLAND_LAYOUTS") == "1") { WaylandKeyboardLayoutTests.Run(); return; }

@@ -273,7 +273,7 @@ static bool compatible_view_format(SDL_GPUTextureFormat base, SDL_GPUTextureForm
 {
     if (base == view) return true;
     if (abi != E2D_D3D12_SAMPLED_FORMAT_ABI && abi != E2D_D3D12_MUTABLE_FORMAT_ABI &&
-        abi != E2D_D3D12_TRANSFER_TARGET_VIEW_ABI) return false;
+        abi != E2D_D3D12_TRANSFER_TARGET_VIEW_ABI && abi != E2D_D3D12_LAYER_VIEW_ABI && abi != E2D_D3D12_LAYER_SAMPLED_ABI) return false;
     const DXGI_FORMAT family = typeless_family(base);
     return family != DXGI_FORMAT_UNKNOWN && family == typeless_family(view);
 }
@@ -282,8 +282,11 @@ static bool view_format(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextur
 {
     const SDL_GPUTextureUsageFlags color = SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_COLOR_TARGET;
     const bool transfer_target = abi == E2D_D3D12_TRANSFER_TARGET_VIEW_ABI;
-    const SDL_GPUTextureUsageFlags required = (transfer_target || abi == E2D_D3D12_MUTABLE_FORMAT_ABI ? color : SDL_GPU_TEXTUREUSAGE_SAMPLER) |
-        (abi == E2D_D3D12_ARRAY_ABI ? SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ : 0);
+    const bool layer_view = abi == E2D_D3D12_LAYER_VIEW_ABI;
+    const bool sampled_only = abi == E2D_D3D12_SAMPLED_FORMAT_ABI || abi == E2D_D3D12_LAYER_SAMPLED_ABI;
+    const SDL_GPUTextureUsageFlags required = transfer_target || abi == E2D_D3D12_MUTABLE_FORMAT_ABI ? color :
+        layer_view ? color | SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ | storage :
+        SDL_GPU_TEXTUREUSAGE_SAMPLER | (abi == E2D_D3D12_ARRAY_ABI ? SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ : 0);
     const SDL_GPUTextureUsageFlags allowed = transfer_target ? color : color | SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ | storage;
     return info && compatible_view_format(info->format, format, abi) && info->sample_count == SDL_GPU_SAMPLECOUNT_1 &&
         (info->type == SDL_GPU_TEXTURETYPE_2D || info->type == SDL_GPU_TEXTURETYPE_2D_ARRAY) &&
@@ -291,7 +294,7 @@ static bool view_format(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextur
         (uint32_t)format < SDL_arraysize(SDLToD3D12_TextureFormat) &&
         SDLToD3D12_TextureFormat[format] != DXGI_FORMAT_UNKNOWN &&
         SDL_GPUTextureSupportsFormat(device, format, info->type,
-            abi == E2D_D3D12_SAMPLED_FORMAT_ABI ? SDL_GPU_TEXTUREUSAGE_SAMPLER : info->usage);
+            sampled_only ? SDL_GPU_TEXTUREUSAGE_SAMPLER : info->usage);
 }
 #endif
 
@@ -329,11 +332,12 @@ SDL_GPUTexture *e2d_d3d12_view_create(SDL_GPUDevice *device, uint32_t abi, SDL_G
     D3D12TextureContainer *container = (D3D12TextureContainer *)source;
     SDL_GPUTextureCreateInfo info = container->header.info;
     const bool array_storage = array == 2;
-    const bool layer_target = !array && info.layer_count_or_depth > 1 && abi == E2D_D3D12_TRANSFER_TARGET_VIEW_ABI;
+    const bool layer_target = !array && info.type == SDL_GPU_TEXTURETYPE_2D_ARRAY &&
+        (abi == E2D_D3D12_TRANSFER_TARGET_VIEW_ABI || abi == E2D_D3D12_LAYER_VIEW_ABI || abi == E2D_D3D12_LAYER_SAMPLED_ABI);
     if (!view_format(device, abi, &info, format) || array > 2 || !layers || !levels ||
         layer >= info.layer_count_or_depth || layers > info.layer_count_or_depth - layer ||
         level >= info.num_levels || levels > info.num_levels - level ||
-        (!array && (layers != 1 || (info.layer_count_or_depth != 1 && !layer_target))) ||
+        (!array && (layers != 1 || (info.type == SDL_GPU_TEXTURETYPE_2D_ARRAY && !layer_target))) ||
         (array_storage && (info.type != SDL_GPU_TEXTURETYPE_2D_ARRAY || levels != 1 || (info.usage & storage) != storage))) {
         SDL_SetError("Unsupported Direct3D 12 source view format, usage or range");
         return NULL;
@@ -355,7 +359,7 @@ SDL_GPUTexture *e2d_d3d12_view_create(SDL_GPUDevice *device, uint32_t abi, SDL_G
     // The RTV uses the physical array shape to select the layer of this ordinary view.
     info.type = (array || layer_target) ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D;
     info.format = format;
-    if (abi == E2D_D3D12_SAMPLED_FORMAT_ABI) info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER;
+    if (abi == E2D_D3D12_SAMPLED_FORMAT_ABI || abi == E2D_D3D12_LAYER_SAMPLED_ABI) info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER;
     info.width = SDL_max(1u, root->width >> level);
     info.height = SDL_max(1u, root->height >> level);
     info.layer_count_or_depth = layers;

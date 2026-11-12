@@ -107,7 +107,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal int[]? OutputSlots;
         internal uint ViewIndex;
         internal GraphicsRecipe? Recipe;
-        internal Dictionary<TextureSwizzleKey, SwizzleVariant>? SwizzleVariants;
+        internal Dictionary<(TextureSwizzleKey Sampled, TextureSwizzleKey Storage), SwizzleVariant>? SwizzleVariants;
         internal Entry? Variant;
         internal RenderHandle[] ViewPipelines = [];
         internal Entry[] ViewPrograms = [];

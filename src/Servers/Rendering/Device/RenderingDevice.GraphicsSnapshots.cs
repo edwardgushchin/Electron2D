@@ -6,7 +6,7 @@ public sealed unsafe partial class RenderingDevice
 {
     private int _graphicsSnapshotCount;
     private readonly List<Entry> _graphicsSnapshots = new(8);
-    private static bool NeedsGraphicsSnapshot(Entry entry) => entry.Kind == Kind.Texture && entry.Texture is { Type: TextureType.Texture } info && (info.Usage & (TextureUsageBits.Sampling | TextureUsageBits.Storage)) == (TextureUsageBits.Sampling | TextureUsageBits.Storage);
+    private static bool NeedsGraphicsSnapshot(Entry entry) => entry.Kind == Kind.Texture && entry.Texture is { Type: TextureType.Texture, NativeArraySlice: false } info && (info.Usage & (TextureUsageBits.Sampling | TextureUsageBits.Storage)) == (TextureUsageBits.Sampling | TextureUsageBits.Storage);
     private bool CaptureGraphicsImages()
     {
         if (PipelineProgram(_graphicsPipeline!).GraphicsImages != 0) return CaptureNativeImages();

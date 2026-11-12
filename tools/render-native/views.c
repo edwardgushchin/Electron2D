@@ -35,7 +35,7 @@ static bool compatible(SDL_GPUDevice *device)
 E2D_EXPORT int e2d_render_view_support(SDL_GPUDevice *device, uint32_t abi)
 {
     if (!device) return -1;
-    if (abi >= E2D_D3D12_VIEW_ABI && abi <= E2D_D3D12_TRANSFER_TARGET_VIEW_ABI) return e2d_d3d12_device(device);
+    if (abi >= E2D_D3D12_VIEW_ABI && abi <= E2D_D3D12_LAYER_SAMPLED_ABI) return e2d_d3d12_device(device);
     if (abi != 1 && abi != 2 && abi != 4 && abi != 5) return -1;
     if (!compatible(device)) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
@@ -293,7 +293,7 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_
     if (e2d_render_view_support(device, abi) != 1 || !source || !layers || !levels || array > 2 || (!array && layers != 1)) return NULL;
     if ((array == 2 && (levels != 1 || (abi != 2 && abi != E2D_D3D12_ARRAY_ABI))) ||
         (abi == E2D_D3D12_ARRAY_ABI && array != 2)) return NULL;
-    if (abi >= E2D_D3D12_VIEW_ABI && abi <= E2D_D3D12_TRANSFER_TARGET_VIEW_ABI)
+    if (abi >= E2D_D3D12_VIEW_ABI && abi <= E2D_D3D12_LAYER_SAMPLED_ABI)
         return e2d_d3d12_view_create(device, abi, source, format, layer, layers, level, levels, array);
     VulkanRenderer *r = (VulkanRenderer *)device->driverData; VulkanTextureContainer *src = (VulkanTextureContainer *)source;
     bool sampled_only = abi == 4;
@@ -414,7 +414,7 @@ E2D_EXPORT int e2d_render_view_format_support(SDL_GPUDevice *device, uint32_t ab
 {
     if (!info || e2d_render_view_support(device, abi) != 1) return 0;
     if (abi == E2D_D3D12_VIEW_ABI || abi == E2D_D3D12_SAMPLED_FORMAT_ABI || abi == E2D_D3D12_MUTABLE_FORMAT_ABI ||
-        abi == E2D_D3D12_TRANSFER_TARGET_VIEW_ABI)
+        abi == E2D_D3D12_TRANSFER_TARGET_VIEW_ABI || abi == E2D_D3D12_LAYER_VIEW_ABI || abi == E2D_D3D12_LAYER_SAMPLED_ABI)
         return e2d_d3d12_view_format(device, abi, info, format);
     if (abi >= E2D_D3D12_VIEW_ABI) return 0;
     if (info->sample_count > SDL_GPU_SAMPLECOUNT_8) return 0;

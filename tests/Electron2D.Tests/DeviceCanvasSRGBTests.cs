@@ -114,17 +114,7 @@ internal static class DeviceCanvasSRGBTests
                 sampledArray.HasMIPMaps(), "An sRGB array retains its layer and mip counts.");
             view.SwizzleR = TextureSwizzle.B;
             view.SwizzleB = TextureSwizzle.R;
-            var sliceOwner = array;
-            var sliceLayer = 1u;
-            if (direct3D)
-            {
-                Reject<NotSupportedException>(() => device.TextureCreateSharedFromSlice(view, array, 1, 1));
-                format.TextureType = TextureType.Texture;
-                format.ArrayLayers = 1;
-                sliceOwner = device.TextureCreate(format, view);
-                sliceLayer = 0;
-            }
-            var slice = device.TextureCreateSharedFromSlice(view, sliceOwner, sliceLayer, 1);
+            var slice = device.TextureCreateSharedFromSlice(view, array, 1, 1);
             sliceTexture.TextureRDRID = slice;
             var sliceAlias = RenderingServer.TextureGetRDTexture(sliceTexture.GetRID(), true);
             sampledSlice.TextureRDRID = sliceAlias;
@@ -141,8 +131,7 @@ internal static class DeviceCanvasSRGBTests
             device.TextureUpdate(sliceAlias, 0, texel);
             Check(device.TextureGetData(recreated, 0).SequenceEqual(ordinaryPixels) &&
                 device.TextureGetData(slice, 0).SequenceEqual(texel) &&
-                device.TextureGetData(sliceOwner, sliceLayer).AsSpan(16).SequenceEqual(texel) &&
-                (!direct3D || device.TextureGetData(arrayAlias, 1).AsSpan(16).SequenceEqual(arrayPixels.AsSpan(16))) &&
+                device.TextureGetData(arrayAlias, 1).AsSpan(16).SequenceEqual(texel) &&
                 device.TextureGetData(arrayAlias, 1).AsSpan(0, 16).SequenceEqual(arrayPixels.AsSpan(0, 16)) &&
                 device.TextureGetData(arrayAlias, 0).All(value => value == 0),
                 "Views share encoded bytes and writes touch the selected physical subresources.");
@@ -166,7 +155,6 @@ internal static class DeviceCanvasSRGBTests
                 device.FreeRID(slice);
                 Check(!device.TextureIsValid(sliceAlias) && device.TextureIsShared(arrayAlias),
                     "Freeing the source slice expires its export and preserves the array view.");
-                if (direct3D) device.FreeRID(sliceOwner);
                 device.FreeRID(array);
                 if (debugFixture != 0)
                 {

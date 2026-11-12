@@ -123,6 +123,7 @@ public sealed unsafe partial class RenderingDevice
     {
         internal uint BaseLayer { get; init; }
         internal uint BaseMip { get; init; }
+        internal bool NativeArraySlice { get; init; }
     }
     private static SDL.GPUTextureUsageFlags NativeUsage(TextureUsageBits usage)
     {

@@ -33,9 +33,9 @@ public sealed unsafe partial class RenderingDevice
     /// queue family requires a new ownership transfer. Destroy producer-owned objects before the
     /// logical device closes.
     /// GPU Direct3D 12 imports require a same-device typed color resource on a non-shared default heap
-    /// visible to the renderer queue. Color attachments require ALLOW_RENDER_TARGET. Ordinary color
-    /// mip chains require the native shared-view adapter and a single-mip view for the framebuffer.
-    /// Multi-layer color attachments require one mip. Compute storage images require ALLOW_UNORDERED_ACCESS.
+    /// visible to the renderer queue. Color attachments require ALLOW_RENDER_TARGET. Color mip chains
+    /// require the native shared-view adapter and a single-mip view for the framebuffer.
+    /// Compute storage images require ALLOW_UNORDERED_ACCESS.
     /// The native array adapter exposes all layers of the base mip to compute. Resources with
     /// simultaneous access are unsupported on Direct3D 12.
     /// The producer completes all work and leaves every subresource in ALL_SHADER_RESOURCE. The wrapper
@@ -81,9 +81,9 @@ public sealed unsafe partial class RenderingDevice
         {
             if (type == TextureType.TextureArray && (usageFlags & TextureUsageBits.Storage) != 0)
                 RequireStorageArrayViews();
-            if (MIPMaps != 1 && (usageFlags & TextureUsageBits.ColorAttachment) != 0 &&
-                (layers != 1 || GPUTextureViews.Support(Device, GPUTextureViews.Direct3DViewABI) != 1))
-                throw new NotSupportedException("Direct3D 12 mip-chain color attachments require a native ordinary shared texture view.");
+            var viewABI = type == TextureType.TextureArray ? GPUTextureViews.Direct3DLayerViewABI : GPUTextureViews.Direct3DViewABI;
+            if (MIPMaps != 1 && (usageFlags & TextureUsageBits.ColorAttachment) != 0 && GPUTextureViews.Support(Device, viewABI) != 1)
+                throw new NotSupportedException("Direct3D 12 mip-chain color attachments require a native shared texture view.");
         }
         if (driver == "direct3d12" && image > nuint.MaxValue) throw new ArgumentOutOfRangeException(nameof(image));
         if (ValidationLimits is { } limits && (width > limits[12] || height > limits[12] || layers > limits[10]))

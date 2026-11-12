@@ -9,6 +9,8 @@
 #define E2D_D3D12_SAMPLED_FORMAT_ABI 8
 #define E2D_D3D12_MUTABLE_FORMAT_ABI 9
 #define E2D_D3D12_TRANSFER_TARGET_VIEW_ABI 10
+#define E2D_D3D12_LAYER_VIEW_ABI 11
+#define E2D_D3D12_LAYER_SAMPLED_ABI 12
 #define E2D_VIEW_CACHE "Electron2D.render.texture_views"
 
 bool e2d_d3d12_device(SDL_GPUDevice *device);

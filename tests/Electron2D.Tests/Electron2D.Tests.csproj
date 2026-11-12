@@ -95,4 +95,5 @@
   <Import Project="../../tools/shaders/DeviceShaders.targets" />
   <ItemGroup><Electron2DComputeShader Include="../../examples/WaterPlayground/Water.comp.glsl;Shaders/LocalBufferLengths.comp.glsl" /></ItemGroup>
   <ItemGroup><Electron2DComputeShader Include="Shaders/LocalRendererSRGB.comp.glsl;Shaders/VulkanImportWrite.comp.glsl;Shaders/VulkanImportWriteArray.comp.glsl;Shaders/Direct3DSharedView.comp.glsl;Shaders/Direct3DStorageArrayAtomic.comp.glsl" /></ItemGroup>
+  <ItemGroup><Electron2DComputeShader Include="Shaders/Direct3DLayerSlice.comp.glsl" /></ItemGroup>
 </Project>
