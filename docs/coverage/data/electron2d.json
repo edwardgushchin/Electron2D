@@ -296090,6 +296090,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.MeshLODThreshold()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MeshLODThreshold",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E MeshLODThreshold { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.MovieWriterAudioBitDepth()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -307371,6 +307384,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Viewport.MSAA",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.MeshLODThreshold()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "MeshLODThreshold",
+    "signature": "public System.Single MeshLODThreshold { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

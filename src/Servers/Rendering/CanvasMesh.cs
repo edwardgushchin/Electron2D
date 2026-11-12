@@ -13,7 +13,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
     internal void Clear() { mesh = null!; _revision = -1; _customCount = 0; Array.Clear(_custom); }
 
     internal void Append(List<CanvasVertex> vertices, List<CanvasBatch> batches, Texture? texture, Transform transform, Color color,
-        MaterialState? inheritedMaterial, BlendMode inheritedBlend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, MultiMesh? instances = null, float fraction = 1, CanvasItem? skinOwner = null, bool linear = false, Texture? textureSource = null, CanvasMatrices? matrices = null)
+        MaterialState? inheritedMaterial, BlendMode inheritedBlend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, MultiMesh? instances = null, float fraction = 1, CanvasItem? skinOwner = null, bool linear = false, Texture? textureSource = null, CanvasMatrices? matrices = null, float lodThreshold = Viewport.DefaultMeshLODThreshold)
     {
         ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
         transform *= local; matrices = matrices?.Local(local); color *= modulate; if (linear) color = CanvasGeometry.LinearColor(color);
@@ -32,7 +32,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
                         var surface = arrays.Get(i); var first = vertices.Count;
                         if (instances?.GPUState is { } gpu)
                         {
-                            var batch = AppendGPU(vertices, surface.Data, surface.Primitive, gpu, instances, i, transform, color, fraction, palette, toPalette, fromPalette, linear, surface.LODs);
+                            var batch = AppendGPU(vertices, surface.Data, surface.Primitive, gpu, instances, i, transform, color, fraction, palette, toPalette, fromPalette, linear, surface.LODs, lodThreshold);
                             var template = Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, instanceCount: instances.InstanceCount, linear: linear, visibility: transform * instances.GetPresentationBounds(fraction), procedural: surface.Data.IsProcedural, primitive: surface.Primitive, snap: snap, textureSource: textureSource, matrices: matrices);
                             AddBatch(vertices, batches, template with { GPU = batch, SnapGeneratedVertices = snap }); continue;
                         }
@@ -50,10 +50,10 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
                         {
                             if (instances.DrawCount == 0) continue;
                             var template = Batch(0, 0, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: surfaceVisibility, procedural: surface.Data.IsProcedural, primitive: NativePrimitive(surface.Data, surface.Primitive), snap: snap, textureSource: textureSource, matrices: matrices);
-                            AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear, batches, template);
+                            AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, lodThreshold, linear, batches, template);
                             continue;
                         }
-                        else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear);
+                        else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, lodThreshold, linear);
                         if (vertices.Count != first) AddBatch(vertices, batches, Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount, linear, surfaceVisibility, surface.Data.IsProcedural, NativePrimitive(surface.Data, surface.Primitive), snap, textureSource, matrices));
                     }
                 }
@@ -65,7 +65,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
                 var first = vertices.Count; var surface = _custom[i];
                 if (instances?.GPUState is { } gpu)
                 {
-                    var batch = AppendGPU(vertices, surface.Data, surface.Primitive, gpu, instances, i, transform, color, fraction, palette, toPalette, fromPalette, linear, surface.LODs);
+                    var batch = AppendGPU(vertices, surface.Data, surface.Primitive, gpu, instances, i, transform, color, fraction, palette, toPalette, fromPalette, linear, surface.LODs, lodThreshold);
                     var template = Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, instanceCount: instances.InstanceCount, linear: linear, visibility: transform * instances.GetPresentationBounds(fraction), procedural: surface.Data.IsProcedural, primitive: surface.Primitive, snap: snap, textureSource: textureSource, matrices: matrices);
                     AddBatch(vertices, batches, template with { GPU = batch, SnapGeneratedVertices = snap }); continue;
                 }
@@ -74,10 +74,10 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
                 {
                     if (instances.DrawCount == 0) continue;
                     var template = Batch(0, 0, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: visibility, procedural: surface.Data.IsProcedural, primitive: NativePrimitive(surface.Data, surface.Primitive), snap: snap, textureSource: textureSource, matrices: matrices);
-                    AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear, batches, template);
+                    AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, lodThreshold, linear, batches, template);
                     continue;
                 }
-                AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear);
+                AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, lodThreshold, linear);
                 if (vertices.Count != first) AddBatch(vertices, batches, Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: visibility, procedural: surface.Data.IsProcedural, primitive: NativePrimitive(surface.Data, surface.Primitive), snap: snap, textureSource: textureSource));
             }
         }
@@ -207,15 +207,16 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         bounds = new(minimum, maximum - minimum);
         return bounds.IsFinite() && bounds.End.IsFinite();
     }
-    private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, MeshLOD[] lods, bool linear, List<CanvasBatch>? splitBatches = null, CanvasBatch template = default)
+    private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, MeshLOD[] lods, float lodThreshold, bool linear, List<CanvasBatch>? splitBatches = null, CanvasBatch template = default)
     {
         if (!palette.IsEmpty && data.Bones.Length != 0) foreach (var bone in data.Bones) if ((uint)bone >= (uint)palette.Length) throw new InvalidOperationException("A mesh skin index does not resolve in its palette.");
-        if (instances is null) { AppendSurface(output, MeshLOD.Select(data, lods, transform), primitive, transform, modulation, snap, default, palette, toPalette, fromPalette, linear); return; }
+        if (instances is null) { AppendSurface(output, MeshLOD.Select(data, lods, transform, lodThreshold), primitive, transform, modulation, snap, default, palette, toPalette, fromPalette, linear); return; }
         for (var index = 0; index < instances.DrawCount; index++)
         {
             instances.Presentation(index, fraction, out var pose, out var color, out var custom);
             var first = output.Count;
-            AppendSurface(output, MeshLOD.Select(data, lods, transform * pose), primitive, transform * pose, modulation * (linear ? CanvasGeometry.LinearColor(color) : color), snap, custom, palette, toPalette, fromPalette, linear, (uint)index);
+            var basis = transform * pose;
+            AppendSurface(output, MeshLOD.Select(data, lods, basis, lodThreshold), primitive, basis, modulation * (linear ? CanvasGeometry.LinearColor(color) : color), snap, custom, palette, toPalette, fromPalette, linear, (uint)index);
             if (splitBatches is not null) AddBatch(output, splitBatches, template with { First = first, Count = output.Count - first, Matrices = template.Matrices?.Instance(pose) });
         }
     }
@@ -260,7 +261,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         var index = data.Indices.Length == 0 ? order : data.Indices[order];
         return VertexIndex(data, index, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear, instanceID);
     }
-    private MultiMeshGPUDraw AppendGPU(List<CanvasVertex> vertices, MeshSurfaceData data, Mesh.PrimitiveType primitive, MultiMeshGPUState state, MultiMesh instances, int surface, Transform canvas, Color modulation, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, MeshLOD[] lods)
+    private MultiMeshGPUDraw AppendGPU(List<CanvasVertex> vertices, MeshSurfaceData data, Mesh.PrimitiveType primitive, MultiMeshGPUState state, MultiMesh instances, int surface, Transform canvas, Color modulation, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, MeshLOD[] lods, float lodThreshold)
     {
         state.Prepare(); var count = data.VertexCount;
         if (count == 0) { count = data.Indices.Max() + 1; foreach (var lod in lods) count = Math.Max(count, lod.Data.Indices.Max() + 1); }
@@ -275,7 +276,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
             indices = _deviceIndices[surface]; data.Indices.CopyTo(indices, 0); var offset = data.Indices.Length;
             foreach (var lod in lods) { lod.Data.Indices.CopyTo(indices, offset); offset += lod.Data.Indices.Length; }
         }
-        return new(state, surface, indices, data.Indices.Length, lods, canvas, modulation, instances.Stride, instances.InstanceCount, instances.DrawCount, instances.UseColors, instances.UseCustomData, instances.UseIndirect, instances.InterpolationEnabled ? Math.Clamp(fraction, 0, 1) : 1, instances.PhysicsInterpolationQualityMode);
+        return new(state, surface, indices, data.Indices.Length, lods, canvas, modulation, instances.Stride, instances.InstanceCount, instances.DrawCount, instances.UseColors, instances.UseCustomData, instances.UseIndirect, instances.InterpolationEnabled ? Math.Clamp(fraction, 0, 1) : 1, instances.PhysicsInterpolationQualityMode, lodThreshold);
     }
     private static CanvasVertex VertexIndex(MeshSurfaceData data, int index, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, uint instanceID = uint.MaxValue)
     {

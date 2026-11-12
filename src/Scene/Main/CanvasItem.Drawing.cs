@@ -406,13 +406,13 @@ public abstract partial class CanvasItem
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
                 var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.PhysicsInterpolationFraction : 1f;
-                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, effectiveClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this, linear, command.Texture, matrices?.Local(drawingTransform));
+                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, effectiveClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this, linear, command.Texture, matrices?.Local(drawingTransform), viewport?.MeshLODThreshold ?? Viewport.DefaultMeshLODThreshold);
                 continue;
             }
             if (replay.Mesh is { } mesh)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, effectiveClip, viewport?.SnapVerticesToPixel == true, skinOwner: this, linear: linear, textureSource: command.Texture, matrices: matrices?.Local(drawingTransform));
+                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, effectiveClip, viewport?.SnapVerticesToPixel == true, skinOwner: this, linear: linear, textureSource: command.Texture, matrices: matrices?.Local(drawingTransform), lodThreshold: viewport?.MeshLODThreshold ?? Viewport.DefaultMeshLODThreshold);
                 continue;
             }
             if (replay.ParticleCustom is { } custom)

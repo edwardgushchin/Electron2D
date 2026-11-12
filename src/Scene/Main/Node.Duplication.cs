@@ -112,7 +112,7 @@ public partial class Node
                         newPlaceholder.InitializePending(oldPlaceholder.GetInstancePath(), oldPlaceholder.PendingFields.Copy(static r => r).Fields.Values);
                     if (Has(DuplicateFlags.Groups)) foreach (var group in original._groups) target.AddToGroup(group.Key, group.Value);
                     var properties = original.GetPropertyList(includeScript: Has(DuplicateFlags.Scripts)).Where(property => !property.IsReadOnly &&
-                        (property.IsStored || Has(DuplicateFlags.InternalState)) && property.Name != nameof(Name) &&
+                        (property.ShouldStore(original) || !property.IsStored && Has(DuplicateFlags.InternalState)) && property.Name != nameof(Name) &&
                         !(original is MissingNode && MissingNode.IsRecoveryControl(property.Name)) &&
                         !(property.Name == nameof(TranslationDomain) && original.IsTranslationDomainInherited) &&
                         !(original is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition) &&

@@ -344,7 +344,7 @@ surfaceIndex: Existing zero-based surface index.
 
 returns: Ascending positive finite thresholds mapped to independent index arrays.
 
-remarks: Canvas drawing chooses the largest threshold whose transformed error is at most one framebuffer pixel. Base arrays, bounds and face queries keep the full authored geometry.
+remarks: Canvas drawing chooses the largest threshold whose transformed error is at most the viewport pixel error bound. Base arrays, bounds and face queries keep the full authored geometry.
 
 System.ArgumentOutOfRangeException: The surface index is outside the mesh.
 
@@ -382,7 +382,7 @@ System.ObjectDisposedException: The mesh or material is disposed.
 
 ## LOD behavior
 
-Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS6 persists LODs and targets and reads AMS1–5. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within the viewport pixel error bound from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS6 persists LODs and targets and reads AMS1–5. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
 
 ### CreatePlaceholder
 

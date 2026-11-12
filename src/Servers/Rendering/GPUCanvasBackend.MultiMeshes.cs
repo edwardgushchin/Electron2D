@@ -107,7 +107,7 @@ internal sealed unsafe partial class GPUCanvasBackend
                 Layout = new(gpu.Capacity, gpu.Stride, (gpu.Colors ? 1 : 0) | (gpu.Custom ? 2 : 0) | (batch.LinearColors ? 4 : 0) | (batch.GroupShader ? 8 : 0) | (gpu.Indirect ? 16 : 0) | (gpu.Indices is not null ? 32 : 0), gpu.Visible),
                 Geometry = new(gpu.Surface, batch.First, _indexByBatch[i], gpu.Indices is null ? batch.Count : gpu.IndexCount),
                 Levels = new(_lodByBatch[i], gpu.LODs?.Length ?? 0, _relaxedAndroidDevice ? 1 : 0, 0),
-                Physics = new(gpu.Fraction, (float)gpu.Quality, width * 64, 0)
+                Physics = new(gpu.Fraction, (float)gpu.Quality, width * 64, gpu.LODThreshold)
             };
             SDL.PushGPUComputeUniformData(command, 0, (nint)(&parameters), (uint)sizeof(InstanceParameters));
             var pass = SDL.BeginGPUComputePass(command, 0, 0, (nint)output, models ? 3u : 2u); if (pass == 0) throw Failure("begin instance conversion");

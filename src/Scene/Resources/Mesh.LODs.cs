@@ -63,15 +63,15 @@ internal readonly record struct MeshLOD(float Error, MeshSurfaceData Data)
         foreach (var lod in lods) result.Add(lod.Error, (int[])lod.Data.Indices.Clone());
         return result;
     }
-    internal static MeshSurfaceData Select(MeshSurfaceData basis, MeshLOD[] lods, Transform transform)
+    internal static MeshSurfaceData Select(MeshSurfaceData basis, MeshLOD[] lods, Transform transform, float threshold)
     {
-        if (lods.Length == 0) return basis;
+        if (lods.Length == 0 || threshold == 0) return basis;
         // The largest singular value includes shear, anisotropic scale and reflection.
         double a = transform.X.X, b = transform.X.Y, c = transform.Y.X, d = transform.Y.Y;
         var xx = a * a + b * b; var yy = c * c + d * d; var xy = a * c + b * d;
         var scale = Math.Sqrt((xx + yy + double.Hypot(xx - yy, 2 * xy)) * .5);
         var result = basis;
-        foreach (var lod in lods) { if (lod.Error * scale > 1) break; result = lod.Data; }
+        foreach (var lod in lods) { if (lod.Error * scale > threshold) break; result = lod.Data; }
         return result;
     }
 }

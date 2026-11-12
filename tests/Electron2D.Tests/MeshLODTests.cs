@@ -20,9 +20,9 @@ internal static class MeshLODTests
         var mesh = new ArrayMesh(); var data = Data(); if (morph) mesh.AddBlendShape("move");
         mesh.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType.Triangles, data, morph ? [MeshMorphTests.Pose(data, new(4, 0))] : null, Levels()); return mesh;
     }
-    internal static List<CanvasVertex> Draw(Electron2D.Mesh mesh, Transform transform, MultiMesh? instances = null)
+    internal static List<CanvasVertex> Draw(Electron2D.Mesh mesh, Transform transform, MultiMesh? instances = null, float lodThreshold = 1)
     {
-        var vertices = new List<CanvasVertex>(); new CanvasMesh(mesh, Transform.Identity, Colors.White).Append(vertices, [], null, transform, Colors.White, null, BlendMode.Mix, TextureFilter.Nearest, TextureRepeat.Disabled, 1, null, false, instances); return vertices;
+        var vertices = new List<CanvasVertex>(); new CanvasMesh(mesh, Transform.Identity, Colors.White).Append(vertices, [], null, transform, Colors.White, null, BlendMode.Mix, TextureFilter.Nearest, TextureRepeat.Disabled, 1, null, false, instances, lodThreshold: lodThreshold); return vertices;
     }
     internal static void Run()
     {
@@ -47,6 +47,8 @@ internal static class MeshLODTests
     {
         using var mesh = Mesh(); Transform Scale(float value) => new(new Vector2(value, 0), new Vector2(0, value), Vector2.Zero);
         Check(Draw(mesh, Transform.Identity).Count == 12 && Draw(mesh, Scale(.5f)).Count == 6 && Draw(mesh, Scale(.25f)).Count == 3, "Base/fine/coarse thresholds execute."); Check(Draw(mesh, Scale(MathF.BitIncrement(.5f))).Count == 12 && Draw(mesh, Scale(-.25f)).Count == 3, "Strict threshold and reflection."); Check(Draw(mesh, new(new Vector2(.1f, 0), new Vector2(0, 1), Vector2.Zero)).Count == 12, "Anisotropic scale uses greatest axis."); Check(Draw(mesh, new(new Vector2(.4f, 0), new Vector2(.4f, .4f), Vector2.Zero)).Count == 12, "Shear uses singular value, not maximum column length."); Check(Draw(mesh, new(Vector2.Zero, Vector2.Zero, Vector2.Zero)).Count == 3, "Singular collapse remains finite.");
+        Check(Draw(mesh, Transform.Identity, lodThreshold: 2).Count == 6 && Draw(mesh, Scale(.25f), lodThreshold: 0).Count == 12,
+            "An increased threshold selects coarser geometry and zero keeps base geometry.");
         using var multi = new MultiMesh { Mesh = mesh, InstanceCount = 2 }; multi.SetInstanceTransform2D(0, Scale(.25f)); multi.SetInstanceTransform2D(1, Transform.Identity); Check(Draw(mesh, Transform.Identity, multi).Count == 15, "Each instance selects its own level."); Check(mesh.GetFaces().Length == 12 && mesh.GetAABB().Size.X == 72, "Bounds and base face queries retain full geometry.");
         using var shaped = Mesh(true); using var root = new Node(); var node = new MeshInstance { Mesh = shaped, Scale = new(.5f, .5f) }; root.AddChild(node); using var tree = new SceneTree(root); node.SetBlendShapeValue(0, 1); node.PrepareCanvas(); var vertices = new List<CanvasVertex>(); node.AppendCanvas(vertices, [], node.GlobalTransform); Check(vertices.Count == 6 && vertices[0].Position.X == 2, "Instance-owned morph output retains LOD and deforms before selection drawing.");
     }

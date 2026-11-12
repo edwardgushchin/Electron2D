@@ -312,7 +312,7 @@ value: Relative initially; changing the mode preserves stored payloads and updat
 
 ## LOD behavior
 
-Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS8 persists LODs, targets and compressed attributes and reads AMS1–7. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within the viewport pixel error bound from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS8 persists LODs, targets and compressed attributes and reads AMS1–7. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
 
 
 ## Compressed attribute storage

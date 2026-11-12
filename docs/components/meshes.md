@@ -96,9 +96,24 @@ AMS8 persists exact shape definitions, masks, target channels, LOD indices and c
 
 ## Authored LOD indices and scale selection
 
-ArrayMesh imports copied positive finite local error thresholds with shorter nonempty index arrays over an indexed base. SurfaceGetLODs and static RenderingServer.MeshSurfaceGetLODs return independent sorted threshold/index copies; custom Mesh callbacks participate in stable-revision preparation. Invalid thresholds, topology, bounds or base requirements reject before mutation. The retained canvas selects the largest local error whose product with the full framebuffer-basis greatest singular value is at most one pixel. Translation has no effect; shear, reflection, anisotropic scale, parent/camera/viewport transforms and each MultiMesh presentation instance basis do. All five topologies preserve their normal canvas drawing contract. Different instance levels use CPU expansion into the ordinary retained stream; unchanged non-LOD meshes retain hardware instancing.
+ArrayMesh imports copied positive finite local error thresholds with shorter nonempty index arrays over an indexed base. SurfaceGetLODs and static RenderingServer.MeshSurfaceGetLODs return independent sorted threshold/index copies; custom Mesh callbacks participate in stable-revision preparation. Invalid thresholds, topology, bounds or base requirements reject before mutation. The retained canvas selects the largest local error whose product with the full framebuffer-basis greatest singular value is at most `Viewport.MeshLODThreshold` framebuffer pixels. One pixel is the default and zero uses base geometry. Translation has no effect; shear, reflection, anisotropic scale, parent/camera/viewport transforms and each MultiMesh presentation instance basis do. All five topologies preserve their normal canvas drawing contract. Different instance levels use CPU expansion into the ordinary retained stream; unchanged non-LOD meshes retain hardware instancing.
 
 LOD views share private base channels so packed updates, materials, normal/tangent/custom data and skin execute ordinarily. MeshInstance morph output retains its levels. Bounds, GetFaces, base-array/index counts keep full geometry for conservative visibility. RegenNormalMaps and duplication preserve LOD indices. AMS6 stores sorted thresholds/indices together with target data and reads AMS1–5; malformed or truncated records preserve old storage. Automatic simplification is not part of authored index storage; ImporterMesh still requires its topology/attribute-preserving producer.
+
+An unassigned root uses `ProjectSettings.MeshLODThreshold` at startup.
+Explicit assignments, including one pixel, survive packing and duplication.
+SubViewports keep their own thresholds. Direct and CPU-instanced meshes
+use the viewport bound during retained replay. GPU-authored MultiMesh uses
+the same bound when expanding a full-base indirect command into a per-instance
+LOD draw. Explicit partial indirect ranges retain their authored indices.
+
+`ELECTRON2D_TEST_MESH_LOD_THRESHOLD` verifies managed validation, feature
+overrides, scene storage, duplication and independent root/SubViewport pixels.
+Windows x64 exercised Vulkan, Direct3D 12 and the Direct3D 11 Compatibility
+renderer. `ELECTRON2D_TEST_GPU_MULTIMESH=1` changes the viewport bound while
+keeping GPU-authored commands fixed, then checks the resulting pixels on
+Vulkan and Direct3D 12. Release packages and foreign platforms retain their
+qualification gates.
 
 MeshLODTests checks all five topologies, copied and invalid inputs, exact threshold boundaries, reflection/shear/anisotropy/singular bases, independent MultiMesh levels, morph integration, callback failure/reentry/retry, duplication, regeneration, archives and fresh-process scenes. MeshLODNativeTests exercises actual GLSL/HLSL/compatibility pixels, independent MultiMesh scale, morph/skin/group/server paths and 64 active plus 64 idle complete warmed frames. Local Linux Wayland measurements and captures are recorded with the slice; native allocator totals, other platforms and owner acceptance remain separate gates.
 

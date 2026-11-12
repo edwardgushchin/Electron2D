@@ -46,6 +46,14 @@ internal static partial class MultiMeshGPUTests
                     Check(RenderingServer.MultiMeshInstanceGetTransform2D(instances, 0) == default, "GPU writes preserve authored CPU snapshots.");
                     if (Environment.GetEnvironmentVariable("ELECTRON2D_CAPTURE_DIR") is { } path) { Directory.CreateDirectory(path); pixels.SavePNG(System.IO.Path.Combine(path, $"gpu-multimesh-{frame}.png")); }
                     if (frame == 1) Dispatch(1);
+                    if (frame == 2) window.MeshLODThreshold = 2;
+                }
+                else if (frame is 3 or 4)
+                {
+                    using var pixels = window.GetTexture().GetImage()!;
+                    var lodPixel = pixels.GetPixel(24, 28);
+                    Check(frame == 3 ? lodPixel.G < .1f : lodPixel.G > .9f, "The viewport threshold changes GPU-authored LOD without changing its instance commands.");
+                    window.MeshLODThreshold = frame == 3 ? 0 : 1;
                 }
                 if (frame == 144)
                 {

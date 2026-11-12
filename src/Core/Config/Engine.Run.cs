@@ -110,6 +110,7 @@ public sealed partial class Engine
             window.ApplyProjectMSAA();
             window.ApplyProjectScreenSpaceAA();
             window.ApplyProjectMIPMapBias();
+            window.ApplyProjectMeshLODThreshold();
             window.ApplyProjectHDR();
             window.ApplyProjectDebanding();
             if (moviePath is not null)

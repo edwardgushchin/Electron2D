@@ -16,7 +16,7 @@ layout(set=2,binding=0,std140) uniform Parameters {
     uvec4 layoutData; // capacity, stride, flags, visible
     uvec4 geometry; // surface, base vertex, index offset, vertex count
     uvec4 levels; // offset, count, relaxed device, unused
-    vec4 physics; // fraction, quality, dispatch row width, unused
+    vec4 physics; // fraction, quality, dispatch row width, LOD error in pixels
 };
 bool finiteValue(float value) { return !isnan(value) && !isinf(value); }
 vec4 readCurrent(uint o) { return vec4(current[o],current[o+1],current[o+2],current[o+3]); }
@@ -76,15 +76,16 @@ void main() {
 #endif
     vec2 x=canvas.xy*a.x+canvas.zw*b.x,y=canvas.xy*a.y+canvas.zw*b.y;
     vec2 translation=canvas.xy*a.w+canvas.zw*b.w+origin.xy;
-    if(levels.y!=0 && count==geometry.w && start==0 && offset==0) {
+    if(levels.y!=0 && physics.w>0 && count==geometry.w && start==0 && offset==0) {
         // Normalize before squaring so large finite transforms keep their error bound.
         float m=max(max(abs(x.x),abs(x.y)),max(abs(y.x),abs(y.y)));
         vec2 nx=m==0 ? vec2(0) : x/m,ny=m==0 ? vec2(0) : y/m;
         float xx=dot(nx,nx),yy=dot(ny,ny),xy=dot(nx,ny);
-        float scale=m*sqrt((xx+yy+length(vec2(xx-yy,2*xy)))*0.5);
+        float scale=sqrt((xx+yy+length(vec2(xx-yy,2*xy)))*0.5);
+        float errorLimit=m==0 ? 0 : (physics.w/scale)/m;
         for(uint l=0;l<levels.y;l++) {
             uvec4 lod=lods[levels.x+l];
-            if(uintBitsToFloat(lod.x)*scale>1) break;
+            if(m!=0 && !(uintBitsToFloat(lod.x)<=errorLimit)) break;
             draw[i*5]=lod.z; draw[i*5+2]=geometry.z+lod.y;
         }
     }

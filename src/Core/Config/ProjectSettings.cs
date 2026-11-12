@@ -399,6 +399,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<ScreenSpaceAAMode> ScreenSpaceAA { get; } =
         new("rendering/anti_aliasing/quality/screen_space_aa", ScreenSpaceAAMode.Disabled, Viewport.IsScreenSpaceAAMode);
 
+    /// <summary>Sets the root window's maximum projected mesh LOD error in framebuffer pixels at startup.</summary>
+    /// <value>rendering/mesh_lod/lod_change/threshold_pixels; one pixel by default. Zero selects base geometry.</value>
+    /// <remarks>An explicitly assigned root window uses its authored threshold. Other viewports keep independent values.</remarks>
+    public static ProjectSetting<float> MeshLODThreshold { get; } =
+        new("rendering/mesh_lod/lod_change/threshold_pixels", Viewport.DefaultMeshLODThreshold, Viewport.IsMeshLODThreshold);
+
     /// <summary>Selects linear half-float canvas output for an unassigned root window at startup.</summary>
     /// <value>rendering/viewport/hdr_2d; false initially.</value>
     /// <remarks>Offscreen viewports retain their authored selections. Enabled HDR requires GPU rendering and supported half-float color targets.</remarks>

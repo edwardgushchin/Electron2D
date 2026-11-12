@@ -475,7 +475,7 @@ public sealed partial class PackedScene : Resource
             .Concat(node.CapturedEditorProperties(root));
 
     internal static bool CapturesProperty(Node node, PropertyDescriptor property) =>
-        property.IsStored && property.Name != nameof(Node.Name) &&
+        property.ShouldStore(node) && property.Name != nameof(Node.Name) &&
         !(property.Name == nameof(Node.TranslationDomain) && node.IsTranslationDomainInherited) &&
         !(node is Window window && property.Name == nameof(Window.Position) && !window.HasAuthoredPosition) &&
         !(node is FoldableContainer && property.Name.StartsWith("__TitleControl/", StringComparison.Ordinal));

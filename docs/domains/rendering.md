@@ -430,6 +430,9 @@ The [buffer upload report](../components/local-compute.md#buffer-upload-report)
 publishes the retained renderer's and each local device's buffer write
 traffic at their frame boundaries.
 
+[Viewport mesh LOD](../components/meshes.md#authored-lod-indices-and-scale-selection)
+sets the projected error bound per target for authored mesh levels.
+
 [Canvas FXAA and SMAA](../components/canvas-rendering.md#screen-space-antialiasing)
 filter completed viewport color after MSAA resolve and environment composition.
 Scene, RID and root project settings select the same mode contract. GPU

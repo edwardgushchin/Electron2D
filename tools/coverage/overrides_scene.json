@@ -10431,7 +10431,6 @@
         "Viewport::property:debug_draw",
         "Viewport::property:disable_3d",
         "Viewport::property:fsr_sharpness",
-        "Viewport::property:mesh_lod_threshold",
         "Viewport::property:msaa_3d",
         "Viewport::property:own_world_3d",
         "Viewport::property:positional_shadow_atlas_16_bits",

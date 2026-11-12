@@ -25,6 +25,13 @@ MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (4800
 Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Config/ProjectSettings.API.cs).
 
 
+## MeshLODThreshold
+
+`ProjectSettings.MeshLODThreshold` registers the float setting
+`rendering/mesh_lod/lod_change/threshold_pixels` with default one and finite
+nonnegative validation. An unassigned root window samples the effective
+value at startup. Zero selects base geometry. See [authored mesh LOD](../components/meshes.md#authored-lod-indices-and-scale-selection).
+
 ## TextureMIPMapBias
 
 `public static ProjectSetting<float> TextureMIPMapBias { get; }` registers `rendering/textures/default_filters/texture_mipmap_bias`, default zero, with finite-value validation and feature overrides. An unassigned root window samples it when Engine.Run starts; explicit window policy and existing viewports retain their state. See [viewport sampler integration](../components/viewport-mipmap-bias.md).
