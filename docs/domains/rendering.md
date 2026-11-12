@@ -635,6 +635,8 @@ Ordinary writable graphics storage now connects vertex/fragment producers to ord
 
 Formatted graphics producers now store encoded ImageBuffer elements and execute R32 atomics before sampled draw, compute/readback and retained canvas consumption. [Contract and limits](../components/local-compute.md#writable-formatted-graphics-producers).
 
+[Native texture handles](../components/native-texture-handles.md) resolve a canvas texture RID to the current native GPU Vulkan or Compatibility allocation. The renderer retains ownership.
+
 [Native driver resources](../components/driver-resources.md) expose the current Vulkan device, queue and active GPU resources to integrations under the borrowed lifetime contract.
 
 [Attachmentless graphics](../components/local-compute.md#attachmentless-graphics) now executes explicit raster extents and exact available samples without dummy image attachments. Existing graphics storage writes feed following compute, ordinary graphics and canvas consumers; raster discard remains a separate state adapter.

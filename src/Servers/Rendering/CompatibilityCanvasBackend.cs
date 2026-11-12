@@ -14,7 +14,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     private SDL.Vertex[] _attributePoints = [], _attributeTriangles = [];
     private readonly bool _rasterAttributeLines;
     private readonly int _nativeLineMethod;
-    private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels, ulong Revision)> _textures = [];
+    private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels, ulong Revision, bool Exported)> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private (nint Context, nint EGLDisplay, nint EGLConfig, nint GLXVisualID, nint GLXFBConfig) _graphics;
     private DisplayServer.VSyncMode _vSync;
@@ -627,7 +627,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Handle.Dispose(); }
 
     internal override void BeginFrame() => _usedTextures.Clear();
-    internal override void EndFrame() { foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); } }
+    internal override void EndFrame() { foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && ((!pair.Key.RetainRendererCache && !pair.Value.Exported) || pair.Key.IsDisposed)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); } }
     private static Texture CanvasSample(Texture texture)
     {
         for (var depth = 0; depth <= 1024; depth++)
@@ -675,9 +675,56 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         return SDL.ComposeCustomBlendMode(srcColor, dstColor, operation, srcAlpha, dstAlpha, operation);
     }
 
-    private unsafe void PrepareTexture(Texture texture)
+    internal ulong ExportNativeTexture(Resource resource)
     {
-        var pixels = texture.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels;
+        var (property, pointer) = Driver switch
+        {
+            "direct3d11" => (SDL.Props.TextureD3D11TexturePointer, true),
+            "direct3d12" => (SDL.Props.TextureD3D12TexturePointer, true),
+            "opengl" => (SDL.Props.TextureOpenGLTextureNumber, false),
+            "opengles2" => (SDL.Props.TextureOpenGLES2TextureNumber, false),
+            "vulkan" => (SDL.Props.TextureVulkanTextureNumber, false),
+            _ => throw new NotSupportedException("This compatibility driver has no native texture handle export."),
+        };
+        nint handle;
+        if (resource is ViewportTexture view)
+        {
+            var viewport = view.Bound;
+            var target = viewport is null ? null : FindTarget(viewport);
+            var size = view.GetSize();
+            if (target is not { HasFrame: true } || size.X == 0 || size.Y == 0) return 0;
+            handle = target.Current.DangerousGetHandle();
+        }
+        else
+        {
+            if (resource is not Texture texture || texture is TextureRD or DrawableTexture)
+                throw new NotSupportedException("This texture role requires the GPU renderer.");
+            var pixels = texture.CapturePixels();
+            if (pixels is null) return 0;
+            PrepareTexture(texture, pixels);
+            handle = _textures[texture].Handle.DangerousGetHandle();
+        }
+
+        var properties = SDL.GetTextureProperties(handle);
+        var native = pointer
+            ? unchecked((ulong)(nuint)SDL.GetPointerProperty(properties, property, 0))
+            : unchecked((ulong)SDL.GetNumberProperty(properties, property, 0));
+        if (native == 0) throw new NotSupportedException("SDL did not expose a native object for this texture allocation.");
+        if (resource is Texture source && source is not ViewportTexture)
+        {
+            var upload = _textures[source];
+            if (!upload.Exported)
+            {
+                upload.Exported = true;
+                _textures[source] = upload;
+            }
+        }
+        return native;
+    }
+
+    private unsafe void PrepareTexture(Texture texture, TexturePixels? prepared = null)
+    {
+        var pixels = prepared ?? texture.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels;
         if (pixels.PixelType != 0) throw new NotSupportedException("Compatibility cannot sample integer texture values; use GPU rendering.");
         _textures.TryGetValue(texture, out var previous);
         if (ReferenceEquals(previous.Pixels, pixels) && previous.Revision == pixels.Revision) return;
@@ -705,7 +752,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         }
         catch { if (replacement) handle!.Dispose(); throw; }
         if (replacement) previous.Handle?.Dispose();
-        _textures[texture] = (handle, pixels, pixels.Revision);
+        _textures[texture] = (handle, pixels, pixels.Revision, previous.Exported);
     }
 
     internal override Image Readback(CanvasRenderTarget output, bool backBuffer = false, bool requireFrame = true)

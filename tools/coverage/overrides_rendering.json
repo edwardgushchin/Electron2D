@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "RenderingServer::method:texture_get_native_handle(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureGetNativeHandle(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0028: actual borrowed Vulkan VkImage and SDL compatibility D3D11/D3D12, GL/GLES or Vulkan storage. Ordinary, supported layered and completed viewport resources share the sampled native allocation. GPU drivers without a native exporter and unsupported compatibility drivers or image roles need adapters. See docs/components/native-texture-handles.md."
+    },
+    {
       "godot": "RenderingServer::method:environment_create()",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentCreate()",
       "reason": "ADRs 0004/0028/0095: caller-owned canvas environment creation, shared world selection through the borrowed world canvas RID, all applicable existing setting operations, retirement and fallback to authored scene selection execute on the current GPU and Compatibility paths. See docs/components/canvas-environment-background.md#server-ownership."
@@ -7418,11 +7423,24 @@
     },
     {
       "godot": [
-        "RenderingServer::method:texture_get_native_handle(RID:,bool:)",
+        "RenderingServer::method:texture_get_native_handle(RID:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0028: actual borrowed Vulkan VkImage and SDL compatibility D3D11/D3D12, GL/GLES or Vulkan storage. Ordinary, supported layered and completed viewport resources share the sampled native allocation. GPU drivers without a native exporter and unsupported compatibility drivers or image roles need adapters. See docs/components/native-texture-handles.md."
+    },
+    {
+      "godot": [
         "RenderingServer::method:texture_create_from_native_handle(int:RenderingServer.TextureType,int:Image.Format,int:,int:,int:,int:,int:,int:RenderingServer.TextureLayeredType)"
       ],
       "state": "Blocked",
-      "reason": "Trigger: safe borrowed external texture identity/import ownership and sRGB view contract for GPU and compatibility drivers, including invalidation/cleanup/capability checks; enters the first native texture interop slice under ADR 0028 without exposing owned SDL types/handles."
+      "reason": "ADR 0028: importing requires a same-device external producer contract for allocation lifetime, initial image layout, queue ownership and synchronized acquisition and release. Retain the texture shape and sRGB view role across the importer and the canvas consumer. Borrowed export does not establish this contract."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:viewport_get_render_target(RID:)"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0028: needs a distinct logical target identity for viewport-owned attachments and an executing consumer with the target's lifetime and access rules. The current exported texture follows completed storage and cannot identify the target role."
     },
     {
       "godot": [

@@ -57,10 +57,72 @@ public sealed partial class RenderingServer
     public static RID TextureGetRDTexture(RID texture, bool SRGB = false) => RequireService().TextureGetRDTextureCore(texture, SRGB);
     internal RID TextureGetRDTextureCore(RID texture, bool SRGB)
     {
-        EnsureOwner(); var resource = RenderingTextureRegistry.ResolveResource(texture);
-        if (resource is ServerTexture { IsProxy: true } proxy) resource = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget) ?? resource;
-        if (resource is LayeredTextureProxy arrayProxy) resource = RenderingTextureRegistry.ResolveLayeredProxySource(arrayProxy.ProxyTarget) ?? resource;
-        resource = RenderingTextureRegistry.SampledStorage(resource)!;
+        EnsureOwner();
+        var resource = ResolveTextureExportSource(texture);
+        return resource is null ? default : ExportRDTexture(resource, SRGB);
+    }
+
+    /// <summary>Gets the borrowed graphics handle of a live canvas texture.</summary>
+    /// <param name="texture">A live ordinary or layered canvas texture RID.</param>
+    /// <param name="SRGB">Requests the sRGB interpretation when one is available. The native allocation can serve both interpretations.</param>
+    /// <returns>The native handle bits, or zero if the texture has no storage or the viewport has no completed image.</returns>
+    /// <remarks>Call on the scene owner outside canvas submission. Export may prepare an upload or shared storage.
+    /// The handle borrows the current allocation and does not pin it, synchronize GPU work or transfer ownership.
+    /// Viewport handles follow the last completed image. Replacement, resizing, cycling, retirement or renderer
+    /// shutdown can invalidate previously returned values. External consumers must coordinate native lifetime and synchronization.</remarks>
+    /// <exception cref="ArgumentException">The texture RID is not live.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable, closing, off-owner or submitting a canvas.</exception>
+    /// <exception cref="NotSupportedException">The selected backend or texture role has no native handle export.</exception>
+    public static ulong TextureGetNativeHandle(RID texture, bool SRGB = false) =>
+        RequireService().TextureGetNativeHandleCore(texture, SRGB);
+
+    private ulong TextureGetNativeHandleCore(RID texture, bool SRGB)
+    {
+        EnsureOwner();
+        if (_closing || _submittingTextures) throw new InvalidOperationException("Native texture export requires an active renderer outside canvas submission.");
+        var resource = ResolveTextureExportSource(texture);
+        if (resource is null) return 0;
+
+        if (_backend is CompatibilityCanvasBackend compatibility) return compatibility.ExportNativeTexture(resource);
+        if (_backend is not GPUCanvasBackend { Driver: "vulkan" })
+            throw new NotSupportedException("This GPU backend has no native texture handle export.");
+
+        var deviceTexture = ExportRDTexture(resource, SRGB: false);
+        if (!deviceTexture.IsValid()) return 0;
+        var device = GetRenderingDeviceCore()!;
+        if (SRGB) deviceTexture = device.CanvasSRGBTexture(deviceTexture, allowBase: true);
+        return deviceTexture.IsValid() ? device.GetDriverResource(RenderingDevice.DriverResource.Texture, deviceTexture, 0) : 0;
+    }
+
+    private static Resource? ResolveTextureExportSource(RID texture)
+    {
+        Resource? source = RenderingTextureRegistry.ResolveResource(texture);
+        for (var depth = 0; depth <= 1024; depth++)
+        {
+            switch (source)
+            {
+                case null or { IsDisposed: true }: return null;
+                case ServerTexture { IsProxy: true } proxy:
+                    source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
+                    break;
+                case LayeredTextureProxy proxy:
+                    source = RenderingTextureRegistry.ResolveLayeredProxySource(proxy.ProxyTarget);
+                    break;
+                case AtlasTexture atlas:
+                    source = atlas.RenderingTexture;
+                    break;
+                case CanvasTexture channels:
+                    source = channels.DiffuseTexture;
+                    break;
+                default:
+                    return RenderingTextureRegistry.SampledStorage(source);
+            }
+        }
+        throw new InvalidOperationException("Texture view depth exceeds 1024.");
+    }
+
+    private RID ExportRDTexture(Resource resource, bool SRGB)
+    {
         var result = resource switch { TextureRD ordinary => ordinary.TextureRDRID, TextureLayeredRD layered => layered.TextureRDRID, _ => default };
         if (!result.IsValid() && _backend is GPUCanvasBackend gpu) { EnsureDeviceAccess(); var device = GetRenderingDeviceCore()!; device.ValidateCanvasMutation(); result = gpu.ExportTexture(resource, device, SRGB); }
         if (!result.IsValid()) return default;

@@ -17,6 +17,8 @@ The query observes current storage without allocating a wrapper, uploading autho
 
 A stale, foreign or wrong-kind resource RID is rejected. An unavailable native adapter or native descriptor-set query raises `NotSupportedException`. The adapter requires the matched SDL 3.4.18 Vulkan core. Other drivers and native package qualification remain separate.
 
+[Native texture export](native-texture-handles.md) uses the Vulkan image selector for a canvas texture RID and exposes SDL texture properties on supported Compatibility drivers.
+
 ## Verification
 
 Run `ELECTRON2D_TEST_DRIVER_RESOURCE=local` to check the instance, physical device, queue, queue family, and image and buffer memory requirements through the independent Vulkan loader. This profile also exercises shared views, graphics and compute output, RID lifetime and 64 warmed zero-owner-byte queries. Use `canvas` to check the completed viewport allocation and resize lifetime. Use `unavailable` to check refusal from a foreign driver or preceding native module while ordinary GPU work remains available.

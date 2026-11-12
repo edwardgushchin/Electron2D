@@ -121,6 +121,7 @@ GetRenderingDevice returns the active GPU renderer's retained device, or null wh
 | --- | --- |
 | `public static RenderingDevice? GetRenderingDevice()` | Retained global device for the active GPU session; never caller-owned. |
 | `public static RID TextureRDCreate(RID deviceTexture, TextureLayered.LayeredType layerType = TextureLayered.LayeredType.Array)` | Owns an ordinary or independent-array canvas wrapper, inferred from image allocation. |
+| `public static ulong TextureGetNativeHandle(RID texture, bool SRGB = false)` | Borrowed native allocation of a sampled canvas texture. See [native texture handles](../components/native-texture-handles.md). |
 | `public static RID TextureGetRDTexture(RID texture, bool SRGB = false)` | Borrowed global image of a canvas resource/alias; exports native uploads/arrays/completed viewports; empty for unavailable storage. |
 
 ## Example

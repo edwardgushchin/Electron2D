@@ -1,3 +1,5 @@
+[Native texture export](../components/native-texture-handles.md) returns borrowed sampled allocations on GPU Vulkan and supported SDL Compatibility drivers. One row moves from Blocked to Partial. Coverage is **13,894/18,904 (73.50%)**, with 1,163 Partial, 290 Unimplemented, 3,557 Blocked, 8,389 Excluded and zero unmapped.
+
 [Native driver resources](../components/driver-resources.md) expose the current Vulkan device, queue, image, buffer and pipeline objects. The typed family gains thirteen Implemented rows, and the query is Partial for other drivers and retained descriptor sets. Coverage is **13,894/18,904 (73.50%)**, with 1,162 Partial, 290 Unimplemented, 3,558 Blocked, 8,389 Excluded and zero unmapped.
 
 [Server-owned canvas environments](../components/canvas-environment-background.md#server-ownership) bind native backgrounds and effects to shared worlds and select camera feeds through the low-level API. Environment creation moves from Blocked to Implemented and camera selection moves from Unimplemented to Partial. Coverage is **13,881/18,904 (73.43%)**, with 1,161 Partial, 302 Unimplemented, 3,560 Blocked, 8,389 Excluded and zero unmapped.

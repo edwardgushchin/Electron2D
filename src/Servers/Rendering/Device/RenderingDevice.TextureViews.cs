@@ -48,7 +48,7 @@ public sealed unsafe partial class RenderingDevice
         Access();
         return _entries.TryGetValue(texture, out var entry) && entry.TextureOwner.IsValid() && entry.Alive;
     }
-    internal RID CanvasSRGBTexture(RID source)
+    internal RID CanvasSRGBTexture(RID source, bool allowBase = false)
     {
         Access(true);
         if (!_entries.TryGetValue(source, out var entry) || entry.Texture is not { } info || !entry.Alive) return default;
@@ -56,14 +56,21 @@ public sealed unsafe partial class RenderingDevice
         if (format == info.Format) return source;
         var sampledOnly = (entry.TextureSource ?? entry).Borrowed?.HasSRGBBacking == true;
         if (format == DataFormat.Max || (!sampledOnly && !info.Shareable.Contains(format)))
+        {
+            if (allowBase) return source;
             throw new NotSupportedException("This texture allocation does not declare a compatible sRGB view.");
+        }
         if (entry.SRGBView.IsValid() && _entries.TryGetValue(entry.SRGBView, out var alias) && alias.Alive)
             return entry.SRGBView;
 
         IdleList();
         var (ownerID, owner) = TextureViewOwner(source);
-        entry.SRGBView = CreateTextureView(format, info.Swizzle, ownerID, owner, info.BaseLayer, info.Layers, info.BaseMip, info.Mips, info.Type, sampledOnly);
-        return entry.SRGBView;
+        try
+        {
+            entry.SRGBView = CreateTextureView(format, info.Swizzle, ownerID, owner, info.BaseLayer, info.Layers, info.BaseMip, info.Mips, info.Type, sampledOnly);
+            return entry.SRGBView;
+        }
+        catch (NotSupportedException) when (allowBase) { return source; }
     }
     private static DataFormat SRGBViewFormat(DataFormat format) => format switch
     {
