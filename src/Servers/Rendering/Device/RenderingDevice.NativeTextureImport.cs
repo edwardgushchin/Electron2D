@@ -13,7 +13,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="type">An ordinary image or independent image array.</param>
     /// <param name="format">The native allocation's exact data format.</param>
     /// <param name="samples">The native sample count. Imports require one sample.</param>
-    /// <param name="usageFlags">Sampling and any declared transfer roles supported by the native image.</param>
+    /// <param name="usageFlags">Sampling, declared transfer roles, and Vulkan color-attachment and storage roles.</param>
     /// <param name="image">The live VkImage or ID3D12Resource pointer bits from the device returned by <see cref="GetDriverResource"/>.</param>
     /// <param name="width">The base mip width in texels.</param>
     /// <param name="height">The base mip height in texels.</param>
@@ -23,6 +23,8 @@ public sealed unsafe partial class RenderingDevice
     /// <returns>A device-owned RID for the wrapped allocation.</returns>
     /// <remarks>
     /// Vulkan imports require a same-device, optimal-tiling color image with sampled usage and an exact description.
+    /// Create the image with the Vulkan usage flags corresponding to every declared role. Storage
+    /// requires VK_IMAGE_USAGE_STORAGE_BIT and color attachments require VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT.
     /// The producer completes its work, transfers exclusive access to this device's queue family,
     /// and leaves every subresource in SHADER_READ_ONLY_OPTIMAL before import. The producer retains
     /// ownership of the image and its memory. Keep both alive and refrain from external commands
@@ -63,12 +65,16 @@ public sealed unsafe partial class RenderingDevice
 
         const TextureUsageBits allowed = TextureUsageBits.Sampling | TextureUsageBits.CanCopyFrom |
             TextureUsageBits.CanCopyTo | TextureUsageBits.CanUpdate | TextureUsageBits.CPURead;
+        const TextureUsageBits writable = TextureUsageBits.ColorAttachment | TextureUsageBits.Storage;
         if (samples != TextureSamples.Samples1 || DepthFormat(format) ||
-            (usageFlags & TextureUsageBits.Sampling) == 0 || (usageFlags & ~allowed) != 0)
-            throw new NotSupportedException("Import requires a single-sample color image with sampled and optional transfer roles.");
+            (usageFlags & TextureUsageBits.Sampling) == 0 || (usageFlags & ~(allowed | writable)) != 0)
+            throw new NotSupportedException("Import requires a single-sample sampled color image with supported roles.");
         var driver = TextureDriver;
         if (driver is not ("vulkan" or "direct3d12"))
             throw new NotSupportedException("The GPU backend does not provide a native texture importer.");
+        var writableImport = (usageFlags & writable) != 0;
+        if (writableImport && driver != "vulkan")
+            throw new NotSupportedException("Writable native texture import requires Vulkan.");
         if (driver == "direct3d12" && image > nuint.MaxValue) throw new ArgumentOutOfRangeException(nameof(image));
         if (ValidationLimits is { } limits && (width > limits[12] || height > limits[12] || layers > limits[10]))
             throw new ArgumentOutOfRangeException(nameof(width), "Texture dimensions or layers exceed device limits.");
@@ -82,7 +88,12 @@ public sealed unsafe partial class RenderingDevice
         RenderHandle handle;
         try
         {
-            if (driver == "vulkan") RequireTextureViews();
+            if (driver == "vulkan")
+            {
+                RequireTextureViews();
+                if (writableImport && GPUTextureViews.Support(device, 5) != 1)
+                    throw new NotSupportedException("The native module does not support writable Vulkan texture import.");
+            }
             foreach (var entry in _entries.Values)
                 if (entry.Kind == Kind.Texture && entry.Alive &&
                     QueryDriverResource(device, 1, (uint)DriverResource.Texture, entry.NativeHandle, out var existing) == 1 &&

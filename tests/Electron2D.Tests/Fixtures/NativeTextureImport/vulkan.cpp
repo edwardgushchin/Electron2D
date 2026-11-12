@@ -113,7 +113,7 @@ extern "C" __declspec(dllexport) VkResult __cdecl ClearImage(const Context& cont
 }
 
 extern "C" __declspec(dllexport) VkResult __cdecl CreateImage(const Context& context, uint32_t width,
-    uint32_t height, uint32_t layers, uint32_t levels, VkFormat format, Image& image)
+    uint32_t height, uint32_t layers, uint32_t levels, VkFormat format, VkImageUsageFlags extraUsage, Image& image)
 {
     image = {};
     const auto instance = InstanceProc();
@@ -133,7 +133,7 @@ extern "C" __declspec(dllexport) VkResult __cdecl CreateImage(const Context& con
     info.arrayLayers = layers;
     info.samples = VK_SAMPLE_COUNT_1_BIT;
     info.tiling = VK_IMAGE_TILING_OPTIMAL;
-    info.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    info.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | extraUsage;
     info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     auto result = vkCreateImage(context.device, &info, nullptr, &image.image);
     if (result != VK_SUCCESS) return result;

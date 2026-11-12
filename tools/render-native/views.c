@@ -34,7 +34,7 @@ static bool compatible(SDL_GPUDevice *device)
 }
 E2D_EXPORT int e2d_render_view_support(SDL_GPUDevice *device, uint32_t abi)
 {
-    if (!device || (abi != 1 && abi != 2 && abi != 4)) return -1;
+    if (!device || (abi != 1 && abi != 2 && abi != 4 && abi != 5)) return -1;
     if (!compatible(device)) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     if (!r || !r->vkCreateImage || !r->vkCreateImageView || !r->vkAllocateMemory || !r->vkBindImageMemory || !r->vkCmdPipelineBarrier) return 0;
@@ -198,7 +198,10 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_texture_import(SDL_GPUDevice *device, uint
 {
     if (abi != 1 || e2d_render_view_support(device, 1) != 1 || !info || !image_bits) return NULL;
     VkFormat format = native_format(info->format);
-    if (!format || depth_format(format) || info->usage != SDL_GPU_TEXTUREUSAGE_SAMPLER ||
+    const SDL_GPUTextureUsageFlags allowed = SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_COLOR_TARGET |
+        SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE |
+        SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE;
+    if (!format || depth_format(format) || !(info->usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) || (info->usage & ~allowed) ||
         info->sample_count != SDL_GPU_SAMPLECOUNT_1 || !info->width || !info->height ||
         !info->num_levels || info->num_levels > 32 || !info->layer_count_or_depth ||
         info->layer_count_or_depth > 2048 ||
@@ -222,6 +225,7 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_texture_import(SDL_GPUDevice *device, uint
     SDL_memcpy(&image, &image_bits, sizeof(image));
     // Keep the owned image and memory fields zero. Only views are owned, and the
     // producer already transitioned every subresource to SDL's sampled layout.
+    // SAMPLER takes precedence over attachment and storage roles in SDL's default usage.
     if (!wrap(device, view, image, info, false)) {
         destroy_unpublished(device, view);
         return NULL;

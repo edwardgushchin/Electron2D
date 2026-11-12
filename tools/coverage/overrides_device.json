@@ -3,7 +3,7 @@
     {
       "godot": "RenderingDevice::method:texture_create_from_extension(int:RenderingDevice.TextureType,int:RenderingDevice.DataFormat,int:RenderingDevice.TextureSamples,int:RenderingDevice.TextureUsageBits,int:,int:,int:,int:,int:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureCreateFromExtension(Electron2D.RenderingDevice.TextureType,Electron2D.RenderingDevice.DataFormat,Electron2D.RenderingDevice.TextureSamples,Electron2D.RenderingDevice.TextureUsageBits,System.UInt64,System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32)",
-      "reason": "ADR 0028: same-device Vulkan and GPU Direct3D 12 image wrapping after a completed sampled-state handoff, with native mip/layer transfers and canvas consumers. Vulkan owns views over producer storage. Direct3D 12 retains a COM reference."
+      "reason": "ADR 0028: same-device Vulkan and GPU Direct3D 12 image wrapping after a completed sampled-state handoff, with native mip/layer transfers and canvas consumers. Vulkan owns views over producer storage and supports color attachments and storage images. Direct3D 12 retains a COM reference."
     },
     {
       "godot": "RenderingDevice::enum:DriverResource",
@@ -4704,7 +4704,7 @@
       "godot": [
         "RenderingDevice::method:texture_create_from_extension(int:RenderingDevice.TextureType,int:RenderingDevice.DataFormat,int:RenderingDevice.TextureSamples,int:RenderingDevice.TextureUsageBits,int:,int:,int:,int:,int:,int:)"
       ],
-      "reason": "ADR 0028: Vulkan and desktop GPU Direct3D 12 wrap sampled single-sample color images and arrays with optional native transfer roles and real canvas sampling. Handoffs use SHADER_READ_ONLY_OPTIMAL with queue-family ownership or ALL_SHADER_RESOURCE with a retained COM reference. Depth/stencil, multisample, attachment and storage roles need native view and state contracts. Direct3D 12 layer/format aliases require a shared-view adapter. Metal and browser GPU require their own allocation and synchronization adapters. See docs/components/native-texture-handles.md."
+      "reason": "ADR 0028: Vulkan and desktop GPU Direct3D 12 wrap sampled single-sample color images and arrays with optional native transfer roles and real canvas sampling. Handoffs use SHADER_READ_ONLY_OPTIMAL with queue-family ownership or ALL_SHADER_RESOURCE with a retained COM reference. Vulkan also executes color attachments and storage images on producer storage, including shared mip/layer attachments, array compute and canvas sampling. Remaining import triggers are depth/stencil, multisample, input attachments and storage atomics, plus Direct3D 12 writable roles with their native state contract. Direct3D 12 layer/format aliases require a shared-view adapter. Metal and browser GPU require their own allocation and synchronization adapters. See docs/components/native-texture-handles.md."
     },
     {
       "state": "Blocked",

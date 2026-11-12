@@ -25,6 +25,12 @@ internal static unsafe partial class VulkanTextureImportTests
         {
             if (profile == "canvas") Canvas(library);
             else if (profile == "server") Server(library);
+            else if (profile == "writable") WritableScene(library);
+            else if (profile == "writable-preceding")
+            {
+                using var device = RenderingServer.CreateLocalRenderingDevice();
+                VerifyWritableRefusal(device, library);
+            }
             else
             {
                 using var device = RenderingServer.CreateLocalRenderingDevice();
@@ -55,7 +61,7 @@ internal static unsafe partial class VulkanTextureImportTests
             Reject<ArgumentOutOfRangeException>(() => Import(device, 0));
             Reject<ArgumentOutOfRangeException>(() => Import(device, handle, 2, mipmaps: 4));
             Reject<NotSupportedException>(() => Import(device, handle, 2, samples: Samples.Samples2));
-            Reject<NotSupportedException>(() => Import(device, handle, 2, usage: Usage.Storage | Usage.Sampling));
+            Reject<NotSupportedException>(() => Import(device, handle, 2, usage: Usage.Sampling | Usage.InputAttachment));
             Reject<NotSupportedException>(() => Import(device, handle, 2, usage: Usage.CanCopyFrom));
             Reject<InvalidOperationException>(() => Task.Run(() => Import(device, handle, 2)).GetAwaiter().GetResult());
             device.ComputeListBegin();
@@ -214,12 +220,12 @@ internal static unsafe partial class VulkanTextureImportTests
         (nint)device.GetDriverResource(ResourceKind.CommandQueue, default, 0),
         checked((uint)device.GetDriverResource(ResourceKind.QueueFamily, default, 0)));
 
-    private static ProducerImage Create(nint library, ProducerContext context, uint layers, uint levels = Levels, uint format = 37)
+    private static ProducerImage Create(nint library, ProducerContext context, uint layers, uint levels = Levels, uint format = 37, uint extraUsage = 0)
     {
         ProducerImage image;
-        var create = (delegate* unmanaged[Cdecl]<ProducerContext*, uint, uint, uint, uint, uint, ProducerImage*, int>)
+        var create = (delegate* unmanaged[Cdecl]<ProducerContext*, uint, uint, uint, uint, uint, uint, ProducerImage*, int>)
             NativeLibrary.GetExport(library, "CreateImage");
-        var result = create(&context, Width, Height, layers, levels, format, &image);
+        var result = create(&context, Width, Height, layers, levels, format, extraUsage, &image);
         Check(result == 0 && image.Image != 0 && image.Memory != 0, $"The external Vulkan producer returned {result}.");
         return image;
     }
