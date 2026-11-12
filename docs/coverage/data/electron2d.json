@@ -128373,6 +128373,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Image.GetData(ref Electron2D.Vector2i,ref Electron2D.Image.Format,ref System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Image",
+    "name": "GetData",
+    "signature": "public System.Byte[] GetData(out Electron2D.Vector2i size, out Electron2D.Image.Format format, out System.Boolean hasMipmaps)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "ref Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "format",
+        "type": "ref Electron2D.Image.Format",
+        "default": null
+      },
+      {
+        "name": "hasMipmaps",
+        "type": "ref System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Image.GetMIPMapOffset(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Image",

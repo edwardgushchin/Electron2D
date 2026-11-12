@@ -422,6 +422,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_THEME") is { } p
 if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); Console.WriteLine("Raw image storage and archive snapshots passed."); return; }
 if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
 if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
@@ -2353,6 +2354,7 @@ VerifyMathF();
 VerifyColors();
 SpriteTests.Run();
 VerifyImages();
+VerifyImageStorage();
 VerifyVector2Values();
 VerifyVector2iValues();
 VerifyVector3Values();
@@ -3619,6 +3621,96 @@ static void VerifyColors()
         "Warmed numeric color operations must not allocate managed memory.");
 }
 
+static void VerifyImageStorage()
+{
+    using var image = new Image();
+    Require(image.GetData(out var size, out var format, out var mips).Length == 0 &&
+        size == Vector2i.Zero && format == Image.Format.L8 && !mips,
+        "The raw snapshot must expose canonical empty metadata.");
+
+    var directory = Directory.CreateTempSubdirectory("Electron2D-image-storage-");
+    var path = IOPath.Combine(directory.FullName, "image.e2dres");
+    try
+    {
+        ResourceSaver.Save(image, path);
+        using (var empty = ResourceLoader.Load<Image>(path, ResourceLoader.CacheMode.Ignore))
+            Require(empty.IsEmpty && empty.PixelFormat == Image.Format.L8, "Empty image storage must survive an archive round trip.");
+
+        var luma = Enumerable.Repeat((byte)0x5A, 6).ToArray();
+        var blocks = Enumerable.Repeat((byte)0xA5, 80).ToArray();
+        image.SetData(9, 5, true, Image.Format.Astc8X8, blocks);
+        Require(image.GetMIPMapOffset(0) == 0 && image.GetMIPMapOffset(1) == 32 &&
+            image.GetMIPMapOffset(2) == 48 && image.GetMIPMapOffset(3) == 64,
+            "Odd-sized 8x8 blocks must retain a complete mip chain with exact offsets.");
+        var snapshot = image.GetData(out size, out format, out mips);
+        Require(size == new Vector2i(9, 5) && format == Image.Format.Astc8X8 && mips && snapshot.SequenceEqual(blocks),
+            "The raw snapshot must include the original compressed blocks and their metadata.");
+        snapshot[0] = 0;
+        Require(image.GetData()[0] == blocks[0], "The caller must own the copied raw buffer.");
+        Expect<ArgumentOutOfRangeException>(() => image.GetMIPMapOffset(-1), "Negative mip indices must reject.");
+        Expect<ArgumentOutOfRangeException>(() => image.GetMIPMapOffset(4), "A mip past the complete chain must reject.");
+
+        using var stop = new CancellationTokenSource();
+        using var started = new ManualResetEventSlim();
+        var writer = Task.Run(() =>
+        {
+            image.SetData(2, 3, false, Image.Format.L8, luma);
+            started.Set();
+            while (!stop.IsCancellationRequested)
+            {
+                image.SetData(9, 5, true, Image.Format.Astc8X8, blocks);
+                image.SetData(2, 3, false, Image.Format.L8, luma);
+                Thread.Yield();
+            }
+        });
+        try
+        {
+            started.Wait();
+            for (var i = 0; i < 64; i++)
+            {
+                CheckSnapshot(image);
+                ResourceSaver.Save(image, path, i % 2 == 0 ? SaverFlags.None : SaverFlags.SaveBigEndian);
+                using var loaded = ResourceLoader.Load<Image>(path, ResourceLoader.CacheMode.Ignore);
+                CheckSnapshot(loaded);
+            }
+        }
+        finally
+        {
+            stop.Cancel();
+            writer.GetAwaiter().GetResult();
+        }
+
+        var pixels = Enumerable.Range(0, 28).Select(value => (byte)(value * 7)).ToArray();
+        image.SetData(3, 2, true, Image.Format.Rgba8, pixels);
+        using var texture = ImageTexture.CreateFromImage(image);
+        using var emptySource = new Image();
+        image.CopyFrom(emptySource);
+        Require(image.IsEmpty && image.DataSize == 0, "CopyFrom must clear storage when given an empty image.");
+        ResourceSaver.Save(texture, path, SaverFlags.SaveBigEndian);
+        using var loadedTexture = ResourceLoader.Load<ImageTexture>(path, ResourceLoader.CacheMode.Ignore);
+        using var embedded = loadedTexture.GetImage() ?? throw new InvalidOperationException("Archived texture lost its pixels.");
+        Require(embedded.GetData(out size, out format, out mips).SequenceEqual(pixels) &&
+            size == new Vector2i(3, 2) && format == Image.Format.Rgba8 && mips,
+            "An embedded texture must retain its independent pixel state and complete mip chain through the archive.");
+
+        void CheckSnapshot(Image current)
+        {
+            var bytes = current.GetData(out var extent, out var pixelFormat, out var hasMipmaps);
+            Require(
+                extent == new Vector2i(2, 3) && pixelFormat == Image.Format.L8 && !hasMipmaps && bytes.SequenceEqual(luma) ||
+                extent == new Vector2i(9, 5) && pixelFormat == Image.Format.Astc8X8 && hasMipmaps && bytes.SequenceEqual(blocks),
+                "Metadata and bytes must come from one complete raw image state.");
+        }
+    }
+    finally
+    {
+        directory.Delete(recursive: true);
+    }
+
+    image.Dispose();
+    Expect<ObjectDisposedException>(() => image.GetData(out _, out _, out _), "Disposed images must reject raw snapshots.");
+}
+
 static void VerifyImages()
 {
     var expectedMethods = new Dictionary<string, int>(StringComparer.Ordinal)
@@ -3656,7 +3748,7 @@ static void VerifyImages()
         [nameof(Image.FlipX)] = 1,
         [nameof(Image.FlipY)] = 1,
         [nameof(Image.GenerateMIPMaps)] = 1,
-        [nameof(Image.GetData)] = 1,
+        [nameof(Image.GetData)] = 2,
         [nameof(Image.GetMIPMapOffset)] = 1,
         [nameof(Image.GetPixel)] = 2,
         [nameof(Image.GetRegion)] = 1,

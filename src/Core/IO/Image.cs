@@ -329,7 +329,23 @@ public sealed partial class Image : Resource
     /// <summary>Returns an independent copy of the complete raw image buffer.</summary>
     /// <returns>The base level followed by all mip levels, or an empty array for an empty image.</returns>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public byte[] GetData() => Read(state => (byte[])state.Data.Clone());
+    public byte[] GetData() => Snapshot().Data;
+
+    /// <summary>Returns an independent copy of the raw image buffer and its matching metadata.</summary>
+    /// <param name="size">The captured dimensions in pixels.</param>
+    /// <param name="format">The captured raw storage format.</param>
+    /// <param name="hasMipmaps">Whether lower-resolution mip levels are stored after the base level.</param>
+    /// <returns>The base level followed by all mip levels. An empty image returns an empty array, zero size and <see cref="Format.L8"/>.</returns>
+    /// <remarks>The bytes and metadata come from one state, including when another thread replaces the image data.</remarks>
+    /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
+    public byte[] GetData(out Vector2i size, out Format format, out bool hasMipmaps)
+    {
+        var state = Snapshot();
+        size = new Vector2i(state.Width, state.Height);
+        format = state.Format;
+        hasMipmaps = state.HasMIPMaps;
+        return state.Data;
+    }
 
     /// <summary>Returns the byte offset of a base or mip level in the raw buffer.</summary>
     /// <param name="mipmap">Zero for the base image, one for the first mip level, and so on.</param>
@@ -337,9 +353,8 @@ public sealed partial class Image : Resource
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="mipmap"/> does not identify a stored level.</exception>
     /// <exception cref="InvalidOperationException">The image is empty.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public int GetMIPMapOffset(int mipmap)
+    public int GetMIPMapOffset(int mipmap) => Read(state =>
     {
-        var state = Snapshot();
         if (state.Data.Length == 0)
             throw new InvalidOperationException("An empty image has no mip levels.");
 
@@ -348,7 +363,7 @@ public sealed partial class Image : Resource
             throw new ArgumentOutOfRangeException(nameof(mipmap));
 
         return GetLevel(state, mipmap).Offset;
-    }
+    });
 
     /// <summary>Copies all image state from another image while preserving this resource's identity.</summary>
     /// <param name="source">The live source image.</param>
@@ -483,13 +498,13 @@ public sealed partial class Image : Resource
         }
     }
 
-    private State Snapshot(bool copyData = true)
+    private State Snapshot()
     {
         ThrowIfDisposed();
         lock (_stateGate)
         {
             ThrowIfDisposed();
-            return CaptureState(copyData);
+            return CaptureState(copyData: true);
         }
     }
 

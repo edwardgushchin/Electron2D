@@ -28,7 +28,7 @@ This Resources component owns portable managed 2D pixel buffers, binary masks, r
 ## Runtime flow
 
 1. A default `Image` starts empty, or a factory validates dimensions/format/exact byte count and copies storage.
-2. Reads take a consistent per-image state. `GetData()` returns a copy.
+2. Reads take a consistent per-image state. The metadata overload of `GetData` captures the dimensions, storage format, mipmap presence and copied bytes together. Mip offset queries use layout metadata without copying the pixel buffer.
 3. A bulk mutation serializes with other mutations, clones the current buffer, computes and validates a complete next state, commits once, releases image locks, and emits `Resource.Changed`. `SetPixel` updates one pixel under the same serialization without allocating a replacement buffer.
 4. Uncompressed pixels decode to `Color`; writes quantize or preserve floating/integer values according to `Image.Format`.
 5. Mipmap generation averages 2×2 samples to a complete chain; resize, crop, rotation, and region composition preserve or rebuild mip policy as documented.
@@ -64,9 +64,15 @@ All 47 current raw format identities, the complete compression/source/ASTC enum 
 
 BitMap's complete declared 2D mask surface is implemented: alpha thresholding, bit access, rectangle writes, nearest resize, L8 conversion, circular grow/shrink and contour extraction. Its managed copy and lifetime behavior use the Resource contract. Physics collision consumers are not yet implemented.
 
-## Exclusions and deferred integration
+## Raw image snapshots
 
-The dynamic image-data dictionary is permanently replaced by typed properties plus `GetData`/`SetData`; error-code returns are replaced by exceptions; metric dictionaries are replaced by `ImageMetrics`.
+Read the raw bytes and matching metadata with [`Image.GetData`](../classes/Image.md#getdata-with-metadata). Replace populated storage with `SetData`. `CopyFrom` also accepts an empty image. Raw snapshots preserve compressed blocks and complete mip levels.
+
+Resource and scene archives use the same snapshot when writing images. Saving during a concurrent edit records one committed state for each image. Metadata and pixel bytes retain the existing archive layout, including the canonical empty state and raw byte order under either archive endianness.
+
+Run `ELECTRON2D_TEST_IMAGE_STORAGE=1` to check all raw format sizes, odd compressed mip layouts, copied ownership, empty and disposed state, and 64 archive round trips while a background writer alternates between two incompatible image layouts. The same profile checks an embedded image texture round trip.
+
+## Exclusions and deferred integration
 
 PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR loading and PNG/JPEG/WebP/EXR saving are executable. BC1–BC7 compression/decompression and DDS file/buffer load/save feed existing resource and texture consumers. The SDL_image load profile normalizes ordinary files to RGBA8; DDS retains supported byte/BCn storage and EXR retains HDR channels and precision. Encoded input/output and decoder dimensions follow the documented codec budgets. The private WebP encoder supports exact RGB/RGBA and lossy saving. KTX1/KTX2 and Basis LDR/HDR loading now execute through the [private KTX reader](image-ktx.md), retaining complete mips and applicable precision. Importing and complete color/metadata semantics remain pending. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) records exact dependencies. BC1–BC7 and RA-as-RG decode; S3TC/BPTC encode. [ETC/EAC/ASTC decoding](image-block-decoding.md) now supplies all remaining block roles; their encoding remains unavailable.
 

@@ -418,11 +418,11 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
     }
     private static void WriteImage(StreamPeerBuffer stream, Image image)
     {
-        stream.Put32(image.Width);
-        stream.Put32(image.Height);
-        stream.PutU8(image.HasMIPMaps ? (byte)1 : (byte)0);
-        stream.Put32((int)image.PixelFormat);
-        var data = image.GetData();
+        var data = image.GetData(out var size, out var format, out var hasMipmaps);
+        stream.Put32(size.X);
+        stream.Put32(size.Y);
+        stream.PutU8(hasMipmaps ? (byte)1 : (byte)0);
+        stream.Put32((int)format);
         stream.Put32(data.Length);
         stream.PutData(data);
     }

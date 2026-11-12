@@ -1,6 +1,21 @@
 {
   "mappings": [
     {
+      "electron2d": "method:Electron2D.Image.GetData(ref Electron2D.Vector2i,ref Electron2D.Image.Format,ref System.Boolean)",
+      "godot": "Image::property:data",
+      "reason": "Typed, consistent snapshot of dimensions, format, mip flag and owned raw bytes under ADR 0039."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.SetData(System.Int32,System.Int32,System.Boolean,Electron2D.Image.Format,System.Byte[])",
+      "godot": "Image::property:data",
+      "reason": "Typed replacement for populated data under ADR 0039. CopyFrom supports an empty source."
+    },
+    {
+      "electron2d": "method:Electron2D.Image.CopyFrom(Electron2D.Image)",
+      "godot": "Image::property:data",
+      "reason": "Copies the full typed state, including canonical empty storage."
+    },
+    {
       "godot": "Resource::method:get_id_for_path(String:)",
       "electron2d": "method:Electron2D.Resource.GetIDForPath(System.String)",
       "reason": "ADR 0013: typed authoring cache lookup by exact referrer and current resource path."
@@ -592,6 +607,35 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "Image::property:data"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039 replaces the dynamic dictionary with an atomic typed raw snapshot and typed replacement. Resource archives persist the same snapshot, with exact mip bytes and matching metadata. See docs/components/images.md#raw-image-snapshots."
+    },
+    {
+      "godot": [
+        "Image::enum:Format",
+        "Image::method:copy_from(Image:)",
+        "Image::method:create_empty(int:,int:,bool:,int:Image.Format)",
+        "Image::method:create_from_data(int:,int:,bool:,int:Image.Format,PackedByteArray:)",
+        "Image::method:get_data()",
+        "Image::method:get_data_size()",
+        "Image::method:get_format()",
+        "Image::method:get_height()",
+        "Image::method:get_mipmap_count()",
+        "Image::method:get_mipmap_offset(int:)",
+        "Image::method:get_size()",
+        "Image::method:get_width()",
+        "Image::method:has_mipmaps()",
+        "Image::method:is_compressed()",
+        "Image::method:is_empty()",
+        "Image::method:set_data(int:,int:,bool:,int:Image.Format,PackedByteArray:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039 raw storage validates dimensions, 47 concrete format identities, block sizes and exact complete mip layouts. Copied data and independent state queries are available for compressed and uncompressed storage, with canonical empty metadata and explicit validation failures. See docs/components/images.md#raw-image-snapshots."
+    },
     {
       "godot": [
         "Resource::method:get_id_for_path(String:)",

@@ -78,6 +78,7 @@ byte[] ownedCopy = image.GetData();
 | [`public void SaveDDS(string path)`](#savedds) | Atomically saves DDS to an existing parent directory. |
 | [`public void SetData(int width, int height, bool useMipmaps, Image.Format format, byte[] data)`](#setdata) | Atomically replaces all pixel state. |
 | [`public byte[] GetData()`](#getdata) | Returns an independent raw-buffer copy. |
+| [`public byte[] GetData(out Vector2i size, out Image.Format format, out bool hasMipmaps)`](#getdata-with-metadata) | Captures a raw-buffer copy and matching metadata in one read. |
 | [`public int GetMIPMapOffset(int mipmap)`](#getmipmapoffset) | Gets a stored level's byte offset. |
 | [`public void CopyFrom(Image source)`](#copyfrom) | Copies pixel state while preserving resource identity. |
 | [`public Color GetPixel(int x, int y)`](#getpixel-xy) | Decodes one base-level pixel. |
@@ -251,6 +252,11 @@ Validates and copies an exact complete buffer before atomically replacing the cu
 ### `public byte[] GetData()`
 
 Returns a fresh copy containing the base level followed by all mip levels. Mutating the returned array cannot change the image.
+
+<a id="getdata-with-metadata"></a>
+### `public byte[] GetData(out Vector2i size, out Image.Format format, out bool hasMipmaps)`
+
+Returns the complete raw buffer with dimensions, storage format and mipmap presence from the same state. Use this overload when an image can change between reads. The returned buffer belongs to the caller. An empty image returns an empty array, zero size, `L8` and `false`. A disposed image throws `ObjectDisposedException`.
 
 <a id="getmipmapoffset"></a>
 ### `public int GetMIPMapOffset(int mipmap)`
