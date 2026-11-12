@@ -422,7 +422,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_THEME") is { } p
 if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); Console.WriteLine("Raw image storage, mip chains and archive snapshots passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); VerifyImageResize(); Console.WriteLine("Image storage, mip chains, resizing and archive snapshots passed."); return; }
 if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
 if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
@@ -2356,6 +2356,7 @@ SpriteTests.Run();
 VerifyImages();
 VerifyImageStorage();
 VerifyImageMIPChains();
+VerifyImageResize();
 VerifyVector2Values();
 VerifyVector2iValues();
 VerifyVector3Values();
@@ -3620,6 +3621,66 @@ static void VerifyColors()
     var allocated = GC.GetAllocatedBytesForCurrentThread() - beforeAllocations;
     Require(allocated == 0 && float.IsFinite(hotResult.R),
         "Warmed numeric color operations must not allocate managed memory.");
+}
+
+static void VerifyImageResize()
+{
+    using var nearest = Image.CreateFromData(2, 1, false, Image.Format.Rh, [0x01, 0x7E, 0x00, 0x80]);
+    nearest.Resize(4, 1, Image.Interpolation.Nearest);
+    Require(nearest.GetData().SequenceEqual(new byte[] { 1, 0x7E, 1, 0x7E, 0, 0x80, 0, 0x80 }),
+        "Nearest filtering must preserve raw half NaN payloads and signed zeros.");
+
+    using var bilinear = Image.CreateFromData(2, 1, false, Image.Format.L8, [0, 255]);
+    bilinear.Resize(4, 1);
+    Require(bilinear.GetData().SequenceEqual(new byte[] { 0, 63, 191, 255 }),
+        "Bilinear must use pixel centers and clamp at the edges.");
+    using var cubic = Image.CreateFromData(2, 1, false, Image.Format.L8, [0, 255]);
+    cubic.Resize(4, 1, Image.Interpolation.Cubic);
+    Require(cubic.GetData().SequenceEqual(new byte[] { 0, 51, 203, 255 }),
+        "Cubic must reconstruct the ramp with its distinct four-tap weights.");
+
+    var impulse = new byte[32];
+    impulse[0] = 255;
+    using var row = Image.CreateFromData(32, 1, false, Image.Format.R8, impulse);
+    using var column = Image.CreateFromData(1, 32, false, Image.Format.R8, impulse);
+    row.Resize(1, 1, Image.Interpolation.Lanczos);
+    column.Resize(1, 1, Image.Interpolation.Lanczos);
+    Require(row.GetData()[0] == 5 && column.GetData()[0] == 5,
+        "Lanczos must retain the low-pass contribution from a sample outside the unscaled kernel on either axis.");
+
+    using var hdr = Image.CreateEmpty(3, 2, false, Image.Format.Rgbaf);
+    hdr.Fill(new Color(-2f, 3f, 5f, 0.25f));
+    hdr.ResizeToPowerOfTwo(square: true, Image.Interpolation.Lanczos);
+    Require(hdr.Size == new Vector2i(4, 4) && ColorNearlyEqual(hdr.GetPixel(3, 3), new(-2f, 3f, 5f, 0.25f)),
+        "Power-of-two Lanczos must preserve a constant HDR image at the boundary.");
+
+    var levels = new byte[21];
+    Array.Fill(levels, (byte)200, 16, 4);
+    levels[20] = 255;
+    using var authored = Image.CreateFromData(4, 4, true, Image.Format.L8, levels);
+    authored.Resize(3, 3, Image.Interpolation.Trilinear);
+    Require(authored.MIPMapCount == 1 && authored.GetData().All(value => value == 83),
+        "Trilinear must blend the authored mip before output quantization and rebuild the destination chain.");
+    using var baseOnly = Image.CreateFromData(4, 4, false, Image.Format.L8,
+        [255, 255, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    baseOnly.Resize(2, 2, Image.Interpolation.Trilinear);
+    Require(!baseOnly.HasMIPMaps && baseOnly.GetData().SequenceEqual(new byte[] { 255, 0, 0, 0 }),
+        "Trilinear can generate a temporary chain while keeping the published image base-only.");
+    using var stretched = Image.CreateFromData(4, 4, true, Image.Format.L8, levels);
+    stretched.Resize(8, 1, Image.Interpolation.Trilinear);
+    Require(stretched.GetData().All(value => value == 0),
+        "A mixed-axis resize with mean scale at least one must sample the base level.");
+
+    var saved = authored.GetData();
+    Expect<ArgumentOutOfRangeException>(() => authored.Resize(2, 2, (Image.Interpolation)99), "Unknown filters must reject.");
+    Require(authored.GetData().SequenceEqual(saved), "Invalid filtering must preserve the committed chain.");
+    using var compressed = Image.CreateEmpty(4, 4, true, Image.Format.Dxt1);
+    Expect<InvalidOperationException>(() => compressed.ResizeToPowerOfTwo(), "Compressed images must reject reconstruction.");
+    authored.Changed += _ => throw new InvalidOperationException("resize observer failure");
+    Expect<InvalidOperationException>(() => authored.Resize(2, 2), "Resize must report observer failures after publishing.");
+    using var texture = ImageTexture.CreateFromImage(authored);
+    Require(texture.GetSize() == new Vector2(2, 2) && texture.MIPMapCount == 1,
+        "A texture must capture the committed resized image and its rebuilt mip chain.");
 }
 
 static void VerifyImageMIPChains()

@@ -39,12 +39,12 @@ image.Resize(320, 180, Image.Interpolation.Lanczos);
 <a id="nearest"></a>
 ### `Nearest = 0`
 
-Selects the nearest source-pixel center. It is fastest and preserves hard pixel-art edges but produces aliasing during reduction.
+Copies the nearest source pixel's stored bytes and preserves hard pixel-art edges.
 
 <a id="bilinear"></a>
 ### `Bilinear = 1`
 
-Blends the nearest four source pixels. This is the default resize mode and the filter used by `ShrinkX2`.
+Blends the nearest four source pixels. This is the default resize mode.
 
 <a id="cubic"></a>
 ### `Cubic = 2`
@@ -54,12 +54,12 @@ Uses a Catmull–Rom-style bicubic reconstruction over sixteen neighboring sampl
 <a id="trilinear"></a>
 ### `Trilinear = 3`
 
-For minification, blends bilinear samples from two generated scale levels; for magnification it reduces to bilinear sampling.
+When the mean of the two destination/source scale ratios is below one, blends bilinear samples from adjacent mip levels. Reuses stored levels or generates a temporary chain. At a mean scale of one or higher it samples the base level.
 
 <a id="lanczos"></a>
 ### `Lanczos = 4`
 
-Uses a radius-three Lanczos reconstruction for sharper high-quality resampling at the highest cost among the available modes.
+Uses a separable radius-three Lanczos filter. Its sampling window widens along each reduced axis and normalizes the in-bounds weights at the edges.
 
 ## Invariants and errors
 

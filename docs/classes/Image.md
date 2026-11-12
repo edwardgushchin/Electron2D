@@ -366,7 +366,7 @@ Halves each dimension, clamping to one pixel. When a stored mip exists, level on
 <a id="resize"></a>
 ### `public void Resize(int width, int height, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`
 
-Resamples the base level to positive validated dimensions with the selected filter and rebuilds a prior mip chain. Invalid dimensions or interpolation values throw `ArgumentOutOfRangeException`.
+Resamples to positive validated dimensions in the current pixel format. Trilinear uses stored levels when available and rebuilds an existing chain for the new extent. Lanczos widens the filter on each reduced axis. Invalid dimensions or interpolation values throw `ArgumentOutOfRangeException`. See [image resizing](../components/images.md#image-resizing).
 
 <a id="resizetopot"></a>
 ### `public void ResizeToPowerOfTwo(bool square = false, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`

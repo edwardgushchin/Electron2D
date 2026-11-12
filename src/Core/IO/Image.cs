@@ -140,15 +140,15 @@ public sealed partial class Image : Resource
     /// <summary>Defines the reconstruction filter used while resizing an image.</summary>
     public enum Interpolation
     {
-        /// <summary>Uses the nearest source pixel and preserves hard pixel edges.</summary>
+        /// <summary>Copies the nearest source pixel's stored bytes and preserves hard pixel edges.</summary>
         Nearest = 0,
         /// <summary>Linearly blends the nearest four source pixels.</summary>
         Bilinear = 1,
         /// <summary>Uses a bicubic reconstruction over sixteen neighboring samples.</summary>
         Cubic = 2,
-        /// <summary>Linearly blends bilinear samples from two mip levels.</summary>
+        /// <summary>Blends bilinear samples from adjacent mip levels during reduction.</summary>
         Trilinear = 3,
-        /// <summary>Uses a radius-three Lanczos reconstruction filter.</summary>
+        /// <summary>Uses a separable radius-three Lanczos filter with wider support during reduction.</summary>
         Lanczos = 4,
     }
 

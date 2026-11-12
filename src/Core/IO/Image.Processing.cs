@@ -299,6 +299,8 @@ public sealed partial class Image
     }, copyData: false);
 
     /// <summary>Resizes the base image and regenerates an existing mip chain.</summary>
+    /// <remarks>Retains the pixel format. Trilinear uses stored or temporary mip levels during reduction.
+    /// Lanczos widens the filter on each reduced axis.</remarks>
     /// <param name="width">The positive destination width.</param>
     /// <param name="height">The positive destination height.</param>
     /// <param name="interpolation">The reconstruction filter.</param>
@@ -310,10 +312,11 @@ public sealed partial class Image
     {
         ValidateDimensions(width, height);
         ValidateInterpolation(interpolation);
-        Mutate(state => ResizeState(RequireReadablePixels(state), width, height, interpolation));
+        Mutate(state => ResizeState(RequireReadablePixels(state), width, height, interpolation), copyData: false);
     }
 
     /// <summary>Resizes each dimension to the next power of two and optionally makes the result square.</summary>
+    /// <remarks>Uses the same reconstruction and mipmap rules as <see cref="Resize(int, int, Interpolation)"/>.</remarks>
     /// <param name="square">Whether both dimensions use the larger resulting power of two.</param>
     /// <param name="interpolation">The reconstruction filter.</param>
     /// <exception cref="ArgumentOutOfRangeException">The resulting size or interpolation mode is invalid.</exception>
@@ -333,7 +336,7 @@ public sealed partial class Image
                     width = height = Math.Max(width, height);
                 ValidateDimensions(width, height);
                 return ResizeState(state, width, height, interpolation);
-            });
+            }, copyData: false);
     }
 
     /// <summary>Copies a clipped source rectangle into this image without alpha blending.</summary>
@@ -945,64 +948,68 @@ public sealed partial class Image
         if (width == state.Width && height == state.Height)
             return state;
 
-        var result = interpolation == Interpolation.Trilinear
-            ? ResizeTrilinear(state, width, height)
-            : ResizeLevel(state, 0, width, height, interpolation);
+        var result = interpolation == Interpolation.Lanczos
+            ? ResizeLanczos(state, width, height)
+            : ResizeSampled(state, width, height, interpolation);
         return state.HasMIPMaps ? BuildMIPMaps(result, false) : result;
     }
 
-    private static State ResizeTrilinear(State state, int width, int height)
+    private static State ResizeSampled(State state, int width, int height, Interpolation interpolation)
     {
-        var mipState = state.HasMIPMaps ? state : BuildMIPMaps(state, false);
-        var scale = Math.Max(state.Width / (double)width, state.Height / (double)height);
-        var level = Math.Max(0d, Math.Log2(Math.Max(1d, scale)));
-        var maximum = GetRequiredMIPMapCount(mipState.Width, mipState.Height, mipState.HasMIPMaps);
-        var lower = Math.Min(maximum, (int)Math.Floor(level));
-        var upper = Math.Min(maximum, lower + 1);
-        var weight = (float)(level - lower);
-        var lowerState = ResizeLevel(mipState, lower, width, height, Interpolation.Bilinear);
-        if (upper == lower)
-            return lowerState;
-        var upperState = ResizeLevel(mipState, upper, width, height, Interpolation.Bilinear);
-        var bytes = GetBytesPerPixel(state.Format);
-        for (var offset = 0; offset < lowerState.Data.Length; offset += bytes)
-        {
-            var color = ReadColor(lowerState.Data, offset, state.Format)
-                .Lerp(ReadColor(upperState.Data, offset, state.Format), weight);
-            WriteColor(lowerState.Data, offset, state.Format, color);
-        }
-
-        return lowerState;
-    }
-
-    private static State ResizeLevel(State state, int levelIndex, int width, int height, Interpolation interpolation)
-    {
-        var level = GetLevel(state, levelIndex);
         var bytes = GetBytesPerPixel(state.Format);
         var data = new byte[GetRequiredDataSize(width, height, state.Format, false)];
+        var level = GetLevel(state, 0);
+        var nextLevel = level;
+        var weight = 0f;
+        if (interpolation == Interpolation.Trilinear)
+        {
+            interpolation = Interpolation.Bilinear;
+            var scale = (width / (double)state.Width + height / (double)state.Height) * 0.5d;
+            if (scale < 1d)
+            {
+                var lod = Math.Min(-Math.Log2(scale), GetRequiredMIPMapCount(state.Width, state.Height, true));
+                var lower = (int)lod;
+                var upper = (int)Math.Ceiling(lod);
+                if (upper > 0 && !state.HasMIPMaps)
+                    state = BuildMIPMaps(state, false);
+                level = GetLevel(state, lower);
+                nextLevel = GetLevel(state, upper);
+                weight = (float)(lod - lower);
+            }
+        }
+
         for (var y = 0; y < height; y++)
         {
-            var sourceY = ((y + 0.5) * level.Height / height) - 0.5;
+            var sourceY = SourceCenter(y, level.Height, height);
             for (var x = 0; x < width; x++)
             {
-                var sourceX = ((x + 0.5) * level.Width / width) - 0.5;
-                var color = interpolation switch
+                var sourceX = SourceCenter(x, level.Width, width);
+                var write = (y * width + x) * bytes;
+                if (interpolation == Interpolation.Nearest)
                 {
-                    Interpolation.Nearest => SampleNearest(state, level, sourceX, sourceY),
-                    Interpolation.Bilinear => SampleBilinear(state, level, sourceX, sourceY),
-                    Interpolation.Cubic => SampleCubic(state, level, sourceX, sourceY),
-                    Interpolation.Lanczos => SampleLanczos(state, level, sourceX, sourceY),
-                    _ => throw new ArgumentOutOfRangeException(nameof(interpolation)),
-                };
-                WriteColor(data, ((y * width) + x) * bytes, state.Format, color);
+                    var read = ((int)(sourceY + 0.5) * level.Width + (int)(sourceX + 0.5)) * bytes;
+                    state.Data.AsSpan(read, bytes).CopyTo(data.AsSpan(write, bytes));
+                    continue;
+                }
+
+                var color = interpolation == Interpolation.Cubic
+                    ? SampleCubic(state, level, sourceX, sourceY)
+                    : SampleBilinear(state, level, sourceX, sourceY);
+                if (weight > 0f)
+                {
+                    var next = SampleBilinear(state, nextLevel, SourceCenter(x, nextLevel.Width, width),
+                        SourceCenter(y, nextLevel.Height, height));
+                    color = color.Lerp(next, weight);
+                }
+                WriteColor(data, write, state.Format, color);
             }
         }
 
         return new State(width, height, state.Format, false, data);
     }
 
-    private static Color SampleNearest(State state, Level level, double x, double y) =>
-        ReadLevelPixel(state, level, (int)Math.Floor(x + 0.5), (int)Math.Floor(y + 0.5));
+    private static double SourceCenter(int index, int sourceSize, int targetSize) =>
+        (index + 0.5d) * sourceSize / targetSize - 0.5d;
 
     private static Color SampleBilinear(State state, Level level, double x, double y)
     {
@@ -1035,25 +1042,71 @@ public sealed partial class Image
         return total == 0f ? default : result / total;
     }
 
-    private static Color SampleLanczos(State state, Level level, double x, double y)
+    private static State ResizeLanczos(State state, int width, int height)
     {
-        var baseX = (int)Math.Floor(x);
-        var baseY = (int)Math.Floor(y);
-        var result = default(Color);
-        var total = 0f;
-        for (var sampleY = -2; sampleY <= 3; sampleY++)
+        var data = new byte[GetRequiredDataSize(width, height, state.Format, false)];
+        var bytes = GetBytesPerPixel(state.Format);
+        // Filter the stronger reduction first. One intermediate line bounds memory even on thin images.
+        var horizontal = (long)width * state.Height <= (long)height * state.Width;
+        var sourceLength = horizontal ? state.Width : state.Height;
+        var lineLength = horizontal ? state.Height : state.Width;
+        var firstSize = horizontal ? width : height;
+        var secondSize = horizontal ? height : width;
+        var sourceStep = horizontal ? bytes : state.Width * bytes;
+        var lineStep = horizontal ? state.Width * bytes : bytes;
+        var line = new Color[lineLength];
+        var firstScale = Math.Max(1d, sourceLength / (double)firstSize);
+        var secondScale = Math.Max(1d, lineLength / (double)secondSize);
+        var weights = new float[Math.Min(sourceLength, (int)Math.Ceiling(firstScale * 6) + 1)];
+
+        for (var first = 0; first < firstSize; first++)
         {
-            var wy = LanczosKernel((float)(y - (baseY + sampleY)));
-            for (var sampleX = -2; sampleX <= 3; sampleX++)
+            var center = SourceCenter(first, sourceLength, firstSize);
+            var (start, end) = LanczosBounds(center, firstScale, sourceLength);
+            var total = 0f;
+            for (var sample = start; sample <= end; sample++)
             {
-                var weight = wy * LanczosKernel((float)(x - (baseX + sampleX)));
-                result += ReadLevelPixel(state, level, baseX + sampleX, baseY + sampleY) * weight;
+                var weight = LanczosKernel((float)((sample - center) / firstScale));
+                weights[sample - start] = weight;
                 total += weight;
+            }
+            for (var index = 0; index < lineLength; index++)
+            {
+                var pixel = default(Color);
+                var read = index * lineStep;
+                for (var sample = start; sample <= end; sample++)
+                {
+                    var weight = weights[sample - start];
+                    if (weight != 0f)
+                        pixel += ReadColor(state.Data, read + sample * sourceStep, state.Format) * weight;
+                }
+                line[index] = pixel / total;
+            }
+
+            for (var second = 0; second < secondSize; second++)
+            {
+                center = SourceCenter(second, lineLength, secondSize);
+                (start, end) = LanczosBounds(center, secondScale, lineLength);
+                var pixel = default(Color);
+                total = 0f;
+                for (var sample = start; sample <= end; sample++)
+                {
+                    var weight = LanczosKernel((float)((sample - center) / secondScale));
+                    if (weight == 0f)
+                        continue;
+                    pixel += line[sample] * weight;
+                    total += weight;
+                }
+                var write = horizontal ? (second * width + first) : (first * width + second);
+                WriteColor(data, write * bytes, state.Format, pixel / total);
             }
         }
 
-        return total == 0f ? default : result / total;
+        return new State(width, height, state.Format, false, data);
     }
+
+    private static (int Start, int End) LanczosBounds(double center, double scale, int length) =>
+        (Math.Max(0, (int)Math.Ceiling(center - 3d * scale)), Math.Min(length - 1, (int)Math.Floor(center + 3d * scale)));
 
     private static Color ReadLevelPixel(State state, Level level, int x, int y)
     {
@@ -1077,7 +1130,7 @@ public sealed partial class Image
         value = Mathf.Abs(value);
         if (value == 0f)
             return 1f;
-        if (value >= 3f)
+        if (value >= 3f || value == MathF.Floor(value))
             return 0f;
         var radians = Mathf.Pi * value;
         return (Mathf.Sin(radians) / radians) * (Mathf.Sin(radians / 3f) / (radians / 3f));

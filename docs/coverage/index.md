@@ -1,3 +1,5 @@
+[Image resizing](../components/images.md#image-resizing) widens Lanczos on reduced axes and reconstructs trilinear samples before quantization. Nearest preserves exact stored pixels. Three rows move to Implemented. Coverage is **13,937/18,900 (73.74%)**, with 1,147 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Mip chain editing](../components/images.md#mip-chain-editing) promotes authored levels, including compressed blocks, and shares the generation filter with base-only reduction. Three rows move to Implemented. Coverage is **13,934/18,900 (73.72%)**, with 1,150 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [Raw image snapshots](../components/images.md#raw-image-snapshots) expose copied pixels with matching dimensions, format and mipmap presence. Resource archives use the same snapshot during concurrent edits. Seventeen raw storage rows move to Implemented. Coverage is **13,931/18,900 (73.71%)**, with 1,153 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

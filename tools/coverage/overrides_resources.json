@@ -609,6 +609,15 @@
   "statusGroups": [
     {
       "godot": [
+        "Image::enum:Interpolation",
+        "Image::method:resize(int:,int:,int:Image.Interpolation)",
+        "Image::method:resize_to_po2(bool:,int:Image.Interpolation)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039: five CPU filters preserve typed pixel formats and storage ownership. Trilinear uses authored or temporary mips and Lanczos widens its footprint when downscaling. Center sampling and format-aware quantization are managed adaptations. See docs/components/images.md#image-resizing."
+    },
+    {
+      "godot": [
         "Image::method:clear_mipmaps()",
         "Image::method:generate_mipmaps(bool:)",
         "Image::method:shrink_x2()"

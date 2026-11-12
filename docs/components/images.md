@@ -80,6 +80,14 @@ Run `ELECTRON2D_TEST_IMAGE_STORAGE=1` to check all raw format sizes, odd compres
 
 `ClearMIPMaps` retains the base bytes, including compressed blocks. ImageTexture captures the resulting format, base extent and exact remaining mip chain. The image-storage profile checks authored BC1 colors, odd and one-pixel axes, integer and half-float values, base edits, and observer failure after commit.
 
+## Image resizing
+
+`Resize` and `ResizeToPowerOfTwo` run the same CPU filters and retain the original pixel format, including packed, integer and HDR layouts. Nearest copies the stored sample exactly. Bilinear and cubic sample around destination pixel centers with clamped source coordinates. Trilinear uses the mean destination/source scale to select the two mip levels and blends their bilinear samples before encoding the output. Temporary levels used to filter a base-only image stay private. An existing chain is rebuilt at the new size.
+
+Lanczos widens the filter along each reduced axis to retain detail across the full footprint. It filters one axis at a time and normalizes the weights at image edges. Scratch storage holds one intermediate line and one set of weights. Color values are filtered in their stored color space.
+
+The image-storage profile verifies exact nearest, bilinear and cubic samples, both orientations of a 32-to-1 reduction, HDR pixels at the boundary, and authored and temporary trilinear levels. It also checks rejected compressed and invalid requests, observer failure after commitment, and the resized chain consumed by ImageTexture.
+
 ## Exclusions and deferred integration
 
 PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR loading and PNG/JPEG/WebP/EXR saving are executable. BC1–BC7 compression/decompression and DDS file/buffer load/save feed existing resource and texture consumers. The SDL_image load profile normalizes ordinary files to RGBA8; DDS retains supported byte/BCn storage and EXR retains HDR channels and precision. Encoded input/output and decoder dimensions follow the documented codec budgets. The private WebP encoder supports exact RGB/RGBA and lossy saving. KTX1/KTX2 and Basis LDR/HDR loading now execute through the [private KTX reader](image-ktx.md), retaining complete mips and applicable precision. Importing and complete color/metadata semantics remain pending. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) records exact dependencies. BC1–BC7 and RA-as-RG decode; S3TC/BPTC encode. [ETC/EAC/ASTC decoding](image-block-decoding.md) now supplies all remaining block roles; their encoding remains unavailable.
