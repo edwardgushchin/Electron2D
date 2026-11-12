@@ -97,5 +97,5 @@ public sealed unsafe partial class RenderingDevice
 
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_driver_resource")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    private static partial int QueryDriverResource(nint device, uint abi, uint resource, nint handle, out ulong value);
+    internal static partial int QueryDriverResource(nint device, uint abi, uint resource, nint handle, out ulong value);
 }

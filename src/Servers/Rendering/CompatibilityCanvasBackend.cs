@@ -42,6 +42,8 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             _rasterAttributeLines = Driver == "software" || lineMethod is not (2 or 3);
             if (Driver is "opengl" or "opengles2")
                 AdapterIdentity = GraphicsAdapterIdentity.ReadGL(window.DangerousGetHandle());
+            else if (OperatingSystem.IsWindows() && Driver is "direct3d11" or "direct3d12")
+                AdapterIdentity = GraphicsAdapterIdentity.ReadDirect3DRenderer(_renderer.DangerousGetHandle(), Driver);
             CaptureGraphicsHandles(window.DangerousGetHandle());
             Check(SDL.SetRenderDrawBlendMode(_renderer.DangerousGetHandle(), SDL.BlendMode.Blend), "set canvas blending");
         }

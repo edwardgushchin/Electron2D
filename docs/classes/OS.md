@@ -25,7 +25,7 @@ Process argv, Linux MIDI names and GIO paths use [tracked UTF8 input storage](..
 
 ## Graphics driver
 
-`GetVideoAdapterDriverInfo()` returns the active renderer's reported driver name and version on Windows and desktop Linux. Each available pair is caller-owned. See [graphics adapter identity](../components/graphics-adapter-identity.md) for unavailable values.
+`GetVideoAdapterDriverInfo()` returns the active renderer's reported driver name and version on Windows and desktop Linux. Each available pair is caller-owned. Direct3D reads its selected adapter's description and version through DXCore when available. See [graphics adapter identity](../components/graphics-adapter-identity.md) for unavailable values.
 
 ## Storage, verification and decisions
 

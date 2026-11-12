@@ -167,7 +167,7 @@ Largest accepted CanvasLayer.Layer value. It draws after every smaller layer ind
 | `string GetCurrentRenderingDriverName()` | Actual native driver name. |
 | `string GetVideoAdapterName()` | Active native adapter or GL renderer name. |
 | `string GetVideoAdapterVendor()` | Active adapter vendor when reported. |
-| `string GetVideoAdapterAPIVersion()` | Active graphics API version when reported. |
+| `string GetVideoAdapterAPIVersion()` | Active graphics API version when reported. Direct3D reports its feature level. |
 | `RenderingDevice.DeviceType GetVideoAdapterType()` | Active physical device classification when reported. |
 | `Color GetDefaultClearColor()` | Current clear color. |
 | `void SetDefaultClearColor(Color color)` | Sets a finite clear color for later frames. |

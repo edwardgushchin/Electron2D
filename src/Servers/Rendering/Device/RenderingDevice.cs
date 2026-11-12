@@ -557,7 +557,16 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
 
     /// <summary>Returns the selected compute-device name.</summary>
     /// <returns>The native device description.</returns>
-    public string GetDeviceName() { Access(); return _context.DeviceName; }
+    public string GetDeviceName()
+    {
+        Access();
+        if (OperatingSystem.IsWindows() && TextureDriver == "direct3d12")
+        {
+            var identity = _adapterIdentity ??= GraphicsAdapterIdentity.ReadGPU(Device);
+            if (identity.Name.Length != 0) return identity.Name;
+        }
+        return _context.DeviceName;
+    }
     /// <summary>Frees a resource after completing pending work.</summary>
     /// <param name="rid">A live identity owned by this device.</param>
     /// <remarks>Borrowed renderer image identities release their wrapper and leases, preserving source ownership.

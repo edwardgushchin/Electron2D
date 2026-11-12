@@ -654,25 +654,25 @@
       "godot": "RenderingServer::method:get_video_adapter_name()",
       "electron2d": "method:Electron2D.RenderingServer.GetVideoAdapterName()",
       "state": "Partial",
-      "reason": "The active SDL GPU reports its native name and the active GL context reports its renderer string. Software and inactive renderers report empty. Browser and foreign target qualification remains open."
+      "reason": "Active SDL GPU and owned GL contexts report the renderer name. Direct3D GPU and Compatibility read the selected DXGI adapter description. Software and inactive renderers report empty. Browser and foreign target qualification remains open."
     },
     {
       "godot": "RenderingServer::method:get_video_adapter_vendor()",
       "electron2d": "method:Electron2D.RenderingServer.GetVideoAdapterVendor()",
       "state": "Partial",
-      "reason": "ADR 0028: active OpenGL context reports this field. Vulkan uses the selected SDL adapter and the guarded Vulkan identity bridge. Other GPU backends need their native identity fields. See docs/components/graphics-adapter-identity.md."
+      "reason": "ADR 0028: OpenGL reports its owned context strings, Vulkan reads the guarded native adapter properties and Direct3D GPU/Compatibility reads the selected DXGI adapter and device feature level. Metal and browser providers remain open. See docs/components/graphics-adapter-identity.md."
     },
     {
       "godot": "RenderingServer::method:get_video_adapter_api_version()",
       "electron2d": "method:Electron2D.RenderingServer.GetVideoAdapterAPIVersion()",
       "state": "Partial",
-      "reason": "ADR 0028: active OpenGL context reports this field. Vulkan uses the selected SDL adapter and the guarded Vulkan identity bridge. Other GPU backends need their native identity fields. See docs/components/graphics-adapter-identity.md."
+      "reason": "ADR 0028: OpenGL reports its owned context strings, Vulkan reads the guarded native adapter properties and Direct3D GPU/Compatibility reads the selected DXGI adapter and device feature level. Metal and browser providers remain open. See docs/components/graphics-adapter-identity.md."
     },
     {
       "godot": "RenderingServer::method:get_video_adapter_type()",
       "electron2d": "method:Electron2D.RenderingServer.GetVideoAdapterType()",
       "state": "Partial",
-      "reason": "Selected Vulkan device type maps to the typed Vulkan identities. OpenGL and software use Other. Direct3D 12 and Metal need native classification tied to the active device."
+      "reason": "Vulkan uses its native device type. Direct3D classifies the selected DXGI adapter as discrete, integrated or CPU software. OpenGL and SDL software use Other. Metal and browser providers remain open."
     },
     {
       "godot": "Shader::enum_value:Mode.MODE_PARTICLES",
@@ -6057,6 +6057,16 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "RenderingServer::enum:Features",
+        "RenderingServer::enum_value:Features.FEATURE_MULTITHREADED",
+        "RenderingServer::enum_value:Features.FEATURE_SHADERS",
+        "RenderingServer::method:has_feature(int:RenderingServer.Features)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned RenderingServer.xml marks has_feature and both Features constants deprecated as unused since version 3.0. The method always returns false. The enum has no applicable values or consumer."
+    },
     {
       "godot": [
         "Viewport::property:mesh_lod_threshold",

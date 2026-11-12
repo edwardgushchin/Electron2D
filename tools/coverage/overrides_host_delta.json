@@ -4,7 +4,7 @@
       "godot": "OS::method:get_video_adapter_driver_info()",
       "electron2d": "method:Electron2D.OS.GetVideoAdapterDriverInfo()",
       "state": "Partial",
-      "reason": "Active SDL GPU driver name and version are returned in a caller-owned pair on Windows and desktop Linux. Native driver name/version providers for compatibility and missing SDL properties remain open."
+      "reason": "Active SDL GPU reports a caller-owned driver pair on Windows and desktop Linux. Direct3D GPU and Compatibility read the selected adapter's description and driver version by DXCore LUID. Other Compatibility providers and broader platform qualification remain open."
     },
     {
       "godot": "OS::property:delta_smoothing",

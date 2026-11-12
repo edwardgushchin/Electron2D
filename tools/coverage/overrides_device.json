@@ -107,19 +107,19 @@
       "godot": "RenderingDevice::method:get_device_vendor_name()",
       "electron2d": "method:Electron2D.RenderingDevice.GetDeviceVendorName()",
       "state": "Partial",
-      "reason": "Selected Vulkan vendor ID maps to a hardware vendor. Direct3D 12 and Metal need native identity tied to the actual device."
+      "reason": "Vulkan and Direct3D 12 GPU map the PCI vendor of the actual adapter. Metal and browser need native providers."
     },
     {
       "godot": "RenderingDevice::method:get_device_pipeline_cache_uuid()",
       "electron2d": "method:Electron2D.RenderingDevice.GetDevicePipelineCacheUUID()",
       "state": "Partial",
-      "reason": "Selected Vulkan adapter supplies its native 16-byte pipeline cache UUID. Other backends need cache identities based on their native driver and adapter."
+      "reason": "Vulkan supplies its native 16-byte UUID. Direct3D 12 GPU uses the selected DXGI LUID, revision and actual driver version. Main and local devices share the native cache identity. Metal and browser need native providers."
     },
     {
       "godot": "RenderingDevice::enum:DeviceType",
       "electron2d": "T:Electron2D.RenderingDevice.DeviceType",
       "state": "Partial",
-      "reason": "Typed device categories match the native Vulkan numeric classification. Direct3D 12 and Metal need native classification of the owned adapter."
+      "reason": "Typed device categories map the native Vulkan identity and the selected DXGI adapter classification. Metal and browser need native providers."
     },
     {
       "godot": "RenderingDevice::enum_value:DeviceType.DEVICE_TYPE_OTHER",

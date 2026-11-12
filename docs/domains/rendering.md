@@ -44,7 +44,7 @@ Windows Direct3D 12 creates canvas and device graphics pipelines with private DX
 
 # Rendering domain
 
-The [graphics adapter identity](../components/graphics-adapter-identity.md) describes the actual renderer and local device, including Vulkan's native device type and pipeline cache UUID.
+The [graphics adapter identity](../components/graphics-adapter-identity.md) describes the actual renderer and local device, including Vulkan and Direct3D device types, driver fields and pipeline cache identities.
 
 [Device-backed texture updates](../components/canvas-rendering.md#device-backed-texture-updates) upload selected layers and mip chains into the original native storage used by retained canvas and material bindings.
 

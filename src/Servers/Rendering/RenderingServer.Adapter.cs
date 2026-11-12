@@ -13,7 +13,7 @@ public sealed partial class RenderingServer
     public static string GetVideoAdapterVendor() => ActiveAdapter.Vendor;
 
     /// <summary>Gets the graphics API version reported by the active renderer.</summary>
-    /// <returns>The version or an empty string when unavailable.</returns>
+    /// <returns>The version or an empty string when unavailable. Direct3D reports its native device feature level.</returns>
     public static string GetVideoAdapterAPIVersion() => ActiveAdapter.APIVersion;
 
     /// <summary>Gets the physical graphics device type reported by the active renderer.</summary>

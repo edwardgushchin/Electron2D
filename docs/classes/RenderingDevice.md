@@ -328,7 +328,7 @@ Borrowers become invalid and may still be freed explicitly. The root device iden
 <a id="member-6a41660f977d"></a>
 ### Device identity
 
-`GetDeviceVendorName()` and `GetDevicePipelineCacheUUID()` return empty strings when their native fields are unavailable. [`DeviceType`](RenderingDevice.DeviceType.md) classifies physical adapters. See [graphics adapter identity](../components/graphics-adapter-identity.md).
+`GetDeviceVendorName()` and `GetDevicePipelineCacheUUID()` return empty strings when their native fields are unavailable. Direct3D 12 reports an adapter and driver version key for its pipeline cache. [`DeviceType`](RenderingDevice.DeviceType.md) classifies physical adapters. See [graphics adapter identity](../components/graphics-adapter-identity.md).
 
 ### DrawCommandBeginLabel and DrawCommandEndLabel
 

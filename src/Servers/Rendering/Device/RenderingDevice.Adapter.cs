@@ -30,7 +30,8 @@ public sealed unsafe partial class RenderingDevice
     }
 
     /// <summary>Gets the pipeline cache UUID of this device.</summary>
-    /// <returns>A lowercase hexadecimal UUID from the native adapter or an empty string when unavailable.</returns>
+    /// <returns>The native pipeline cache identity or an empty string when unavailable. Vulkan reports a lowercase hexadecimal UUID.
+    /// Direct3D 12 reports an adapter and driver version key.</returns>
     public string GetDevicePipelineCacheUUID()
     {
         Access();

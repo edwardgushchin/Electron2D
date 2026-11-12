@@ -15,7 +15,8 @@ internal sealed partial record GraphicsAdapterIdentity(string Name, string Vendo
         var name = SDL.GetStringProperty(properties, SDL.Props.GPUDeviceNameString, "") ?? "";
         var driverName = SDL.GetStringProperty(properties, SDL.Props.GPUDeviceDriverNameString, "") ?? "";
         var driverVersion = SDL.GetStringProperty(properties, SDL.Props.GPUDeviceDriverVersionString, "") ?? "";
-        if (SDL.GetGPUDeviceDriver(device) == "vulkan")
+        var driver = SDL.GetGPUDeviceDriver(device);
+        if (driver == "vulkan")
         {
             Span<byte> uuid = stackalloc byte[16];
             try
@@ -33,7 +34,8 @@ internal sealed partial record GraphicsAdapterIdentity(string Name, string Vendo
             catch (EntryPointNotFoundException) { } // A preceding native module still supplies SDL's public strings.
         }
 
-        return new(name, "", "", RenderingDevice.DeviceType.Other, driverName, driverVersion, "");
+        var fallback = new GraphicsAdapterIdentity(name, "", "", RenderingDevice.DeviceType.Other, driverName, driverVersion, "");
+        return OperatingSystem.IsWindows() && driver == "direct3d12" ? ReadD3D12GPU(device, fallback) : fallback;
     }
 
     internal static unsafe GraphicsAdapterIdentity ReadGL(nint window)
