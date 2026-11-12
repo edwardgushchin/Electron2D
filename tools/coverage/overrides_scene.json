@@ -1228,8 +1228,22 @@
     {
       "electron2d": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action<Electron2D.Node>,Electron2D.GroupCallFlags)",
       "godot": "SceneTree::method:call_group(StringName:,StringName:)",
-      "state": "Partial",
-      "reason": "Typed delegate replaces string method dispatch; ADRs 0001/0006."
+      "reason": "Typed group call without an explicit argument under ADR 0011."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.CallGroup`1(System.String,Action<Electron2D.Node, T>,T,Electron2D.GroupCallFlags)",
+      "godot": "SceneTree::method:call_group(StringName:,StringName:)",
+      "reason": "Typed argument or tuple under ADR 0011."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action<Electron2D.Node>,Electron2D.GroupCallFlags)",
+      "godot": "SceneTree::method:call_group_flags(int:,StringName:,StringName:)",
+      "reason": "The optional flags parameter owns flagged delivery."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.CallGroup`1(System.String,Action<Electron2D.Node, T>,T,Electron2D.GroupCallFlags)",
+      "godot": "SceneTree::method:call_group_flags(int:,StringName:,StringName:)",
+      "reason": "The typed argument overload accepts the same flags."
     },
     {
       "electron2d": "method:Electron2D.SceneTree.Defer(System.Action)",
@@ -1252,8 +1266,12 @@
     {
       "electron2d": "method:Electron2D.SceneTree.NotifyGroup(System.String,System.Int32,Electron2D.GroupCallFlags)",
       "godot": "SceneTree::method:notify_group(StringName:,int:)",
-      "state": "Partial",
-      "reason": "Typed group notification with flags; ADR 0006."
+      "reason": "The default flags select immediate delivery under ADR 0011."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.NotifyGroup(System.String,System.Int32,Electron2D.GroupCallFlags)",
+      "godot": "SceneTree::method:notify_group_flags(int:,StringName:,int:)",
+      "reason": "The optional flags parameter owns flagged delivery."
     },
     {
       "electron2d": "method:Electron2D.SceneTree.OnFinalize()",
@@ -1288,8 +1306,12 @@
     {
       "electron2d": "method:Electron2D.SceneTree.SetGroup`1(System.String,Action<Electron2D.Node, T>,T,Electron2D.GroupCallFlags)",
       "godot": "SceneTree::method:set_group(StringName:,String:,Variant:)",
-      "state": "Partial",
-      "reason": "Typed setter delegate replaces Variant/string path; ADRs 0001/0006."
+      "reason": "Typed setter and captured value under ADR 0011."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.SetGroup`1(System.String,Action<Electron2D.Node, T>,T,Electron2D.GroupCallFlags)",
+      "godot": "SceneTree::method:set_group_flags(int:,StringName:,String:,Variant:)",
+      "reason": "The optional flags parameter owns flagged delivery."
     },
     {
       "electron2d": "method:Electron2D.SceneTree.SetInputAsHandled()",
@@ -8719,6 +8741,29 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "SceneTree::enum:GroupCallFlags",
+        "SceneTree::method:call_group(StringName:,StringName:)",
+        "SceneTree::method:call_group_flags(int:,StringName:,StringName:)",
+        "SceneTree::method:notify_group(StringName:,int:)",
+        "SceneTree::method:notify_group_flags(int:,StringName:,int:)",
+        "SceneTree::method:set_group(StringName:,String:,Variant:)",
+        "SceneTree::method:set_group_flags(int:,StringName:,String:,Variant:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0011 typed delegates and optional flags cover both forms. Deferred execution resolves current membership, uses captured attachment identities, and supports reverse order, first-operation coalescing, nested delivery and failure continuation. See docs/components/scene-tree.md#named-group-dispatch."
+    },
+    {
+      "godot": [
+        "SceneTree::method:get_first_node_in_group(StringName:)",
+        "SceneTree::method:get_node_count_in_group(StringName:)",
+        "SceneTree::method:get_nodes_in_group(StringName:)",
+        "SceneTree::method:has_group(StringName:)"
+      ],
+      "state": "Implemented",
+      "reason": "Owner-thread queries observe live hierarchy order, including internal children, with ordinal names, independent read-only snapshots and null or empty results for missing groups. See docs/components/scene-tree.md#named-group-dispatch."
+    },
     {
       "godot": [
         "class:PackedScene",

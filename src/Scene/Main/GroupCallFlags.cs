@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>
 /// Public group methods reject unknown bits and require <see cref="Unique"/> to be combined with
 /// <see cref="Deferred"/>. Unique identity is the operation kind, group, and delegate or notification identifier;
-/// later setter values and other supported flags do not replace the first accepted operation.
+/// later arguments, setter values, and flags do not replace the first accepted operation.
 /// </remarks>
 [Flags]
 public enum GroupCallFlags

@@ -101,10 +101,11 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public void SetInputAsHandled()`](#m-electron2d-scenetree-setinputashandled) | Marks the input event currently being dispatched as handled. |
 | [`public bool IsInputHandled()`](#m-electron2d-scenetree-isinputhandled) | Gets whether the input event currently being dispatched has been handled. |
 | [`public IReadOnlyList<Node> GetNodesInGroup(string group)`](#m-electron2d-scenetree-getnodesingroup-system-string) | Returns every current node in a group in depth-first pre-order. |
-| [`public Node GetFirstNodeInGroup(string group)`](#m-electron2d-scenetree-getfirstnodeingroup-system-string) | Returns the first current node in a group using depth-first pre-order. |
+| [`public Node? GetFirstNodeInGroup(string group)`](#m-electron2d-scenetree-getfirstnodeingroup-system-string) | Returns the first current node in a group using depth-first pre-order. |
 | [`public int GetNodeCountInGroup(string group)`](#m-electron2d-scenetree-getnodecountingroup-system-string) | Gets the number of current nodes in a group. |
 | [`public bool HasGroup(string group)`](#m-electron2d-scenetree-hasgroup-system-string) | Determines whether this tree currently contains a node in a group. |
 | [`public void CallGroup(string group, Action<Node> action, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-callgroup-system-string-system-action-electron2d-entity-electron2d-groupcallflags) | Invokes a typed action for each current node in a group. |
+| [`public void CallGroup<T>(string group, Action<Node, T> action, T argument, GroupCallFlags flags = GroupCallFlags.Default)`](#callgroup-with-argument) | Invokes a typed action with an explicit argument for each current node in a group. |
 | [`public void SetGroup<T>(string group, Action<Node, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-setgroup-1-system-string-system-action-electron2d-entity-0-0-electron2d-groupcallflags) | Applies a typed value through a setter for each current node in a group. |
 | [`public void NotifyGroup(string group, int notification, GroupCallFlags flags = GroupCallFlags.Default)`](#m-electron2d-scenetree-notifygroup-system-string-system-int32-electron2d-groupcallflags) | Delivers a numeric notification to each current node in a group. |
 | [`public void QueueDelete(ElectronObject instance)`](#m-electron2d-scenetree-queuedelete-electron2d-electronobject) | Thread-safely queues an engine object for deterministic disposal at a future deletion phase. |
@@ -442,7 +443,7 @@ Returns every current node in a group in depth-first pre-order.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
 
 <a id="m-electron2d-scenetree-getfirstnodeingroup-system-string"></a>
-### `public Node GetFirstNodeInGroup(string group)`
+### `public Node? GetFirstNodeInGroup(string group)`
 
 Returns the first current node in a group using depth-first pre-order.
 
@@ -514,10 +515,16 @@ Invokes a typed action for each current node in a group.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
 - `AggregateException`: One or more node callbacks fail during execution.
 
-**Remarks:** Immediate operations require the owner thread. Deferred operations may be requested from any thread and execute
-during a future flush. The selected nodes are captured when the operation executes; each is revalidated before
-invocation. All selected callbacks are attempted before failures are reported. Deferred callback failures are
-reported by the future flush or frame, not by this scheduling call.
+Immediate operations require the owner thread. Deferred operations may be requested from any thread and execute during a future flush. The operation captures members when it starts and skips nodes that leave their original attachment or group before delivery. All remaining callbacks run before failures are reported. A future flush or frame reports deferred callback failures.
+
+<a id="callgroup-with-argument"></a>
+### `public void CallGroup<T>(string group, Action<Node, T> action, T argument, GroupCallFlags flags = GroupCallFlags.Default)`
+
+Passes `argument` to the action for each eligible member. Use a tuple to pass multiple values. Deferred delivery captures the argument when scheduled and resolves membership when it starts. A unique deferred call keeps the first argument and flags for the same group and equal action. Order, thread access, and failures follow the other `CallGroup` overload.
+
+```csharp
+tree.CallGroup("actors", static (node, enabled) => ((CanvasItem)node).Visible = enabled, true);
+```
 
 <a id="m-electron2d-scenetree-setgroup-1-system-string-system-action-electron2d-entity-0-0-electron2d-groupcallflags"></a>
 ### `public void SetGroup<T>(string group, Action<Node, T> setter, T value, GroupCallFlags flags = GroupCallFlags.Default)`
@@ -545,8 +552,7 @@ Applies a typed value through a setter for each current node in a group.
 
 **Remarks:** With [`GroupCallFlags.Unique`](GroupCallFlags.md#f-electron2d-groupcallflags-unique), the group and setter identify equality; differing values do not create
 additional queued operations, and the first accepted value is retained. Immediate execution requires the owner
-thread. Deferred execution may be requested from another thread, resolves membership when it starts, revalidates
-each candidate, attempts every selected setter, and then aggregates failures through the future flush or frame.
+thread. Deferred execution may be requested from another thread and resolves membership when it starts. The setter runs only for nodes still in the group on their captured attachment. Remaining setters run before the immediate call or future flush or frame reports failures.
 
 <a id="m-electron2d-scenetree-notifygroup-system-string-system-int32-electron2d-groupcallflags"></a>
 ### `public void NotifyGroup(string group, int notification, GroupCallFlags flags = GroupCallFlags.Default)`
@@ -568,9 +574,7 @@ Delivers a numeric notification to each current node in a group.
 - `AggregateException`: One or more notification callbacks fail during execution.
 
 **Remarks:** Immediate execution requires the owner thread. Deferred execution may be requested from another thread, resolves
-membership when it starts, revalidates each candidate, attempts every selected notification, and then aggregates
-failures through the future flush or frame. Equal deferred unique operations are coalesced by group and
-notification identifier.
+membership when it starts, and delivers only to nodes still in the group on their captured attachment. Remaining notifications run before the immediate call or future flush or frame reports failures. Equal unique deferred operations coalesce by group and notification identifier.
 
 <a id="m-electron2d-scenetree-queuedelete-electron2d-electronobject"></a>
 ### `public void QueueDelete(ElectronObject instance)`

@@ -727,7 +727,7 @@ public sealed partial class SceneTree : MainLoop
         ThrowIfDisposed();
         EnsureOwnerThread();
         ValidateGroup(group);
-        return Array.AsReadOnly(GetNodesInGroupCore(group));
+        return Array.AsReadOnly(EnumerateGroupMembers(group).ToArray());
     }
 
     /// <summary>Returns the first current node in a group using depth-first pre-order.</summary>
@@ -741,7 +741,7 @@ public sealed partial class SceneTree : MainLoop
         ThrowIfDisposed();
         EnsureOwnerThread();
         ValidateGroup(group);
-        return Root.EnumerateDepthFirst().FirstOrDefault(node => node.IsInGroup(group));
+        return EnumerateGroupMembers(group).FirstOrDefault();
     }
 
     /// <summary>Gets the number of current nodes in a group.</summary>
@@ -750,7 +750,13 @@ public sealed partial class SceneTree : MainLoop
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
-    public int GetNodeCountInGroup(string group) => GetNodesInGroup(group).Count;
+    public int GetNodeCountInGroup(string group)
+    {
+        ThrowIfDisposed();
+        EnsureOwnerThread();
+        ValidateGroup(group);
+        return EnumerateGroupMembers(group).Count();
+    }
 
     /// <summary>Determines whether this tree currently contains a node in a group.</summary>
     /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
@@ -766,9 +772,9 @@ public sealed partial class SceneTree : MainLoop
     /// <param name="flags">Ordering and scheduling behavior.</param>
     /// <remarks>
     /// Immediate operations require the owner thread. Deferred operations may be requested from any thread and execute
-    /// during a future flush. The selected nodes are captured when the operation executes; each is revalidated before
-    /// invocation. All selected callbacks are attempted before failures are reported. Deferred callback failures are
-    /// reported by the future flush or frame, not by this scheduling call.
+    /// during a future flush. The selected nodes are captured when the operation executes. A node is skipped if it
+    /// leaves its original attachment or no longer belongs to the group before delivery. All remaining callbacks
+    /// are attempted before failures are reported. A future flush or frame reports deferred callback failures.
     /// </remarks>
     /// <exception cref="ArgumentException"><paramref name="flags"/> is invalid.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
@@ -786,6 +792,33 @@ public sealed partial class SceneTree : MainLoop
             () => ExecuteGroup(group, flags, action));
     }
 
+    /// <summary>Invokes a typed action with an explicit argument for each current node in a group.</summary>
+    /// <typeparam name="T">The argument type. A tuple can carry multiple values.</typeparam>
+    /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
+    /// <param name="action">The action to invoke for every eligible node.</param>
+    /// <param name="argument">The argument captured for this operation.</param>
+    /// <param name="flags">Ordering and scheduling behavior.</param>
+    /// <remarks>
+    /// Deferred execution captures the argument when scheduled and resolves membership when it starts. A unique
+    /// deferred call retains the first argument and flags for the same group and equal action. All other delivery
+    /// rules follow <see cref="CallGroup(string, Action{Node}, GroupCallFlags)"/>.
+    /// </remarks>
+    /// <exception cref="ArgumentException"><paramref name="flags"/> is invalid.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="group"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">An immediate operation is called off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
+    /// <exception cref="AggregateException">One or more node callbacks fail during execution.</exception>
+    public void CallGroup<T>(string group, Action<Node, T> action, T argument, GroupCallFlags flags = GroupCallFlags.Default)
+    {
+        ValidateGroup(group);
+        ArgumentNullException.ThrowIfNull(action);
+        ValidateGroupCallFlags(flags);
+        ScheduleGroupOperation(
+            flags,
+            new GroupOperationKey(GroupOperationKind.Call, group, action),
+            () => ExecuteGroup(group, flags, node => action(node, argument)));
+    }
+
     /// <summary>Applies a typed value through a setter for each current node in a group.</summary>
     /// <typeparam name="T">The value type accepted by the setter.</typeparam>
     /// <param name="group">The literal, case-sensitive group identifier; an empty identifier matches no nodes.</param>
@@ -795,8 +828,9 @@ public sealed partial class SceneTree : MainLoop
     /// <remarks>
     /// With <see cref="GroupCallFlags.Unique"/>, the group and setter identify equality; differing values do not create
     /// additional queued operations, and the first accepted value is retained. Immediate execution requires the owner
-    /// thread. Deferred execution may be requested from another thread, resolves membership when it starts, revalidates
-    /// each candidate, attempts every selected setter, and then aggregates failures through the future flush or frame.
+    /// thread. Deferred execution may be requested from another thread and resolves membership when it starts.
+    /// The setter runs only for nodes still in the group on their captured attachment. Remaining setters are
+    /// attempted before failures are aggregated through the immediate call or future flush or frame.
     /// </remarks>
     /// <exception cref="ArgumentException"><paramref name="flags"/> is invalid.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> or <paramref name="setter"/> is <see langword="null"/>.</exception>
@@ -820,9 +854,9 @@ public sealed partial class SceneTree : MainLoop
     /// <param name="flags">Ordering and scheduling behavior.</param>
     /// <remarks>
     /// Immediate execution requires the owner thread. Deferred execution may be requested from another thread, resolves
-    /// membership when it starts, revalidates each candidate, attempts every selected notification, and then aggregates
-    /// failures through the future flush or frame. Equal deferred unique operations are coalesced by group and
-    /// notification identifier.
+    /// membership when it starts, and delivers only to nodes still in the group on their captured attachment.
+    /// Remaining notifications are attempted before failures are aggregated through the immediate call or future
+    /// flush or frame. Equal deferred unique operations are coalesced by group and notification identifier.
     /// </remarks>
     /// <exception cref="ArgumentException"><paramref name="flags"/> is invalid.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="group"/> is <see langword="null"/>.</exception>
@@ -1969,16 +2003,17 @@ public sealed partial class SceneTree : MainLoop
     private void ExecuteGroup(string group, GroupCallFlags flags, Action<Node> operation)
     {
         EnsureOwnerThread();
-        var nodes = GetNodesInGroupCore(group);
+        var nodes = EnumerateGroupMembers(group)
+            .Select(static node => (Node: node, Attachment: node.TreeAttachmentVersion)).ToArray();
 
         if ((flags & GroupCallFlags.Reverse) != 0)
             Array.Reverse(nodes);
 
         List<Exception>? errors = null;
 
-        foreach (var node in nodes)
+        foreach (var (node, attachment) in nodes)
         {
-            if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.IsInGroup(group))
+            if (node.TreeAttachmentVersion != attachment || !IsCurrentGroupMember(node, group))
                 continue;
 
             try
@@ -2166,8 +2201,11 @@ public sealed partial class SceneTree : MainLoop
         _currentScene = null;
     }
 
-    private Node[] GetNodesInGroupCore(string group) =>
-        Root.EnumerateDepthFirst().Where(node => node.IsInGroup(group)).ToArray();
+    private IEnumerable<Node> EnumerateGroupMembers(string group) =>
+        Root.EnumerateDepthFirst().Where(node => IsCurrentGroupMember(node, group));
+
+    private bool IsCurrentGroupMember(Node node, string group) =>
+        !node.IsDisposed && ReferenceEquals(node.Tree, this) && node.IsInGroup(group);
 
     private static void ValidateGroup(string group) => ArgumentNullException.ThrowIfNull(group);
 

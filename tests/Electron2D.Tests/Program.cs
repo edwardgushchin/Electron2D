@@ -214,7 +214,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_RIDS") is { } r
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_OVERSAMPLING") is { } canvasOversampling) { CanvasOversamplingTests.Run(canvasOversampling); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_RELATED") == "1") { BoxContainerTests.Run(); GridContainerTests.Run(); FlowContainerTests.Run(); LayoutContainersTests.Run(); PanelContainerTests.Run(); ThemeResourceTests.Run(); NavigationBakingTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_CONTRACT") == "1") { VerifySceneTree(); VerifySceneTreeGroupsEventsAndTimers(); VerifySceneTreeFailureSafety(); VerifyEventConnections(); Console.WriteLine("Deferred tree and typed setter regressions passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_CONTRACT") == "1") { VerifySceneTree(); VerifySceneTreeGroupsEventsAndTimers(); VerifySceneGroupDispatch(); VerifySceneTreeFailureSafety(); VerifyEventConnections(); Console.WriteLine("Deferred tree, typed setters and group dispatch passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOOP_PERMISSIONS") is { } permissionBackend) { MainLoopPermissionTests.Run(permissionBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOOP_LIFECYCLE") == "1") { VerifyEngine(); VerifyMainLoop(); VerifyInput(); Console.WriteLine("Main loop, Engine lifecycle and Input lanes passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_RELATIONS") is { } windowRelations) { try { if (windowRelations == "display") DisplayServerRelationsTests.Display(); else DisplayServerRelationsTests.RunNative(windowRelations); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
@@ -2390,6 +2390,7 @@ VerifyNodeHierarchyAndTransforms();
 VerifyProcessing();
 VerifySceneTree();
 VerifySceneTreeGroupsEventsAndTimers();
+VerifySceneGroupDispatch();
 SceneTreeTimerTests.Run();
 VerifyTimers();
 VerifyTweens();
@@ -11039,6 +11040,85 @@ static void VerifySceneTree()
     Require(root.Children.Count == 0, "Queued deletion must remove the node from its parent.");
 }
 
+static void VerifySceneGroupDispatch()
+{
+    const string group = "Actors";
+    var log = new List<string>();
+    var root = new GroupNode("root", log);
+    var first = new GroupNode("first", log);
+    var second = new GroupNode("second", log);
+    var internalChild = new GroupNode("internal", log);
+    var late = new GroupNode("late", log);
+    foreach (var node in new[] { root, first, second, internalChild, late })
+        node.AddToGroup(group);
+    root.AddChild(first);
+    root.AddChild(second);
+    root.AddChild(internalChild, Node.InternalMode.Back);
+    using var tree = new SceneTree(root);
+
+    var snapshot = tree.GetNodesInGroup(group);
+    root.MoveChild(second, 0);
+    Require(snapshot.SequenceEqual([root, first, second, internalChild]) &&
+        tree.GetNodesInGroup(group).SequenceEqual([root, second, first, internalChild]) &&
+        tree.GetFirstNodeInGroup(group) == root && tree.GetNodeCountInGroup(group) == 4,
+        "Group queries must include internal children, track current order and preserve prior snapshots.");
+    Require(!tree.HasGroup("actors") && !tree.HasGroup("") && tree.GetFirstNodeInGroup("missing") is null &&
+        tree.GetNodeCountInGroup("missing") == 0 && tree.GetNodesInGroup("missing").Count == 0,
+        "Group queries must match literal names and return empty results for absent groups.");
+
+    tree.CallGroup(group, node =>
+    {
+        log.Add($"outer:{node.Name}");
+        if (node != root)
+            return;
+        root.RemoveChild(second);
+        root.AddChild(second);
+        first.RemoveFromGroup(group);
+        root.AddChild(late);
+        tree.CallGroup(group, static (member, entries) => entries.Add($"nested:{member.Name}"), log);
+        throw new InvalidOperationException("group callback failure");
+    }, GroupCallFlags.Deferred);
+    Expect<AggregateException>(tree.FlushDeferred, "A deferred group failure must reach its flush.");
+    Require(log.SequenceEqual(["outer:root", "nested:root", "nested:second", "nested:late", "nested:internal", "outer:internal"]),
+        "Nested calls need a fresh snapshot. Outer delivery must skip reattached, removed and newly joined nodes, and continue after errors.");
+
+    log.Clear();
+    Action<Node, (List<string> Log, int Value)> action = static (node, argument) =>
+        argument.Log.Add($"call:{node.Name}:{argument.Value}");
+    var unique = GroupCallFlags.Deferred | GroupCallFlags.Unique;
+    var reverseUnique = unique | GroupCallFlags.Reverse;
+    Task.Run(() =>
+    {
+        Expect<InvalidOperationException>(() => tree.CallGroup(group, action, (log, 0)),
+            "Immediate typed group calls require the scene owner.");
+        tree.CallGroup(group, action, (log, 1), reverseUnique);
+        tree.CallGroup(group, action, (log, 2), unique);
+        tree.SetGroup(group, action, (log, 3), reverseUnique);
+        tree.SetGroup(group, action, (log, 4), unique);
+        tree.NotifyGroup(group, 9_003, reverseUnique);
+        tree.NotifyGroup(group, 9_003, unique);
+        tree.NotifyGroup(group, 9_004, unique);
+    }).GetAwaiter().GetResult();
+    second.RemoveFromGroup(group);
+    first.AddToGroup(group);
+    tree.PhysicsFrame(0d);
+    Require(log.SequenceEqual([
+        "call:internal:1", "call:late:1", "call:first:1", "call:root:1",
+        "call:internal:3", "call:late:3", "call:first:3", "call:root:3",
+        "notify:internal:9003", "notify:late:9003", "notify:first:9003", "notify:root:9003",
+        "notify:root:9004", "notify:first:9004", "notify:late:9004", "notify:internal:9004"]),
+        "The first unique operation must retain its arguments and order, with independent call/set/notification identities and execution-time membership.");
+
+    Expect<ArgumentNullException>(() => tree.CallGroup<int>(group, null!, 1), "A null group action must reject.");
+    Expect<ArgumentOutOfRangeException>(() => tree.CallGroup(group, action, (log, 1), (GroupCallFlags)8),
+        "Unknown group call flags must reject.");
+    tree.CallGroup(group, action, (log, 5), unique);
+    tree.Dispose();
+    Require(log.Count == 16, "Disposing the tree must discard pending group work.");
+    Expect<ObjectDisposedException>(() => tree.CallGroup(group, action, (log, 6), unique),
+        "Disposed trees must reject deferred group work.");
+}
+
 static void VerifySceneTreeGroupsEventsAndTimers()
 {
     var groupLog = new List<string>();
@@ -15486,7 +15566,7 @@ sealed class GroupNode : Entity
 
     protected override void OnNotification(int what)
     {
-        if (what == 9_001)
+        if (what is 9_001 or 9_003 or 9_004)
             _log.Add($"notify:{Name}:{what}");
 
         base.OnNotification(what);

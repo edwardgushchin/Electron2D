@@ -63,7 +63,19 @@ Mouse hover and each isolated viewport's local pointer point publish before Node
 
 A Viewport root first localizes incoming client input through its inverse final transform. Positional temporary copies are disposed after dispatch, including errors; local-coordinate and non-positional input stays borrowed. Conversion validates execution/re-entry before copying and does not mutate Input polling. Parsed input uses a reusable reverse depth-first snapshot. Regular input runs first, root viewport hover routing and GUI input follow, then unhandled `ui_*` focus navigation, keyboard-only unhandled input and general unhandled input. GUI pointer targeting uses Control geometry, filter, layer/Z and direct-parent bubbling; keyboard/controller input reaches the focused Control. Focus transfer exits the old Control, raises Viewport.GUIFocusChanged, then enters the new Control; each Control notification precedes its event. Viewport.GetGUIFocusOwner reports the current target and ReleaseGUIFocus clears it. Focus callback failures are aggregated after later eligible callbacks, and reentrant release suppresses stale enter delivery. Pointer motion updates Control hover and native cursor even after handled regular input. Handled state stops later input stages; current membership, pause eligibility, lifetime, and per-stage enablement are revalidated before ordinary Node callbacks. Callback failures are aggregated after eligible delivery continues. Complete renderer ordering, clipping, stationary-pointer geometry changes, touch, exact directional ranking, scroll clipping and nested viewport routing remain absent.
 
-Immediate typed group operations snapshot members in hierarchy or reverse order on the owner thread. Deferred operations resolve membership when their queued wrapper starts. `Unique` coalesces equal queued operations and retains the first setter value. String-based method/property dispatch is absent.
+### Named group dispatch
+
+`CallGroup`, `SetGroup` and `NotifyGroup` use typed delegates or numeric notifications and accept the same optional flags. `CallGroup<T>` passes a captured argument to each receiver. Use a tuple for multiple values.
+
+Group queries read the current hierarchy on the owner thread, including internal children. Names compare ordinally and an empty name matches no members. `GetNodesInGroup` returns an independent snapshot.
+
+Immediate operations capture members in hierarchy order on the owner thread. `Reverse` inverts that captured order. Deferred operations can be scheduled from other threads and resolve membership at execution. Each receiver must still belong to the group on the captured attachment when its turn comes. Nested calls capture their own members. Errors reach the caller or flush after delivery to the remaining eligible receivers.
+
+`Unique` requires `Deferred`. Equality uses the operation kind, group and delegate or notification identifier. The first queued operation retains its argument and order. An operation can be scheduled again once the queued entry begins. Finalization discards pending delivery.
+
+The managed deferred-contract profile exercises current and prior snapshots, internal children, same-tree reattachment, nested delivery, failure continuation, off-owner scheduling and the separate call, setter and notification identities.
+
+### Deferred work and finalization
 
 Queue acceptance uses one lock shared with finalization closure. A successful cross-thread enqueue is either executed by a later safe point or deliberately discarded by later finalization; an enqueue that reaches the closed tree is rejected. Finalization closes the queues, exits and recursively disposes the hierarchy, disposes timers, invalidates tweens, and clears subscribers while aggregating every failure.
 

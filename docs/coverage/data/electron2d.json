@@ -195917,6 +195917,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneTree.CallGroup\u00601(System.String,Action\u003CElectron2D.Node, T\u003E,T,Electron2D.GroupCallFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "CallGroup",
+    "signature": "public System.Void CallGroup\u003CT\u003E(System.String group, Action\u003CElectron2D.Node, T\u003E action, T argument, Electron2D.GroupCallFlags flags = Default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "group",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "action",
+        "type": "Action\u003CElectron2D.Node, T\u003E",
+        "default": null
+      },
+      {
+        "name": "argument",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.GroupCallFlags",
+        "default": "Default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneTree.ChangeSceneToFile(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",

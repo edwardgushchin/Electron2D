@@ -20,7 +20,7 @@ Controls ordering and scheduling for typed scene-group operations.
 
 Public group methods reject unknown bits and require [`GroupCallFlags.Unique`](GroupCallFlags.md#f-electron2d-groupcallflags-unique) to be combined with
 [`GroupCallFlags.Deferred`](GroupCallFlags.md#f-electron2d-groupcallflags-deferred). Unique identity is the operation kind, group, and delegate or notification identifier;
-later setter values and other supported flags do not replace the first accepted operation.
+the first accepted operation retains its arguments and flags.
 
 ## Examples
 
