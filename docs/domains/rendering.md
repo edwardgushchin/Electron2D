@@ -421,6 +421,11 @@ Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root p
 
 ## Canvas multisample antialiasing
 
+[Canvas FXAA](../components/canvas-rendering.md#screen-space-antialiasing)
+filters completed viewport color after MSAA resolve and environment composition.
+Scene, RID and root project settings select the same mode contract. GPU
+presentation and texture exports consume the filtered frame.
+
 The shared Viewport.MSAA enum, stored MSAA2D scene property, static server selection and typed root project setting execute 2/4/8-sample GPU geometry coverage. Per-sample history survives Never-clear frames and pass restarts; screen/group/clip consumers read resolved pixels. Compatibility rejects enabled MSAA. [Canvas rendering](../components/canvas-rendering.md#canvas-multisample-antialiasing) records target ownership, typed identity, native coverage and warmed allocation evidence.
 
 Retained canvas item interpolation now executes through scene physics boundaries, native hierarchy composition, typed reset/rebase and source policy publication. Shared history logic also preserves canonical light/occluder rebases. See [canvas interpolation](../components/canvas-rendering.md#retained-canvas-item-interpolation) for pixel, lifetime and warmed allocation evidence.

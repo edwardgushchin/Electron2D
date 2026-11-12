@@ -1,6 +1,61 @@
 {
   "mappings": [
     {
+      "godot": "Viewport::enum:ScreenSpaceAA",
+      "electron2d": "T:Electron2D.ScreenSpaceAAMode",
+      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_DISABLED",
+      "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.Disabled()",
+      "reason": "ADRs 0028/0051. The shared enum disables the native post-process or defines the nonselectable upper bound of mode identities. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_FXAA",
+      "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.FXAA()",
+      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_MAX",
+      "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.Max()",
+      "reason": "ADRs 0028/0051. The shared enum disables the native post-process or defines the nonselectable upper bound of mode identities. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportScreenSpaceAA",
+      "electron2d": "T:Electron2D.ScreenSpaceAAMode",
+      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_DISABLED",
+      "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.Disabled()",
+      "reason": "ADRs 0028/0051. The shared enum disables the native post-process or defines the nonselectable upper bound of mode identities. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_FXAA",
+      "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.FXAA()",
+      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_MAX",
+      "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.Max()",
+      "reason": "ADRs 0028/0051. The shared enum disables the native post-process or defines the nonselectable upper bound of mode identities. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "Viewport::property:screen_space_aa",
+      "electron2d": "property:Electron2D.Viewport.ScreenSpaceAA()",
+      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_screen_space_aa(RID:,int:RenderingServer.ViewportScreenSpaceAA)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetScreenSpaceAA(Electron2D.RID,Electron2D.ScreenSpaceAAMode)",
+      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/anti_aliasing/quality/screen_space_aa",
+      "electron2d": "property:Electron2D.ProjectSettings.ScreenSpaceAA()",
+      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
       "godot": "RenderingServer::enum:TextureType",
       "electron2d": "T:Electron2D.RenderingServer.TextureType",
       "reason": "ADRs 0004/0028: ordinary and independent array shapes execute through GPU Vulkan. Direct3D 11 and 12 Compatibility also import ordinary images. Volume shapes are excluded."
@@ -5972,6 +6027,37 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_DISABLED",
+        "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_MAX",
+        "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_DISABLED",
+        "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_MAX"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0051. The shared enum disables the native post-process or defines the nonselectable upper bound of mode identities. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": [
+        "Viewport::enum:ScreenSpaceAA",
+        "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_FXAA",
+        "RenderingServer::enum:ViewportScreenSpaceAA",
+        "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_FXAA",
+        "Viewport::property:screen_space_aa",
+        "RenderingServer::method:viewport_set_screen_space_aa(RID:,int:RenderingServer.ViewportScreenSpaceAA)",
+        "ProjectSettings::property:rendering/anti_aliasing/quality/screen_space_aa"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": [
+        "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_SMAA",
+        "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_SMAA"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0028. SMAA needs the completed-image edge/weight/blend pipeline and area/search lookups."
+    },
     {
       "state": "Implemented",
       "reason": "Shared typed 2D identity for resource authoring and server glow updates under ADRs 0004/0051.",

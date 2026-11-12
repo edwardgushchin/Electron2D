@@ -385,6 +385,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<Viewport.MSAA> MSAA2D { get; } =
         new("rendering/anti_aliasing/quality/msaa_2d", Viewport.MSAA.Disabled, value => (uint)value < (uint)Viewport.MSAA.Max);
 
+    /// <summary>Selects screen-space antialiasing for an unassigned root window at startup.</summary>
+    /// <value>rendering/anti_aliasing/quality/screen_space_aa; Disabled initially.</value>
+    /// <remarks>FXAA requires GPU rendering. Other viewports use their own selections.</remarks>
+    public static ProjectSetting<ScreenSpaceAAMode> ScreenSpaceAA { get; } =
+        new("rendering/anti_aliasing/quality/screen_space_aa", ScreenSpaceAAMode.Disabled, Viewport.IsScreenSpaceAAMode);
+
     /// <summary>Selects linear half-float canvas output for an unassigned root window at startup.</summary>
     /// <value>rendering/viewport/hdr_2d; false initially.</value>
     /// <remarks>Offscreen viewports retain their authored selections. Enabled HDR requires GPU rendering and supported half-float color targets.</remarks>

@@ -47,7 +47,7 @@ internal static class ViewportMIPMapBiasTests
             Reject<InvalidOperationException>(() => RenderingServer.ViewportSetTextureMIPMapBias(viewport.GetViewportRID(), 2));
         }
     }
-    private static ImageTexture Mips()
+    internal static ImageTexture Mips()
     {
         var data = new List<byte>(); var colors = new[] { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow, Colors.Magenta, Colors.White };
         for (int size = 32, mip = 0; size > 0; size /= 2, mip++)

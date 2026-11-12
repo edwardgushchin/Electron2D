@@ -12,7 +12,7 @@ public abstract partial class Viewport
     /// <remarks>Negative offsets sharpen minified mipmapped textures; positive offsets select coarser levels.
     /// The next submitted image uses the value without replacing its target. Imported image policies, ordinary
     /// canvas images and normalized explicit mip samplers share the offset; explicit sampler LODBias is added.
-    /// Base-level filters and unnormalized samplers retain their original policy. Valid assignments, including
+    /// FXAA adds -0.25 to the effective bias. Base-level filters and unnormalized samplers retain their original policy. Valid assignments, including
     /// equal values, republish renderer overrides. Compatibility and Metal reject nonzero offsets; other GPU
     /// drivers may reject a combined offset beyond their native sampler limit. Explicit shader LOD operations
     /// retain native sampling semantics. Independent device and particle-process samplers are unaffected.</remarks>

@@ -12172,6 +12172,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ScreenSpaceAAMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ScreenSpaceAAMode",
+    "name": "ScreenSpaceAAMode",
+    "signature": "public enum Electron2D.ScreenSpaceAAMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Script",
     "kind": "type",
     "declaringType": "Electron2D.Script",
@@ -59042,6 +59060,45 @@
     "parameters": [],
     "returnType": "Electron2D.ScreenEnableMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ScreenSpaceAAMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScreenSpaceAAMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ScreenSpaceAAMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenSpaceAAMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ScreenSpaceAAMode.FXAA()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScreenSpaceAAMode",
+    "name": "FXAA",
+    "signature": "public const Electron2D.ScreenSpaceAAMode FXAA = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenSpaceAAMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ScreenSpaceAAMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScreenSpaceAAMode",
+    "name": "Max",
+    "signature": "public const Electron2D.ScreenSpaceAAMode Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenSpaceAAMode",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.ScrollContainer.ScrollHintMode.All()",
@@ -190079,6 +190136,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportSetScreenSpaceAA(Electron2D.RID,Electron2D.ScreenSpaceAAMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetScreenSpaceAA",
+    "signature": "public static System.Void ViewportSetScreenSpaceAA(Electron2D.RID viewport, Electron2D.ScreenSpaceAAMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.ScreenSpaceAAMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportSetSize(Electron2D.RID,System.Int32,System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -296789,6 +296870,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.ScreenSpaceAA()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ScreenSpaceAA",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.ScreenSpaceAAMode\u003E ScreenSpaceAA { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.ScreenSpaceAAMode\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.SnapTransformsToPixel()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -307316,6 +307410,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.CanvasSDFScale",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.ScreenSpaceAA()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "ScreenSpaceAA",
+    "signature": "public Electron2D.ScreenSpaceAAMode ScreenSpaceAA { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenSpaceAAMode",
     "value": null
   },
   {

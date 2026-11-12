@@ -114,6 +114,39 @@ Evidence: bin/physics-top-level/2026-10-18/validation.json, SHA-256
 
 [HDR canvas targets](hdr-canvas.md) connect stored UseHDR2D authoring, server-session overrides and the typed root project setting to actual half-float/linear rendering, color-role sampling, composition/MSAA, device readback, SDR presentation and movie transfer. Compatibility rejects enabled HDR.
 
+## Screen-space antialiasing
+
+`Viewport.ScreenSpaceAA` selects Disabled or FXAA. `RenderingServer.ViewportSetScreenSpaceAA`
+overrides a live viewport for the current rendering session, including
+caller-owned viewports. Authored scene assignments replace the override.
+`ProjectSettings.ScreenSpaceAA` samples the root default at startup unless
+the scene explicitly assigns a value. Offscreen viewports have independent modes.
+
+FXAA runs a local-contrast directional filter on the final GPU color image
+after MSAA resolve and canvas environment composition. Its edge signal includes
+alpha coverage for transparent canvases. Flat pixels retain the source value.
+The pass uses encoded SDR values or half-float HDR with perceptual edge detection.
+Presentation, texture consumers, readback and device exports use the filtered
+image. Screen-reading canvas materials and retained Never-clear history use
+the ordinary canvas passes. Keep their unfiltered background in the existing
+history target. Environment and layered composition use a separate filter
+source when the history represents an earlier stage. Mode changes preserve the
+viewport texture allocation and release temporary filter input when idle.
+
+FXAA offsets effective viewport mipmap sampling by -0.25 without changing the
+stored bias. Compatibility and GPU profiles without native canvas mipmap-bias
+support reject enabled FXAA. SMAA requires its edge/weight/blend passes and
+lookups. The underlying directional filter follows the [FXAA algorithm](https://developer.download.nvidia.com/assets/gamedev/files/sdk/11/FXAA_WhitePaper.pdf).
+
+Run `ELECTRON2D_TEST_FXAA=managed` for typed validation and scene-file round
+trips. The `vulkan` and `direct3d12` profiles use the matching `SDL_GPU_DRIVER`.
+Both pass on Windows x64 with an RTX 3090 Ti. They check rendered RGB and
+alpha edges, retained history, actual mip interpolation, HDR with tone mapping
+and MSAA, viewport export and resize. The `compatibility` and `software`
+profiles exercise startup and live refusal on SDL Direct3D 12 and dummy/video
+software respectively. Foreign GPU profiles and release packages retain their
+qualification requirements.
+
 ## Canvas multisample antialiasing
 
 `Viewport.MSAA` is the single public coverage-sample contract shared by scene viewports, RenderingServer and the root project setting: Disabled=0, Samples2X=1, Samples4X=2, Samples8X=3 and the nonselectable Max=4. `Viewport.MSAA2D` is stored scene authoring. `RenderingServer.ViewportSetMSAA2D(RID, Viewport.MSAA)` is renderer-session state; it preserves the scene getter and an equal valid scene assignment republishes it. Root startup samples `ProjectSettings.MSAA2D` (`rendering/anti_aliasing/quality/msaa_2d`, Disabled by default) unless the supplied window already has an explicit selection. Other viewports retain their own selection.

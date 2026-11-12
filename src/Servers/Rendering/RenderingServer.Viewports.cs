@@ -17,6 +17,7 @@ public sealed partial class RenderingServer
         internal AnisotropicFiltering? Anisotropy;
         internal float? MIPMapBias;
         internal Viewport.MSAA? MSAA;
+        internal ScreenSpaceAAMode? ScreenSpaceAA;
         internal bool? HDR, Debanding;
         internal int? Screen;
         internal Rect2 ScreenRect;

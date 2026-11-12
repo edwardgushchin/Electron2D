@@ -67,9 +67,19 @@ internal abstract partial class CanvasBackend : IDisposable
     internal virtual void ValidateMSAA(Viewport.MSAA mode) { if (mode != Viewport.MSAA.Disabled) throw new NotSupportedException("The compatibility renderer cannot use canvas multisample antialiasing."); }
     internal virtual RenderHandle CreateMultisampleTarget(Vector2i size, Color clear, Viewport.MSAA mode, bool HDR = false) => throw new NotSupportedException("Multisample canvas targets require GPU rendering.");
     internal virtual void ValidateMIPMapBias(float bias) { if (bias != 0) throw new NotSupportedException("Texture mipmap bias requires a supporting GPU sampler backend."); }
+    internal void ValidateScreenSpaceAA(ScreenSpaceAAMode mode)
+    {
+        if (mode == ScreenSpaceAAMode.Disabled) return;
+        if (this is not GPUCanvasBackend) throw new NotSupportedException("Screen-space antialiasing requires GPU rendering.");
+        ValidateMIPMapBias(-0.25f);
+    }
     internal (float Bias, Viewport.MSAA Mode, bool HDR) ValidateViewportOptions(Viewport viewport)
     {
-        var bias = viewport.RenderingOwner?.ViewportMIPMapBias(viewport) ?? viewport.TextureMIPMapBias; ValidateMIPMapBias(bias);
+        var screenSpaceAA = viewport.RenderingOwner?.ViewportScreenSpaceAA(viewport) ?? viewport.ScreenSpaceAA;
+        ValidateScreenSpaceAA(screenSpaceAA);
+        var bias = viewport.RenderingOwner?.ViewportMIPMapBias(viewport) ?? viewport.TextureMIPMapBias;
+        if (screenSpaceAA == ScreenSpaceAAMode.FXAA) bias -= 0.25f;
+        ValidateMIPMapBias(bias);
         var mode = viewport.RenderingOwner?.ViewportMSAA(viewport) ?? viewport.MSAA2D; ValidateMSAA(mode);
         var hdr = viewport.RenderingOwner?.ViewportHDR(viewport) ?? viewport.UseHDR2D; ValidateHDR(hdr);
         ValidateDebanding(viewport.RenderingOwner?.ViewportDebanding(viewport) ?? viewport.UseDebanding);

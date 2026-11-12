@@ -322,7 +322,7 @@ public sealed partial class RenderingServer : ElectronObject
             PrepareFrameBackground(frame, environment?.Background);
             if (direct) { PauseRenderCPU(); return; }
             var target = _backend.FindTarget(viewport); if (target is null) return;
-            var postProcess = SelectPostProcess(viewport, environment?.Effects ?? default);
+            var postProcess = SelectPostProcess(viewport, environment?.Effects ?? default) with { ScreenSpaceAA = ViewportScreenSpaceAA(viewport) };
             var glow = postProcess.Glow;
             if (glow.Enabled && glow.MapStrength > 0 && glow.Map is { IsDisposed: false } map) SubmitTexture(map, tree);
             if (postProcess.Adjustment.Enabled && postProcess.Adjustment.Lookup is { IsDisposed: false } lookup) SubmitTexture(lookup, tree);

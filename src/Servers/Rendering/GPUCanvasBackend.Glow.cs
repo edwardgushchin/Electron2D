@@ -104,7 +104,7 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
 {
     internal RenderHandle Raw = raw;
     internal RenderHandle?[]? Levels;
-    internal RenderHandle? Linear, ForegroundSamples, PendingRaw;
+    internal RenderHandle? Linear, ForegroundSamples, PendingRaw, FXAAInput;
 
     internal bool HasRawFrame;
 
@@ -120,6 +120,12 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
         foreach (var level in levels) level?.Dispose();
     }
 
+    internal void ReleaseFXAAInput()
+    {
+        FXAAInput?.Dispose();
+        FXAAInput = null;
+    }
+
     public void Dispose()
     {
         try { Raw.Dispose(); }
@@ -129,7 +135,7 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
             finally
             {
                 try { ForegroundSamples?.Dispose(); }
-                finally { PendingRaw?.Dispose(); }
+                finally { try { PendingRaw?.Dispose(); } finally { ReleaseFXAAInput(); } }
             }
         }
     }

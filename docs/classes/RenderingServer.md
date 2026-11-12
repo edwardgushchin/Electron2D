@@ -48,6 +48,12 @@ CanvasItemAddLCDTextureRectRegion(RID, Rect2, RID, Rect2, Color) and CanvasItemA
 
 The static retained-item interpolation family now includes CanvasItemSetInterpolated, CanvasItemResetPhysicsInterpolation and CanvasItemTransformPhysicsInterpolation. Native item/child histories are tied to scene physics boundaries; reset is item-local and rebase updates both endpoints and canonical retained pose. Typed owner/finite/lifetime guards and source republishing preserve authored scene properties. See [contract and native verification](../components/canvas-rendering.md#retained-canvas-item-interpolation).
 
+## Viewport screen-space antialiasing
+
+`ViewportSetScreenSpaceAA(RID viewport, ScreenSpaceAAMode mode)` selects Disabled
+or FXAA for the next submitted frame of a live scene or caller-owned viewport.
+Valid scene assignments replace the session override. See [canvas FXAA](../components/canvas-rendering.md#screen-space-antialiasing).
+
 ## Viewport MSAA
 
 `ViewportSetMSAA2D(RID viewport, Viewport.MSAA mode)` selects per-viewport GPU geometry coverage independently of scene authoring and other attachments of a shared canvas. Valid scene MSAA2D assignments republish. The next submitted image prepares matching multisample targets and pipelines, preserving logical texture identity; invalid identities/modes and off-owner/capture mutations reject. Native capability and lifecycle details are in [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).

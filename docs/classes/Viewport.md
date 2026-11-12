@@ -42,6 +42,13 @@ The call uses the editor’s Text contract: LineEdit applies its scalar length l
 
 `public bool UseHDR2D { get; set; }` enables linear RGBA half-float targets, default false. An unassigned root uses `ProjectSettings.HDR2D` at startup; offscreen authoring remains independent. Equal assignments republish renderer-session overrides. Changes notify texture views after state publication, preserve the logical RID and replace native targets on the next submission; observer failures aggregate without rollback. GetTexture().GetImage() returns completed linear `Rgbah` pixels while the root screen is SDR encoded. Compatibility and unsupported GPU formats/sample counts reject enabled HDR. See [color roles, storage, capture and executable verification](../components/hdr-canvas.md).
 
+## Screen-space antialiasing
+
+`ScreenSpaceAA` stores Disabled or FXAA. An unassigned root samples the project
+default at startup. A valid assignment republishes the authored mode, including
+equal values. FXAA filters the completed SDR or HDR canvas on a supported GPU and
+adds -0.25 to effective mipmap bias. See [canvas FXAA](../components/canvas-rendering.md#screen-space-antialiasing).
+
 ## Canvas MSAA
 
 `Viewport.MSAA` defines Disabled, Samples2X, Samples4X, Samples8X and nonselectable Max. `MSAA2D` stores the viewport's authored coverage selection, defaulting to Disabled. Valid assignments republish the matching renderer override, including equal values. The root applies the project default at startup unless explicitly configured; offscreen viewports keep their own values. Native target preparation uses matching GPU pipelines and resolves pixels for sampling/readback; mode changes and resize retire completed pixels while retaining texture RID identity. Compatibility and unsupported GPU counts reject enabled MSAA. See [behavior and executable checks](../components/canvas-rendering.md#canvas-multisample-antialiasing).

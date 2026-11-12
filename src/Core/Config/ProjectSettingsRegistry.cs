@@ -114,6 +114,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(CanvasShadowAtlasSize, isBasic: false);
         _settings[CanvasShadowAtlasSize.Name].RestartIfChanged = true;
         RegisterInternal(MSAA2D, isBasic: false);
+        RegisterInternal(ScreenSpaceAA, isBasic: false);
         RegisterInternal(HDR2D, isBasic: false);
         RegisterInternal(HDROutputRequested, isBasic: false);
         RegisterInternal(UseDebanding, isBasic: false);
@@ -1280,6 +1281,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, RenderingFallback) ||
         ReferenceEquals(setting, CanvasShadowAtlasSize) ||
         ReferenceEquals(setting, MSAA2D) ||
+        ReferenceEquals(setting, ScreenSpaceAA) ||
         ReferenceEquals(setting, HDR2D) ||
         ReferenceEquals(setting, HDROutputRequested) ||
         ReferenceEquals(setting, UseDebanding) ||

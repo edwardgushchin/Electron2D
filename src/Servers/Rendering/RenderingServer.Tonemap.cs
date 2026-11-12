@@ -45,4 +45,4 @@ public sealed partial class RenderingServer
     }
 }
 
-internal readonly record struct CanvasPostProcess(GlowSettings Glow, TonemapSettings? Tonemap, CanvasAdjustmentSettings Adjustment, float OutputMaximum = 1);
+internal readonly record struct CanvasPostProcess(GlowSettings Glow, TonemapSettings? Tonemap, CanvasAdjustmentSettings Adjustment, float OutputMaximum = 1, ScreenSpaceAAMode ScreenSpaceAA = ScreenSpaceAAMode.Disabled);
