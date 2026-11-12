@@ -1563,4 +1563,4 @@ Direct3D 12 links vertex/fragment signatures on private native copies before com
 
 ## Native driver resources
 
-`GetDriverResource` queries the current native device, queue, image, image view, effective format, sampler, buffer or pipeline. Use a typed `DriverResource` selector and a live device-owned RID for resource-specific queries. See [driver resources](../components/driver-resources.md).
+`GetDriverResource` queries the current native device, queue, image, image view, effective format, sampler, buffer or pipeline. Use a typed `DriverResource` selector and a live device-owned RID for resource-specific queries. Vulkan reports its native objects. GPU Direct3D 12 reports COM interfaces, typed DXGI format values and CPU staging descriptor handles. See [driver resources](../components/driver-resources.md).

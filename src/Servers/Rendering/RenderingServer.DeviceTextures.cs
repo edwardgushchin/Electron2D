@@ -86,7 +86,7 @@ public sealed partial class RenderingServer
         if (resource is null) return 0;
 
         if (_backend is CompatibilityCanvasBackend compatibility) return compatibility.ExportNativeTexture(resource);
-        if (_backend is not GPUCanvasBackend { Driver: "vulkan" })
+        if (_backend is not GPUCanvasBackend { Driver: "vulkan" or "direct3d12" })
             throw new NotSupportedException("This GPU backend has no native texture handle export.");
 
         var deviceTexture = ExportRDTexture(resource, SRGB: false);

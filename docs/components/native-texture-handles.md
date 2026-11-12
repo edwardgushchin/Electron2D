@@ -7,11 +7,12 @@ Last updated: 2026-11-12
 | Backend | Value |
 | --- | --- |
 | GPU Vulkan | `VkImage` for an ordinary upload, image array, drawable, device-backed image or completed viewport. |
+| GPU Direct3D 12 | Borrowed `ID3D12Resource*` from the retained device for the corresponding image or completed viewport. |
 | Compatibility Direct3D 11 and Direct3D 12 | `ID3D11Texture2D*` or `ID3D12Resource*` from SDL texture properties. |
 | Compatibility OpenGL and OpenGL ES | `GLuint` texture name in the owning context. |
 | Compatibility Vulkan | `VkImage` from SDL texture properties. |
 
-An unsupported renderer or texture role throws `NotSupportedException`. Software rendering has no native graphics texture, and programmable GPU drivers other than Vulkan need their own exporters. Independent image arrays and device-backed and writable resources require the GPU renderer. Compatibility exports ordinary uploads and completed viewport targets.
+An unsupported renderer or texture role throws `NotSupportedException`. Software rendering has no native graphics texture. Metal and browser GPU require their own exporters. Independent image arrays and device-backed and writable resources require the GPU renderer. Compatibility exports ordinary uploads and completed viewport targets.
 
 The handle identifies an allocation, so Vulkan linear and sRGB image views can return the same value. When an allocation offers a separate sampled interpretation, query the typed view with `TextureGetRDTexture(texture, SRGB: true)`. The native-handle query uses the current allocation when a separate interpretation is unavailable. See [shared texture views](shared-texture-views.md#srgb-canvas-texture-exports).
 
@@ -61,7 +62,7 @@ Vulkan Compatibility needs its renderer device and queue handoff adapter. Pinned
 
 ## Verification
 
-Run `ELECTRON2D_TEST_NATIVE_TEXTURE_HANDLE` with the SDL driver profile. The profile checks ordinary drawing, compatible updates, replacement, diffuse aliases, viewport image publication and resize, and refusal for unsupported roles or drivers. The Vulkan profile also compares device and array handles and the actual sRGB view format. The Direct3D 11 profile calls `ID3D11Texture2D::GetDesc` independently. The OpenGL and OpenGL ES profiles check the native name in the active context. The Windows run also checks Direct3D 12 and Vulkan Compatibility, plus refusal controls for software and GPU Direct3D 12.
+Run `ELECTRON2D_TEST_NATIVE_TEXTURE_HANDLE` with the SDL driver profile. The profile checks ordinary drawing, compatible updates, replacement, diffuse aliases, viewport image publication and resize, and refusal for unsupported roles or drivers. The Vulkan profile also compares device and array handles and the actual sRGB view format. The Direct3D 11 profile calls `ID3D11Texture2D::GetDesc` independently. The OpenGL and OpenGL ES profiles check the native name in the active context. The Windows run checks Direct3D 12 Compatibility, Vulkan Compatibility and GPU Direct3D 12. The GPU Direct3D 12 profile uses the independent COM fixture described in [driver resources](driver-resources.md#verification) to check ordinary, array and completed viewport descriptions. The refusal controls use software or the preceding native module.
 
 Run `ELECTRON2D_TEST_NATIVE_TEXTURE_IMPORT=direct3d11` with `SDL_RENDER_DRIVER=direct3d11` on Windows. The producer creates native RGBA8 and BGRA8 resources on the active renderer device. The profile verifies real canvas output, native writes, release of producer references, imported image update/readback, logical size, alias replacement and owner/shape/device errors. It measures zero managed owner bytes across 64 prepared handle queries and 64 active frames without presentation. The `software` and `vulkan` profiles check explicit refusal and ordinary rendering on the selected backends. Native allocation totals and release packages have separate qualification.
 

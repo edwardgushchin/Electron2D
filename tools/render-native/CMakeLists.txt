@@ -13,7 +13,8 @@ FetchContent_MakeAvailable(SDLMemory)
 set(layout "${CMAKE_CURRENT_BINARY_DIR}/memory-layout.h")
 add_custom_command(OUTPUT "${layout}"
     COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/generate_layout.py" "${sdlmemory_SOURCE_DIR}" "${layout}"
-    DEPENDS "${sdlmemory_SOURCE_DIR}/src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h" generate_layout.py "${sdlmemory_SOURCE_DIR}/src/gpu/SDL_sysgpu.h" "${sdlmemory_SOURCE_DIR}/src/gpu/vulkan/SDL_gpu_vulkan.c")
+    DEPENDS "${sdlmemory_SOURCE_DIR}/src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h" generate_layout.py "${sdlmemory_SOURCE_DIR}/src/gpu/SDL_sysgpu.h" "${sdlmemory_SOURCE_DIR}/src/gpu/vulkan/SDL_gpu_vulkan.c"
+        "${sdlmemory_SOURCE_DIR}/src/gpu/d3d12/SDL_gpu_d3d12.c")
 set(kind SHARED)
 if(ELECTRON2D_STATIC_NATIVE)
     set(kind STATIC)

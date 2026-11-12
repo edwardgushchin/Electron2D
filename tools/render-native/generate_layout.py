@@ -7,6 +7,7 @@ import re
 
 SOURCES = {
     "src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h": "75921837d29c19f4c3b3b0e66e3c1db97a589cb2e928985c4e844948857e1258",
+    "src/gpu/d3d12/SDL_gpu_d3d12.c": "6cd3964004aff0aef48b2959131fb0eb6f3ad8dfd1d9befc571385f7e00c1e4d",
     "src/gpu/SDL_sysgpu.h": "86f74c57f00529fc9531f680340be114414688c4809b724eac894d862f86fb6e",
     "src/gpu/vulkan/SDL_gpu_vulkan.c": "28b42c4286805a6cff952bd698de29659180132ae881eedd3f6bf24d16583361",
 }
@@ -21,6 +22,46 @@ def block(text, marker):
         if depth == 0:
             return text[start:text.index(";", index) + 1]
     raise ValueError("Incomplete native declaration: " + marker)
+
+
+def prefix(text, marker, last, alias=""):
+    declaration = block(text, marker)
+    end = declaration.index(last) + len(last)
+    return declaration[:end] + "\n}" + (" " + alias if alias else "") + ";"
+
+
+def d3d12_layout(source):
+    text = (source / "src/gpu/d3d12/SDL_gpu_d3d12.c").read_text(encoding="utf-8")
+    return [
+        "#if defined(E2D_RENDER_DRIVER_D3D12) && defined(SDL_PLATFORM_WIN32)",
+        "#define __REQUIRED_RPCNDR_H_VERSION__ 475",
+        "#include <d3d12.h>", "#include <dxgi1_6.h>", "#include <dxgidebug.h>",
+        "#ifdef __IDXGIInfoQueue_INTERFACE_DEFINED__", "#define HAVE_IDXGIINFOQUEUE", "#endif",
+        "#define USE_PIX_RUNTIME",
+        *re.findall(r"^typedef void\(WINAPI\* pfn(?:BeginEventOnCommandList|EndEventOnCommandList|SetMarkerOnCommandList)\).*;", text, re.M),
+        block(text, "typedef struct WinPixEventRuntimeFns"),
+        prefix(text, "struct D3D12Renderer\n{", "ID3D12CommandQueue *commandQueue;"),
+        "typedef struct D3D12Renderer D3D12Renderer;",
+        "typedef struct D3D12Texture D3D12Texture;",
+        "typedef struct D3D12TextureSubresource D3D12TextureSubresource;",
+        "typedef struct D3D12DescriptorHeap D3D12DescriptorHeap;",
+        "typedef struct D3D12StagingDescriptorPool D3D12StagingDescriptorPool;",
+        "typedef struct D3D12StagingDescriptor D3D12StagingDescriptor;",
+        block(text, "struct D3D12StagingDescriptor\n{"),
+        prefix(text, "typedef struct D3D12TextureContainer\n{", "D3D12Texture *activeTexture;", "D3D12TextureContainer"),
+        prefix(text, "struct D3D12Texture\n{", "D3D12StagingDescriptor srvHandle;"),
+        block(text, "typedef struct D3D12Sampler\n{"),
+        block(text, "typedef enum D3D12BufferType"),
+        "typedef struct D3D12Buffer D3D12Buffer;",
+        "typedef struct D3D12BufferContainer D3D12BufferContainer;",
+        prefix(text, "struct D3D12BufferContainer\n{", "D3D12Buffer *activeBuffer;"),
+        prefix(text, "struct D3D12Buffer\n{", "ID3D12Resource *handle;"),
+        prefix(text, "struct D3D12GraphicsPipeline\n{", "ID3D12PipelineState *pipelineState;"),
+        prefix(text, "struct D3D12ComputePipeline\n{", "ID3D12PipelineState *pipelineState;"),
+        block(text, "static DXGI_FORMAT SDLToD3D12_TextureFormat[]"),
+        block(text, "static DXGI_FORMAT SDLToD3D12_DepthFormat[]"),
+        "#undef USE_PIX_RUNTIME", "#undef HAVE_IDXGIINFOQUEUE", "#endif", "",
+    ]
 
 
 def generate(source):
@@ -73,6 +114,7 @@ def generate(source):
         block(vulkan, "typedef struct VulkanComputePipelineResourceLayout\n{"),
         block(vulkan, "typedef struct VulkanComputePipeline\n{"),
 
+        *d3d12_layout(source),
         vulkan[vulkan.index("typedef struct VulkanCommandBuffer\n{"):vulkan.index("    Sint32 texturesUsedInPendingTransfersCapacity;") + len("    Sint32 texturesUsedInPendingTransfersCapacity;")] + "\n} VulkanCommandBuffer;", "",
     ])
 

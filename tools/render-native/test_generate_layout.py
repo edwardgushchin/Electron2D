@@ -15,6 +15,11 @@ class LayoutTests(unittest.TestCase):
         self.assertEqual(generate_layout.block(source, "static VkFormat Formats[]"),
                          "static VkFormat Formats[] = { VK_FORMAT_UNDEFINED, VK_FORMAT_R8_UNORM };")
 
+    def test_bounded_prefix_retains_fields_and_typedef(self):
+        source = "typedef struct A { int tag; void *resource; Private unused; } A;"
+        self.assertEqual(generate_layout.prefix(source, "typedef struct A", "void *resource;", "A"),
+                         "typedef struct A { int tag; void *resource;\n} A;")
+
     def test_truncated_declaration_rejects(self):
         with self.assertRaises(ValueError):
             generate_layout.block("struct A { union { int x; };", "struct A")

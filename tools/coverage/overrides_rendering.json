@@ -23,7 +23,7 @@
     {
       "godot": "RenderingServer::method:texture_get_native_handle(RID:,bool:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureGetNativeHandle(Electron2D.RID,System.Boolean)",
-      "reason": "ADR 0028: actual borrowed Vulkan VkImage and SDL compatibility D3D11/D3D12, GL/GLES or Vulkan storage. Ordinary, supported layered and completed viewport resources share the sampled native allocation. GPU drivers without a native exporter and unsupported compatibility drivers or image roles need adapters. See docs/components/native-texture-handles.md."
+      "reason": "ADR 0028: actual borrowed GPU Vulkan VkImage, GPU Direct3D 12 ID3D12Resource pointer, and SDL Compatibility D3D11/D3D12, GL/GLES or Vulkan storage. Ordinary, supported layered and completed viewport resources share the sampled native allocation. GPU drivers without a native exporter and unsupported compatibility drivers or image roles need adapters. See docs/components/native-texture-handles.md."
     },
     {
       "godot": "RenderingServer::method:environment_create()",
@@ -7446,7 +7446,7 @@
         "RenderingServer::method:texture_get_native_handle(RID:,bool:)"
       ],
       "state": "Partial",
-      "reason": "ADR 0028: actual borrowed Vulkan VkImage and SDL compatibility D3D11/D3D12, GL/GLES or Vulkan storage. Ordinary, supported layered and completed viewport resources share the sampled native allocation. GPU drivers without a native exporter and unsupported compatibility drivers or image roles need adapters. See docs/components/native-texture-handles.md."
+      "reason": "ADR 0028: actual borrowed GPU Vulkan VkImage, GPU Direct3D 12 ID3D12Resource pointer, and SDL Compatibility D3D11/D3D12, GL/GLES or Vulkan storage. Ordinary, supported layered and completed viewport resources share the sampled native allocation. GPU drivers without a native exporter and unsupported compatibility drivers or image roles need adapters. See docs/components/native-texture-handles.md."
     },
     {
       "godot": [

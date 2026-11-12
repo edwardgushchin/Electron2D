@@ -4,7 +4,7 @@ using DriverResource = Electron2D.RenderingDevice.DriverResource;
 using DataFormat = Electron2D.RenderingDevice.DataFormat;
 using Usage = Electron2D.RenderingDevice.TextureUsageBits;
 
-internal static unsafe class DriverResourceTests
+internal static unsafe partial class DriverResourceTests
 {
     internal static void Run(string profile)
     {
@@ -24,13 +24,14 @@ internal static unsafe class DriverResourceTests
             return;
         }
 
-        Local(device);
+        var direct3D = profile == "direct3d12";
+        Local(device, direct3D);
         device.Dispose();
         Reject<ObjectDisposedException>(() => device.GetDriverResource(DriverResource.LogicalDevice, default, 0));
-        Console.WriteLine("Vulkan driver resources: native instance/device/queue, image and buffer requirements, typed views, pipelines, ownership, and zero warm owner bytes passed.");
+        Console.WriteLine($"{(direct3D ? "Direct3D 12" : "Vulkan")} driver resources: native devices and queue, image and buffer, sampled view, pipelines, ownership, and zero warm owner bytes passed.");
     }
 
-    private static void Local(RenderingDevice device)
+    private static void Local(RenderingDevice device, bool direct3D)
     {
         using var format = new RDTextureFormat
         {
@@ -39,27 +40,56 @@ internal static unsafe class DriverResourceTests
             Format = DataFormat.R8G8B8A8UNORM,
             UsageBits = Usage.Sampling | Usage.ColorAttachment | Usage.CanCopyFrom,
         };
-        format.AddShareableFormat(DataFormat.R8G8B8A8UNORM);
-        format.AddShareableFormat(DataFormat.R8G8B8A8SRGB);
+        if (!direct3D)
+        {
+            format.AddShareableFormat(DataFormat.R8G8B8A8UNORM);
+            format.AddShareableFormat(DataFormat.R8G8B8A8SRGB);
+        }
         using var view = new RDTextureView();
         var texture = device.TextureCreate(format, view);
-        view.FormatOverride = DataFormat.R8G8B8A8SRGB;
-        var shared = device.TextureCreateShared(view, texture);
         var image = device.GetDriverResource(DriverResource.Texture, texture, 0);
         var imageView = device.GetDriverResource(DriverResource.TextureView, texture, 0);
-        Check(image == device.GetDriverResource(DriverResource.Texture, shared, 0), "Shared views expose the same VkImage.");
-        Check(imageView != device.GetDriverResource(DriverResource.TextureView, shared, 0), "Shared views expose distinct VkImageView objects.");
-        Check(device.GetDriverResource(DriverResource.TextureDataFormat, texture, 0) == 37 &&
-            device.GetDriverResource(DriverResource.TextureDataFormat, shared, 0) == 43, "Formats are the native VkFormat codes of both views.");
+        var shared = texture;
+        if (direct3D)
+        {
+            Check(device.GetDriverResource(DriverResource.TextureDataFormat, texture, 0) == 28, "The sampled view uses DXGI_FORMAT_R8G8B8A8_UNORM.");
+            Reject<NotSupportedException>(() => device.GetDriverResource(DriverResource.QueueFamily, default, 0));
+            format.UsageBits = Usage.ColorAttachment;
+            var attachmentOnly = device.TextureCreate(format, view);
+            Reject<NotSupportedException>(() => device.GetDriverResource(DriverResource.TextureView, attachmentOnly, 0));
+            Check(device.GetDriverResource(DriverResource.TextureDataFormat, attachmentOnly, 0) == 28, "A color attachment reports its typed DXGI format.");
+            device.FreeRID(attachmentOnly);
+            format.Format = DataFormat.D32SFLOAT;
+            format.UsageBits = Usage.DepthStencilAttachment;
+            var depthOnly = device.TextureCreate(format, view);
+            Check(device.GetDriverResource(DriverResource.TextureDataFormat, depthOnly, 0) == 40, "A depth attachment reports DXGI_FORMAT_D32_FLOAT.");
+            Reject<NotSupportedException>(() => device.GetDriverResource(DriverResource.TextureView, depthOnly, 0));
+            device.FreeRID(depthOnly);
+            format.UsageBits |= Usage.Sampling;
+            var sampledDepth = device.TextureCreate(format, view);
+            Check(device.GetDriverResource(DriverResource.TextureDataFormat, sampledDepth, 0) == 41 &&
+                device.GetDriverResource(DriverResource.TextureView, sampledDepth, 0) != 0, "A sampled depth image reports its DXGI_FORMAT_R32_FLOAT view.");
+            device.FreeRID(sampledDepth);
+        }
+        else
+        {
+            view.FormatOverride = DataFormat.R8G8B8A8SRGB;
+            shared = device.TextureCreateShared(view, texture);
+            Check(image == device.GetDriverResource(DriverResource.Texture, shared, 0), "Shared views expose the same VkImage.");
+            Check(imageView != device.GetDriverResource(DriverResource.TextureView, shared, 0), "Shared views expose distinct VkImageView objects.");
+            Check(device.GetDriverResource(DriverResource.TextureDataFormat, texture, 0) == 37 &&
+                device.GetDriverResource(DriverResource.TextureDataFormat, shared, 0) == 43, "Formats are the native VkFormat codes of both views.");
+        }
 
         var buffer = device.StorageBufferCreate(48);
         var queue = device.GetDriverResource(DriverResource.CommandQueue, default, 0);
-        VerifyVulkanHandles(device, texture, buffer);
+        if (!direct3D) VerifyVulkanHandles(device, texture, buffer);
         Check(device.GetDriverResource(DriverResource.CommandQueue, texture, int.MinValue) == queue, "Queue ignores the RID and reserved index.");
 
         using var samplerState = new RDSamplerState();
         var sampler = device.SamplerCreate(samplerState);
-        Check(device.GetDriverResource(DriverResource.Sampler, sampler, 0) != 0, "Sampler has a VkSampler.");
+        var samplerHandle = device.GetDriverResource(DriverResource.Sampler, sampler, 0);
+        Check(samplerHandle != 0, "Sampler has a native object or descriptor.");
         Reject<ArgumentException>(() => device.GetDriverResource(DriverResource.Texture, sampler, 0));
         Reject<ArgumentOutOfRangeException>(() => device.GetDriverResource((DriverResource)13, default, 0));
         Reject<InvalidOperationException>(() => Task.Run(() => device.GetDriverResource(DriverResource.Texture, texture, 0)).GetAwaiter().GetResult());
@@ -92,7 +122,8 @@ internal static unsafe class DriverResourceTests
         compute.BytecodeCompute = bytes.ToArray();
         var computeShader = device.ShaderCreateFromSPIRV(compute);
         var pipeline = device.ComputePipelineCreate(computeShader);
-        Check(device.GetDriverResource(DriverResource.ComputePipeline, pipeline, 0) != 0, "Compute pipeline resolves the native program.");
+        var computeHandle = device.GetDriverResource(DriverResource.ComputePipeline, pipeline, 0);
+        Check(computeHandle != 0, "Compute pipeline resolves the native program.");
         using var uniform = new RDUniform { UniformType = RenderingDevice.UniformType.StorageBuffer, Binding = 0 };
         uniform.AddID(buffer);
         var set = device.UniformSetCreate([uniform], computeShader, 0);
@@ -107,6 +138,8 @@ internal static unsafe class DriverResourceTests
 
         var result = MemoryMarshal.Cast<byte, uint>(device.BufferGetData(buffer));
         Check(result[0] == 3 && result[1] == 1, "Compute remains executable.");
+        if (direct3D)
+            VerifyDirect3DHandles(device, image, imageView, samplerHandle, buffer, renderHandle, computeHandle);
         var pixels = device.TextureGetData(texture, 0);
         Check(Enumerable.Range(0, pixels.Length / 4).Any(i => pixels[i * 4] == 255 && pixels[i * 4 + 2] == 0),
             "Graphics remains executable.");

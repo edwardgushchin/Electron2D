@@ -7,9 +7,14 @@ internal static unsafe class NativeTextureHandleTests
     internal static void Run(string profile)
     {
         Reject<InvalidOperationException>(() => RenderingServer.TextureGetNativeHandle(default));
-        var gpu = profile is "vulkan" or "gpu-direct3d12";
-        var unsupported = profile is "software" or "gpu-direct3d12";
-        var driver = profile switch { "gpu-direct3d12" => "direct3d12", "compatibility-vulkan" => "vulkan", _ => profile };
+        var gpu = profile is "vulkan" or "gpu-direct3d12" or "gpu-direct3d12-preceding";
+        var unsupported = profile is "software" or "gpu-direct3d12-preceding";
+        var driver = profile switch
+        {
+            "gpu-direct3d12" or "gpu-direct3d12-preceding" => "direct3d12",
+            "compatibility-vulkan" => "vulkan",
+            _ => profile
+        };
         ProjectSettings.Set(ProjectSettings.RenderingMethod, gpu ? "gpu" : "compatibility");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
 
@@ -58,7 +63,7 @@ internal static unsafe class NativeTextureHandleTests
             RenderingServer.ForceDraw();
             ExpectPixel(rootTexture, Colors.Red, "The exported texture still draws its authored pixels.");
             Check(RenderingServer.TextureGetNativeHandle(cold.GetRID()) == idle, "An explicitly exported undrawn upload survives a frame.");
-            Inspect(driver, first, 8, 4);
+            Inspect(driver, gpu, first, 8, 4);
             for (var i = 0; i < 64; i++) RenderingServer.TextureGetNativeHandle(rid);
             var before = GC.GetAllocatedBytesForCurrentThread();
             for (var i = 0; i < 64; i++) RenderingServer.TextureGetNativeHandle(rid);
@@ -68,11 +73,16 @@ internal static unsafe class NativeTextureHandleTests
             {
                 var device = RenderingServer.GetRenderingDevice()!;
                 var linear = RenderingServer.TextureGetRDTexture(rid);
-                var srgb = RenderingServer.TextureGetRDTexture(rid, true);
-                Check(linear != srgb && RenderingServer.TextureGetRDTexture(channels.GetRID()) == linear &&
-                    device.GetDriverResource(RenderingDevice.DriverResource.Texture, srgb, 0) == first &&
-                    device.GetDriverResource(RenderingDevice.DriverResource.TextureDataFormat, srgb, 0) == 43,
-                    "Server and device exports share the VkImage with a real sRGB view.");
+                Check(RenderingServer.TextureGetRDTexture(channels.GetRID()) == linear &&
+                    device.GetDriverResource(RenderingDevice.DriverResource.Texture, linear, 0) == first,
+                    "Server, diffuse alias and device export share the same allocation.");
+                if (driver == "vulkan")
+                {
+                    var srgb = RenderingServer.TextureGetRDTexture(rid, true);
+                    Check(linear != srgb && device.GetDriverResource(RenderingDevice.DriverResource.Texture, srgb, 0) == first &&
+                        device.GetDriverResource(RenderingDevice.DriverResource.TextureDataFormat, srgb, 0) == 43,
+                        "The Vulkan export shares the VkImage with a real sRGB view.");
+                }
                 var wrapper = RenderingServer.TextureRDCreate(linear);
                 Check(RenderingServer.TextureGetNativeHandle(wrapper) == first, "A device-backed wrapper shares the native image.");
                 RenderingServer.FreeRID(wrapper);
@@ -82,9 +92,10 @@ internal static unsafe class NativeTextureHandleTests
                 array.CreateFromImages([original, update]);
                 var arrayRID = array.GetRID();
                 var nativeArray = RenderingServer.TextureGetNativeHandle(arrayRID);
-                var arrayView = RenderingServer.TextureGetRDTexture(arrayRID, true);
+                var arrayView = RenderingServer.TextureGetRDTexture(arrayRID, SRGB: driver == "vulkan");
                 Check(nativeArray != 0 && device.GetDriverResource(RenderingDevice.DriverResource.Texture, arrayView, 0) == nativeArray,
                     "An independent image array exports its native allocation and view.");
+                if (driver == "direct3d12") DriverResourceTests.InspectDirect3DTexture(nativeArray, 8, 4, 2);
             }
             else
             {
@@ -100,7 +111,7 @@ internal static unsafe class NativeTextureHandleTests
             image.SetImage(larger);
             var replacement = RenderingServer.TextureGetNativeHandle(rid);
             Check(replacement != first && replacement != 0, "Storage replacement exports a different native allocation.");
-            Inspect(driver, replacement, 16, 8);
+            Inspect(driver, gpu, replacement, 16, 8);
             RenderingServer.ForceDraw();
             ExpectPixel(rootTexture, Colors.Blue, "Replacement pixels still draw.");
             var expired = cold.GetRID();
@@ -110,7 +121,7 @@ internal static unsafe class NativeTextureHandleTests
             viewport.RenderTargetUpdateMode = ViewportUpdateMode.Always;
             RenderingServer.ForceDraw();
             var completed = RenderingServer.TextureGetNativeHandle(target.GetRID());
-            Inspect(driver, completed, 12, 10);
+            Inspect(driver, gpu, completed, 12, 10);
             RenderingServer.ForceDraw();
             var next = RenderingServer.TextureGetNativeHandle(target.GetRID(), true);
             Check(next != completed && next != 0, "The viewport exports the new completed image.");
@@ -120,7 +131,7 @@ internal static unsafe class NativeTextureHandleTests
             RenderingServer.ForceDraw();
             var resized = RenderingServer.TextureGetNativeHandle(target.GetRID());
             Check(resized != 0, "A resized target publishes a native allocation.");
-            Inspect(driver, resized, 16, 14);
+            Inspect(driver, gpu, resized, 16, 14);
             ExpectPixel(target, Colors.Yellow, "The resized target still renders its viewport.");
             if (gpu)
             {
@@ -148,7 +159,7 @@ internal static unsafe class NativeTextureHandleTests
         Console.WriteLine($"Native texture export {profile}: {(unsupported ? "explicit refusal and ordinary rendering" : "native allocation, updates, aliasing, completed viewport images and rendering")} passed.");
     }
 
-    private static void Inspect(string driver, ulong value, uint width, uint height)
+    private static void Inspect(string driver, bool gpu, ulong value, uint width, uint height)
     {
         Check(value != 0, "The native object is available.");
         if (driver == "direct3d11")
@@ -162,6 +173,8 @@ internal static unsafe class NativeTextureHandleTests
                 description.ArraySize == 1 && description.Format != 0 && description.SampleCount == 1,
                 "The D3D11 texture object reports its actual dimensions, format and samples.");
         }
+        else if (gpu && driver == "direct3d12")
+            DriverResourceTests.InspectDirect3DTexture(value, width, height, 1);
         else if (driver is "opengl" or "opengles2")
         {
             var isTexture = (delegate* unmanaged<uint, byte>)SDL.GLGetProcAddress("glIsTexture");

@@ -637,7 +637,7 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 
 [Native texture handles](../components/native-texture-handles.md) resolve a canvas texture RID to the current native GPU Vulkan or Compatibility allocation. Direct3D 11 and Direct3D 12 Compatibility import same-device ordinary textures for direct canvas sampling, retaining a native reference through the server-owned RID.
 
-[Native driver resources](../components/driver-resources.md) expose the current Vulkan device, queue and active GPU resources to integrations under the borrowed lifetime contract.
+[Native driver resources](../components/driver-resources.md) expose the current Vulkan or desktop Direct3D 12 device, queue and active GPU resources under the borrowed lifetime contract.
 
 [Vulkan device image import](../components/native-texture-handles.md#importing-vulkan-device-images) wraps ordinary and array images on that device after a completed producer handoff. [Direct canvas import](../components/native-texture-handles.md#importing-vulkan-canvas-textures) owns the device root through the server texture, including alias redirection and storage replacement. The producer retains the native allocation.
 
