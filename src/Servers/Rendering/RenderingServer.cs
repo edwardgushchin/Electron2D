@@ -430,7 +430,9 @@ public sealed partial class RenderingServer : ElectronObject
         var environment = SelectEnvironment(viewport, tree)?.SnapshotEnvironment();
         if (environment?.Background is { Mode: CanvasBackgroundMode.CameraFeed } background)
             AppendCameraBackground(background.CameraFeedID, pixels);
-        ComposeFrame(pixels);
+        var backgroundLimit = !direct && environment?.Background is { Mode: CanvasBackgroundMode.Canvas } selectedBackground
+            ? (int?)selectedBackground.CanvasMaxLayer : null;
+        ComposeFrame(pixels, backgroundLimit);
         return environment;
     }
 

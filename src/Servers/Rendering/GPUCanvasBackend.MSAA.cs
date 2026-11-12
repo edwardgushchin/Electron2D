@@ -4,10 +4,10 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
-    private nint BeginCanvasPass(nint command, CanvasRenderTarget output, bool backBuffer, SDL.GPULoadOp load, Color clear)
+    private nint BeginCanvasPass(nint command, CanvasRenderTarget output, bool backBuffer, SDL.GPULoadOp load, Color clear, RenderHandle? foregroundSamples = null)
     {
         var resolved = backBuffer ? output.BackBuffer! : output.Next;
-        var multisample = backBuffer ? output.MultisampleBackBuffer : output.Multisample;
+        var multisample = backBuffer ? output.MultisampleBackBuffer : foregroundSamples ?? output.Multisample;
         if (multisample is null) return BeginPass(command, resolved.DangerousGetHandle(), load, clear);
         var target = new SDL.GPUColorTargetInfo
         {
@@ -29,9 +29,9 @@ internal sealed unsafe partial class GPUCanvasBackend
         var d = new CanvasVertex(new(0, size.Y), Colors.White, new(0, 1));
         vertices[0] = a; vertices[1] = b; vertices[2] = c; vertices[3] = a; vertices[4] = c; vertices[5] = d;
     }
-    private void SeedBackBuffer(nint command, CanvasRenderTarget output, int first, int vertexOffset)
+    private void SeedCanvasSamples(nint command, CanvasRenderTarget output, RenderHandle target, RenderHandle source, int first, int vertexOffset)
     {
-        var pass = BeginPass(command, output.MultisampleBackBuffer!.DangerousGetHandle(), SDL.GPULoadOp.DontCare, default);
+        var pass = BeginPass(command, target.DangerousGetHandle(), SDL.GPULoadOp.DontCare, default);
         try
         {
             SDL.BindGPUGraphicsPipeline(pass, _seedPipelines[output.HDR ? 1 : 0, (int)output.MSAA]!.DangerousGetHandle());
@@ -39,7 +39,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             PushFrame(command, dimensions, Colors.White);
             var binding = new SDL.GPUBufferBinding { Buffer = _vertexBuffer!.DangerousGetHandle(), Offset = (uint)vertexOffset };
             SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(&binding, 1), 1);
-            var sampler = new SDL.GPUTextureSamplerBinding { Texture = output.BackBuffer!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled) };
+            var sampler = new SDL.GPUTextureSamplerBinding { Texture = source.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled) };
             SDL.BindGPUFragmentSamplers(pass, 0, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(&sampler, 1), 1);
             SDL.DrawGPUPrimitives(pass, 6, 1, (uint)first, 0);
         }

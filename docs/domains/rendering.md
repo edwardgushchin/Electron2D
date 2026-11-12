@@ -417,7 +417,7 @@ Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root p
 
 [Canvas color adjustment](../components/canvas-color-adjustment.md) applies brightness, contrast, saturation and an optional filterable ramp after glow and tone mapping on GPU HDR and SDR targets.
 
-[Canvas environment backgrounds](../components/canvas-environment-background.md) select a native clear, retained canvas or live camera feed before drawing on GPU and Compatibility. The world and viewport environment mode also select its post-processing effects.
+[Canvas environment backgrounds](../components/canvas-environment-background.md) select a native clear, retained canvas or live camera feed on GPU and Compatibility. Canvas mode composites higher layers after environment effects on texture-backed GPU viewports. The world and viewport environment mode also select its post-processing effects.
 
 ## Canvas multisample antialiasing
 

@@ -7,6 +7,8 @@ public enum CanvasBackgroundMode
     ClearColor = 0,
     /// <summary>Clears to the environment's authored background color.</summary>
     Color = 1,
+    /// <summary>Draws the background canvas layers before environment effects and higher layers afterward.</summary>
+    Canvas = 3,
     /// <summary>Retains the preceding unprocessed canvas unless a one-time clear is requested.</summary>
     Keep = 4,
     /// <summary>Draws the selected camera feed behind the canvas.</summary>
@@ -74,9 +76,18 @@ public sealed partial class CanvasEnvironment
         }
     }
 
+    /// <summary>Gets or sets the greatest canvas layer drawn before environment effects in Canvas mode.</summary>
+    /// <value>Zero initially. All sublayers of the selected layer are included.</value>
+    /// <exception cref="ObjectDisposedException">This environment is disposed.</exception>
+    public int BackgroundCanvasMaxLayer
+    {
+        get => Read(ref _background.CanvasMaxLayer);
+        set => Set(ref _background.CanvasMaxLayer, value);
+    }
+
     internal static void ValidateBackgroundMode(CanvasBackgroundMode mode)
     {
-        if (mode is not (CanvasBackgroundMode.ClearColor or CanvasBackgroundMode.Color or CanvasBackgroundMode.Keep or CanvasBackgroundMode.CameraFeed))
+        if (mode is not (CanvasBackgroundMode.ClearColor or CanvasBackgroundMode.Color or CanvasBackgroundMode.Canvas or CanvasBackgroundMode.Keep or CanvasBackgroundMode.CameraFeed))
             throw new ArgumentOutOfRangeException(nameof(mode));
     }
 
@@ -97,7 +108,8 @@ public sealed partial class CanvasEnvironment
         new PropertyDescriptor<CanvasEnvironment, CanvasBackgroundMode>(nameof(BackgroundMode), e => e.BackgroundMode, (e, value) => e.BackgroundMode = value, _ => CanvasBackgroundMode.ClearColor, stored: true),
         new PropertyDescriptor<CanvasEnvironment, Color>(nameof(BackgroundColor), e => e.BackgroundColor, (e, value) => e.BackgroundColor = value, _ => Colors.Black, stored: true),
         new PropertyDescriptor<CanvasEnvironment, float>(nameof(BackgroundEnergyMultiplier), e => e.BackgroundEnergyMultiplier, (e, value) => e.BackgroundEnergyMultiplier = value, _ => 1f, stored: true),
-        new PropertyDescriptor<CanvasEnvironment, int>(nameof(BackgroundCameraFeedID), e => e.BackgroundCameraFeedID, (e, value) => e.BackgroundCameraFeedID = value, _ => 1, stored: true)
+        new PropertyDescriptor<CanvasEnvironment, int>(nameof(BackgroundCameraFeedID), e => e.BackgroundCameraFeedID, (e, value) => e.BackgroundCameraFeedID = value, _ => 1, stored: true),
+        new PropertyDescriptor<CanvasEnvironment, int>(nameof(BackgroundCanvasMaxLayer), e => e.BackgroundCanvasMaxLayer, (e, value) => e.BackgroundCanvasMaxLayer = value, _ => 0, stored: true)
     ];
 }
 
@@ -106,6 +118,6 @@ internal struct CanvasBackgroundSettings
     internal CanvasBackgroundMode Mode;
     internal Color Color;
     internal float Energy, Exposure;
-    internal int CameraFeedID;
+    internal int CameraFeedID, CanvasMaxLayer;
     internal static CanvasBackgroundSettings Default => new() { Color = Colors.Black, Energy = 1, Exposure = 1, CameraFeedID = 1 };
 }

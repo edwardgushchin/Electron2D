@@ -75,7 +75,7 @@ Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon 
 
 ## Canvas background
 
-`EnvironmentSetBackground` and `EnvironmentSetBGColor` update a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. `EnvironmentSetBGEnergy` applies a finite nonnegative energy multiplier and runtime exposure factor together. `ViewportSetEnvironmentMode` controls background and effects selection for the viewport. See [canvas environment backgrounds](../components/canvas-environment-background.md).
+`EnvironmentSetBackground` and `EnvironmentSetBGColor` update a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. `EnvironmentSetCanvasMaxLayer` sets the inclusive upper layer for `Canvas` mode. `EnvironmentSetBGEnergy` applies a finite nonnegative energy multiplier and runtime exposure factor together. `ViewportSetEnvironmentMode` controls background and effects selection for the viewport. See [canvas environment backgrounds](../components/canvas-environment-background.md).
 
 ## Canvas glow
 

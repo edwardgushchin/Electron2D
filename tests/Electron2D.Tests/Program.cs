@@ -144,6 +144,7 @@ if (args.Length == 2 && args[0] == "--debanding-storage") { CanvasDebandingTests
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_POLYGONS") == "1") { CanvasPolygonTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DRAW_CALLBACK") is { } callbackRenderer) { CanvasDrawCallbackTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DRAW_CALLBACK_PHYSICS") == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU, callbackRenderer, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_STROKES") is { } nativeStrokeProfile) { if (nativeStrokeProfile == "managed") NativeStrokeTests.Managed(); else NativeStrokeTests.Run(nativeStrokeProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LAYER_BACKGROUND") is { } layerBackgroundProfile) { CanvasLayerBackgroundTests.Run(layerBackgroundProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_BACKGROUND") is { } cameraBackgroundProfile) { CanvasCameraBackgroundTests.Run(cameraBackgroundProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_BACKGROUND") is { } backgroundProfile) { CanvasBackgroundTests.Run(backgroundProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SDR_ENVIRONMENT") is { } sdrEnvironmentProfile) { CanvasSDREnvironmentTests.Run(sdrEnvironmentProfile); return; }

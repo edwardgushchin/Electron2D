@@ -1,6 +1,26 @@
 {
   "mappings": [
     {
+      "godot": "Environment::enum_value:BGMode.BG_CANVAS",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Canvas()",
+      "reason": "ADRs 0028/0051: Canvas splits texture-backed composition at the signed inclusive layer limit. GPU effects run before foreground blending and screen reads. GPU and Compatibility retain raw background history. Direct presentation and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#canvas-layers."
+    },
+    {
+      "godot": "Environment::property:background_canvas_max_layer",
+      "electron2d": "property:Electron2D.CanvasEnvironment.BackgroundCanvasMaxLayer()",
+      "reason": "ADRs 0028/0051: Canvas splits texture-backed composition at the signed inclusive layer limit. GPU effects run before foreground blending and screen reads. GPU and Compatibility retain raw background history. Direct presentation and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#canvas-layers."
+    },
+    {
+      "godot": "RenderingServer::enum_value:EnvironmentBG.ENV_BG_CANVAS",
+      "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Canvas()",
+      "reason": "ADRs 0028/0051: Canvas splits texture-backed composition at the signed inclusive layer limit. GPU effects run before foreground blending and screen reads. GPU and Compatibility retain raw background history. Direct presentation and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#canvas-layers."
+    },
+    {
+      "godot": "RenderingServer::method:environment_set_canvas_max_layer(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetCanvasMaxLayer(Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0028/0051: Canvas splits texture-backed composition at the signed inclusive layer limit. GPU effects run before foreground blending and screen reads. GPU and Compatibility retain raw background history. Direct presentation and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#canvas-layers."
+    },
+    {
       "godot": "Environment::enum_value:BGMode.BG_CAMERA_FEED",
       "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.CameraFeed()",
       "reason": "ADRs 0028/0051/0115: active registered camera backgrounds draw before the canvas on GPU and Compatibility with the feed transform, RGB, packed and separate YCbCr, retained conversion, and viewport lifecycle. Windows verifies live caller-owned feed pixels. Physical capture permission, external images, and unqualified platforms remain open. See docs/components/canvas-environment-background.md#camera-feed."
@@ -18,12 +38,12 @@
     {
       "godot": "Environment::enum:BGMode",
       "electron2d": "T:Electron2D.CanvasBackgroundMode",
-      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection is available. The shared mode family still needs the canvas-layer boundary."
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection and canvas layer composition are available on texture-backed targets."
     },
     {
       "godot": "RenderingServer::enum:EnvironmentBG",
       "electron2d": "T:Electron2D.CanvasBackgroundMode",
-      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection is available. The shared mode family still needs the canvas-layer boundary."
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection and canvas layer composition are available on texture-backed targets."
     },
     {
       "godot": "Environment::enum_value:BGMode.BG_CLEAR_COLOR",
@@ -68,7 +88,7 @@
     {
       "godot": "Environment::property:background_mode",
       "electron2d": "property:Electron2D.CanvasEnvironment.BackgroundMode()",
-      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection is available. The shared mode family still needs the canvas-layer boundary."
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection and canvas layer composition are available on texture-backed targets."
     },
     {
       "godot": "Environment::property:background_color",
@@ -98,32 +118,32 @@
     {
       "godot": "Environment::property:adjustment_brightness",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentBrightness()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "Environment::property:adjustment_color_correction",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentColorCorrection()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "Environment::property:adjustment_contrast",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentContrast()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "Environment::property:adjustment_enabled",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentEnabled()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "Environment::property:adjustment_saturation",
       "electron2d": "property:Electron2D.CanvasEnvironment.AdjustmentSaturation()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md."
     },
     {
       "godot": "RenderingServer::method:environment_set_adjustment(RID:,bool:,float:,float:,float:,bool:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetAdjustment(Electron2D.RID,System.Boolean,System.Single,System.Single,System.Single,Electron2D.RID)",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md. A borrowed ordinary texture RID selects the applicable ramp role directly; the volume lookup selector is outside ADR 0004."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md. A borrowed ordinary texture RID selects the applicable ramp role directly; the volume lookup selector is outside ADR 0004."
     },
     {
       "godot": "Environment::enum:ToneMapper",
@@ -158,27 +178,27 @@
     {
       "godot": "Environment::property:tonemap_agx_contrast",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapAGXContrast()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "Environment::property:tonemap_agx_white",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapAGXWhite()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "Environment::property:tonemap_exposure",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapExposure()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "Environment::property:tonemap_mode",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapMode()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "Environment::property:tonemap_white",
       "electron2d": "property:Electron2D.CanvasEnvironment.TonemapWhite()",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "RenderingServer::enum:EnvironmentToneMapper",
@@ -213,12 +233,12 @@
     {
       "godot": "RenderingServer::method:environment_set_tonemap(RID:,int:RenderingServer.EnvironmentToneMapper,float:,float:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetTonemap(Electron2D.RID,Electron2D.CanvasEnvironment.ToneMapper,System.Single,System.Single)",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "RenderingServer::method:environment_set_tonemap_agx_contrast(RID:,float:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetTonemapAGXContrast(Electron2D.RID,System.Single)",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md."
     },
     {
       "godot": "WorldEnvironment::property:environment",
@@ -458,17 +478,17 @@
     {
       "godot": "RenderingServer::method:environment_set_glow(RID:,bool:,PackedFloat32Array:,float:,float:,float:,float:,int:RenderingServer.EnvironmentGlowBlendMode,float:,float:,float:,float:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetGlow(Electron2D.RID,System.Boolean,System.ReadOnlySpan<System.Single>,System.Single,System.Single,System.Single,System.Single,Electron2D.CanvasEnvironment.GlowBlendMode,System.Single,System.Single,System.Single,System.Single,Electron2D.RID)",
-      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Compatibility needs a native low-end filtering/composition pass, and layer-limited backgrounds need native canvas-layer composition. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
+      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Canvas mode applies GPU glow before drawing foreground layers. Compatibility needs a native low-end filtering and composition pass. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
     },
     {
       "godot": "RenderingServer::method:environment_glow_set_use_bicubic_upscale(bool:)",
       "electron2d": "method:Electron2D.RenderingServer.EnvironmentGlowSetUseBicubicUpscale(System.Boolean)",
-      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Compatibility needs a native low-end filtering/composition pass, and layer-limited backgrounds need native canvas-layer composition. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
+      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Canvas mode applies GPU glow before drawing foreground layers. Compatibility needs a native low-end filtering and composition pass. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
     },
     {
       "godot": "RenderingServer::method:viewport_set_environment_mode(RID:,int:RenderingServer.ViewportEnvironmentMode)",
       "electron2d": "method:Electron2D.RenderingServer.ViewportSetEnvironmentMode(Electron2D.RID,Electron2D.RenderingServer.ViewportEnvironmentMode)",
-      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Compatibility needs a native low-end filtering/composition pass, and layer-limited backgrounds need native canvas-layer composition. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
+      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Canvas mode applies GPU glow before drawing foreground layers. Compatibility needs a native low-end filtering and composition pass. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md."
     },
     {
       "godot": "Camera2D::property:editor_draw_screen",
@@ -5934,7 +5954,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Compatibility needs a native low-end filtering/composition pass, and layer-limited backgrounds need native canvas-layer composition. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md.",
+      "reason": "ADRs 0004/0028: World-selected GPU glow executes in half-float passes with seven levels, borrowed maps and pre-effect history. RGBA8 viewports decode before filtering and encode after composition. Windows native pixels verify byte and half-float output. Canvas mode applies GPU glow before drawing foreground layers. Compatibility needs a native low-end filtering and composition pass. Pinned numeric parity and the complete target matrix remain open. See docs/components/canvas-glow.md.",
       "godot": [
         "class:Environment",
         "class:WorldEnvironment",
@@ -5981,7 +6001,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md.",
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas adjustment applies linear brightness, encoded contrast and saturation, and a typed first-row lookup after tone mapping and glow. Windows native pixel profiles verify byte output and linear HDR. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-color-adjustment.md.",
       "godot": [
         "Environment::property:adjustment_brightness",
         "Environment::property:adjustment_color_correction",
@@ -6011,7 +6031,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Compatibility, layer-limited backgrounds, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md.",
+      "reason": "ADRs 0004/0028: GPU RGBA8 and half-float canvas exposure and five tone curves integrate with world selection, glow and viewport publication. Byte viewports use unit headroom and encode sRGB after tone mapping. Windows native pixel profiles verify linear HDR and byte output. Canvas mode applies GPU effects before drawing foreground layers. Compatibility effects, native HDR display and the target matrix remain open. See docs/components/canvas-tonemapping.md.",
       "godot": [
         "Environment::property:tonemap_agx_contrast",
         "Environment::property:tonemap_agx_white",
@@ -6036,7 +6056,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection is available. The shared mode family still needs the canvas-layer boundary.",
+      "reason": "ADRs 0004/0028/0051: world-selected native clears apply the default or authored color and linear energy on GPU and Compatibility. Keep retains unprocessed texture-backed history with explicit Once priority. Direct-window Keep needs a retained presentation surface. See docs/components/canvas-environment-background.md. Camera feed selection and canvas layer composition are available on texture-backed targets.",
       "godot": [
         "Environment::enum:BGMode",
         "RenderingServer::enum:EnvironmentBG",
@@ -6051,12 +6071,13 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Needs a native canvas-layer composition boundary that preserves upper-layer blend and screen reads and unprocessed Never-clear history.",
+      "state": "Partial",
+      "reason": "ADRs 0028/0051: Canvas splits texture-backed composition at the signed inclusive layer limit. GPU effects run before foreground blending and screen reads. GPU and Compatibility retain raw background history. Direct presentation and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#canvas-layers.",
       "godot": [
         "Environment::enum_value:BGMode.BG_CANVAS",
+        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_CANVAS",
         "Environment::property:background_canvas_max_layer",
-        "RenderingServer::enum_value:EnvironmentBG.ENV_BG_CANVAS"
+        "RenderingServer::method:environment_set_canvas_max_layer(RID:,int:)"
       ]
     },
     {

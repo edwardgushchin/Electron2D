@@ -4,7 +4,7 @@ using SDL3;
 
 namespace Electron2D;
 
-internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, MaskEnd, MaskFinish }
+internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, MaskEnd, MaskFinish, EnvironmentBoundary }
 
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,
@@ -116,6 +116,13 @@ internal abstract partial class CanvasBackend : IDisposable
             {
                 using var pixels = source.Readback(sourceTarget, backBuffer: true, requireFrame: false);
                 ImportPixels(BackBuffer(target, sourceTarget.BackBufferMipmaps), pixels);
+            }
+            if (source is CompatibilityCanvasBackend compatibility && sourceTarget.PostProcess is { HasRawFrame: true } history)
+            {
+                using var pixels = compatibility.ReadbackTexture(history.Raw);
+                var background = target.PostProcess = new(CreateTarget(target.Size, default));
+                ImportPixels(background.Raw, pixels);
+                background.HasRawFrame = true;
             }
             target.HasFrame = sourceTarget.HasFrame;
         }

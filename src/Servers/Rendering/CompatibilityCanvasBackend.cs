@@ -159,11 +159,17 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         if (measured is not null) { Check(SDL.FlushRenderer(renderer), "flush before measured canvas"); measured.Begin(); }
         var origin = output is null ? directRegion.Position : Vector2.Zero;
         if (output is null) directRegion = directRegion.Intersection(new Rect2(Vector2.Zero, GetPixelSize()));
-        var screen = false;
+        var screen = false; var layered = false;
         foreach (var batch in batches)
         {
+            if (batch.Operation == CanvasOperation.EnvironmentBoundary) { layered = true; continue; }
             if (batch.MIPMaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
             screen |= batch.Operation != CanvasOperation.Draw || batch.GroupShader || batch.MaskShader;
+        }
+        if (layered)
+        {
+            var history = output!.PostProcess ??= new(CreateTarget(output.Size, default));
+            history.PendingRaw ??= CreateTarget(output.Size, default);
         }
         if (screen)
             _ = BackBuffer(output ?? throw new NotSupportedException("Direct viewports cannot copy or group screen pixels."), false);
@@ -202,8 +208,9 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             }
             else if (output is not null)
             {
-                Check(SDL.SetTextureBlendMode(output.Current.DangerousGetHandle(), SDL.BlendMode.None), "preserve framebuffer blending");
-                Check(SDL.RenderTexture(renderer, output.Current.DangerousGetHandle(), 0, 0), "preserve completed canvas image");
+                var previous = output.PostProcess is { HasRawFrame: true } history ? history.Raw : output.Current;
+                Check(SDL.SetTextureBlendMode(previous.DangerousGetHandle(), SDL.BlendMode.None), "preserve framebuffer blending");
+                Check(SDL.RenderTexture(renderer, previous.DangerousGetHandle(), 0, 0), "preserve completed canvas image");
             }
             if (_vertices.Length < vertices.Length) Array.Resize(ref _vertices, Math.Max(vertices.Length, _vertices.Length * 2));
             for (var i = 0; i < vertices.Length; i++)
@@ -219,6 +226,19 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             Rect2i? activeClip = null; var inMask = false;
             foreach (var batch in batches)
             {
+                if (batch.Operation == CanvasOperation.EnvironmentBoundary)
+                {
+                    var raw = output!.PostProcess!.PendingRaw!.DangerousGetHandle();
+                    var canvas = output.Next.DangerousGetHandle();
+                    Check(SDL.SetRenderTarget(renderer, raw), "bind background history target");
+                    Check(SDL.SetRenderClipRect(renderer, 0), "clear background history clipping");
+                    Check(SDL.SetTextureBlendMode(canvas, SDL.BlendMode.None), "set background history blending");
+                    Check(SDL.RenderTexture(renderer, canvas, 0, 0), "copy the background before foreground layers");
+                    Check(SDL.SetRenderTarget(renderer, canvas), "restore canvas after background history");
+                    Check(SDL.SetRenderClipRect(renderer, 0), "reset clipping for foreground layers");
+                    activeClip = null;
+                    continue;
+                }
                 if (batch.Operation is CanvasOperation.Copy or CanvasOperation.MaskBegin)
                 {
                     Check(SDL.SetRenderTarget(renderer, output!.BackBuffer!.DangerousGetHandle()), "bind screen copy target");
@@ -303,6 +323,19 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                 RecordCanvasDraw(batch, batch.Count / step);
             }
             output?.Commit();
+            if (output?.PostProcess is { } completedHistory)
+            {
+                if (layered)
+                {
+                    (completedHistory.Raw, completedHistory.PendingRaw) = (completedHistory.PendingRaw!, completedHistory.Raw);
+                    completedHistory.HasRawFrame = true;
+                }
+                else
+                {
+                    output.PostProcess = null;
+                    completedHistory.Dispose();
+                }
+            }
         }
         finally
         {
@@ -678,8 +711,13 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     internal override Image Readback(CanvasRenderTarget output, bool backBuffer = false, bool requireFrame = true)
     {
         if (requireFrame && !output.HasFrame) throw new InvalidOperationException("No canvas frame has completed.");
+        return ReadbackTexture(backBuffer ? output.BackBuffer ?? throw new InvalidOperationException("No screen backbuffer is available.") : output.Current);
+    }
+
+    internal Image ReadbackTexture(RenderHandle target)
+    {
         var renderer = _renderer.DangerousGetHandle();
-        Check(SDL.SetRenderTarget(renderer, (backBuffer ? output.BackBuffer ?? throw new InvalidOperationException("No screen backbuffer is available.") : output.Current).DangerousGetHandle()), "bind readback target");
+        Check(SDL.SetRenderTarget(renderer, target.DangerousGetHandle()), "bind readback target");
         try
         {
             using var surface = new RenderHandle(SDL.RenderReadPixels(renderer, null), SDL.DestroySurface);

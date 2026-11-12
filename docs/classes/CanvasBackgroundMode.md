@@ -6,6 +6,7 @@ Select a mode with [CanvasEnvironment](CanvasEnvironment.md#background) or `Rend
 | ---: | --- | --- |
 | 0 | `ClearColor` | Uses the rendering session's default clear color. |
 | 1 | `Color` | Uses the environment's authored clear color. |
+| 3 | `Canvas` | Draws the selected canvas layer range before environment effects. |
 | 4 | `Keep` | Retains unprocessed canvas history. |
 | 5 | `CameraFeed` | Draws the selected active camera feed behind the canvas. |
 | 6 | `Max` | Terminal marker. |

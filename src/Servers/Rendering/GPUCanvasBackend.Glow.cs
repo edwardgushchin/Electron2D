@@ -102,9 +102,9 @@ internal sealed unsafe partial class GPUCanvasBackend
 
 internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
 {
-    internal readonly RenderHandle Raw = raw;
+    internal RenderHandle Raw = raw;
     internal RenderHandle?[]? Levels;
-    internal RenderHandle? Linear;
+    internal RenderHandle? Linear, ForegroundSamples, PendingRaw;
 
     internal bool HasRawFrame;
 
@@ -123,6 +123,14 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
     public void Dispose()
     {
         try { Raw.Dispose(); }
-        finally { ReleaseLevels(); }
+        finally
+        {
+            try { ReleaseLevels(); }
+            finally
+            {
+                try { ForegroundSamples?.Dispose(); }
+                finally { PendingRaw?.Dispose(); }
+            }
+        }
     }
 }

@@ -172,10 +172,12 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var samples = (SDL.GPUSampleCount)output.MSAA; var format = CanvasFormat(output.HDR);
         _materialMasks = lighting.Masks.Count != 0 || lighting.ShadowCount != 0;
         var size = output.Size; var lightingUsed = false; var sdfUsed = false; var screen = false; var screenMipmaps = false;
+        var layered = false;
         if (processParticles && RenderingServer.Service is { } particleServer) PrepareParticleSources(particleServer);
         if (processParticles) foreach (var source in _particlePrepared) sdfUsed |= source.PreparedProcess?.Program.UsesSDFTexture == true || source.PreparedProcess?.ParticleMotion?.Program.UsesSDFTexture == true;
         foreach (var batch in batches)
         {
+            if (batch.Operation == CanvasOperation.EnvironmentBoundary) { layered = true; continue; }
             if (batch.Particles is { } particles && (long)batch.Count * particles.Source.Amount * sizeof(CanvasVertex) > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(batches), "Expanded particle geometry exceeds the native byte budget.");
             lightingUsed |= batch.Count != 0 && batch.Lighting is not null && !batch.MaskShader && !batch.GroupShader;
@@ -239,7 +241,10 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var drawPostProcess = drawGlow || !toneSettings.IsIdentity || adjust;
         var linearizeGlowSource = !output.HDR && glowLevelCount > 0;
         var storage = output.HDR ? 1 : 0;
-        if (drawPostProcess) output.PostProcess ??= new(CreateTarget(size, default, HDR: output.HDR));
+        var saveHistory = drawPostProcess || layered;
+        if (saveHistory) output.PostProcess ??= new(CreateTarget(size, default, HDR: output.HDR));
+        if (layered && output.Multisample is not null)
+            output.PostProcess!.ForegroundSamples ??= CreateMultisampleTarget(size, default, output.MSAA, output.HDR);
         if (drawPostProcess && !drawGlow) _tonemapPipelines[storage] ??= CreatePostProcessPipeline(TonemapShader, output.HDR);
         if (drawGlow)
         {
@@ -327,6 +332,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             }
             pass = BeginCanvasPass(command, output, false, clearEnabled ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load, clear);
             var inGroup = false; var copied = false;
+            RenderHandle? foregroundSamples = null;
             var maskSamplers = stackalloc SDL.GPUTextureSamplerBinding[2];
             var vertexSamplers = stackalloc SDL.GPUTextureSamplerBinding[16];
             var bindings = stackalloc SDL.GPUBufferBinding[2];
@@ -335,12 +341,23 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             {
                 var streamIndex = _streamByBatch.Length > batchIndex ? _streamByBatch[batchIndex] : -1;
                 var lightingOffset = _lightingOffsets[batchIndex++];
+                if (batch.Operation == CanvasOperation.EnvironmentBoundary)
+                {
+                    SDL.EndGPURenderPass(pass); pass = 0;
+                    FinishBackground();
+                    foregroundSamples = output.PostProcess!.ForegroundSamples;
+                    if (foregroundSamples is not null)
+                        SeedCanvasSamples(command, output, foregroundSamples, output.Next, seedFirst, lightingBytes);
+                    copied = false;
+                    pass = BeginCanvasPass(command, output, false, SDL.GPULoadOp.Load, default, foregroundSamples);
+                    continue;
+                }
                 if (batch.Operation == CanvasOperation.Copy)
                 {
                     SDL.EndGPURenderPass(pass); pass = 0;
                     if (batch.Region.HasArea()) Blit(command, output.Next.DangerousGetHandle(), output.BackBuffer!.DangerousGetHandle(), batch.Region);
                     if (screenMipmaps) SDL.GenerateMipmapsForGPUTexture(command, output.BackBuffer!.DangerousGetHandle());
-                    copied = true; pass = BeginCanvasPass(command, output, false, SDL.GPULoadOp.Load, default);
+                    copied = true; pass = BeginCanvasPass(command, output, false, SDL.GPULoadOp.Load, default, foregroundSamples);
                     continue;
                 }
                 if (batch.Operation == CanvasOperation.MaskFinish) continue;
@@ -348,28 +365,30 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 {
                     SDL.EndGPURenderPass(pass); pass = 0; inGroup = true;
                     if (batch.Region.HasArea()) Blit(command, output.Next.DangerousGetHandle(), output.BackBuffer!.DangerousGetHandle(), batch.Region);
-                    if (output.MultisampleBackBuffer is not null) SeedBackBuffer(command, output, seedFirst, lightingBytes);
+                    if (output.MultisampleBackBuffer is { } backSamples)
+                        SeedCanvasSamples(command, output, backSamples, output.BackBuffer!, seedFirst, lightingBytes);
                     pass = BeginCanvasPass(command, output, true, SDL.GPULoadOp.Load, default);
                     continue;
                 }
                 if (batch.Operation == CanvasOperation.GroupBegin)
                 {
                     SDL.EndGPURenderPass(pass); pass = 0; inGroup = true;
-                    if (output.MultisampleBackBuffer is not null) SeedBackBuffer(command, output, seedFirst, lightingBytes);
+                    if (output.MultisampleBackBuffer is { } backSamples)
+                        SeedCanvasSamples(command, output, backSamples, output.BackBuffer!, seedFirst, lightingBytes);
                     pass = BeginCanvasPass(command, output, true, SDL.GPULoadOp.Load, default);
                 }
                 if (batch.Operation is CanvasOperation.GroupEnd or CanvasOperation.MaskEnd && inGroup)
                 {
                     SDL.EndGPURenderPass(pass); pass = 0; inGroup = false;
                     if (batch.MIPMaps) SDL.GenerateMipmapsForGPUTexture(command, output.BackBuffer!.DangerousGetHandle());
-                    pass = BeginCanvasPass(command, output, false, SDL.GPULoadOp.Load, default);
+                    pass = BeginCanvasPass(command, output, false, SDL.GPULoadOp.Load, default, foregroundSamples);
                 }
                 if (batch.Material?.Program.UsesScreenTexture == true && batch.Operation is not (CanvasOperation.GroupEnd or CanvasOperation.MaskEnd) && !copied)
                 {
                     SDL.EndGPURenderPass(pass); pass = 0;
                     Blit(command, output.Next.DangerousGetHandle(), output.BackBuffer!.DangerousGetHandle(), new(0, 0, size.X, size.Y));
                     if (screenMipmaps) SDL.GenerateMipmapsForGPUTexture(command, output.BackBuffer!.DangerousGetHandle());
-                    copied = true; pass = BeginCanvasPass(command, output, false, SDL.GPULoadOp.Load, default);
+                    copied = true; pass = BeginCanvasPass(command, output, false, SDL.GPULoadOp.Load, default, foregroundSamples);
                 }
                 var particleStream = batch.Particles is not null && batch.Particles.Value.Source.GPU is { Initialized: true } ? _particleStreams[particleStreamIndex++] : null;
                 if (batch.Count == 0 || batch.Particles is { } particleDrawing && particleDrawing.Source.GPU is not { Initialized: true }) continue;
@@ -463,24 +482,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 RecordCanvasDraw(batch, drawCalls);
             }
             SDL.EndGPURenderPass(pass); pass = 0;
-            if (drawPostProcess)
-            {
-                var tone = TonemapUniforms.Prepare(toneSettings, postProcess.OutputMaximum, byteTarget: !output.HDR, linearSource: linearizeGlowSource);
-                var raw = output.PostProcess!.Raw.DangerousGetHandle();
-                Blit(command, output.Next.DangerousGetHandle(), raw, new(0, 0, size.X, size.Y));
-                var glowSource = raw;
-                if (linearizeGlowSource)
-                {
-                    glowSource = output.PostProcess.Linear!.DangerousGetHandle();
-                    var convert = BeginPass(command, glowSource, SDL.GPULoadOp.DontCare, default);
-                    try { BindColorCopy(command, convert, _linearizePipeline!, raw, new(0, 1, 0, 0), lightingBytes, colorFirst); }
-                    finally { SDL.EndGPURenderPass(convert); }
-                }
-                var correction = new AdjustmentUniforms(new(adjustment.Brightness, adjustment.Contrast, adjustment.Saturation, adjust ? 1 : 0), lookup.Region);
-                var correctionBinding = AdjustmentBinding(output, lookup.Texture);
-                if (drawGlow) DrawGlow(command, output, glowSource, glow, glowLevelCount, glowMap, mapRegion, in tone, in correction, in correctionBinding);
-                else DrawTonemap(command, output, in tone, in correction, in correctionBinding);
-            }
+            if (drawPostProcess && !layered) FinishBackground();
             measured?.End(command);
             var submitted = command; command = 0;
             if (measured is not null) measured.Submit(submitted); else Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
@@ -490,9 +492,14 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             output.Commit();
             if (output.PostProcess is { } buffers)
             {
-                if (drawPostProcess)
+                if (saveHistory)
                 {
                     buffers.HasRawFrame = true;
+                    if (!layered && buffers.ForegroundSamples is { } retainedSamples)
+                    {
+                        retainedSamples.Dispose();
+                        buffers.ForegroundSamples = null;
+                    }
                     if (glowLevelCount == 0) buffers.ReleaseLevels();
                 }
                 else { output.PostProcess = null; buffers.Dispose(); }
@@ -503,6 +510,26 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             if (pass != 0) SDL.EndGPURenderPass(pass);
             if (command != 0) SDL.CancelGPUCommandBuffer(command);
             if (processParticles) RollbackParticleChanges(particlesCommitted);
+        }
+
+        void FinishBackground()
+        {
+            var raw = output.PostProcess!.Raw.DangerousGetHandle();
+            Blit(command, output.Next.DangerousGetHandle(), raw, new(0, 0, size.X, size.Y));
+            if (!drawPostProcess) return;
+            var tone = TonemapUniforms.Prepare(toneSettings, postProcess.OutputMaximum, byteTarget: !output.HDR, linearSource: linearizeGlowSource);
+            var glowSource = raw;
+            if (linearizeGlowSource)
+            {
+                glowSource = output.PostProcess.Linear!.DangerousGetHandle();
+                var convert = BeginPass(command, glowSource, SDL.GPULoadOp.DontCare, default);
+                try { BindColorCopy(command, convert, _linearizePipeline!, raw, new(0, 1, 0, 0), lightingBytes, colorFirst); }
+                finally { SDL.EndGPURenderPass(convert); }
+            }
+            var correction = new AdjustmentUniforms(new(adjustment.Brightness, adjustment.Contrast, adjustment.Saturation, adjust ? 1 : 0), lookup.Region);
+            var correctionBinding = AdjustmentBinding(output, lookup.Texture);
+            if (drawGlow) DrawGlow(command, output, glowSource, glow, glowLevelCount, glowMap, mapRegion, in tone, in correction, in correctionBinding);
+            else DrawTonemap(command, output, in tone, in correction, in correctionBinding);
         }
     }
     private nint BeginPass(nint command, nint texture, SDL.GPULoadOp load, Color clear)

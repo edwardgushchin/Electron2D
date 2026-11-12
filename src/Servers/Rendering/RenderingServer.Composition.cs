@@ -11,12 +11,21 @@ public sealed partial class RenderingServer
             if (IsCompositor(parent)) return parent;
         return null;
     }
-    private void ComposeFrame(Vector2i pixels)
+    private void ComposeFrame(Vector2i pixels, int? backgroundLimit)
     {
         var linear = ViewportHDR(_viewport);
         CanvasItem? active = null; var begin = 0; var first = 0; Rect2? notifierBounds = null;
+        var boundary = -1;
         foreach (var item in _order)
         {
+            if (backgroundLimit is { } layer && (item.TooltipOverlay || (item.Stacking >> 32) > layer))
+            {
+                if (active is not null) throw new InvalidOperationException("A canvas group cannot cross the environment layer boundary.");
+                boundary = _batches.Count;
+                _batches.Add(new(0, 0, null, Operation: CanvasOperation.EnvironmentBoundary));
+                backgroundLimit = null;
+            }
+
             var owner = item.Group is { } group && group.RenderZ == item.Z ? group : null;
             if (IsCompositor(item.Node) && owner is not null)
                 throw new NotSupportedException("Nested same-Z canvas groups and masks require independent nested backbuffer storage.");
@@ -120,6 +129,7 @@ public sealed partial class RenderingServer
             }
         }
         if (active is not null) throw new InvalidOperationException("Canvas group boundaries must finish within their ordered canvas range.");
+        if (boundary >= 0 && boundary == _batches.Count - 1) _batches.RemoveAt(boundary);
     }
     private void AppendGroupOwner(RenderEntry item, Vector2i pixels, CanvasGroupSettings settings, Rect2? childBounds)
     {

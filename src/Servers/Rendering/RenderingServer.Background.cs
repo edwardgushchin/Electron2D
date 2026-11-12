@@ -42,6 +42,17 @@ public sealed partial class RenderingServer
         RenderingProgramRegistry<CanvasEnvironment>.Resolve(environment).SetBackgroundEnergy(multiplier, exposureValue);
     }
 
+    /// <summary>Sets the inclusive background layer limit for a live canvas environment in Canvas mode.</summary>
+    /// <param name="environment">A live borrowed environment identity.</param>
+    /// <param name="maxLayer">The last background canvas layer, including all its sublayers.</param>
+    /// <exception cref="ArgumentException">The identity is invalid or has a different resource type.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable, access is off-owner or submission is in progress.</exception>
+    public static void EnvironmentSetCanvasMaxLayer(RID environment, int maxLayer)
+    {
+        RequireService().EnsureServerViewportChange();
+        RenderingProgramRegistry<CanvasEnvironment>.Resolve(environment).BackgroundCanvasMaxLayer = maxLayer;
+    }
+
     private void PrepareFrameBackground(CanvasFrame frame, CanvasBackgroundSettings? settings)
     {
         var viewport = frame.Viewport;

@@ -12,7 +12,7 @@ Scalar glow settings accept finite, nonnegative values through 65,504. Mix and m
 
 ## Background
 
-`BackgroundMode` selects `ClearColor`, `Color`, `Keep` or `CameraFeed`. `BackgroundCameraFeedID` selects the registered feed, initially ID one. `BackgroundColor` defaults to black and `BackgroundEnergyMultiplier` defaults to one. See [canvas environment backgrounds](../components/canvas-environment-background.md) for clear policy, retention and color transfer.
+`BackgroundMode` selects `ClearColor`, `Color`, `Canvas`, `Keep` or `CameraFeed`. `BackgroundCanvasMaxLayer` defaults to zero and selects the highest canvas layer included in the background. `BackgroundCameraFeedID` selects the registered feed, initially ID one. `BackgroundColor` defaults to black and `BackgroundEnergyMultiplier` defaults to one. See [canvas environment backgrounds](../components/canvas-environment-background.md) for clear policy, retention and color transfer.
 
 ## Tone mapping
 

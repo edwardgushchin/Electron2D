@@ -35127,6 +35127,19 @@
     "value": "5"
   },
   {
+    "id": "enumValue:Electron2D.CanvasBackgroundMode.Canvas()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasBackgroundMode",
+    "name": "Canvas",
+    "signature": "public const Electron2D.CanvasBackgroundMode Canvas = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasBackgroundMode",
+    "value": "3"
+  },
+  {
     "id": "enumValue:Electron2D.CanvasBackgroundMode.ClearColor()",
     "kind": "enumValue",
     "declaringType": "Electron2D.CanvasBackgroundMode",
@@ -184380,6 +184393,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.EnvironmentSetCanvasMaxLayer(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "EnvironmentSetCanvasMaxLayer",
+    "signature": "public static System.Void EnvironmentSetCanvasMaxLayer(Electron2D.RID environment, System.Int32 maxLayer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "environment",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "maxLayer",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.EnvironmentSetGlow(Electron2D.RID,System.Boolean,System.ReadOnlySpan\u003CSystem.Single\u003E,System.Single,System.Single,System.Single,System.Single,Electron2D.CanvasEnvironment.GlowBlendMode,System.Single,System.Single,System.Single,System.Single,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -272621,6 +272658,19 @@
     "declaringType": "Electron2D.CanvasEnvironment",
     "name": "BackgroundCameraFeedID",
     "signature": "public System.Int32 BackgroundCameraFeedID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasEnvironment.BackgroundCanvasMaxLayer()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasEnvironment",
+    "name": "BackgroundCanvasMaxLayer",
+    "signature": "public System.Int32 BackgroundCanvasMaxLayer { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

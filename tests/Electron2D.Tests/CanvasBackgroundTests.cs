@@ -18,7 +18,7 @@ internal static class CanvasBackgroundTests
         Check(environment.BackgroundMode == CanvasBackgroundMode.ClearColor && environment.BackgroundColor == Colors.Black &&
             environment.BackgroundEnergyMultiplier == 1, "Background defaults.");
         Reject<ArgumentOutOfRangeException>(() => environment.BackgroundMode = CanvasBackgroundMode.Max);
-        Reject<ArgumentOutOfRangeException>(() => environment.BackgroundMode = (CanvasBackgroundMode)3);
+        Reject<ArgumentOutOfRangeException>(() => environment.BackgroundMode = (CanvasBackgroundMode)2);
         Reject<ArgumentOutOfRangeException>(() => environment.BackgroundColor = new(float.NaN, 0, 0, 1));
         Reject<ArgumentOutOfRangeException>(() => environment.BackgroundEnergyMultiplier = float.PositiveInfinity);
         Reject<ArgumentOutOfRangeException>(() => environment.BackgroundEnergyMultiplier = -1);
