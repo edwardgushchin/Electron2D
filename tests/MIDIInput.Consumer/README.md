@@ -13,3 +13,19 @@ dotnet publish -c Release -r linux-x64 -p:PublishAot=true -p:IlcTreatWarningsAsE
 `managed` checks event values/resources without opening native input. `unavailable` expects native acquisition to fail, so run it in a child with `ALSA_CONFIG_PATH` set to an empty file. `denied` expects the isolated `Fixtures/MIDI/denied.c` shared-library fault, selected only in that child through `LD_LIBRARY_PATH`. The fixture exports an acquisition failure and never intercepts user input. Source mode requires `/dev/snd/seq` access; it creates two virtual source ports and removes them on exit.
 
 The ordinary native-consumer properties also support `Electron2DUsePackage=true` for validation against a locally qualified package. Source-to-scene checks include callback failure diagnostics by design. See [the component contract](../../docs/components/midi-input.md) for source identity, failure semantics, platform and physical-device limits.
+
+On Windows x64, run the system profile on a host with zero WinMM input devices.
+
+```powershell
+dotnet run -c Release -- windows-empty
+```
+
+For the deterministic WinMM callback profile, build the fixture from an x64 Visual Studio Developer Command Prompt in this directory.
+
+```bat
+if not exist obj mkdir obj
+cl /nologo /std:c11 /W4 /WX /LD /Foobj\winmm-fixture.obj /Feobj\winmm-fixture.dll ..\Electron2D.Tests\Fixtures\MIDI\winmm.c
+dotnet run -c Release -- winmm-fixture obj\winmm-fixture.dll
+```
+
+The fixture supplies a test ABI in an isolated CLR load context and uses no installed MIDI ports. Use the system profile for strict NativeAOT on a host with no input devices. Windows source-to-scene qualification with a system loopback or controller remains separate.

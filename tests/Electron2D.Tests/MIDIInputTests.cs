@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Electron2D;
 
-internal static class MIDIInputTests
+internal static partial class MIDIInputTests
 {
     private static int _checks;
     private static void Check(bool condition, string reason)

@@ -102,6 +102,7 @@ public sealed partial class ConfigFile
     [JsonSerializable(typeof(AudioDefaultPlaybackType))]
     [JsonSerializable(typeof(AudioServer.SpeakerMode))]
     [JsonSerializable(typeof(Viewport.MSAA))]
+    [JsonSerializable(typeof(ScreenSpaceAAMode))]
     [JsonSerializable(typeof(FontLCDSubpixelLayout))]
     [JsonSerializable(typeof(InputActionSettings))]
     [JsonSerializable(typeof(GlobalShaderParameterSettings<bool>))]

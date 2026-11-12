@@ -2507,7 +2507,7 @@ ProjectSettings.Accessibility.cs now registers native AccessibilityDriver and Ac
 | [InputEventMIDI](classes/InputEventMIDI.md) | [source](../src/Core/Input/InputEventMIDI.cs) | Stored MIDI event/resource values and native Linux scene input |
 | [MIDIMessage](classes/MIDIMessage.md) | [source](../src/Core/Input/MIDIMessage.cs) | Typed MIDI 1 message identities |
 
-The retained OS MIDI owner is implemented in [OS.MIDI.cs](../src/Core/OS/OS.MIDI.cs); its native and platform boundaries are recorded in [MIDI input](components/midi-input.md).
+[OS.MIDI.cs](../src/Core/OS/OS.MIDI.cs) owns the session and the ALSA adapter. [OS.MIDI.WinMM.cs](../src/Core/OS/OS.MIDI.WinMM.cs) implements the Windows source. Platform boundaries are recorded in [MIDI input](components/midi-input.md).
 
 Custom AnimationNode endpoint delivery extends the existing AnimationNode/AnimationTree/AnimationMixer and Animation track families. Internal [AnimationEventRange](../src/Scene/Animation/AnimationEventRange.cs) and transient AnimationMixFrame metadata implement the [shared event traversal](components/scene-animation.md#custom-clip-event-boundaries); no public type or persisted schema is added.
 

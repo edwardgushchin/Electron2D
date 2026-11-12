@@ -1,3 +1,5 @@
+[Windows MIDI input](../components/midi-input.md) adds WinMM device sessions and owner-thread scene delivery. Three OS operations remain Partial for real Windows endpoints, remaining adapters and platform qualification.
+
 [Viewport mesh LOD thresholds](../components/meshes.md#authored-lod-indices-and-scale-selection) select authored detail from a per-target framebuffer error bound. The root samples a typed project setting unless assigned in the scene. Two rows move from Blocked to Implemented. Coverage is **13,903/18,904 (73.55%)**, with 1,177 Partial, 281 Unimplemented, 3,543 Blocked, 8,389 Excluded and zero unmapped.
 
 [Buffer upload report](../components/local-compute.md#buffer-upload-report) exposes the last renderer frame or local submission's actual staged uploads, direct host uniform writes and byte count through `RenderingDevice.GetPerfReport()`. One declaration moves to Implemented. Coverage is **13,901/18,904 (73.53%)**, with 1,177 Partial, 281 Unimplemented, 3,545 Blocked, 8,389 Excluded and zero unmapped.

@@ -8,8 +8,9 @@ public sealed partial class OS
     private readonly MIDIInputOwner _midiInputs = new();
 
     /// <summary>Opens and subscribes to the currently available MIDI input sources.</summary>
-    /// <remarks>Opening an active session is a no-op. Linux uses the system ALSA Sequencer independently of the
-    /// window and audio backends. Sources added later require close/open. Source indices remain stable until close.
+    /// <remarks>Opening an active session is a no-op. Desktop Linux uses ALSA Sequencer and Windows uses WinMM.
+    /// Both operate independently of the window and audio backends. Sources added later require close/open.
+    /// Source indices remain stable until close.
     /// Events arrive before the next engine frame's physics/process stages, or through Input.FlushBufferedEvents
     /// on the active MainLoop's owner thread. No source is a valid empty session.</remarks>
     /// <exception cref="NotSupportedException">The platform input adapter or system library is unavailable.</exception>
@@ -42,8 +43,8 @@ public sealed partial class OS
 
         private static void EnsurePlatform()
         {
-            if (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid())
-                throw new NotSupportedException("MIDI input requires this host's native adapter. The Linux adapter uses ALSA Sequencer.");
+            if (!OperatingSystem.IsWindows() && (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid()))
+                throw new NotSupportedException("MIDI input requires this host's native adapter.");
         }
 
         internal void Open()
@@ -53,9 +54,9 @@ public sealed partial class OS
             {
                 if (_session is not null) return;
                 _failure = null;
-                try { _session = Session.Open(); }
-                catch (DllNotFoundException error) { throw new NotSupportedException("The system ALSA library is unavailable.", error); }
-                catch (EntryPointNotFoundException error) { throw new NotSupportedException("The system ALSA Sequencer API is unavailable.", error); }
+                try { _session = OperatingSystem.IsWindows() ? WinMMInputSession.Open() : ALSAInputSession.Open(); }
+                catch (DllNotFoundException error) { throw new NotSupportedException("The system MIDI input library is unavailable.", error); }
+                catch (EntryPointNotFoundException error) { throw new NotSupportedException("The system MIDI input API is unavailable.", error); }
             }
         }
 
@@ -92,11 +93,16 @@ public sealed partial class OS
                 _pumping = true;
                 try
                 {
-                    // Bound one frame's work; remaining events stay in ALSA's bounded input pool.
+                    // Bound one frame's work; remaining events stay in the native or callback input queue.
                     for (var count = 0; count < 4096 && ReferenceEquals(_session, current); count++)
                     {
                         InputEventMIDI? value;
-                        try { value = current.Read(out var available); if (!available) break; }
+                        try
+                        {
+                            if (count == 0) current.ValidateSources();
+                            value = current.Read(out var available);
+                            if (!available) break;
+                        }
                         catch (Exception error) when (error is IOException or UnauthorizedAccessException)
                         {
                             _session = null;
@@ -112,15 +118,22 @@ public sealed partial class OS
             }
         }
 
-        private sealed class Session
+        private abstract class Session
+        {
+            internal readonly List<string> Names = [];
+            internal virtual void ValidateSources() { }
+            internal abstract InputEventMIDI? Read(out bool available);
+            internal abstract void Close();
+        }
+
+        private sealed class ALSAInputSession : Session
         {
             private nint _handle;
             private readonly Dictionary<int, int> _sources = [];
-            internal readonly List<string> Names = [];
 
-            internal static Session Open()
+            internal static ALSAInputSession Open()
             {
-                var session = new Session();
+                var session = new ALSAInputSession();
                 try
                 {
                     Check(ALSA.Open(out session._handle, "default", 2, 1), "open sequencer");
@@ -168,14 +181,14 @@ public sealed partial class OS
                 }
             }
 
-            internal void Close()
+            internal override void Close()
             {
                 var handle = _handle;
                 _handle = 0;
                 if (handle != 0) Check(ALSA.Close(handle), "close sequencer");
             }
 
-            internal InputEventMIDI? Read(out bool available)
+            internal override InputEventMIDI? Read(out bool available)
             {
                 var result = ALSA.Read(_handle, out var pointer);
                 available = result != -11;

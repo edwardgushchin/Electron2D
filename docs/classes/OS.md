@@ -383,6 +383,6 @@ Launches a chosen desktop application with literal ordered host file/directory p
 
 ## MIDI inputs
 
-`OpenMIDIInputs()`, `GetConnectedMIDIInputs() -> string[]` and `CloseMIDIInputs()` operate an explicit retained input session. Desktop Linux uses system ALSA; other native adapters remain missing. Open/close are repeat-safe, the names array is a copy indexed by event Device, and failures never masquerade as an empty successful acquisition. [MIDI input](../components/midi-input.md) owns the lifecycle, exceptions, thread/delivery contract, executable evidence and platform limits.
+`OpenMIDIInputs()`, `GetConnectedMIDIInputs() -> string[]` and `CloseMIDIInputs()` operate an explicit retained input session. Desktop Linux uses ALSA Sequencer and Windows uses WinMM. Open and close are repeat-safe. The names array is a copy indexed by event `Device`. A successful acquisition may have zero sources. [MIDI input](../components/midi-input.md) owns the lifecycle, exceptions, thread/delivery contract, executable evidence and platform limits.
 
 Windows trash executes source, managed-package and NativeAOT native recovery/restore, caller apartment, concurrency, data-safety and managed browser confirmation/failure checks. Other target and native-heap gates remain open; see [the owning component](../components/windows-trash.md).

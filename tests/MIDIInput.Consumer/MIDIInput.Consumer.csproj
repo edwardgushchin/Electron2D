@@ -1,5 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
   <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /><Compile Include="../Electron2D.Tests/MIDIInputTests.cs" Link="MIDIInputTests.cs" /></ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Electron2D.Tests/MIDIInputWinMMTests.cs" Link="MIDIInputWinMMTests.cs" />
+    <Compile Remove="WinMMFixtureHost.cs" Condition="'$(PublishAot)' == 'true' Or '$(PublishTrimmed)' == 'true'" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(PublishAot)' != 'true' And '$(PublishTrimmed)' != 'true'">
+    <DefineConstants>$(DefineConstants);MIDI_WINMM_FIXTURE_HOST</DefineConstants>
+  </PropertyGroup>
   <Import Project="../../tools/native-consumer.props" />
 </Project>

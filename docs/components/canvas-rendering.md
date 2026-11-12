@@ -154,7 +154,8 @@ owner-thread bytes. Remaining platforms and packages follow ADR 0021.
 current rendering session, including caller-owned viewports. Authored scene
 assignments replace the override. `ProjectSettings.ScreenSpaceAA` supplies the
 root default at startup unless the scene explicitly assigns a value. Offscreen
-viewports have independent modes.
+viewports have independent modes. The typed project setting uses generated JSON
+metadata for NativeAOT startup and persistence.
 
 The filters use the final SDR or half-float HDR GPU image after MSAA resolve
 and environment composition. Presentation, texture consumers, readback and

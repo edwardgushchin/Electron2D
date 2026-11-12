@@ -143,17 +143,17 @@
     {
       "godot": "OS::method:close_midi_inputs()",
       "electron2d": "method:Electron2D.OS.CloseMIDIInputs()",
-      "reason": "ADRs 0038 and 0021: Linux ALSA input owns explicit repeat-safe sessions, stable source indices, bounded owner-thread polling, scene delivery, rollback/disconnect/overflow and cleanup after callback failures, exercised by MIDIInputTests and MIDIInput.Consumer. Missing WinMM/CoreMIDI/Android/Web MIDI producers and unresolved tvOS acquisition keep full platform behavior Partial; physical and native heap acceptance remain open. See docs/components/midi-input.md."
+      "reason": "ADRs 0038 and 0021: ALSA and WinMM own explicit repeat-safe sessions, stable source indices, bounded owner-thread delivery, rollback, disconnect, overflow and cleanup after callback failures. Windows x64 system WinMM empty input and a Windows SDK native ABI fixture are exercised by MIDIInput.Consumer. Windows device/loopback and package qualification, CoreMIDI/Android/Web producers and tvOS acquisition remain open. See docs/components/midi-input.md."
     },
     {
       "godot": "OS::method:get_connected_midi_inputs()",
       "electron2d": "method:Electron2D.OS.GetConnectedMIDIInputs()",
-      "reason": "ADRs 0038 and 0021: Linux ALSA input owns explicit repeat-safe sessions, stable source indices, bounded owner-thread polling, scene delivery, rollback/disconnect/overflow and cleanup after callback failures, exercised by MIDIInputTests and MIDIInput.Consumer. Missing WinMM/CoreMIDI/Android/Web MIDI producers and unresolved tvOS acquisition keep full platform behavior Partial; physical and native heap acceptance remain open. See docs/components/midi-input.md."
+      "reason": "ADRs 0038 and 0021: ALSA and WinMM own explicit repeat-safe sessions, stable source indices, bounded owner-thread delivery, rollback, disconnect, overflow and cleanup after callback failures. Windows x64 system WinMM empty input and a Windows SDK native ABI fixture are exercised by MIDIInput.Consumer. Windows device/loopback and package qualification, CoreMIDI/Android/Web producers and tvOS acquisition remain open. See docs/components/midi-input.md."
     },
     {
       "godot": "OS::method:open_midi_inputs()",
       "electron2d": "method:Electron2D.OS.OpenMIDIInputs()",
-      "reason": "ADRs 0038 and 0021: Linux ALSA input owns explicit repeat-safe sessions, stable source indices, bounded owner-thread polling, scene delivery, rollback/disconnect/overflow and cleanup after callback failures, exercised by MIDIInputTests and MIDIInput.Consumer. Missing WinMM/CoreMIDI/Android/Web MIDI producers and unresolved tvOS acquisition keep full platform behavior Partial; physical and native heap acceptance remain open. See docs/components/midi-input.md."
+      "reason": "ADRs 0038 and 0021: ALSA and WinMM own explicit repeat-safe sessions, stable source indices, bounded owner-thread delivery, rollback, disconnect, overflow and cleanup after callback failures. Windows x64 system WinMM empty input and a Windows SDK native ABI fixture are exercised by MIDIInput.Consumer. Windows device/loopback and package qualification, CoreMIDI/Android/Web producers and tvOS acquisition remain open. See docs/components/midi-input.md."
     }
   ],
   "extras": [
@@ -216,7 +216,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0038 and 0021: Linux ALSA input owns explicit repeat-safe sessions, stable source indices, bounded owner-thread polling, scene delivery, rollback/disconnect/overflow and cleanup after callback failures, exercised by MIDIInputTests and MIDIInput.Consumer. Missing WinMM/CoreMIDI/Android/Web MIDI producers and unresolved tvOS acquisition keep full platform behavior Partial; physical and native heap acceptance remain open. See docs/components/midi-input.md.",
+      "reason": "ADRs 0038 and 0021: ALSA and WinMM own explicit repeat-safe sessions, stable source indices, bounded owner-thread delivery, rollback, disconnect, overflow and cleanup after callback failures. Windows x64 system WinMM empty input and a Windows SDK native ABI fixture are exercised by MIDIInput.Consumer. Windows device/loopback and package qualification, CoreMIDI/Android/Web producers and tvOS acquisition remain open. See docs/components/midi-input.md.",
       "godot": [
         "OS::method:close_midi_inputs()",
         "OS::method:get_connected_midi_inputs()",
