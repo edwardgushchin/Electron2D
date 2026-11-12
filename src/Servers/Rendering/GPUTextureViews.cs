@@ -9,14 +9,19 @@ internal static unsafe partial class GPUTextureViews
     internal const uint SampledFormatABI = 4;
     internal const uint Direct3DViewABI = 6;
     internal const uint Direct3DArrayABI = 7;
+    internal const uint Direct3DSampledFormatABI = 8;
+    internal const uint Direct3DMutableFormatABI = 9;
     internal static RenderHandle? TryCreateSampledFormatStorage(RenderHandle owner, in SDL.GPUTextureCreateInfo info, SDL.GPUTextureFormat alternate)
     {
         var device = owner.DangerousGetHandle();
-        if (Support(device, SampledFormatABI) != 1 ||
+        var direct3D = SDL.GetGPUDeviceDriver(device) == "direct3d12";
+        var abi = direct3D ? Direct3DSampledFormatABI : SampledFormatABI;
+        var destroyABI = direct3D ? Direct3DViewABI : 1u;
+        if (Support(device, abi) != 1 ||
             !SDL.GPUTextureSupportsFormat(device, alternate, info.Type, SDL.GPUTextureUsageFlags.Sampler)) return null;
         SDL.GPUTextureFormat* formats = stackalloc SDL.GPUTextureFormat[2] { info.Format, alternate };
-        var image = Create(device, SampledFormatABI, in info, (nint)formats, 2);
-        return image == 0 ? null : new RenderHandle(image, h => Destroy(device, 1, h), owner);
+        var image = Create(device, abi, in info, (nint)formats, 2);
+        return image == 0 ? null : new RenderHandle(image, h => Destroy(device, destroyABI, h), owner);
     }
     private static bool Active(nint device) => SDL.GetPointerProperty(SDL.GetGPUDeviceProperties(device), Cache, 0) != 0;
     internal static void CollectIfActive(nint device) { if (Active(device)) Collect(device, 1); }

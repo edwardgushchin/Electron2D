@@ -1516,7 +1516,7 @@ Pass a same-device native image after the producer has completed its work. The d
 
 Copies `view` over the original owner resolved from `withTexture`. Includes its complete layer/mip extent. Max retains the stored format. Alternate formats must be declared shareable and native-compatible with every usage/sample role. Returns a device-owned shared RID automatically freed with that owner; freeing an intermediate view preserves siblings. Unknown/freed/foreign sources and disposed/null descriptions reject before publication. Missing native adapter support throws NotSupportedException; native setup failure throws InvalidOperationException. Calls follow the device owner-thread/idle-list contract.
 
-For a viewport export, shared views select the completed physical image when each command is recorded. Pending reads retain the selected image through completion. Direct3D 12 supports exact-format sampled color images and full arrays. Ordinary mip views require a single-layer source. See [Direct3D 12 color views](../components/shared-texture-views.md#direct3d-12-color-views).
+For a viewport export, shared views select the completed physical image when each command is recorded. Pending reads retain the selected image through completion. Direct3D 12 supports single-sample sampled color images and full arrays, including declared RGBA8, BGRA8 and BC1/2/3/7 linear/sRGB pairs when both formats support the declared roles. Ordinary mip views require a single-layer source. See [Direct3D 12 color views](../components/shared-texture-views.md#direct3d-12-color-views).
 
 <a id="texture-create-shared-from-slice"></a>
 ### TextureCreateSharedFromSlice(RDTextureView, RID, uint, uint, uint, TextureSliceType)

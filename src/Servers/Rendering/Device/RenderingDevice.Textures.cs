@@ -173,6 +173,8 @@ public sealed unsafe partial class RenderingDevice
     /// Array Image descriptors expose every layer of one base mip through a cached native view; higher mip data is preserved. One-layer arrays retain their array shader and canvas role.
     /// Sampled component maps apply to texture operations; updates, copies, clears and readback retain raw storage.
     /// Multisample color/depth targets may include Sampling for explicit per-sample shader loads and size/sample queries. They require empty data, one mip and the native image/view adapter; color storage uses the enabled native multisample-storage feature. Equal-count copies preserve every sample, including both depth/stencil aspects. Raw CPU sample transfers and direct canvas sampling retain their separate adapters.
+    /// On Direct3D 12, declared linear/sRGB pairs use one typeless single-sample sampled color resource and typed views.
+    /// Every explicitly shareable format must support the declared native roles.
     /// Storage-image descriptors, input attachments and framebuffer attachments require identity mappings.</remarks>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Image extents or layers exceed the effective device limits.</exception>

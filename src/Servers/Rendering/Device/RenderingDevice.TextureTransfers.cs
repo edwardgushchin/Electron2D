@@ -23,7 +23,8 @@ public sealed unsafe partial class RenderingDevice
     /// Source and destination must have the same sample count; every sample is preserved without resolving.
     /// Matching depth/stencil copies preserve both aspects through the native adapter.
     /// Color and depth formats cannot substitute for each other. Same-subresource rectangles must not overlap. A prepared native scratch image preserves disjoint
-    /// self copies. This operation neither submits nor invokes readback callbacks.</remarks>
+    /// self copies. Direct3D 12 preserves encoded bytes when copying within a supported linear/sRGB format family.
+    /// This operation neither submits nor invokes readback callbacks.</remarks>
     /// <exception cref="ArgumentException">The texture, sample count, region, format footprint or overlap is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A coordinate, mip level or layer is out of range.</exception>
     /// <exception cref="InvalidOperationException">A required usage is absent, the device state is invalid or native recording fails.</exception>
@@ -42,8 +43,12 @@ public sealed unsafe partial class RenderingDevice
         var sourceFormat = NativeFormat(source.Texture!.Format); var destinationFormat = NativeFormat(destination.Texture!.Format);
         if (DepthFormat(source.Texture.Format) || DepthFormat(destination.Texture!.Format)) { if (sourceFormat != destinationFormat || !DepthFormat(source.Texture.Format) || !DepthFormat(destination.Texture.Format)) throw new ArgumentException("Depth/stencil copies require matching depth formats."); RequireDepthTransfers(source.Texture.Format); }
         if (BlockDimensions(sourceFormat) != BlockDimensions(destinationFormat) || SDL.GPUTextureFormatTexelBlockSize(sourceFormat) != SDL.GPUTextureFormatTexelBlockSize(destinationFormat)) throw new ArgumentException("Texture formats have different encoded footprints.");
-        // shortcut: other drivers need a verified compatible-format adapter before reinterpretation is enabled.
-        if (sourceFormat != destinationFormat && TextureDriver != "vulkan") throw new NotSupportedException("Format reinterpretation requires this backend's compatible-view adapter.");
+        if (sourceFormat != destinationFormat && TextureDriver != "vulkan")
+        {
+            var family = SRGBViewFormat(source.Texture.Format);
+            if (TextureDriver != "direct3d12" || family == DataFormat.Max || family != SRGBViewFormat(destination.Texture.Format))
+                throw new NotSupportedException("Format reinterpretation requires this backend's compatible-format support.");
+        }
         CopyBlocks(source, a, width, height); CopyBlocks(destination, b, width, height);
         var physicalSource = GPUTextureViews.Location(Device, a); var physicalDestination = GPUTextureViews.Location(Device, b);
         var self = physicalSource.Texture == physicalDestination.Texture && physicalSource.MipLevel == physicalDestination.MipLevel && physicalSource.Layer == physicalDestination.Layer;

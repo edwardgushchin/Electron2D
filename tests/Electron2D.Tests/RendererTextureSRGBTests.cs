@@ -42,7 +42,7 @@ internal static class RendererTextureSRGBTests
         root.Ready += _ =>
         {
             var device = RenderingServer.GetRenderingDevice()!;
-            Check(RenderingServer.GetCurrentRenderingDriverName() == (profile == "preceding" ? "vulkan" : profile), "The requested GPU driver is active.");
+            Check(RenderingServer.GetCurrentRenderingDriverName() == (profile switch { "preceding" => "vulkan", "direct3d12-preceding" => "direct3d12", _ => profile }), "The requested GPU driver is active.");
             RenderingServer.SetDefaultClearColor(Colors.Black);
             RID ordinary = default, arrayLinear = default, ordinarySRGB = default, layeredSRGB = default;
             RenderingServer.FramePostDraw += AfterFrame;
@@ -55,7 +55,7 @@ internal static class RendererTextureSRGBTests
                     // Exercise preparation of a texture the canvas has already drawn.
                     Pixel(image, 8, 64, 128, 192);
                     ordinary = RenderingServer.TextureGetRDTexture(source.GetRID());
-                    if (profile != "vulkan")
+                    if (profile is "preceding" or "direct3d12-preceding")
                     {
                         Reject<NotSupportedException>(() => RenderingServer.TextureGetRDTexture(source.GetRID(), true));
                         Reject<NotSupportedException>(() => RenderingServer.TextureGetRDTexture(array.GetRID(), true));

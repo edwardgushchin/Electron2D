@@ -248,27 +248,56 @@ E2D_EXPORT int e2d_render_d3d12_texture_import(SDL_GPUDevice *device, uint32_t a
 
 
 #if defined(SDL_PLATFORM_WIN32)
-static int view_format(SDL_GPUDevice *device, const SDL_GPUTextureCreateInfo *info, SDL_GPUTextureFormat format, bool array_storage)
+static DXGI_FORMAT typeless_family(SDL_GPUTextureFormat format)
+{
+    if ((uint32_t)format >= SDL_arraysize(SDLToD3D12_TextureFormat)) return DXGI_FORMAT_UNKNOWN;
+    switch (SDLToD3D12_TextureFormat[format]) {
+        case DXGI_FORMAT_R8G8B8A8_UNORM:
+        case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB: return DXGI_FORMAT_R8G8B8A8_TYPELESS;
+        case DXGI_FORMAT_B8G8R8A8_UNORM:
+        case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB: return DXGI_FORMAT_B8G8R8A8_TYPELESS;
+        case DXGI_FORMAT_BC1_UNORM:
+        case DXGI_FORMAT_BC1_UNORM_SRGB: return DXGI_FORMAT_BC1_TYPELESS;
+        case DXGI_FORMAT_BC2_UNORM:
+        case DXGI_FORMAT_BC2_UNORM_SRGB: return DXGI_FORMAT_BC2_TYPELESS;
+        case DXGI_FORMAT_BC3_UNORM:
+        case DXGI_FORMAT_BC3_UNORM_SRGB: return DXGI_FORMAT_BC3_TYPELESS;
+        case DXGI_FORMAT_BC7_UNORM:
+        case DXGI_FORMAT_BC7_UNORM_SRGB: return DXGI_FORMAT_BC7_TYPELESS;
+        default: return DXGI_FORMAT_UNKNOWN;
+    }
+}
+
+static bool compatible_view_format(SDL_GPUTextureFormat base, SDL_GPUTextureFormat view, uint32_t abi)
+{
+    if (base == view) return true;
+    if (abi != E2D_D3D12_SAMPLED_FORMAT_ABI && abi != E2D_D3D12_MUTABLE_FORMAT_ABI) return false;
+    const DXGI_FORMAT family = typeless_family(base);
+    return family != DXGI_FORMAT_UNKNOWN && family == typeless_family(view);
+}
+
+static bool view_format(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextureCreateInfo *info, SDL_GPUTextureFormat format)
 {
     const SDL_GPUTextureUsageFlags readable = SDL_GPU_TEXTUREUSAGE_SAMPLER |
-        (array_storage ? SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ : 0);
+        (abi == E2D_D3D12_ARRAY_ABI ? SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ : 0);
     const SDL_GPUTextureUsageFlags allowed = SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_COLOR_TARGET |
         SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ | storage;
-    return info && format == info->format && info->sample_count == SDL_GPU_SAMPLECOUNT_1 &&
+    return info && compatible_view_format(info->format, format, abi) && info->sample_count == SDL_GPU_SAMPLECOUNT_1 &&
         (info->type == SDL_GPU_TEXTURETYPE_2D || info->type == SDL_GPU_TEXTURETYPE_2D_ARRAY) &&
         (info->usage & readable) && !(info->usage & ~allowed) &&
         (uint32_t)format < SDL_arraysize(SDLToD3D12_TextureFormat) &&
         SDLToD3D12_TextureFormat[format] != DXGI_FORMAT_UNKNOWN &&
-        SDL_GPUTextureSupportsFormat(device, format, info->type, info->usage);
+        SDL_GPUTextureSupportsFormat(device, format, info->type,
+            abi == E2D_D3D12_SAMPLED_FORMAT_ABI ? SDL_GPU_TEXTUREUSAGE_SAMPLER : info->usage);
 }
 #endif
 
-int e2d_d3d12_view_format(SDL_GPUDevice *device, const SDL_GPUTextureCreateInfo *info, SDL_GPUTextureFormat format)
+int e2d_d3d12_view_format(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextureCreateInfo *info, SDL_GPUTextureFormat format)
 {
 #if defined(SDL_PLATFORM_WIN32)
-    return view_format(device, info, format, false);
+    return view_format(device, abi, info, format);
 #else
-    (void)device; (void)info; (void)format;
+    (void)device; (void)abi; (void)info; (void)format;
     return 0;
 #endif
 }
@@ -290,14 +319,14 @@ SDL_GPUTexture *e2d_d3d12_view_region(SDL_GPUTexture *texture, uint32_t *layer, 
 #endif
 }
 
-SDL_GPUTexture *e2d_d3d12_view_create(SDL_GPUDevice *device, SDL_GPUTexture *source,
+SDL_GPUTexture *e2d_d3d12_view_create(SDL_GPUDevice *device, uint32_t abi, SDL_GPUTexture *source,
     SDL_GPUTextureFormat format, uint32_t layer, uint32_t layers, uint32_t level, uint32_t levels, uint32_t array)
 {
 #if defined(SDL_PLATFORM_WIN32)
     D3D12TextureContainer *container = (D3D12TextureContainer *)source;
     SDL_GPUTextureCreateInfo info = container->header.info;
     const bool array_storage = array == 2;
-    if (!view_format(device, &info, format, array_storage) || array > 2 || !layers || !levels ||
+    if (!view_format(device, abi, &info, format) || array > 2 || !layers || !levels ||
         layer >= info.layer_count_or_depth || layers > info.layer_count_or_depth - layer ||
         level >= info.num_levels || levels > info.num_levels - level ||
         (!array && (layers != 1 || info.layer_count_or_depth != 1)) ||
@@ -311,7 +340,17 @@ SDL_GPUTexture *e2d_d3d12_view_create(SDL_GPUDevice *device, SDL_GPUTexture *sou
     if (!source) return NULL;
     container = (D3D12TextureContainer *)source;
     const SDL_GPUTextureCreateInfo *root = &container->header.info;
+    if (format != root->format) {
+        D3D12_RESOURCE_DESC native;
+        ID3D12Resource_GetDesc(container->activeTexture->resource, &native);
+        if (!compatible_view_format(root->format, format, abi) || native.Format != typeless_family(format)) {
+            SDL_SetError("Alternate Direct3D 12 views require compatible typeless storage");
+            return NULL;
+        }
+    }
     info.type = array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D;
+    info.format = format;
+    if (abi == E2D_D3D12_SAMPLED_FORMAT_ABI) info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER;
     info.width = SDL_max(1u, root->width >> level);
     info.height = SDL_max(1u, root->height >> level);
     info.layer_count_or_depth = layers;
@@ -332,7 +371,57 @@ SDL_GPUTexture *e2d_d3d12_view_create(SDL_GPUDevice *device, SDL_GPUTexture *sou
     container->canBeCycled = false;
     return (SDL_GPUTexture *)view;
 #else
-    (void)device; (void)source; (void)format; (void)layer; (void)layers; (void)level; (void)levels; (void)array;
+    (void)device; (void)abi; (void)source; (void)format; (void)layer; (void)layers; (void)level; (void)levels; (void)array;
+    return NULL;
+#endif
+}
+
+SDL_GPUTexture *e2d_d3d12_texture_create(SDL_GPUDevice *device, uint32_t abi,
+    const SDL_GPUTextureCreateInfo *info, const SDL_GPUTextureFormat *formats, uint32_t count)
+{
+#if defined(SDL_PLATFORM_WIN32)
+    if (!info || !formats || count != 2 || formats[0] == formats[1] ||
+        (formats[0] != info->format && formats[1] != info->format) ||
+        !view_format(device, E2D_D3D12_VIEW_ABI, info, info->format) ||
+        !view_format(device, abi, info, formats[0]) || !view_format(device, abi, info, formats[1]) ||
+        !info->width || !info->height || info->width > D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION ||
+        info->height > D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION || !info->layer_count_or_depth ||
+        info->layer_count_or_depth > D3D12_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION ||
+        (info->type == SDL_GPU_TEXTURETYPE_2D && info->layer_count_or_depth != 1) ||
+        !info->num_levels || info->num_levels > D3D12_REQ_MIP_LEVELS) return NULL;
+    uint32_t levels = 1;
+    for (uint32_t side = SDL_max(info->width, info->height); side > 1; side >>= 1) ++levels;
+    if (info->num_levels > levels) return NULL;
+
+    D3D12_RESOURCE_DESC desc = { 0 };
+    desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    desc.Width = info->width;
+    desc.Height = info->height;
+    desc.DepthOrArraySize = (UINT16)info->layer_count_or_depth;
+    desc.MipLevels = (UINT16)info->num_levels;
+    desc.Format = typeless_family(info->format);
+    desc.SampleDesc.Count = 1;
+    if (info->usage & SDL_GPU_TEXTUREUSAGE_COLOR_TARGET) desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+    if (info->usage & storage) desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+    const D3D12_HEAP_PROPERTIES heap = { D3D12_HEAP_TYPE_DEFAULT, D3D12_CPU_PAGE_PROPERTY_UNKNOWN,
+        D3D12_MEMORY_POOL_UNKNOWN, 1, 1 };
+    static const IID resource_iid = { 0x696442be, 0xa72e, 0x4059, { 0xbc, 0x79, 0x5b, 0x5c, 0x98, 0x04, 0x0f, 0xad } };
+    const D3D12Renderer *renderer = (const D3D12Renderer *)device->driverData;
+    ID3D12Resource *resource = NULL;
+    HRESULT result = ID3D12Device_CreateCommittedResource(renderer->device, &heap, D3D12_HEAP_FLAG_NONE, &desc,
+        D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE, NULL, &resource_iid, (void **)&resource);
+    if (FAILED(result)) {
+        SDL_SetError("Cannot create typeless Direct3D 12 texture (HRESULT 0x%08x)", (unsigned)result);
+        return NULL;
+    }
+    D3D12TextureContainer *wrapper = make_wrapper(device, info);
+    if (wrapper)
+        bind_resource(wrapper, renderer->device, resource, info, SDLToD3D12_TextureFormat[info->format],
+            0, 0, info->num_levels, false);
+    ID3D12Resource_Release(resource);
+    return (SDL_GPUTexture *)wrapper;
+#else
+    (void)device; (void)abi; (void)info; (void)formats; (void)count;
     return NULL;
 #endif
 }

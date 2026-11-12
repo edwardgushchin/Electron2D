@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Electron2D;
 using static Electron2D.RenderingDevice;
 using static TextureArrayTests;
@@ -13,7 +14,20 @@ internal static class DeviceCanvasSRGBTests
         }
     }
 
-    internal static void Run(string profile)
+    internal static unsafe void Run(string profile)
+    {
+        var debug = profile == "direct3d12" && Environment.GetEnvironmentVariable("ELECTRON2D_D3D12_IMPORT_DEBUG") == "1";
+        var fixture = debug ? NativeLibrary.Load(Environment.GetEnvironmentVariable("ELECTRON2D_D3D12_IMPORT_FIXTURE") ??
+            throw new InvalidOperationException("Set ELECTRON2D_D3D12_IMPORT_FIXTURE.")) : 0;
+        try
+        {
+            if (debug) Marshal.ThrowExceptionForHR(((delegate* unmanaged[Cdecl]<int>)NativeLibrary.GetExport(fixture, "EnableDebug"))());
+            VerifyCanvas(profile, fixture);
+        }
+        finally { if (fixture != 0) NativeLibrary.Free(fixture); }
+    }
+
+    private static unsafe void VerifyCanvas(string profile, nint debugFixture)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
@@ -32,7 +46,7 @@ internal static class DeviceCanvasSRGBTests
         root.Ready += _ =>
         {
             var device = RenderingServer.GetRenderingDevice()!;
-            Check(RenderingServer.GetCurrentRenderingDriverName() == profile, "The selected driver is active.");
+            Check(RenderingServer.GetCurrentRenderingDriverName() == (profile == "direct3d12-preceding" ? "direct3d12" : profile), "The selected driver is active.");
             using var format = new RDTextureFormat
             {
                 Width = 2,
@@ -56,13 +70,16 @@ internal static class DeviceCanvasSRGBTests
             format.Format = DataFormat.R8G8B8A8UNORM;
             format.AddShareableFormat(DataFormat.R8G8B8A8UNORM);
             format.AddShareableFormat(DataFormat.R8G8B8A8SRGB);
-            if (profile != "vulkan")
+            if (profile == "direct3d12-preceding")
             {
                 Reject<NotSupportedException>(() => device.TextureCreate(format, view));
                 finished = true;
                 root.Tree!.Quit();
                 return;
             }
+
+            var direct3D = profile == "direct3d12";
+            if (direct3D) VerifyDirect3DFormats(device, format, view);
 
             var source = device.TextureCreate(format, view);
             linear.TextureRDRID = source;
@@ -78,6 +95,13 @@ internal static class DeviceCanvasSRGBTests
             var recreated = RenderingServer.TextureGetRDTexture(linear.GetRID(), true);
             Check(recreated != alias && device.TextureIsShared(recreated), "A freed cached view is recreated.");
             decoded.TextureRDRID = recreated;
+            if (direct3D)
+            {
+                var handle = RenderingServer.TextureGetNativeHandle(proxy);
+                Check(handle != 0 && RenderingServer.TextureGetNativeHandle(proxy, true) == handle &&
+                    handle == device.GetDriverResource(DriverResource.Texture, recreated, 0),
+                    "The native canvas exports report the shared allocation.");
+            }
 
             format.TextureType = TextureType.TextureArray;
             format.ArrayLayers = 2;
@@ -90,7 +114,17 @@ internal static class DeviceCanvasSRGBTests
                 sampledArray.HasMIPMaps(), "An sRGB array retains its layer and mip counts.");
             view.SwizzleR = TextureSwizzle.B;
             view.SwizzleB = TextureSwizzle.R;
-            var slice = device.TextureCreateSharedFromSlice(view, array, 1, 1);
+            var sliceOwner = array;
+            var sliceLayer = 1u;
+            if (direct3D)
+            {
+                Reject<NotSupportedException>(() => device.TextureCreateSharedFromSlice(view, array, 1, 1));
+                format.TextureType = TextureType.Texture;
+                format.ArrayLayers = 1;
+                sliceOwner = device.TextureCreate(format, view);
+                sliceLayer = 0;
+            }
+            var slice = device.TextureCreateSharedFromSlice(view, sliceOwner, sliceLayer, 1);
             sliceTexture.TextureRDRID = slice;
             var sliceAlias = RenderingServer.TextureGetRDTexture(sliceTexture.GetRID(), true);
             sampledSlice.TextureRDRID = sliceAlias;
@@ -107,7 +141,8 @@ internal static class DeviceCanvasSRGBTests
             device.TextureUpdate(sliceAlias, 0, texel);
             Check(device.TextureGetData(recreated, 0).SequenceEqual(ordinaryPixels) &&
                 device.TextureGetData(slice, 0).SequenceEqual(texel) &&
-                device.TextureGetData(arrayAlias, 1).AsSpan(16).SequenceEqual(texel) &&
+                device.TextureGetData(sliceOwner, sliceLayer).AsSpan(16).SequenceEqual(texel) &&
+                (!direct3D || device.TextureGetData(arrayAlias, 1).AsSpan(16).SequenceEqual(arrayPixels.AsSpan(16))) &&
                 device.TextureGetData(arrayAlias, 1).AsSpan(0, 16).SequenceEqual(arrayPixels.AsSpan(0, 16)) &&
                 device.TextureGetData(arrayAlias, 0).All(value => value == 0),
                 "Views share encoded bytes and writes touch the selected physical subresources.");
@@ -131,7 +166,14 @@ internal static class DeviceCanvasSRGBTests
                 device.FreeRID(slice);
                 Check(!device.TextureIsValid(sliceAlias) && device.TextureIsShared(arrayAlias),
                     "Freeing the source slice expires its export and preserves the array view.");
+                if (direct3D) device.FreeRID(sliceOwner);
                 device.FreeRID(array);
+                if (debugFixture != 0)
+                {
+                    var native = (nint)device.GetDriverResource(DriverResource.Texture, source, 0);
+                    Marshal.ThrowExceptionForHR(((delegate* unmanaged[Cdecl]<nint, int>)NativeLibrary.GetExport(debugFixture, "CheckDebug"))(native));
+                    Console.WriteLine("Direct3D 12 debug layer reported no errors or corruption.");
+                }
                 device.FreeRID(source);
                 Check(!device.TextureIsShared(arrayAlias) && !device.TextureIsShared(recreated), "Owners retire their exports.");
                 RenderingServer.FramePostDraw -= AfterFrame;
@@ -141,6 +183,42 @@ internal static class DeviceCanvasSRGBTests
         };
         Check(Engine.Run(root) == 0 && finished, "The device canvas sRGB fixture completed.");
         Console.WriteLine($"Device canvas sRGB export verified ({profile}).");
+    }
+
+    private static void VerifyDirect3DFormats(RenderingDevice device, RDTextureFormat format, RDTextureView view)
+    {
+        var usage = format.UsageBits;
+        format.UsageBits |= TextureUsageBits.ColorAttachment | TextureUsageBits.CanCopyTo;
+        view.FormatOverride = DataFormat.R8G8B8A8SRGB;
+        var encoded = device.TextureCreate(format, view);
+        view.FormatOverride = DataFormat.Max;
+        var linear = device.TextureCreateShared(view, encoded);
+        var resource = device.GetDriverResource(DriverResource.Texture, encoded, 0);
+        Check(resource != 0 && resource == device.GetDriverResource(DriverResource.Texture, linear, 0) &&
+            device.GetDriverResource(DriverResource.TextureDataFormat, linear, 0) == 28 &&
+            device.GetDriverResource(DriverResource.TextureDataFormat, encoded, 0) == 29 &&
+            device.GetDriverResource(DriverResource.TextureView, linear, 0) != device.GetDriverResource(DriverResource.TextureView, encoded, 0),
+            "The initial sRGB view and the linear view have distinct typed SRVs on one D3D12 resource.");
+        var framebuffer = device.FramebufferCreate([encoded]);
+        device.DrawListBegin(framebuffer, DrawFlags.ClearColor0, [new Color(.5f, .25f, 0, 1)]);
+        device.DrawListEnd();
+        var bytes = device.TextureGetData(linear, 0);
+        Check(Math.Abs(bytes[0] - 188) <= 1 && Math.Abs(bytes[1] - 137) <= 1 && bytes[2] == 0 && bytes[3] == 255,
+            "Clearing the sRGB attachment encodes into shared linear storage.");
+        var copy = device.TextureCreate(format, view);
+        device.TextureCopy(encoded, copy, default, default, new(2, 2, 1), 0, 0, 0, 0);
+        Check(device.TextureGetData(copy, 0).SequenceEqual(bytes), "Copies between linear and sRGB views preserve encoded bytes.");
+        Reject<ArgumentException>(() => device.TextureCopy(encoded, linear, default, default, new(2, 2, 1), 0, 0, 0, 0));
+        device.FreeRID(copy);
+        device.FreeRID(framebuffer);
+        device.FreeRID(encoded);
+        Check(!device.TextureIsValid(linear), "Freeing an initial alternate view retires the underlying allocation and aliases.");
+        format.UsageBits = usage | TextureUsageBits.Storage;
+        Reject<NotSupportedException>(() => device.TextureCreate(format, view));
+        format.UsageBits = usage;
+        format.AddShareableFormat(DataFormat.B8G8R8A8SRGB);
+        Reject<NotSupportedException>(() => device.TextureCreate(format, view));
+        format.RemoveShareableFormat(DataFormat.B8G8R8A8SRGB);
     }
 
     private static void Pixel(Image frame, int x, int red, int green, int blue)

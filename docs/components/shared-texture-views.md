@@ -34,13 +34,12 @@ both. If the canvas already drew the upload, preparation at first export can
 allocate new backing and upload the authored bytes again. Images used only by the
 canvas keep ordinary SDL allocation.
 
-Renderer uploads support RGBA8 and BC1/2/3/7 when the selected Vulkan device
-supports the sampled format and negotiates Vulkan 1.1 or later with the matching
-native bridge. Other upload formats and backends reject a distinct sRGB request
-when they lack a compatible view.
+Renderer uploads support RGBA8 and BC1/2/3/7 with the matching Vulkan or
+Direct3D 12 adapter and device sampling support. Vulkan requires 1.1 or later.
+Unsupported upload formats and backends reject a distinct sRGB request.
 
 The first export of a completed SDR viewport prepares both physical images for
-compatible views on the same Vulkan adapter. One GPU copy of each physical image
+compatible views on the Vulkan or Direct3D 12 adapter. One GPU copy of each physical image
 preserves the completed frame and the alternate buffer before publishing a
 device RID. Later exports reuse that pair. The linear RID retains attachment and
 available storage roles. The sRGB RID uses a sampled view of each physical image
@@ -55,9 +54,10 @@ Run `ELECTRON2D_TEST_DEVICE_CANVAS_SRGB=vulkan` with `SDL_GPU_DRIVER=vulkan` to
 check ordinary, array and swizzled slice sampling in a rendered frame. The
 [test](../../tests/Electron2D.Tests/DeviceCanvasSRGBTests.cs) also checks raw
 reads and writes, mip/layer isolation, proxy identity, active-list refusal and
-view retirement. The `direct3d12` profile checks already-sRGB export and refusal
-to create mutable format backing on that adapter. Both profiles pass on the
-tested Windows desktop.
+view retirement. The `direct3d12` profile also checks typed SRV and native
+resource identity, sRGB attachment encoding, encoded copies and incompatible
+format or usage refusal. Its mip slice uses a single-layer allocation. The
+`direct3d12-preceding` profile verifies refusal on the preceding native bridge.
 
 Run `ELECTRON2D_TEST_RENDERER_TEXTURE_SRGB=vulkan` with `SDL_GPU_DRIVER=vulkan`
 to check the [renderer upload profile](../../tests/Electron2D.Tests/RendererTextureSRGBTests.cs).
@@ -65,16 +65,16 @@ It draws the upload before its first export, writes the linear allocation with a
 compute shader before asking for sRGB, checks ordinary and array samples against
 decoded values, and tests raw bytes, compatible updates, source retirement and
 queued readback. When the device exposes BC1, it also verifies decoded BC1 pixels
-and the unchanged encoded block. The `direct3d12` and `preceding` profiles check distinct-view
-refusal and working linear uploads on Direct3D 12 and the preceding Vulkan bridge.
-All three profiles pass on the tested Windows desktop.
+and the unchanged encoded block. The `direct3d12` profile runs the same upload
+checks. The `preceding` and `direct3d12-preceding` profiles verify that older
+bridges preserve linear uploads when distinct views are unavailable.
 
 Run `ELECTRON2D_TEST_VIEWPORT_SRGB=vulkan` with `SDL_GPU_DRIVER=vulkan` to check
 [viewport exports](../../tests/Electron2D.Tests/ViewportSRGBTests.cs). The
 fixture checks gamma-decoded canvas pixels, raw writes, buffer swaps, shared
-views, queued reads, resize, MSAA resolve and HDR refusal. The `direct3d12` and
-`preceding` profiles check that distinct-view refusal preserves linear export.
-These profiles pass on the tested Windows desktop.
+views, queued reads, resize, MSAA resolve and HDR refusal. The `direct3d12`
+profile runs the same checks. The `preceding` and `direct3d12-preceding` profiles
+verify that older bridges preserve the linear export.
 
 ## Formats and consumers
 
@@ -128,8 +128,8 @@ retain unsubmitted commands; collection waits only when retirement is pending.
 The last physical device release drains this cache before destroying the device.
 No private native pointer is public and no vendored source is modified.
 
-SDL exposes no mutable-image import/allocation hook. Alternate-format backing uses
-a private mutable Vulkan image with its exact device-local memory requirement,
+SDL exposes no mutable-image import/allocation hook. Alternate-format backing on
+Vulkan uses a private mutable image with its exact device-local memory requirement,
 wrapped in the same pinned SDL texture structures. Native texture/total memory
 queries include these allocations once; ordinary views add no image payload.
 See [render memory](render-memory.md). Unknown cores/backends or missing view
@@ -142,10 +142,14 @@ lifetime paths. [ADR 0028](../decisions/rendering.md#adr-0028) owns this boundar
 
 ## Direct3D 12 color views
 
-On the pinned Windows GPU backend, exact-format views share a single-sample
-sampled color allocation. The full view preserves the owner's shape, including
-arrays. A single-layer allocation supports ordinary views over a selected mip
-interval. A one-mip view can serve as a color attachment. A view of an ordinary
+On the pinned Windows GPU backend, views share a single-sample sampled color
+allocation. Declared RGBA8, BGRA8 and BC1/2/3/7 linear/sRGB pairs use one typeless
+resource with typed descriptors. Each declared format must support the requested
+roles. Renderer uploads and completed SDR viewport images use a sampling-only sRGB
+view with raw transfers, and their linear owners retain the original roles.
+Copies within these pairs preserve encoded bytes. The full view preserves the
+owner's shape, including arrays. A single-layer allocation supports ordinary
+views over a selected mip interval. A one-mip view can serve as a color attachment. A view of an ordinary
 storage image can receive a compute write at its selected base mip. Direct3D 12
 allows disjoint sampled and writable mip ranges in one dispatch and rejects
 overlapping ranges and duplicate writable bindings before entering the native pass.
@@ -160,9 +164,8 @@ staging texture to acquire SDL's descriptors.
 An ordinary view of one layer in a multi-layer resource needs a shader binding
 that translates an ordinary sampled image to a one-layer array SRV. The existing
 [Direct3D 12 array descriptor](https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_tex2d_array_srv)
-provides a first-layer field. Alternate formats need typed views over a compatible
-typeless resource. Depth/stencil, multisample and input attachments retain their native
-adapters as prerequisites. [Direct3D 12 compute array UAVs](graphics-storage-images.md#direct3d-12-compute-arrays)
+provides a first-layer field. Depth/stencil, multisample and input attachments
+retain their native adapters as prerequisites. [Direct3D 12 compute array UAVs](graphics-storage-images.md#direct3d-12-compute-arrays)
 use a cached base-mip view and transition every writable layer.
 
 ## Verification and remaining limits
@@ -177,7 +180,14 @@ owner-family retirement, refusal rollback and warmed owner-thread allocations.
 `Electron2DRenderCheck` additionally checks defragmentation pins, direct native
 nested views, deferred unsubmitted commands and mutable allocation accounting.
 
-Linux/Wayland Vulkan verifies the full Vulkan view profile. The Windows x64
+Linux/Wayland Vulkan verifies the full Vulkan view profile. On Windows x64
+with an RTX 3090 Ti, the three sRGB fixtures pass on Direct3D 12 and Vulkan.
+All three Direct3D 12 refusal profiles pass with the preceding native module.
+The Direct3D 12 device/canvas sRGB fixture also passes with the debug layer.
+Enable it with `ELECTRON2D_D3D12_IMPORT_DEBUG=1` and set
+`ELECTRON2D_D3D12_IMPORT_FIXTURE` to the [native producer DLL](native-texture-handles.md#verification).
+
+The Windows x64
 `gpu-direct3d12-local` and `gpu-direct3d12` import profiles exercise ordinary
 mip views and exact array views with the Direct3D 12 debug layer, including
 physical overlap, framebuffer and compute writes, canvas pixels, and pending

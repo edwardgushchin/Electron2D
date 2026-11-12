@@ -33,7 +33,7 @@ internal static class ViewportSRGBTests
         root.Ready += _ =>
         {
             var device = RenderingServer.GetRenderingDevice()!;
-            Check(RenderingServer.GetCurrentRenderingDriverName() == (profile == "preceding" ? "vulkan" : profile), "The requested GPU driver is active.");
+            Check(RenderingServer.GetCurrentRenderingDriverName() == (profile switch { "preceding" => "vulkan", "direct3d12-preceding" => "direct3d12", _ => profile }), "The requested GPU driver is active.");
             var canvas = viewport.GetTexture().GetRID();
             Check(!RenderingServer.TextureGetRDTexture(canvas, true).IsValid(), "An unrendered viewport has no completed image.");
             RID linear = default, SRGB = default, shared = default;
@@ -50,7 +50,7 @@ internal static class ViewportSRGBTests
                         // Export a previously drawn viewport, with the linear RID requested first.
                         linear = RenderingServer.TextureGetRDTexture(canvas);
                         PixelBytes(device.TextureGetData(linear, 0), 64, 128, 192);
-                        if (profile != "vulkan")
+                        if (profile is "preceding" or "direct3d12-preceding")
                         {
                             Reject<NotSupportedException>(() => RenderingServer.TextureGetRDTexture(canvas, true));
                             Check(RenderingServer.TextureGetRDTexture(canvas) == linear, "Distinct-view refusal preserves linear identity.");

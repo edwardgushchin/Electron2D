@@ -7,14 +7,14 @@ Last updated: 2026-11-12
 | Backend | Value |
 | --- | --- |
 | GPU Vulkan | `VkImage` for an ordinary upload, image array, drawable, device-backed image or completed viewport. |
-| GPU Direct3D 12 | Borrowed `ID3D12Resource*` from the retained device for the corresponding image or completed viewport. |
+| GPU Direct3D 12 | Borrowed `ID3D12Resource*` from the retained device for the corresponding image or completed viewport. Linear and sRGB views share the resource pointer. |
 | Compatibility Direct3D 11 and Direct3D 12 | `ID3D11Texture2D*` or `ID3D12Resource*` from SDL texture properties. |
 | Compatibility OpenGL and OpenGL ES | `GLuint` texture name in the owning context. |
 | Compatibility Vulkan | `VkImage` from SDL texture properties. |
 
 An unsupported renderer or texture role throws `NotSupportedException`. Software rendering has no native graphics texture. Metal and browser GPU require their own exporters. Independent image arrays and device-backed and writable resources require the GPU renderer. Compatibility exports ordinary uploads and completed viewport targets.
 
-The handle identifies an allocation, so Vulkan linear and sRGB image views can return the same value. When an allocation offers a separate sampled interpretation, query the typed view with `TextureGetRDTexture(texture, SRGB: true)`. The native-handle query uses the current allocation when a separate interpretation is unavailable. See [shared texture views](shared-texture-views.md#srgb-canvas-texture-exports).
+The handle identifies an allocation, so linear and sRGB image views on Vulkan and Direct3D 12 can return the same value. When an allocation offers a separate sampled interpretation, query the typed view with `TextureGetRDTexture(texture, SRGB: true)`. The native-handle query uses the current allocation when a separate interpretation is unavailable. See [shared texture views](shared-texture-views.md#srgb-canvas-texture-exports).
 
 The first query may prepare an upload or renderer export. A compatible pixel update reuses storage. Explicitly exported ordinary uploads remain cached while the resource and renderer live. Replacement, cycling, resize, retirement or shutdown can invalidate a returned value. A viewport query returns the completed ping-pong image at the moment of the call. The query transfers no ownership, image layout or synchronization. Acquire and use the handle under the selected native backend's lifetime rules.
 

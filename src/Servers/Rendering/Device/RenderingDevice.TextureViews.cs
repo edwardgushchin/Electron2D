@@ -14,7 +14,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="view">Copied format and sampled component mapping.</param>
     /// <param name="withTexture">A live source identity; an existing shared view resolves to its original owner.</param>
     /// <returns>A device-owned view identity, automatically freed with the original owner.</returns>
-    /// <remarks>No image data is copied. The view includes the owner's complete image/layer/mip extent. FormatOverride must be declared shareable. GetFormat retains the owner's stored format; shader and attachment interfaces consume the selected view format. A viewport view selects the completed buffer at command recording. Direct3D 12 supports exact-format, single-sample sampled color images and complete color arrays.</remarks>
+    /// <remarks>No image data is copied. The view includes the owner's complete image/layer/mip extent. FormatOverride must be declared shareable. GetFormat retains the owner's stored format; shader and attachment interfaces consume the selected view format. A viewport view selects the completed buffer at command recording. Direct3D 12 supports single-sample sampled color images and complete color arrays, including compatible linear/sRGB formats when both support the declared roles.</remarks>
     /// <exception cref="NotSupportedException">The native view adapter or selected format role is unavailable.</exception>
     public RID TextureCreateShared(RDTextureView view, RID withTexture)
     {
@@ -109,24 +109,26 @@ public sealed unsafe partial class RenderingDevice
     {
         var original = owner.Texture!;
         var direct3D = TextureDriver == "direct3d12";
-        var nativeABI = direct3D ? GPUTextureViews.Direct3DViewABI : 1u;
-        if (GPUTextureViews.Support(Device, nativeABI) != 1)
-            throw new NotSupportedException("This texture role requires the pinned native image/view adapter.");
-        if (direct3D && (sampledOnly || type == TextureType.Texture && original.Layers != 1 ||
-            (original.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0))
-            throw new NotSupportedException("Direct3D 12 views require a supported exact-format sampled color texture and native view shape.");
-        if (direct3D && type == TextureType.TextureArray && (original.Usage & TextureUsageBits.Storage) != 0)
-            RequireStorageArrayViews();
         var stored = original.StoredFormat == DataFormat.Max ? original.Format : original.StoredFormat;
         var format = formatOverride == DataFormat.Max ? stored : formatOverride;
         if (format != stored && !sampledOnly && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", "view");
-        if (direct3D && format != stored) throw new NotSupportedException("Direct3D 12 views retain the exact source format.");
+        var destroyABI = direct3D ? GPUTextureViews.Direct3DViewABI : 1u;
+        var abi = destroyABI;
+        if (sampledOnly) abi = direct3D ? GPUTextureViews.Direct3DSampledFormatABI : GPUTextureViews.SampledFormatABI;
+        else if (direct3D && format != stored) abi = GPUTextureViews.Direct3DMutableFormatABI;
+        if (GPUTextureViews.Support(Device, abi) != 1)
+            throw new NotSupportedException("This texture role requires the pinned native image/view adapter.");
+        if (direct3D && (type == TextureType.Texture && original.Layers != 1 ||
+            (original.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0))
+            throw new NotSupportedException("Direct3D 12 views require a supported sampled color texture and native view shape.");
+        if (direct3D && !sampledOnly && type == TextureType.TextureArray && (original.Usage & TextureUsageBits.Storage) != 0)
+            RequireStorageArrayViews();
         var create = NativeTextureInfo(original with { Format = stored });
         if (stored == DataFormat.S8UINT)
         {
             if (format != DataFormat.S8UINT || !StencilSupported(original.Usage, original.Samples)) throw new NotSupportedException("A stencil-only view retains its native format and supported roles.");
         }
-        else if (!sampledOnly && GPUTextureViews.FormatSupport(Device, nativeABI, in create, NativeFormat(format)) != 1) throw new NotSupportedException("The shared native format is incompatible or lacks the requested usage/sample roles.");
+        else if (!sampledOnly && GPUTextureViews.FormatSupport(Device, abi, in create, NativeFormat(format)) != 1) throw new NotSupportedException("The shared native format is incompatible or lacks the requested usage/sample roles.");
         var usage = sampledOnly ? original.Usage & (TextureUsageBits.Sampling | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead) : original.Usage;
         var info = CaptureTextureInfo(format, type, Math.Max(1, original.Width >> (int)mip), Math.Max(1, original.Height >> (int)mip),
             layers, mips, usage, original.Shareable, original.Samples, original.Resolve, swizzle, stored)
@@ -137,11 +139,10 @@ public sealed unsafe partial class RenderingDevice
         };
         var ownedViews = owner.TextureViews ??= []; ownedViews.EnsureCapacity(ownedViews.Count + 1);
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, TextureOwner = ownerID, TextureSource = owner };
-        var abi = sampledOnly ? GPUTextureViews.SampledFormatABI : nativeABI;
         var nativeFormat = NativeFormat(format);
         var array = type == TextureType.TextureArray ? 1u : 0u;
         RenderHandle CreateNativeView(nint image) =>
-            new(GPUTextureViews.View(Device, abi, image, nativeFormat, layer, layers, mip, mips, array), h => GPUTextureViews.Destroy(Device, nativeABI, h), _context.Handle);
+            new(GPUTextureViews.View(Device, abi, image, nativeFormat, layer, layers, mip, mips, array), h => GPUTextureViews.Destroy(Device, destroyABI, h), _context.Handle);
         try
         {
             if (owner.Borrowed is { Target: not null } viewport)
@@ -192,20 +193,31 @@ public sealed unsafe partial class RenderingDevice
         var allocationFormat = create.Format;
         if (shareable.Length != 0 && !shareable.Contains(entry.Texture!.StoredFormat == DataFormat.Max ? entry.Texture.Format : entry.Texture.StoredFormat)) throw new ArgumentException("Shareable formats must include the allocation format.", nameof(shareable));
         var mutable = shareable.Any(f => NativeFormat(f) != allocationFormat);
+        var direct3DMutable = mutable && TextureDriver == "direct3d12";
+        var abi = direct3DMutable ? GPUTextureViews.Direct3DMutableFormatABI : 1u;
+        var destroyABI = direct3DMutable ? GPUTextureViews.Direct3DViewABI : 1u;
         RenderHandle storage;
         if (mutable || DepthFormat(entry.Texture!.Format) && (entry.Texture.Usage & TextureUsageBits.InputAttachment) != 0 || create.SampleCount != SDL.GPUSampleCount.SampleCount1 && (create.Usage & (SDL.GPUTextureUsageFlags.Sampler | SDL.GPUTextureUsageFlags.ComputeStorageWrite)) != 0)
         {
-            RequireTextureViews(); if (shareable.Length == 0) shareable = [entry.Texture!.StoredFormat == DataFormat.Max ? entry.Texture.Format : entry.Texture.StoredFormat];
+            if (direct3DMutable)
+            {
+                if (GPUTextureViews.Support(Device, abi) != 1)
+                    throw new NotSupportedException("Shared Direct3D 12 formats require the pinned native image/view adapter.");
+                if ((entry.Texture.Usage & (TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0)
+                    throw new NotSupportedException("Shared Direct3D 12 formats do not support input or depth-resolve attachments.");
+            }
+            else RequireTextureViews();
+            if (shareable.Length == 0) shareable = [entry.Texture!.StoredFormat == DataFormat.Max ? entry.Texture.Format : entry.Texture.StoredFormat];
             var formats = new SDL.GPUTextureFormat[shareable.Length];
-            for (var i = 0; i < formats.Length; i++) { formats[i] = NativeFormat(shareable[i]); if (GPUTextureViews.FormatSupport(Device, 1, in create, formats[i]) != 1) throw new NotSupportedException("A shareable native format is incompatible or lacks the requested usage/sample roles."); }
-            fixed (SDL.GPUTextureFormat* p = formats) storage = new(GPUTextureViews.Create(Device, 1, in create, (nint)p, (uint)formats.Length), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);
+            for (var i = 0; i < formats.Length; i++) { formats[i] = NativeFormat(shareable[i]); if (GPUTextureViews.FormatSupport(Device, abi, in create, formats[i]) != 1) throw new NotSupportedException("A shareable native format is incompatible or lacks the requested usage/sample roles."); }
+            fixed (SDL.GPUTextureFormat* p = formats) storage = new(GPUTextureViews.Create(Device, abi, in create, (nint)p, (uint)formats.Length), h => GPUTextureViews.Destroy(Device, destroyABI, h), _context.Handle);
         }
         else storage = new(SDL.CreateGPUTexture(Device, in create), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
         try
         {
             if (NativeFormat(viewedFormat) == create.Format) return storage;
             if (!shareable.Contains(viewedFormat)) throw new ArgumentException("The initial view format is not declared shareable.", nameof(viewedFormat));
-            var handle = new RenderHandle(GPUTextureViews.View(Device, 1, storage.DangerousGetHandle(), NativeFormat(viewedFormat), 0, create.LayerCountOrDepth, 0, create.NumLevels, create.Type == SDL.GPUTextureType.TextureType2DArray ? 1u : 0u), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);
+            var handle = new RenderHandle(GPUTextureViews.View(Device, abi, storage.DangerousGetHandle(), NativeFormat(viewedFormat), 0, create.LayerCountOrDepth, 0, create.NumLevels, create.Type == SDL.GPUTextureType.TextureType2DArray ? 1u : 0u), h => GPUTextureViews.Destroy(Device, destroyABI, h), _context.Handle);
             entry.TextureAllocation = storage; return handle;
         }
         catch { storage.Dispose(); throw; }

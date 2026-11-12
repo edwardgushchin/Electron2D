@@ -45,6 +45,7 @@ public sealed partial class RenderingServer
     /// or viewport rebinding expires it. A viewport RID follows its completed ping-pong image at command recording.
     /// An already-sRGB image returns its source RID. Compatible device images, renderer uploads and
     /// completed SDR viewport images return a cached shared view that expires with the source RID.
+    /// Supported Vulkan and Direct3D 12 adapters share the native allocation across linear and sRGB views.
     /// Renderer sRGB views support sampling and raw transfers. Storage-image access remains on the
     /// linear RID. Both viewport RIDs select the completed image at command recording.
     /// Creating a view requires an idle device.
