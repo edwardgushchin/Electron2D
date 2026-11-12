@@ -41,6 +41,7 @@ EXPORTS
     e2d_render_view_destroy
     e2d_render_texture_create
     e2d_render_texture_import
+    e2d_render_d3d12_texture_import
     e2d_render_views_collect
     e2d_render_views_release
     e2d_render_view_region

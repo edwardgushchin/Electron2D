@@ -10,11 +10,13 @@
 
 using Microsoft::WRL::ComPtr;
 
-static HRESULT Upload(ID3D12Device* device, ID3D12Resource* texture, const D3D12_RESOURCE_DESC& description)
+static HRESULT Upload(ID3D12Device* device, ID3D12Resource* texture, const D3D12_RESOURCE_DESC& description,
+    bool sampled = false, UINT phase = 0, bool rewrite = false)
 {
-    D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint{};
+    const UINT count = description.DepthOrArraySize * description.MipLevels;
+    std::vector<D3D12_PLACED_SUBRESOURCE_FOOTPRINT> footprints(count);
     UINT64 bytes;
-    device->GetCopyableFootprints(&description, 0, 1, 0, &footprint, nullptr, nullptr, &bytes);
+    device->GetCopyableFootprints(&description, 0, count, 0, footprints.data(), nullptr, nullptr, &bytes);
     D3D12_RESOURCE_DESC buffer{};
     buffer.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
     buffer.Width = bytes;
@@ -33,15 +35,21 @@ static HRESULT Upload(ID3D12Device* device, ID3D12Resource* texture, const D3D12
     void* mapped;
     const D3D12_RANGE noRead{ 0, 0 };
     if (FAILED(result = upload->Map(0, &noRead, &mapped))) return result;
-    for (UINT y = 0; y < description.Height; ++y)
+    constexpr std::uint32_t colors[] = { 0xff0000ff, 0xff00ff00, 0xffff0000, 0xff00ffff };
+    for (UINT index = 0; index < count; ++index)
     {
-        auto row = reinterpret_cast<std::uint32_t*>(static_cast<char*>(mapped) + footprint.Offset +
-            static_cast<size_t>(y) * footprint.Footprint.RowPitch);
-        for (UINT x = 0; x < description.Width; ++x) row[x] = 0xff0000ff;
-        if (y + 1 == description.Height)
+        const auto& footprint = footprints[index];
+        const auto color = colors[(phase + index % description.MipLevels + 2 * (index / description.MipLevels)) % 4];
+        for (UINT y = 0; y < footprint.Footprint.Height; ++y)
         {
-            row[description.Width - 2] = 0x002d11ee;
-            row[description.Width - 1] = 0x8000ff00;
+            auto row = reinterpret_cast<std::uint32_t*>(static_cast<char*>(mapped) + footprint.Offset +
+                static_cast<size_t>(y) * footprint.Footprint.RowPitch);
+            for (UINT x = 0; x < footprint.Footprint.Width; ++x) row[x] = color;
+            if (!sampled && y + 1 == description.Height)
+            {
+                row[description.Width - 2] = 0x002d11ee;
+                row[description.Width - 1] = 0x8000ff00;
+            }
         }
     }
     upload->Unmap(0, nullptr);
@@ -60,11 +68,28 @@ static HRESULT Upload(ID3D12Device* device, ID3D12Resource* texture, const D3D12
     D3D12_TEXTURE_COPY_LOCATION source{};
     source.pResource = upload.Get();
     source.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-    source.PlacedFootprint = footprint;
     D3D12_TEXTURE_COPY_LOCATION destination{};
     destination.pResource = texture;
     destination.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-    list->CopyTextureRegion(&destination, 0, 0, 0, &source, nullptr);
+    D3D12_RESOURCE_BARRIER barrier{};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Transition.pResource = texture;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_DEST;
+    if (rewrite) list->ResourceBarrier(1, &barrier);
+    for (UINT index = 0; index < count; ++index)
+    {
+        source.PlacedFootprint = footprints[index];
+        destination.SubresourceIndex = index;
+        list->CopyTextureRegion(&destination, 0, 0, 0, &source, nullptr);
+    }
+    if (sampled)
+    {
+        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+        list->ResourceBarrier(1, &barrier);
+    }
     if (FAILED(result = list->Close())) return result;
     ID3D12CommandList* commands[] = { list.Get() };
     queue->ExecuteCommandLists(1, commands);
@@ -107,6 +132,37 @@ extern "C" __declspec(dllexport) HRESULT __cdecl CreateSample(ID3D12Resource* re
         if (FAILED(result = Upload(device.Get(), texture.Get(), description))) return result;
     *output = texture.Detach();
     return S_OK;
+}
+
+extern "C" __declspec(dllexport) HRESULT __cdecl CreateGPUSample(ID3D12Device* device, UINT layers,
+    UINT levels, UINT options, ID3D12Resource** output)
+{
+    *output = nullptr;
+    D3D12_RESOURCE_DESC description{};
+    description.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    description.Width = 7;
+    description.Height = 3;
+    description.DepthOrArraySize = static_cast<UINT16>(layers);
+    description.MipLevels = static_cast<UINT16>(levels);
+    description.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    description.SampleDesc.Count = 1;
+    const D3D12_HEAP_PROPERTIES heap{ D3D12_HEAP_TYPE_DEFAULT, D3D12_CPU_PAGE_PROPERTY_UNKNOWN,
+        D3D12_MEMORY_POOL_UNKNOWN, 1, 1 };
+    ComPtr<ID3D12Resource> texture;
+    if (options & 2) description.Flags = D3D12_RESOURCE_FLAG_ALLOW_SIMULTANEOUS_ACCESS;
+    HRESULT result = device->CreateCommittedResource(&heap, options & 1 ? D3D12_HEAP_FLAG_SHARED : D3D12_HEAP_FLAG_NONE,
+        &description, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&texture));
+    if (FAILED(result)) return result;
+    if (FAILED(result = Upload(device, texture.Get(), description, true))) return result;
+    *output = texture.Detach();
+    return S_OK;
+}
+
+extern "C" __declspec(dllexport) HRESULT __cdecl RewriteGPUSample(ID3D12Resource* texture, UINT phase)
+{
+    ComPtr<ID3D12Device> device;
+    const HRESULT result = texture->GetDevice(IID_PPV_ARGS(&device));
+    return FAILED(result) ? result : Upload(device.Get(), texture, texture->GetDesc(), true, phase, true);
 }
 
 extern "C" __declspec(dllexport) HRESULT __cdecl EnableDebug()

@@ -407,7 +407,7 @@ public sealed partial class RenderingServer
     /// <summary>Releases a caller-owned rendering texture, mesh, instance, palette, shader, material, canvas, canvas item, environment or offscreen viewport identity.</summary>
     /// <param name="rid">A live supported RID owned by this renderer.</param>
     /// <remarks>Resource-owned identities must be released by their resource. Retained commands stop drawing freed
-    /// server textures. Freeing a native Vulkan import also retires its device identity and views, and drains pending
+    /// server textures. Freeing a native GPU import also retires its device identity and views, and drains pending
     /// work before readback callbacks run. Drawing a disposed mesh reports the borrowed-resource lifetime error. Freed palettes
     /// restore unskinned geometry. Freed materials select ordinary canvas colors; freeing a shader clears its owned material bindings. Freeing a canvas/item disconnects its render children without freeing their identities; they can be reparented. Borrowed scene canvas/skeleton identities remain scene-owned. Owned viewport release retires its native targets and texture view and detaches rendering children; scene viewports remain scene-owned. Freeing an owned environment restores scene selection in its bound worlds. Active palette replay forbids free.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or not a supported rendering resource.</exception>

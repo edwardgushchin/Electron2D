@@ -321,7 +321,7 @@ public System.Void FreeRID(Electron2D.RID rid)
 
 Frees a resource after completing pending work.
 
-Borrowers become invalid and may still be freed explicitly. The root device identity exported by a direct Vulkan canvas import is server-owned. Free that root through its canvas RID with `RenderingServer.FreeRID`.
+Borrowers become invalid and may still be freed explicitly. The root device identity exported by a direct GPU canvas import is server-owned. Free that root through its canvas RID with `RenderingServer.FreeRID`.
 
 `rid`: A live identity owned by this device.
 
@@ -1509,7 +1509,7 @@ Vertex-only source/SPIR-V programs now execute with copied `RDPipelineRasterizat
 
 `public RID TextureCreateFromExtension(TextureType type, DataFormat format, TextureSamples samples, TextureUsageBits usageFlags, ulong image, uint width, uint height, uint depth, uint layers, uint MIPMaps = 1)`
 
-Pass a same-device Vulkan image in the sampled layout after the producer has completed its work. The declared format and shape must match the native allocation. The wrapper owns the RID and views and preserves the producer's image and memory. Free it on the creating thread outside an active list before the producer resumes use or destroys the allocation. Single-sample sampled color images and arrays can declare optional transfer roles. Unsupported formats, roles or drivers throw `NotSupportedException`. See the [producer handoff and retirement contract](../components/native-texture-handles.md#importing-vulkan-device-images).
+Pass a same-device native image after the producer has completed its work. The declared format and shape must match the allocation. Ordinary single-sample color images and independent arrays can declare optional transfer roles. Vulkan imports own views over producer-owned storage in the sampled layout. Direct3D 12 imports retain a COM reference to a typed default-heap image in `ALL_SHADER_RESOURCE`. Free the RID on the owner thread outside an active list before the producer resumes use. See the [Vulkan](../components/native-texture-handles.md#importing-vulkan-device-images) and [GPU Direct3D 12](../components/native-texture-handles.md#importing-gpu-direct3d-12-textures) handoff contracts.
 
 <a id="texture-create-shared"></a>
 ### TextureCreateShared(RDTextureView, RID)

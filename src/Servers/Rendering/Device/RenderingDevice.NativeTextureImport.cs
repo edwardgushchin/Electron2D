@@ -1,21 +1,26 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using SDL3;
 
 namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
+    private static readonly HashSet<ulong> Direct3DImports = [];
+
     /// <summary>Wraps a sampled native image allocated by an external producer on this device.</summary>
     /// <param name="type">An ordinary image or independent image array.</param>
     /// <param name="format">The native allocation's exact data format.</param>
-    /// <param name="samples">The native sample count. Vulkan imports require one sample.</param>
+    /// <param name="samples">The native sample count. Imports require one sample.</param>
     /// <param name="usageFlags">Sampling and any declared transfer roles supported by the native image.</param>
-    /// <param name="image">The live VkImage handle bits from the device returned by <see cref="GetDriverResource"/>.</param>
+    /// <param name="image">The live VkImage or ID3D12Resource pointer bits from the device returned by <see cref="GetDriverResource"/>.</param>
     /// <param name="width">The base mip width in texels.</param>
     /// <param name="height">The base mip height in texels.</param>
     /// <param name="depth">The native depth. Ordinary images and arrays require one.</param>
     /// <param name="layers">The native number of image layers.</param>
     /// <param name="MIPMaps">The native number of mip levels including the base level.</param>
-    /// <returns>A device-owned RID for the borrowed allocation and its owned views.</returns>
+    /// <returns>A device-owned RID for the wrapped allocation.</returns>
     /// <remarks>
     /// Vulkan imports require a same-device, optimal-tiling color image with sampled usage and an exact description.
     /// The producer completes its work, transfers exclusive access to this device's queue family,
@@ -24,7 +29,13 @@ public sealed unsafe partial class RenderingDevice
     /// until the RID is freed. FreeRID completes pending work, releases the
     /// wrapper and its views, and leaves the image in its sampled layout. External use on another
     /// queue family requires a new ownership transfer. Destroy producer-owned objects before the
-    /// logical device closes. This operation does not initialize pixels.
+    /// logical device closes.
+    /// GPU Direct3D 12 imports require a same-device typed color resource on a non-shared default heap
+    /// visible to the renderer queue. Resources with simultaneous access are unsupported.
+    /// The producer completes all work and leaves every subresource in ALL_SHADER_RESOURCE. The wrapper
+    /// retains one COM reference and restores that state after transfers. Keep external heaps alive and
+    /// grant exclusive resource access until retirement. FreeRID drains the GPU before releasing the wrapper.
+    /// Neither backend initializes the producer's pixels.
     /// </remarks>
     /// <exception cref="ArgumentException">The declared description is invalid or the image already belongs to this device's resources.</exception>
     /// <exception cref="NotSupportedException">The driver, installed native module, format or requested roles do not support import.</exception>
@@ -55,7 +66,10 @@ public sealed unsafe partial class RenderingDevice
         if (samples != TextureSamples.Samples1 || DepthFormat(format) ||
             (usageFlags & TextureUsageBits.Sampling) == 0 || (usageFlags & ~allowed) != 0)
             throw new NotSupportedException("Import requires a single-sample color image with sampled and optional transfer roles.");
-        RequireTextureViews();
+        var driver = TextureDriver;
+        if (driver is not ("vulkan" or "direct3d12"))
+            throw new NotSupportedException("The GPU backend does not provide a native texture importer.");
+        if (driver == "direct3d12" && image > nuint.MaxValue) throw new ArgumentOutOfRangeException(nameof(image));
         if (ValidationLimits is { } limits && (width > limits[12] || height > limits[12] || layers > limits[10]))
             throw new ArgumentOutOfRangeException(nameof(width), "Texture dimensions or layers exceed device limits.");
         if (!TextureIsFormatSupportedForUsage(format, usageFlags))
@@ -65,24 +79,63 @@ public sealed unsafe partial class RenderingDevice
             samples, resolve: false, swizzle: 0, stored: format);
         var create = NativeTextureInfo(info);
         var device = Device;
-        nint native;
+        RenderHandle handle;
         try
         {
+            if (driver == "vulkan") RequireTextureViews();
             foreach (var entry in _entries.Values)
                 if (entry.Kind == Kind.Texture && entry.Alive &&
                     QueryDriverResource(device, 1, (uint)DriverResource.Texture, entry.NativeHandle, out var existing) == 1 &&
                     existing == image)
                     throw new ArgumentException("The image already belongs to a live resource of this device.", nameof(image));
-            native = GPUTextureViews.Import(device, 1, in create, image);
+            handle = driver == "direct3d12"
+                ? ImportDirect3DTexture(device, in create, image)
+                : new RenderHandle(GPUTextureViews.Import(device, 1, in create, image),
+                    value => GPUTextureViews.Destroy(device, 1, value), _context.Handle);
         }
         catch (Exception error) when (error is EntryPointNotFoundException or DllNotFoundException)
         {
-            throw new NotSupportedException("The native module does not provide Vulkan texture import.", error);
+            throw new NotSupportedException("The native module does not provide this texture importer.", error);
         }
-        var handle = new RenderHandle(native, value => GPUTextureViews.Destroy(device, 1, value), _context.Handle);
         try { return Add(new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, Handle = handle, ServerOwnsTexture = serverOwned }); }
         catch { handle.Dispose(); throw; }
     }
+
+    private RenderHandle ImportDirect3DTexture(nint device, in SDL.GPUTextureCreateInfo create, ulong image)
+    {
+        lock (Direct3DImports)
+            if (!Direct3DImports.Add(image))
+                throw new ArgumentException("The resource already has a live Direct3D 12 texture wrapper.", nameof(image));
+        nint native;
+        try
+        {
+            var status = ImportDirect3DTextureNative(device, 1, in create, image, out native);
+            if (status == 0) throw new NotSupportedException("The native module cannot import this Direct3D 12 resource.");
+            if (status == -1)
+                throw new ArgumentException("The Direct3D 12 resource device, description or heap does not match the import contract.", nameof(image));
+            if (status != 1) throw GPUPhysicsDevice.Failure("import a Direct3D 12 texture");
+        }
+        catch
+        {
+            lock (Direct3DImports) Direct3DImports.Remove(image);
+            throw;
+        }
+
+        return new RenderHandle(native, value =>
+        {
+            try
+            {
+                SDL.ReleaseGPUTexture(device, value);
+                SDL.WaitForGPUIdle(device);
+            }
+            finally { lock (Direct3DImports) Direct3DImports.Remove(image); }
+        }, _context.Handle);
+    }
+
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_d3d12_texture_import")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int ImportDirect3DTextureNative(nint device, uint abi,
+        in SDL.GPUTextureCreateInfo create, ulong image, out nint texture);
 
     internal void RetireCanvasImport(RID rid)
     {

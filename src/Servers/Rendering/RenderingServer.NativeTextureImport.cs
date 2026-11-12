@@ -13,7 +13,7 @@ public sealed partial class RenderingServer
 
     /// <summary>Wraps an existing native sampled texture for use by canvas commands.</summary>
     /// <param name="type">An ordinary image or an independent image array.</param>
-    /// <param name="format">The pixel encoding. Vulkan uses its exact linear native equivalent. Direct3D RGBA8 and BGRA8 UNORM both use Rgba8.</param>
+    /// <param name="format">The pixel encoding. The GPU renderer uses its exact linear native equivalent. Direct3D Compatibility accepts RGBA8 and BGRA8 UNORM as Rgba8.</param>
     /// <param name="nativeHandle">A live VkImage, ID3D11Texture2D or ID3D12Resource from the active renderer device.</param>
     /// <param name="width">The native image width in pixels.</param>
     /// <param name="height">The native image height in pixels.</param>
@@ -21,16 +21,20 @@ public sealed partial class RenderingServer
     /// <param name="layers">The native layer count, which must be one for an ordinary image.</param>
     /// <param name="layeredType">The independent image-array role when importing a layered image.</param>
     /// <returns>A rendering-server-owned texture RID. Release it with <see cref="FreeRID"/>.</returns>
-    /// <remarks>Call on the active renderer owner thread. The wrapper retains a reference to the same SDR allocation.
+    /// <remarks>Call on the active renderer owner thread. The wrapper samples the producer allocation directly.
     /// Order Direct3D 11 writes on the device's immediate context before canvas submission.
-    /// For Direct3D 12, complete all producer work before import, leave the resource in COPY_DEST,
+    /// For Direct3D 12 Compatibility, complete all producer work before import, leave the resource in COPY_DEST,
     /// and give the renderer exclusive state and queue access. Retirement releases the wrapper and does not
     /// publish a native state for further external commands. The wrapper is local to the importing renderer.
     /// GPU Vulkan requires a one-mip, single-sample, optimal-tiling image with sampled and both transfer
     /// usages. Complete producer work on the renderer queue family and leave all layers in SHADER_READ_ONLY_OPTIMAL.
     /// The producer retains the image and memory and grants exclusive use until retirement. Release the canvas RID
     /// before destroying producer storage. Retirement drains GPU work and leaves the image in its sampled layout.
-    /// The canvas RID owns its device texture root. Destroy the producer allocation before the logical device closes.</remarks>
+    /// Destroy the Vulkan producer allocation before the logical device closes.
+    /// GPU Direct3D 12 requires a typed one-mip, single-sample image on a non-shared default heap.
+    /// Complete producer work and leave all subresources in ALL_SHADER_RESOURCE. The wrapper retains
+    /// a COM reference, completes GPU work on retirement and leaves the resource in that same state.
+    /// On the GPU renderer, the canvas RID owns its device texture root.</remarks>
     /// <exception cref="ArgumentException">The shape, size, format declaration, interface or device is invalid.</exception>
     /// <exception cref="NotSupportedException">The backend or native allocation role cannot be imported.</exception>
     /// <exception cref="InvalidOperationException">The renderer is unavailable, closing, off-owner or submitting a canvas.</exception>
@@ -47,12 +51,12 @@ public sealed partial class RenderingServer
         if (layers < 1 || type == TextureType.Texture && layers != 1) throw new ArgumentOutOfRangeException(nameof(layers));
         if (!Enum.IsDefined(format)) throw new ArgumentOutOfRangeException(nameof(format));
         if (nativeHandle == 0) throw new ArgumentOutOfRangeException(nameof(nativeHandle));
-        if (server._backend is GPUCanvasBackend { Driver: "vulkan" })
-            return server.ImportVulkanCanvasTexture(type, format, nativeHandle, width, height, layers);
+        if (server._backend is GPUCanvasBackend { Driver: "vulkan" or "direct3d12" })
+            return server.ImportGPUCanvasTexture(type, format, nativeHandle, width, height, layers);
 
         if (format != Image.Format.Rgba8 || type != TextureType.Texture ||
             server._backend is not CompatibilityCanvasBackend { Driver: "direct3d11" or "direct3d12" } backend)
-            throw new NotSupportedException("This texture import requires a supported GPU Vulkan or Direct3D Compatibility image.");
+            throw new NotSupportedException("This texture import requires a supported GPU or Direct3D Compatibility image.");
 
         if (nativeHandle > nuint.MaxValue) throw new ArgumentOutOfRangeException(nameof(nativeHandle));
         var native = unchecked((nint)nativeHandle);
@@ -76,7 +80,7 @@ public sealed partial class RenderingServer
         }
     }
 
-    private RID ImportVulkanCanvasTexture(TextureType type, Image.Format format, ulong image, int width, int height, int layers)
+    private RID ImportGPUCanvasTexture(TextureType type, Image.Format format, ulong image, int width, int height, int layers)
     {
         var nativeFormat = RenderingDevice.CanvasImportFormat(format);
         if (nativeFormat == RenderingDevice.DataFormat.Max)

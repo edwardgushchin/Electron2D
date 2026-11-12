@@ -39,6 +39,7 @@ _e2d_render_view_create
 _e2d_render_view_destroy
 _e2d_render_texture_create
 _e2d_render_texture_import
+_e2d_render_d3d12_texture_import
 _e2d_render_views_collect
 _e2d_render_views_release
 _e2d_render_view_region

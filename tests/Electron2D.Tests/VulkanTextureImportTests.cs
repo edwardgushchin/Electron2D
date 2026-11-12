@@ -19,15 +19,6 @@ internal static unsafe partial class VulkanTextureImportTests
 
     internal static void Run(string profile)
     {
-        if (profile == "unavailable")
-        {
-            using var unsupported = RenderingServer.CreateLocalRenderingDevice();
-            Reject<NotSupportedException>(() => Import(unsupported, 1));
-            CheckOrdinaryDeviceWork(unsupported);
-            Console.WriteLine("Unsupported texture importer preserves native device operations.");
-            return;
-        }
-
         var path = Environment.GetEnvironmentVariable("ELECTRON2D_VULKAN_IMPORT_FIXTURE");
         var library = NativeLibrary.Load(path ?? throw new InvalidOperationException("Set ELECTRON2D_VULKAN_IMPORT_FIXTURE."));
         try

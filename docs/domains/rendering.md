@@ -639,7 +639,7 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 
 [Native driver resources](../components/driver-resources.md) expose the current Vulkan or desktop Direct3D 12 device, queue and active GPU resources under the borrowed lifetime contract.
 
-[Vulkan device image import](../components/native-texture-handles.md#importing-vulkan-device-images) wraps ordinary and array images on that device after a completed producer handoff. [Direct canvas import](../components/native-texture-handles.md#importing-vulkan-canvas-textures) owns the device root through the server texture, including alias redirection and storage replacement. The producer retains the native allocation.
+[Vulkan device image import](../components/native-texture-handles.md#importing-vulkan-device-images) and [GPU Direct3D 12 import](../components/native-texture-handles.md#importing-gpu-direct3d-12-textures) wrap ordinary and array images after a completed producer handoff. [Direct canvas import](../components/native-texture-handles.md#importing-vulkan-canvas-textures) owns the device root through the server texture, including alias redirection and storage replacement. The producer controls Vulkan allocation lifetime. The Direct3D 12 wrapper retains a COM reference.
 
 [Attachmentless graphics](../components/local-compute.md#attachmentless-graphics) now executes explicit raster extents and exact available samples without dummy image attachments. Existing graphics storage writes feed following compute, ordinary graphics and canvas consumers; raster discard remains a separate state adapter.
 
