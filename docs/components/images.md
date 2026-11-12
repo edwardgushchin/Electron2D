@@ -31,7 +31,7 @@ This Resources component owns portable managed 2D pixel buffers, binary masks, r
 2. Reads take a consistent per-image state. The metadata overload of `GetData` captures the dimensions, storage format, mipmap presence and copied bytes together. Mip offset queries use layout metadata without copying the pixel buffer.
 3. A bulk mutation serializes with other mutations, clones the current buffer, computes and validates a complete next state, commits once, releases image locks, and emits `Resource.Changed`. `SetPixel` updates one pixel under the same serialization without allocating a replacement buffer.
 4. Uncompressed pixels decode to `Color`; writes quantize or preserve floating/integer values according to `Image.Format`.
-5. Mipmap generation averages 2×2 samples to a complete chain; resize, crop, rotation, and region composition preserve or rebuild mip policy as documented.
+5. Mipmap generation averages 2×2 samples to a complete chain. Half-size reduction promotes authored levels when present. Resize, crop, rotation, and region composition preserve or rebuild mip policy as documented.
 6. Duplication copies the complete buffer and inherited Resource configuration but not external path identity.
 7. Disposal drops the managed buffer, clears image state, then completes inherited Resource disposal.
 8. BitMap can classify a copied Image alpha plane, edit packed bits, dilate or erode a region, and extract marching-squares contours without a renderer.
@@ -71,6 +71,14 @@ Read the raw bytes and matching metadata with [`Image.GetData`](../classes/Image
 Resource and scene archives use the same snapshot when writing images. Saving during a concurrent edit records one committed state for each image. Metadata and pixel bytes retain the existing archive layout, including the canonical empty state and raw byte order under either archive endianness.
 
 Run `ELECTRON2D_TEST_IMAGE_STORAGE=1` to check all raw format sizes, odd compressed mip layouts, copied ownership, empty and disposed state, and 64 archive round trips while a background writer alternates between two incompatible image layouts. The same profile checks an embedded image texture round trip.
+
+## Mip chain editing
+
+`ShrinkX2` promotes the first stored mip and keeps the remaining bytes in order. It works on uncompressed pixels and complete block-compressed chains. When the promoted base is 1×1, the image reports no lower levels. Base-only uncompressed images halve through the generation filter and stay base-only.
+
+`GenerateMIPMaps` averages 2×2 samples in storage space. Odd extents truncate and one-pixel axes repeat their sample. Byte and unsigned 16-bit channels round to the nearest value. Normal renormalization applies to byte, float, half and unsigned 16-bit RGB/RGBA layouts. It normalizes the averaged RGB and preserves the averaged alpha. Packed and one- or two-channel formats use ordinary averaging.
+
+`ClearMIPMaps` retains the base bytes, including compressed blocks. ImageTexture captures the resulting format, base extent and exact remaining mip chain. The image-storage profile checks authored BC1 colors, odd and one-pixel axes, integer and half-float values, base edits, and observer failure after commit.
 
 ## Exclusions and deferred integration
 

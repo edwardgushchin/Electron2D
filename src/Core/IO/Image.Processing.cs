@@ -181,15 +181,15 @@ public sealed partial class Image
                 return state;
             var baseLength = GetLevelByteCount(state.Width, state.Height, state.Format);
             return state with { HasMIPMaps = false, Data = state.Data[..baseLength] };
-        });
+        }, copyData: false);
 
     /// <summary>Generates a complete lower-resolution mip chain from the base image.</summary>
-    /// <remarks>Without renormalization, byte channels use rounded encoded 2-by-2 averages; odd extents truncate and one-pixel axes repeat their sample.</remarks>
-    /// <param name="renormalize">Whether RGB values are decoded as signed normal components and normalized after averaging.</param>
+    /// <remarks>Byte and unsigned 16-bit channels use rounded 2-by-2 averages. Odd extents truncate and one-pixel axes repeat their sample.</remarks>
+    /// <param name="renormalize">Whether to normalize averaged RGB in byte, float, half and unsigned 16-bit RGB/RGBA formats. Alpha is only averaged.</param>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the chain commits.</exception>
-    public void GenerateMIPMaps(bool renormalize = false) => Mutate(state => BuildMIPMaps(RequireReadablePixels(state), renormalize));
+    public void GenerateMIPMaps(bool renormalize = false) => Mutate(state => BuildMIPMaps(state, renormalize), copyData: false);
 
     /// <summary>Converts every stored level to another uncompressed pixel format.</summary>
     /// <param name="format">The destination format.</param>
@@ -277,16 +277,26 @@ public sealed partial class Image
     public void Rotate180() => Mutate(
         state => FlipState(FlipState(RequireReadablePixels(state), horizontal: true), horizontal: false));
 
-    /// <summary>Halves both dimensions using box filtering, clamped to one pixel, and regenerates existing mipmaps.</summary>
-    /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
+    /// <summary>Halves both dimensions, clamping each to one pixel.</summary>
+    /// <remarks>Promotes the first stored mip level and preserves every remaining level, including compressed blocks.
+    /// With base-level uncompressed pixels, uses the same 2-by-2 filter as mipmap generation.</remarks>
+    /// <exception cref="InvalidOperationException">The image is empty, or block-compressed without a stored mip level.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the resize commits.</exception>
-    public void ShrinkX2() => Mutate(
-        state => ResizeState(
-            RequireReadablePixels(state),
-            Math.Max(1, state.Width / 2),
-            Math.Max(1, state.Height / 2),
-            Interpolation.Bilinear));
+    public void ShrinkX2() => Mutate(state =>
+    {
+        var width = Math.Max(1, state.Width / 2);
+        var height = Math.Max(1, state.Height / 2);
+        if (state.HasMIPMaps)
+            return new State(width, height, state.Format, width > 1 || height > 1, state.Data[GetLevel(state, 1).Offset..]);
+
+        RequireReadablePixels(state);
+        if (width == state.Width && height == state.Height)
+            return state;
+        var data = new byte[GetLevelByteCount(width, height, state.Format)];
+        DownsampleLevel(state.Format, state.Data, 0, state.Width, state.Height, data, 0, renormalize: false);
+        return new State(width, height, state.Format, false, data);
+    }, copyData: false);
 
     /// <summary>Resizes the base image and regenerates an existing mip chain.</summary>
     /// <param name="width">The positive destination width.</param>
@@ -728,7 +738,8 @@ public sealed partial class Image
             return state;
         });
 
-    private void Mutate(Func<State, State> operation)
+    // Operations using borrowed data may only read it. The mutation gate prevents pixel writes until publication.
+    private void Mutate(Func<State, State> operation, bool copyData = true)
     {
         ThrowIfDisposed();
         lock (_mutationGate)
@@ -737,7 +748,7 @@ public sealed partial class Image
             lock (_stateGate)
             {
                 ThrowIfDisposed();
-                current = CaptureState(copyData: true);
+                current = CaptureState(copyData);
             }
 
             var next = operation(current);
@@ -795,54 +806,68 @@ public sealed partial class Image
         RequireReadablePixels(state);
         var mipCount = GetRequiredMIPMapCount(state.Width, state.Height, true);
         if (mipCount == 0)
-            return state with { HasMIPMaps = false, Data = BaseData(state) };
+            return state;
 
         var data = new byte[GetRequiredDataSize(state.Width, state.Height, state.Format, true)];
-        var baseData = BaseData(state);
-        Buffer.BlockCopy(baseData, 0, data, 0, baseData.Length);
+        var baseLength = GetLevelByteCount(state.Width, state.Height, state.Format);
+        state.Data.AsSpan(0, baseLength).CopyTo(data);
         var bytes = GetBytesPerPixel(state.Format);
         var sourceOffset = 0;
-        var destinationOffset = baseData.Length;
+        var destinationOffset = baseLength;
         var sourceWidth = state.Width;
         var sourceHeight = state.Height;
         for (var level = 1; level <= mipCount; level++)
         {
-            var destinationWidth = Math.Max(1, sourceWidth / 2);
-            var destinationHeight = Math.Max(1, sourceHeight / 2);
-            for (var y = 0; y < destinationHeight; y++)
-            {
-                for (var x = 0; x < destinationWidth; x++)
-                {
-                    var x0 = Math.Min(sourceWidth - 1, x * 2);
-                    var x1 = Math.Min(sourceWidth - 1, x0 + 1);
-                    var y0 = Math.Min(sourceHeight - 1, y * 2);
-                    var y1 = Math.Min(sourceHeight - 1, y0 + 1);
-                    if (!renormalize && (uint)state.Format <= (uint)Format.Rgba8)
-                    {
-                        var a = sourceOffset + (y0 * sourceWidth + x0) * bytes; var b = sourceOffset + (y0 * sourceWidth + x1) * bytes;
-                        var c = sourceOffset + (y1 * sourceWidth + x0) * bytes; var d = sourceOffset + (y1 * sourceWidth + x1) * bytes;
-                        var destination = destinationOffset + (y * destinationWidth + x) * bytes;
-                        for (var channel = 0; channel < bytes; channel++) data[destination + channel] = (byte)((data[a + channel] + data[b + channel] + data[c + channel] + data[d + channel] + 2) >> 2);
-                        continue;
-                    }
-                    var color = Average(
-                        ReadColor(data, sourceOffset + (((y0 * sourceWidth) + x0) * bytes), state.Format),
-                        ReadColor(data, sourceOffset + (((y0 * sourceWidth) + x1) * bytes), state.Format),
-                        ReadColor(data, sourceOffset + (((y1 * sourceWidth) + x0) * bytes), state.Format),
-                        ReadColor(data, sourceOffset + (((y1 * sourceWidth) + x1) * bytes), state.Format));
-                    if (renormalize)
-                        color = RenormalizeNormal(color);
-                    WriteColor(data, destinationOffset + (((y * destinationWidth) + x) * bytes), state.Format, color);
-                }
-            }
-
+            DownsampleLevel(state.Format, data, sourceOffset, sourceWidth, sourceHeight, data, destinationOffset, renormalize);
             sourceOffset = destinationOffset;
-            destinationOffset += destinationWidth * destinationHeight * bytes;
-            sourceWidth = destinationWidth;
-            sourceHeight = destinationHeight;
+            sourceWidth = Math.Max(1, sourceWidth / 2);
+            sourceHeight = Math.Max(1, sourceHeight / 2);
+            destinationOffset += sourceWidth * sourceHeight * bytes;
         }
 
         return new State(state.Width, state.Height, state.Format, true, data);
+    }
+
+    private static void DownsampleLevel(Format format, byte[] source, int offset, int width, int height,
+        byte[] destination, int write, bool renormalize)
+    {
+        var bytes = GetBytesPerPixel(format);
+        var byteChannels = (uint)format <= (uint)Format.Rgba8;
+        var ushortChannels = format is >= Format.R16 and <= Format.Rgba16I;
+        var normalize = renormalize && format is Format.Rgb8 or Format.Rgba8 or Format.Rgbf or Format.Rgbaf or
+            Format.Rgbh or Format.Rgbah or Format.Rgb16 or Format.Rgba16 or Format.Rgb16I or Format.Rgba16I;
+        var targetWidth = Math.Max(1, width / 2);
+        var targetHeight = Math.Max(1, height / 2);
+        var nextColumn = width == 1 ? 0 : bytes;
+        var nextRow = height == 1 ? 0 : width * bytes;
+        for (var y = 0; y < targetHeight; y++)
+            for (var x = 0; x < targetWidth; x++, write += bytes)
+            {
+                var a = offset + (y * 2 * width + x * 2) * bytes;
+                var b = a + nextColumn;
+                var c = a + nextRow;
+                var d = c + nextColumn;
+                if (byteChannels)
+                {
+                    for (var channel = 0; channel < bytes; channel++)
+                        destination[write + channel] = (byte)((source[a + channel] + source[b + channel] + source[c + channel] + source[d + channel] + 2) >> 2);
+                }
+                else if (ushortChannels)
+                {
+                    for (var channel = 0; channel < bytes; channel += 2)
+                        WriteUInt16(destination, write + channel, (ushort)((ReadUInt16(source, a + channel) + ReadUInt16(source, b + channel) +
+                            ReadUInt16(source, c + channel) + ReadUInt16(source, d + channel) + 2) >> 2));
+                }
+                else
+                {
+                    var color = Average(ReadColor(source, a, format), ReadColor(source, b, format),
+                        ReadColor(source, c, format), ReadColor(source, d, format));
+                    WriteColor(destination, write, format, color);
+                }
+
+                if (normalize)
+                    NormalizeMIPPixel(destination, write, format, byteChannels, ushortChannels);
+            }
     }
 
     private static State RebuildMIPMapsIfNeeded(State state) => state.HasMIPMaps ? BuildMIPMaps(state, false) : state;
@@ -1060,15 +1085,36 @@ public sealed partial class Image
 
     private static Color Average(Color a, Color b, Color c, Color d) => (a + b + c + d) / 4f;
 
-    private static Color RenormalizeNormal(Color color)
+    private static void NormalizeMIPPixel(byte[] data, int offset, Format format, bool byteChannels, bool ushortChannels)
     {
+        var color = ushortChannels
+            ? new Color(ReadUInt16(data, offset) / 65535f, ReadUInt16(data, offset + 2) / 65535f, ReadUInt16(data, offset + 4) / 65535f)
+            : ReadColor(data, offset, format);
         var x = (color.R * 2f) - 1f;
         var y = (color.G * 2f) - 1f;
         var z = (color.B * 2f) - 1f;
         var length = Mathf.Sqrt((x * x) + (y * y) + (z * z));
         if (length == 0f)
-            return new Color(0.5f, 0.5f, 1f, color.A);
-        return new Color(0.5f + (x / length * 0.5f), 0.5f + (y / length * 0.5f), 0.5f + (z / length * 0.5f), color.A);
+            return;
+        var r = 0.5f + (x / length * 0.5f);
+        var g = 0.5f + (y / length * 0.5f);
+        var b = 0.5f + (z / length * 0.5f);
+        if (byteChannels)
+        {
+            data[offset] = (byte)MathF.Round(r * 255f, MidpointRounding.AwayFromZero);
+            data[offset + 1] = (byte)MathF.Round(g * 255f, MidpointRounding.AwayFromZero);
+            data[offset + 2] = (byte)MathF.Round(b * 255f, MidpointRounding.AwayFromZero);
+        }
+        else if (ushortChannels)
+        {
+            WriteUInt16(data, offset, (ushort)MathF.Round(r * 65535f, MidpointRounding.AwayFromZero));
+            WriteUInt16(data, offset + 2, (ushort)MathF.Round(g * 65535f, MidpointRounding.AwayFromZero));
+            WriteUInt16(data, offset + 4, (ushort)MathF.Round(b * 65535f, MidpointRounding.AwayFromZero));
+        }
+        else
+        {
+            WriteColor(data, offset, format, new Color(r, g, b, color.A));
+        }
     }
 
     private static Rect2i ClipRectangle(Rect2i rectangle, int width, int height)

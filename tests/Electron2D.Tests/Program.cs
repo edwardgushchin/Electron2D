@@ -422,7 +422,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_THEME") is { } p
 if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); Console.WriteLine("Raw image storage and archive snapshots passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); Console.WriteLine("Raw image storage, mip chains and archive snapshots passed."); return; }
 if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
 if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
@@ -2355,6 +2355,7 @@ VerifyColors();
 SpriteTests.Run();
 VerifyImages();
 VerifyImageStorage();
+VerifyImageMIPChains();
 VerifyVector2Values();
 VerifyVector2iValues();
 VerifyVector3Values();
@@ -3619,6 +3620,73 @@ static void VerifyColors()
     var allocated = GC.GetAllocatedBytesForCurrentThread() - beforeAllocations;
     Require(allocated == 0 && float.IsFinite(hotResult.R),
         "Warmed numeric color operations must not allocate managed memory.");
+}
+
+static void VerifyImageMIPChains()
+{
+    var authored = new byte[32];
+    new byte[] { 0, 248, 0, 0, 0, 0, 0, 0 }.CopyTo(authored, 16); // Solid red BC1.
+    new byte[] { 31, 0, 0, 0, 0, 0, 0, 0 }.CopyTo(authored, 24); // Solid blue BC1.
+    using var blocks = Image.CreateFromData(5, 3, true, Image.Format.Dxt1, authored);
+    var changes = 0;
+    blocks.Changed += _ => changes++;
+    Expect<InvalidOperationException>(() => blocks.GenerateMIPMaps(), "Compressed pixels require decoding before generation.");
+    Require(changes == 0 && blocks.GetData().SequenceEqual(authored), "A rejected mip generation must retain authored blocks.");
+    blocks.ShrinkX2();
+    Require(blocks.Size == new Vector2i(2, 1) && blocks.PixelFormat == Image.Format.Dxt1 &&
+        blocks.MIPMapCount == 1 && blocks.GetData().SequenceEqual(authored[16..]) && changes == 1,
+        "Shrinking an odd compressed image must promote the first stored level and preserve the rest exactly.");
+    using var texture = ImageTexture.CreateFromImage(blocks);
+    using var source = texture.GetImage()!;
+    Require(texture.GetSize() == new Vector2(2, 1) && texture.MIPMapCount == 1 &&
+        source.GetData().SequenceEqual(authored[16..]), "A texture must retain the promoted block chain.");
+    source.Decompress();
+    Require(source.GetPixel(0, 0).R > 0.99f, "The promoted block must decode to the authored red pixels.");
+    blocks.ShrinkX2();
+    Require(blocks.Size == new Vector2i(1, 1) && !blocks.HasMIPMaps &&
+        blocks.GetData().SequenceEqual(authored[24..]) && changes == 2,
+        "The last stored level becomes a base-only image.");
+    Expect<InvalidOperationException>(blocks.ShrinkX2, "A base-only compressed image cannot synthesize pixels.");
+    source.ClearMIPMaps();
+    Require(!source.HasMIPMaps && source.DataSize == 8 && source.GetPixel(1, 0).R > 0.99f,
+        "Clearing generated pixels must preserve the promoted base.");
+    using var raw = texture.GetImage()!;
+    raw.ClearMIPMaps();
+    Require(!raw.HasMIPMaps && raw.GetData().SequenceEqual(authored[16..24]),
+        "Clearing mips must preserve the exact compressed base block.");
+
+    using var odd = Image.CreateFromData(1, 5, false, Image.Format.L8, [0, 3, 5, 8, 255]);
+    odd.GenerateMIPMaps(renormalize: true);
+    Require(odd.GetData().SequenceEqual(new byte[] { 0, 3, 5, 8, 255, 2, 7, 5 }),
+        "A one-channel image must use rounded averages, repeating the one-pixel axis and truncating the odd extent.");
+    odd.SetPixel(0, 0, Colors.White);
+    odd.ShrinkX2();
+    Require(odd.GetData().SequenceEqual(new byte[] { 2, 7, 5 }), "Promotion must preserve stored levels after a base edit.");
+    using var strip = Image.CreateFromData(5, 1, false, Image.Format.L8, [0, 3, 5, 8, 255]);
+    strip.ShrinkX2();
+    Require(strip.Size == new Vector2i(2, 1) && !strip.HasMIPMaps &&
+        strip.GetData().SequenceEqual(new byte[] { 2, 7 }), "Base-only shrink must use the mip filter without adding a chain.");
+
+    using var integers = Image.CreateFromData(2, 1, false, Image.Format.Rgba16I,
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 255, 255, 0, 128, 1, 0]);
+    integers.GenerateMIPMaps();
+    Require(integers.GetData().AsSpan(16).SequenceEqual(new byte[] { 1, 0, 0, 128, 0, 64, 1, 0 }),
+        "Integer RGB and alpha must use rounded full-width channel averages.");
+    using var normals = Image.CreateFromData(2, 1, false, Image.Format.Rgba8, [255, 128, 128, 0, 128, 255, 128, 255]);
+    normals.GenerateMIPMaps(renormalize: true);
+    Require(normals.GetData().AsSpan(8).SequenceEqual(new byte[] { 218, 218, 128, 128 }),
+        "Normal mip generation must normalize quantized RGB and keep the independently averaged alpha.");
+
+    using var halfNormals = Image.CreateEmpty(2, 1, false, Image.Format.Rgbah);
+    halfNormals.SetPixel(0, 0, new Color(1f, 0.5f, 0.5f, 2f));
+    halfNormals.SetPixel(1, 0, new Color(0.5f, 1f, 0.5f, 4f));
+    halfNormals.GenerateMIPMaps(renormalize: true);
+    halfNormals.Changed += _ => throw new InvalidOperationException("observer failure");
+    Expect<InvalidOperationException>(halfNormals.ShrinkX2, "A failing observer must report after mip promotion commits.");
+    var pixel = halfNormals.GetPixel(0, 0);
+    Require(halfNormals.Size == Vector2i.One && !halfNormals.HasMIPMaps &&
+        MathF.Abs(pixel.R - 0.853553f) < 0.001f && MathF.Abs(pixel.G - 0.853553f) < 0.001f &&
+        pixel.B == 0.5f && pixel.A == 3f, "Half-float normals must retain HDR alpha and committed pixels.");
 }
 
 static void VerifyImageStorage()

@@ -99,7 +99,7 @@ byte[] ownedCopy = image.GetData();
 | [`public void FlipY()`](#flipy) | Flips all levels vertically. |
 | [`public void Rotate90(ClockDirection direction)`](#rotate90) | Rotates by 90 degrees. |
 | [`public void Rotate180()`](#rotate180) | Rotates by 180 degrees. |
-| [`public void ShrinkX2()`](#shrinkx2) | Halves dimensions with bilinear filtering. |
+| [`public void ShrinkX2()`](#shrinkx2) | Promotes a stored mip level or halves dimensions with the mip filter. |
 | [`public void Resize(int width, int height, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`](#resize) | Resamples the base level. |
 | [`public void ResizeToPowerOfTwo(bool square = false, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`](#resizetopot) | Resamples to power-of-two dimensions. |
 | [`public void BlitRect(Image source, Rect2i sourceRect, Vector2i destination)`](#blitrect) | Copies a clipped source rectangle. |
@@ -321,7 +321,7 @@ Retains base bytes and removes every lower level. Calling it without mipmaps is 
 <a id="generatemipmaps"></a>
 ### `public void GenerateMIPMaps(bool renormalize = false)`
 
-Builds the complete chain using 2×2 averaging. With `renormalize`, averaged RGB values are interpreted as signed normal components and normalized. Empty and compressed images are rejected.
+Builds the complete chain using 2×2 averaging. Byte and unsigned 16-bit channels round to the nearest stored value. With `renormalize`, averaged RGB in the supported RGB/RGBA channel formats is interpreted as a signed normal and normalized. Alpha keeps its averaged value. Empty and compressed images are rejected.
 
 <a id="convert"></a>
 ### `public void Convert(Image.Format format)`
@@ -361,7 +361,7 @@ Rotates every stored level by 180 degrees.
 <a id="shrinkx2"></a>
 ### `public void ShrinkX2()`
 
-Halves each dimension using bilinear filtering, with each result clamped to one pixel, and regenerates existing mipmaps.
+Halves each dimension, clamping to one pixel. When a stored mip exists, level one becomes the base and all remaining bytes are preserved, including compressed blocks. An uncompressed base-only image uses the same 2×2 filter as mip generation. Empty images and compressed images without a lower level are rejected.
 
 <a id="resize"></a>
 ### `public void Resize(int width, int height, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`
@@ -607,7 +607,7 @@ See [ADR 0039](../decisions/resources.md#adr-0039).
 
 The native codec checks in `ImageCodecTests` cover six load formats, PNG/JPEG saving, SVG size/color/scale and rejection of DTD or oversized input, PNG grayscale/16-bit/alpha vectors, BMP/TGA orientation and pitch, callback failure, state preservation, parallel independent decoding, disposal, virtual paths, oversized inputs and atomic-write failures on Linux x64. The rendering checks additionally upload decoded PNG pixels and verify GPU readback through both HLSL and GLSL. These checks do not establish AOT or other-platform acceptance.
 
-Non-renormalized mipmap generation for L8/LA8/R8/RG8/RGB8/RGBA8 uses encoded byte averages rounded to nearest. Odd extents truncate when halved; one-pixel axes repeat their sample. The connected noise image fixtures verify complete grayscale/colored/normal mip chains. Floating, packed and renormalized paths keep their existing typed processing profiles.
+See [mip chain editing](../components/images.md#mip-chain-editing) for reduction, normal-map and compressed storage behavior.
 
 
 ## Custom image decoder integration

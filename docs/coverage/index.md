@@ -1,3 +1,5 @@
+[Mip chain editing](../components/images.md#mip-chain-editing) promotes authored levels, including compressed blocks, and shares the generation filter with base-only reduction. Three rows move to Implemented. Coverage is **13,934/18,900 (73.72%)**, with 1,150 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Raw image snapshots](../components/images.md#raw-image-snapshots) expose copied pixels with matching dimensions, format and mipmap presence. Resource archives use the same snapshot during concurrent edits. Seventeen raw storage rows move to Implemented. Coverage is **13,931/18,900 (73.71%)**, with 1,153 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [Named group dispatch](../components/scene-tree.md#named-group-dispatch) passes a typed argument to each receiver and checks its original tree attachment before delivery. Live membership queries and the default and flagged call, setter and notification rows are Implemented. Coverage is **13,914/18,900 (73.62%)**, with 1,169 Partial, 274 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

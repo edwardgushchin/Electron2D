@@ -609,6 +609,15 @@
   "statusGroups": [
     {
       "godot": [
+        "Image::method:clear_mipmaps()",
+        "Image::method:generate_mipmaps(bool:)",
+        "Image::method:shrink_x2()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039: complete mip generation, typed validation, normal filtering, base-byte retention and half-size promotion of authored levels, including compressed chains. See docs/components/images.md#mip-chain-editing."
+    },
+    {
+      "godot": [
         "Image::property:data"
       ],
       "state": "Implemented",
