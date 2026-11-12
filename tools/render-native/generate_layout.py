@@ -57,7 +57,7 @@ def d3d12_layout(source):
         block(text, "typedef enum D3D12BufferType"),
         "typedef struct D3D12Buffer D3D12Buffer;",
         "typedef struct D3D12BufferContainer D3D12BufferContainer;",
-        prefix(text, "struct D3D12BufferContainer\n{", "D3D12Buffer *activeBuffer;"),
+        prefix(text, "struct D3D12BufferContainer\n{", "Uint32 bufferCount;"),
         prefix(text, "struct D3D12Buffer\n{", "ID3D12Resource *handle;"),
         prefix(text, "struct D3D12GraphicsPipeline\n{", "ID3D12PipelineState *pipelineState;"),
         prefix(text, "struct D3D12ComputePipeline\n{", "ID3D12PipelineState *pipelineState;"),

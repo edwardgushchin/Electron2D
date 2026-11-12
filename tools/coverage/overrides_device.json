@@ -101,7 +101,7 @@
       "godot": "RenderingDevice::method:set_resource_name(RID:,String:)",
       "electron2d": "method:Electron2D.RenderingDevice.SetResourceName(Electron2D.RID,System.String)",
       "state": "Partial",
-      "reason": "Vulkan debug utils labels live buffers, textures, shared image views, samplers, shader modules, and compute and graphics pipelines. Native tracing checks object types and UTF-8 payloads. Host-only uniform buffers and logical uniform sets need nameable native backing, later backing replacements need label replay, and Direct3D 12 and Metal need native name adapters. See docs/components/local-compute.md#native-resource-labels."
+      "reason": "Vulkan labels live buffers, images, shared image views, samplers, shader modules and pipelines. Direct3D 12 labels native buffer and image allocations and compute and graphics pipeline state objects. Its views and samplers are descriptors, and shader bytecode has no independent debug object. Host-only uniform buffers and logical uniform sets need nameable native backing. Later backing replacements need label replay, and Metal needs a native name adapter. See docs/components/local-compute.md#native-resource-labels."
     },
     {
       "godot": "RenderingDevice::method:get_device_vendor_name()",

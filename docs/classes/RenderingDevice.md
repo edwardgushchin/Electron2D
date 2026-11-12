@@ -336,7 +336,7 @@ Labels the commands recorded on this device with a UTF-8 name and RGBA color. A 
 
 ### SetResourceName
 
-Labels a live device-owned GPU resource through the native debug interface. An empty string clears the label. A retired or foreign RID and a name containing a null character are invalid. A missing backend capability or independently nameable object raises `NotSupportedException`. See [native resource labels](../components/local-compute.md#native-resource-labels).
+Labels a live device-owned GPU resource through the native debug interface. Direct3D 12 exposes buffer and image allocations and pipeline state objects. Vulkan also exposes shared image views, samplers and shader modules. An empty string clears the label. A retired or foreign RID and a name containing a null character are invalid. A missing backend capability or independently nameable object raises `NotSupportedException`. See [native resource labels](../components/local-compute.md#native-resource-labels).
 
 ### GetDeviceName()
 

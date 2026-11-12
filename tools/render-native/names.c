@@ -1,4 +1,7 @@
 #include "pinned-core.h"
+#include "d3d12-views.h"
+#define COBJMACROS
+#define E2D_RENDER_DRIVER_D3D12
 #include "memory-layout.h"
 
 #if defined(_WIN32)
@@ -11,6 +14,43 @@ enum E2DNameKind {
     E2D_NAME_BUFFER = 1, E2D_NAME_IMAGE, E2D_NAME_IMAGE_VIEW, E2D_NAME_SAMPLER,
     E2D_NAME_SHADER, E2D_NAME_COMPUTE_SHADER, E2D_NAME_COMPUTE_PIPELINE, E2D_NAME_GRAPHICS_PIPELINE
 };
+
+#if defined(SDL_PLATFORM_WIN32)
+static int label_d3d12_object(ID3D12Object *object, const wchar_t *name)
+{
+    if (!object) return -1;
+    return SUCCEEDED(ID3D12Object_SetName(object, name)) ? 1 : -2;
+}
+
+static int label_d3d12_resource(uint32_t kind, void *resource, const wchar_t *name)
+{
+    switch (kind) {
+        case E2D_NAME_BUFFER: {
+            D3D12BufferContainer *container = resource;
+            if (!container->bufferCount) return -1;
+            for (uint32_t i = 0; i < container->bufferCount; ++i) {
+                int result = label_d3d12_object((ID3D12Object *)container->buffers[i]->handle, name);
+                if (result != 1) return result;
+            }
+            return 1;
+        }
+        case E2D_NAME_IMAGE: {
+            D3D12TextureContainer *container = resource;
+            if (!container->textureCount) return -1;
+            for (uint32_t i = 0; i < container->textureCount; ++i) {
+                int result = label_d3d12_object((ID3D12Object *)container->textures[i]->resource, name);
+                if (result != 1) return result;
+            }
+            return 1;
+        }
+        case E2D_NAME_COMPUTE_PIPELINE:
+            return label_d3d12_object((ID3D12Object *)((struct D3D12ComputePipeline *)resource)->pipelineState, name);
+        case E2D_NAME_GRAPHICS_PIPELINE:
+            return label_d3d12_object((ID3D12Object *)((struct D3D12GraphicsPipeline *)resource)->pipelineState, name);
+        default: return 0;
+    }
+}
+#endif
 
 static int label(VulkanRenderer *renderer, VkObjectType type, uint64_t handle, const char *name)
 {
@@ -73,6 +113,19 @@ static VulkanRenderer *debug_renderer(SDL_GPUDevice *device)
 E2D_EXPORT int e2d_render_resource_name(SDL_GPUDevice *device, uint32_t abi, uint32_t kind, void *resource, const char *name)
 {
     if (!device || abi != 1 || !resource || !name) return -1;
+#if defined(SDL_PLATFORM_WIN32)
+    if (e2d_d3d12_device(device)) {
+        if (kind >= E2D_NAME_IMAGE_VIEW && kind <= E2D_NAME_COMPUTE_SHADER) return 0;
+        wchar_t *wide = NULL;
+        if (*name) {
+            wide = (wchar_t *)SDL_iconv_string("UTF-16LE", "UTF-8", name, SDL_strlen(name) + 1);
+            if (!wide) return -2;
+        }
+        int result = label_d3d12_resource(kind, resource, wide ? wide : L"");
+        SDL_free(wide);
+        return result;
+    }
+#endif
     VulkanRenderer *renderer = debug_renderer(device);
     if (!renderer || !renderer->vkSetDebugUtilsObjectNameEXT) return 0;
     if (kind < E2D_NAME_BUFFER || kind > E2D_NAME_IMAGE_VIEW)

@@ -13,7 +13,9 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Labels a live GPU resource for native graphics diagnostics.</summary>
     /// <param name="id">An owned resource identity on this device.</param>
     /// <param name="name">The UTF-8 debug name. An empty string clears the name.</param>
-    /// <remarks>Labels apply to existing native objects, including aliases of a compute pipeline and both physical views of a viewport.</remarks>
+    /// <remarks>Labels apply to existing native objects. Compute pipeline aliases share the same name.
+    /// Vulkan supports buffers, owned images, shared image views, samplers, shader modules and pipelines.
+    /// Direct3D 12 supports native buffers, owned images and pipeline state objects.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
     /// <exception cref="ArgumentException">The identity is invalid or the name contains a null character.</exception>
     /// <exception cref="NotSupportedException">The backend or resource does not expose a nameable native object.</exception>

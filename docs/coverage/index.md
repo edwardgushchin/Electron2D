@@ -1,3 +1,5 @@
+[Direct3D 12 resource labels](../components/local-compute.md#native-resource-labels) name live buffer and image allocations and compute and graphics pipeline state objects. The method remains Partial pending Metal support and label replay on later backings. Coverage is **13,903/18,900 (73.56%)**, with 1,177 Partial, 277 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Direct3D adapter identity](../components/graphics-adapter-identity.md) publishes the selected adapter, driver and feature level on Windows. The Direct3D 12 GPU cache key follows the actual adapter and driver. Remaining providers keep the affected rows Partial. The deprecated RenderingServer feature query, its two values and their enum are Excluded under ADR 0004. Coverage is **13,903/18,900 (73.56%)**, with 1,177 Partial, 277 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [Windows desktop color selection](../components/color-authoring.md#desktop-and-application-sampling) exposes the native picker through the display API and delivers owner-thread results. The row remains Partial for remaining provider and platform qualification.
