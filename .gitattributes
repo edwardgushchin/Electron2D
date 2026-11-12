@@ -3,6 +3,8 @@ src/Vendor/Clipper2/** -whitespace
 src/Vendor/Box2D.NET/** -whitespace
 src/Vendor/UnicodeText/** -whitespace
 src/Vendor/ICU/** -whitespace
+src/Servers/Rendering/Shaders/Includes/smaa/SMAA.h -text -whitespace
+licence/SMAA-LICENSE.txt -text
 licence/** -whitespace
 tests/Electron2D.Tests/Fixtures/Fonts/LICENSE.* -whitespace
 src/Vendor/FAudio/** -whitespace

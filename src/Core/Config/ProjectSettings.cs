@@ -387,7 +387,7 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
 
     /// <summary>Selects screen-space antialiasing for an unassigned root window at startup.</summary>
     /// <value>rendering/anti_aliasing/quality/screen_space_aa; Disabled initially.</value>
-    /// <remarks>FXAA requires GPU rendering. Other viewports use their own selections.</remarks>
+    /// <remarks>FXAA and SMAA require GPU rendering. Other viewports use their own selections.</remarks>
     public static ProjectSetting<ScreenSpaceAAMode> ScreenSpaceAA { get; } =
         new("rendering/anti_aliasing/quality/screen_space_aa", ScreenSpaceAAMode.Disabled, Viewport.IsScreenSpaceAAMode);
 

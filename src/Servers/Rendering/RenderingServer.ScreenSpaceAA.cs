@@ -22,7 +22,7 @@ public sealed partial class RenderingServer
 
     /// <summary>Sets screen-space antialiasing for the next frame of a live scene or caller-owned viewport.</summary>
     /// <param name="viewport">The live viewport identity in this rendering session.</param>
-    /// <param name="mode">Disabled or GPU FXAA.</param>
+    /// <param name="mode">Disabled, FXAA or SMAA.</param>
     /// <remarks>The renderer override preserves authored and packed scene values. A scene property assignment republishes its value.</remarks>
     /// <exception cref="ArgumentException">The viewport identity is invalid or retired.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is outside the supported modes.</exception>

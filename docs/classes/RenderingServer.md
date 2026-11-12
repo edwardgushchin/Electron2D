@@ -50,9 +50,9 @@ The static retained-item interpolation family now includes CanvasItemSetInterpol
 
 ## Viewport screen-space antialiasing
 
-`ViewportSetScreenSpaceAA(RID viewport, ScreenSpaceAAMode mode)` selects Disabled
-or FXAA for the next submitted frame of a live scene or caller-owned viewport.
-Valid scene assignments replace the session override. See [canvas FXAA](../components/canvas-rendering.md#screen-space-antialiasing).
+`ViewportSetScreenSpaceAA(RID viewport, ScreenSpaceAAMode mode)` selects Disabled,
+FXAA or SMAA for the next submitted frame of a live scene or caller-owned viewport.
+Valid scene assignments replace the session override. See [screen-space antialiasing](../components/canvas-rendering.md#screen-space-antialiasing).
 
 ## Viewport MSAA
 

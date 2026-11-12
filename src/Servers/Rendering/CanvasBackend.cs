@@ -71,7 +71,7 @@ internal abstract partial class CanvasBackend : IDisposable
     {
         if (mode == ScreenSpaceAAMode.Disabled) return;
         if (this is not GPUCanvasBackend) throw new NotSupportedException("Screen-space antialiasing requires GPU rendering.");
-        ValidateMIPMapBias(-0.25f);
+        if (mode == ScreenSpaceAAMode.FXAA) ValidateMIPMapBias(-0.25f);
     }
     internal (float Bias, Viewport.MSAA Mode, bool HDR) ValidateViewportOptions(Viewport viewport)
     {

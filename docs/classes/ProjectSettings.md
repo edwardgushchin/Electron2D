@@ -47,8 +47,8 @@ The GPU effect requires root HDR output to affect 2D pixels; offscreen/SDR image
 
 `ProjectSettings.ScreenSpaceAA` registers the typed
 `rendering/anti_aliasing/quality/screen_space_aa` setting. Disabled is the default.
-Engine startup samples feature overrides for the unassigned root. Enabled FXAA
-requires a GPU backend with canvas mipmap-bias support. See [canvas FXAA](../components/canvas-rendering.md#screen-space-antialiasing).
+Engine startup samples feature overrides for the unassigned root. FXAA and SMAA
+require GPU rendering. FXAA also uses the canvas mipmap-bias adapter. See [screen-space antialiasing](../components/canvas-rendering.md#screen-space-antialiasing).
 
 `ProjectSettings.MSAA2D` is a typed `ProjectSetting<Viewport.MSAA>` for `rendering/anti_aliasing/quality/msaa_2d`. Disabled is the default; Max and undefined values reject. Engine startup reads active feature overrides for an unconfigured root window. Explicit window and offscreen viewport selections remain independent. Enabled values require GPU support for the selected byte/half-float format and requested sample count; compatibility fails explicitly. See [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).
 

@@ -421,8 +421,8 @@ Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root p
 
 ## Canvas multisample antialiasing
 
-[Canvas FXAA](../components/canvas-rendering.md#screen-space-antialiasing)
-filters completed viewport color after MSAA resolve and environment composition.
+[Canvas FXAA and SMAA](../components/canvas-rendering.md#screen-space-antialiasing)
+filter completed viewport color after MSAA resolve and environment composition.
 Scene, RID and root project settings select the same mode contract. GPU
 presentation and texture exports consume the filtered frame.
 

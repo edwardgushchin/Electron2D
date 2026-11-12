@@ -241,10 +241,10 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var drawPostProcess = drawGlow || !toneSettings.IsIdentity || adjust;
         var linearizeGlowSource = !output.HDR && glowLevelCount > 0;
         var storage = output.HDR ? 1 : 0;
-        var FXAA = postProcess.ScreenSpaceAA == ScreenSpaceAAMode.FXAA;
-        var saveHistory = drawPostProcess || layered || FXAA;
+        var antialias = postProcess.ScreenSpaceAA != ScreenSpaceAAMode.Disabled;
+        var saveHistory = drawPostProcess || layered || antialias;
         if (saveHistory) output.PostProcess ??= new(CreateTarget(size, default, HDR: output.HDR));
-        if (FXAA) PrepareFXAA(output, drawPostProcess || layered);
+        if (antialias) PrepareScreenSpaceAA(output, postProcess.ScreenSpaceAA, drawPostProcess || layered);
         if (layered && output.Multisample is not null)
             output.PostProcess!.ForegroundSamples ??= CreateMultisampleTarget(size, default, output.MSAA, output.HDR);
         if (drawPostProcess && !drawGlow) _tonemapPipelines[storage] ??= CreatePostProcessPipeline(TonemapShader, output.HDR);
@@ -485,7 +485,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             }
             SDL.EndGPURenderPass(pass); pass = 0;
             if (saveHistory && !layered) FinishBackground();
-            if (FXAA) DrawFXAA(command, output, drawPostProcess || layered);
+            if (antialias) DrawScreenSpaceAA(command, output, postProcess.ScreenSpaceAA, drawPostProcess || layered);
             measured?.End(command);
             var submitted = command; command = 0;
             if (measured is not null) measured.Submit(submitted); else Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
@@ -504,7 +504,8 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                         buffers.ForegroundSamples = null;
                     }
                     if (glowLevelCount == 0) buffers.ReleaseLevels();
-                    if (!FXAA || (!drawPostProcess && !layered)) buffers.ReleaseFXAAInput();
+                    if (!antialias || (!drawPostProcess && !layered)) buffers.ReleaseAAInput();
+                    if (postProcess.ScreenSpaceAA != ScreenSpaceAAMode.SMAA) buffers.ReleaseSMAA();
                 }
                 else { output.PostProcess = null; buffers.Dispose(); }
             }
@@ -864,7 +865,8 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         ReleaseInstanceStreams(); ReleaseModelPoses(); _pipelines.Clear(); foreach (var pipeline in _clearPipelines) pipeline?.Dispose();
         _glowBlurPipeline?.Dispose();
         foreach (var pipeline in _glowCompositePipelines) pipeline?.Dispose();
-        foreach (var pipeline in _FXAAPipelines) pipeline?.Dispose();
+        foreach (var pipeline in _fxaaPipelines) pipeline?.Dispose();
+        ReleaseSMAA();
         foreach (var pipeline in _tonemapPipelines) pipeline?.Dispose();
         foreach (var pipeline in _seedPipelines) pipeline?.Dispose(); ReleaseTargets(); _vertexBuffer?.Dispose(); _transfer?.Dispose(); _vertexShader.Dispose(); _instancedVertexShader.Dispose(); _lightingVertexShader.Dispose(); _lightingInstancedVertexShader.Dispose();
         if (_windowClaimed) SDL.ReleaseWindowFromGPUDevice(Device, _window);

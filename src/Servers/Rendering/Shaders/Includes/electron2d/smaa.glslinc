@@ -1,0 +1,6 @@
+layout(set = 3, binding = 0, std140) uniform ScreenSpaceAA { vec4 metrics; };
+
+#define SMAA_GLSL_3 1
+#define SMAA_PRESET_HIGH 1
+#define SMAA_PIXEL_SIZE metrics.xy
+#include "../smaa/SMAA.h"

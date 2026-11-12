@@ -1,7 +1,7 @@
 using Electron2D;
 using static TextureArrayTests;
 
-internal static class CanvasFXAATests
+internal static class CanvasScreenSpaceAATests
 {
     private static readonly Vector2[] Triangle = [new(4.2f, 5.4f), new(48.4f, 13.1f), new(14.3f, 48.8f)];
 
@@ -21,47 +21,47 @@ internal static class CanvasFXAATests
         protected override void OnDraw() => DrawTextureRect(texture, new(0, 0, 16, 16), false);
     }
 
-    internal static void Run(string profile)
+    internal static void Run(string profile, ScreenSpaceAAMode mode)
     {
-        if (profile == "managed") { Managed(); return; }
+        if (profile == "managed") { Managed(mode); return; }
         var compatibility = profile is "compatibility" or "software";
         ProjectSettings.Set(ProjectSettings.RenderingMethod, compatibility ? "compatibility" : "gpu");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-        ProjectSettings.Set(ProjectSettings.ScreenSpaceAA, ScreenSpaceAAMode.FXAA);
-        if (compatibility) Compatibility();
-        else Render(profile);
-        Console.WriteLine($"Canvas FXAA verified ({profile}).");
+        ProjectSettings.Set(ProjectSettings.ScreenSpaceAA, mode);
+        if (compatibility) Compatibility(mode);
+        else Render(profile, mode);
+        Console.WriteLine($"Canvas {mode} verified ({profile}).");
     }
 
-    private static void Managed()
+    private static void Managed(ScreenSpaceAAMode mode)
     {
         using var viewport = new SubViewport();
         Check(viewport.ScreenSpaceAA == ScreenSpaceAAMode.Disabled, "The viewport default is disabled.");
-        viewport.ScreenSpaceAA = ScreenSpaceAAMode.FXAA;
+        viewport.ScreenSpaceAA = mode;
         using var scene = new PackedScene();
         scene.Pack(viewport);
         using var copy = (SubViewport)scene.Instantiate();
-        Check(copy.ScreenSpaceAA == ScreenSpaceAAMode.FXAA, "The packed scene retains the authored mode.");
-        var file = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-fxaa-{Guid.NewGuid():N}.e2dscene");
+        Check(copy.ScreenSpaceAA == mode, "The packed scene retains the authored mode.");
+        var file = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-screen-space-aa-{Guid.NewGuid():N}.e2dscene");
         try
         {
             ResourceSaver.Save(scene, file);
             using var stored = ResourceLoader.Load<PackedScene>(file, ResourceLoader.CacheMode.Ignore);
             using var restored = (SubViewport)stored.Instantiate();
-            Check(restored.ScreenSpaceAA == ScreenSpaceAAMode.FXAA, "Scene files reconstruct the typed FXAA setting.");
+            Check(restored.ScreenSpaceAA == mode, "Scene files reconstruct the typed antialiasing mode.");
         }
         finally { File.Delete(file); }
-        foreach (var invalid in new[] { -1, 2, (int)ScreenSpaceAAMode.Max, 99 })
+        foreach (var invalid in new[] { -1, (int)ScreenSpaceAAMode.Max, 99 })
         {
             Reject<ArgumentOutOfRangeException>(() => viewport.ScreenSpaceAA = (ScreenSpaceAAMode)invalid);
             Reject<ArgumentOutOfRangeException>(() => ProjectSettings.Set(ProjectSettings.ScreenSpaceAA, (ScreenSpaceAAMode)invalid));
         }
-        Check(viewport.ScreenSpaceAA == ScreenSpaceAAMode.FXAA, "Refused values preserve the authored mode.");
+        Check(viewport.ScreenSpaceAA == mode, "Refused values preserve the authored mode.");
         Reject<InvalidOperationException>(() => RenderingServer.ViewportSetScreenSpaceAA(default, ScreenSpaceAAMode.Disabled));
-        Console.WriteLine("Typed FXAA scene storage and mode validation passed.");
+        Console.WriteLine($"Typed {mode} scene storage and mode validation passed.");
     }
 
-    private static void Compatibility()
+    private static void Compatibility(ScreenSpaceAAMode mode)
     {
         var configured = new Window { Size = new(64, 64) };
         configured.AddChild(new Shape(Colors.White));
@@ -71,16 +71,16 @@ internal static class CanvasFXAATests
         var explicitMode = new Window { Size = new(64, 64), ScreenSpaceAA = ScreenSpaceAAMode.Disabled };
         explicitMode.Ready += _ =>
         {
-            Check(explicitMode.ScreenSpaceAA == ScreenSpaceAAMode.Disabled, "Explicit Disabled takes precedence over startup FXAA.");
-            Reject<NotSupportedException>(() => explicitMode.ScreenSpaceAA = ScreenSpaceAAMode.FXAA);
-            Reject<NotSupportedException>(() => RenderingServer.ViewportSetScreenSpaceAA(explicitMode.GetViewportRID(), ScreenSpaceAAMode.FXAA));
+            Check(explicitMode.ScreenSpaceAA == ScreenSpaceAAMode.Disabled, "Explicit Disabled takes precedence over the startup mode.");
+            Reject<NotSupportedException>(() => explicitMode.ScreenSpaceAA = mode);
+            Reject<NotSupportedException>(() => RenderingServer.ViewportSetScreenSpaceAA(explicitMode.GetViewportRID(), mode));
             Check(explicitMode.ScreenSpaceAA == ScreenSpaceAAMode.Disabled, "Live rejection preserves the authored value.");
             explicitMode.Tree!.Quit();
         };
-        Check(Engine.Run(explicitMode) == 0, "The renderer still runs with FXAA disabled.");
+        Check(Engine.Run(explicitMode) == 0, "The renderer still runs with antialiasing disabled.");
     }
 
-    private static void Render(string driver)
+    private static void Render(string driver, ScreenSpaceAAMode mode)
     {
         using var world = new World();
         using var mips = ViewportMIPMapBiasTests.Mips();
@@ -95,7 +95,7 @@ internal static class CanvasFXAATests
             UseHDR2D = true,
             World = world,
             MSAA2D = Viewport.MSAA.Samples4X,
-            ScreenSpaceAA = ScreenSpaceAAMode.FXAA,
+            ScreenSpaceAA = mode,
             RenderTargetUpdateMode = ViewportUpdateMode.Always
         };
         root.AddChild(rootShape);
@@ -112,20 +112,20 @@ internal static class CanvasFXAATests
         root.Ready += _ =>
         {
             Check(RenderingServer.GetCurrentRenderingDriverName() == driver &&
-                root.ScreenSpaceAA == ScreenSpaceAAMode.FXAA && child.ScreenSpaceAA == ScreenSpaceAAMode.Disabled,
-                "Project FXAA is applied to the unassigned root and keeps offscreen selection independent.");
+                root.ScreenSpaceAA == mode && child.ScreenSpaceAA == ScreenSpaceAAMode.Disabled,
+                "The project mode is applied to the unassigned root and keeps offscreen selection independent.");
             RenderingServer.SetDefaultClearColor(Colors.Black);
             var rootRID = root.GetViewportRID();
             rootShape.CheckCapture = () => Reject<InvalidOperationException>(() => root.ScreenSpaceAA = ScreenSpaceAAMode.Disabled);
             Reject<InvalidOperationException>(() => Task.Run(() => root.ScreenSpaceAA = ScreenSpaceAAMode.Disabled).GetAwaiter().GetResult());
             Reject<ArgumentOutOfRangeException>(() => RenderingServer.ViewportSetScreenSpaceAA(rootRID, ScreenSpaceAAMode.Max));
-            Reject<ArgumentException>(() => RenderingServer.ViewportSetScreenSpaceAA(default, ScreenSpaceAAMode.FXAA));
+            Reject<ArgumentException>(() => RenderingServer.ViewportSetScreenSpaceAA(default, mode));
 
             var owned = RenderingServer.ViewportCreate();
             RenderingServer.ViewportSetSize(owned, 64, 64);
             RenderingServer.ViewportSetActive(owned, true);
             RenderingServer.ViewportSetUpdateMode(owned, ViewportUpdateMode.Always);
-            RenderingServer.ViewportSetScreenSpaceAA(owned, ScreenSpaceAAMode.FXAA);
+            RenderingServer.ViewportSetScreenSpaceAA(owned, mode);
             var ownedTexture = RenderingServer.ViewportGetTexture(owned);
             var canvas = RenderingServer.CanvasCreate();
             RenderingServer.ViewportAttachCanvas(owned, canvas);
@@ -135,28 +135,29 @@ internal static class CanvasFXAATests
             RenderingServer.ForceDraw();
             using (var result = rootTexture.GetImage()!)
             {
-                Check(Partial(result, alpha: false) > 10, "FXAA smooths visible edges on the root.");
+                Check(Partial(result, alpha: false) > 10, "Screen-space antialiasing smooths visible edges on the root.");
                 var sample = result.GetPixel(52, 52);
-                Check(MathF.Abs(sample.R - .25f) < .02f && MathF.Abs(sample.G - .75f) < .02f &&
-                    root.TextureMIPMapBias == 0, $"The FXAA offset blends a quarter of the finer mip: {sample}.");
+                var expectedRed = mode == ScreenSpaceAAMode.FXAA ? .25f : 0f;
+                Check(MathF.Abs(sample.R - expectedRed) < .02f && MathF.Abs(sample.G - (1 - expectedRed)) < .02f &&
+                    root.TextureMIPMapBias == 0, $"The selected mode applies its mip policy: {sample}.");
             }
-            using (var result = RenderingServer.Texture2DGet(ownedTexture)!) Check(Partial(result, alpha: false) > 10, "The RID viewport runs FXAA.");
+            using (var result = RenderingServer.Texture2DGet(ownedTexture)!) Check(Partial(result, alpha: false) > 10, "The RID viewport applies screen-space antialiasing.");
             using var sharp = childTexture.GetImage()!;
             Check(Partial(sharp, alpha: true) == 0, "Disabled transparent viewport has single-sample coverage.");
-            using var HDRWithFXAA = HDRTexture.GetImage()!;
-            Check(HDRWithFXAA.PixelFormat == Image.Format.Rgbah && HDRWithFXAA.GetPixel(16, 20).R > 1.9f,
-                "FXAA preserves the half-float output and flat highlights after tone mapping.");
+            using var filteredHDR = HDRTexture.GetImage()!;
+            Check(filteredHDR.PixelFormat == Image.Format.Rgbah && filteredHDR.GetPixel(16, 20).R > 1.9f,
+                "Screen-space antialiasing preserves the half-float output and flat highlights after tone mapping.");
             HDR.ScreenSpaceAA = ScreenSpaceAAMode.Disabled;
-            child.ScreenSpaceAA = ScreenSpaceAAMode.FXAA;
+            child.ScreenSpaceAA = mode;
             RenderingServer.ViewportSetScreenSpaceAA(rootRID, ScreenSpaceAAMode.Disabled);
             rootShape.CheckCapture = null;
             RenderingServer.ForceDraw();
             using (var result = rootTexture.GetImage()!)
-                Check(Partial(result, alpha: false) == 0 && root.ScreenSpaceAA == ScreenSpaceAAMode.FXAA &&
+                Check(Partial(result, alpha: false) == 0 && root.ScreenSpaceAA == mode &&
                     result.GetPixel(52, 52) == Colors.Green,
                     "The renderer override removes the pass and mip bias while preserving scene authoring.");
             using (var result = HDRTexture.GetImage()!)
-                Check(!result.GetData().AsSpan().SequenceEqual(HDRWithFXAA.GetData()),
+                Check(!result.GetData().AsSpan().SequenceEqual(filteredHDR.GetData()),
                     "The pass filters the image after MSAA resolve and tone mapping.");
             using var smoothed = childTexture.GetImage()!;
             Check(Partial(smoothed, alpha: true) > 10 && smoothed.GetPixel(16, 20) == Colors.Black,
@@ -168,21 +169,32 @@ internal static class CanvasFXAATests
             childShape.Visible = false;
             root.ScreenSpaceAA = root.ScreenSpaceAA;
             for (var i = 0; i < 3; i++) RenderingServer.ForceDraw();
-            using (var result = rootTexture.GetImage()!) Check(Partial(result, alpha: false) > 10, "An equal scene assignment republishes FXAA.");
+            using (var result = rootTexture.GetImage()!) Check(Partial(result, alpha: false) > 10, "An equal scene assignment republishes the antialiasing mode.");
             using (var retained = childTexture.GetImage()!)
                 Check(retained.GetData().AsSpan().SequenceEqual(smoothed.GetData()), "Clear-never frames retain unfiltered history and avoid cumulative blur.");
+            if (mode == ScreenSpaceAAMode.SMAA)
+            {
+                child.ScreenSpaceAA = ScreenSpaceAAMode.FXAA;
+                RenderingServer.ForceDraw();
+                using (var result = childTexture.GetImage()!)
+                    Check(!result.GetData().AsSpan().SequenceEqual(smoothed.GetData()), "The two filters produce distinct edge coverage.");
+                child.ScreenSpaceAA = ScreenSpaceAAMode.SMAA;
+                RenderingServer.ForceDraw();
+                using var restored = childTexture.GetImage()!;
+                Check(restored.GetData().AsSpan().SequenceEqual(smoothed.GetData()), "SMAA recreates its intermediates on the retained source.");
+            }
             child.ScreenSpaceAA = ScreenSpaceAAMode.Disabled;
             RenderingServer.ForceDraw();
             using (var result = childTexture.GetImage()!)
-                Check(result.GetData().AsSpan().SequenceEqual(sharp.GetData()), "Disabling FXAA publishes the original retained frame.");
-            Check(RenderingServer.TextureGetRDTexture(childTexture.GetRID()) == export, "Toggling FXAA keeps the viewport device identity.");
+                Check(result.GetData().AsSpan().SequenceEqual(sharp.GetData()), "Disabling antialiasing publishes the original retained frame.");
+            Check(RenderingServer.TextureGetRDTexture(childTexture.GetRID()) == export, "Toggling antialiasing keeps the viewport device identity.");
             child.Size = new(80, 72);
             child.RenderTargetClearMode = ViewportClearMode.Always;
             childShape.Visible = true;
-            child.ScreenSpaceAA = ScreenSpaceAAMode.FXAA;
+            child.ScreenSpaceAA = mode;
             RenderingServer.ForceDraw();
             using (var resized = childTexture.GetImage()!)
-                Check(resized.Size == new Vector2i(80, 72) && Partial(resized, alpha: true) > 10, "Resizing prepares new FXAA history and still filters edges.");
+                Check(resized.Size == new Vector2i(80, 72) && Partial(resized, alpha: true) > 10, "Resizing prepares new render history and still filters edges.");
 
             RenderingServer.FreeRID(item);
             RenderingServer.FreeRID(canvas);
@@ -191,7 +203,7 @@ internal static class CanvasFXAATests
             done = true;
             root.Tree!.Quit();
         };
-        Check(Engine.Run(root) == 0 && done, "The FXAA render fixture completed.");
+        Check(Engine.Run(root) == 0 && done, "The screen-space antialiasing fixture completed.");
     }
 
     private static int Partial(Image image, bool alpha)

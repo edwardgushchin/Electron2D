@@ -1,9 +1,19 @@
 {
   "mappings": [
     {
+      "godot": "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_SMAA",
+      "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.SMAA()",
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_SMAA",
+      "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.SMAA()",
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+    },
+    {
       "godot": "Viewport::enum:ScreenSpaceAA",
       "electron2d": "T:Electron2D.ScreenSpaceAAMode",
-      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "godot": "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_DISABLED",
@@ -13,7 +23,7 @@
     {
       "godot": "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_FXAA",
       "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.FXAA()",
-      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "godot": "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_MAX",
@@ -23,7 +33,7 @@
     {
       "godot": "RenderingServer::enum:ViewportScreenSpaceAA",
       "electron2d": "T:Electron2D.ScreenSpaceAAMode",
-      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "godot": "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_DISABLED",
@@ -33,7 +43,7 @@
     {
       "godot": "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_FXAA",
       "electron2d": "enumValue:Electron2D.ScreenSpaceAAMode.FXAA()",
-      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "godot": "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_MAX",
@@ -43,17 +53,17 @@
     {
       "godot": "Viewport::property:screen_space_aa",
       "electron2d": "property:Electron2D.Viewport.ScreenSpaceAA()",
-      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "godot": "RenderingServer::method:viewport_set_screen_space_aa(RID:,int:RenderingServer.ViewportScreenSpaceAA)",
       "electron2d": "method:Electron2D.RenderingServer.ViewportSetScreenSpaceAA(Electron2D.RID,Electron2D.ScreenSpaceAAMode)",
-      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "godot": "ProjectSettings::property:rendering/anti_aliasing/quality/screen_space_aa",
       "electron2d": "property:Electron2D.ProjectSettings.ScreenSpaceAA()",
-      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "godot": "RenderingServer::enum:TextureType",
@@ -6048,15 +6058,15 @@
         "ProjectSettings::property:rendering/anti_aliasing/quality/screen_space_aa"
       ],
       "state": "Partial",
-      "reason": "ADRs 0028/0051/0095. One typed screen-space canvas AA mode supports scene storage, live RID overrides and root startup. FXAA filters completed SDR/HDR frames after resolve and composition and applies the mip bias offset. SMAA needs edge/weight/blend passes and lookups. Additional platform qualification and the Metal bias adapter remain open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "godot": [
         "Viewport::enum_value:ScreenSpaceAA.SCREEN_SPACE_AA_SMAA",
         "RenderingServer::enum_value:ViewportScreenSpaceAA.VIEWPORT_SCREEN_SPACE_AA_SMAA"
       ],
-      "state": "Blocked",
-      "reason": "ADR 0028. SMAA needs the completed-image edge/weight/blend pipeline and area/search lookups."
+      "state": "Partial",
+      "reason": "ADRs 0028/0051/0095. The shared mode supports scene storage, live RID overrides and root startup. FXAA and SMAA filter completed SDR/HDR frames after resolve and composition. FXAA applies the mip bias offset. SMAA 1x executes edge detection, area/search weights and neighborhood blending. Remaining backend and package qualification and the Metal FXAA bias adapter are open. See docs/components/canvas-rendering.md#screen-space-antialiasing."
     },
     {
       "state": "Implemented",

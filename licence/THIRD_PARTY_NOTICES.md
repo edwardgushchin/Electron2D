@@ -14,6 +14,7 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | NLayer 3.0.0 internal MP3 decoder | MIT | [NLayer](NLayer-LICENSE.txt) |
 | NVorbis 0.10.5 internal Vorbis decoder | MIT | [NVorbis](NVorbis-LICENSE.txt) |
 | qoa-fu managed codec | MIT | [qoa-fu](QOA-LICENSE.txt) |
+| SMAA v2.8 shader and lookup tables | BSD-style | [SMAA](SMAA-LICENSE.txt) |
 | Box2D.NET managed backend | MIT | [LICENSE](Box2D.NET-LICENSE.txt) |
 | Adapted GamepadMotionHelpers v9 controller gravity filtering | MIT | [GamepadMotionHelpers](GamepadMotionHelpers-LICENSE.txt) |
 | Clipper2 managed geometry | BSL-1.0 | [LICENSE](Clipper2-LICENSE.txt) |

@@ -44,10 +44,10 @@ The call uses the editor’s Text contract: LineEdit applies its scalar length l
 
 ## Screen-space antialiasing
 
-`ScreenSpaceAA` stores Disabled or FXAA. An unassigned root samples the project
-default at startup. A valid assignment republishes the authored mode, including
-equal values. FXAA filters the completed SDR or HDR canvas on a supported GPU and
-adds -0.25 to effective mipmap bias. See [canvas FXAA](../components/canvas-rendering.md#screen-space-antialiasing).
+`ScreenSpaceAA` stores Disabled, FXAA or SMAA. An unassigned root samples the
+project default at startup. A valid assignment republishes the authored mode,
+including equal values. Both filters process the completed SDR or HDR canvas
+on a supported GPU. FXAA adds -0.25 to effective mipmap bias. See [screen-space antialiasing](../components/canvas-rendering.md#screen-space-antialiasing).
 
 ## Canvas MSAA
 

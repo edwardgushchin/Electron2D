@@ -1787,7 +1787,7 @@ display metrics, HDR output and foreign-platform acceptance retain separate gate
 
 | Domain | Component | Class | Source | State | Behavior |
 | --- | --- | --- | --- | --- | --- |
-| [Rendering](domains/rendering.md) | [Canvas FXAA](components/canvas-rendering.md#screen-space-antialiasing) | [ScreenSpaceAAMode](classes/ScreenSpaceAAMode.md) and [Viewport.ScreenSpaceAA](classes/Viewport.md#screen-space-antialiasing) | [Viewport.ScreenSpaceAA.cs](../src/Scene/Main/Viewport.ScreenSpaceAA.cs) | Current | Typed scene, RID and project selection executes a GPU post-process on completed SDR/HDR canvas frames. |
+| [Rendering](domains/rendering.md) | [Canvas FXAA and SMAA](components/canvas-rendering.md#screen-space-antialiasing) | [ScreenSpaceAAMode](classes/ScreenSpaceAAMode.md) and [Viewport.ScreenSpaceAA](classes/Viewport.md#screen-space-antialiasing) | [Viewport.ScreenSpaceAA.cs](../src/Scene/Main/Viewport.ScreenSpaceAA.cs) | Current | Typed scene, RID and project selection executes a GPU post-process on completed SDR/HDR canvas frames. |
 | [Rendering](domains/rendering.md) | [Canvas MSAA](components/canvas-rendering.md#canvas-multisample-antialiasing) | [Viewport.MSAA](classes/Viewport.md#canvas-msaa) | [Viewport.MSAA.cs](../src/Scene/Main/Viewport.MSAA.cs) | Current | One typed scene/server sample contract, stored authoring, root configuration and 2/4/8-sample GPU targets/resolve; compatibility rejects enabled MSAA. |
 
 

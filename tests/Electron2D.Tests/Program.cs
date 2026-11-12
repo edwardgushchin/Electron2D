@@ -150,7 +150,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_BACKGROUND") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_BACKGROUND") is { } backgroundProfile) { CanvasBackgroundTests.Run(backgroundProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SDR_ENVIRONMENT") is { } sdrEnvironmentProfile) { CanvasSDREnvironmentTests.Run(sdrEnvironmentProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ADJUSTMENT") is { } adjustmentProfile) { CanvasAdjustmentTests.Run(adjustmentProfile); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FXAA") is { } FXAAProfile) { CanvasFXAATests.Run(FXAAProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SMAA") is { } SMAAProfile) { CanvasScreenSpaceAATests.Run(SMAAProfile, ScreenSpaceAAMode.SMAA); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FXAA") is { } FXAAProfile) { CanvasScreenSpaceAATests.Run(FXAAProfile, ScreenSpaceAAMode.FXAA); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TONEMAP") is { } tonemapProfile) { CanvasTonemapTests.Run(tonemapProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GLOW") is { } glowProfile) { CanvasGlowTests.Run(glowProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEBANDING") is { } debandingProfile) { if (debandingProfile == "managed") CanvasDebandingTests.Managed(); else CanvasDebandingTests.Native(debandingProfile); return; }

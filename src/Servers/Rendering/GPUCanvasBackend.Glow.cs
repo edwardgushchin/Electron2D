@@ -9,12 +9,15 @@ internal sealed unsafe partial class GPUCanvasBackend
     private static readonly byte[] GlowBlurShader = BuiltInShaders.Read("CanvasGlowBlur.frag.spv");
     private static readonly byte[] GlowCompositeShader = BuiltInShaders.Read("CanvasGlowComposite.frag.spv");
 
-    private RenderHandle CreatePostProcessPipeline(byte[] fragmentCode, bool HDR)
+    private RenderHandle CreatePostProcessPipeline(byte[] fragmentCode, bool HDR) =>
+        CreatePostProcessPipeline(fragmentCode, CanvasFormat(HDR));
+
+    private RenderHandle CreatePostProcessPipeline(byte[] fragmentCode, SDL.GPUTextureFormat format)
     {
         var (vertexCode, linkedFragment) = ShaderCompiler.LinkGraphicsStages(Device, BuiltInShaders.DrawableVertex, fragmentCode);
         using var vertex = CreateShader(vertexCode, fragment: false);
         using var fragment = CreateShader(linkedFragment, fragment: true);
-        var target = new SDL.GPUColorTargetDescription { Format = CanvasFormat(HDR) };
+        var target = new SDL.GPUColorTargetDescription { Format = format };
         var info = new SDL.GPUGraphicsPipelineCreateInfo
         {
             VertexShader = vertex.DangerousGetHandle(),
@@ -104,7 +107,7 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
 {
     internal RenderHandle Raw = raw;
     internal RenderHandle?[]? Levels;
-    internal RenderHandle? Linear, ForegroundSamples, PendingRaw, FXAAInput;
+    internal RenderHandle? Linear, ForegroundSamples, PendingRaw, AAInput, SMAAEdges, SMAAWeights;
 
     internal bool HasRawFrame;
 
@@ -120,10 +123,18 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
         foreach (var level in levels) level?.Dispose();
     }
 
-    internal void ReleaseFXAAInput()
+    internal void ReleaseAAInput()
     {
-        FXAAInput?.Dispose();
-        FXAAInput = null;
+        AAInput?.Dispose();
+        AAInput = null;
+    }
+
+    internal void ReleaseSMAA()
+    {
+        SMAAEdges?.Dispose();
+        SMAAEdges = null;
+        SMAAWeights?.Dispose();
+        SMAAWeights = null;
     }
 
     public void Dispose()
@@ -135,7 +146,7 @@ internal sealed class PostProcessBuffers(RenderHandle raw) : IDisposable
             finally
             {
                 try { ForegroundSamples?.Dispose(); }
-                finally { try { PendingRaw?.Dispose(); } finally { ReleaseFXAAInput(); } }
+                finally { try { PendingRaw?.Dispose(); } finally { try { ReleaseAAInput(); } finally { ReleaseSMAA(); } } }
             }
         }
     }

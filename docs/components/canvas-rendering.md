@@ -116,36 +116,43 @@ Evidence: bin/physics-top-level/2026-10-18/validation.json, SHA-256
 
 ## Screen-space antialiasing
 
-`Viewport.ScreenSpaceAA` selects Disabled or FXAA. `RenderingServer.ViewportSetScreenSpaceAA`
-overrides a live viewport for the current rendering session, including
-caller-owned viewports. Authored scene assignments replace the override.
-`ProjectSettings.ScreenSpaceAA` samples the root default at startup unless
-the scene explicitly assigns a value. Offscreen viewports have independent modes.
+`Viewport.ScreenSpaceAA` selects Disabled, FXAA or SMAA.
+`RenderingServer.ViewportSetScreenSpaceAA` overrides a live viewport for the
+current rendering session, including caller-owned viewports. Authored scene
+assignments replace the override. `ProjectSettings.ScreenSpaceAA` supplies the
+root default at startup unless the scene explicitly assigns a value. Offscreen
+viewports have independent modes.
 
-FXAA runs a local-contrast directional filter on the final GPU color image
-after MSAA resolve and canvas environment composition. Its edge signal includes
-alpha coverage for transparent canvases. Flat pixels retain the source value.
-The pass uses encoded SDR values or half-float HDR with perceptual edge detection.
-Presentation, texture consumers, readback and device exports use the filtered
-image. Screen-reading canvas materials and retained Never-clear history use
-the ordinary canvas passes. Keep their unfiltered background in the existing
-history target. Environment and layered composition use a separate filter
-source when the history represents an earlier stage. Mode changes preserve the
-viewport texture allocation and release temporary filter input when idle.
+The filters use the final SDR or half-float HDR GPU image after MSAA resolve
+and environment composition. Presentation, texture consumers, readback and
+device exports use the filtered image. Screen-reading canvas materials and
+Never-clear history use the ordinary canvas passes. Environment and layered
+composition use a separate filter source when history represents an earlier
+stage. Mode changes preserve the viewport texture allocation.
 
-FXAA offsets effective viewport mipmap sampling by -0.25 without changing the
-stored bias. Compatibility and GPU profiles without native canvas mipmap-bias
-support reject enabled FXAA. SMAA requires its edge/weight/blend passes and
-lookups. The underlying directional filter follows the [FXAA algorithm](https://developer.download.nvidia.com/assets/gamedev/files/sdk/11/FXAA_WhitePaper.pdf).
+- FXAA uses a local-contrast directional filter and adds -0.25 to the
+  effective canvas mipmap bias. [FXAA algorithm](https://developer.download.nvidia.com/assets/gamedev/files/sdk/11/FXAA_WhitePaper.pdf)
+- SMAA 1x uses the High preset, RG8 edge detection, RGBA8 directional weights
+  and neighborhood blending. The edge pass accounts for alpha coverage and
+  estimates perceptual contrast for HDR. The blend pass samples the original
+  color and alpha. SMAA uses the authored mipmap bias. The viewport owns its
+  edge and weight images, which retire when it leaves SMAA. The renderer
+  uploads the pinned area and search lookups once and shares them across
+  viewports. [SMAA source and table provenance](../../src/Servers/Rendering/Shaders/Includes/smaa/VENDOR.md)
 
-Run `ELECTRON2D_TEST_FXAA=managed` for typed validation and scene-file round
-trips. The `vulkan` and `direct3d12` profiles use the matching `SDL_GPU_DRIVER`.
-Both pass on Windows x64 with an RTX 3090 Ti. They check rendered RGB and
-alpha edges, retained history, actual mip interpolation, HDR with tone mapping
-and MSAA, viewport export and resize. The `compatibility` and `software`
-profiles exercise startup and live refusal on SDL Direct3D 12 and dummy/video
-software respectively. Foreign GPU profiles and release packages retain their
-qualification requirements.
+Compatibility rejects enabled modes. FXAA requires the GPU mipmap-bias
+adapter. SMAA requires GPU sampling and color-attachment support for its
+intermediates.
+
+Run `ELECTRON2D_TEST_FXAA` or `ELECTRON2D_TEST_SMAA` with `managed`,
+`vulkan`, `direct3d12`, `compatibility` or `software`. Use the matching
+`SDL_GPU_DRIVER` for GPU profiles. The fixtures check typed scene files,
+rendered RGB and alpha edges, the distinct mip policies, HDR with tone mapping
+and MSAA, retained history, mode switching, device export and resize. The
+software and Compatibility profiles check startup and live refusal. Platform
+and release-package qualification follow ADR 0021. Both modes passed the GPU
+profiles on Windows x64 with an RTX 3090 Ti. The Compatibility refusal ran on
+SDL Direct3D 12 and the software refusal used the dummy video driver.
 
 ## Canvas multisample antialiasing
 

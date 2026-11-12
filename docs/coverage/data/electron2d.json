@@ -59101,6 +59101,19 @@
     "value": "3"
   },
   {
+    "id": "enumValue:Electron2D.ScreenSpaceAAMode.SMAA()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScreenSpaceAAMode",
+    "name": "SMAA",
+    "signature": "public const Electron2D.ScreenSpaceAAMode SMAA = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenSpaceAAMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.ScrollContainer.ScrollHintMode.All()",
     "kind": "enumValue",
     "declaringType": "Electron2D.ScrollContainer.ScrollHintMode",
