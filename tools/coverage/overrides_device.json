@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "RenderingDevice::method:get_perf_report()",
+      "electron2d": "method:Electron2D.RenderingDevice.GetPerfReport()",
+      "reason": "ADR 0028. The latest submitted frame or local Submit publishes buffer uploads, direct host uniform writes and their byte count. Internal flushes and failed submissions preserve the publication boundary. Windows Vulkan and Direct3D 12 exercise real buffer transfers and renderer frames. See docs/components/local-compute.md#buffer-upload-report for the SDL adaptation and qualification limits."
+    },
+    {
       "godot": "RenderingDevice::method:texture_create_from_extension(int:RenderingDevice.TextureType,int:RenderingDevice.DataFormat,int:RenderingDevice.TextureSamples,int:RenderingDevice.TextureUsageBits,int:,int:,int:,int:,int:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureCreateFromExtension(Electron2D.RenderingDevice.TextureType,Electron2D.RenderingDevice.DataFormat,Electron2D.RenderingDevice.TextureSamples,Electron2D.RenderingDevice.TextureUsageBits,System.UInt64,System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32)",
       "reason": "ADR 0028: same-device Vulkan and GPU Direct3D 12 image wrapping after a completed sampled-state handoff, with native mip/layer transfers and canvas consumers. Vulkan owns views over producer storage. Direct3D 12 retains a COM reference. Both execute color attachments and supported storage images on the producer allocation."
@@ -4534,6 +4539,13 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "RenderingDevice::method:get_perf_report()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028. The latest submitted frame or local Submit publishes buffer uploads, direct host uniform writes and their byte count. Internal flushes and failed submissions preserve the publication boundary. Windows Vulkan and Direct3D 12 exercise real buffer transfers and renderer frames. See docs/components/local-compute.md#buffer-upload-report for the SDL adaptation and qualification limits."
+    },
     {
       "state": "Implemented",
       "reason": "ADR 0028: non-deprecated typed selectors preserve pinned numeric identities. The Vulkan and desktop GPU Direct3D 12 adapters resolve actual objects and driver values where a native counterpart exists. See docs/components/driver-resources.md.",

@@ -243,6 +243,7 @@ public sealed partial class RenderingServer : ElectronObject
             _nativeFrameStarted = false;
             gpu?.EndFrameQueue(completed: true);
             PublishRenderInfo();
+            _renderingDevice?.PublishPerfReport();
             setupTicks += Stopwatch.GetTimestamp() - setupStart;
             _frameSetupCPU = setupTicks * 1000d / Stopwatch.Frequency;
             _frameSubmitted = true;

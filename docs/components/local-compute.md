@@ -531,6 +531,43 @@ RenderingDeviceScreenTests passed software Vulkan Wayland, X11 and HDR-canvas pr
 
 The public-only DeviceScreen.Consumer passed CLR and strict full-trim, reflection-disabled NativeAOT on Wayland/X11/HDR, using the existing offline device-shader build target and embedded modules. Its successful pipeline execution and unchanged public viewport image complement the internal final-presentation pixel probe. The previous GLSL/HLSL graphics, buffer/image/index/instance, scissor, retained-canvas and interrupted-pass cohort also passed on software Wayland. Native map guards exclude NVIDIA; these are software-driver checks. Physical GPUs, native heap, throughput and other platforms remain unverified. Receipts: `bin/device-screen-draw/2026-10-24/` (the slice began before midnight).
 
+## Buffer upload report
+
+`RenderingDevice.GetPerfReport()` returns the latest published frame's buffer
+write statistics in the invariant format ` gpu:5 direct:4 bytes:60 lazily alloc:0`.
+Each device owns its report. The retained renderer publishes after successful
+frame submission and before `FramePostDraw`, including frames without
+presentation. A local device publishes on each successful `Submit()`.
+A fresh device starts with zero counters. A successful empty interval
+publishes zero counters.
+
+- `gpu` counts nonempty buffer uploads that SDL accepted for GPU submission.
+  This includes staged initialization, updates, clears and copies from host
+  uniform storage into GPU buffers.
+- `direct` counts nonempty writes to host-only uniform storage. It includes
+  the supplied initial data, updates, clears and host-to-host copies.
+- `bytes` is the sum of the bytes in those two categories. GPU initialization
+  includes zero-fill and any native buffer header transferred with it.
+- `lazily alloc` is zero for the current attachment allocators. The pinned
+  [SDL Vulkan](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/gpu/vulkan/SDL_gpu_vulkan.c)
+  and [SDL Metal](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/gpu/metal/SDL_gpu_metal.m)
+  paths use ordinary attachment storage.
+
+GPU-to-GPU copies, readbacks, texture transfers, uniform bindings and draws
+leave these counters alone. `ForceSync()` and synchronous readback can
+submit intermediate batches without publishing the report. A failed batch
+drops its recorded GPU counters. A frame interrupted before successful
+submission preserves the previous report and carries accepted uploads to
+the next successful publication.
+Reading the report formats a string without submitting or waiting.
+
+Run the Windows x64 Release test runner with `SDL_GPU_DRIVER` and
+`ELECTRON2D_TEST_GPU_PERF_REPORT` both set to `vulkan` or both set to
+`direct3d12`. The profile verifies exact counts and actual buffer bytes,
+implicit flushes, local and renderer publication, empty and aborted frames,
+submission refusal, owner and disposal guards, and prepared submission
+allocation. Other target packages retain their qualification gates.
+
 ## Native command labels
 
 `DrawCommandBeginLabel(name, color)` starts a native Vulkan debug region on the device's current command buffer. It accepts UTF-8 names without embedded null characters and finite RGBA channels in the range zero to one. Vulkan treats all-zero RGBA as no color. A second begin replaces the region. `DrawCommandEndLabel()` closes the current region and is harmless when no region is open.

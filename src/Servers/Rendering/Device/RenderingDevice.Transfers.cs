@@ -34,6 +34,7 @@ public sealed unsafe partial class RenderingDevice
         if (HostUniform(destination))
         {
             BufferGetData(sourceBuffer, destination.Data.AsSpan((int)destinationOffset, (int)sizeBytes), sourceOffset);
+            if (HostUniform(source)) RecordDirectBufferWrite(sizeBytes);
             return;
         }
         if (HostUniform(source)) { Upload(destination, destinationOffset, source.Data.AsSpan((int)sourceOffset, (int)sizeBytes)); return; }
@@ -57,7 +58,12 @@ public sealed unsafe partial class RenderingDevice
         IdleList(); var entry = Get(buffer); Range(entry, offset, sizeBytes);
         if (sizeBytes % 4 != 0) throw new ArgumentOutOfRangeException(nameof(sizeBytes));
         if (sizeBytes == 0) return;
-        if (HostUniform(entry)) { entry.Data.AsSpan((int)offset, (int)sizeBytes).Clear(); return; }
+        if (HostUniform(entry))
+        {
+            entry.Data.AsSpan((int)offset, (int)sizeBytes).Clear();
+            RecordDirectBufferWrite(sizeBytes);
+            return;
+        }
         var command = Commands();
         var pointer = SDL.MapGPUTransferBuffer(Device, entry.Upload!.DangerousGetHandle(), true);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map clear storage");
@@ -66,6 +72,7 @@ public sealed unsafe partial class RenderingDevice
         var pass = SDL.BeginGPUCopyPass(command); if (pass == 0) throw GPUPhysicsDevice.Failure("begin buffer clear");
         SDL.UploadToGPUBuffer(pass, new() { TransferBuffer = entry.Upload.DangerousGetHandle() }, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = entry.BufferOffset + offset, Size = sizeBytes }, false);
         SDL.EndGPUCopyPass(pass);
+        RecordBufferUpload(sizeBytes);
     }
 
     /// <summary>Records a compute dispatch whose group counts are supplied by a storage buffer.</summary>

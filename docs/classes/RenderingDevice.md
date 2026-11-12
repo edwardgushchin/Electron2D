@@ -1465,6 +1465,14 @@ The clear appears once in the native main window. Later canvas output resumes un
 local device. It reads the capacity on the owning thread without waiting.
 See [the GPU frame queue](../components/canvas-rendering.md#gpu-frame-queue).
 
+## GetPerfReport()
+
+Returns an invariant string with buffer uploads, direct uniform writes and
+their total byte count for the last submitted frame. Local devices publish
+on `Submit()`, and the retained renderer publishes before `FramePostDraw`.
+See [buffer upload report](../components/local-compute.md#buffer-upload-report)
+for counter definitions and failure behavior.
+
 ## Canvas point integration
 
 See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.

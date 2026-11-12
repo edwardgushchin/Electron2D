@@ -426,6 +426,10 @@ bounds pending rendered frames across all windows and viewports. The renderer
 samples the typed project setting at startup and exposes it through
 `RenderingDevice.GetFrameDelay()`.
 
+The [buffer upload report](../components/local-compute.md#buffer-upload-report)
+publishes the retained renderer's and each local device's buffer write
+traffic at their frame boundaries.
+
 [Canvas FXAA and SMAA](../components/canvas-rendering.md#screen-space-antialiasing)
 filter completed viewport color after MSAA resolve and environment composition.
 Scene, RID and root project settings select the same mode contract. GPU

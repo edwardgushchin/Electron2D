@@ -184,7 +184,12 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         Access(); if (sizeBytes == 0 || sizeBytes % 4 != 0 || sizeBytes > 16384 || ValidationLimits is { } limits && sizeBytes > limits[21] || data.Length > sizeBytes) throw new ArgumentOutOfRangeException(nameof(sizeBytes));
         if ((creationBits & ~(BufferCreationBits.AsStorage | BufferCreationBits.DeviceAddress)) != 0) throw new ArgumentOutOfRangeException(nameof(creationBits));
         var entry = new Entry { Kind = Kind.Uniform, Size = sizeBytes, Data = new byte[sizeBytes], GraphicsStorage = (creationBits & BufferCreationBits.AsStorage) != 0 }; data.CopyTo(entry.Data);
-        if (creationBits == 0) return Add(entry);
+        if (creationBits == 0)
+        {
+            var rid = Add(entry);
+            RecordDirectBufferWrite((uint)data.Length);
+            return rid;
+        }
         IdleList();
         try
         {
@@ -204,7 +209,11 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var entry = Get(buffer); Range(entry, offset, sizeBytes);
         if (sizeBytes > data.Length) throw new ArgumentException("Source data is too short.", nameof(data));
         var source = data[..(int)sizeBytes];
-        if (HostUniform(entry)) source.CopyTo(entry.Data.AsSpan((int)offset));
+        if (HostUniform(entry))
+        {
+            source.CopyTo(entry.Data.AsSpan((int)offset));
+            RecordDirectBufferWrite(sizeBytes);
+        }
         else { IdleList(); Upload(entry, offset, source); }
     }
     private static void Range(Entry entry, uint offset, uint size)
@@ -224,6 +233,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var copy = SDL.BeginGPUCopyPass(command); if (copy == 0) throw GPUPhysicsDevice.Failure("begin buffer upload");
         SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = entry.Upload.DangerousGetHandle() }, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = offset, Size = (uint)data.Length }, false);
         SDL.EndGPUCopyPass(copy);
+        RecordBufferUpload((uint)data.Length);
     }
 
     /// <summary>Synchronizes and copies a buffer range into an independent array.</summary>
@@ -493,6 +503,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         if (_serverOwner is not null) throw new InvalidOperationException("The renderer submits its device; explicit submission belongs to local devices.");
         SubmitRecorded();
+        PublishPerfReport();
     }
     private void SubmitRecorded(bool canvasMetadata = false)
     {
@@ -501,6 +512,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             CloseCommandLabel();
             var command = _command; _command = 0; _fence = SDL.SubmitGPUCommandBufferAndAcquireFence(command);
+            FinishBufferUploads(_fence != 0);
             if (_fence == 0)
             {
                 _timestampRecorded = 0;

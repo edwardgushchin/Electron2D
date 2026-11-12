@@ -153,6 +153,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ADJUSTMENT") is { } adju
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SMAA") is { } SMAAProfile) { CanvasScreenSpaceAATests.Run(SMAAProfile, ScreenSpaceAAMode.SMAA); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FXAA") is { } FXAAProfile) { CanvasScreenSpaceAATests.Run(FXAAProfile, ScreenSpaceAAMode.FXAA); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_FRAME_QUEUE") is { } frameQueueDriver) { GPUFrameQueueTests.Run(frameQueueDriver); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PERF_REPORT") is { } perfReportDriver) { GPUPerfReportTests.Run(perfReportDriver); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TONEMAP") is { } tonemapProfile) { CanvasTonemapTests.Run(tonemapProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GLOW") is { } glowProfile) { CanvasGlowTests.Run(glowProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEBANDING") is { } debandingProfile) { if (debandingProfile == "managed") CanvasDebandingTests.Managed(); else CanvasDebandingTests.Native(debandingProfile); return; }
