@@ -136,7 +136,7 @@ internal sealed class ServerTexture : Texture
         _pixels = pixels; Size = new(pixels.Source.Width, pixels.Source.Height); RetainRendererCache = true;
     }
     internal ServerTexture(TextureRD texture) => DeviceTexture = texture;
-    internal ServerTexture(D3D11CanvasTexture texture)
+    internal ServerTexture(NativeCanvasTexture texture)
     {
         NativeTexture = texture;
         Size = texture.Size;
@@ -148,7 +148,7 @@ internal sealed class ServerTexture : Texture
     }
     private TexturePixels? _pixels;
     internal TextureRD? DeviceTexture { get; private set; }
-    internal D3D11CanvasTexture? NativeTexture { get; private set; }
+    internal NativeCanvasTexture? NativeTexture { get; private set; }
 
     internal void TakeStorage(ServerTexture source)
     {

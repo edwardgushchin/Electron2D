@@ -21,7 +21,21 @@ internal static unsafe partial class NativeTextureImportTests
     internal static void Run(string profile)
     {
         Reject<InvalidOperationException>(() => Import(1));
-        var supported = profile == "direct3d11";
+        var d3d12 = profile == "direct3d12";
+        var supported = d3d12 || profile == "direct3d11";
+        var fixturePath = Environment.GetEnvironmentVariable("ELECTRON2D_D3D12_IMPORT_FIXTURE");
+        var debug = Environment.GetEnvironmentVariable("ELECTRON2D_D3D12_IMPORT_DEBUG") == "1";
+        var fixture = d3d12 ? NativeLibrary.Load(fixturePath ?? throw new InvalidOperationException("Set ELECTRON2D_D3D12_IMPORT_FIXTURE.")) : 0;
+        try { RunScene(profile, supported, fixture, debug); }
+        finally { if (fixture != 0) NativeLibrary.Free(fixture); }
+        Reject<InvalidOperationException>(() => Import(1));
+        Console.WriteLine($"Native texture import {profile} passed.");
+    }
+
+    private static void RunScene(string profile, bool supported, nint fixture, bool debug)
+    {
+        if (fixture != 0 && debug)
+            Marshal.ThrowExceptionForHR(((delegate* unmanaged[Cdecl]<int>)NativeLibrary.GetExport(fixture, "EnableDebug"))());
         ProjectSettings.Set(ProjectSettings.RenderingMethod, profile == "vulkan" ? "gpu" : "compatibility");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var root = new Window { Size = new(48, 24), Title = "Native texture import" };
@@ -36,8 +50,6 @@ internal static unsafe partial class NativeTextureImportTests
             {
                 var source = RenderingServer.Texture2DCreate(seed);
                 var native = (nint)RenderingServer.TextureGetNativeHandle(source);
-                nint device;
-                ((delegate* unmanaged[Stdcall]<nint, nint*, void>)Methods(native)[3])(native, &device);
                 try
                 {
                     Reject<ArgumentOutOfRangeException>(() => Import(0));
@@ -45,19 +57,12 @@ internal static unsafe partial class NativeTextureImportTests
                     Reject<ArgumentOutOfRangeException>(() => Import((ulong)native, layers: 2));
                     Reject<ArgumentOutOfRangeException>(() => Import((ulong)native, width: -1));
                     Reject<ArgumentOutOfRangeException>(() => Import((ulong)native, type: (RenderingServer.TextureType)2));
-                    var wrongInterface = (ulong)device;
-                    Reject<ArgumentException>(() => Import(wrongInterface));
-                    Reject<ArgumentException>(() => Import((ulong)native, width: Width + 1));
                     Reject<NotSupportedException>(() => Import((ulong)native, format: Image.Format.Rgb8));
                     Reject<InvalidOperationException>(() => Task.Run(() => Import((ulong)native)).GetAwaiter().GetResult());
-                    VerifyForeignDevice();
-                    VerifyPixels(root, output, device, seed);
+                    if (fixture != 0) VerifyD3D12(root, output, native, seed, fixture, debug);
+                    else VerifyD3D11(root, output, native, seed);
                 }
-                finally
-                {
-                    Marshal.Release(device);
-                    RenderingServer.FreeRID(source);
-                }
+                finally { RenderingServer.FreeRID(source); }
             }
             else
             {
@@ -70,15 +75,58 @@ internal static unsafe partial class NativeTextureImportTests
             root.Tree!.Quit();
         };
         Check(Engine.Run(root) == 0 && complete, "The import scene completed.");
-        Reject<InvalidOperationException>(() => Import(1));
-        Console.WriteLine($"Native texture import {profile} passed.");
     }
 
-    private static void VerifyPixels(Window root, Texture output, nint device, Image seed)
+    private static void VerifyD3D11(Window root, Texture output, nint native, Image seed)
     {
-        var rgba = Create(device, 28);
-        var bgra = Create(device, 87);
-        var layered = Create(device, 28, layers: 2);
+        nint device;
+        ((delegate* unmanaged[Stdcall]<nint, nint*, void>)Methods(native)[3])(native, &device);
+        var currentDevice = device;
+        try
+        {
+            Reject<ArgumentException>(() => Import((ulong)currentDevice));
+            Reject<ArgumentException>(() => Import((ulong)native, width: Width + 1));
+            VerifyForeignDevice();
+            VerifyPixels(root, output, seed, (format, layers) => Create(currentDevice, format, layers),
+                resource => UpdateExternally(currentDevice, resource));
+        }
+        finally { Marshal.Release(device); }
+    }
+
+    private static void VerifyD3D12(Window root, Texture output, nint native, Image seed, nint fixture, bool debug)
+    {
+        var create = NativeLibrary.GetExport(fixture, "CreateSample");
+        nint CreateNative(uint format, uint layers, int foreign = 0)
+        {
+            nint resource;
+            Marshal.ThrowExceptionForHR(((delegate* unmanaged[Cdecl]<nint, uint, uint, int, nint*, int>)create)
+                (native, format, layers, foreign, &resource));
+            return resource;
+        }
+        Reject<ArgumentException>(() => Import((ulong)native));
+        var foreign = CreateNative(28, 1, 1);
+        try { Reject<ArgumentException>(() => Import((ulong)foreign)); }
+        finally { Marshal.Release(foreign); }
+        var SRGB = CreateNative(29, 1);
+        try { Reject<NotSupportedException>(() => Import((ulong)SRGB)); }
+        finally { Marshal.Release(SRGB); }
+        VerifyPixels(root, output, seed, (format, layers) => CreateNative(format, layers), null);
+        var target = RenderingServer.TextureGetNativeHandle(output.GetRID());
+        Check(target != 0, "A completed viewport exposes its allocation.");
+        Reject<ArgumentException>(() => RenderingServer.TextureCreateFromNativeHandle(RenderingServer.TextureType.Texture,
+            Image.Format.Rgba8, target, 48, 24, 1));
+        if (debug)
+        {
+            Marshal.ThrowExceptionForHR(((delegate* unmanaged[Cdecl]<nint, int>)NativeLibrary.GetExport(fixture, "CheckDebug"))(native));
+            Console.WriteLine("Direct3D 12 debug layer reported no errors or corruption.");
+        }
+    }
+
+    private static void VerifyPixels(Window root, Texture output, Image seed, Func<uint, uint, nint> create, Action<nint>? externalUpdate)
+    {
+        var rgba = create(28, 1);
+        var bgra = create(87, 1);
+        var layered = create(28, 2);
         try { Reject<NotSupportedException>(() => Import((ulong)layered)); }
         finally { Marshal.Release(layered); }
         var canvas = RenderingServer.CanvasCreate();
@@ -86,12 +134,14 @@ internal static unsafe partial class NativeTextureImportTests
         RenderingServer.ViewportAttachCanvas(root.GetViewportRID(), canvas);
         RenderingServer.CanvasItemSetParent(item, canvas);
         RenderingServer.CanvasItemSetDefaultTextureFilter(item, TextureFilter.Nearest);
+        Reject<ArgumentException>(() => Import((ulong)rgba, width: Width + 1));
         var first = Import((ulong)rgba);
         var second = Import((ulong)bgra);
         var proxy = RenderingServer.TextureProxyCreate(second);
         var channels = RenderingServer.CanvasTextureCreate();
         try
         {
+            if (externalUpdate is null) Reject<ArgumentException>(() => Import((ulong)rgba));
             Check(RenderingServer.TextureGetNativeHandle(first) == (ulong)rgba &&
                   RenderingServer.TextureGetNativeHandle(proxy, SRGB: true) == (ulong)bgra, "Both formats and the proxy retain the original allocations.");
             Check(RenderingServer.TextureGetFormat(proxy) == Image.Format.Rgba8, "BGRA storage projects portable RGBA8.");
@@ -112,9 +162,18 @@ internal static unsafe partial class NativeTextureImportTests
                 Check(image is { Width: Width, Height: Height, PixelFormat: Image.Format.Rgba8 } &&
                       image.GetPixel(0, 0) == Colors.Blue && image.GetPixel(6, 2) == new Color(0, 1, 0, 128 / 255f),
                     "Native readback preserves format, pitch, row order and alpha.");
+                if (externalUpdate is null)
+                    Check(image!.GetPixel(5, 2) == new Color(45 / 255f, 17 / 255f, 238 / 255f, 0),
+                        "Unblended readback preserves RGB in a fully transparent texel.");
                 image!.SetPixel(0, 0, Colors.White);
             }
-            UpdateExternally(device, rgba);
+            if (externalUpdate is not null) externalUpdate(rgba);
+            else
+            {
+                using var green = Image.CreateEmpty(Width, Height, false, Image.Format.Rgba8);
+                green.Fill(Colors.Lime);
+                RenderingServer.Texture2DUpdate(first, green);
+            }
             RenderingServer.ForceDraw();
             CheckOutput(output, Colors.Lime, Colors.Blue);
             Marshal.Release(rgba);

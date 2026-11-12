@@ -94,6 +94,7 @@ internal abstract partial class CanvasBackend : IDisposable
         target.BackBuffer = replacement; target.BackBufferMipmaps = mipmaps; return replacement;
     }
     internal CanvasRenderTarget? FindTarget(Viewport viewport) => _targets.GetValueOrDefault(viewport);
+    protected Dictionary<Viewport, CanvasRenderTarget>.ValueCollection ViewportTargets => _targets.Values;
     internal void ReleaseTarget(Viewport viewport) { if (_targets.Remove(viewport, out var target)) target.Dispose(); }
     protected void ReleaseTargets() { foreach (var target in _targets.Values) target.Dispose(); _targets.Clear(); DiscardPresentation(); }
     internal virtual void SetWindowVisible(DisplayServer display, bool visible) => display.SetWindowVisible(visible);

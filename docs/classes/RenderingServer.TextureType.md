@@ -10,4 +10,4 @@ Selects the native image shape for [`RenderingServer.TextureCreateFromNativeHand
 | --- | --- |
 | `Texture = 0` | One ordinary sampled image with one layer and unit depth. |
 
-Use `RenderingServer.TextureType.Texture` when wrapping a live Direct3D 11 ordinary texture. The current [import adapter](../components/native-texture-handles.md#importing-direct3d-11-textures) requires a renderer-local sampled color image.
+Use `RenderingServer.TextureType.Texture` when wrapping a live Direct3D 11 or Direct3D 12 ordinary texture. The [import adapters](../components/native-texture-handles.md) require a renderer-local sampled color image.

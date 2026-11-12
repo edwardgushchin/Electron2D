@@ -649,11 +649,26 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         return _textures[texture].Handle.DangerousGetHandle();
     }
 
-    internal D3D11CanvasTexture ImportD3D11Texture(nint native, int width, int height) => new(this, _renderer, native, width, height);
+    internal NativeCanvasTexture ImportNativeTexture(nint native, Vector2i size)
+    {
+        if (Driver == "direct3d12")
+        {
+            foreach (var entry in _textures.Values)
+                if (D3D12Resource(entry.Handle) == native)
+                    throw new ArgumentException("The resource already belongs to this renderer.", "nativeHandle");
+            foreach (var target in ViewportTargets)
+                if (D3D12Resource(target.Current) == native || D3D12Resource(target.Next) == native)
+                    throw new ArgumentException("The resource already belongs to a viewport target.", "nativeHandle");
+        }
+        return new(this, _renderer, native, size);
+    }
+
+    private static nint D3D12Resource(RenderHandle texture) =>
+        SDL.GetPointerProperty(SDL.GetTextureProperties(texture.DangerousGetHandle()), SDL.Props.TextureD3D12TexturePointer, 0);
 
     internal void FlushImportedTexture() => Check(SDL.FlushRenderer(_renderer.DangerousGetHandle()), "flush native texture commands");
 
-    private void ValidateImportedTexture(D3D11CanvasTexture texture)
+    private void ValidateImportedTexture(NativeCanvasTexture texture)
     {
         if (!ReferenceEquals(texture.Backend, this))
             throw new NotSupportedException("The imported texture belongs to a different Compatibility renderer.");
@@ -782,16 +797,46 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     {
         var renderer = _renderer.DangerousGetHandle();
         Check(SDL.SetRenderTarget(renderer, target.DangerousGetHandle()), "bind readback target");
+        try { return ReadCurrentPixels(renderer); }
+        finally { Check(SDL.SetRenderTarget(renderer, 0), "restore readback target"); }
+    }
+
+    internal Image ReadImportedTexture(nint texture, Vector2i size)
+    {
+        // SDL owns the Direct3D 12 resource state. Sample 1:1 with blending disabled
+        // to preserve straight alpha without introducing an external resource barrier.
+        var renderer = _renderer.DangerousGetHandle();
+        var previous = SDL.GetRenderTarget(renderer);
+        Check(SDL.GetTextureBlendMode(texture, out var blend), "read imported texture blending");
+        Check(SDL.GetTextureScaleMode(texture, out var scale), "read imported texture filtering");
+        using var target = new RenderHandle(SDL.CreateTexture(renderer, SDL.PixelFormat.ABGR8888,
+            SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, _renderer);
         try
         {
-            using var surface = new RenderHandle(SDL.RenderReadPixels(renderer, null), SDL.DestroySurface);
-            using var rgba = new RenderHandle(SDL.ConvertSurface(surface.DangerousGetHandle(), (BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888)), SDL.DestroySurface);
-            var data = Marshal.PtrToStructure<SDL.Surface>(rgba.DangerousGetHandle());
-            var pixels = new byte[checked(data.Width * data.Height * 4)];
-            for (var y = 0; y < data.Height; y++) Marshal.Copy(data.Pixels + y * data.Pitch, pixels, y * data.Width * 4, data.Width * 4);
-            return Image.CreateFromData(data.Width, data.Height, false, Image.Format.Rgba8, pixels);
+            Check(SDL.SetTextureBlendMode(texture, SDL.BlendMode.None), "disable imported texture blending");
+            Check(SDL.SetTextureScaleMode(texture, SDL.ScaleMode.Nearest), "select exact imported texture samples");
+            Check(SDL.SetRenderTarget(renderer, target.DangerousGetHandle()), "bind imported texture readback target");
+            Check(SDL.RenderTexture(renderer, texture, 0, 0), "copy imported texture to readback target");
+            return ReadCurrentPixels(renderer);
         }
-        finally { Check(SDL.SetRenderTarget(renderer, 0), "restore readback target"); }
+        finally
+        {
+            var restored = SDL.SetRenderTarget(renderer, previous);
+            restored &= SDL.SetTextureBlendMode(texture, blend);
+            restored &= SDL.SetTextureScaleMode(texture, scale);
+            Check(restored, "restore imported texture readback state");
+        }
+    }
+
+    private static Image ReadCurrentPixels(nint renderer)
+    {
+        using var surface = new RenderHandle(SDL.RenderReadPixels(renderer, null), SDL.DestroySurface);
+        using var rgba = new RenderHandle(SDL.ConvertSurface(surface.DangerousGetHandle(),
+            BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888), SDL.DestroySurface);
+        var data = Marshal.PtrToStructure<SDL.Surface>(rgba.DangerousGetHandle());
+        var pixels = new byte[checked(data.Width * data.Height * 4)];
+        for (var y = 0; y < data.Height; y++) Marshal.Copy(data.Pixels + y * data.Pitch, pixels, y * data.Width * 4, data.Width * 4);
+        return Image.CreateFromData(data.Width, data.Height, false, Image.Format.Rgba8, pixels);
     }
 
     protected override unsafe void ImportPixels(RenderHandle target, Image pixels)

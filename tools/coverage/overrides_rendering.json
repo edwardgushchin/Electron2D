@@ -3,7 +3,7 @@
     {
       "godot": "RenderingServer::enum:TextureType",
       "electron2d": "T:Electron2D.RenderingServer.TextureType",
-      "reason": "ADRs 0004/0028: the ordinary image shape executes through Direct3D 11 Compatibility import. Layered import needs native array storage and sampling; volumes are excluded."
+      "reason": "ADRs 0004/0028: the ordinary image shape executes through Direct3D 11 and 12 Compatibility import. Layered import needs native array storage and sampling; volumes are excluded."
     },
     {
       "godot": "RenderingServer::enum_value:TextureType.TEXTURE_TYPE_2D",
@@ -13,7 +13,7 @@
     {
       "godot": "RenderingServer::method:texture_create_from_native_handle(int:RenderingServer.TextureType,int:Image.Format,int:,int:,int:,int:,int:,int:RenderingServer.TextureLayeredType)",
       "electron2d": "method:Electron2D.RenderingServer.TextureCreateFromNativeHandle(Electron2D.RenderingServer.TextureType,Electron2D.Image.Format,System.UInt64,System.Int32,System.Int32,System.Int32,System.Int32,Electron2D.TextureLayered.LayeredType)",
-      "reason": "ADR 0028: same-device Direct3D 11 Compatibility RGBA8/BGRA8 allocation with retained COM lifetime, immediate-context ordering and real canvas consumption."
+      "reason": "ADR 0028: same-device Direct3D 11 and 12 Compatibility RGBA8/BGRA8 allocations with retained COM lifetime, ordered handoff and real canvas consumption."
     },
     {
       "godot": "RenderingServer::method:texture_get_native_handle(RID:,bool:)",
@@ -7448,12 +7448,12 @@
         "RenderingServer::method:texture_create_from_native_handle(int:RenderingServer.TextureType,int:Image.Format,int:,int:,int:,int:,int:,int:RenderingServer.TextureLayeredType)"
       ],
       "state": "Partial",
-      "reason": "ADR 0028: Windows Direct3D 11 Compatibility executes same-device RGBA8/BGRA8 imports with retained COM lifetime, canvas sampling, update, readback, proxy and replacement. Vulkan needs image layout, queue ownership and acquisition/release. Other renderers need their native lifetime and synchronization adapters. Layered images and sRGB format views require corresponding sampled storage support. See docs/components/native-texture-handles.md."
+      "reason": "ADR 0028: Windows Direct3D 11 and 12 Compatibility execute same-device RGBA8/BGRA8 imports with retained COM lifetime, canvas sampling, update, readback, proxy and replacement. Direct3D 12 starts in COPY_DEST after completed producer work and requires exclusive state tracking. Returning state to external commands requires a handoff protocol. Vulkan needs layout, queue ownership and acquisition/release. OpenGL and GLES need a share-group, sampling and deletion contract. Layered images and sRGB format views require corresponding sampled storage support. See docs/components/native-texture-handles.md."
     },
     {
       "godot": ["RenderingServer::enum:TextureType"],
       "state": "Partial",
-      "reason": "ADRs 0004/0028: ordinary images execute through Direct3D 11 Compatibility; layered import is blocked on an array adapter."
+      "reason": "ADRs 0004/0028: ordinary images execute through Direct3D 11 and 12 Compatibility. Layered import needs a native array adapter."
     },
     {
       "godot": ["RenderingServer::enum_value:TextureType.TEXTURE_TYPE_2D"],

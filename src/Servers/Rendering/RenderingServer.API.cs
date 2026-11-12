@@ -341,7 +341,7 @@ public sealed partial class RenderingServer
     /// <returns>A caller-owned image, including checkerboard pixels for an uninitialized resource texture;
     /// null for a live proxy whose source has been released.</returns>
     /// <remarks>Uses original backing pixels for authored uploads, including the full source of an atlas view.
-    /// A native Direct3D 11 import reads the current allocation synchronously.</remarks>
+    /// A native Direct3D import reads the current allocation synchronously.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or not a texture.</exception>
     /// <exception cref="InvalidOperationException">The renderer is off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
