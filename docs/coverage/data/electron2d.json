@@ -184253,6 +184253,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.EnvironmentCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "EnvironmentCreate",
+    "signature": "public static Electron2D.RID EnvironmentCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.EnvironmentGlowSetUseBicubicUpscale(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -184386,6 +184399,30 @@
       {
         "name": "mode",
         "type": "Electron2D.CanvasBackgroundMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.EnvironmentSetCameraID(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "EnvironmentSetCameraID",
+    "signature": "public static System.Void EnvironmentSetCameraID(Electron2D.RID environment, System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "environment",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
         "default": null
       }
     ],
@@ -189787,6 +189824,30 @@
       {
         "name": "enabled",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.WorldSetEnvironment(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "WorldSetEnvironment",
+    "signature": "public static System.Void WorldSetEnvironment(Electron2D.RID worldCanvas, Electron2D.RID environment)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "worldCanvas",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "environment",
+        "type": "Electron2D.RID",
         "default": null
       }
     ],

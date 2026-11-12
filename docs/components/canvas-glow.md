@@ -6,7 +6,7 @@ The resource stores the enabled state, HDR extraction threshold and transition, 
 
 After the canvas pass resolves, the GPU copies its pixels to retained scratch storage in the target format. An RGBA8 viewport decodes sRGB to linear half-float before the first filtered read. An HDR viewport already supplies linear pixels. It extracts bright pixels and progressively downsamples through the highest enabled level. A full-size pass combines the selected levels and optional map with the original pixels, keeping the original alpha. The result publishes through the viewport texture, image readback and window presentation. Canvas screen-texture commands run during the scene pass and see its raw content. Never-clear frames preserve unprocessed history so their halo cannot accumulate on subsequent redraws. Scratch targets retire when glow is disabled or the viewport target changes. No framebuffer data travels through managed memory.
 
-[RenderingServer](../classes/RenderingServer.md#canvas-glow) can update the settings on a resource's borrowed RID with one validated call. The upsampling switch applies to the current renderer session. Bilinear upsampling is the default. The viewport environment mode can explicitly enable or bypass the effect. By default it inherits the parent viewport's mode, with an enabled root.
+[RenderingServer](../classes/RenderingServer.md#canvas-glow) can update the settings on an owned or borrowed environment RID with one validated call. The upsampling switch applies to the current renderer session. Bilinear upsampling is the default. The viewport environment mode can explicitly enable or bypass the effect. By default it inherits the parent viewport's mode, with an enabled root.
 
 ## Verification and remaining profiles
 

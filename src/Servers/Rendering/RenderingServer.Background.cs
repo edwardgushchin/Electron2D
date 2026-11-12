@@ -3,7 +3,7 @@ namespace Electron2D;
 public sealed partial class RenderingServer
 {
     /// <summary>Selects the background mode of a live canvas environment.</summary>
-    /// <param name="environment">A live borrowed environment identity.</param>
+    /// <param name="environment">A live owned or borrowed environment identity.</param>
     /// <param name="mode">The background mode.</param>
     /// <exception cref="ArgumentException">The identity is invalid or has a different resource type.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The mode is not selectable.</exception>
@@ -15,7 +15,7 @@ public sealed partial class RenderingServer
     }
 
     /// <summary>Sets the sRGB clear color used by a canvas environment in Color mode.</summary>
-    /// <param name="environment">A live borrowed environment identity.</param>
+    /// <param name="environment">A live owned or borrowed environment identity.</param>
     /// <param name="color">A finite clear color. The viewport controls clear alpha.</param>
     /// <exception cref="ArgumentException">The identity is invalid or has a different resource type.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A color component is nonfinite.</exception>
@@ -27,7 +27,7 @@ public sealed partial class RenderingServer
     }
 
     /// <summary>Applies background energy and a runtime linear exposure factor in one update.</summary>
-    /// <param name="environment">A live borrowed environment identity.</param>
+    /// <param name="environment">A live owned or borrowed environment identity.</param>
     /// <param name="multiplier">A finite, nonnegative linear energy multiplier.</param>
     /// <param name="exposureValue">A finite, nonnegative linear exposure multiplier. One preserves ordinary authored exposure.</param>
     /// <remarks>The runtime factor is reset by authoring BackgroundEnergyMultiplier. Scene files store the energy multiplier.</remarks>
@@ -43,7 +43,7 @@ public sealed partial class RenderingServer
     }
 
     /// <summary>Sets the inclusive background layer limit for a live canvas environment in Canvas mode.</summary>
-    /// <param name="environment">A live borrowed environment identity.</param>
+    /// <param name="environment">A live owned or borrowed environment identity.</param>
     /// <param name="maxLayer">The last background canvas layer, including all its sublayers.</param>
     /// <exception cref="ArgumentException">The identity is invalid or has a different resource type.</exception>
     /// <exception cref="InvalidOperationException">The renderer is unavailable, access is off-owner or submission is in progress.</exception>
@@ -51,6 +51,19 @@ public sealed partial class RenderingServer
     {
         RequireService().EnsureServerViewportChange();
         RenderingProgramRegistry<CanvasEnvironment>.Resolve(environment).BackgroundCanvasMaxLayer = maxLayer;
+    }
+
+    /// <summary>Selects the registered camera feed drawn in CameraFeed mode.</summary>
+    /// <param name="environment">A live owned or borrowed canvas environment identity.</param>
+    /// <param name="id">The nonnegative process-local feed ID. Zero selects no feed.</param>
+    /// <remarks>Selecting a feed does not activate it or transfer its ownership.</remarks>
+    /// <exception cref="ArgumentException">The environment identity is invalid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="id"/> is negative.</exception>
+    /// <exception cref="InvalidOperationException">The rendering service is unavailable, access is off-owner or a submission is in progress.</exception>
+    public static void EnvironmentSetCameraID(RID environment, int id)
+    {
+        RequireService().EnsureServerViewportChange();
+        RenderingProgramRegistry<CanvasEnvironment>.Resolve(environment).BackgroundCameraFeedID = id;
     }
 
     private void PrepareFrameBackground(CanvasFrame frame, CanvasBackgroundSettings? settings)

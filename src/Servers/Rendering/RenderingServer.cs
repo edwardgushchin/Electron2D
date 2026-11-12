@@ -690,6 +690,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             finally
             {
+                try { ReleaseOwnedEnvironments(); } catch (Exception error) { (errors ??= []).Add(error); }
                 _forcedTextureRedraw?.Clear(); _forcedTextureRedraw = null; _presentedWindows.Clear(); _publisherFramePreDrawCore.Handlers = _publisherFramePostDrawCore.Handlers = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
                 _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _modelPoses.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _repeatModels.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 _contactCanvases.Clear();

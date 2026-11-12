@@ -75,15 +75,17 @@ Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon 
 
 ## Canvas background
 
-`EnvironmentSetBackground` and `EnvironmentSetBGColor` update a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. `EnvironmentSetCanvasMaxLayer` sets the inclusive upper layer for `Canvas` mode. `EnvironmentSetBGEnergy` applies a finite nonnegative energy multiplier and runtime exposure factor together. `ViewportSetEnvironmentMode` controls background and effects selection for the viewport. See [canvas environment backgrounds](../components/canvas-environment-background.md).
+`EnvironmentSetBackground` and `EnvironmentSetBGColor` update a live owned or borrowed [CanvasEnvironment](CanvasEnvironment.md). `EnvironmentSetCanvasMaxLayer` sets the inclusive upper layer for `Canvas` mode. `EnvironmentSetBGEnergy` applies a finite nonnegative energy multiplier and runtime exposure factor together. `EnvironmentSetCameraID` selects a registered feed by ID. `ViewportSetEnvironmentMode` controls background and effects selection for the viewport.
+
+`EnvironmentCreate` returns a caller-owned environment RID. `WorldSetEnvironment` binds an owned or borrowed environment to a world by `World.Canvas`. All viewports sharing that world see the override when enabled. Passing an empty RID, retiring the environment or closing the session restores authored selection. Release an owned RID through `FreeRID`. See [canvas environment backgrounds](../components/canvas-environment-background.md).
 
 ## Canvas glow
 
-`EnvironmentSetGlow` updates a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. It copies seven weights and validates settings before publication. `EnvironmentGlowSetUseBicubicUpscale` switches the upsampling filter for the active session. `ViewportSetEnvironmentMode` enables, disables or inherits the effect per viewport. See [canvas glow](../components/canvas-glow.md).
+`EnvironmentSetGlow` updates a live [CanvasEnvironment](CanvasEnvironment.md) through its owned or borrowed RID. It copies seven weights and validates settings before publication. `EnvironmentGlowSetUseBicubicUpscale` switches the upsampling filter for the active session. `ViewportSetEnvironmentMode` enables, disables or inherits the effect per viewport. See [canvas glow](../components/canvas-glow.md).
 
 ## Canvas tone mapping
 
-`EnvironmentSetTonemap` sets the tone operator, exposure and white point on a live [CanvasEnvironment](CanvasEnvironment.md) through its borrowed RID. The AgX mode uses its separate white point. `EnvironmentSetTonemapAGXContrast` changes the AgX contrast. Both calls validate settings and owner-thread access before publishing. See [canvas tone mapping](../components/canvas-tonemapping.md).
+`EnvironmentSetTonemap` sets the tone operator, exposure and white point on a live [CanvasEnvironment](CanvasEnvironment.md) through its owned or borrowed RID. The AgX mode uses its separate white point. `EnvironmentSetTonemapAGXContrast` changes the AgX contrast. Both calls validate settings and owner-thread access before publishing. See [canvas tone mapping](../components/canvas-tonemapping.md).
 
 ## Canvas color adjustment
 

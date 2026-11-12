@@ -1,6 +1,16 @@
 {
   "mappings": [
     {
+      "godot": "RenderingServer::method:environment_create()",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentCreate()",
+      "reason": "ADRs 0004/0028/0095: caller-owned canvas environment creation, shared world selection through the borrowed world canvas RID, all applicable existing setting operations, retirement and fallback to authored scene selection execute on the current GPU and Compatibility paths. See docs/components/canvas-environment-background.md#server-ownership."
+    },
+    {
+      "godot": "RenderingServer::method:environment_set_camera_id(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.EnvironmentSetCameraID(Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0028/0051/0115: the live owned or borrowed environment setter selects the registered feed by process-local ID on GPU and Compatibility. Zero clears selection. Caller-owned frames are verified on Windows. Physical capture, external images and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#camera-feed."
+    },
+    {
       "godot": "Environment::enum_value:BGMode.BG_CANVAS",
       "electron2d": "enumValue:Electron2D.CanvasBackgroundMode.Canvas()",
       "reason": "ADRs 0028/0051: Canvas splits texture-backed composition at the signed inclusive layer limit. GPU effects run before foreground blending and screen reads. GPU and Compatibility retain raw background history. Direct presentation and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#canvas-layers."
@@ -6104,10 +6114,17 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Needs a low-level canvas-world binding for caller-owned environment RIDs and matching retirement when the world, viewport or RID closes. Typed scene resources already provide borrowed IDs.",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028/0095: caller-owned canvas environment creation, shared world selection through the borrowed world canvas RID, all applicable existing setting operations, retirement and fallback to authored scene selection execute on the current GPU and Compatibility paths. See docs/components/canvas-environment-background.md#server-ownership.",
       "godot": [
         "RenderingServer::method:environment_create()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADRs 0028/0051/0115: the live owned or borrowed environment setter selects the registered feed by process-local ID on GPU and Compatibility. Zero clears selection. Caller-owned frames are verified on Windows. Physical capture, external images and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#camera-feed.",
+      "godot": [
+        "RenderingServer::method:environment_set_camera_id(RID:,int:)"
       ]
     },
     {
@@ -8396,6 +8413,11 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "method:Electron2D.RenderingServer.WorldSetEnvironment(Electron2D.RID,Electron2D.RID)",
+      "reason": "Projects the scenario_set_environment selection role onto the live World.Canvas identity for the canvas environment API. Spatial scenarios stay outside ADR 0004. The override is session-local and restores authored WorldEnvironment selection on retirement.",
+      "adr": "docs/decisions/rendering.md#adr-0028"
+    },
     {
       "electron2d": "constructor:Electron2D.CanvasEnvironment..ctor()",
       "reason": "Typed resource construction, descriptors, duplicate/reset/disposal hooks and the borrowed Resource.GetRID override supply the canvas environment's existing authoring and lifetime contract.",

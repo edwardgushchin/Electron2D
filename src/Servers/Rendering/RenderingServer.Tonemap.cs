@@ -3,7 +3,7 @@ namespace Electron2D;
 public sealed partial class RenderingServer
 {
     /// <summary>Publishes the operator, exposure and selected white point together on a canvas environment.</summary>
-    /// <param name="environment">A live borrowed environment identity.</param>
+    /// <param name="environment">A live owned or borrowed environment identity.</param>
     /// <param name="mode">The tone operator.</param>
     /// <param name="exposure">A finite, nonnegative linear multiplier.</param>
     /// <param name="white">A finite, positive input white point. AgX writes the separate AgX white point.</param>
@@ -20,7 +20,7 @@ public sealed partial class RenderingServer
     }
 
     /// <summary>Sets the AgX contrast of a live canvas environment.</summary>
-    /// <param name="environment">A live borrowed environment identity.</param>
+    /// <param name="environment">A live owned or borrowed environment identity.</param>
     /// <param name="contrast">A finite, positive contrast.</param>
     /// <exception cref="ArgumentException">The environment identity is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The contrast is invalid.</exception>

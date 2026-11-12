@@ -10,6 +10,8 @@
 
 Scalar glow settings accept finite, nonnegative values through 65,504. Mix and map strength accept 0 through 1.
 
+`GetRID()` supplies the borrowed identity for server settings and runtime world bindings. The caller retains the resource. Use `RenderingServer.EnvironmentCreate()` for a session-owned server identity.
+
 ## Background
 
 `BackgroundMode` selects `ClearColor`, `Color`, `Canvas`, `Keep` or `CameraFeed`. `BackgroundCanvasMaxLayer` defaults to zero and selects the highest canvas layer included in the background. `BackgroundCameraFeedID` selects the registered feed, initially ID one. `BackgroundColor` defaults to black and `BackgroundEnergyMultiplier` defaults to one. See [canvas environment backgrounds](../components/canvas-environment-background.md) for clear policy, retention and color transfer.

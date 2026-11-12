@@ -20,7 +20,7 @@ public sealed partial class RenderingServer
     /// <summary>The number of available HDR glow levels.</summary>
     public const int MaxGlowLevels = GlowSettings.LevelCount;
 
-    /// <summary>Updates the glow on an environment resource identified by its borrowed RID.</summary>
+    /// <summary>Updates glow on a live owned or borrowed canvas environment.</summary>
     /// <param name="environment">A live canvas environment identity.</param>
     /// <param name="enabled">Whether to apply glow to its GPU canvas targets.</param>
     /// <param name="levels">Seven copied, nonnegative blur weights in increasing radius order.</param>
@@ -115,8 +115,15 @@ public sealed partial class RenderingServer
 
     private CanvasEnvironment? SelectEnvironment(Viewport viewport, SceneTree tree)
     {
-        if (!tree.HasWorldEnvironment || !EnvironmentEnabled(viewport) || viewport.FindWorld() is not { } world) return null;
-        return tree.SelectWorldEnvironment(world.Runtime)?.LiveEnvironment;
+        if ((!tree.HasWorldEnvironment && _worldEnvironmentOverrides is null) || !EnvironmentEnabled(viewport) ||
+            viewport.FindWorld() is not { } world) return null;
+        var runtime = world.Runtime;
+        if (_worldEnvironmentOverrides is { } bindings && bindings.TryGetValue(runtime, out var reference))
+        {
+            if (reference.TryGetTarget(out var environment) && !environment.IsDisposed) return environment;
+            bindings.Remove(runtime);
+        }
+        return tree.SelectWorldEnvironment(runtime)?.LiveEnvironment;
     }
 
     private CanvasPostProcess SelectPostProcess(Viewport viewport, CanvasPostProcess settings)

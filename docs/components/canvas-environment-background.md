@@ -14,7 +14,19 @@ Assign a [CanvasEnvironment](../classes/CanvasEnvironment.md) to the scene's [Wo
 
 `ViewportClearMode.Never` retains the canvas. In `Canvas` mode it retains the background layer range. `Keep` also retains it under `Always`. An explicit `Once` takes precedence and clears `Keep` to the session default, then changes the viewport clear mode to `Never` after successful submission. Texture-backed GPU and Compatibility viewports use native history. GPU MSAA retains its unresolved samples and active effects read unprocessed history. Direct-to-screen Compatibility draws can clear a region, but their native window backbuffer does not provide a retained per-viewport image for `Keep`.
 
-The resource stores the mode, color, energy multiplier, canvas layer limit and process-local feed ID in typed scenes. The static [RenderingServer methods](../classes/RenderingServer.md#canvas-background) use the live environment's borrowed RID. `EnvironmentSetBGEnergy` sets the multiplier and a separate runtime linear exposure factor together. Assigning the resource multiplier restores unit exposure. Duplication and scene files retain authored settings.
+The resource stores the mode, color, energy multiplier, canvas layer limit and process-local feed ID in typed scenes. The static [RenderingServer methods](../classes/RenderingServer.md#canvas-background) accept a live owned or borrowed environment RID. `EnvironmentSetBGEnergy` sets the multiplier and a separate runtime linear exposure factor together. Assigning the resource multiplier restores unit exposure. Duplication and scene files retain authored settings.
+
+## Server ownership
+
+`RenderingServer.EnvironmentCreate()` retains a default canvas environment in the rendering session and returns its caller-owned RID. The same setters configure it and a borrowed `CanvasEnvironment.GetRID()`. Release an owned identity with `FreeRID`. Closing the rendering session also retires every remaining owned environment.
+
+`WorldSetEnvironment(world.Canvas, environment)` selects a runtime override for all viewports using that world. Viewport environment mode can bypass the override. A viewport switching worlds uses the destination world's selection. One environment can be bound to several worlds. This operation uses the world's borrowed canvas identity and runs on the renderer owner thread outside frame capture and submission.
+
+The binding borrows the resource and does not extend its lifetime. Passing an empty environment RID, freeing the owned environment, or disposing or releasing the borrowed resource restores authored `WorldEnvironment` selection. A world or rendering session can close independently of a borrowed environment. Bindings live only in the active rendering session and have no scene-file representation.
+
+`EnvironmentSetCameraID` selects an active registered feed by process-local ID. It changes the stored feed selection without activating the feed. Zero clears the selection and negative IDs are rejected.
+
+Run `ELECTRON2D_TEST_SERVER_ENVIRONMENT=managed`, `gpu` or `compatibility`. The native profile checks pixels in shared and independent worlds, live effect and camera settings, viewport modes, clearing and retirement, and a reopened session.
 
 ## Canvas layers
 
