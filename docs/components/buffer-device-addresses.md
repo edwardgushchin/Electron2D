@@ -1,6 +1,6 @@
 # Buffer device addresses
 
-Last updated: 2026-10-28
+Last updated: 2026-11-13
 
 [RenderingDevice](../classes/RenderingDevice.md) executes physical-storage pointer shaders under [ADR 0028](../decisions/rendering.md#adr-0028). `HasFeature(Features.SupportsBufferDeviceAddress)` reports the enabled logical-device feature and allocation adapter. This first native profile requires the pinned Vulkan backend and Vulkan 1.2; other backends refuse address creation and pointer modules before publication.
 
@@ -10,7 +10,17 @@ Last updated: 2026-10-28
 
 Address allocations own one Vulkan buffer and device-local memory with the required usage/allocation flags. They stay outside SDL's relocating allocator. Existing SDL uploads, transfers, vertex/index binding, indirect commands and readback use that same storage. The Vulkan uniform limit is 4 KiB, matching the pinned descriptor range; oversized host and native uniforms reject instead of accessing an undersized descriptor. Native uniform allocations have at least that range, retain their logical public size and bind GPU storage directly; pointer or descriptor writes therefore reach subsequent uniform consumers without a CPU shadow readback. Ordinary uniforms retain the host-data path. Native uniform/storage allocation requires its current Vulkan descriptor adapter even without an address flag.
 
-The command adapter conservatively retains live address/native-uniform buffers on the shared native device for pointer execution, because numeric shader data cannot enumerate its referenced resources. Full memory dependencies order pointer dispatches and graphics pass boundaries with later shader and transfer consumers. Completed or cancelled commands release their references; retired allocations are collected after submission and at device retirement. Public resource ownership remains per RenderingDevice. Keep referenced buffers alive, use only addresses from that device and obey bounds, alignment and invocation race rules. Saving an address in another buffer does not extend its public lifetime.
+The Vulkan command adapter conservatively retains live address/native-uniform buffers on the shared native device for pointer execution, because numeric shader data cannot enumerate its referenced resources. Full memory dependencies order pointer dispatches and graphics pass boundaries with later shader and transfer consumers. Completed or cancelled commands release their references; retired allocations are collected after submission and at device retirement. Public resource ownership remains per RenderingDevice. Keep referenced buffers alive, use only addresses from that device and obey bounds, alignment and invocation race rules. Saving an address in another buffer does not extend its public lifetime.
+
+## Direct3D 12 native uniforms
+
+`UniformBufferCreate(..., BufferCreationBits.AsStorage)` allocates a Direct3D 12 default-heap buffer with storage views and a constant-buffer read state. A dispatch can write it through a storage binding. Subsequent direct or indirect dispatches and vertex and fragment stages read that same allocation through root constant-buffer views. Copy, clear, update and readback use the existing ordered GPU transfers. The command buffer retains each bound allocation through completion. Ordinary host uniform data and push constants retain their per-command storage and can alternate with native bindings. [Direct3D 12 root CBVs](https://learn.microsoft.com/en-us/windows/win32/direct3d12/using-descriptors-directly-in-the-root-signature)
+
+One Direct3D 12 dispatch cannot use the same buffer as a uniform and writable storage. Split the producer and consumer into successive dispatches. The native module must support this binding path. `BufferGetDeviceAddress` returns zero for the storage-only role, and the Direct3D 12 profile still rejects `BufferCreationBits.DeviceAddress`.
+
+Disjoint self-copies go through device-owned scratch storage that grows to the largest requested range. Direct3D 12 assigns copy state to the entire buffer, so the two GPU copies keep its source and destination states separate. Scratch allocations remain live through queued work.
+
+The [native uniform test](../../tests/Electron2D.Tests/NativeUniformTests.cs) uses `ELECTRON2D_TEST_NATIVE_UNIFORMS=direct3d12` or `vulkan` to check GPU-written values, host/native rebinding, graphics pixels, transfers, queued readback and retirement. The `unavailable` profile checks rejection on Direct3D 12 with an older native module. Other platforms and complete native package qualification remain open.
 
 ## Shader interface
 

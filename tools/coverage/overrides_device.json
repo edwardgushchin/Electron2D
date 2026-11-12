@@ -4627,11 +4627,23 @@
       "state": "Implemented",
       "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified.",
       "godot": [
-        "RenderingDevice::method:buffer_copy(RID:,RID:,int:,int:,int:)",
-        "RenderingDevice::method:buffer_clear(RID:,int:,int:)",
         "RenderingDevice::enum:StorageBufferUsage",
         "RenderingDevice::enum_value:StorageBufferUsage.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT"
       ]
+    },
+    {
+      "godot": [
+        "RenderingDevice::method:buffer_copy(RID:,RID:,int:,int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified. Direct3D 12 supports GPU-only copies to and from native uniforms and routes disjoint self-copies through retained GPU scratch storage."
+    },
+    {
+      "godot": [
+        "RenderingDevice::method:buffer_clear(RID:,int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified. Direct3D 12 native uniforms follow the ordered GPU clear and transfer path."
     },
     {
       "state": "Implemented",
@@ -5105,7 +5117,6 @@
         "RenderingDevice::enum_value:BlendOperation.BLEND_OP_MINIMUM",
         "RenderingDevice::enum_value:BlendOperation.BLEND_OP_REVERSE_SUBTRACT",
         "RenderingDevice::enum_value:BlendOperation.BLEND_OP_SUBTRACT",
-        "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_AS_STORAGE_BIT",
         "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_0",
         "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_1",
         "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_2",
@@ -5153,7 +5164,6 @@
         "RenderingDevice::method:draw_list_bind_vertex_array(int:,RID:)",
         "RenderingDevice::method:draw_list_bind_vertex_buffers_format(int:,int:,int:,RID[]:,PackedInt64Array:)",
         "RenderingDevice::method:draw_list_disable_scissor(int:)",
-        "RenderingDevice::method:draw_list_draw(int:,bool:,int:,int:)",
         "RenderingDevice::method:draw_list_draw_indirect(int:,bool:,RID:,int:,int:,int:)",
         "RenderingDevice::method:draw_list_enable_scissor(int:,Rect2:)",
         "RenderingDevice::method:draw_list_end()",
@@ -5169,6 +5179,20 @@
         "class:RDVertexAttribute"
       ],
       "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. ADR 0028: ordinary writable graphics StorageBuffer execution and inter-draw ordering now follow docs/components/local-compute.md#writable-graphics-storage-buffers; unsupported native stages reject before shader/binary publication. ADR 0028: writable vertex/fragment ImageBuffer stores and R32 atomics now execute through existing encoded buffers and draw dependencies, including packed neighbors, descriptor choices/specialized counts and later sampled/compute/CPU consumers; native texel-only capabilities are removed and core graphics no longer forces Vulkan 1.2. HLSL source specialization-array lengths retain their pinned frontend dependency; see docs/components/local-compute.md#writable-formatted-graphics-producers."
+    },
+    {
+      "godot": [
+        "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_AS_STORAGE_BIT"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. ADR 0028: ordinary writable graphics StorageBuffer execution and inter-draw ordering now follow docs/components/local-compute.md#writable-graphics-storage-buffers; unsupported native stages reject before shader/binary publication. ADR 0028: writable vertex/fragment ImageBuffer stores and R32 atomics now execute through existing encoded buffers and draw dependencies, including packed neighbors, descriptor choices/specialized counts and later sampled/compute/CPU consumers; native texel-only capabilities are removed and core graphics no longer forces Vulkan 1.2. HLSL source specialization-array lengths retain their pinned frontend dependency; see docs/components/local-compute.md#writable-formatted-graphics-producers. Direct3D 12 native uniform allocations also support compute storage writes and direct compute and graphics uniform reads."
+    },
+    {
+      "godot": [
+        "RenderingDevice::method:draw_list_draw(int:,bool:,int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. ADR 0028: ordinary writable graphics StorageBuffer execution and inter-draw ordering now follow docs/components/local-compute.md#writable-graphics-storage-buffers; unsupported native stages reject before shader/binary publication. ADR 0028: writable vertex/fragment ImageBuffer stores and R32 atomics now execute through existing encoded buffers and draw dependencies, including packed neighbors, descriptor choices/specialized counts and later sampled/compute/CPU consumers; native texel-only capabilities are removed and core graphics no longer forces Vulkan 1.2. HLSL source specialization-array lengths retain their pinned frontend dependency; see docs/components/local-compute.md#writable-formatted-graphics-producers. Direct3D 12 vertex and fragment stages read GPU-written native uniforms and can alternate with host bindings in one list."
     },
     {
       "state": "Partial",
@@ -5496,14 +5520,14 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. Metal runtime storage-array lengths now receive actual dispatch byte ranges through a private readonly table, preserving logical descriptors and eight-storage/four-uniform capacity; local translated layouts and same-submission rebinding execute. Run 40097639786 at 025f1514f passes six native Metal particle cohorts on ARM64 and x64, including direct dispatch with eight storage/four uniform buffers and same-submission rebinding. Full suites and indirect/specialized/binary variant acceptance remain separate.",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. Metal runtime storage-array lengths now receive actual dispatch byte ranges through a private readonly table, preserving logical descriptors and eight-storage/four-uniform capacity; local translated layouts and same-submission rebinding execute. Run 40097639786 at 025f1514f passes six native Metal particle cohorts on ARM64 and x64, including direct dispatch with eight storage/four uniform buffers and same-submission rebinding. Full suites and indirect/specialized/binary variant acceptance remain separate. Direct3D 12 native uniforms observe ordered GPU writes. A dispatch rejects simultaneous constant-buffer and writable storage use of the same allocation.",
       "godot": [
         "RenderingDevice::method:compute_list_dispatch(int:,int:,int:,int:)"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified. Metal runtime storage-array lengths now receive actual dispatch byte ranges through a private readonly table, preserving logical descriptors and eight-storage/four-uniform capacity; local translated layouts and same-submission rebinding execute. Run 40097639786 at 025f1514f passes six native Metal particle cohorts on ARM64 and x64, including direct dispatch with eight storage/four uniform buffers and same-submission rebinding. Full suites and indirect/specialized/binary variant acceptance remain separate.",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified. Metal runtime storage-array lengths now receive actual dispatch byte ranges through a private readonly table, preserving logical descriptors and eight-storage/four-uniform capacity; local translated layouts and same-submission rebinding execute. Run 40097639786 at 025f1514f passes six native Metal particle cohorts on ARM64 and x64, including direct dispatch with eight storage/four uniform buffers and same-submission rebinding. Full suites and indirect/specialized/binary variant acceptance remain separate. Direct3D 12 executes indirect dispatch with GPU-written native uniform data and host/native rebinding.",
       "godot": [
         "RenderingDevice::method:compute_list_dispatch_indirect(int:,RID:,int:)"
       ]
@@ -5737,7 +5761,7 @@
         "RenderingDevice::method:uniform_buffer_create(int:,PackedByteArray:,int:RenderingDevice.BufferCreationBits)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0028: stable native storage/vertex/index/uniform buffer addresses execute physical-storage compute and independently enabled vertex/fragment pointer shaders. Transfers, indirect/storage bindings, native uniform reads, copied SPIR-V/binaries, typed specialization, push pointer reconstruction, command retention/barriers and retirement share actual GPU storage. See docs/components/buffer-device-addresses.md and tests/DeviceGraphicsStorage.Consumer/Addresses.cs. Linux/Vulkan execution and prepared zero owner-thread managed bytes are checked; foreign targets, native allocations and physical HDR acceptance remain separate."
+      "reason": "ADR 0028: stable native storage/vertex/index/uniform buffer addresses execute physical-storage compute and independently enabled vertex/fragment pointer shaders. Transfers, indirect/storage bindings, native uniform reads, copied SPIR-V/binaries, typed specialization, push pointer reconstruction, command retention/barriers and retirement share actual GPU storage. See docs/components/buffer-device-addresses.md and tests/DeviceGraphicsStorage.Consumer/Addresses.cs. Linux/Vulkan execution and prepared zero owner-thread managed bytes are checked; foreign targets, native allocations and physical HDR acceptance remain separate. Direct3D 12 AsStorage now uses default-heap storage and root CBVs in compute, vertex and fragment. Its physical pointer/address role still needs a shader and allocation adapter. See docs/components/buffer-device-addresses.md#direct3d-12-native-uniforms."
     },
     {
       "godot": [

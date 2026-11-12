@@ -25,7 +25,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private bool WritesGraphicsStorage(Entry program)
     {
-        if (program.PhysicalAddresses || NativeUniformsUsed(program)) return true;
+        if (program.PhysicalAddresses || VulkanUniformsUsed(program)) return true;
         foreach (var binding in program.Layout) if (binding.Writable && binding.Stage != ShaderStage.Compute) return true;
         return false;
     }

@@ -138,7 +138,7 @@ public sealed unsafe partial class RenderingDevice
             depth.StencilLoadOp = !target.Touched[_drawView * target.Textures.Length + depthIndex] && (_drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
             depth.StoreOp = SDL.GPUStoreOp.Store; depth.StencilStoreOp = depth.StoreOp;
         }
-        if (_graphicsPipeline is not null && (PipelineProgram(_graphicsPipeline).PhysicalAddresses || NativeUniformsUsed(PipelineProgram(_graphicsPipeline)))) PrepareAddressBuffers();
+        if (_graphicsPipeline is not null && (PipelineProgram(_graphicsPipeline).PhysicalAddresses || VulkanUniformsUsed(PipelineProgram(_graphicsPipeline)))) PrepareAddressBuffers();
         var pass = target.Empty != 0 ? NativeEmptyBegin(Device, 1, Commands(), target.Empty) : BeginGraphicsPass(Commands(), (nint)colors, (uint)layout.ColorSlots.Length, depthIndex >= 0 ? (nint)(&depth) : 0, depthIndex >= 0 ? layout.Formats[depthIndex] : DataFormat.Max);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin device graphics pass");
         _drawPass = pass; target.Visited[_drawView] = true;

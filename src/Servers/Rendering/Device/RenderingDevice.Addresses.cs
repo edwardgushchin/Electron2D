@@ -56,8 +56,14 @@ public sealed unsafe partial class RenderingDevice
         if ((creation & BufferCreationBits.DeviceAddress) != 0 && !HasFeature(Features.SupportsBufferDeviceAddress)) throw new NotSupportedException("Buffer addresses require an enabled native address allocation and shader adapter.");
         if (entry.Kind == Kind.Uniform)
         {
-            try { if (GPUDeviceFactory.ReadAddressSupport(Device, 2) != 1) throw new NotSupportedException("Native uniform storage requires its allocation and descriptor adapter."); }
+            var direct3D = _context.Driver == "direct3d12";
+            try { if (GPUDeviceFactory.ReadAddressSupport(Device, direct3D ? 3u : 2u) != 1) throw new NotSupportedException("Native uniform storage requires its allocation and descriptor adapter."); }
             catch (EntryPointNotFoundException error) { throw new NotSupportedException("Native uniform storage requires the current native descriptor adapter.", error); }
+            if (direct3D)
+            {
+                info.Usage |= SDL.GPUBufferUsageFlags.Vertex;
+                return new(SDL.CreateGPUBuffer(Device, info), h => SDL.ReleaseGPUBuffer(Device, h), _context.Handle);
+            }
         }
         var buffer = NativeAddressCreate(Device, 1, in info, (entry.Kind == Kind.Uniform ? 1u : 0u) | ((creation & BufferCreationBits.DeviceAddress) != 0 ? 2u : 0u), out var address);
         if (buffer == 0) throw GPUPhysicsDevice.Failure("create addressable buffer");
@@ -75,8 +81,9 @@ public sealed unsafe partial class RenderingDevice
     private readonly nint[] _addressUniforms = new nint[12];
     private uint _addressUniformMask;
     private static bool HostUniform(Entry entry) => entry.Kind == Kind.Uniform && entry.Handle is null;
-    private bool NativeUniformsUsed(Entry program)
+    private bool VulkanUniformsUsed(Entry program)
     {
+        if (_context.Driver != "vulkan") return false;
         foreach (var binding in program.Layout)
             if (binding.Native >= 0 && binding.Type == UniformType.UniformBuffer && _sets.TryGetValue(binding.Set, out var set) && set.Bindings.TryGetValue(binding.Slot, out var ids) && _entries.TryGetValue(ids[ResourceID(binding)], out var buffer) && buffer.Handle is not null) return true;
         return false;
@@ -84,8 +91,9 @@ public sealed unsafe partial class RenderingDevice
     private void BindAddressUniform(Entry buffer, ShaderStage stage, int slot)
     {
         var index = (stage == ShaderStage.Compute ? 2 : stage == ShaderStage.Vertex ? 0 : 1) * 4 + slot;
-        if (NativeAddressUniform(Device, 1, _command, (uint)index / 4, (uint)slot, buffer.NativeHandle, ref _addressUniforms[index]) != 1) throw new InvalidOperationException("Native uniform storage could not be bound.");
-        _addressUniformMask |= 1u << index;
+        var abi = _context.Driver == "direct3d12" ? 2u : 1u;
+        if (NativeAddressUniform(Device, abi, _command, (uint)index / 4, (uint)slot, buffer.NativeHandle, ref _addressUniforms[index]) != 1) throw new InvalidOperationException("Native uniform storage could not be bound.");
+        if (abi == 1) _addressUniformMask |= 1u << index;
     }
     private void RestoreAddressUniforms()
     {

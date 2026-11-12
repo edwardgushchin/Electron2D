@@ -76,7 +76,7 @@ RenderingDevice [native resource labels](../components/local-compute.md#native-r
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-11-12
+Last updated: 2026-11-13
 
 [Viewport mipmap bias](../components/viewport-mipmap-bias.md) controls next-image mip selection through scene, RenderingServer and project policies while preserving authored sampler and target identities.
 
@@ -666,7 +666,7 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 
 [Native sample controls](../components/multisample-state.md) execute copied masks, sample shading/fraction and alpha-to-one, with independent feature refusal, sample-rate shader publication guards and real resolve/storage/canvas consumers. Keep nonempty mask vector shape, copied variant state and the native/platform qualification limits together.
 
-[Buffer device addresses](../components/buffer-device-addresses.md) execute pointer-based compute and graphics through stable native allocations, including direct GPU uniform consumers and capability refusal.
+[Buffer device addresses](../components/buffer-device-addresses.md) execute Vulkan pointer-based compute and graphics through stable native allocations. [Direct3D 12 native uniforms](../components/buffer-device-addresses.md#direct3d-12-native-uniforms) bind GPU-written data in compute, vertex and fragment stages.
 
 [Canvas follow-scale preview](../components/canvas-rendering.md#canvas-follow-scale-preview) now executes through one renderer-session policy on the shared GPU/Compatibility composition, preserving authored transforms, input, snapping and complete attachment overrides.
 

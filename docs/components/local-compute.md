@@ -4,11 +4,11 @@
 
 [Native FP32 atomics](float-atomics.md) execute load/store/exchange and addition over buffer, shared and R32SFLOAT image storage, including descriptor/layer/sample selection and graphics/address consumers. The linked contract owns independent feature negotiation, ordering, unsupported precision/resource gates and Linux qualification.
 
-Last updated: 2026-11-12
+Last updated: 2026-11-13
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
-[Buffer device addresses](buffer-device-addresses.md) add stable physical-storage pointers, native uniform/storage roles and command-owned synchronization without CPU shadow copies.
+[Buffer device addresses](buffer-device-addresses.md) add stable Vulkan physical-storage pointers and command-owned synchronization. [Direct3D 12 native uniforms](buffer-device-addresses.md#direct3d-12-native-uniforms) use GPU-written buffers as compute and graphics constants without CPU readback.
 
 ## Lifetime and execution
 

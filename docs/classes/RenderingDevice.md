@@ -9,7 +9,7 @@ contents retain their recorded encoding across output changes and transfer on GP
 new screen lists use the current format. Existing owner/list/window lifetime guards
 and framebuffer-format identities remain in effect.
 
-Last updated: 2026-11-12
+Last updated: 2026-11-13
 
 [Copied native depth/stencil state](../components/depth-stencil-state.md) extends pipeline creation with stored-depth bounds and independent visible-face masks/reference, including derived native variants.
 
@@ -415,6 +415,8 @@ public Electron2D.RID UniformBufferCreate(System.UInt32 sizeBytes, System.ReadOn
 ```
 
 Creates a uniform buffer, optionally backed by native addressable or storage-capable data.
+
+On Vulkan and Direct3D 12, `AsStorage` allows GPU writes followed by direct uniform reads in compute or graphics stages. A single Direct3D 12 dispatch cannot bind the same buffer in both roles. [Native uniform behavior](../components/buffer-device-addresses.md#direct3d-12-native-uniforms)
 
 A device-owned buffer identity.
 

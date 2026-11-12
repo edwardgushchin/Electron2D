@@ -174,7 +174,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     }
 
     /// <summary>Creates a uniform buffer, optionally backed by native addressable or storage-capable data.</summary>
-    /// <remarks>Native roles bind GPU storage directly and participate in ordered transfers/readback. Ordinary uniforms retain copied host bytes. Unsupported allocation or address adapters reject before resource publication.</remarks>
+    /// <remarks>Native roles bind GPU storage directly and participate in ordered transfers/readback.
+    /// Direct3D 12 supports storage-capable uniforms. A dispatch cannot bind the same Direct3D 12
+    /// buffer as both a uniform and a storage buffer. Ordinary uniforms retain copied host bytes.
+    /// Unsupported allocation or address adapters reject before resource publication.</remarks>
     /// <param name="creationBits">Optional storage and stable device-address roles.</param>
     /// <param name="sizeBytes">Positive capacity divisible by four, at most 16 KiB.</param>
     /// <param name="data">Optional initial prefix; remaining bytes are zero.</param>
@@ -441,6 +444,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var sampledVariant = SampledVariant(Get(_pushPipeline, Kind.Pipeline));
         _pipeline = sampledVariant?.Programs[0] ?? PipelineProgram(Get(_pushPipeline, Kind.Pipeline));
         var buffers = stackalloc SDL.GPUStorageBufferReadWriteBinding[8]; var count = 0;
+        Span<nint> nativeUniforms = stackalloc nint[4]; var nativeUniformCount = 0;
         Span<uint> bufferSizes = stackalloc uint[8];
         var images = stackalloc SDL.GPUStorageTextureReadWriteBinding[8]; var imageCount = 0;
         var imageHandles = stackalloc nint[8];
@@ -463,13 +467,17 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[ResourceID(descriptor, 1)]).NativeHandle }; samplerCount++; }
             else if (StorageBinding(descriptor.Type)) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; bufferSizes[descriptor.Native] = buffer.Size; count++; }
             else if (HostUniform(buffer)) { fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size); }
+            else if (_context.Driver == "direct3d12") nativeUniforms[nativeUniformCount++] = buffer.NativeHandle;
         }
+        for (var i = 0; nativeUniformCount != 0 && i < count; i++)
+            if (nativeUniforms[..nativeUniformCount].Contains(buffers[i].Buffer))
+                throw new InvalidOperationException("A Direct3D 12 dispatch cannot use the same buffer as both a uniform and writable storage.");
         foreach (var link in _pipeline.Samplers) { samplers[link.Native.Native] = LinkedSampler(link, false); samplerCount++; }
         PushUniforms(_pipeline);
         _pipeline.Compute?.PrepareBufferSizes(_command, ReadOnlySpan<uint>.Empty, bufferSizes[..count]);
         var imageABI = ComputeImageABI(imageHandles, imageLayers[..imageCount], arrayImages, samplers, (uint)samplerCount);
         var preparedImages = false;
-        if (_pipeline.PhysicalAddresses || NativeUniformsUsed(_pipeline)) PrepareAddressBuffers();
+        if (_pipeline.PhysicalAddresses || VulkanUniformsUsed(_pipeline)) PrepareAddressBuffers();
         var pass = SDL.BeginGPUComputePass(_command, (nint)images, imageABI == VulkanComputeImageABI ? 0 : (uint)imageCount, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
         try
@@ -618,6 +626,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
             ReleaseDepthResolves();
+            _bufferCopyScratch?.Dispose();
             foreach (var e in _entries.Values) { e.StorageArrayView?.Dispose(); e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.SecondTextureView?.Dispose(); e.TextureAllocation?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
             _entries.Clear(); _generalImages.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _timestampPool?.Dispose(); _timestampPool = null; _context.Dispose();
         }

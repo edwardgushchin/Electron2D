@@ -1,5 +1,8 @@
 #include "pinned-core.h"
+#include "d3d12-views.h"
 #include <stdint.h>
+#define COBJMACROS
+#define E2D_RENDER_DRIVER_D3D12
 #include "memory-layout.h"
 #include <SDL3/SDL_vulkan.h>
 
@@ -29,6 +32,7 @@ static bool compatible(SDL_GPUDevice *device)
 }
 E2D_EXPORT int e2d_render_address_support(SDL_GPUDevice *device, uint32_t abi)
 {
+    if (abi == 3) return e2d_d3d12_device(device) ? 1 : 0;
     if (!device || (abi != 1 && abi != 2)) return -1;
     if (!compatible(device)) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
@@ -164,8 +168,62 @@ E2D_EXPORT int e2d_render_addresses_prepare(SDL_GPUDevice *device, uint32_t abi,
     return 1;
 }
 
+#if defined(SDL_PLATFORM_WIN32)
+static bool retain_d3d12_uniform(D3D12CommandBuffer *command, D3D12Buffer *buffer)
+{
+    for (uint32_t i = 0; i < command->usedBufferCount; ++i)
+        if (command->usedBuffers[i] == buffer) return true;
+    if (command->usedBufferCount == command->usedBufferCapacity) {
+        if (command->usedBufferCapacity > UINT32_MAX / 2) return false;
+        uint32_t capacity = command->usedBufferCapacity ? command->usedBufferCapacity * 2 : 16;
+        if (capacity > SIZE_MAX / sizeof(*command->usedBuffers)) return false;
+        D3D12Buffer **buffers = SDL_realloc(command->usedBuffers, capacity * sizeof(*buffers));
+        if (!buffers) return false;
+        command->usedBuffers = buffers;
+        command->usedBufferCapacity = capacity;
+    }
+    command->usedBuffers[command->usedBufferCount++] = buffer;
+    SDL_AtomicIncRef(&buffer->referenceCount);
+    return true;
+}
+
+static int bind_d3d12_uniform(SDL_GPUDevice *device, SDL_GPUCommandBuffer *commands, uint32_t stage, uint32_t slot, SDL_GPUBuffer *buffer)
+{
+    if (!commands || !buffer || stage > 2 || slot >= MAX_UNIFORM_BUFFERS_PER_STAGE ||
+        !e2d_d3d12_device(device)) return -1;
+    D3D12CommandBuffer *command = (D3D12CommandBuffer *)commands;
+    D3D12BufferContainer *container = (D3D12BufferContainer *)buffer;
+    if (command->common.device != device || command->renderer != (D3D12Renderer *)device->driverData ||
+        !command->graphicsCommandList || !(container->usage & SDL_GPU_BUFFERUSAGE_VERTEX) ||
+        !container->activeBuffer || !container->activeBuffer->virtualAddress) return -1;
+    D3D12Buffer *native = container->activeBuffer;
+    // The allocation uses the vertex usage bit to include CONSTANT_BUFFER in SDL's default state.
+    // Set the root CBV directly and leave SDL's mapped host-uniform pool and offsets untouched.
+    if (stage == 2) {
+        D3D12ComputePipeline *pipeline = command->currentComputePipeline;
+        if (!pipeline || slot >= pipeline->header.numUniformBuffers || !retain_d3d12_uniform(command, native)) return -1;
+        ID3D12GraphicsCommandList_SetComputeRootConstantBufferView(command->graphicsCommandList,
+            pipeline->rootSignature->uniformBufferRootIndex[slot], native->virtualAddress);
+        command->needComputeUniformBufferBind[slot] = false;
+    } else {
+        D3D12GraphicsPipeline *pipeline = command->currentGraphicsPipeline;
+        if (!pipeline || slot >= (stage == 0 ? pipeline->header.num_vertex_uniform_buffers : pipeline->header.num_fragment_uniform_buffers) ||
+            !retain_d3d12_uniform(command, native)) return -1;
+        D3D12GraphicsRootSignature *root = pipeline->rootSignature;
+        ID3D12GraphicsCommandList_SetGraphicsRootConstantBufferView(command->graphicsCommandList,
+            stage == 0 ? root->vertexUniformBufferRootIndex[slot] : root->fragmentUniformBufferRootIndex[slot], native->virtualAddress);
+        if (stage == 0) command->needVertexUniformBufferBind[slot] = false;
+        else command->needFragmentUniformBufferBind[slot] = false;
+    }
+    return 1;
+}
+#endif
+
 E2D_EXPORT int e2d_render_address_uniform(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, uint32_t stage, uint32_t slot, SDL_GPUBuffer *buffer, void **previous)
 {
+#if defined(SDL_PLATFORM_WIN32)
+    if (abi == 2) return bind_d3d12_uniform(device, commands, stage, slot, buffer);
+#endif
     if (abi != 1 || !commands || stage > 2 || slot >= MAX_UNIFORM_BUFFERS_PER_STAGE || !previous || !compatible(device)) return -1;
     VulkanCommandBuffer *c = (VulkanCommandBuffer *)commands;
     if (c->common.device != device || c->renderer != (VulkanRenderer *)device->driverData) return -1;

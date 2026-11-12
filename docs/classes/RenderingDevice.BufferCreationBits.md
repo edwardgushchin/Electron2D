@@ -1,6 +1,6 @@
 # RenderingDevice.BufferCreationBits
 
-Last updated: 2026-10-28
+Last updated: 2026-11-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.BufferCreationBits`. **Source:** [RenderingDevice.GraphicsEnums.cs](../../src/Servers/Rendering/Device/RenderingDevice.GraphicsEnums.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -31,6 +31,8 @@ public const Electron2D.RenderingDevice.BufferCreationBits AsStorage = 2
 ```
 
 Enables shader storage binding on vertex, index and uniform resources.
+
+Uniform resources use a native GPU allocation on Vulkan and Direct3D 12. [Native uniform behavior](../components/buffer-device-addresses.md#direct3d-12-native-uniforms)
 
 ## Lifetime and verification
 

@@ -4,6 +4,9 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
+    private RenderHandle? _bufferCopyScratch;
+    private uint _bufferCopyScratchSize;
+
     /// <summary>Additional roles for a storage buffer.</summary>
     [Flags]
     public enum StorageBufferUsage
@@ -38,10 +41,33 @@ public sealed unsafe partial class RenderingDevice
             return;
         }
         if (HostUniform(source)) { Upload(destination, destinationOffset, source.Data.AsSpan((int)sourceOffset, (int)sizeBytes)); return; }
+        var from = new SDL.GPUBufferLocation { Buffer = source.NativeHandle, Offset = source.BufferOffset + sourceOffset };
+        var to = new SDL.GPUBufferLocation { Buffer = destination.NativeHandle, Offset = destination.BufferOffset + destinationOffset };
+        var scratch = from.Buffer == to.Buffer && _context.Driver == "direct3d12" ? BufferCopyScratch(sizeBytes) : 0;
         var pass = SDL.BeginGPUCopyPass(Commands()); if (pass == 0) throw GPUPhysicsDevice.Failure("begin buffer copy");
-        SDL.CopyGPUBufferToBuffer(pass, new() { Buffer = source.Handle!.DangerousGetHandle(), Offset = source.BufferOffset + sourceOffset },
-            new() { Buffer = destination.Handle!.DangerousGetHandle(), Offset = destination.BufferOffset + destinationOffset }, sizeBytes, false);
+        if (scratch != 0)
+        {
+            // Direct3D 12 cannot put one buffer in COPY_SOURCE and COPY_DEST at the same time.
+            var temporary = new SDL.GPUBufferLocation { Buffer = scratch };
+            SDL.CopyGPUBufferToBuffer(pass, in from, in temporary, sizeBytes, false);
+            from = temporary;
+        }
+        SDL.CopyGPUBufferToBuffer(pass, in from, in to, sizeBytes, false);
         SDL.EndGPUCopyPass(pass);
+    }
+
+    private nint BufferCopyScratch(uint size)
+    {
+        if (size > _bufferCopyScratchSize)
+        {
+            var device = Device;
+            var info = new SDL.GPUBufferCreateInfo { Size = size, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead };
+            var scratch = new RenderHandle(SDL.CreateGPUBuffer(device, info), h => SDL.ReleaseGPUBuffer(device, h), _context.Handle);
+            _bufferCopyScratch?.Dispose();
+            _bufferCopyScratch = scratch;
+            _bufferCopyScratchSize = size;
+        }
+        return _bufferCopyScratch!.DangerousGetHandle();
     }
 
     /// <summary>Replaces a validated buffer range with zero bytes.</summary>
