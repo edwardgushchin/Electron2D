@@ -1,11 +1,13 @@
 # NavigationAgent
 
-Last updated: 2026-10-26
+Last updated: 2026-11-13
 
 - Source: [NavigationAgent.cs](../../src/Navigation/2D/NavigationAgent.cs), [NavigationAgent.Debug.cs](../../src/Navigation/2D/NavigationAgent.Debug.cs)
 - Component: [Navigation maps and agents](../components/navigation-maps.md#agent-path-following)
 
 ## Description
+
+Route selection shares the [entry-position state and deterministic ties](../components/navigation-maps.md#search-state-and-ties) of both server path APIs.
 
 A getter-driven path follower for its direct Entity parent, with retained query/result versions, optional typed waypoint/link metadata, target progression, real map membership and node-owned RID.
 

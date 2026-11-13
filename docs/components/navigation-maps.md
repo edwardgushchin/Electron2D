@@ -1,6 +1,6 @@
 # Authored navigation maps and regions
 
-Last updated: 2026-10-10
+Last updated: 2026-11-13
 
 The initial NavigationServer backend consumes authored convex polygon geometry and publishes immutable planar map iterations. Maps/regions are real RID owners; NavigationRegion : Entity and World.NavigationMap use the same storage. Gameplay can query a route around missing walkable areas and follow it using existing scene/physics APIs. No renderer-specific navigation mesh or native backend identity enters public APIs.
 
@@ -34,11 +34,13 @@ When both projected endpoints lie on one polygon, its direct segment is the init
 
 The Windows link tests cover all three postprocessing modes, reverse traversal, filters, committed costs, zero-cost ties and bounded searches. The rendered agent fixture follows two ordered link events and checks the final goal pixel and runtime retirement on Windows GPU and Compatibility.
 
-### Remaining search equivalence
+### Search state and ties
 
-Each directed incoming portal retains its own best arrival. A more expensive entry can win when its continuation to the next portal costs less. Alternative entries into a polygon share one place in the polygon-count budget. Queue ties use polygon order followed by discovery order.
+Each directed portal and exact finite Vector2 entry position identify a search state. A more expensive arrival at a different point remains eligible because its continuation can cost less. Equal-cost entries at different points also remain alternatives. Only a strictly cheaper arrival replaces the same state; zero-cost cycles cannot repeatedly enqueue an unchanged state. Entry coordinates use exact float equality, without a proximity tolerance or raster merge. Completed goal arrivals can share a state because their score already includes the final segment.
 
-Arrivals at different points of the same directed portal still share one search state. Equivalence across those routes and larger tied corridors remains Partial. Margin matching compares eligible free edges quadratically. Source parsing and outline/clearance baking execute through the connected producer. Async map iterations and [global controls/scene diagnostics](navigation-diagnostics.md) have their own verification. Deprecated outline generation, force-update and region-RID aliases remain excluded.
+Alternative entries into a polygon share one place in the polygon-count budget. Queue priority compares estimated total cost, then greater traveled cost, then published polygon order and discovery order. Equal complete costs keep the first accepted route; a same-polygon direct route wins ties. Search retains per-position records, so large-map state growth and performance remain unqualified. [NavigationRouteSelectionTests](../../tests/Electron2D.Tests/NavigationRouteSelectionTests.cs) independently reproduces the former shared-portal defect through both queries and NavigationAgent. Distinct and equal arrival costs, repeated complete-cost ties, zero-cost cyclic fallback, filters, metadata and a shared polygon budget pass on Windows x64. All three consumers also execute real movement and two winning link transitions, check target pixels and retire their runtime on GPU and Compatibility. These receipts use an existing native override cohort; they do not qualify delivered packages, other hosts, NativeAOT, native allocation or large-map performance.
+
+Margin matching compares eligible free edges quadratically. Source parsing and outline/clearance baking execute through the connected producer. Async map iterations and [global controls/scene diagnostics](navigation-diagnostics.md) have their own verification. Deprecated outline generation, force-update and region-RID aliases remain excluded.
 
 [NavigationTopologyTests](../../tests/Electron2D.Tests/NavigationTopologyTests.cs) compares twelve independently executed official pinned-runtime fixtures for raster/negative keys, first-two ownership, internal merges, margin eligibility, disabled/layer/inactive states, raw/funnel routes, pathways and all counters. Additional checks cover transactional failures, region versions, membership refresh, area/nonuniform statistics, filtered/disabled/detached/extreme sampling, worker resource delivery and warmed allocations. [Rendered topology checks](../../tests/Electron2D.Tests/NavigationTopologyRenderingTests.cs) move a real actor across a quantized gap with margin connections disabled, verify scene-lane metrics and goal pixels, and clean up the borrowed map on GPU/compatibility. Oracle generation is [a development-only script](../../tools/navigation/topology_reference.gd); source geometry archives and fresh-process navigation checks remain the existing NavigationTests contract.
 

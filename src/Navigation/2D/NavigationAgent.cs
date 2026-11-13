@@ -3,6 +3,7 @@ namespace Electron2D;
 /// <summary>Follows a committed navigation path for its direct Entity parent.</summary>
 /// <remarks>Call GetNextPathPosition from the parent's physics processing and move that parent yourself.
 /// The agent owns a stable borrowed RID and retained result; getters that advance navigation reject reentry.
+/// Route selection uses the same entry-position states and deterministic cost ties as NavigationServer.QueryPath.
 /// Events run after each state transition, deliver all subscribers and aggregate failures after the update.</remarks>
 public sealed partial class NavigationAgent : Node
 {

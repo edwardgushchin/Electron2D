@@ -1,6 +1,6 @@
 # NavigationMapIteration
 
-Last updated: 2026-10-10
+Last updated: 2026-11-13
 
 - Visibility: internal
 - Source: [NavigationMapIteration.cs](../../src/Servers/Navigation/NavigationMapIteration.cs)
@@ -8,7 +8,7 @@ Last updated: 2026-10-10
 
 ## Description
 
-Immutable committed cells and portals support projection, weighted corridor search and funnel output. Each directed portal retains its best search arrival with predecessor and portal point. Goal arrivals compare the complete weighted cost. The polygon budget counts distinct processed polygons.
+Immutable committed cells and portals support projection, weighted corridor search and funnel output. Each directed portal and exact entry position retain their best search arrival with predecessor and portal point. Different positions remain alternatives even at equal cost; the same state is replaced only by a strictly cheaper arrival. Queue ties prefer greater traveled cost, then published polygon order and discovery order. Goal arrivals compare the complete weighted cost. The polygon budget counts distinct processed polygons.
 
 ## Verification
 
