@@ -24,10 +24,16 @@ class UnifiedNativeTests(unittest.TestCase):
             source = path.read_text(encoding="utf-8")
             if "NativeLibraries.EngineLibrary" not in source:
                 continue
-            imports = re.finditer(r'\[LibraryImport\((NativeLibraries\.EngineLibrary|Library|SSL|Crypto)([^\]]*)\)\][^\n]*?\bpartial\s+\S+\s+(\w+)\s*\(', source)
+            libraries = [r'NativeLibraries\.EngineLibrary']
+            libraries.extend(re.findall(r'\bconst\s+string\s+(\w+)\s*=\s*NativeLibraries\.EngineLibrary\s*;', source))
+            imports = re.finditer(
+                r'\[LibraryImport\((' + '|'.join(libraries) + r')\b([^\]]*)\)\]'
+                r'(?:\s*\[[^\r\n]*\])*\s*(?:\w+\s+)*?\bpartial\s+\S+\s+(\w+)\s*\(', source)
             for match in imports:
                 entry = re.search(r'EntryPoint\s*=\s*"([^"]+)"', match[2])
-                self.assertIn(entry[1] if entry else match[3], expected, str(path))
+                symbol = entry[1] if entry else match[3]
+                with self.subTest(path=path, symbol=symbol):
+                    self.assertTrue(symbol in expected, f"Missing unified export: {symbol}")
 
     @unittest.skipUnless(all(shutil.which(tool) for tool in ("cc", "ar")), "Archive tools are unavailable")
     def test_archive_merge_preserves_colliding_member_basenames(self):

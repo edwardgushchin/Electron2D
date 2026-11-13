@@ -476,7 +476,14 @@ internal static unsafe partial class NativeTextureImportTests
 
                 Draw(Colors.Red, Colors.Blue);
                 using var view = new RDTextureView();
-                Reject<NotSupportedException>(() => device.TextureCreateSharedFromSlice(view, arrayDevice, 1, 0));
+                var selectedLayer = device.TextureCreateSharedFromSlice(view, arrayDevice, 1, 0);
+                try
+                {
+                    Check(device.GetDriverResource(DriverResource.Texture, selectedLayer, 0) == (ulong)array &&
+                        device.TextureGetData(selectedLayer, 0).AsSpan().SequenceEqual(GPUMipColors(2).AsSpan(0, Width * Height * 4)),
+                        "The selected array layer shares the producer allocation and exposes its own pixels.");
+                }
+                finally { device.FreeRID(selectedLayer); }
                 var singleDevice = RenderingServer.TextureGetRDTexture(singleLayer);
                 var singleView = device.TextureCreateSharedFromSlice(view, singleDevice, 0, 0);
                 using (var singleFormat = device.TextureGetFormat(singleView))

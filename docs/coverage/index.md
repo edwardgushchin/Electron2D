@@ -1,3 +1,5 @@
+[Native texture import delivery](../components/native-texture-handles.md#verification) restores the Vulkan and GPU Direct3D 12 import entry points in the common native module. Both public import methods stay Partial for the remaining formats, resource roles and adapters. Coverage is **13,983/18,900 (73.98%)**.
+
 [Zstandard project options](../components/file-access.md#compression-levels) select the native level, matching strategy and window limit for file and byte-buffer operations. Three Blocked rows move to Implemented. Coverage is **13,983/18,900 (73.98%)**, with 1,120 Partial, 269 Unimplemented, 3,528 Blocked, 8,393 Excluded and zero unmapped.
 
 [Startup output policy](../components/diagnostics.md#startup-output-policy) connects the version header, stream suppression and explicit writer flushing to runtime diagnostics. Five Blocked rows move to Implemented. Coverage is **13,980/18,900 (73.97%)**, with 1,120 Partial, 269 Unimplemented, 3,531 Blocked, 8,393 Excluded and zero unmapped.

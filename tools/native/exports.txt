@@ -79,6 +79,7 @@ e2d_render_aspect_copy
 e2d_render_aspect_support
 e2d_render_aspect_transfer
 e2d_render_bind_image
+e2d_render_d3d12_texture_import
 e2d_render_depth_pipeline
 e2d_render_depth_support
 e2d_render_empty_begin
@@ -116,6 +117,7 @@ e2d_render_shader16_support
 e2d_render_storage_barrier
 e2d_render_texture_create
 e2d_render_texture_format
+e2d_render_texture_import
 e2d_render_timestamp_create
 e2d_render_timestamp_destroy
 e2d_render_timestamp_elapsed

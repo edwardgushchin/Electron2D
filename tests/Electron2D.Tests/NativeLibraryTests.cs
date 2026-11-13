@@ -25,6 +25,7 @@ internal static class NativeLibraryTests
                 {
                     var exports = new[] { "e2d_text_init", "e2d_mesh_simplify",
                         "e2d_webp_encode", "e2d_webp_decode", "e2d_ktx_create", "e2d_video_create", "e2d_render_memory",
+                        "e2d_render_texture_import", "e2d_render_d3d12_texture_import",
                         "e2d_enet_memory", "e2d_file_encode", "e2d_file_zstd_encode", "e2d_file_zstd_decode", "e2d_gzip_create", "e2d_memory_abi", "e2d_memory_allocate",
                         "e2d_memory_reallocate", "e2d_memory_release", "e2d_memory_snapshot" };
                     foreach (var export in exports)
