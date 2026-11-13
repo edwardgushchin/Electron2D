@@ -431,7 +431,7 @@ Converts readable data to `Rgba8`, then stores green as luminance and red as alp
 <a id="rgbetosrgb"></a>
 ### `public Image RGBEToSRGB()`
 
-Returns a new `Rgb8` image by decoding shared-exponent `Rgbe9995` values and applying linear-to-sRGB conversion. Source dimensions and mipmap policy are preserved.
+Decodes the base level of an `Rgbe9995` image to linear RGB, applies the sRGB transfer curve, and writes clamped 8-bit channels into an independent `Rgb8` image of the same size. When the source has mipmaps, the result builds its chain from the converted base level. The source retains its pixels and emits no change notification. Empty images and other formats raise `InvalidOperationException`. See [RGBE conversion](../components/images.md#rgbe-to-srgb).
 
 <a id="computeimagemetrics"></a>
 ### `public ImageMetrics ComputeImageMetrics(Image comparedImage, bool useLuma)`

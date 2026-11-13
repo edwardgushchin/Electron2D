@@ -622,23 +622,34 @@ public sealed partial class Image
             return state with { Format = Format.La8, Data = result };
         }, copyData: false);
 
-    /// <summary>Creates an RGB8 image by decoding RGBE9995 pixels and applying linear-to-sRGB conversion.</summary>
-    /// <returns>A new independent image that preserves the source mipmap policy.</returns>
+    /// <summary>Decodes the RGBE9995 base level and applies the sRGB transfer curve.</summary>
+    /// <returns>A new RGB8 image with the same dimensions. If the source has mipmaps, the result generates them from the converted base level.</returns>
     /// <exception cref="InvalidOperationException">The image is empty or is not RGBE9995.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     public Image RGBEToSRGB()
     {
-        var state = RequireReadablePixels();
-        if (state.Format != Format.Rgbe9995)
-            throw new InvalidOperationException("RGBE conversion requires Rgbe9995 data.");
+        var (converted, hasMIPMaps) = Read(static state =>
+        {
+            if (state.Format != Format.Rgbe9995)
+                throw new InvalidOperationException("RGBE conversion requires RGBE9995 data.");
+            RequireReadablePixels(state);
 
-        var resultState = ConvertState(state, Format.Rgbf);
-        var bytes = GetBytesPerPixel(resultState.Format);
-        for (var offset = 0; offset < resultState.Data.Length; offset += bytes)
-            WriteColor(resultState.Data, offset, resultState.Format, ReadColor(resultState.Data, offset, resultState.Format).LinearToSRGB());
-        resultState = ConvertState(resultState, Format.Rgb8);
+            var sourceBytes = GetBytesPerPixel(state.Format);
+            var resultBytes = GetBytesPerPixel(Format.Rgb8);
+            var data = new byte[GetRequiredDataSize(state.Width, state.Height, Format.Rgb8, false)];
+            for (int source = 0, target = 0; target < data.Length; source += sourceBytes, target += resultBytes)
+            {
+                var color = ReadColor(state.Data, source, state.Format).LinearToSRGB();
+                WriteColor(data, target, Format.Rgb8, color);
+            }
+
+            return (new State(state.Width, state.Height, Format.Rgb8, false, data), state.HasMIPMaps);
+        });
+
+        if (hasMIPMaps)
+            converted = BuildMIPMaps(converted, false);
         var result = new Image();
-        result.SetStateWithoutNotification(resultState);
+        result.SetStateWithoutNotification(converted);
         return result;
     }
 

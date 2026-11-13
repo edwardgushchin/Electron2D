@@ -106,6 +106,12 @@ The image-storage profile checks independent mip values, luma and alpha, signed 
 
 Image encoders reject a directory destination with `IOException` before starting atomic replacement. Other path and permission errors retain the file layer's behavior.
 
+## RGBE to sRGB
+
+`RGBEToSRGB` decodes the base-level RGB9E5 mantissas and shared exponent, applies the linear-to-sRGB transfer, and quantizes to owned RGB8 bytes. HDR components above the byte range saturate. The operation retains the source image dimensions and leaves its bytes and notifications untouched.
+
+When the source has mipmaps, the result generates every lower level from the new RGB8 base with the byte mip filter. A base-only source yields a base-only result. The image-storage test checks an authored HDR mip that differs from the regenerated value, an odd-width base, exact transfer and clamp bytes, and the independent ImageTexture snapshot.
+
 ## Alpha-edge repair and premultiplication
 
 Both operations edit the RGBA8 base level and preserve all authored mip bytes. Edge repair copies the nearest RGB whose alpha byte is at least 20 into each pixel below that threshold. It searches up to four pixels on each axis, measures squared distance, and visits candidates in top-to-bottom, left-to-right order. Repaired pixels remain below the threshold and cannot become sources. Premultiplication applies integer `(component * alpha + 255) >> 8` to each base RGB byte. Both operations keep alpha values.

@@ -96,6 +96,8 @@ Gradient adds typed color points and three interpolation modes/spaces. GradientR
 
 AnimatedTexture stores up to 256 borrowed texture slots with per-slot duration, scene-aware duplication and source change forwarding. Active sources set the smallest logical dimensions; larger current frames are cropped for image queries and native sampling, including live source resize. The renderer advances it on unscaled monotonic time; CPU configuration and copying need no renderer. AtlasTexture slots and dependency cycles are rejected. Its behavior and native verification are recorded in [the class](../classes/AnimatedTexture.md).
 
+`Image.RGBEToSRGB()` prepares an RGB8 texture source from RGB9E5 data. Its [mip chain](../components/images.md#rgbe-to-srgb) is derived from the converted base.
+
 ## Dependency direction
 
 Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLocalScene()`. Image and BitMap processing use Core `Color`, `Vector2`, `Vector2i`, and `Rect2i`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. Resource base and managed image/mask processing remain independent of rendering/importing/editor. Image file/buffer codecs use internal SDL3-CS and FileAccess without exposing native handles.

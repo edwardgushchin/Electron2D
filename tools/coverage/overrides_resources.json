@@ -608,6 +608,11 @@
   ],
   "statusGroups": [
     {
+      "godot": ["Image::method:rgbe_to_srgb()"],
+      "state": "Implemented",
+      "reason": "ADR 0039: decode RGBE9995 base pixels with linear-to-sRGB transfer and RGB8 quantization. Regenerate a requested mip chain from the converted base, matching the pinned image.cpp method. The typed operation throws for empty/invalid formats. ImageRGBETests verifies exact output bytes, the source snapshot and ImageTexture retention."
+    },
+    {
       "godot": [
         "Image::method:fix_alpha_edges()",
         "Image::method:premultiply_alpha()"

@@ -1,3 +1,5 @@
+[RGBE conversion](../components/images.md#rgbe-to-srgb) builds the RGB8 mip chain from the converted base. One Partial row moves to Implemented. Coverage is **13,962/18,900 (73.87%)**, with 1,123 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [SceneTree fixed-frame numbering](../components/scene-tree.md#runtime-flow) supplies the public fixed-frame index and verifies the frame-start phases. One Unimplemented and one Partial row move to Implemented. Coverage is **13,961/18,900 (73.87%)**, with 1,124 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [BMP loading](../components/images.md#bmp-loading) uses a bounded managed decoder for packed, indexed and RLE data. The BMP buffer row moves to Implemented. Coverage is **13,959/18,900 (73.86%)**, with 1,125 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

@@ -4451,14 +4451,7 @@ static void VerifyImages()
             "Premultiplication handles zero, partial and full alpha and publishes once without changing authored mips.");
     }
 
-    using (var rgbe = Image.CreateEmpty(2, 1, true, Image.Format.Rgbe9995))
-    {
-        rgbe.SetPixel(0, 0, new Color(2f, 1f, 0.5f));
-        rgbe.SetPixel(1, 0, new Color(0.25f, 0.5f, 1f));
-        using var srgb = rgbe.RGBEToSRGB();
-        Require(srgb.PixelFormat == Image.Format.Rgb8 && srgb.Size == rgbe.Size && srgb.HasMIPMaps,
-            "RGBE conversion must return an RGB8 copy and preserve mipmap policy.");
-    }
+    ImageRGBETests.Run();
 
     using (var first = Image.CreateEmpty(2, 1, false, Image.Format.Rgba8))
     using (var second = Image.CreateEmpty(2, 1, false, Image.Format.Rgba8))
