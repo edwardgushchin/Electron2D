@@ -149,7 +149,7 @@ public sealed partial class Image
         });
 
     /// <summary>Fills the base-level intersection of a rectangle and the image bounds.</summary>
-    /// <param name="rectangle">The half-open pixel rectangle; nonpositive sizes are treated as empty.</param>
+    /// <param name="rectangle">The half-open pixel rectangle. Reversed axes are normalized before clipping.</param>
     /// <param name="color">The color encoded into the current format.</param>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
@@ -158,7 +158,7 @@ public sealed partial class Image
         state =>
         {
             RequireReadablePixels(state);
-            var clipped = ClipRectangle(rectangle, state.Width, state.Height);
+            var clipped = ClipRectangle(rectangle, state.Width, state.Height, normalize: true);
             if (!clipped.HasArea())
                 return state;
             var bytes = GetBytesPerPixel(state.Format);
@@ -203,7 +203,7 @@ public sealed partial class Image
         Mutate(state => ConvertState(state, format));
     }
 
-    /// <summary>Crops or expands the image from its top-left corner, filling new pixels with transparent black.</summary>
+    /// <summary>Crops or expands the image from its top-left corner, filling new pixels with zero-valued storage.</summary>
     /// <param name="width">The positive destination width.</param>
     /// <param name="height">The positive destination height.</param>
     /// <exception cref="ArgumentOutOfRangeException">A dimension is invalid or exceeds supported bounds.</exception>
@@ -213,35 +213,48 @@ public sealed partial class Image
     public void Crop(int width, int height)
     {
         ValidateDimensions(width, height);
-        Mutate(state => CropState(RequireReadablePixels(state), width, height));
+        Mutate(state => CropState(RequireReadablePixels(state), width, height), copyData: false);
     }
 
-    /// <summary>Returns a new image containing the intersection of a region and the base image.</summary>
+    /// <summary>Copies the requested region into a new image, padding outside the source with zero-valued pixels.</summary>
     /// <param name="region">The requested half-open pixel rectangle.</param>
-    /// <returns>An empty image when the intersection has no area; otherwise an uncompressed image without mipmaps.</returns>
+    /// <returns>An independent image in the original format with the requested extent and rebuilt mipmaps if the source has them.
+    /// A nonpositive extent returns an empty image.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The requested positive extent exceeds the image limits.</exception>
     /// <exception cref="InvalidOperationException">This image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">This image is disposing or disposed.</exception>
-    public Image GetRegion(Rect2i region)
+    public Image GetRegion(Rect2i region) => CopyRegion(region, clippedOnly: false);
+
+    internal Image GetClippedRegion(Rect2i region) => CopyRegion(region, clippedOnly: true);
+
+    private Image CopyRegion(Rect2i region, bool clippedOnly)
     {
-        var state = RequireReadablePixels();
-        var clipped = ClipRectangle(region, state.Width, state.Height);
-        if (!clipped.HasArea())
-            return new Image();
-
-        var bytes = GetBytesPerPixel(state.Format);
-        var data = new byte[GetRequiredDataSize(clipped.Size.X, clipped.Size.Y, state.Format, false)];
-        for (var y = 0; y < clipped.Size.Y; y++)
+        var pixels = Read<State?>(state =>
         {
-            Buffer.BlockCopy(
-                state.Data,
-                (((clipped.Position.Y + y) * state.Width) + clipped.Position.X) * bytes,
-                data,
-                y * clipped.Size.X * bytes,
-                clipped.Size.X * bytes);
-        }
+            RequireReadablePixels(state);
+            var clipped = ClipRectangle(region, state.Width, state.Height);
+            var size = clippedOnly ? clipped.Size : region.Size;
+            if (size.X <= 0 || size.Y <= 0)
+                return default;
 
+            var bytes = GetBytesPerPixel(state.Format);
+            var data = new byte[GetRequiredDataSize(size.X, size.Y, state.Format, false)];
+            if (clipped.HasArea())
+            {
+                var offset = clippedOnly ? Vector2i.Zero : clipped.Position - region.Position;
+                for (var y = 0; y < clipped.Size.Y; y++)
+                    Buffer.BlockCopy(state.Data, ((clipped.Position.Y + y) * state.Width + clipped.Position.X) * bytes,
+                        data, ((offset.Y + y) * size.X + offset.X) * bytes, clipped.Size.X * bytes);
+            }
+
+            return new State(size.X, size.Y, state.Format, !clippedOnly && state.HasMIPMaps, data);
+        });
         var result = new Image();
-        result.SetStateWithoutNotification(new State(clipped.Size.X, clipped.Size.Y, state.Format, false, data));
+        if (pixels is { } captured)
+        {
+            var basePixels = captured with { HasMIPMaps = false };
+            result.SetStateWithoutNotification(captured.HasMIPMaps ? BuildMIPMaps(basePixels, false) : basePixels);
+        }
         return result;
     }
 
@@ -339,7 +352,7 @@ public sealed partial class Image
             }, copyData: false);
     }
 
-    /// <summary>Copies a clipped source rectangle into this image without alpha blending.</summary>
+    /// <summary>Copies the stored bytes of a clipped source rectangle into this image.</summary>
     /// <param name="source">The source image.</param>
     /// <param name="sourceRect">The half-open source rectangle.</param>
     /// <param name="destination">The target coordinate corresponding to <paramref name="sourceRect"/>'s position.</param>
@@ -365,16 +378,16 @@ public sealed partial class Image
 
     /// <summary>Copies source pixels whose corresponding mask alpha is nonzero.</summary>
     /// <param name="source">The source image.</param>
-    /// <param name="mask">A same-sized mask image.</param>
+    /// <param name="mask">A same-sized mask image. Formats without alpha select all covered pixels.</param>
     /// <param name="sourceRect">The half-open source rectangle.</param>
     /// <param name="destination">The target coordinate corresponding to <paramref name="sourceRect"/>'s position.</param>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">Formats or source/mask dimensions violate the operation contract.</exception>
-    /// <exception cref="InvalidOperationException">An image is empty or block-compressed, or the mask has no alpha channel.</exception>
+    /// <exception cref="InvalidOperationException">An image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">An image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the copy commits.</exception>
     public void BlitRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination) =>
-        Composite(source, mask, sourceRect, destination, blend: false);
+        Composite(source, mask ?? throw new ArgumentNullException(nameof(mask)), sourceRect, destination, blend: false);
 
     /// <summary>Alpha-composites source pixels whose corresponding mask alpha is nonzero.</summary>
     /// <param name="source">The straight-alpha source image.</param>
@@ -387,7 +400,7 @@ public sealed partial class Image
     /// <exception cref="ObjectDisposedException">An image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the blend commits.</exception>
     public void BlendRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination) =>
-        Composite(source, mask, sourceRect, destination, blend: true);
+        Composite(source, mask ?? throw new ArgumentNullException(nameof(mask)), sourceRect, destination, blend: true);
 
     /// <summary>Adjusts RGB brightness, contrast, and saturation in every stored level.</summary>
     /// <param name="brightness">The RGB multiplier; <c>1</c> preserves brightness.</param>
@@ -660,54 +673,76 @@ public sealed partial class Image
     private void Composite(Image source, Image? mask, Rect2i sourceRect, Vector2i destination, bool blend)
     {
         ArgumentNullException.ThrowIfNull(source);
-        var sourceState = source.RequireReadablePixels();
-        State? maskState = null;
-        if (mask is not null)
-        {
-            maskState = mask.RequireReadablePixels();
-            if (maskState.Value.Width != sourceState.Width || maskState.Value.Height != sourceState.Height)
-                throw new ArgumentException("Source and mask dimensions must match.", nameof(mask));
-            if (!HasAlpha(maskState.Value.Format))
-                throw new InvalidOperationException("The mask format must contain alpha.");
-            if (blend && !HasAlpha(sourceState.Format))
-                throw new InvalidOperationException("Masked blending requires source alpha.");
-        }
+        var sourceSnapshot = ReferenceEquals(this, source) ? (State?)null : source.RequireReadablePixels();
+        var maskSnapshot = mask is null || ReferenceEquals(this, mask) || ReferenceEquals(source, mask)
+            ? (State?)null : mask.RequireReadablePixels();
 
         Mutate(
             destinationState =>
             {
                 RequireReadablePixels(destinationState);
+                var sourceState = sourceSnapshot ?? destinationState;
+                var maskState = ReferenceEquals(mask, source) ? sourceState : maskSnapshot;
+                if (ReferenceEquals(mask, this))
+                    maskState = destinationState;
                 if (destinationState.Format != sourceState.Format)
                     throw new ArgumentException("Source and destination formats must match.", nameof(source));
+                if (maskState is { } selection)
+                {
+                    if (selection.Width != sourceState.Width || selection.Height != sourceState.Height)
+                        throw new ArgumentException("Source and mask dimensions must match.", nameof(mask));
+                    if (blend && (!HasAlpha(selection.Format) || !HasAlpha(sourceState.Format)))
+                        throw new InvalidOperationException("The mask and, for blending, the source must have alpha.");
+                }
 
-                var clippedSource = ClipRectangle(sourceRect, sourceState.Width, sourceState.Height);
-                if (!clippedSource.HasArea())
+                var left = Math.Max(0L, Math.Max(-(long)sourceRect.Position.X, -(long)destination.X));
+                var top = Math.Max(0L, Math.Max(-(long)sourceRect.Position.Y, -(long)destination.Y));
+                var right = Math.Min(sourceRect.Size.X, Math.Min((long)sourceState.Width - sourceRect.Position.X,
+                    (long)destinationState.Width - destination.X));
+                var bottom = Math.Min(sourceRect.Size.Y, Math.Min((long)sourceState.Height - sourceRect.Position.Y,
+                    (long)destinationState.Height - destination.Y));
+                if (right <= left || bottom <= top)
                     return destinationState;
 
-                var shift = clippedSource.Position - sourceRect.Position;
-                var targetStart = destination + shift;
+                var width = (int)(right - left);
+                var height = (int)(bottom - top);
+                var sourceX = (int)(sourceRect.Position.X + left);
+                var targetX = (int)(destination.X + left);
+                var sourceY = (int)(sourceRect.Position.Y + top);
+                var targetY = (int)(destination.Y + top);
                 var bytes = GetBytesPerPixel(sourceState.Format);
                 var maskBytes = maskState is null ? 0 : GetBytesPerPixel(maskState.Value.Format);
-                for (var y = 0; y < clippedSource.Size.Y; y++)
+                // Read destination aliases from the committed buffer throughout the operation.
+                byte[]? output = null;
+                for (var y = 0; y < height; y++)
                 {
-                    var targetY = targetStart.Y + y;
-                    if ((uint)targetY >= (uint)destinationState.Height)
-                        continue;
-                    for (var x = 0; x < clippedSource.Size.X; x++)
+                    var sourceIndex = (sourceY + y) * sourceState.Width + sourceX;
+                    var targetIndex = (targetY + y) * destinationState.Width + targetX;
+                    if (!blend && maskState is null)
                     {
-                        var targetX = targetStart.X + x;
-                        if ((uint)targetX >= (uint)destinationState.Width)
-                            continue;
-                        var sourceX = clippedSource.Position.X + x;
-                        var sourceY = clippedSource.Position.Y + y;
-                        if (maskState is not null &&
-                            ReadColor(maskState.Value.Data, ((sourceY * maskState.Value.Width) + sourceX) * maskBytes, maskState.Value.Format).A <= 0f)
+                        output ??= (byte[])destinationState.Data.Clone();
+                        Buffer.BlockCopy(sourceState.Data, sourceIndex * bytes, output, targetIndex * bytes, width * bytes);
+                        continue;
+                    }
+
+                    for (var x = 0; x < width; x++)
+                    {
+                        if (maskState is { } maskPixels &&
+                            ReadColor(maskPixels.Data, (sourceIndex + x) * maskBytes, maskPixels.Format).A == 0f)
                             continue;
 
-                        var sourceColor = ReadColor(sourceState.Data, ((sourceY * sourceState.Width) + sourceX) * bytes, sourceState.Format);
-                        var destinationOffset = ((targetY * destinationState.Width) + targetX) * bytes;
-                        if (blend)
+                        var sourceOffset = (sourceIndex + x) * bytes;
+                        var destinationOffset = (targetIndex + x) * bytes;
+                        if (!blend)
                         {
+                            output ??= (byte[])destinationState.Data.Clone();
+                            sourceState.Data.AsSpan(sourceOffset, bytes).CopyTo(output.AsSpan(destinationOffset, bytes));
+                        }
+                        else
+                        {
+                            var sourceColor = ReadColor(sourceState.Data, sourceOffset, sourceState.Format);
+                            if (sourceColor.A == 0f)
+                                continue;
                             var destinationColor = ReadColor(destinationState.Data, destinationOffset, destinationState.Format);
                             if (sourceState.Format == Format.Rgba16I)
                             {
@@ -720,13 +755,14 @@ public sealed partial class Image
                             {
                                 sourceColor = destinationColor.Blend(sourceColor);
                             }
+                            output ??= (byte[])destinationState.Data.Clone();
+                            WriteColor(output, destinationOffset, destinationState.Format, sourceColor);
                         }
-                        WriteColor(destinationState.Data, destinationOffset, destinationState.Format, sourceColor);
                     }
                 }
 
-                return RebuildMIPMapsIfNeeded(destinationState);
-            });
+                return output is null ? destinationState : RebuildMIPMapsIfNeeded(destinationState with { Data = output });
+            }, copyData: false);
     }
 
     private void TransformRGB8Colors(Func<Color, Color> transform) => Mutate(
@@ -1170,17 +1206,24 @@ public sealed partial class Image
         }
     }
 
-    private static Rect2i ClipRectangle(Rect2i rectangle, int width, int height)
+    private static Rect2i ClipRectangle(Rect2i rectangle, int width, int height, bool normalize = false)
     {
-        if (!rectangle.HasArea())
-            return default;
-        var left = Math.Clamp(rectangle.Position.X, 0, width);
-        var top = Math.Clamp(rectangle.Position.Y, 0, height);
-        var right = Math.Clamp((long)rectangle.Position.X + rectangle.Size.X, 0L, width);
-        var bottom = Math.Clamp((long)rectangle.Position.Y + rectangle.Size.Y, 0L, height);
+        var x = (long)rectangle.Position.X;
+        var y = (long)rectangle.Position.Y;
+        var endX = x + rectangle.Size.X;
+        var endY = y + rectangle.Size.Y;
+        if (normalize)
+        {
+            if (x > endX) (x, endX) = (endX, x);
+            if (y > endY) (y, endY) = (endY, y);
+        }
+        var left = (int)Math.Clamp(x, 0, width);
+        var top = (int)Math.Clamp(y, 0, height);
+        var right = (int)Math.Clamp(endX, 0, width);
+        var bottom = (int)Math.Clamp(endY, 0, height);
         return right <= left || bottom <= top
             ? default
-            : new Rect2i(left, top, checked((int)right - left), checked((int)bottom - top));
+            : new Rect2i(left, top, right - left, bottom - top);
     }
 
     private static bool HasAlpha(Format format) => format is Format.La8 or Format.Rgba8 or Format.Rgba4444 or

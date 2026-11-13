@@ -88,6 +88,14 @@ Lanczos widens the filter along each reduced axis to retain detail across the fu
 
 The image-storage profile verifies exact nearest, bilinear and cubic samples, both orientations of a 32-to-1 reduction, HDR pixels at the boundary, and authored and temporary trilinear levels. It also checks rejected compressed and invalid requests, observer failure after commitment, and the resized chain consumed by ImageTexture.
 
+## Image regions
+
+`GetRegion` keeps the requested positive extent and pads outside the source with zero-valued storage. `Crop` changes the base extent from the top-left and also zero-fills new pixels. Both retain the pixel format and rebuild a source mip chain for the result. Atlas readback and movie capture use the clipped source intersection with base-level pixels.
+
+Blit and blend preserve the translation between source and destination when clipping either side. Copying preserves stored pixel bytes. Blending skips transparent foreground pixels and uses straight alpha, including the full integer alpha range. Masked operations sample alpha at the source coordinates and read destination aliases from the original image. `FillRect` normalizes reversed axes and clips the result. Nonpositive blit and blend extents are empty.
+
+The image-storage profile covers padded and disjoint regions, atlas readback, extreme coordinates, overlapping self-copy, mask aliases, hidden RGB and exact half-float bytes. The movie writer profile exercises the clip-and-resize path against actual resized render targets.
+
 ## Exclusions and deferred integration
 
 PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR loading and PNG/JPEG/WebP/EXR saving are executable. BC1–BC7 compression/decompression and DDS file/buffer load/save feed existing resource and texture consumers. The SDL_image load profile normalizes ordinary files to RGBA8; DDS retains supported byte/BCn storage and EXR retains HDR channels and precision. Encoded input/output and decoder dimensions follow the documented codec budgets. The private WebP encoder supports exact RGB/RGBA and lossy saving. KTX1/KTX2 and Basis LDR/HDR loading now execute through the [private KTX reader](image-ktx.md), retaining complete mips and applicable precision. Importing and complete color/metadata semantics remain pending. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) records exact dependencies. BC1–BC7 and RA-as-RG decode; S3TC/BPTC encode. [ETC/EAC/ASTC decoding](image-block-decoding.md) now supplies all remaining block roles; their encoding remains unavailable.

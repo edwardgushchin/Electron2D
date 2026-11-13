@@ -609,6 +609,19 @@
   "statusGroups": [
     {
       "godot": [
+        "Image::method:blend_rect(Image:,Rect2i:,Vector2i:)",
+        "Image::method:blend_rect_mask(Image:,Image:,Rect2i:,Vector2i:)",
+        "Image::method:blit_rect(Image:,Rect2i:,Vector2i:)",
+        "Image::method:blit_rect_mask(Image:,Image:,Rect2i:,Vector2i:)",
+        "Image::method:crop(int:,int:)",
+        "Image::method:fill_rect(Rect2i:,Color:)",
+        "Image::method:get_region(Rect2i:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039: padded region extraction, exact clipped copies, alpha and mask selection, deterministic overlap, typed validation, and rebuilt mip chains. See docs/components/images.md#image-regions."
+    },
+    {
+      "godot": [
         "Image::enum:Interpolation",
         "Image::method:resize(int:,int:,int:Image.Interpolation)",
         "Image::method:resize_to_po2(bool:,int:Image.Interpolation)"

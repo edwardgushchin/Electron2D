@@ -422,7 +422,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_THEME") is { } p
 if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); VerifyImageResize(); Console.WriteLine("Image storage, mip chains, resizing and archive snapshots passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); VerifyImageResize(); VerifyImageRegions(); RenderingRuntimeTests.VerifyAtlasResources(); Console.WriteLine("Image storage, mip chains, resizing, regions and archive snapshots passed."); return; }
 if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
 if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
@@ -2357,6 +2357,7 @@ VerifyImages();
 VerifyImageStorage();
 VerifyImageMIPChains();
 VerifyImageResize();
+VerifyImageRegions();
 VerifyVector2Values();
 VerifyVector2iValues();
 VerifyVector3Values();
@@ -3623,6 +3624,69 @@ static void VerifyColors()
         "Warmed numeric color operations must not allocate managed memory.");
 }
 
+static void VerifyImageRegions()
+{
+    using var source = Image.CreateFromData(2, 2, true, Image.Format.R8, [1, 2, 3, 4, 200]);
+    using var padded = source.GetRegion(new Rect2i(-1, -1, 3, 3));
+    Require(padded.Size == new Vector2i(3, 3) && padded.MIPMapCount == 1 &&
+        padded.GetData().SequenceEqual(new byte[] { 0, 0, 0, 0, 1, 2, 0, 3, 4, 0 }),
+        "Region extraction must keep its extent, pad before the source and rebuild its mip chain.");
+    using var texture = ImageTexture.CreateFromImage(source);
+    using var atlas = new AtlasTexture { Atlas = texture, Region = new Rect2(-1, -1, 3, 3) };
+    using var atlasPixels = atlas.GetImage()!;
+    Require(atlasPixels.Size == new Vector2i(2, 2) && !atlasPixels.HasMIPMaps &&
+        atlasPixels.GetData().SequenceEqual(new byte[] { 1, 2, 3, 4 }),
+        "Atlas readback must retain only its effective source intersection.");
+    source.Crop(3, 3);
+    Require(source.GetData().SequenceEqual(new byte[] { 1, 2, 0, 3, 4, 0, 0, 0, 0, 3 }),
+        "Crop expansion must retain top-left bytes and rebuild the resized chain.");
+    using var disjoint = source.GetRegion(new Rect2i(int.MaxValue, int.MinValue, 2, 2));
+    Require(disjoint.Size == new Vector2i(2, 2) && disjoint.GetData().All(value => value == 0),
+        "Even a disjoint positive region retains its zero-padded extent.");
+    using var empty = source.GetRegion(new Rect2i(0, 0, -2, 2));
+    Require(empty.IsEmpty, "A nonpositive region must return the canonical empty image.");
+
+    using var bits = Image.CreateFromData(3, 1, false, Image.Format.Rh, [1, 0x7E, 0, 0x80, 0, 0x3C]);
+    using var target = Image.CreateEmpty(3, 1, false, Image.Format.Rh);
+    target.BlitRect(bits, new Rect2i(-1, 0, 4, 1), new Vector2i(-2, 0));
+    Require(target.GetData().SequenceEqual(new byte[] { 0, 0x80, 0, 0x3C, 0, 0 }),
+        "Both image bounds must clip the same translated rectangle and copy half storage exactly.");
+    bits.BlitRect(bits, new Rect2i(0, 0, 2, 1), new Vector2i(1, 0));
+    Require(bits.GetData().SequenceEqual(new byte[] { 1, 0x7E, 1, 0x7E, 0, 0x80 }),
+        "Self-blit must read the original overlapping pixels and preserve NaN bits.");
+    var before = target.GetData();
+    target.BlitRect(bits, new Rect2i(int.MinValue, 0, int.MaxValue, 1), new Vector2i(int.MinValue, 0));
+    target.BlitRect(bits, new Rect2i(-1, 0, 2, 1), new Vector2i(int.MaxValue, 0));
+    Require(target.GetData().SequenceEqual(before), "Extreme coordinates must not wrap into a write.");
+
+    using var mask = Image.CreateFromData(3, 1, false, Image.Format.Rgbaf,
+        new byte[48]);
+    mask.SetPixel(0, 0, new Color(0f, 0f, 0f, -1f));
+    target.BlitRectMask(bits, mask, new Rect2i(0, 0, 3, 1), Vector2i.Zero);
+    Require(target.GetData().SequenceEqual(new byte[] { 1, 0x7E, 0, 0x3C, 0, 0 }),
+        "A nonzero mask alpha selects the exact source bits.");
+    Expect<ArgumentNullException>(() => target.BlitRectMask(bits, null!, new Rect2i(0, 0, 1, 1), Vector2i.Zero),
+        "A missing mask must reject.");
+    using var opaqueMask = Image.CreateEmpty(3, 1, false, Image.Format.R8);
+    target.BlitRectMask(bits, opaqueMask, new Rect2i(0, 0, 3, 1), Vector2i.Zero);
+    Require(target.GetData().SequenceEqual(bits.GetData()), "A mask format without alpha is implicitly opaque for blitting.");
+
+    using var composite = Image.CreateFromData(3, 1, false, Image.Format.Rgba8,
+        [255, 0, 0, 255, 0, 255, 0, 0, 0, 0, 255, 255]);
+    composite.BlendRectMask(composite, composite, new Rect2i(0, 0, 2, 1), new Vector2i(1, 0));
+    Require(composite.GetData().SequenceEqual(new byte[] { 255, 0, 0, 255, 255, 0, 0, 255, 0, 0, 255, 255 }),
+        "Aliased blending must use the original mask and source for every destination.");
+    using var transparent = Image.CreateEmpty(3, 1, false, Image.Format.Rgba8);
+    transparent.SetPixel(0, 0, new Color(1f, 0f, 0f, 0f));
+    composite.BlitRect(transparent, new Rect2i(0, 0, 1, 1), new Vector2i(0, 0));
+    composite.BlendRect(transparent, new Rect2i(0, 0, 1, 1), new Vector2i(0, 0));
+    Require(composite.GetData().AsSpan(0, 4).SequenceEqual(new byte[] { 255, 0, 0, 0 }),
+        "Zero-alpha blending must retain hidden destination RGB.");
+    composite.FillRect(new Rect2i(2, 1, -2, -1), Colors.White);
+    Require(composite.GetPixel(0, 0) == Colors.White && composite.GetPixel(1, 0) == Colors.White &&
+        composite.GetPixel(2, 0) == Colors.Blue, "FillRect must normalize a reversed extent before clipping.");
+}
+
 static void VerifyImageResize()
 {
     using var nearest = Image.CreateFromData(2, 1, false, Image.Format.Rh, [0x01, 0x7E, 0x00, 0x80]);
@@ -4133,10 +4197,12 @@ static void VerifyImages()
             "Rotate90 must reject an undefined direction.");
 
         using var region = image.GetRegion(new Rect2i(1, 1, 4, 4));
-        Require(region.Size == Vector2i.One && region.GetPixel(0, 0) == image.GetPixel(1, 1),
-            "GetRegion must return only the clipped source intersection.");
+        Require(region.Size == new Vector2i(4, 4) && region.GetPixel(0, 0) == image.GetPixel(1, 1) &&
+                region.GetPixel(3, 3) == default,
+            "GetRegion must keep the requested extent and zero-fill past the source.");
         using var emptyRegion = image.GetRegion(new Rect2i(9, 9, 1, 1));
-        Require(emptyRegion.IsEmpty, "GetRegion must return an empty image for a disjoint rectangle.");
+        Require(emptyRegion.Size == Vector2i.One && emptyRegion.GetPixel(0, 0) == default,
+            "A disjoint positive region must contain zero-valued pixels.");
     }
 
     using (var rectangular = Image.CreateEmpty(3, 2, false, Image.Format.R8))

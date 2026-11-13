@@ -37,7 +37,7 @@ internal sealed class MovieRecording : IDisposable
                 var width = image.Width; var height = image.Height;
                 if (width / (double)height > ratio) width = Math.Max(1, (int)(height * ratio));
                 else height = Math.Max(1, (int)(width / ratio));
-                cropped = image.GetRegion(new Rect2i((image.Width - width) / 2, (image.Height - height) / 2, width, height));
+                cropped = image.GetClippedRegion(new Rect2i((image.Width - width) / 2, (image.Height - height) / 2, width, height));
                 image = cropped; image.Resize(_size.X, _size.Y);
             }
             image.ConvertMovieRGB(captured.PixelFormat == Image.Format.Rgbah);

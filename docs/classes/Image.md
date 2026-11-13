@@ -94,7 +94,7 @@ byte[] ownedCopy = image.GetData();
 | [`public void GenerateMIPMaps(bool renormalize = false)`](#generatemipmaps) | Rebuilds a complete mip chain. |
 | [`public void Convert(Image.Format format)`](#convert) | Converts all stored levels to an uncompressed format. |
 | [`public void Crop(int width, int height)`](#crop) | Crops or expands from the top-left corner. |
-| [`public Image GetRegion(Rect2i region)`](#getregion) | Copies a clipped base-level region. |
+| [`public Image GetRegion(Rect2i region)`](#getregion) | Copies the requested extent and pads outside the source. |
 | [`public void FlipX()`](#flipx) | Flips all levels horizontally. |
 | [`public void FlipY()`](#flipy) | Flips all levels vertically. |
 | [`public void Rotate90(ClockDirection direction)`](#rotate90) | Rotates by 90 degrees. |
@@ -311,7 +311,7 @@ Encodes `color` into every pixel of every stored level. Quantization and omitted
 <a id="fillrect"></a>
 ### `public void FillRect(Rect2i rectangle, Color color)`
 
-Clips the half-open rectangle to the base image. Nonpositive or disjoint rectangles change no pixels. When mipmaps exist, they are rebuilt from the resulting base level.
+Normalizes reversed axes and clips the half-open rectangle to the base image. Zero-area or disjoint rectangles leave the pixels intact. When pixels are filled, existing mipmaps are rebuilt.
 
 <a id="clearmipmaps"></a>
 ### `public void ClearMIPMaps()`
@@ -331,12 +331,12 @@ Decodes and re-encodes every stored pixel into an uncompressed destination. Comp
 <a id="crop"></a>
 ### `public void Crop(int width, int height)`
 
-Copies the top-left overlap into the requested positive size and fills newly exposed pixels with transparent black encoded in the current format. Existing mipmaps are regenerated.
+Copies the top-left overlap into the requested positive size and fills newly exposed pixels with zero-valued storage in the current format. Existing mipmaps are regenerated.
 
 <a id="getregion"></a>
 ### `public Image GetRegion(Rect2i region)`
 
-Returns a new image containing the clipped base-level intersection without mipmaps. A disjoint or nonpositive region returns a new empty image.
+Returns a new image with the requested positive dimensions. Pixels outside the source bounds have zero-valued storage. The result uses the original format and regenerates lower levels when the source has a mip chain. A nonpositive extent returns an empty image.
 
 <a id="flipx"></a>
 ### `public void FlipX()`
@@ -376,22 +376,22 @@ Rounds each dimension upward to a power of two. When `square` is true, both use 
 <a id="blitrect"></a>
 ### `public void BlitRect(Image source, Rect2i sourceRect, Vector2i destination)`
 
-Copies the clipped source rectangle without alpha blending. Source and destination formats must match. Destination is aligned with `sourceRect.Position`, so source clipping preserves the corresponding destination offset.
+Copies exact stored bytes with clipping against both images. Source and destination formats must match. The destination point aligns with `sourceRect.Position`. Overlapping self-copies read the original pixels.
 
 <a id="blendrect"></a>
 ### `public void BlendRect(Image source, Rect2i sourceRect, Vector2i destination)`
 
-Composites straight-alpha source colors over the destination. Formats must match and both images must be readable. For `Rgba16I`, alpha is normalized from `0..65535` during blending and converted back to integer storage afterward.
+Composites straight-alpha source colors over the destination. A zero-alpha source pixel leaves the destination pixel intact. Formats must match and both images must be readable. For `Rgba16I`, alpha is normalized from `0..65535` during blending and converted back to integer storage afterward.
 
 <a id="blitrectmask"></a>
 ### `public void BlitRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination)`
 
-Copies only pixels whose same-coordinate mask alpha is nonzero. Source and mask dimensions must match; source/destination formats must match; the mask must expose alpha.
+Copies exact bytes for pixels whose same-coordinate mask alpha is nonzero. A mask format without alpha acts as opaque. Source and mask dimensions must match, and source and destination formats must match.
 
 <a id="blendrectmask"></a>
 ### `public void BlendRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination)`
 
-Combines mask selection with straight-alpha compositing. Source, destination, and mask validation occurs before destination commit.
+Combines mask selection with straight-alpha compositing. The source and mask must contain alpha. A mask that is also the destination is read from the original pixels. Validation occurs before destination commitment.
 
 <a id="adjustbcs"></a>
 ### `public void AdjustBCS(float brightness, float contrast, float saturation)`

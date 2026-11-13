@@ -105,7 +105,7 @@ Reads both dimensions under the graph gate. Source metadata can change independe
 
 ### GetImage
 
-Calls the immediate source's GetImage and disposes that temporary image on success or failure. Null remains null. Crops its effective region after checked integer truncation of position and size. Image.GetRegion clips against actual image bounds and returns an empty image for an empty intersection; it removes mipmaps. Margin offset/size and logical source-size overrides do not resample the CPU image. Nested views crop the already cropped immediate source image. Integer overflow throws OverflowException; other source/image errors propagate. The caller owns the returned image.
+Calls the immediate source's GetImage and disposes that temporary image on success or failure. Null remains null. Crops its effective region after checked integer truncation of position and size. The result contains the intersection with actual source bounds as base-level pixels, or an empty image for an empty intersection. Margin offset/size and logical source-size overrides do not resample the CPU image. Nested views crop the already cropped immediate source image. Integer overflow throws OverflowException; other source/image errors propagate. The caller owns the returned image.
 
 ### IsPixelOpaque
 
