@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-11-11
+Last updated: 2026-11-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -52,11 +52,11 @@ Returns copied catalog family names, the closest style file or ordered files con
 
 ## Independent process operations
 
-OS process operations use the retained static service. CreateProcess starts a literal executable/argv independently; CreateInstance restarts the current application, including the entry assembly for a framework-dependent host. Execute blocks and appends one captured string after exit, preserving existing collection items. POSIX stdout/stderr capture merges into one native stream in write order; nonzero exit codes remain ordinary results. Arguments never enter an implicit shell. GetExecutablePath returns the actual native host path, GetCommandLineArgs copies application arguments, and GetCommandLineUserArgs copies the suffix after the first -- or ++ separator.
+OS process operations use the retained static service. CreateProcess starts a literal executable/argv independently; CreateInstance restarts the current application, including the entry assembly for a framework-dependent host. Execute blocks and appends one captured string after exit, preserving existing collection items. Windows and POSIX stdout/stderr capture merges into one native stream in write order; nonzero exit codes remain ordinary results. Arguments never enter an implicit shell. GetExecutablePath returns the actual native host path, GetCommandLineArgs copies application arguments, and GetCommandLineUserArgs copies the suffix after the first -- or ++ separator.
 
 ExecuteWithPipe returns ProcessPipes with PID, owned bidirectional StandardIO and read-only StandardError FileAccess streams. Pipes are non-seekable. Blocking I/O waits on the caller; nonblocking ReadBytes returns an available prefix immediately without mistaking NotReady for EOF. Exact reads can consume an incomplete prefix before throwing IOException; use byte buffers for incremental framing. A partial write throws PipeWriteException.BytesWritten so retries send only the remainder. Closing/disposal releases streams without killing the independent process. Native SafeHandles also release forgotten streams. IsProcessRunning queries native IDs, GetProcessExitCode retains the most recently owned child status, and Kill terminates only one process, never its descendants. IDs may be reused by the OS. Completed children release native/BCL handles; a small exit-history record remains in the service.
 
-This is cold, blocking/allocating process and I/O work. It is unsuitable for real-time callbacks. The runtime does not impose application-specific deadlines or kill policy. Tooling hosts still own cancellation, deadlines, diagnostics and project orchestration under ADR 0090. Linux/.NET10 with SDL3.4.18 is exercised. Mobile launch adapters, macOS .app selection and Windows shared-output/explicit-new-console launch remain exact dependencies. Arbitrary named pipe:// paths remain unavailable; these pipe://PID/channel values identify already-owned streams and do not create a named-pipe connector. See [executable checks and examples](../components/processes.md).
+This is cold, blocking/allocating process and I/O work. It is unsuitable for real-time callbacks. The runtime does not impose application-specific deadlines or kill policy. Tooling hosts still own cancellation, deadlines, diagnostics and project orchestration under ADR 0090. Linux/.NET10 with SDL3.4.18 is exercised. Mobile launch adapters and general macOS .app selection remain exact dependencies. Windows x64 shared-output and console-identity checks execute; other architectures/sandboxes remain unqualified. Arbitrary named pipe:// paths remain unavailable; these pipe://PID/channel values identify already-owned streams and do not create a named-pipe connector. See [executable checks and examples](../components/processes.md).
 
 ## Process method reference
 
@@ -85,12 +85,12 @@ Restarts the current native application; a dotnet host prepends its entry assemb
 <a id="createprocess"></a>
 `public static System.Int32 CreateProcess(System.String path, System.ReadOnlySpan<System.String> arguments, System.Boolean openConsole = false)`
 
-Starts a literal executable and separate ordered arguments; no implicit shell. Virtual project/user paths resolve before launch. Returns a native PID; failures throw before result publication. The child survives renderer/application shutdown. macOS .app/Android launch and exact Windows new-console adapters remain dependencies.
+Starts a literal executable and separate ordered arguments; no implicit shell. Virtual project/user paths resolve before launch. Returns a native PID; failures throw before result publication. The child survives renderer/application shutdown. Windows true creates a separate console even with a console-owning parent; false suppresses a console. macOS general .app/Android launch remain dependencies.
 
 <a id="execute"></a>
 `public static System.Int32 Execute(System.String path, System.ReadOnlySpan<System.String> arguments, System.Collections.Generic.ICollection<System.String> output = null, System.Boolean readStderr = false, System.Boolean openConsole = false)`
 
-Blocks until actual exit, captures/discards omitted stdout and disabled stderr, and appends one complete output string to a supplied collection. Existing items remain. POSIX stderr merging preserves native write order; large output is drained before exit polling. Windows readStderr=true explicitly rejects until its shared-output adapter. Output allocation and unbounded child duration are caller policy.
+Blocks until actual exit, captures/discards omitted stdout and disabled stderr, and appends one complete output string to a supplied collection. Existing items remain. Windows and POSIX stderr merging preserves native write order on one pipe; large output is drained before exit polling. Windows openConsole selects a separate console or suppresses it without changing capture. Output allocation and unbounded child duration are caller policy.
 
 <a id="executewithpipe"></a>
 `public static Electron2D.ProcessPipes ExecuteWithPipe(System.String path, System.ReadOnlySpan<System.String> arguments, System.Boolean blocking = true)`

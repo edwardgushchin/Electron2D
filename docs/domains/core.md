@@ -46,7 +46,7 @@ The Android application host supplies [system back navigation](../components/win
 
 [Native permission results](../components/main-loop.md#native-permission-results) now enter the exact Android window's loop through an owner-thread FIFO before its next frame hook. Terminal lifetime discards pending results; listener errors preserve unread results and the original exception. Platform request/query APIs remain separate.
 
-Last updated: 2026-11-11
+Last updated: 2026-11-13
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -423,3 +423,5 @@ Owned movie runs now preserve the last successful simulation pose and PCM on pro
 [Windows file-manager navigation](../components/file-manager.md) opens directories and selects exact files/directories using Shell identities independently of an engine display. A private STA preserves the caller apartment; native folder-view checks verify the actual external result.
 
 [Windows system fonts](../components/system-fonts.md#windows-native-verification) connect existing OS catalog queries, SystemFont and owned automatic text fallback to local DirectWrite file/collection identities through the shared text owner.
+
+The [process component](../components/processes.md#windows-console-and-capture) owns Windows shared stdout/stderr capture and separate console identity, with common CreateProcess/Execute launch, retained CreateInstance/OpenWithProgram semantics and SDL pipe lifetime. This Windows x64 slice leaves mobile launch, general macOS bundles and the full target qualification open.

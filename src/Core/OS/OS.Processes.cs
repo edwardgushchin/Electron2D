@@ -14,7 +14,7 @@ public sealed partial class OS
     /// <summary>Starts an independent executable with literal ordered arguments.</summary>
     /// <param name="path">An executable path or platform-search name; virtual paths resolve through ProjectSettings.</param>
     /// <param name="arguments">Arguments passed separately, without shell interpretation.</param>
-    /// <param name="openConsole">Requests a console for a Windows console application; other platforms ignore this flag.</param>
+    /// <param name="openConsole">Creates a separate console for a Windows console application; false suppresses a console. Other platforms ignore this flag.</param>
     /// <returns>The child process ID. The child survives renderer and application shutdown.</returns>
     /// <exception cref="ArgumentException">The executable or an argument contains a null character, or the path is empty.</exception>
     /// <exception cref="PlatformNotSupportedException">The host has no independent process service.</exception>
@@ -67,25 +67,29 @@ public sealed partial class OS
     /// <param name="arguments">Literal ordered arguments, without shell interpretation.</param>
     /// <param name="output">Receives one string after completion; existing items remain intact. Null discards captured output.</param>
     /// <param name="readStderr">Includes standard error in captured output; otherwise it is drained and discarded.</param>
-    /// <param name="openConsole">Requests a Windows console; other platforms ignore this flag.</param>
+    /// <param name="openConsole">Creates a separate Windows console, including when the parent has a console; false suppresses a console. Other platforms ignore this flag.</param>
     /// <returns>The executable's actual exit code, including nonzero exit codes.</returns>
-    /// <remarks>Blocks the caller and allocates captured output. Capture drains both streams concurrently to avoid pipe deadlock;
-    /// POSIX capture merges stdout/stderr on one native pipe in write order. Use ExecuteWithPipe for independent channels.</remarks>
+    /// <remarks>Blocks the caller and allocates requested output. Merged capture uses one native pipe in write order;
+    /// disabled stderr is discarded without filling a second pipe. Use ExecuteWithPipe for independent channels.</remarks>
     /// <exception cref="ArgumentException">The launch input is invalid.</exception>
     /// <exception cref="System.ComponentModel.Win32Exception">The executable cannot be started.</exception>
     /// <exception cref="IOException">The native process or pipe operation fails.</exception>
-    /// <exception cref="PlatformNotSupportedException">A required host or shared-output adapter is absent.</exception>
+    /// <exception cref="PlatformNotSupportedException">The host has no independent process service.</exception>
     public static int Execute(string path, ReadOnlySpan<string> arguments, ICollection<string>? output = null, bool readStderr = false, bool openConsole = false)
     {
         if (!OperatingSystem.IsWindows()) return Service.ExecuteCaptured(path, arguments, output, readStderr);
-        // shortcut: enable merged Windows capture after its shared-output and new-console launch adapter executes.
-        if (readStderr && OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("Merged console capture requires the Windows shared-output process adapter.");
-        var start = ProcessStart(path, arguments, openConsole); start.RedirectStandardOutput = true; start.RedirectStandardError = true;
-        start.StandardOutputEncoding = Encoding.UTF8; if (start.RedirectStandardError) start.StandardErrorEncoding = Encoding.UTF8;
-        using var process = Process.Start(start) ?? throw new IOException("The executable did not start.");
-        var stdout = process.StandardOutput.ReadToEndAsync(); var stderr = process.StandardError.BaseStream.CopyToAsync(Stream.Null);
-        process.WaitForExit(); var text = stdout.GetAwaiter().GetResult(); stderr.GetAwaiter().GetResult();
-        if (output is not null) output.Add(text); return process.ExitCode;
+        var child = Service.StartWindows(path, arguments, openConsole, true, readStderr, out var pipe);
+        try
+        {
+            using (pipe)
+            {
+                if (output is null) pipe!.CopyTo(Stream.Null);
+                else { using var bytes = new MemoryStream(); pipe!.CopyTo(bytes); var text = Encoding.UTF8.GetString(bytes.GetBuffer(), 0, checked((int)bytes.Length)); while (!child.Poll()) Thread.Sleep(1); output.Add(text); }
+            }
+            while (!child.Poll()) Thread.Sleep(1);
+            return child.ExitCode!.Value;
+        }
+        catch { child.Abandon(); throw; }
     }
     /// <summary>Starts an independent executable with owned stdin/stdout and stderr pipe access.</summary>
     /// <param name="path">An executable path or platform-search name.</param>
@@ -137,11 +141,10 @@ public sealed partial class OS
     {
         if (!(OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid() || OperatingSystem.IsWindows() || OperatingSystem.IsMacOS())) throw new PlatformNotSupportedException("Independent process services require a desktop process host; mobile launch adapters are unavailable.");
     }
-    private static ProcessStartInfo ProcessStart(string path, ReadOnlySpan<string> arguments, bool console)
+    private OSProcess StartWindows(string path, ReadOnlySpan<string> arguments, bool console, bool capture, bool mergeError, out System.IO.Pipes.AnonymousPipeServerStream? output)
     {
         DesktopProcesses(); ValidateProcessInput(path, arguments); if (path.Contains("://", StringComparison.Ordinal)) path = ProjectSettings.GlobalizePath(path);
-        var info = new ProcessStartInfo(path) { UseShellExecute = false, CreateNoWindow = !console };
-        foreach (var argument in arguments) info.ArgumentList.Add(argument); return info;
+        lock (_environmentGate) return ProcessPlatform.StartWindows(path, arguments, console, capture, mergeError, out output);
     }
     private static void ValidateProcessInput(string path, ReadOnlySpan<string> arguments)
     {
@@ -150,10 +153,9 @@ public sealed partial class OS
     }
     private int StartProcess(string path, ReadOnlySpan<string> arguments, bool console)
     {
-        if (!OperatingSystem.IsWindows()) { var child = StartNative(path, arguments, false); try { lock (_processGate) { ReapProcesses(); _processes[child.PID] = child; } return child.PID; } catch { child.Abandon(); throw; } }
-        var start = ProcessStart(path, arguments, console); var process = Process.Start(start) ?? throw new IOException("The executable did not start.");
-        try { var pid = process.Id; lock (_processGate) { ReapProcesses(); _processes[pid] = new(process); } return pid; }
-        catch { process.Dispose(); throw; }
+        var child = OperatingSystem.IsWindows() ? StartWindows(path, arguments, console, false, false, out _) : StartNative(path, arguments, false);
+        try { lock (_processGate) { ReapProcesses(); _processes[child.PID] = child; } return child.PID; }
+        catch { child.Abandon(); throw; }
     }
     private int ExecuteCaptured(string path, ReadOnlySpan<string> arguments, ICollection<string>? output, bool readError)
     {
