@@ -504,7 +504,7 @@ Replaces pixels from WebP bytes through the existing private libwebp bridge. Sta
 <a id="loadbmpfrombuffer"></a>
 ### `public void LoadBMPFromBuffer(ReadOnlySpan<byte> buffer)`
 
-Replaces pixels from BMP bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+Replaces pixels from BMP bytes. The [managed decoder](../components/images.md#bmp-loading) expands indexed, packed or RLE pixels to straight RGBA8 in top-left order. It copies the input and validates the header, palette, masks and pixel ranges. A successful load replaces all image state and emits one synchronous `Changed` event. Invalid or truncated data raises `InvalidDataException` and preserves the current image. An observer exception occurs after commit. Disposed instances reject access.
 
 <a id="loadtgafrombuffer"></a>
 ### `public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer)`

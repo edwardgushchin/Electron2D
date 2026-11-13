@@ -39,13 +39,7 @@ internal static class ImageCodecTests
         image.LoadSVGFromString("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 3\"><rect width=\"4\" height=\"3\" fill=\"#00ff00\"/></svg>");
         Check(image.Size == new Vector2i(4, 3) && image.GetPixel(1, 1) == Colors.Green,
             "SVG viewBox supplies intrinsic dimensions.");
-        foreach (var topDown in new[] { false, true })
-        {
-            image.LoadBMPFromBuffer(BMP(topDown));
-            var opaque = (byte[])Pixels.Clone(); opaque[3] = 255;
-            CheckPixels(image, opaque);
-        }
-
+        VerifyBMP();
         VerifyTGA();
         VerifyPNG();
 
@@ -339,6 +333,145 @@ internal static class ImageCodecTests
                     bytes[54 + y * 12 + x * 3 + channel] = Pixels[((topDown ? y : 1 - y) * 3 + x) * 4 + 2 - channel];
         return bytes;
     }
+
+    internal static void VerifyBMP()
+    {
+        static void CheckBMPPixels(Image decoded, int width, int height, byte[] expected) =>
+            Check(decoded.Size == new Vector2i(width, height) && decoded.PixelFormat == Image.Format.Rgba8 &&
+                decoded.GetData().AsSpan().SequenceEqual(expected), $"BMP {width}x{height} dimensions and RGBA pixels are exact.");
+
+        using var image = new Image();
+        byte[] red = [255, 0, 0, 255], green = [0, 255, 0, 255], blue = [0, 0, 255, 255];
+        byte[] black = [0, 0, 0, 255];
+        byte[] palette = [0, 0, 0, 77, 0, 0, 255, 44, 0, 255, 0, 0, 255, 0, 0, 9];
+        var indexed = BMPVector(5, -1, 2, [0x1b, 0x40, 0xaa, 0xbb], palette);
+        foreach (var topDown in new[] { false, true })
+        {
+            image.LoadBMPFromBuffer(BMP(topDown));
+            var opaque = (byte[])Pixels.Clone();
+            opaque[3] = 255;
+            CheckBMPPixels(image, 3, 2, opaque);
+        }
+        image.LoadBMPFromBuffer(indexed);
+        CheckBMPPixels(image, 5, 1, [.. black, .. red, .. green, .. blue, .. red]);
+        image.LoadBMPFromBuffer(BMPVector(3, 1, 1, [0xa0, 0, 0, 0], [0, 0, 255, 0, 255, 0], header: 12));
+        CheckBMPPixels(image, 3, 1, [.. green, .. red, .. green]);
+        image.LoadBMPFromBuffer(BMPVector(3, 1, 4, [0x12, 0x30, 0, 0], palette));
+        CheckBMPPixels(image, 3, 1, [.. red, .. green, .. blue]);
+        image.LoadBMPFromBuffer(BMPVector(3, 1, 8, [3, 0, 2, 0], palette));
+        CheckBMPPixels(image, 3, 1, [.. blue, .. black, .. green]);
+        var legacy = BMPVector(1, 1, 15, [0x0c, 0x7c, 0, 0]);
+        BinaryPrimitives.WriteInt32LittleEndian(legacy.AsSpan(2), 0);
+        image.LoadBMPFromBuffer(legacy);
+        CheckBMPPixels(image, 1, 1, [255, 0, 99, 255]);
+        image.LoadBMPFromBuffer(BMPVector(1, 1, 16, [0x0c, 0x7c, 0, 0]));
+        CheckBMPPixels(image, 1, 1, [255, 0, 99, 255]);
+        image.LoadBMPFromBuffer(BMPVector(1, 1, 16, [0xe0, 0x07, 0, 0], compression: 3, masks: [0xf800, 0x07e0, 0x001f]));
+        CheckBMPPixels(image, 1, 1, green);
+        image.LoadBMPFromBuffer(BMPVector(1, -1, 16, [0x00, 0x7c, 0, 0], compression: 6, masks: [0x7c00, 0x03e0, 0x001f, 0x8000]));
+        CheckBMPPixels(image, 1, 1, [255, 0, 0, 0]);
+        image.LoadBMPFromBuffer(BMPVector(1, 1, 32, [0xff, 0x83, 0x0f, 0x80], compression: 3, header: 56,
+            masks: [0x000003ff, 0x000ffc00, 0x3ff00000, 0xc0000000]));
+        CheckBMPPixels(image, 1, 1, [255, 247, 0, 170]);
+        image.LoadBMPFromBuffer(BMPVector(2, 1, 32, [0, 0, 255, 0, 255, 0, 0, 0]));
+        CheckBMPPixels(image, 2, 1, [.. red, .. blue]);
+        image.LoadBMPFromBuffer(BMPVector(2, 1, 32, [0, 0, 255, 0, 255, 0, 0, 127]));
+        CheckBMPPixels(image, 2, 1, [255, 0, 0, 0, 0, 0, 255, 127]);
+
+        var rle4 = BMPVector(5, 2, 4, [5, 0x12, 0, 0, 0, 5, 0x32, 0x10, 0x30, 0xaa, 0, 1], palette, compression: 2);
+        byte[] rle4Expected = [.. blue, .. green, .. red, .. black, .. blue, .. red, .. green, .. red, .. green, .. red];
+        image.LoadBMPFromBuffer(rle4);
+        CheckBMPPixels(image, 5, 2, rle4Expected);
+        var rle8 = BMPVector(4, 2, 8, [0, 2, 1, 0, 3, 3, 0, 0, 0, 3, 1, 2, 3, 0xaa, 0, 1], palette, compression: 1);
+        image.LoadBMPFromBuffer(rle8);
+        CheckBMPPixels(image, 4, 2, [.. red, .. green, .. blue, .. black, .. black, .. blue, .. blue, .. blue]);
+
+        image.GenerateMIPMaps();
+        var before = image.GetData();
+        var changes = 0;
+        image.Changed += _ => changes++;
+        foreach (var invalid in new[]
+        {
+            indexed[..^1], rle4[..^2],
+            BMPVector(1, 1, 4, [0x40, 0, 0, 0], palette),
+            BMPVector(1, 1, 8, [0, 1], compression: 1),
+            BMPVector(3, 1, 8, [4, 2, 0, 1], palette, compression: 1),
+            BMPVector(3, 1, 8, [0, 2, 0, 1, 0, 1], palette, compression: 1),
+            BMPVector(3, -1, 8, [3, 2, 0, 1], palette, compression: 1),
+            BMPVector(3, 1, 4, [3, 0x41, 0, 1], palette, compression: 2),
+            BMPVector(1, 1, 16, [0, 0, 0, 0], compression: 3, masks: [0x001f, 0x03e0, 0x001f]),
+            BMPVector(1, 1, 16, [0, 0, 0, 0], compression: 3, masks: [0x7c00, 0x03e0, 0x0015]),
+            BMPVector(1, 1, 16, [0, 0, 0, 0], compression: 3, masks: [0x10000, 0x03e0, 0x001f]),
+            BMPVector(1, 1, 16, [0, 0, 0, 0], compression: 3, masks: [0x7c00, 0x03e0]),
+            BMPVector(1, int.MinValue, 32, [0, 0, 0, 0]),
+            BMPVector(8192, 8192, 32, [0, 0, 0, 0]),
+        })
+            Reject<InvalidDataException>(() => image.LoadBMPFromBuffer(invalid));
+        var boundedRLE = (byte[])rle4.Clone();
+        BinaryPrimitives.WriteInt32LittleEndian(boundedRLE.AsSpan(34), 2);
+        Reject<InvalidDataException>(() => image.LoadBMPFromBuffer(boundedRLE));
+        var paletteOverlap = (byte[])indexed.Clone();
+        BinaryPrimitives.WriteInt32LittleEndian(paletteOverlap.AsSpan(10), 54);
+        Reject<InvalidDataException>(() => image.LoadBMPFromBuffer(paletteOverlap));
+        var shortRows = BMPVector(2, 1, 24, [0, 0, 0, 0, 0, 0]);
+        Reject<InvalidDataException>(() => image.LoadBMPFromBuffer(shortRows));
+        Check(image.HasMIPMaps && image.GetData().AsSpan().SequenceEqual(before) && changes == 0,
+            "Malformed BMP preserves pixels, mipmaps and event count.");
+
+        var folder = Directory.CreateTempSubdirectory("Electron2D-bmp-");
+        try
+        {
+            var path = IOPath.Combine(folder.FullName, "indexed.BMP");
+            File.WriteAllBytes(path, rle4);
+            image.Load(path);
+            CheckBMPPixels(image, 5, 2, rle4Expected);
+            Check(changes == 1 && !image.HasMIPMaps, "BMP file load publishes one base level.");
+            using var loaded = Image.LoadFromFile(path);
+            CheckBMPPixels(loaded, 5, 2, rle4Expected);
+            using var texture = ResourceLoader.Load<ImageTexture>(path, ResourceLoader.CacheMode.Ignore);
+            using var snapshot = texture.GetImage()!;
+            CheckBMPPixels(snapshot, 5, 2, rle4Expected);
+        }
+        finally { folder.Delete(recursive: true); }
+        Console.WriteLine("BMP depths, masks, palettes, RLE, orientation, failure and resource checks passed.");
+    }
+
+    private static byte[] BMPVector(int width, int height, ushort depth, byte[] pixels,
+        byte[]? palette = null, uint compression = 0, int header = 40, uint[]? masks = null)
+    {
+        var maskBytes = (masks?.Length ?? 0) * 4;
+        var tableOffset = 14 + Math.Max(header, maskBytes == 0 ? header : 40 + maskBytes);
+        var offset = tableOffset + (palette?.Length ?? 0);
+        var bytes = new byte[offset + pixels.Length];
+        "BM"u8.CopyTo(bytes);
+        BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(2), bytes.Length);
+        BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(10), offset);
+        BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(14), header);
+        if (header == 12)
+        {
+            BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(18), (ushort)width);
+            BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(20), (ushort)height);
+            bytes[22] = 1;
+            BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(24), depth);
+        }
+        else
+        {
+            BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(18), width);
+            BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(22), height);
+            bytes[26] = 1;
+            BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(28), depth);
+            BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(30), compression);
+            BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(34), pixels.Length);
+            BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(46), (palette?.Length ?? 0) / 4);
+        }
+        if (masks is not null)
+            for (var i = 0; i < masks.Length; i++)
+                BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(54 + 4 * i), masks[i]);
+        palette?.CopyTo(bytes, tableOffset);
+        pixels.CopyTo(bytes, offset);
+        return bytes;
+    }
+
 
     internal static void VerifyTGA()
     {

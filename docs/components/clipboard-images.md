@@ -14,7 +14,7 @@ On Wayland the native offer is delivered to the keyboard-focused client.
 | 2 | image/jpeg | LoadJPGFromBuffer |
 | 3 | image/webp | LoadWebPFromBuffer |
 | 4 | image/svg+xml | LoadSVGFromBuffer |
-| 5 | image/bmp | LoadBMPFromBuffer |
+| 5 | image/bmp | [LoadBMPFromBuffer](images.md#bmp-loading) |
 | 6 | image/x-tga, image/x-targa | LoadTGAFromBuffer |
 | 7 | image/ktx | LoadKTXFromBuffer |
 | 8 | image/x-exr | LoadEXRFromBuffer |

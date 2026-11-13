@@ -68,7 +68,7 @@ public sealed partial class Image
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer) => DecodeAndCommit(buffer, "WEBP");
 
-    /// <summary>Decodes a BMP buffer and replaces the image atomically.</summary>
+    /// <summary>Decodes indexed, direct-color or RLE BMP pixels to top-left RGBA8 and replaces the image atomically.</summary>
     /// <param name="buffer">BMP data, copied before validation and decoding, at most 64 MiB.</param>
     /// <remarks>Produces RGBA8 without mipmaps. Failure preserves pixels; success emits Changed.</remarks>
     /// <exception cref="InvalidDataException">Data is malformed or exceeds image limits.</exception>
@@ -173,6 +173,11 @@ public sealed partial class Image
         ThrowIfDisposed();
         if (buffer.IsEmpty || buffer.Length > MaximumEncodedBytes) throw new InvalidDataException("Encoded images must contain between 1 byte and 64 MiB.");
         var bytes = buffer.ToArray();
+        if (codec == "BMP")
+        {
+            Commit(DecodeBMP(bytes));
+            return;
+        }
         if (codec == "TGA")
         {
             Commit(DecodeTGA(bytes));
@@ -209,7 +214,6 @@ public sealed partial class Image
                 var surface = codec switch
                 {
                     "JPG" => SDL3.Image.LoadJPGIO(stream),
-                    "BMP" => SDL3.Image.LoadBMPIO(stream),
                     "SVG" => SDL3.Image.LoadSizedSVGIO(stream, size.X, size.Y),
                     _ => throw new NotSupportedException(codec)
                 };
@@ -396,17 +400,6 @@ public sealed partial class Image
             }
             if (!ended) throw Invalid();
             return new((int)width, (int)height);
-        }
-        if (codec == "BMP")
-        {
-            if (data.Length < 26 || !data[..2].SequenceEqual("BM"u8)) throw Invalid();
-            var header = BinaryPrimitives.ReadUInt32LittleEndian(data[14..]);
-            if (header == 12) return new(BinaryPrimitives.ReadUInt16LittleEndian(data[18..]), BinaryPrimitives.ReadUInt16LittleEndian(data[20..]));
-            if (header < 40 || header > data.Length - 14) throw Invalid();
-            var width = BinaryPrimitives.ReadInt32LittleEndian(data[18..]);
-            var height = BinaryPrimitives.ReadInt32LittleEndian(data[22..]);
-            if (height == int.MinValue) throw Invalid();
-            return new(width, Math.Abs(height));
         }
         if (codec == "WEBP")
         {
