@@ -573,7 +573,8 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <summary>Gets the initial highlight color used by the canvas redraw diagnostic.</summary>
     /// <value>A finite color, initially (1, 0.2, 0.2, 0.5).</value>
     /// <remarks>The renderer samples the active feature override at startup. Enable the diagnostic with
-    /// the --debug-canvas-item-redraw host switch.</remarks>
+    /// the --debug-canvas-item-redraw host switch. Highlights appear over the rendered canvas without
+    /// entering the viewport's retained color history.</remarks>
     public static ProjectSetting<Color> DebugRedrawColor { get; } =
         new("debug/canvas_items/debug_redraw_color", new Color(1f, 0.2f, 0.2f, 0.5f), value => value.IsFinite());
 

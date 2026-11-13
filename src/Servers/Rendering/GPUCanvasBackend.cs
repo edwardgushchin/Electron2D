@@ -174,12 +174,14 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var samples = (SDL.GPUSampleCount)output.MSAA; var format = CanvasFormat(output.HDR);
         _materialMasks = lighting.Masks.Count != 0 || lighting.ShadowCount != 0;
         var size = output.Size; var lightingUsed = false; var sdfUsed = false; var screen = false; var screenMipmaps = false;
-        var layered = false;
+        var layered = false; var redrawOverlay = false;
         if (processParticles && RenderingServer.Service is { } particleServer) PrepareParticleSources(particleServer);
         if (processParticles) foreach (var source in _particlePrepared) sdfUsed |= source.PreparedProcess?.Program.UsesSDFTexture == true || source.PreparedProcess?.ParticleMotion?.Program.UsesSDFTexture == true;
         foreach (var batch in batches)
         {
             if (batch.Operation == CanvasOperation.EnvironmentBoundary) { layered = true; continue; }
+            if (batch.Operation == CanvasOperation.RedrawOverlay) { redrawOverlay = true; continue; }
+            var batchSamples = redrawOverlay ? SDL.GPUSampleCount.SampleCount1 : samples;
             if (batch.Particles is { } particles && (long)batch.Count * particles.Source.Amount * sizeof(CanvasVertex) > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(batches), "Expanded particle geometry exceeds the native byte budget.");
             lightingUsed |= batch.Count != 0 && batch.Lighting is not null && !batch.MaskShader && !batch.GroupShader;
@@ -199,9 +201,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 ValidateUnnormalizedProgram(sampledMaterial, code, 2);
                 if (vertexCode is not null) ValidateUnnormalizedProgram(sampledMaterial, vertexCode, 0, sampledMaterial.Program.VertexTextureIndices);
             }
-            var effectiveBlend = batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend; var key = new PipelineKey(code, vertexCode, effectiveBlend, batch.InstanceCount > 0, samples, batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format, batch.Primitive);
+            var effectiveBlend = batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend; var key = new PipelineKey(code, vertexCode, effectiveBlend, batch.InstanceCount > 0, batchSamples, batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format, batch.Primitive);
             _usedPrograms.Add(key);
-            if (!_pipelines.ContainsKey(key)) _pipelines.Add(key, CreatePipeline(code, effectiveBlend, instanced: batch.InstanceCount > 0, lighting: batch.Lighting is not null && batch.Material is not null && !batch.MaskShader && !batch.GroupShader, samples: samples, lcd: batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format: format, vertexCode: vertexCode, primitive: batch.Primitive));
+            if (!_pipelines.ContainsKey(key)) _pipelines.Add(key, CreatePipeline(code, effectiveBlend, instanced: batch.InstanceCount > 0, lighting: batch.Lighting is not null && batch.Material is not null && !batch.MaskShader && !batch.GroupShader, samples: batchSamples, lcd: batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format: format, vertexCode: vertexCode, primitive: batch.Primitive));
             if (batch.MaskShader) _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
             if (batch.GroupShader)
             {
@@ -244,7 +246,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var linearizeGlowSource = !output.HDR && glowLevelCount > 0;
         var storage = output.HDR ? 1 : 0;
         var antialias = postProcess.ScreenSpaceAA != ScreenSpaceAAMode.Disabled;
-        var saveHistory = drawPostProcess || layered || antialias;
+        var saveHistory = drawPostProcess || layered || antialias || redrawOverlay;
         if (saveHistory) output.PostProcess ??= new(CreateTarget(size, default, HDR: output.HDR));
         if (antialias) PrepareScreenSpaceAA(output, postProcess.ScreenSpaceAA, drawPostProcess || layered);
         if (layered && output.Multisample is not null)
@@ -335,7 +337,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 Blit(command, previous.DangerousGetHandle(), output.Next.DangerousGetHandle(), new(0, 0, size.X, size.Y));
             }
             pass = BeginCanvasPass(command, output, false, clearEnabled ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load, clear);
-            var inGroup = false; var copied = false;
+            var inGroup = false; var copied = false; var drawSamples = samples;
             RenderHandle? foregroundSamples = null;
             var maskSamplers = stackalloc SDL.GPUTextureSamplerBinding[2];
             var vertexSamplers = stackalloc SDL.GPUTextureSamplerBinding[16];
@@ -354,6 +356,16 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                         SeedCanvasSamples(command, output, foregroundSamples, output.Next, seedFirst, lightingBytes);
                     copied = false;
                     pass = BeginCanvasPass(command, output, false, SDL.GPULoadOp.Load, default, foregroundSamples);
+                    continue;
+                }
+                if (batch.Operation == CanvasOperation.RedrawOverlay)
+                {
+                    // Preserve the clean scene before overlay composition, including Once-to-Never transitions.
+                    SDL.EndGPURenderPass(pass); pass = 0;
+                    if (!layered) FinishBackground();
+                    if (antialias) DrawScreenSpaceAA(command, output, postProcess.ScreenSpaceAA, drawPostProcess || layered);
+                    pass = BeginPass(command, output.Next.DangerousGetHandle(), SDL.GPULoadOp.Load, default);
+                    drawSamples = SDL.GPUSampleCount.SampleCount1;
                     continue;
                 }
                 if (batch.Operation == CanvasOperation.Copy)
@@ -408,7 +420,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 if (particleStream is not null) bindings[0] = new() { Buffer = particleStream.Vertices!.DangerousGetHandle() };
                 var bindingCount = batch.InstanceCount > 0 ? 2 : 1;
                 SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(bindings, bindingCount), (uint)bindingCount);
-                var pipeline = batch.Operation == CanvasOperation.GroupBegin ? _clearPipelines[output.HDR ? 1 : 0, (int)samples]! : _pipelines[new(GlyphCode(batch), VertexCode(batch), batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend, batch.InstanceCount > 0, samples, batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format, batch.Primitive)];
+                var pipeline = batch.Operation == CanvasOperation.GroupBegin ? _clearPipelines[output.HDR ? 1 : 0, (int)samples]! : _pipelines[new(GlyphCode(batch), VertexCode(batch), batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend, batch.InstanceCount > 0, drawSamples, batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format, batch.Primitive)];
                 SDL.BindGPUGraphicsPipeline(pass, pipeline.DangerousGetHandle());
                 if (modelTable)
                 {
@@ -486,8 +498,11 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 RecordCanvasDraw(batch, drawCalls);
             }
             SDL.EndGPURenderPass(pass); pass = 0;
-            if (saveHistory && !layered) FinishBackground();
-            if (antialias) DrawScreenSpaceAA(command, output, postProcess.ScreenSpaceAA, drawPostProcess || layered);
+            if (!redrawOverlay)
+            {
+                if (saveHistory && !layered) FinishBackground();
+                if (antialias) DrawScreenSpaceAA(command, output, postProcess.ScreenSpaceAA, drawPostProcess || layered);
+            }
             measured?.End(command);
             var submitted = command; command = 0;
             if (measured is not null) measured.Submit(submitted); else Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");

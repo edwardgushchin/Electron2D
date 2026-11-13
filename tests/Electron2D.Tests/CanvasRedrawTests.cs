@@ -39,7 +39,7 @@ internal static class CanvasRedrawTests
             ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
             using var window = new Window { Size = new(64, 48) };
             using var scene = new Swatch { Position = new(4, 4) };
-            using var probe = new Probe(window, scene, enabled);
+            using var probe = new Probe(window, scene, enabled, backend == "gpu");
             window.AddChild(scene);
             window.AddChild(probe);
             window.Ready += _ =>
@@ -49,7 +49,7 @@ internal static class CanvasRedrawTests
                 ProjectSettings.SetFeatureOverride(ProjectSettings.DebugRedrawColor, Feature, Colors.White);
             };
             Check(Engine.Run(window) == 0 && probe.Complete && !RenderingServer.IsAvailable, "Native run retired.");
-            Console.WriteLine($"Canvas redraw {backend}/{profile}: pixels, fading, re-recording, RID and cleanup passed.");
+            Console.WriteLine($"Canvas redraw {backend}/{profile}: pixels, fading, viewport history and cleanup passed.");
         }
     }
 
@@ -63,7 +63,7 @@ internal static class CanvasRedrawTests
         }
     }
 
-    private sealed class Probe(Window window, Swatch scene, bool enabled) : Node
+    private sealed class Probe(Window window, Swatch scene, bool enabled, bool gpu) : Node
     {
         internal bool Complete;
 
@@ -117,7 +117,10 @@ internal static class CanvasRedrawTests
             for (var i = 0; i < 64; i++) RenderingServer.ForceDraw(swapBuffers: false);
             bytes = GC.GetAllocatedBytesForCurrentThread() - before;
             Check(bytes == 0, $"Warmed retained frames allocated {bytes} owner-thread bytes.");
-            VerifyAccumulatingTarget();
+            VerifyAccumulatingTarget(ViewportClearMode.Never);
+            VerifyAccumulatingTarget(ViewportClearMode.Once);
+            if (gpu) VerifyAccumulatingTarget(ViewportClearMode.Once, multisampledHDR: true);
+            VerifyKeptBackground();
             Complete = true;
             Tree!.Quit();
         }
@@ -134,32 +137,90 @@ internal static class CanvasRedrawTests
             RenderingServer.ForceDraw(swapBuffers: false);
         }
 
-        private static void VerifyAccumulatingTarget()
+        private void VerifyAccumulatingTarget(ViewportClearMode clear, bool multisampledHDR = false)
         {
             var view = RenderingServer.ViewportCreate();
             var canvas = RenderingServer.CanvasCreate();
             var item = RenderingServer.CanvasItemCreate();
             try
             {
-                RenderingServer.ViewportSetSize(view, 16, 16);
+                RenderingServer.ViewportSetSize(view, 32, 24);
                 RenderingServer.ViewportSetActive(view, true);
                 RenderingServer.ViewportSetUpdateMode(view, ViewportUpdateMode.Always);
-                RenderingServer.ViewportSetClearMode(view, ViewportClearMode.Never);
+                RenderingServer.ViewportSetClearMode(view, clear);
+                if (multisampledHDR)
+                {
+                    RenderingServer.ViewportSetUseHDR2D(view, true);
+                    RenderingServer.ViewportSetMSAA2D(view, Viewport.MSAA.Samples4X);
+                    RenderingServer.ViewportSetScreenSpaceAA(view, ScreenSpaceAAMode.FXAA);
+                }
                 RenderingServer.ViewportAttachCanvas(view, canvas);
                 RenderingServer.CanvasItemSetParent(item, canvas);
+                var texture = RenderingServer.ViewportGetTexture(view);
                 Record(item);
                 RenderingServer.ForceDraw(swapBuffers: false);
-                using var pixels = RenderingServer.Texture2DGet(RenderingServer.ViewportGetTexture(view));
-                Check(pixels?.GetPixel(5, 5).IsEqualApprox(Colors.Red) == true, "Accumulating targets keep their original pixels.");
+                TargetPixel(texture, 5, enabled ? Colors.Blue : Colors.Red);
+                RenderingServer.CanvasItemSetTransform(item, new Transform(0, new Vector2(16, 0)));
+                RenderingServer.ForceDraw(swapBuffers: false, frameStep: 1d);
+                TargetPixel(texture, 5, Colors.Red);
+                TargetPixel(texture, 20, enabled ? new Color(.5f, 0, .5f) : Colors.Red);
+                if (clear == ViewportClearMode.Never)
+                {
+                    for (var i = 0; i < 24; i++) RecordAndDraw(item);
+                    var before = GC.GetAllocatedBytesForCurrentThread();
+                    for (var i = 0; i < 64; i++) RecordAndDraw(item);
+                    var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
+                    Check(bytes == 0, $"Warmed accumulating redraws allocated {bytes} owner-thread bytes.");
+                }
+                RenderingServer.FreeRID(item);
+                item = default;
+                RenderingServer.ForceDraw(swapBuffers: false, frameStep: 1d);
+                TargetPixel(texture, 5, Colors.Red);
+                TargetPixel(texture, 20, Colors.Red);
+                RenderingServer.ViewportSetClearMode(view, ViewportClearMode.Always);
+                RenderingServer.ForceDraw(swapBuffers: false);
+                TargetPixel(texture, 5, Colors.Black);
+                TargetPixel(texture, 20, Colors.Black);
             }
             finally
             {
-                RenderingServer.FreeRID(item);
+                if (item.IsValid()) RenderingServer.FreeRID(item);
                 RenderingServer.FreeRID(canvas);
                 RenderingServer.FreeRID(view);
             }
         }
 
+        private static void RecordAndDraw(RID item)
+        {
+            Record(item);
+            RenderingServer.ForceDraw(swapBuffers: false);
+        }
+
+        private void VerifyKeptBackground()
+        {
+            using var environment = new CanvasEnvironment { BackgroundMode = CanvasBackgroundMode.Keep };
+            using var world = new WorldEnvironment { Environment = environment };
+            window.AddChild(world);
+            scene.QueueRedraw();
+            RenderingServer.ForceDraw(swapBuffers: false);
+            Pixel(6, enabled ? Colors.Blue : Colors.Red);
+            scene.Position = new(20, 4);
+            RenderingServer.ForceDraw(swapBuffers: false, frameStep: 1d);
+            Pixel(6, Colors.Red);
+            Pixel(22, enabled ? new Color(.5f, 0, .5f) : Colors.Red);
+            scene.Hide();
+            RenderingServer.ForceDraw(swapBuffers: false, frameStep: 1d);
+            Pixel(22, Colors.Red);
+            window.RemoveChild(world);
+        }
+
+        private static void TargetPixel(RID texture, int x, Color expected)
+        {
+            using var image = RenderingServer.Texture2DGet(texture)!;
+            var actual = image.GetPixel(x, 5);
+            Check(Math.Abs(actual.R - expected.R) < .02f && Math.Abs(actual.G - expected.G) < .02f &&
+                Math.Abs(actual.B - expected.B) < .02f, $"Accumulating target pixel {x}: expected {expected}, got {actual}.");
+        }
         private void Pixel(int x, Color expected)
         {
             using var image = window.GetTexture().GetImage()!;

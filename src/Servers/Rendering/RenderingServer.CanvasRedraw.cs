@@ -39,7 +39,7 @@ public sealed partial class RenderingServer
 
     private void CaptureCanvasRedraw(CanvasItem item, Transform transform, Rect2i? clip, Vector2i pixels)
     {
-        if (item.DebugRedrawRenderer != InstanceID || ClearMode(_viewport) != ViewportClearMode.Always) return;
+        if (item.DebugRedrawRenderer != InstanceID) return;
         var pending = double.IsNaN(item.DebugRedrawTime);
         var elapsed = pending ? 0d : _debugRedrawClock - item.DebugRedrawTime;
         if (!pending && (item.DebugRedrawEpoch != _debugRedrawEpoch || elapsed >= _debugRedrawDuration)) return;
@@ -59,7 +59,8 @@ public sealed partial class RenderingServer
 
     private void AppendCanvasRedrawHighlights(Vector2i pixels)
     {
-        if (_debugRedrawHighlights is not { } highlights) return;
+        if (_debugRedrawHighlights is not { Count: > 0 } highlights) return;
+        _batches.Add(new(0, 0, null, Operation: CanvasOperation.RedrawOverlay));
         foreach (var highlight in highlights)
         {
             var first = _vertices.Count;

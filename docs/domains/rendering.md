@@ -1,3 +1,5 @@
+[Canvas redraw diagnostics](../components/canvas-rendering.md#canvas-redraw-diagnostic) highlight scene and server item bounds over the finished viewport. Accumulating canvas targets preserve their clean render history on GPU and Compatibility.
+
 [Canvas shadow atlas](../components/canvas-shadow-atlas.md) supplies real session/project resolution, point and directional GPU depth rows, shared fixed/programmed sampling and target-owned retirement.
 
 The complete [blend factor family](../components/blend-factors.md) executes constant-alpha and dual-source equations with copied pipeline state, sparse logical locations and independent optional feature negotiation.

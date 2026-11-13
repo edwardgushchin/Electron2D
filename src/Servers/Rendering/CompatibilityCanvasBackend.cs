@@ -161,14 +161,15 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         if (measured is not null) { Check(SDL.FlushRenderer(renderer), "flush before measured canvas"); measured.Begin(); }
         var origin = output is null ? directRegion.Position : Vector2.Zero;
         if (output is null) directRegion = directRegion.Intersection(new Rect2(Vector2.Zero, GetPixelSize()));
-        var screen = false; var layered = false;
+        var screen = false; var layered = false; var redrawOverlay = false;
         foreach (var batch in batches)
         {
             if (batch.Operation == CanvasOperation.EnvironmentBoundary) { layered = true; continue; }
+            if (batch.Operation == CanvasOperation.RedrawOverlay) { redrawOverlay = output is not null; continue; }
             if (batch.MIPMaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
             screen |= batch.Operation != CanvasOperation.Draw || batch.GroupShader || batch.MaskShader;
         }
-        if (layered)
+        if (layered || redrawOverlay)
         {
             var history = output!.PostProcess ??= new(CreateTarget(output.Size, default));
             history.PendingRaw ??= CreateTarget(output.Size, default);
@@ -229,7 +230,8 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             Rect2i? activeClip = null; var inMask = false;
             foreach (var batch in batches)
             {
-                if (batch.Operation == CanvasOperation.EnvironmentBoundary)
+                if (batch.Operation == CanvasOperation.RedrawOverlay && (!redrawOverlay || layered)) continue;
+                if (batch.Operation is CanvasOperation.EnvironmentBoundary or CanvasOperation.RedrawOverlay)
                 {
                     var raw = output!.PostProcess!.PendingRaw!.DangerousGetHandle();
                     var canvas = output.Next.DangerousGetHandle();
@@ -328,7 +330,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             output?.Commit();
             if (output?.PostProcess is { } completedHistory)
             {
-                if (layered)
+                if (layered || redrawOverlay)
                 {
                     (completedHistory.Raw, completedHistory.PendingRaw) = (completedHistory.PendingRaw!, completedHistory.Raw);
                     completedHistory.HasRawFrame = true;

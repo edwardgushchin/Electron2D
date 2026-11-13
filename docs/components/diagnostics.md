@@ -32,7 +32,7 @@ The Windows managed profile verifies both switches and both argument separators,
 
 ## Canvas redraw
 
-`--debug-canvas-item-redraw` shows which canvas items record their drawing commands again. Configure the startup color and fade duration in ProjectSettings. See [canvas redraw diagnostic](canvas-rendering.md#canvas-redraw-diagnostic).
+`--debug-canvas-item-redraw` shows which canvas items record their drawing commands again. Configure the startup color and fade duration in ProjectSettings. The overlay fades on clearing and accumulating canvas targets while leaving their retained scene pixels intact. See [canvas redraw diagnostic](canvas-rendering.md#canvas-redraw-diagnostic).
 
 ## C# snapshots
 
