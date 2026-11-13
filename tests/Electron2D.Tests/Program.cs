@@ -422,7 +422,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_THEME") is { } p
 if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); VerifyImageResize(); VerifyImageRegions(); RenderingRuntimeTests.VerifyAtlasResources(); Console.WriteLine("Image storage, mip chains, resizing, regions and archive snapshots passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); VerifyImageResize(); VerifyImageRegions(); VerifyImageConversion(); RenderingRuntimeTests.VerifyAtlasResources(); Console.WriteLine("Image storage, processing and archive snapshots passed."); return; }
 if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
 if (args.Length == 2 && args[0] == "--image-webp-archive") { ImageWebPTests.RunArchive(args[1]); return; }
@@ -2358,6 +2358,7 @@ VerifyImageStorage();
 VerifyImageMIPChains();
 VerifyImageResize();
 VerifyImageRegions();
+VerifyImageConversion();
 VerifyVector2Values();
 VerifyVector2iValues();
 VerifyVector3Values();
@@ -3622,6 +3623,69 @@ static void VerifyColors()
     var allocated = GC.GetAllocatedBytesForCurrentThread() - beforeAllocations;
     Require(allocated == 0 && float.IsFinite(hotResult.R),
         "Warmed numeric color operations must not allocate managed memory.");
+}
+
+static void VerifyImageConversion()
+{
+    using var colors = Image.CreateFromData(2, 2, true, Image.Format.Rgba8,
+        [255, 0, 0, 19, 0, 255, 0, 23, 0, 0, 255, 29, 255, 255, 255, 31, 33, 33, 33, 37]);
+    colors.Convert(Image.Format.La8);
+    Require(colors.GetData().SequenceEqual(new byte[] { 54, 19, 182, 23, 18, 29, 255, 31, 33, 37 }),
+        "Byte conversion must compute Rec. 709 luma and preserve the authored alpha of every level.");
+    colors.Convert(Image.Format.Rgba8);
+    Require(colors.GetData().AsSpan(16).SequenceEqual(new byte[] { 33, 33, 33, 37 }) && colors.MIPMapCount == 1,
+        "Luminance must expand to RGB without rebuilding the authored mip.");
+
+    using var half = Image.CreateFromData(1, 1, false, Image.Format.Rgh, [0x55, 0x7D, 0x00, 0x80]);
+    half.Convert(Image.Format.Rgbah);
+    Require(half.GetData().SequenceEqual(new byte[] { 0x55, 0x7D, 0, 0x80, 0, 0, 0, 0x3C }),
+        "Half channel expansion must preserve a signaling NaN and signed zero, and insert unit alpha.");
+    half.Convert(Image.Format.Rh);
+    Require(half.GetData().SequenceEqual(new byte[] { 0x55, 0x7D }), "Half channel removal must keep the exact retained bits.");
+    using var floats = Image.CreateFromData(1, 1, false, Image.Format.Rf, [0x34, 0x12, 0x80, 0x7F]);
+    floats.Convert(Image.Format.Rgbaf);
+    Require(floats.GetData().SequenceEqual(new byte[] { 0x34, 0x12, 0x80, 0x7F, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x80, 0x3F }),
+        "Float channel expansion must keep the original payload and insert unit alpha.");
+
+    foreach (var (input, target, alpha) in new[]
+        {
+            (Image.Format.R16, Image.Format.Rgba16, (byte)255),
+            (Image.Format.R16I, Image.Format.Rgba16I, (byte)1)
+        })
+    {
+        using var image = Image.CreateFromData(2, 1, true, input, [0x34, 0x12, 1, 0, 0xFE, 0xFF]);
+        image.Convert(target);
+        using var texture = ImageTexture.CreateFromImage(image);
+        using var copy = texture.GetImage()!;
+        Require(copy.GetData().AsSpan(16).SequenceEqual(new byte[] { 0xFE, 0xFF, 0, 0, 0, 0, alpha, alpha == 1 ? (byte)0 : alpha }),
+            "The texture must retain exact UNORM or UINT mip values and that representation's alpha default.");
+    }
+
+    using var transfer = Image.CreateFromData(2, 1, true, Image.Format.Rgba8,
+        [0, 128, 255, 9, 13, 0, 255, 127, 128, 255, 0, 251]);
+    transfer.SRGBToLinear();
+    Require(transfer.GetData().SequenceEqual(new byte[] { 0, 55, 255, 9, 1, 0, 255, 127, 55, 255, 0, 251 }),
+        "The byte transfer must preserve alpha, endpoints and independent mip samples.");
+    transfer.LinearToSRGB();
+    Require(transfer.GetData().SequenceEqual(new byte[] { 0, 127, 255, 9, 12, 0, 255, 127, 127, 255, 0, 251 }),
+        "The inverse transfer must use deterministic byte quantization.");
+
+    var ramp = Enumerable.Range(0, 256).SelectMany(value => Enumerable.Repeat((byte)value, 3)).ToArray();
+    using var forward = Image.CreateFromData(256, 1, false, Image.Format.Rgb8, ramp);
+    using var inverse = Image.CreateFromData(256, 1, false, Image.Format.Rgb8, ramp);
+    forward.SRGBToLinear();
+    inverse.LinearToSRGB();
+    var forwardBytes = forward.GetData();
+    var inverseBytes = inverse.GetData();
+    for (var i = 0; i < 256; i++)
+    {
+        var value = i / 255d;
+        var linear = value <= 0.04045d ? value / 12.92d : Math.Pow((value + 0.055d) / 1.055d, 2.4d);
+        var srgb = value <= 0.0031308d ? value * 12.92d : 1.055d * Math.Pow(value, 1d / 2.4d) - 0.055d;
+        Require(forwardBytes[i * 3] == (byte)Math.Floor(linear * 255d + 1e-10d) &&
+            inverseBytes[i * 3] == (byte)Math.Floor(srgb * 255d + 1e-10d),
+            $"Both transfer directions must match the quantized sRGB equations at byte {i}.");
+    }
 }
 
 static void VerifyImageRegions()

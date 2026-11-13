@@ -326,7 +326,7 @@ Builds the complete chain using 2×2 averaging. Byte and unsigned 16-bit channel
 <a id="convert"></a>
 ### `public void Convert(Image.Format format)`
 
-Decodes and re-encodes every stored pixel into an uncompressed destination. Compressed source or destination layouts are rejected because block decompression is not integrated.
+Converts every stored mip to an uncompressed destination. Byte luminance uses Rec. 709 weights and retains alpha when the destination stores it. Channel-only changes within float, half, 16-bit normalized and 16-bit integer formats retain the original channel bits. Use `Compress` or `Decompress` to change block storage. [Image format conversion](../components/images.md#image-format-conversion)
 
 <a id="crop"></a>
 ### `public void Crop(int width, int height)`

@@ -1,3 +1,5 @@
+[Image format conversion](../components/images.md#image-format-conversion) preserves compatible stored channel bits, computes byte luminance, and applies both sRGB transfer directions across all stored mip levels. Three rows move to Implemented. Coverage is **13,947/18,900 (73.79%)**, with 1,137 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Image regions](../components/images.md#image-regions) keep the requested extent with zero padding and support exact clipped copies and alias-safe composition. Seven rows move to Implemented. Coverage is **13,944/18,900 (73.78%)**, with 1,140 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [Image resizing](../components/images.md#image-resizing) widens Lanczos on reduced axes and reconstructs trilinear samples before quantization. Nearest preserves exact stored pixels. Three rows move to Implemented. Coverage is **13,937/18,900 (73.74%)**, with 1,147 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

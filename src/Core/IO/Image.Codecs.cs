@@ -134,7 +134,10 @@ public sealed partial class Image
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
         ResourcePacks.Runtime.EnsureWritable(path);
-        AtomicFile.Write(ProjectSettings.GlobalizePath(path), data);
+        var destination = ProjectSettings.GlobalizePath(path);
+        if (System.IO.Directory.Exists(destination))
+            throw new IOException("An image file cannot replace a directory.");
+        AtomicFile.Write(destination, data);
     }
 
     private static string? CodecFromPath(string path)

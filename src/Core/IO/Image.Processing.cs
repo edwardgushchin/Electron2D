@@ -192,6 +192,8 @@ public sealed partial class Image
     public void GenerateMIPMaps(bool renormalize = false) => Mutate(state => BuildMIPMaps(state, renormalize), copyData: false);
 
     /// <summary>Converts every stored level to another uncompressed pixel format.</summary>
+    /// <remarks>Byte luminance conversion uses Rec. 709 weights. Channel-only changes within one numeric
+    /// representation preserve the stored bits of channels present in both formats.</remarks>
     /// <param name="format">The destination format.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="format"/> is invalid.</exception>
     /// <exception cref="InvalidOperationException">The source or destination format is block-compressed.</exception>
@@ -200,7 +202,7 @@ public sealed partial class Image
     public void Convert(Format format)
     {
         ValidateFormat(format);
-        Mutate(state => ConvertState(state, format));
+        Mutate(state => ConvertState(state, format), copyData: false);
     }
 
     /// <summary>Crops or expands the image from its top-left corner, filling new pixels with zero-valued storage.</summary>
@@ -517,13 +519,13 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">The image is empty or is not RGB8 or RGBA8.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the conversion commits.</exception>
-    public void SRGBToLinear() => TransformRGB8Colors(static color => color.SRGBToLinear());
+    public void SRGBToLinear() => TransformRGB8Colors(SRGBToLinearBytes);
 
     /// <summary>Converts RGB components from linear encoding to nonlinear sRGB encoding.</summary>
     /// <exception cref="InvalidOperationException">The image is empty or is not RGB8 or RGBA8.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the conversion commits.</exception>
-    public void LinearToSRGB() => TransformRGB8Colors(static color => color.LinearToSRGB());
+    public void LinearToSRGB() => TransformRGB8Colors(LinearToSRGBBytes);
 
     /// <summary>Converts a height image into a wrapping RGBA8 tangent-space normal map.</summary>
     /// <param name="bumpScale">The finite multiplier applied to neighboring height differences.</param>
@@ -765,7 +767,22 @@ public sealed partial class Image
             }, copyData: false);
     }
 
-    private void TransformRGB8Colors(Func<Color, Color> transform) => Mutate(
+    private static readonly byte[] SRGBToLinearBytes = BuildRGB8TransferTable(toSRGB: false);
+    private static readonly byte[] LinearToSRGBBytes = BuildRGB8TransferTable(toSRGB: true);
+
+    private static byte[] BuildRGB8TransferTable(bool toSRGB)
+    {
+        var table = new byte[256];
+        for (var i = 0; i < table.Length; i++)
+        {
+            var color = new Color(i / 255f, 0f, 0f);
+            table[i] = ToByte(toSRGB ? color.LinearToSRGB().R : color.SRGBToLinear().R);
+        }
+        table[^1] = 255;
+        return table;
+    }
+
+    private void TransformRGB8Colors(byte[] table) => Mutate(
         state =>
         {
             RequireReadablePixels(state);
@@ -773,7 +790,11 @@ public sealed partial class Image
                 throw new InvalidOperationException("The color-space conversion requires Rgb8 or Rgba8 data.");
             var bytes = GetBytesPerPixel(state.Format);
             for (var offset = 0; offset < state.Data.Length; offset += bytes)
-                WriteColor(state.Data, offset, state.Format, transform(ReadColor(state.Data, offset, state.Format)));
+            {
+                state.Data[offset] = table[state.Data[offset]];
+                state.Data[offset + 1] = table[state.Data[offset + 1]];
+                state.Data[offset + 2] = table[state.Data[offset + 2]];
+            }
             return state;
         });
 
@@ -808,7 +829,7 @@ public sealed partial class Image
         return state;
     }
 
-    internal void ConvertMovieRGB(bool linear) => Mutate(state => ConvertState(state, Format.Rgb8, linear));
+    internal void ConvertMovieRGB(bool linear) => Mutate(state => ConvertState(state, Format.Rgb8, linear), copyData: false);
 
     private static State ConvertState(State state, Format destinationFormat, bool encodeSRGB = false)
     {
@@ -819,25 +840,76 @@ public sealed partial class Image
         if (state.Format == destinationFormat && !encodeSRGB)
             return state;
 
-        var levelCount = GetRequiredMIPMapCount(state.Width, state.Height, state.HasMIPMaps) + 1;
         var data = new byte[GetRequiredDataSize(state.Width, state.Height, destinationFormat, state.HasMIPMaps)];
         var sourceBytes = GetBytesPerPixel(state.Format);
         var destinationBytes = GetBytesPerPixel(destinationFormat);
-        var destinationOffset = 0;
-        for (var levelIndex = 0; levelIndex < levelCount; levelIndex++)
+        var group = ChannelFormatGroup(state.Format);
+        if (!encodeSRGB && state.Format <= Format.Rgba8 && destinationFormat <= Format.Rgba8)
         {
-            var level = GetLevel(state, levelIndex);
-            var pixels = level.Width * level.Height;
-            for (var pixel = 0; pixel < pixels; pixel++)
+            ConvertByteChannels(state.Format, state.Data, sourceBytes, destinationFormat, data, destinationBytes);
+        }
+        else if (!encodeSRGB && group != Format.Max && group == ChannelFormatGroup(destinationFormat))
+        {
+            var copied = Math.Min(sourceBytes, destinationBytes);
+            var addAlpha = destinationFormat - group == 3 && sourceBytes < destinationBytes;
+            var alphaOffset = 3 * (destinationBytes / 4);
+            for (int read = 0, write = 0; read < state.Data.Length; read += sourceBytes, write += destinationBytes)
             {
-                var color = ReadColor(state.Data, level.Offset + (pixel * sourceBytes), state.Format);
-                WriteColor(data, destinationOffset + (pixel * destinationBytes), destinationFormat, encodeSRGB ? color.LinearToSRGB() : color);
+                state.Data.AsSpan(read, copied).CopyTo(data.AsSpan(write, copied));
+                if (!addAlpha)
+                    continue;
+                switch (group)
+                {
+                    case Format.Rf: WriteSingle(data, write + alphaOffset, 1f); break;
+                    case Format.Rh: WriteHalf(data, write + alphaOffset, 1f); break;
+                    case Format.R16: WriteUInt16(data, write + alphaOffset, ushort.MaxValue); break;
+                    case Format.R16I: WriteUInt16(data, write + alphaOffset, 1); break;
+                }
             }
-
-            destinationOffset += pixels * destinationBytes;
+        }
+        else
+        {
+            for (int read = 0, write = 0; read < state.Data.Length; read += sourceBytes, write += destinationBytes)
+            {
+                var color = ReadColor(state.Data, read, state.Format);
+                WriteColor(data, write, destinationFormat, encodeSRGB ? color.LinearToSRGB() : color);
+            }
         }
 
         return new State(state.Width, state.Height, destinationFormat, state.HasMIPMaps, data);
+    }
+
+    private static Format ChannelFormatGroup(Format format) => format switch
+    {
+        >= Format.Rf and <= Format.Rgbaf => Format.Rf,
+        >= Format.Rh and <= Format.Rgbah => Format.Rh,
+        >= Format.R16 and <= Format.Rgba16 => Format.R16,
+        >= Format.R16I and <= Format.Rgba16I => Format.R16I,
+        _ => Format.Max
+    };
+
+    private static void ConvertByteChannels(Format source, byte[] input, int inputStride, Format target, byte[] output, int outputStride)
+    {
+        var sourceGray = source is Format.L8 or Format.La8;
+        var sourceAlpha = source is Format.La8 or Format.Rgba8;
+        for (int read = 0, write = 0; read < input.Length; read += inputStride, write += outputStride)
+        {
+            var r = input[read];
+            var g = sourceGray ? r : source >= Format.Rg8 ? input[read + 1] : (byte)0;
+            var b = sourceGray ? r : source >= Format.Rgb8 ? input[read + 2] : (byte)0;
+            var a = sourceAlpha ? input[read + inputStride - 1] : byte.MaxValue;
+            if (target is Format.L8 or Format.La8)
+            {
+                output[write] = (byte)ToLumaByte(r, g, b);
+                if (target == Format.La8)
+                    output[write + 1] = a;
+                continue;
+            }
+            output[write] = r;
+            if (target >= Format.Rg8) output[write + 1] = g;
+            if (target >= Format.Rgb8) output[write + 2] = b;
+            if (target == Format.Rgba8) output[write + 3] = a;
+        }
     }
 
     private static State BuildMIPMaps(State state, bool renormalize)
@@ -1251,5 +1323,8 @@ public sealed partial class Image
     }
 
     private static int ToLumaByte(Color color) =>
-        ((13_938 * ToByte(color.R)) + (46_869 * ToByte(color.G)) + (4_729 * ToByte(color.B)) + 32_768) >> 16;
+        ToLumaByte(ToByte(color.R), ToByte(color.G), ToByte(color.B));
+
+    private static int ToLumaByte(byte r, byte g, byte b) =>
+        ((13_938 * r) + (46_869 * g) + (4_729 * b) + 32_768) >> 16;
 }
