@@ -42,6 +42,11 @@ internal static partial class ProcessPlatform
     [LibraryImport("kernel32.dll", EntryPoint = "GetExitCodeProcess", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool ExitWindows(SafeProcessHandle process, out int code);
+    [LibraryImport("kernel32.dll", EntryPoint = "WaitForSingleObject")]
+    private static partial uint WaitUnownedWindows(nint process, uint milliseconds);
+    [LibraryImport("kernel32.dll", EntryPoint = "CloseHandle")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool CloseWindows(nint handle);
 
     internal static bool PollWindows(SafeProcessHandle process, out int code)
     {
@@ -109,7 +114,13 @@ internal static partial class ProcessPlatform
             }
             return Launch();
         }
-        catch { output?.Dispose(); output = null; throw; }
+        catch
+        {
+            // Exposing ClientSafePipeHandle transfers its cleanup responsibility out of the stream.
+            try { output?.DisposeLocalCopyOfClientHandle(); }
+            finally { output?.Dispose(); output = null; }
+            throw;
+        }
         finally
         {
             input?.Dispose(); stdout?.Dispose(); stderr?.Dispose();
@@ -122,10 +133,33 @@ internal static partial class ProcessPlatform
             fixed (char* line = text)
             {
                 var flags = (console ? 0x10u : 0x08000000u) | (attributes != 0 ? 0x80000u : 0);
-                if (!CreateWindows(0, line, 0, 0, attributes != 0, flags, 0, 0, ref startup, out var process)) throw new Win32Exception(Marshal.GetLastPInvokeError());
-                using var thread = new SafeWaitHandle(process.Thread, true);
-                pipe?.DisposeLocalCopyOfClientHandle();
-                return new OSProcess(new SafeProcessHandle(process.Process, true), process.PID);
+                startup.Size = Marshal.SizeOf<WindowsStartup>() - (attributes == 0 ? IntPtr.Size : 0);
+                var handle = new SafeProcessHandle(0, true);
+                WindowsProcess process = default;
+                var created = false; var adopted = false;
+                try
+                {
+                    if (!(created = CreateWindows(0, line, 0, 0, attributes != 0, flags, 0, 0, ref startup, out process))) throw new Win32Exception(Marshal.GetLastPInvokeError());
+                    Marshal.InitHandle(handle, process.Process); process.Process = 0;
+                    pipe?.DisposeLocalCopyOfClientHandle();
+                    var owner = new OSProcess(handle, process.PID);
+                    adopted = true; return owner;
+                }
+                finally
+                {
+                    // Native ownership must survive failures while the managed owner and pipe are adopted.
+                    if (created)
+                    {
+                        if (!adopted)
+                        {
+                            var child = process.Process != 0 ? process.Process : handle.DangerousGetHandle();
+                            TerminateWindows(child, 0); WaitUnownedWindows(child, uint.MaxValue);
+                        }
+                        CloseWindows(process.Thread);
+                        if (process.Process != 0) CloseWindows(process.Process);
+                    }
+                    if (!adopted) handle.Dispose();
+                }
             }
         }
     }
