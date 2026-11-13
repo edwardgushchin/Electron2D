@@ -251,9 +251,12 @@ public static partial class TranslationServer
     public static Translation[] GetTranslations() => GetOrAddDomain(string.Empty).GetTranslations();
 
     /// <summary>Gets matching resources from the main domain.</summary>
-    /// <param name="locale">The requested culture name.</param>
-    /// <param name="exact">Whether to require an exact normalized match.</param>
-    /// <returns>An independent array of borrowed resources.</returns>
+    /// <param name="locale">Locale text; exact queries use the stored <see cref="Translation.Locale"/> spelling.</param>
+    /// <param name="exact">True requires ordinal equality; false accepts a positive <see cref="CompareLocales"/> score.</param>
+    /// <returns>An independent array of borrowed resources in registration order.</returns>
+    /// <remarks>Shares the live predicate of <see cref="HasTranslationForLocale"/>. Nonexact queries apply fixed aliases
+    /// and script/region defaults. Direct entries, fallback, enablement and locale override do not affect membership.</remarks>
+    /// <exception cref="ArgumentNullException">The locale is null.</exception>
     public static Translation[] FindTranslations(string locale, bool exact) =>
         GetOrAddDomain(string.Empty).FindTranslations(locale, exact);
 
@@ -263,20 +266,23 @@ public static partial class TranslationServer
     public static bool HasTranslation(Translation translation) => GetOrAddDomain(string.Empty).HasTranslation(translation);
 
     /// <summary>Reports whether the main domain has a catalog matching a locale.</summary>
-    /// <param name="locale">The requested culture name.</param>
-    /// <param name="exact">Whether to require an exact normalized match.</param>
-    /// <returns>True when a matching resource exists.</returns>
+    /// <param name="locale">Locale text; exact queries use the stored <see cref="Translation.Locale"/> spelling.</param>
+    /// <param name="exact">True requires ordinal equality; false accepts a positive <see cref="CompareLocales"/> score.</param>
+    /// <returns>True when <see cref="FindTranslations"/> would return at least one resource.</returns>
+    /// <exception cref="ArgumentNullException">The locale is null.</exception>
     public static bool HasTranslationForLocale(string locale, bool exact) =>
         GetOrAddDomain(string.Empty).HasTranslationForLocale(locale, exact);
 
     /// <summary>Gets distinct locale names of live resources in the main domain.</summary>
-    /// <returns>An independent array of locale names.</returns>
+    /// <returns>An independent array of stored locale names, in first registration order with ordinal duplicates removed.</returns>
+    /// <remarks>Reflects live locale changes and catalog retirement. Direct entries and other domains are excluded.</remarks>
     public static string[] GetLoadedLocales()
     {
-        var locales = new HashSet<string>(StringComparer.Ordinal);
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var locales = new List<string>();
         foreach (var translation in GetTranslations())
         {
-            try { locales.Add(translation.Locale); }
+            try { var locale = translation.Locale; if (seen.Add(locale)) locales.Add(locale); }
             catch (ObjectDisposedException) when (translation.IsDisposed) { }
         }
         return [.. locales];

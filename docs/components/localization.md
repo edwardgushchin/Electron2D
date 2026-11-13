@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-10-21
+Last updated: 2026-11-13
 
 ## Scope
 
@@ -13,6 +13,17 @@ This Localization component stores and resolves domain/context translations for 
 ## Current implementation status
 
 Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Two typed project settings select the startup test culture and fallback locale; nine further settings supply pseudolocalization enablement and main-domain transforms. A twelfth setting selects the initial scene-root auto-translate mode. `TranslationServer.ReloadPseudolocalization` reapplies the eight transforms during a run without toggling enablement. Resource duplication copies independent message containers. Optimized catalogs generate hash-keyed, optionally Brotli-compressed values, skip contextual entries, keep only the first plural form, hide source keys, and duplicate their lookup maps. Typed Translation archives now execute through ResourceLoader; UTF-8 PO/MO catalogs import through ResourceLoader; operating-system locale discovery remains unimplemented.
+
+<a id="catalog-queries"></a>
+## Catalog queries
+
+`TranslationDomain.FindTranslations` and `HasTranslationForLocale` share one live predicate; the server delegates to its main domain. Exact queries compare the original request ordinally with stored `Translation.Locale`. Nonexact queries use positive fixed `CompareLocales` scores without first asking managed globalization to normalize the query. Fixed aliases such as `iw`/`he` and `in`/`id`, script modifiers and region/default-script differences therefore follow that same comparison path. The existing managed culture boundary still controls catalog `Locale` assignment. Query results preserve registration order rather than message-score priority; enablement, override, fallback and direct-entry registration do not affect their membership.
+
+Public arrays are independent membership snapshots containing borrowed live references. Internal registration snapshots do not cache locale values: edits, removal, re-registration, clear and disposal remain visible. `GetLoadedLocales` returns a separate string snapshot from main-domain resources, deduplicated ordinally in first registration order. The boolean query reuses prepared locale identities and internal membership snapshots without a result array.
+
+The pinned [domain methods](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/string/translation_domain.cpp#L230-L309) establish exact string comparison, positive-score nonexact membership and distinct loaded locales. Registration-order arrays and the managed stored culture spelling retain Electron2D's accepted typed adaptation. [`TranslationQueryChecks`](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.cs) fixes expected memberships independently of the runtime helper for three domain entry points, then checks ordering, duplicates, snapshots, live locale edits, borrowed retirement, concurrent disposal and retained singular/plural message ranking. Prepared active/missing boolean queries measure zero current-thread managed bytes. Windows x64 GPU and compatibility language menus produce the expected French/Hebrew state pixels and dispose their window and rendering service.
+
+Reproduce with `dotnet run --project tests/TranslationQueries.Consumer -c Release -- managed`, then the built apphost with `gpu OUTPUT` and `compatibility OUTPUT`. Use the matching native closure required by [development preflight](../development-ci.md). The local receipt at `bin/translation-queries/validation.json` records commands, dependency hashes and actual outcomes. No foreign-host, NativeAOT, native-allocation, package-delivery or full product-platform qualification is claimed by this bounded query slice.
 
 <a id="unicode-pseudolocalization"></a>
 ## Unicode pseudolocalization

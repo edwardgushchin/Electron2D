@@ -2201,7 +2201,7 @@ Window's [placement family](classes/Window.md#initial-placement-and-minimum-size
 
 | [Rendering](domains/rendering.md) | [Manual mesh bounds](components/meshes.md#manual-mesh-visibility-bounds) | [ArrayMesh](classes/ArrayMesh.md), [RenderingServer](classes/RenderingServer.md) | [ArrayMesh.Bounds.cs](../src/Scene/Resources/ArrayMesh.Bounds.cs), [RenderingServer.MeshBounds.cs](../src/Servers/Rendering/RenderingServer.MeshBounds.cs) | Current | Stored Rect2 visibility overrides, independent geometric queries and actual group/morph/instance culling |
 
-TranslationDomain and TranslationServer now share scored runtime catalog selection, weakly retained identity preparation and current FindTranslations queries. Physical inherited domain/plural consumers and actual Wayland regional-resource glyphs are verified in [localization](components/localization.md#scored-runtime-lookup).
+TranslationDomain and TranslationServer share scored runtime catalog selection and weakly retained identity preparation. Catalog availability/retrieval now share literal exact or positive-score matching, with ordered live resource snapshots and distinct loaded-locale snapshots; the bounded Windows language-menu checks and platform limits are in [catalog queries](components/localization.md#catalog-queries). Physical inherited domain/plural consumers and actual Wayland regional-resource glyphs are verified in [scored lookup](components/localization.md#scored-runtime-lookup).
 
 TranslationDomain prepares Unicode pseudolocalization per live input identity and transform policy. Source code-point masking/expansion, placeholders, BIDI, cache retirement and physical/actual glyph consumers are verified in [localization](components/localization.md#unicode-pseudolocalization).
 

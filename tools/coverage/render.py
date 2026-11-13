@@ -740,6 +740,8 @@ def render():
             updated = "2026-10-28"
         if name in {"NativeMenu", "PopupMenu"}:
             updated = "2026-11-06"
+        if name in {"TranslationDomain", "TranslationServer"}:
+            updated = "2026-11-14"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
@@ -880,7 +882,7 @@ def render():
         catalog.append(f"| [{cell(item['name'])}](classes/{coverage_target(item['name'])}) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
     actionable_note = (" Reassess dependencies for " + ", ".join(f"[{name}](classes/{coverage_target(name)})" for name in actionable) + " before selecting their slices.") if actionable else ""
-    road = ["# Coverage roadmap", "", "Last updated: 2026-10-27", "",
+    road = ["# Coverage roadmap", "", "Last updated: 2026-11-14", "",
             "Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Close {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",

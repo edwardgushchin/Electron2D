@@ -1,6 +1,6 @@
 # TranslationDomain
 
-Last updated: 2026-10-18
+Last updated: 2026-11-13
 
 **Inherits:** [`ElectronObject`](ElectronObject.md)
 **Inherited By:** —
@@ -58,7 +58,7 @@ domain.Dispose();
 | `public void RemoveTranslation(Translation translation)` | Unregisters without disposing. |
 | `public void Clear()` | Unregisters all catalogs without disposing them. |
 | `public Translation[] GetTranslations()` | Returns an independent array in registration order. |
-| `public Translation[] FindTranslations(string locale, bool exact)` | Returns exact or positive-score locale matches. |
+| `public Translation[] FindTranslations(string locale, bool exact)` | Returns ordinal exact or positive-score locale matches in registration order. |
 | `public bool HasTranslation(Translation translation)` | Tests registration by identity. |
 | `public bool HasTranslationForLocale(string locale, bool exact)` | Tests locale availability. |
 | `public string Translate(string message, string context = "")` | Resolves singular text, including server direct entries when registered. |
@@ -69,7 +69,8 @@ domain.Dispose();
 ## Member behavior
 
 - `LocaleOverride` accepts .NET culture names and underscore separators, normalizes them to `CultureInfo.Name`, and rejects unknown names. Empty removes the override. A null value throws `ArgumentNullException`.
-- `FindTranslations` and `HasTranslationForLocale` normalize the requested locale. With `exact = false`, they accept catalogs with a positive [`TranslationServer.CompareLocales`](TranslationServer.md#comparelocales) score. Returned arrays are snapshots, but their resource objects remain live and caller-owned.
+- `FindTranslations` and `HasTranslationForLocale` share one live resource predicate. With `exact = true`, the supplied text must equal the stored `Translation.Locale` ordinally: a catalog storing `fr-CA` matches `fr-CA`, but not `fr_CA` or `fr-ca`. With `exact = false`, a positive [`TranslationServer.CompareLocales`](TranslationServer.md#comparelocales) score accepts fixed aliases, script modifiers and regional/default-script identities; the query does not require a managed culture entry. For example, `iw_IL` can find a catalog storing `he-IL`. Catalog assignment still uses the managed `CultureInfo` boundary. Null queries throw `ArgumentNullException`.
+- Queries return every matching resource once in registration order, without score sorting. Their arrays are independent membership snapshots; resource objects remain live and caller-owned. Later `Locale` edits, removal, re-registration, clear and disposal affect the next query. Enablement, locale override, direct entries and configured fallback do not affect these catalog queries. `HasTranslationForLocale` applies the same predicate without creating a result array; prepared active and missing queries allocate no managed storage.
 - `Translate` and `TranslatePlural` use a case-sensitive context. Direct entries and resource catalogs compete by default-aware locale score for a registered domain, with direct entries winning ties; the configured fallback is tried after a miss. Disabled lookups return source text. Resource plural selectors may throw their own exceptions. Singular translations, including source fallback, are pseudolocalized when enabled; plural translations are not.
 - `Pseudolocalize` applies override, vowel doubling, accents, and fake BIDI in that order, followed by symmetric expansion padding and prefix/suffix. Common `%s`, `%c`, `%d`, `%o`, `%x`, `%X`, and `%f` placeholders are protected when enabled. Empty input remains empty. The expansion ratio must be finite and nonnegative; a null prefix, suffix, or message throws `ArgumentNullException`.
 - A disposed domain rejects its public operations. A catalog can be disposed concurrently with lookup; lookup skips it. User resource selectors and override callbacks execute outside the server lock; direct plural selectors execute under the server lock.
@@ -77,6 +78,8 @@ domain.Dispose();
 ## Verification and limits
 
 `TranslationDomainTests` and `LocalizationProjectSettingsTests` check registry identity, direct-entry priority, locale override, enablement, catalog lifecycle, main-domain wrappers, scored locale selection, fallback and pseudolocalization. Runtime lookup uses the fixed default-aware score, and resource catalogs supply built-in integer rules or explicit imported/caller selectors. Unicode transforms now match the independent oracle, with current Linux public NativeAOT and actual Wayland consumers. String parameter formatting, decimal CLDR categories, native allocator totals and hardware performance remain separate.
+
+[`TranslationQueryChecks`](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.cs) adds fixed independent membership/order expectations for standalone, registered and main domains, snapshot mutation, live locale edits, duplicate locales, borrowed-resource retirement, concurrent disposal, null/disposed errors and unchanged singular/plural ranking. The public language menu executes on Windows x64 GPU and compatibility with captured French/Hebrew state pixels. These query checks do not qualify foreign hosts, NativeAOT or release-package delivery; see [catalog queries](../components/localization.md#catalog-queries).
 
 ## Decision
 
