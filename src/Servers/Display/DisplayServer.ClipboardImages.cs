@@ -49,7 +49,10 @@ public sealed partial class DisplayServer
                     switch (mime)
                     {
                         case "image/png": image.LoadPNGFromBuffer(bytes); break;
-                        case "image/jpeg": image.LoadJPGFromBuffer(bytes); break;
+                        case "image/jpeg":
+                            try { image.LoadJPGFromBuffer(bytes); }
+                            catch (NotSupportedException error) { throw new InvalidDataException("The clipboard JPEG layout is unsupported.", error); }
+                            break;
                         case "image/webp": image.LoadWebPFromBuffer(bytes); break;
                         case "image/svg+xml": image.LoadSVGFromBuffer(bytes); break;
                         case "image/bmp": image.LoadBMPFromBuffer(bytes); break;

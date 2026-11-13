@@ -474,7 +474,7 @@ When `disposing` is true, serializes with mutations, releases the managed pixel 
 
 ## Encoded image methods
 
-PNG decodes to copied L8, LA8, RGB8 or RGBA8 base pixels. JPEG, WebP, BMP, TGA and SVG yield RGBA8. Input is limited to 64 MiB and dimensions are checked before decoding. See [PNG loading and saving](../components/images.md#png-loading-and-saving) for channel, transfer and work limits.
+PNG decodes to copied L8, LA8, RGB8 or RGBA8 base pixels. JPEG yields L8 or RGB8. WebP, BMP, TGA and SVG yield RGBA8. Input is limited to 64 MiB and dimensions are checked before decoding. See [PNG loading and saving](../components/images.md#png-loading-and-saving) for channel, transfer and work limits.
 
 <a id="load"></a>
 ### `public void Load(string path)`
@@ -494,7 +494,7 @@ Replaces pixels from PNG bytes. The result preserves its decoded luminance or RG
 <a id="loadjpgfrombuffer"></a>
 ### `public void LoadJPGFromBuffer(ReadOnlySpan<byte> buffer)`
 
-Replaces pixels from JPEG bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+Replaces pixels from JPEG bytes. Eight-bit grayscale yields L8 and eight-bit color yields RGB8. Unsupported precision and CMYK/YCCK raise `NotSupportedException`. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
 
 <a id="loadwebpfrombuffer"></a>
 ### `public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer)`
@@ -529,7 +529,7 @@ Encodes a stable base-level snapshot as PNG. L8, LA8, RGB8 and RGBA8 keep their 
 <a id="savejpgtobuffer"></a>
 ### `public byte[] SaveJPGToBuffer(float quality = 0.75f)`
 
-Encodes the base level as lossy JPEG without alpha. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. JPEG converts to RGB8, discards alpha and remains lossy at maximum quality. Quality must be finite and in `[0.01, 1]`; invalid values throw `ArgumentOutOfRangeException`. Returned bytes belong to the caller.
+Encodes the base level as lossy JPEG without alpha. A private snapshot decodes supported blocks before converting to RGB8. Empty images are rejected. Encoding preserves the source and its mipmaps. Quality must be finite and in `[0.01, 1]` and is truncated to an integer percentage. Returned bytes belong to the caller. See [JPEG loading and saving](../components/images.md#jpeg-loading-and-saving).
 
 <a id="savepng"></a>
 ### `public void SavePNG(string path)`
@@ -539,7 +539,7 @@ Atomically replaces a file with the bytes produced by SavePNGToBuffer. Encoding 
 <a id="savejpg"></a>
 ### `public void SaveJPG(string path, float quality = 0.75f)`
 
-Atomically replaces a file with JPEG bytes without alpha. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. JPEG converts to RGB8, discards alpha and remains lossy at maximum quality. Quality must be finite and in `[0.01, 1]`; invalid values throw `ArgumentOutOfRangeException`. Encoding completes before `AtomicFile` replaces the destination in the same directory. Parent directories must exist; failures before replacement preserve an existing file. Paths use the same `res://`/`user://` resolution as loading.
+Atomically replaces a file with the bytes produced by SaveJPGToBuffer. Encoding completes before `AtomicFile` replaces the destination in the same directory. Parent directories must exist; failures before replacement preserve an existing file. Paths use the same `res://`/`user://` resolution as loading.
 
 <a id="savewebptobuffer"></a>
 ### `public byte[] SaveWebPToBuffer(bool lossy = false, float quality = 0.75f)`

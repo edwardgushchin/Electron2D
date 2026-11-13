@@ -36,17 +36,7 @@ public sealed partial class Image
 
     private unsafe byte[] EncodePNG()
     {
-        var state = Read(source =>
-        {
-            if (source.Width == 0)
-                throw new InvalidOperationException("An empty image cannot be encoded.");
-            var length = GetLevelByteCount(source.Width, source.Height, source.Format);
-            if (length > MaximumEncodedBytes)
-                throw new IOException("PNG source pixels exceed 64 MiB.");
-            return source with { HasMIPMaps = false, Data = source.Data.AsSpan(0, length).ToArray() };
-        });
-        if (IsCompressedFormat(state.Format))
-            state = DecompressPixels(state);
+        var state = CopyBaseLevelForEncoding("PNG");
         var format = state.Format is Format.L8 or Format.La8 or Format.Rgb8 or Format.Rgba8
             ? state.Format : DetectAlpha(state) == AlphaMode.None ? Format.Rgb8 : Format.Rgba8;
         var channels = GetBytesPerPixel(format);

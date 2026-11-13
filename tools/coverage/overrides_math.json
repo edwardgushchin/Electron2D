@@ -3392,15 +3392,21 @@
         "Image::method:load(String:)",
         "Image::method:load_bmp_from_buffer(PackedByteArray:)",
         "Image::method:load_from_file(String:)",
-        "Image::method:load_jpg_from_buffer(PackedByteArray:)",
         "Image::method:load_svg_from_buffer(PackedByteArray:,float:)",
         "Image::method:load_svg_from_string(String:,float:)",
         "Image::method:load_tga_from_buffer(PackedByteArray:)",
-        "Image::method:load_webp_from_buffer(PackedByteArray:)",
+        "Image::method:load_webp_from_buffer(PackedByteArray:)"
+      ],
+      "reason": "Executable file/buffer codecs use bounded preflight and atomic publication. PNG preserves decoded channel roles and the sRGB transfer encoding via the private libpng codec. JPEG preserves L8 or RGB8. WebP, BMP, TGA and SVG retain the RGBA8 profile. WebP uses the existing private libwebp decoder for straight RGBA8 and first-frame canvas reconstruction, preserving offsets and atomic malformed-input failure independently of platform SDL_image support. The changed decoder ABI and Apple demux closure require renewed target/package verification. SVG CSS sizing, source channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "Image::method:load_jpg_from_buffer(PackedByteArray:)",
         "Image::method:save_jpg(String:,float:)",
         "Image::method:save_jpg_to_buffer(float:)"
       ],
-      "reason": "Executable file/buffer codecs use bounded preflight and atomic publication. PNG preserves decoded channel roles and the sRGB transfer encoding via the private libpng codec. JPEG, WebP, BMP, TGA and SVG retain the RGBA8 profile. WebP uses the existing private libwebp decoder for straight RGBA8 and first-frame canvas reconstruction, preserving offsets and atomic malformed-input failure independently of platform SDL_image support. The changed decoder ABI and Apple demux closure require renewed target/package verification. SVG CSS sizing, source channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
+      "reason": "ADR 0039: grayscale L8 and color RGB8 with baseline and progressive SDL_image decode, bounded marker and dimension preflight, unsupported precision/color refusal and atomic publication. Save uses a base-only snapshot, supports block decompression, discards alpha and passes truncated quality percentages to the native encoder. File paths share atomic replacement. ImageCodecTests checks odd-width grayscale, progressive color, mip and failure preservation, resource loading and BC export. See docs/components/images.md#jpeg-loading-and-saving for platform limits."
     },
     {
       "state": "Implemented",

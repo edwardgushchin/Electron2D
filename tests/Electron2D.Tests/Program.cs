@@ -679,6 +679,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_INCLUDE") == "1")
 if (args.Length == 3 && args[0] == "--shader-include-write") { ShaderIncludeTests.WriteSource(args[1], args[2]); return; }
 if (args.Length == 4 && args[0] == "--shader-include-render") { ShaderIncludeTests.Render(args[1], args[2], float.Parse(args[3], CultureInfo.InvariantCulture)); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "png") { ImageCodecTests.VerifyPNG(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "jpeg") { ImageCodecTests.VerifyJPEG(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
 {
     ImageCodecTests.Run();

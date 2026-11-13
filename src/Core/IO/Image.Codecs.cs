@@ -12,7 +12,8 @@ public sealed partial class Image
     /// <summary>Replaces this image with decoded pixels from a file.</summary>
     /// <param name="path">An operating-system, res://, user:// or registered UID path to an image file.</param>
     /// <remarks>Input is bounded to 64 MiB. PNG retains its decoded luminance or RGB layout and any alpha channel.
-    /// JPEG, WebP, BMP, TGA and SVG produce copied RGBA8 base pixels. DDS and KTX retain stored mip layouts; EXR and KTX retain applicable channel precision.
+    /// JPEG produces L8 or RGB8 base pixels. WebP, BMP, TGA and SVG produce RGBA8 base pixels.
+    /// DDS and KTX retain stored mip layouts; EXR and KTX retain applicable channel precision.
     /// Registered extensions may return other valid Image layouts. Their state is copied before publication.
     /// A failure preserves the previous image. Changed is emitted after a successful replacement.
     /// Custom decoders execute on this thread using borrowed temporary Image and FileAccess objects.
@@ -52,8 +53,10 @@ public sealed partial class Image
 
     /// <summary>Decodes a JPEG buffer and replaces the image atomically.</summary>
     /// <param name="buffer">JPEG data, copied before validation and decoding, at most 64 MiB.</param>
-    /// <remarks>Produces RGBA8 with opaque alpha and no mipmaps. Failure preserves pixels; success emits Changed.</remarks>
+    /// <remarks>Decodes 8-bit grayscale as L8 and 8-bit color as RGB8. Decoded pixels are bounded to 64 MiB.
+    /// Failure preserves pixels; success emits Changed.</remarks>
     /// <exception cref="InvalidDataException">Data is malformed or exceeds image limits.</exception>
+    /// <exception cref="NotSupportedException">JPEG sample precision or color component count is unsupported.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void LoadJPGFromBuffer(ReadOnlySpan<byte> buffer) => DecodeAndCommit(buffer, "JPG");
 
@@ -100,19 +103,20 @@ public sealed partial class Image
     public byte[] SavePNGToBuffer() => EncodePNG();
 
     /// <summary>Encodes the base image as JPEG bytes, discarding alpha.</summary>
-    /// <param name="quality">Finite quality from 0.01 to 1.0, rounded to a percentage.</param>
+    /// <param name="quality">Finite quality from 0.01 to 1.0, truncated to an integer percentage.</param>
     /// <returns>Caller-owned encoded bytes.</returns>
-    /// <remarks>JPEG remains lossy at maximum quality. Pixels are converted to RGB8; mipmaps are not encoded.</remarks>
+    /// <remarks>Uses a stable base-level snapshot, decompressing supported block formats before converting to RGB8.
+    /// JPEG remains lossy at maximum quality.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Quality is outside the accepted range or is not finite.</exception>
-    /// <exception cref="InvalidOperationException">The image is empty.</exception>
-    /// <exception cref="NotSupportedException">The image is compressed.</exception>
+    /// <exception cref="InvalidOperationException">The image is empty or block expansion exceeds the codec work budget.</exception>
+    /// <exception cref="InvalidDataException">The source blocks are invalid.</exception>
     /// <exception cref="IOException">Encoding fails or its output exceeds 64 MiB.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public byte[] SaveJPGToBuffer(float quality = 0.75f)
     {
         ThrowIfDisposed();
         if (!float.IsFinite(quality) || quality is < 0.01f or > 1) throw new ArgumentOutOfRangeException(nameof(quality));
-        return EncodeJPEG((int)Mathf.Round(quality * 100));
+        return EncodeJPEG((int)(quality * 100));
     }
 
     /// <summary>Atomically saves the base image to a PNG file.</summary>
@@ -130,8 +134,8 @@ public sealed partial class Image
     /// <remarks>Uses SaveJPGToBuffer, then atomically replaces the destination. Parent directories must exist.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Quality is outside the accepted range or is not finite.</exception>
     /// <exception cref="IOException">Encoding or saving fails; an existing destination is preserved before replacement.</exception>
-    /// <exception cref="InvalidOperationException">The image is empty.</exception>
-    /// <exception cref="NotSupportedException">The image is compressed.</exception>
+    /// <exception cref="InvalidOperationException">The image is empty or block expansion exceeds the codec work budget.</exception>
+    /// <exception cref="InvalidDataException">The source blocks are invalid.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void SaveJPG(string path, float quality = 0.75f) => SaveEncodedFile(path, SaveJPGToBuffer(quality));
 
@@ -168,7 +172,13 @@ public sealed partial class Image
         ThrowIfDisposed();
         if (buffer.IsEmpty || buffer.Length > MaximumEncodedBytes) throw new InvalidDataException("Encoded images must contain between 1 byte and 64 MiB.");
         var bytes = buffer.ToArray();
-        var size = codec == "SVG" ? SVGSize(bytes, scale) : EncodedSize(bytes, codec);
+        var format = Format.Rgba8;
+        var size = codec switch
+        {
+            "SVG" => SVGSize(bytes, scale),
+            "JPG" => ReadJPEGLayout(bytes, out format),
+            _ => EncodedSize(bytes, codec)
+        };
         try { ValidateDimensions(size.X, size.Y); }
         catch (ArgumentOutOfRangeException e) { throw new InvalidDataException("Encoded dimensions exceed the image limits.", e); }
         if (codec == "PNG")
@@ -181,6 +191,8 @@ public sealed partial class Image
             Commit(DecodeWebP(bytes, size));
             return;
         }
+        if (codec == "JPG" && (long)size.X * size.Y * GetBytesPerPixel(format) > MaximumEncodedBytes)
+            throw new InvalidDataException("Decoded JPEG pixels exceed 64 MiB.");
         State decoded;
         fixed (byte* pointer = bytes)
         {
@@ -202,7 +214,7 @@ public sealed partial class Image
                     var original = Marshal.PtrToStructure<SDL.Surface>(surface);
                     if (original.Width != size.X || original.Height != size.Y)
                         throw new InvalidDataException("Decoded dimensions disagree with the encoded header.");
-                    var converted = SDL.ConvertSurface(surface, RGBASurfaceFormat);
+                    var converted = SDL.ConvertSurface(surface, format == Format.Rgba8 ? RGBASurfaceFormat : SDL.PixelFormat.RGB24);
                     if (converted == 0) throw new IOException("Could not convert decoded pixels: " + SDL.GetError());
                     try
                     {
@@ -210,11 +222,22 @@ public sealed partial class Image
                         try
                         {
                             var data = Marshal.PtrToStructure<SDL.Surface>(converted);
-                            var pixels = new byte[GetRequiredDataSize(size.X, size.Y, Format.Rgba8, false)];
-                            var rowBytes = checked(size.X * 4);
+                            var pixels = new byte[GetRequiredDataSize(size.X, size.Y, format, false)];
+                            var rowBytes = checked(size.X * (format == Format.Rgba8 ? 4 : 3));
                             if (data.Pixels == 0 || data.Pitch < rowBytes) throw new InvalidDataException("Invalid decoded pixel layout.");
-                            for (var y = 0; y < size.Y; y++) Marshal.Copy(data.Pixels + y * data.Pitch, pixels, y * rowBytes, rowBytes);
-                            decoded = new(size.X, size.Y, Format.Rgba8, false, pixels);
+                            for (var y = 0; y < size.Y; y++)
+                            {
+                                var row = data.Pixels + y * data.Pitch;
+                                if (format == Format.L8)
+                                {
+                                    var rgb = new ReadOnlySpan<byte>((void*)row, rowBytes);
+                                    for (var x = 0; x < size.X; x++)
+                                        pixels[y * size.X + x] = rgb[x * 3];
+                                }
+                                else
+                                    Marshal.Copy(row, pixels, y * rowBytes, rowBytes);
+                            }
+                            decoded = new(size.X, size.Y, format, false, pixels);
                         }
                         finally { SDL.UnlockSurface(converted); }
                     }
@@ -229,11 +252,25 @@ public sealed partial class Image
 
     private static SDL.PixelFormat RGBASurfaceFormat => BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888;
 
+    private State CopyBaseLevelForEncoding(string codec)
+    {
+        var state = Read(source =>
+        {
+            if (source.Width == 0)
+                throw new InvalidOperationException("An empty image cannot be encoded.");
+            var length = GetLevelByteCount(source.Width, source.Height, source.Format);
+            if (length > MaximumEncodedBytes)
+                throw new IOException($"{codec} source pixels exceed 64 MiB.");
+            return source with { HasMIPMaps = false, Data = source.Data.AsSpan(0, length).ToArray() };
+        });
+        return IsCompressedFormat(state.Format) ? DecompressPixels(state) : state;
+    }
+
     private unsafe byte[] EncodeJPEG(int quality)
     {
-        var state = Snapshot();
-        if (state.Width == 0) throw new InvalidOperationException("An empty image cannot be encoded.");
-        if (IsCompressedFormat(state.Format)) throw new NotSupportedException("Decompress image pixels before encoding.");
+        var state = CopyBaseLevelForEncoding("JPEG");
+        if ((long)state.Width * state.Height * 3 > MaximumEncodedBytes || state.Width > ushort.MaxValue || state.Height > ushort.MaxValue)
+            throw new IOException("JPEG input pixels or dimensions exceed encoding limits.");
         state = ConvertState(state, Format.Rgb8);
         fixed (byte* pointer = state.Data)
         {
@@ -261,6 +298,68 @@ public sealed partial class Image
             }
             finally { SDL.DestroySurface(surface); }
         }
+    }
+
+    private static Vector2i ReadJPEGLayout(ReadOnlySpan<byte> data, out Format format)
+    {
+        if (data.Length < 4 || data[0] != 0xff || data[1] != 0xd8)
+            throw new InvalidDataException("Invalid JPEG signature.");
+        Vector2i size = default;
+        format = Format.Rgb8;
+        var sawFrame = false;
+        var sawScan = false;
+        var inScan = false;
+        for (var offset = 2; offset < data.Length;)
+        {
+            if (inScan)
+            {
+                var markerOffset = data[offset..].IndexOf((byte)0xff);
+                if (markerOffset < 0)
+                    break;
+                offset += markerOffset;
+            }
+            if (data[offset++] != 0xff)
+                break;
+            while (offset < data.Length && data[offset] == 0xff)
+                offset++;
+            if (offset == data.Length)
+                break;
+            var marker = data[offset++];
+            // Scan data escapes literal FF bytes and can carry restart markers between blocks.
+            if (inScan && marker is 0x00 or >= 0xd0 and <= 0xd7)
+                continue;
+            if (marker == 0xd9 && sawScan)
+                return size;
+            if (marker == 0x01)
+                continue;
+            if (marker is < 0xc0 or 0xd8 or 0xd9 or >= 0xd0 and <= 0xd7 || offset > data.Length - 2)
+                break;
+            var length = BinaryPrimitives.ReadUInt16BigEndian(data[offset..]);
+            if (length < 2 || length > data.Length - offset)
+                break;
+            if (marker is >= 0xc0 and <= 0xcf and not (0xc4 or 0xc8 or 0xcc))
+            {
+                if (sawFrame || length < 8)
+                    break;
+                var components = data[offset + 7];
+                if (components == 0 || length != 8 + 3 * components)
+                    break;
+                if (data[offset + 2] != 8 || components is not (1 or 3))
+                    throw new NotSupportedException("JPEG requires 8-bit grayscale or three-component color samples.");
+                format = components == 1 ? Format.L8 : Format.Rgb8;
+                size = new(BinaryPrimitives.ReadUInt16BigEndian(data[(offset + 5)..]), BinaryPrimitives.ReadUInt16BigEndian(data[(offset + 3)..]));
+                sawFrame = true;
+            }
+            inScan = marker == 0xda;
+            if (inScan)
+            {
+                if (!sawFrame || length < 8 || length != 6 + 2 * data[offset + 2])
+                    break;
+                sawScan = true;
+            }
+            offset += length;
+        }
+        throw new InvalidDataException("Invalid or incomplete JPEG marker stream.");
     }
 
     private static Vector2i EncodedSize(ReadOnlySpan<byte> data, string codec)
@@ -292,28 +391,6 @@ public sealed partial class Image
             }
             if (!ended) throw Invalid();
             return new((int)width, (int)height);
-        }
-        if (codec == "JPG")
-        {
-            if (data.Length < 4 || data[0] != 255 || data[1] != 216) throw Invalid();
-            for (var offset = 2; offset < data.Length;)
-            {
-                if (data[offset++] != 255) throw Invalid();
-                while (offset < data.Length && data[offset] == 255) offset++;
-                if (offset >= data.Length) throw Invalid();
-                var marker = data[offset++];
-                if (marker is 0xD8 or 0x01 or >= 0xD0 and <= 0xD7) continue;
-                if (marker is 0xD9 or 0xDA || offset > data.Length - 2) throw Invalid();
-                var length = BinaryPrimitives.ReadUInt16BigEndian(data[offset..]);
-                if (length < 2 || length > data.Length - offset) throw Invalid();
-                if (marker is >= 0xC0 and <= 0xCF and not (0xC4 or 0xC8 or 0xCC))
-                {
-                    if (length < 8) throw Invalid();
-                    return new(BinaryPrimitives.ReadUInt16BigEndian(data[(offset + 5)..]), BinaryPrimitives.ReadUInt16BigEndian(data[(offset + 3)..]));
-                }
-                offset += length;
-            }
-            throw Invalid();
         }
         if (codec == "BMP")
         {

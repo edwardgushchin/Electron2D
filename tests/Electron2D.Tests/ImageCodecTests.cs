@@ -50,18 +50,7 @@ internal static class ImageCodecTests
 
         VerifyPNG();
 
-        using var solid = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8);
-        solid.Fill(new Color(0.25f, 0.5f, 0.75f, 0.25f));
-        var jpg = solid.SaveJPGToBuffer(1);
-        foreach (var quality in new[] { 0.01f, 0.75f, 1f })
-        {
-            image.LoadJPGFromBuffer(solid.SaveJPGToBuffer(quality));
-            var pixel = image.GetPixel(5, 5);
-            Check(image.Size == solid.Size && pixel.A == 1 && Math.Abs(pixel.R - 0.25f) < 0.12f && Math.Abs(pixel.B - 0.75f) < 0.12f,
-                "JPEG accepts its quality range, preserves dimensions and discards alpha.");
-        }
-        foreach (var quality in new[] { float.NaN, float.PositiveInfinity, 0, -1, 1.01f })
-            Reject<ArgumentOutOfRangeException>(() => source.SaveJPGToBuffer(quality));
+        var jpg = VerifyJPEG();
 
         image.LoadPNGFromBuffer(png);
         var count = loaded;
@@ -103,6 +92,77 @@ internal static class ImageCodecTests
         Console.WriteLine("Image codec checks passed (PNG/JPEG/WebP/BMP/TGA/SVG; buffers, files, failures, ownership).");
     }
 
+    internal static byte[] VerifyJPEG()
+    {
+        // cjpeg -optimize -quality 98, with -progressive -restart 1 for the RGB fixture.
+        var gray = Convert.FromBase64String("/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQIBAQEBAQIBAQECAgICAgICAgIDAwQDAwMDAwICAwQDAwQEBAQEAgMFBQQEBQQEBAT/wAALCAAIAAkBAREA/8QAFQABAQAAAAAAAAAAAAAAAAAACAr/xAAYEAACAwAAAAAAAAAAAAAAAAAACUaDwv/aAAgBAQAAPwAxpcidGSzw/9k=");
+        var progressive = Convert.FromBase64String("/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQIBAQEBAQIBAQECAgICAgICAgIDAwQDAwMDAwICAwQDAwQEBAQEAgMFBQQEBQQEBAT/2wBDAQEBAQEBAQIBAQIEAwIDBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAT/wgARCAAIAAkDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAcI/8QAFQEBAQAAAAAAAAAAAAAAAAAABAj/3QAEAAH/2gAMAwEAAhADEAAAAYNoInQ3/8QAFxABAAMAAAAAAAAAAAAAAAAAAAYHF//dAAQAAv/aAAgBAQABBQKP1Yy1/8QAGxEAAQQDAAAAAAAAAAAAAAAAUQADBgcWJHH/3QAEAAH/2gAIAQMBAT8Boe3pzhTe0COr/8QAGxEAAQQDAAAAAAAAAAAAAAAABgABBxUksdH/2gAIAQIBAT8BKJLLrJ8jfV//xAAYEAACAwAAAAAAAAAAAAAAAAAAogIkNP/dAAQAAv/aAAgBAQAGPwKFdTOp/8QAFRABAQAAAAAAAAAAAAAAAAAAEKH/2gAIAQEAAT8hln//3QAEAAH/2gAMAwEAAgADAAAAEP8A/8QAFREBAQAAAAAAAAAAAAAAAAAAAMH/2gAIAQMBAT8Qnkf/xAAXEQADAQAAAAAAAAAAAAAAAAAAQVGB/9oACAECAQE/ENiVD//EAB0QAAECBwAAAAAAAAAAAAAAAAABETFBUWFxsfD/3QAEAAL/2gAIAQEAAT8Q1JJoWH0cwf/Z");
+        using var image = new Image();
+        var changes = 0;
+        image.Changed += _ => changes++;
+        image.LoadJPGFromBuffer(gray);
+        var grayscale = image.GetData();
+        Check(image.PixelFormat == Image.Format.L8 && image.Size == new Vector2i(9, 8) &&
+            grayscale.Select((sample, index) => Math.Abs(sample - (28 + index % 9 * 23))).Max() <= 2, "Grayscale JPEG retains one byte per pixel, including odd-width rows.");
+        image.LoadJPGFromBuffer(progressive);
+        var first = image.GetPixel(1, 1);
+        var last = image.GetPixel(7, 6);
+        Check(image.PixelFormat == Image.Format.Rgb8 && image.Size == new Vector2i(9, 8) && first.A == 1 &&
+            last.R - first.R > 0.4f && last.G - first.G > 0.4f && Math.Abs(last.B - 80 / 255f) < 0.12f, "Progressive JPEG reconstructs RGB without alpha storage.");
+        image.GenerateMIPMaps();
+        var before = image.GetData();
+        var changeCount = changes;
+        var frame = gray.AsSpan().IndexOf(new byte[] { 0xff, 0xc0 });
+        var highPrecision = (byte[])gray.Clone();
+        highPrecision[frame + 4] = 12;
+        var excessive = (byte[])gray.Clone();
+        BinaryPrimitives.WriteUInt32BigEndian(excessive.AsSpan(frame + 5), 0x30003000);
+        Reject<NotSupportedException>(() => image.LoadJPGFromBuffer(highPrecision));
+        Reject<InvalidDataException>(() => image.LoadJPGFromBuffer(excessive));
+        Reject<InvalidDataException>(() => image.LoadJPGFromBuffer(progressive[..^2]));
+        Check(image.HasMIPMaps && image.GetData().SequenceEqual(before) && changes == changeCount, "JPEG preflight preserves a populated image on refusal.");
+
+        using var source = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8);
+        source.Fill(new Color(0.25f, 0.5f, 0.75f, 0.25f));
+        source.GenerateMIPMaps();
+        var saved = source.GetData();
+        foreach (var quality in new[] { 0.01f, 0.75f, 1f })
+        {
+            image.LoadJPGFromBuffer(source.SaveJPGToBuffer(quality));
+            var pixel = image.GetPixel(5, 5);
+            Check(image.Size == source.Size && image.PixelFormat == Image.Format.Rgb8 && !image.HasMIPMaps &&
+                pixel.A == 1 && Math.Abs(pixel.R - 0.25f) < 0.12f && Math.Abs(pixel.G - 0.5f) < 0.12f && Math.Abs(pixel.B - 0.75f) < 0.12f,
+                "JPEG accepts its quality range, encodes the base level and discards alpha.");
+        }
+        Check(source.HasMIPMaps && source.GetData().SequenceEqual(saved), "JPEG encoding preserves the source mip chain.");
+        Check(source.SaveJPGToBuffer(0.759f).SequenceEqual(source.SaveJPGToBuffer(0.75f)),
+            "JPEG passes the same truncated quality percentage for both inputs.");
+        foreach (var quality in new[] { float.NaN, float.PositiveInfinity, 0, -1, 1.01f })
+            Reject<ArgumentOutOfRangeException>(() => source.SaveJPGToBuffer(quality));
+        using var empty = new Image();
+        Reject<InvalidOperationException>(() => empty.SaveJPGToBuffer());
+        using var block = Image.CreateFromData(4, 4, false, Image.Format.Dxt1, [0, 248, 0, 0, 0, 0, 0, 0]);
+        image.LoadJPGFromBuffer(block.SaveJPGToBuffer(1));
+        Check(block.IsCompressed && image.GetPixel(3, 3).R > 0.95f, "JPEG accepts a supported block source without changing it.");
+
+        var folder = Directory.CreateTempSubdirectory("Electron2D-jpeg-");
+        try
+        {
+            var path = IOPath.Combine(folder.FullName, "gray.jpeg");
+            File.WriteAllBytes(path, gray);
+            using var decoded = Image.LoadFromFile(path);
+            using var texture = ResourceLoader.Load<ImageTexture>(path, ResourceLoader.CacheMode.Ignore);
+            using var snapshot = texture.GetImage()!;
+            Check(decoded.PixelFormat == Image.Format.L8 && snapshot.PixelFormat == Image.Format.L8 &&
+                snapshot.GetData().SequenceEqual(grayscale), "JPEG file and resource loaders retain the grayscale layout.");
+            block.SaveJPG(path, 1);
+            using var encoded = Image.LoadFromFile(path);
+            Check(encoded.PixelFormat == Image.Format.Rgb8 && encoded.Size == new Vector2i(4, 4), "JPEG file save shares block encoding.");
+        }
+        finally { folder.Delete(recursive: true); }
+        Console.WriteLine("JPEG grayscale, progressive color, block export, file/resource and failure checks passed.");
+        return source.SaveJPGToBuffer(1);
+    }
     internal static void VerifyPNG()
     {
         var nativeBefore = NativeAllocation.Snapshot().Current;
