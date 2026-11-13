@@ -44,10 +44,9 @@ internal static class ImageCodecTests
             image.LoadBMPFromBuffer(BMP(topDown));
             var opaque = (byte[])Pixels.Clone(); opaque[3] = 255;
             CheckPixels(image, opaque);
-            image.LoadTGAFromBuffer(TGA(topDown));
-            CheckPixels(image, Pixels);
         }
 
+        VerifyTGA();
         VerifyPNG();
 
         var jpg = VerifyJPEG();
@@ -341,14 +340,107 @@ internal static class ImageCodecTests
         return bytes;
     }
 
-    private static byte[] TGA(bool topDown)
+    internal static void VerifyTGA()
+    {
+        using var image = new Image();
+        foreach (var top in new[] { false, true })
+            foreach (var right in new[] { false, true })
+            {
+                image.LoadTGAFromBuffer(TGA(top, right));
+                CheckPixels(image, Pixels);
+            }
+
+        var indexed = TGAVector(9, 8, 0x30, 3, 2,
+            [0x81, 6, 0x02, 7, 5, 6, 0x80, 7], palette: [0, 0, 255, 0, 255, 0, 255, 0, 0], first: 5);
+        byte[] expected = [0, 0, 255, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 0, 255, 0, 255, 255, 0, 0, 255];
+        image.LoadTGAFromBuffer(indexed);
+        CheckPixels(image, expected);
+
+        var indices16 = TGAVector(1, 16, 0x20, 2, 1, [0x00, 0x01, 0x01, 0x01],
+            palette: [8, 17, 35, 64, 120, 65, 7, 192], first: 256, paletteDepth: 32);
+        image.LoadTGAFromBuffer(indices16);
+        Check(image.GetData().AsSpan().SequenceEqual(new byte[] { 35, 17, 8, 64, 7, 65, 120, 192 }), "Indexed TGA preserves palette origin and byte alpha.");
+
+        image.LoadTGAFromBuffer(TGAVector(10, 16, 0x21, 2, 1, [0x01, 0x00, 0x7c, 0xe0, 0x83]));
+        Check(image.GetData().AsSpan().SequenceEqual(new byte[] { 248, 0, 0, 0, 0, 248, 0, 255 }), "TGA preserves the optional 16-bit alpha bit.");
+        image.LoadTGAFromBuffer(TGAVector(2, 16, 0x20, 1, 1, [0x1f, 0x00]));
+        Check(image.GetData().AsSpan().SequenceEqual(new byte[] { 0, 0, 248, 255 }), "TGA packed color without alpha is opaque.");
+        image.LoadTGAFromBuffer(TGAVector(2, 24, 0x20, 1, 1, [3, 2, 1]));
+        Check(image.GetData().AsSpan().SequenceEqual(new byte[] { 1, 2, 3, 255 }), "TGA 24-bit color uses BGR storage.");
+        image.LoadTGAFromBuffer(TGAVector(11, 8, 0x20, 3, 1, [0x82, 37]));
+        Check(image.GetData().AsSpan().SequenceEqual(new byte[] { 37, 37, 37, 255, 37, 37, 37, 255, 37, 37, 37, 255 }), "TGA grayscale expands each shade to RGB.");
+        image.LoadTGAFromBuffer(TGAVector(3, 16, 0x28, 1, 1, [200, 17]));
+        Check(image.GetData().AsSpan().SequenceEqual(new byte[] { 200, 200, 200, 17 }), "TGA grayscale alpha is stored separately.");
+
+        var crossRow = TGAVector(10, 24, 0x20, 3, 2, [0x83, 0, 0, 255, 1, 0, 255, 0, 255, 0, 0]);
+        image.LoadTGAFromBuffer(crossRow);
+        Check(image.GetPixel(0, 1) == Colors.Red && image.GetPixel(1, 1) == Colors.Green && image.GetPixel(2, 1) == Colors.Blue,
+            "TGA repeat and literal packets can span row boundaries.");
+
+        var footer = new byte[26];
+        "TRUEVISION-XFILE.\0"u8.CopyTo(footer.AsSpan(8));
+        image.LoadTGAFromBuffer([.. indexed, .. footer]);
+        CheckPixels(image, expected);
+        var unsupportedIndex = (byte[])indexed.Clone();
+        unsupportedIndex[^1] = 8;
+        var changes = 0;
+        image.GenerateMIPMaps();
+        var before = image.GetData();
+        image.Changed += _ => changes++;
+        foreach (var invalid in new byte[][]
+        {
+            indexed[..17], indexed[..19], indexed[..^1], unsupportedIndex, [.. indexed[..^1], .. footer],
+            TGAVector(11, 8, 0x20, 1, 1, [0x81, 33]),
+            TGAVector(11, 8, 0x20, ushort.MaxValue, ushort.MaxValue, [0x80, 1])
+        })
+            Reject<InvalidDataException>(() => image.LoadTGAFromBuffer(invalid));
+        Check(image.HasMIPMaps && image.GetData().AsSpan().SequenceEqual(before) && changes == 0, "Malformed TGA keeps pixels, mipmaps and event count.");
+
+        var folder = Directory.CreateTempSubdirectory("Electron2D-tga-");
+        try
+        {
+            var path = IOPath.Combine(folder.FullName, "indexed.TGA");
+            File.WriteAllBytes(path, indexed);
+            image.Load(path);
+            CheckPixels(image, expected);
+            Check(changes == 1 && !image.HasMIPMaps, "TGA file success publishes a single base level.");
+            using var texture = ResourceLoader.Load<ImageTexture>(path, ResourceLoader.CacheMode.Ignore);
+            using var snapshot = texture.GetImage()!;
+            CheckPixels(snapshot, expected);
+        }
+        finally { folder.Delete(recursive: true); }
+        Console.WriteLine("TGA origins, palette, RLE, alpha, failure and resource checks passed.");
+    }
+
+    private static byte[] TGAVector(byte type, byte depth, byte descriptor, ushort width, ushort height,
+        byte[] pixels, byte[]? palette = null, ushort first = 0, byte paletteDepth = 24)
+    {
+        var header = new byte[19];
+        header[0] = 1;
+        header[18] = 0x41;
+        header[2] = type;
+        BinaryPrimitives.WriteUInt16LittleEndian(header.AsSpan(12), width);
+        BinaryPrimitives.WriteUInt16LittleEndian(header.AsSpan(14), height);
+        header[16] = depth;
+        header[17] = descriptor;
+        if (palette is not null)
+        {
+            header[1] = 1;
+            BinaryPrimitives.WriteUInt16LittleEndian(header.AsSpan(3), first);
+            BinaryPrimitives.WriteUInt16LittleEndian(header.AsSpan(5), (ushort)(palette.Length / (paletteDepth / 8)));
+            header[7] = paletteDepth;
+        }
+        return [.. header, .. (palette ?? []), .. pixels];
+    }
+
+    private static byte[] TGA(bool topDown, bool right = false)
     {
         var bytes = new byte[18 + Pixels.Length];
-        bytes[2] = 2; bytes[12] = 3; bytes[14] = 2; bytes[16] = 32; bytes[17] = (byte)(topDown ? 40 : 8);
+        bytes[2] = 2; bytes[12] = 3; bytes[14] = 2; bytes[16] = 32; bytes[17] = (byte)((topDown ? 40 : 8) | (right ? 16 : 0));
         for (var y = 0; y < 2; y++)
             for (var x = 0; x < 3; x++)
                 for (var channel = 0; channel < 4; channel++)
-                    bytes[18 + (y * 3 + x) * 4 + channel] = Pixels[((topDown ? y : 1 - y) * 3 + x) * 4 + (channel == 3 ? 3 : 2 - channel)];
+                    bytes[18 + (y * 3 + x) * 4 + channel] = Pixels[((topDown ? y : 1 - y) * 3 + (right ? 2 - x : x)) * 4 + (channel == 3 ? 3 : 2 - channel)];
         return bytes;
     }
 

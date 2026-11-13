@@ -1,3 +1,5 @@
+[TGA loading](../components/images.md#tga-loading) handles right-origin images, packed alpha, nonzero palette origins and bounded raw/RLE decoding. One TGA row moves to Implemented. Coverage is **13,954/18,900 (73.83%)**, with 1,130 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [JPEG loading and saving](../components/images.md#jpeg-loading-and-saving) preserves L8 and RGB8, checks scan framing and exports supported block images from a base-level snapshot. Three JPEG rows move to Implemented. Coverage is **13,953/18,900 (73.83%)**, with 1,131 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [PNG loading and saving](../components/images.md#png-loading-and-saving) preserves four channel layouts, expands palettes and transparency, handles interlacing and converts encoded transfer to 8-bit sRGB. PNG export accepts supported compressed images through the existing block decoders. Three PNG-specific rows move to Implemented. Coverage is **13,950/18,900 (73.81%)**, with 1,134 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

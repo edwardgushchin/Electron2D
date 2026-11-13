@@ -77,7 +77,8 @@ public sealed partial class Image
 
     /// <summary>Decodes a TGA buffer and replaces the image atomically.</summary>
     /// <param name="buffer">TGA data, copied before validation and decoding, at most 64 MiB.</param>
-    /// <remarks>Produces RGBA8 without mipmaps. Failure preserves pixels; success emits Changed.</remarks>
+    /// <remarks>Produces RGBA8 without mipmaps, normalizing the image origin to the top left.
+    /// Supports raw and run-length encoded color, grayscale, and indexed pixels. Failure preserves pixels; success emits Changed.</remarks>
     /// <exception cref="InvalidDataException">Data is malformed or exceeds image limits.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer) => DecodeAndCommit(buffer, "TGA");
@@ -172,6 +173,11 @@ public sealed partial class Image
         ThrowIfDisposed();
         if (buffer.IsEmpty || buffer.Length > MaximumEncodedBytes) throw new InvalidDataException("Encoded images must contain between 1 byte and 64 MiB.");
         var bytes = buffer.ToArray();
+        if (codec == "TGA")
+        {
+            Commit(DecodeTGA(bytes));
+            return;
+        }
         var format = Format.Rgba8;
         var size = codec switch
         {
@@ -204,7 +210,6 @@ public sealed partial class Image
                 {
                     "JPG" => SDL3.Image.LoadJPGIO(stream),
                     "BMP" => SDL3.Image.LoadBMPIO(stream),
-                    "TGA" => SDL3.Image.LoadTGAIO(stream),
                     "SVG" => SDL3.Image.LoadSizedSVGIO(stream, size.X, size.Y),
                     _ => throw new NotSupportedException(codec)
                 };
@@ -402,11 +407,6 @@ public sealed partial class Image
             var height = BinaryPrimitives.ReadInt32LittleEndian(data[22..]);
             if (height == int.MinValue) throw Invalid();
             return new(width, Math.Abs(height));
-        }
-        if (codec == "TGA")
-        {
-            if (data.Length < 18 || data[2] is not (1 or 2 or 3 or 9 or 10 or 11)) throw Invalid();
-            return new(BinaryPrimitives.ReadUInt16LittleEndian(data[12..]), BinaryPrimitives.ReadUInt16LittleEndian(data[14..]));
         }
         if (codec == "WEBP")
         {

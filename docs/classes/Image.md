@@ -509,7 +509,7 @@ Replaces pixels from BMP bytes. Decoding and native cleanup finish before commit
 <a id="loadtgafrombuffer"></a>
 ### `public void LoadTGAFromBuffer(ReadOnlySpan<byte> buffer)`
 
-Replaces pixels from TGA bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+Replaces pixels from TGA bytes. Raw and run-length encoded color, grayscale and indexed pixels expand to RGBA8 in top-left row order. The decoder validates palette and packet bounds. Decoding finishes before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
 
 <a id="loadsvgfrombuffer"></a>
 ### `public void LoadSVGFromBuffer(ReadOnlySpan<byte> buffer, float scale = 1f)`

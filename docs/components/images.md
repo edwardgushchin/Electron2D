@@ -42,7 +42,7 @@ WebP file/buffer decoding uses the existing private codec for straight RGBA8 and
 
 Color-space conversions use `SRGBToLinear`, `LinearToSRGB` and `RGBEToSRGB`, following the same acronym spelling as the underlying Color API. Their pixel conversion and format contracts are unchanged.
 
-The component depends on `Resource`, typed property descriptors, `Color`, `Vector2i`, `Rect2i`, and BCL binary/numeric primitives. BitMap consumes copied Image alpha data and uses Vector2 contours; it needs no native library. ImageTexture consumes its copied raw buffer and format metadata for GPU upload. `FileAccess` supplies encoded bytes through existing virtual paths. SDL_image handles JPEG, BMP, TGA and SVG through SDL3-CS. Temporary surfaces are copied and released before Image commits. PNG and WebP use their private native codecs. CPU processing retains its managed-only path.
+The component depends on `Resource`, typed property descriptors, `Color`, `Vector2i`, `Rect2i`, and BCL binary/numeric primitives. BitMap consumes copied Image alpha data and uses Vector2 contours; it needs no native library. ImageTexture consumes its copied raw buffer and format metadata for GPU upload. `FileAccess` supplies encoded bytes through existing virtual paths. SDL_image handles JPEG, BMP and SVG through SDL3-CS. The managed TGA decoder handles raw and run-length encoded pixels. Temporary surfaces are copied and released before Image commits. PNG and WebP use their private native codecs. CPU processing retains its managed-only path.
 
 Web statically links pinned SDL_image 3.4.6 and its libwebp/sharpyuv closure, retaining the same public codec API and shared SDL core. Internal SDL ReadIO/WriteIO imports return native pointer-sized `size_t`, preserving byte counts on wasm32 and 64-bit hosts while the binding convenience API still returns `ulong`. The browser app executes all six file/buffer decoders, PNG/JPEG/WebP saving, SVG validation and atomic failure checks; its nonthreaded profile excludes the parallel-call check. The shared fixture additionally checks exact read/write counts and EOF through actual SDL IO streams. This is CPU codec evidence, not browser texture presentation.
 
@@ -121,6 +121,14 @@ The file and buffer loaders produce L8 for single-component JPEG and RGB8 for th
 Encoding copies the base level, decompresses supported GPU blocks, and converts to RGB8. It discards alpha and leaves the source, mipmaps and notifications untouched. Source pixels, converted RGB8 and returned bytes are each bounded to 64 MiB. The finite quality interval is 0.01–1.0. The engine truncates to an integer percentage and SDL_image applies its native quality mapping. File saving replaces the destination atomically after successful encoding.
 
 `ImageCodecTests` exercised odd-width grayscale, progressive RGB, failure atomicity, BC1 export, and the file/texture paths on Windows x64. The AVI GPU test wrote and decoded real MJPEG frames. Other target packages and NativeAOT remain to be qualified.
+
+## TGA loading
+
+File, buffer and texture loading use one managed decoder. It expands raw and run-length encoded true color, grayscale and indexed samples to straight RGBA8 in top-left row order. All four origin combinations are supported. Packed 15/16-bit color keeps the five high bits in each output channel. The declared 16-bit alpha bit and 32-bit color alpha are preserved. The decoder also supports 16-bit grayscale with byte alpha and 8/16-bit palette indices with a nonzero first entry.
+
+Encoded input and decoded pixels each have a 64 MiB limit. The decoder checks the palette and packet ranges, permits packets that span rows, and rejects a run or literal packet that overruns the image. Optional footer metadata does not contribute pixel data. Interleaved images reject explicitly. Failed decode preserves the destination image, mipmaps and notification count.
+
+`ImageCodecTests` exercised buffer, file and texture loading on Windows x64 and Linux x64 under WSL. Package, NativeAOT and system clipboard checks remain separate.
 
 ## Exclusions and deferred integration
 
