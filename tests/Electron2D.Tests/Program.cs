@@ -4424,6 +4424,32 @@ static void VerifyImages()
             "Normal XY packing must preserve independently authored mip pixels through texture storage.");
     }
 
+    using (var alpha = Image.CreateEmpty(9, 5, true, Image.Format.Rgba8))
+    {
+        alpha.SetPixel(0, 0, new Color(1, 0, 0, 20 / 255f));
+        alpha.SetPixel(2, 0, Colors.Blue);
+        alpha.SetPixel(1, 0, new Color(0, 1, 0, 19 / 255f));
+        alpha.SetPixel(7, 4, new Color(0, 1, 0, 0));
+        var source = alpha.GetData();
+        var mipOffset = alpha.GetMIPMapOffset(1);
+        source.AsSpan(mipOffset).Fill(123);
+        alpha.SetData(9, 5, true, Image.Format.Rgba8, source);
+        var changes = 0;
+        alpha.Changed += _ => changes++;
+        alpha.FixAlphaEdges();
+        var fixedPixels = alpha.GetData();
+        Require(fixedPixels.AsSpan(4, 4).SequenceEqual(new byte[] { 255, 0, 0, 19 }) &&
+            fixedPixels.AsSpan((4 * 9 + 6) * 4, 8).SequenceEqual(new byte[] { 0, 0, 255, 0, 0, 255, 0, 0 }) &&
+            fixedPixels.AsSpan(mipOffset).SequenceEqual(source.AsSpan(mipOffset)),
+            "Alpha repair uses the first equidistant candidate, includes the diagonal corner and preserves distant pixels and mips.");
+        alpha.PremultiplyAlpha();
+        var premultiplied = alpha.GetData();
+        Require(premultiplied.AsSpan(0, 12).SequenceEqual(new byte[] { 20, 0, 0, 20, 19, 0, 0, 19, 0, 0, 255, 255 }) &&
+            premultiplied.AsSpan((4 * 9 + 6) * 4, 8).SequenceEqual(new byte[8]) &&
+            alpha.HasMIPMaps && premultiplied.AsSpan(mipOffset).SequenceEqual(source.AsSpan(mipOffset)) && changes == 2,
+            "Premultiplication handles zero, partial and full alpha and publishes once without changing authored mips.");
+    }
+
     using (var rgbe = Image.CreateEmpty(2, 1, true, Image.Format.Rgbe9995))
     {
         rgbe.SetPixel(0, 0, new Color(2f, 1f, 0.5f));

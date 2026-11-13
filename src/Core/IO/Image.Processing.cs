@@ -446,8 +446,10 @@ public sealed partial class Image
             });
     }
 
-    /// <summary>Copies nearby opaque RGB values into low-alpha pixels of an RGBA8 image.</summary>
-    /// <remarks>Search is limited to a four-pixel radius. Alpha values are not changed.</remarks>
+    /// <summary>Copies nearby RGB values into low-alpha pixels of the RGBA8 base level.</summary>
+    /// <remarks>Pixels below alpha 20 borrow RGB from the closest pixel with alpha at least 20
+    /// within four pixels on each axis. Equidistant candidates are considered in row order.
+    /// Preserves alpha and any existing mip levels.</remarks>
     /// <exception cref="InvalidOperationException">The image is empty, compressed, or not <see cref="Format.Rgba8"/>.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the operation commits.</exception>
@@ -458,23 +460,28 @@ public sealed partial class Image
             if (state.Format != Format.Rgba8)
                 throw new InvalidOperationException("Alpha-edge repair requires Rgba8 data.");
 
-            var source = (byte[])state.Data.Clone();
+            var pixels = state.Data;
+            // Candidates are never modified, so repaired pixels cannot feed later searches.
             for (var y = 0; y < state.Height; y++)
             {
+                var firstY = Math.Max(0, y - 4);
+                var lastY = Math.Min(state.Height - 1, y + 4);
                 for (var x = 0; x < state.Width; x++)
                 {
                     var offset = ((y * state.Width) + x) * 4;
-                    if (source[offset + 3] >= 20)
+                    if (pixels[offset + 3] >= 20)
                         continue;
 
                     var bestDistance = int.MaxValue;
                     var bestOffset = -1;
-                    for (var sampleY = Math.Max(0, y - 4); sampleY <= Math.Min(state.Height - 1, y + 4); sampleY++)
+                    var firstX = Math.Max(0, x - 4);
+                    var lastX = Math.Min(state.Width - 1, x + 4);
+                    for (var sampleY = firstY; sampleY <= lastY; sampleY++)
                     {
-                        for (var sampleX = Math.Max(0, x - 4); sampleX <= Math.Min(state.Width - 1, x + 4); sampleX++)
+                        for (var sampleX = firstX; sampleX <= lastX; sampleX++)
                         {
                             var sampleOffset = ((sampleY * state.Width) + sampleX) * 4;
-                            if (source[sampleOffset + 3] < 20)
+                            if (pixels[sampleOffset + 3] < 20)
                                 continue;
                             var dx = x - sampleX;
                             var dy = y - sampleY;
@@ -487,14 +494,15 @@ public sealed partial class Image
                     }
 
                     if (bestOffset >= 0)
-                        Buffer.BlockCopy(source, bestOffset, state.Data, offset, 3);
+                        pixels.AsSpan(bestOffset, 3).CopyTo(pixels.AsSpan(offset, 3));
                 }
             }
 
-            return RebuildMIPMapsIfNeeded(state);
+            return state;
         });
 
-    /// <summary>Multiplies every stored RGB component by its alpha component.</summary>
+    /// <summary>Multiplies each RGBA8 base-level RGB component by its alpha component.</summary>
+    /// <remarks>Uses integer byte arithmetic and preserves alpha and existing mip levels.</remarks>
     /// <exception cref="InvalidOperationException">The image is empty, block-compressed, or not <see cref="Format.Rgba8"/>.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the operation commits.</exception>
@@ -513,7 +521,7 @@ public sealed partial class Image
                 state.Data[offset + 2] = (byte)(((state.Data[offset + 2] * alpha) + 255) >> 8);
             }
 
-            return RebuildMIPMapsIfNeeded(state);
+            return state;
         });
 
     /// <summary>Converts RGB components from nonlinear sRGB encoding to linear encoding.</summary>

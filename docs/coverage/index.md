@@ -1,3 +1,5 @@
+[Image alpha processing](../components/images.md#alpha-edge-repair-and-premultiplication) preserves authored mip levels during edge repair and premultiplication. Two rows move to Implemented. Coverage is **13,958/18,900 (73.85%)**, with 1,126 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Normal-map conversion](../components/images.md#normal-map-conversion) preserves tangent direction for extreme finite heights and packs X/Y from each authored mip level. Two rows move to Implemented. Coverage is **13,956/18,900 (73.84%)**, with 1,128 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [TGA loading](../components/images.md#tga-loading) handles right-origin images, packed alpha, nonzero palette origins and bounded raw/RLE decoding. One TGA row moves to Implemented. Coverage is **13,954/18,900 (73.83%)**, with 1,130 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

@@ -401,12 +401,12 @@ Applies finite RGB factors to all stored levels while preserving alpha. `1` is n
 <a id="fixalphaedges"></a>
 ### `public void FixAlphaEdges()`
 
-For each base-level `Rgba8` pixel with alpha below 20/255, copies RGB from the nearest pixel within a four-pixel radius whose alpha is at least 20/255. Alpha is unchanged and mipmaps are rebuilt.
+For each base-level `Rgba8` pixel with alpha below 20/255, copies RGB from the nearest pixel with alpha at least 20/255 within four pixels on each axis. Ties use the first candidate in row order. Alpha and existing mip levels are preserved.
 
 <a id="premultiplyalpha"></a>
 ### `public void PremultiplyAlpha()`
 
-Multiplies each base-level `Rgba8` RGB byte by its alpha byte with deterministic integer rounding, preserves alpha, and rebuilds mipmaps. Other formats are rejected.
+Multiplies each base-level `Rgba8` RGB byte by its alpha byte using `(component * alpha + 255) >> 8`. Alpha and existing mip levels are preserved. Empty images and other formats raise `InvalidOperationException`.
 
 <a id="srgbtolinear"></a>
 ### `public void SRGBToLinear()`

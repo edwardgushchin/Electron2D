@@ -609,6 +609,14 @@
   "statusGroups": [
     {
       "godot": [
+        "Image::method:fix_alpha_edges()",
+        "Image::method:premultiply_alpha()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039: RGBA8 base-level alpha operations preserve authored mips. Edge repair uses alpha 20, a four-pixel square and nearest squared distance with row-order ties. Premultiplication uses exact byte arithmetic. Typed guards and atomic publication follow the Image contract. See docs/components/images.md#alpha-edge-repair-and-premultiplication."
+    },
+    {
+      "godot": [
         "Image::method:bump_map_to_normal_map(float:)",
         "Image::method:normal_map_to_xy()"
       ],

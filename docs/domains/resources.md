@@ -122,6 +122,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 - Public resources do not expose manual reference counting. Font layout internally leases immutable source snapshots so native retirement waits for active reads; this does not add a public asset-manager or lease API.
 - Serialized resource state and ownership semantics must remain portable across all five runtime targets; platform-native payloads require explicit internal backends.
 - Image buffers own copied bytes, use canonical little-endian multi-byte fields, publish complete states atomically, and never expose mutable backing storage.
+- [Image alpha processing](../components/images.md#alpha-edge-repair-and-premultiplication) repairs and premultiplies RGBA8 base pixels while preserving authored mip levels. Scalable SVG textures share these operations.
 - BitMap keeps packed bits private, snapshots before morphology, and publishes changes outside its state lock.
 - BC1–BC7 compression/decompression, DDS raw/HDR/mip storage and prepared texture sampling execute; [ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies complete channel/HDR/mip roles and shared texture consumers; their encoding remains separate. See [BC/DDS integration](../components/image-bcn.md).
 

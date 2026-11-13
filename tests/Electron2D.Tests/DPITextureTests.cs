@@ -48,6 +48,11 @@ internal static class DPITextureTests
         {
             edge.FixAlphaBorder = true; using var image = edge.GetImage()!;
             var pixel = image.GetPixel(1, 5); Check(pixel.R > .9f && pixel.G < .01f && pixel.A == 0, "Alpha-edge processing fills transparent RGB without changing alpha.");
+            edge.PremultAlpha = true;
+            using var premultiplied = edge.GetImage()!;
+            Pixel(premultiplied, 1, 5, new Color(0, 0, 0, 0));
+            Pixel(premultiplied, 4, 5, Colors.Red);
+            Pixel(image, 1, 5, new Color(1, 0, 0, 0));
         }
         using (var notifying = DPITexture.CreateFromString(Source))
         {

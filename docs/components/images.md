@@ -106,6 +106,12 @@ The image-storage profile checks independent mip values, luma and alpha, signed 
 
 Image encoders reject a directory destination with `IOException` before starting atomic replacement. Other path and permission errors retain the file layer's behavior.
 
+## Alpha-edge repair and premultiplication
+
+Both operations edit the RGBA8 base level and preserve all authored mip bytes. Edge repair copies the nearest RGB whose alpha byte is at least 20 into each pixel below that threshold. It searches up to four pixels on each axis, measures squared distance, and visits candidates in top-to-bottom, left-to-right order. Repaired pixels remain below the threshold and cannot become sources. Premultiplication applies integer `(component * alpha + 255) >> 8` to each base RGB byte. Both operations keep alpha values.
+
+`DPITexture` can repair transparent edges in its rasterized SVG and then premultiply the result before building a texture variant. The image storage and SVG texture profiles check authored mip retention, threshold and search bounds, and the combined processing order.
+
 ## Normal-map conversion
 
 `BumpMapToNormalMap` samples red or luminance in the base image and wraps forward differences at the right and bottom edges. It encodes the normalized tangent-space vector in opaque RGBA8 and drops the old mip chain. Finite heights and scale retain their direction when float gradient arithmetic overflows. A gradient involving a nonfinite height encodes the zero vector. `NoiseTexture` uses this operation before generating its mip chain.
