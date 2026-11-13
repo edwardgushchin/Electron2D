@@ -77,6 +77,37 @@ public partial class Window
     /// <summary>Reports whether this window uses an attached viewport's embedded host.</summary>
     /// <returns>True only while attached to an embedding viewport.</returns>
     public bool IsEmbedded() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return Embedder is not null; }
+    private Action<ulong>? _updateChildControlsAction;
+    private ulong _childControlsGeneration;
+    private bool _childControlsPending;
+
+    /// <summary>Queues a size refresh after the window's child controls change.</summary>
+    /// <remarks>Requests coalesce until the scene's deferred phase. A visible attached window with
+    /// <see cref="WrapControls"/> grows to fit the measured content within its configured size limits.
+    /// Detached and hidden windows ignore this request. Native size changes follow the host's resize events.</remarks>
+    /// <exception cref="InvalidOperationException">The caller is off-owner or the window is being captured.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    public void ChildControlsChanged()
+    {
+        ValidateNodeMutation();
+        if (!_visible || _childControlsPending || Tree is not { IsClosing: false } tree) return;
+        tree.SetDeferred(_updateChildControlsAction ??= UpdateChildControls, _childControlsGeneration);
+        _childControlsPending = true;
+    }
+
+    private void UpdateChildControls(ulong generation)
+    {
+        if (generation != _childControlsGeneration) return;
+        try
+        {
+            if (!IsDisposed && _visible && IsInsideTree) UpdateEmbeddedContents(generation);
+        }
+        finally
+        {
+            if (generation == _childControlsGeneration) _childControlsPending = false;
+        }
+    }
+
     /// <summary>Returns the maximum extent of direct child controls and their minimum sizes.</summary>
     /// <returns>Finite nonnegative content dimensions, independent of WrapControls.</returns>
     public Vector2 GetContentsMinimumSize() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); var size = OnGetContentsMinimumSize(); if (!size.IsFinite() || size.X < 0 || size.Y < 0) throw new InvalidOperationException("Content minimum must be finite and nonnegative."); return size; }
@@ -220,10 +251,23 @@ public partial class Window
     internal virtual bool AcceptEmbeddedPointer(Vector2 point, InputEvent input) => true;
     internal virtual void PreparePopup() { }
     internal virtual void AdjustPopup() { }
-    internal void UpdateEmbeddedContents()
+    internal void UpdateEmbeddedContents() => UpdateEmbeddedContents(null);
+
+    private void UpdateEmbeddedContents(ulong? generation)
     {
-        if (WrapControls || _keepTitleVisible) { var size = _size.Max(GetWindowMinimumSize()); if (MaxSize.X > 0) size.X = Math.Min(size.X, MaxSize.X); if (MaxSize.Y > 0) size.Y = Math.Min(size.Y, MaxSize.Y); if (size != _size) RequestMeasuredWindowSize(size); }
-        if (ClampToEmbedder && Embedder != null) Position = Position;
+        bool Current() => generation is null || generation == _childControlsGeneration && !IsDisposed && _visible;
+        if (WrapControls || _keepTitleVisible)
+        {
+            var minimum = GetWindowMinimumSize();
+            if (!Current()) return;
+            var size = _size.Max(minimum);
+            var maximum = MaxSize;
+            if (maximum.X > 0) size.X = Math.Min(size.X, maximum.X);
+            if (maximum.Y > 0) size.Y = Math.Min(size.Y, maximum.Y);
+            if (size != _size) RequestMeasuredWindowSize(size);
+        }
+        if (!Current()) return;
+        if (ClampToEmbedder && Embedder is not null) Position = Position;
         _embeddedCanvas?.QueueRedraw();
     }
     internal void EmbeddedVisibilityChanged()

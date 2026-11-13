@@ -365,6 +365,14 @@ BootImageTests verifies real main-window alpha pixels, the native transparency f
 
 Window.NonclientArea and NonclientWindowInput preserve mouse reception while an exclusive child blocks ordinary input. The shared window-reception path runs this signal before native suppression or embedded WindowInput. The final blocked viewport cannot consume client input, including direct injection, and clears stale handled state. Stored rectangles, typed inheritance, synchronous borrowed events, failure continuation and retirement share ordinary Window/scene ownership. See [the complete contract and verification](../classes/Window.md#custom-decoration-input).
 
+## Fitting child controls
+
+`Window.ChildControlsChanged()` queues a single size refresh for the current visible scene membership. Calls during the pending refresh coalesce. Hiding the window before delivery skips measurement. Tree exit invalidates the pending request, and reentry and showing a wrapped window schedule a fresh one. Failed measurements preserve geometry and later requests can retry. Direct child Control entry, exit and committed minimum or maximum changes also request fitting, so container-propagated minimums reach their window.
+
+`WrapControls` uses the current child bounds or the derived window's content hook, scales and rounds the minimum, and grows each axis within the existing limits. A smaller minimum preserves the current size. Embedded windows commit through their viewport layout, and native windows use the existing size request and resize notification. The native window manager still enforces authored limits. Keeping a separate effective content minimum in those constraints needs atomic native limit updates and is tracked in coverage.
+
+The managed profile `ELECTRON2D_TEST_WINDOW_CONTENT_FIT=managed` exercises coalescing, bounds, hide/show, reattachment, failure recovery, owner guards and nested Control changes. The Windows x64 `gpu` and `compatibility` profiles check observed native client geometry and real resized viewport pixels on Vulkan and Direct3D 11.
+
 ## Window drawability
 
 `DisplayServer.WindowCanDraw(windowID)` queries a live native window on the display owner. It requires an active screen renderer, automatic rendering enabled, and a shown, non-minimized SDL window. Display-only, dummy and offscreen hosts return false. This query observes eligibility at the time of the call. The window system can still defer the next actual presentation.

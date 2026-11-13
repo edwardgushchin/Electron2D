@@ -139,6 +139,8 @@ CanvasItem TopLevel rebinding now connects to the existing recursive presentatio
 
 Last updated: 2026-11-14
 
+[Window content fitting](components/window-runtime.md#fitting-child-controls) connects Window and Control to the existing deferred scene queue and native resize path.
+
 [Window drawability](components/window-runtime.md#window-drawability) extends the existing Window and DisplayServer types and is consumed by native presentation.
 
 [Configured project recording](components/movie-writing.md#recording-the-configured-project) adds explicit recording overloads to Engine over its existing project selector and MovieRecording lifecycle.

@@ -735,6 +735,7 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 | Complete declaration | Contract |
 | --- | --- |
 | `public event System.Action AboutToPopup` | Occurs before popup positioning, sizing and visibility changes. |
+| `public void ChildControlsChanged()` | Queues a deferred refresh of wrapped content dimensions. |
 | `public Electron2D.Vector2 GetContentsMinimumSize()` | Returns the maximum extent of direct child controls and their minimum sizes. |
 | `public Electron2D.StyleBox GetThemeStyleBox(System.String name, System.String themeType = "")` | Gets a typed theme style box using local override, branch themes, native defaults and universal fallback. |
 | `public System.Boolean IsEmbedded()` | Reports whether this window uses an attached viewport's embedded host. |
@@ -882,6 +883,8 @@ combined failures retain both errors. See [the current popup contract](../compon
 `InitialPosition` defaults to Absolute and is stored by PackedScene and typed archives separately from Position. Undefined enum values fail before commitment. Every valid assignment emits PropertyListChanged after commitment, including equal values; observer failure leaves the new policy stored. Native roots request placement before scene entry, using full screen bounds. These are requests subject to native constraints and focus-selector capability limits. Wayland rejects explicit root positioning and releases the failed host; the default unset Absolute policy works normally. CurrentScreen retains its existing non-stored native configuration role.
 
 Embedded windows center in their actual containing viewport for every non-absolute policy. Entry/show applies the policy, including showing through Popup; changing it while visible or resizing its parent does not move the window, and hide/show applies it again. Absolute keeps the authored local position. Independent native children apply the same native placement policies on creation and recreation.
+
+`ChildControlsChanged()` queues one measurement of the latest contents for a visible attached window. With `WrapControls`, the client grows within the current bounds. Direct child minimum and maximum changes already request the refresh. See [fitting child controls](../components/window-runtime.md#fitting-child-controls).
 
 `ResetSize()` requests the smallest constrained client extent. It combines MinSize, the title minimum when required, and `ceil(GetContentsMinimumSize() * ContentScaleFactor)` when WrapControls is enabled, then honors each nonzero MaxSize axis. The portable viewport retains at least one pixel per axis. Measurement failures and unrepresentable scaled dimensions leave the old size intact. Source content is sampled once by a reset. Actual native geometry and SizeChanged retain the normal asynchronous resize contract.
 

@@ -182,6 +182,8 @@ public partial class Window : Viewport
             if (value) Tree?.RegisterNativePopup(this);
             try { UpdateExclusiveSelection(); } catch (Exception error) { CollectException(ref errors, error); }
             try { EmbeddedVisibilityChanged(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (value && _wrapControls && !IsDisposed) ChildControlsChanged(); }
+            catch (Exception error) { CollectException(ref errors, error); }
             try { Notify(NotificationVisibilityChanged); } catch (Exception error) { CollectException(ref errors, error); }
             if (IsDisposed) { ThrowCollected("Window visibility callbacks failed.", errors); return; }
             try { BeginEventEmission(_publisherVisibilityChanged.Handlers)?.Invoke(); }

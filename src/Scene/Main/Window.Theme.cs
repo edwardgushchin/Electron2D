@@ -246,10 +246,19 @@ public partial class Window
     {
         List<Exception>? errors = null;
         try { UpdateTransientMembership(entering); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!entering) try { UpdateEmbeddedMembership(false); } catch (Exception error) { CollectException(ref errors, error); }
+        if (!entering)
+        {
+            _childControlsGeneration++;
+            _childControlsPending = false;
+            try { UpdateEmbeddedMembership(false); } catch (Exception error) { CollectException(ref errors, error); }
+        }
         try { ThemeOwner.Membership(entering); } catch (Exception error) { CollectException(ref errors, error); }
         try { base.OnTreeMembershipChanged(entering); } catch (Exception error) { CollectException(ref errors, error); }
-        if (entering) try { UpdateEmbeddedMembership(true); } catch (Exception error) { CollectException(ref errors, error); }
+        if (entering)
+        {
+            try { UpdateEmbeddedMembership(true); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (_wrapControls) ChildControlsChanged(); } catch (Exception error) { CollectException(ref errors, error); }
+        }
         ThrowCollected("Window membership callbacks failed.", errors);
     }
     /// <inheritdoc />

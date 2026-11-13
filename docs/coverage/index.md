@@ -1,3 +1,5 @@
+[Window content fitting](../components/window-runtime.md#fitting-child-controls) connects dynamic Control bounds to coalesced embedded and native resize requests. One Blocked row moves to Partial pending live window-manager size constraints. Coverage is **13,985/18,900 (73.99%)**, with 1,125 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
+
 [Window drawability](../components/window-runtime.md#window-drawability) exposes presentation eligibility and suppresses presentation to hidden or minimized native windows while keeping viewport rendering available. Two Blocked rows move to Implemented. Coverage is **13,985/18,900 (73.99%)**, with 1,124 Partial, 269 Unimplemented, 3,522 Blocked, 8,393 Excluded and zero unmapped.
 
 [Configured project recording](../components/movie-writing.md#recording-the-configured-project) combines the configured scene or custom loop with the existing movie writer lifecycle. Coverage remains **13,983/18,900 (73.98%)**, with 1,124 Partial, 269 Unimplemented, 3,524 Blocked, 8,393 Excluded and zero unmapped. The custom loop selector still needs stripped and AOT script registration.

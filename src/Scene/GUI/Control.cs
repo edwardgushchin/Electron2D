@@ -791,6 +791,7 @@ public partial class Control : CanvasItem
         if (minimum == _lastMinimumSize) return;
         _lastMinimumSize = minimum;
         Reflow();
+        if (Parent is Window { WrapControls: true } window) window.ChildControlsChanged();
         BeginEventEmission(_publisherMinimumSizeChanged.Handlers)?.Invoke();
     }
 
@@ -802,6 +803,7 @@ public partial class Control : CanvasItem
         if (maximum == _lastMaximumSize) return;
         _lastMaximumSize = maximum;
         Reflow();
+        if (Parent is Window { WrapControls: true } window) window.ChildControlsChanged();
         BeginEventEmission(_publisherMaximumSizeChanged.Handlers)?.Invoke();
     }
 

@@ -1,6 +1,12 @@
 {
   "mappings": [
     {
+      "godot": "Window::method:child_controls_changed()",
+      "electron2d": "method:Electron2D.Window.ChildControlsChanged()",
+      "state": "Partial",
+      "reason": "ADRs 0008/0028/0040: deferred fitting grows visible embedded and native windows from current child bounds, with coalescing, owner/lifetime guards and native resize acknowledgement. Trigger: combine authored SDL size limits with a separate live content minimum for window-manager-driven resizes, including atomic updates when a new maximum is smaller."
+    },
+    {
       "godot": "Window::method:can_draw()",
       "electron2d": "method:Electron2D.Window.CanDraw()",
       "reason": "ADRs 0028/0040: uses current native eligibility or attached embedded visibility under the scene owner guard."
@@ -10601,7 +10607,6 @@
       "state": "Blocked",
       "reason": "First typed GUI, text and theme integration with Window after the renderer (ADRs 0008 and 0028).",
       "godot": [
-        "Window::method:child_controls_changed()",
         "Window::method:is_using_font_oversampling()",
         "Window::method:set_use_font_oversampling(bool:)",
         "Window::property:accessibility_description",

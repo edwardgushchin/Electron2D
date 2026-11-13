@@ -259766,6 +259766,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.ChildControlsChanged()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "ChildControlsChanged",
+    "signature": "public System.Void ChildControlsChanged()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
