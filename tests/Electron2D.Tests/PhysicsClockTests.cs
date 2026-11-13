@@ -10,6 +10,8 @@ internal static class PhysicsClockTests
         var scale = Engine.TimeScale;
         try
         {
+            VerifyDirectTreeClock();
+            SceneMultiplayerTests.VerifyFramePhase();
             VerifyWorldClock();
             VerifyJitterBoundary();
         }
@@ -23,6 +25,34 @@ internal static class PhysicsClockTests
             ProjectSettings.FlushChanges();
         }
         Console.WriteLine("Public physics clock passed: actual CPU ticks/motion, frame order, scaling, catch-up, feature capture and 0/0 warmed managed bytes.");
+    }
+
+    private static void VerifyDirectTreeClock()
+    {
+        using var tree = new SceneTree(new Node());
+        using var other = new SceneTree(new Node());
+        var starts = new List<long>();
+        tree.PhysicsFrameStarted += source => starts.Add(source.GetFrame());
+        Check(tree.GetFrame() == 0 && other.GetFrame() == 0, "Each tree starts at frame zero.");
+        tree.ProcessFrame(.1);
+        Check(tree.GetFrame() == 0, "Idle frames do not advance the fixed clock.");
+        try { tree.PhysicsFrame(double.NaN); throw new Exception("Invalid delta was accepted."); }
+        catch (ArgumentOutOfRangeException) { }
+        Check(tree.GetFrame() == 0 && starts.Count == 0, "Invalid input consumes no fixed frame.");
+
+        tree.Paused = true;
+        tree.PhysicsFrame(0);
+        Check(tree.GetFrame() == 1 && starts.SequenceEqual([1L]), "Paused zero-delta fixed frame publishes its index.");
+        Check(Task.Run(tree.GetFrame).GetAwaiter().GetResult() == 1, "Off-owner observers can read the published frame.");
+        Check(other.GetFrame() == 0, "Stepping one tree does not affect another.");
+
+        tree.PhysicsFrameStarted += source => source.PhysicsFrame(0);
+        try { tree.PhysicsFrame(0); throw new Exception("Frame reentry was accepted."); }
+        catch (AggregateException error) when (error.InnerExceptions.Any(value => value is InvalidOperationException)) { }
+        Check(tree.GetFrame() == 2 && starts.SequenceEqual([1L, 2L]), "The accepted frame counts once despite the failed callback.");
+        tree.Dispose();
+        try { _ = tree.GetFrame(); throw new Exception("Disposed clock was read."); }
+        catch (ObjectDisposedException) { }
     }
 
     private static void VerifyWorldClock()
@@ -53,7 +83,8 @@ internal static class PhysicsClockTests
             Check(ReferenceEquals(current, tree) && Engine.IsInPhysicsFrame, "Frame event has its tree and fixed lane.");
             if (starts == 0) Check(Task.Run(static () => Engine.IsInPhysicsFrame).GetAwaiter().GetResult(),
                 "The fixed phase is a process-wide snapshot, including an off-owner observer.");
-            Check(++starts == body.FixedCalls + 1, "Frame event precedes every node fixed callback.");
+            Check(++starts == body.FixedCalls + 1 && current.GetFrame() == starts,
+                "Each published fixed frame number precedes its node fixed callback.");
             Check(PhysicsServer.SpaceGetTick(world.Space) == (ulong)body.Integrations, "Frame event precedes the numerical interval.");
         };
         Engine.Start(tree);

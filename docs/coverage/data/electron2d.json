@@ -196135,6 +196135,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneTree.GetFrame()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "GetFrame",
+    "signature": "public System.Int64 GetFrame()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneTree.GetMultiplayer(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",

@@ -1,3 +1,5 @@
+[SceneTree fixed-frame numbering](../components/scene-tree.md#runtime-flow) supplies the public fixed-frame index and verifies the frame-start phases. One Unimplemented and one Partial row move to Implemented. Coverage is **13,961/18,900 (73.87%)**, with 1,124 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [BMP loading](../components/images.md#bmp-loading) uses a bounded managed decoder for packed, indexed and RLE data. The BMP buffer row moves to Implemented. Coverage is **13,959/18,900 (73.86%)**, with 1,125 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [Image alpha processing](../components/images.md#alpha-edge-repair-and-premultiplication) preserves authored mip levels during edge repair and premultiplication. Two rows move to Implemented. Coverage is **13,958/18,900 (73.85%)**, with 1,126 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

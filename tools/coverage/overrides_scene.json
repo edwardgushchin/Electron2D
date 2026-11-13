@@ -780,8 +780,12 @@
     {
       "electron2d": "event:Electron2D.SceneTree.ProcessFrameStarted()",
       "godot": "SceneTree::signal:process_frame()",
-      "state": "Partial",
-      "reason": "Typed frame-start event; exact signal ordering requires audit under ADR 0002."
+      "reason": "Typed idle-frame notification with scene tree sender."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneTree.GetFrame()",
+      "godot": "SceneTree::method:get_frame()",
+      "reason": "Typed signed 64-bit fixed-frame index."
     },
     {
       "electron2d": "method:Electron2D.Engine.GetSingleton(System.String)",
@@ -11849,6 +11853,16 @@
       ],
       "state": "Excluded",
       "reason": "Pinned doc/classes/Viewport.xml at ed1daf0bf001b61586d9930840f2f1394092c079 has deprecated=\"Use [method push_input] instead.\" ADR 0004 excludes deprecated declarations; use Viewport.PushInput. No implementation trigger."
+    },
+    {
+      "godot": ["SceneTree::method:get_frame()"],
+      "state": "Implemented",
+      "reason": "ADR 0006: atomic signed 64-bit fixed-frame index starts at zero per tree and advances on accepted fixed frames, including paused and zero-delta frames. Idle or rejected calls leave it unchanged. PhysicsClockTests covers direct and Engine-driven CPU steps, callback observation, off-owner reads, and failure without replay."
+    },
+    {
+      "godot": ["SceneTree::signal:process_frame()"],
+      "state": "Implemented",
+      "reason": "ADRs 0002/0006: typed idle event before transform delivery and node callbacks. ADR 0094 deliberately retains automatic multiplayer polling after the event. The managed SceneMultiplayer phase fixture verifies ordering and failure continuation."
     },
     {
       "godot": [

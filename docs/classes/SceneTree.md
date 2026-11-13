@@ -96,6 +96,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false, bool ignoreTimeScale = false)`](#m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean-system-boolean) | Creates a one-shot timer owned and processed by this tree. |
 | [`public Tween CreateTween()`](#m-electron2d-scenetree-createtween) | Creates a valid tween processed by this tree. |
 | [`public IReadOnlyList<Tween> GetProcessedTweens()`](#m-electron2d-scenetree-getprocessedtweens) | Returns the tweens currently registered for processing. |
+| [`public long GetFrame()`](#m-electron2d-scenetree-getframe) | Returns the current fixed-frame number of this tree. |
 | [`public void ProcessFrame(double delta)`](#m-electron2d-scenetree-processframe-system-double) | Runs one host-driven process frame, process timers, process tweens, and one deferred safe point. |
 | [`public void PhysicsFrame(double delta)`](#m-electron2d-scenetree-physicsframe-system-double) | Runs physics callbacks, body/joint simulation and area monitoring before physics timers and tweens. |
 | [`public void SetInputAsHandled()`](#m-electron2d-scenetree-setinputashandled) | Marks the input event currently being dispatched as handled. |
@@ -364,6 +365,13 @@ Returns the tweens currently registered for processing.
 
 - `InvalidOperationException`: The method is called from a thread other than the owner thread.
 - `ObjectDisposedException`: The tree has been finalized, or disposal has started or finished.
+
+<a id="m-electron2d-scenetree-getframe"></a>
+### `public long GetFrame()`
+
+Returns the current fixed-frame number of this tree. The initial value is zero. Each accepted fixed frame advances the number before pending physics transform notifications and `PhysicsFrameStarted`. Paused and zero-delta fixed frames count, including accepted frames that report callback errors. Idle frames and rejected calls leave the value unchanged.
+
+The snapshot can be read off the owner thread. A disposed tree rejects the read with `ObjectDisposedException`. The counter is local to the tree. See [frame scheduling](../components/scene-tree.md#runtime-flow).
 
 <a id="m-electron2d-scenetree-processframe-system-double"></a>
 ### `public void ProcessFrame(double delta)`
@@ -749,14 +757,14 @@ later subscribers of this event invocation from running.
 <a id="e-electron2d-scenetree-processframestarted"></a>
 ### `public event Action<SceneTree> ProcessFrameStarted`
 
-Occurs before the idle transform-delivery phase and eligible node process callbacks.
+Occurs before automatic multiplayer polling, idle transform delivery and eligible node process callbacks. `GetFrame()` observes the latest fixed frame.
 
 **Remarks:** A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.
 
 <a id="e-electron2d-scenetree-physicsframestarted"></a>
 ### `public event Action<SceneTree> PhysicsFrameStarted`
 
-Occurs after pending transform delivery and before eligible node physics-process callbacks.
+Occurs after pending transform delivery and before eligible node physics-process callbacks. `GetFrame()` already returns the new fixed-frame number.
 
 **Remarks:** A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.
 

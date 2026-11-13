@@ -90,7 +90,7 @@ public sealed partial class SceneTree : MainLoop
     private int _activeExecution;
     private int _lifecycleExecutionDepth;
     private ulong _processFrameCount;
-    private ulong _physicsFrameCount;
+    private long _physicsFrameCount;
 
     /// <summary>Creates and immediately activates a scene tree rooted at <paramref name="root"/>.</summary>
     /// <param name="root">A live, detached, parentless node that is not queued for deletion.</param>
@@ -243,17 +243,20 @@ public sealed partial class SceneTree : MainLoop
         }
     }
 
-    /// <summary>Gets the number of completed physics-frame attempts.</summary>
+    /// <summary>Returns the current fixed-frame number of this tree.</summary>
+    /// <returns>Zero before the first fixed frame. Each accepted fixed frame advances the number once before pending physics transform notifications and the frame-start event.</returns>
+    /// <remarks>This snapshot may be read off the owner thread. Paused and zero-delta fixed frames advance it, including frames that report callback errors.</remarks>
+    /// <exception cref="ObjectDisposedException">The tree is disposing on another thread or has finished disposing.</exception>
+    public long GetFrame()
+    {
+        ThrowIfDisposed();
+        return Interlocked.Read(ref _physicsFrameCount);
+    }
+
+    /// <summary>Gets the number of accepted physics-frame attempts.</summary>
     /// <value>The number of valid calls to <see cref="PhysicsFrame"/>, including calls that reported callback failures.</value>
     /// <exception cref="ObjectDisposedException">The tree is disposing on another thread or has finished disposing.</exception>
-    internal ulong PhysicsFrameCount
-    {
-        get
-        {
-            ThrowIfDisposed();
-            return _physicsFrameCount;
-        }
-    }
+    internal ulong PhysicsFrameCount => unchecked((ulong)GetFrame());
 
     /// <summary>Gets the number of nodes currently inside this tree.</summary>
     /// <value>The current hierarchy size, including <see cref="Root"/>, or zero after finalization releases the hierarchy.</value>
@@ -418,12 +421,12 @@ public sealed partial class SceneTree : MainLoop
     public event Action<SceneTree, Node>? NodeRenamed { add => _publisherNodeRenamed.Add(value); remove => _publisherNodeRenamed.Remove(value); }
     private EventPublisher<Action<SceneTree, Node>> _publisherNodeRenamed;
 
-    /// <summary>Occurs before the idle transform-delivery phase and eligible node process callbacks.</summary>
+    /// <summary>Occurs before automatic multiplayer polling, pending idle transform delivery, and eligible node process callbacks.</summary>
     /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
     public event Action<SceneTree>? ProcessFrameStarted { add => _publisherProcessFrameStarted.Add(value); remove => _publisherProcessFrameStarted.Remove(value); }
     private EventPublisher<Action<SceneTree>> _publisherProcessFrameStarted;
 
-    /// <summary>Occurs after pending transform delivery and before eligible node physics-process callbacks.</summary>
+    /// <summary>Occurs after the fixed-frame number advances and pending physics transforms are delivered, before eligible node physics-process callbacks.</summary>
     /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
     public event Action<SceneTree>? PhysicsFrameStarted { add => _publisherPhysicsFrameStarted.Add(value); remove => _publisherPhysicsFrameStarted.Remove(value); }
     private EventPublisher<Action<SceneTree>> _publisherPhysicsFrameStarted;
@@ -1450,7 +1453,7 @@ public sealed partial class SceneTree : MainLoop
         {
             if (captureInterpolation) CapturePhysicsInterpolation(start: true, ref errors);
             if (physics)
-                _physicsFrameCount++;
+                Interlocked.Increment(ref _physicsFrameCount);
             else
                 _processFrameCount++;
 

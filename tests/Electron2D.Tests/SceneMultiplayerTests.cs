@@ -72,9 +72,10 @@ internal static class SceneMultiplayerTests
     {
         private MultiplayerPeer? _peer;
         internal int Count;
+        internal Action? OnPoll;
         internal string Root = "";
         public override MultiplayerPeer? MultiplayerPeer { get { CheckMultiplayer(); return _peer; } set { CheckMultiplayer(); _peer = value; } }
-        public override void Poll() { CheckMultiplayer(); Count++; }
+        public override void Poll() { CheckMultiplayer(); Count++; OnPoll?.Invoke(); }
         public override int GetUniqueID() { CheckMultiplayer(); return _peer?.GetUniqueID() ?? 1; }
         public override int[] GetPeers() { CheckMultiplayer(); return []; }
         public override int GetRemoteSenderID() { CheckMultiplayer(); return 0; }
@@ -87,6 +88,28 @@ internal static class SceneMultiplayerTests
         public override void RPC<TNode, T>(int peer, TNode node, RPCMethod<TNode, T> method, T arguments)
         { CheckMultiplayer(); var storage = new byte[method.GetEncodedSize(arguments)]; method.Encode(arguments, storage); method.InvokeEncoded(node, storage); Count++; }
     }
+    internal static void VerifyFramePhase()
+    {
+        using var api = new CustomAPI();
+        var phases = new List<string>();
+        using var tree = new SceneTree(new FrameNode(() => phases.Add("node")) { ProcessEnabled = true });
+        tree.SetMultiplayer(api);
+        api.OnPoll = () => phases.Add("poll");
+        tree.ProcessFrameStarted += source =>
+        {
+            Check(ReferenceEquals(source, tree) && source.GetFrame() == 0, "Idle start sees the last fixed frame.");
+            phases.Add("start");
+            throw new ArithmeticException("Idle start probe.");
+        };
+        Reject<AggregateException>(() => tree.ProcessFrame(0));
+        Check(phases.SequenceEqual(["start", "poll", "node"]), "Idle start precedes polling and nodes even when a subscriber fails.");
+    }
+
+    private sealed class FrameNode(Action process) : Node
+    {
+        protected override void OnProcess(double delta) => process();
+    }
+
     private static void LocalAndBranches()
     {
         using (var peer = new ChangingPeer()) using (var scene = new SceneMultiplayer { MultiplayerPeer = peer }) { peer.Admit(2); peer.Admit(3); peer.Change = true; scene.SendBytes("snapshot"u8); Check(peer.Sent == 2 && scene.GetPeers().Length == 3, "Managed transport admission during send preserves captured recipients."); }

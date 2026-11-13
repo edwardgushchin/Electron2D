@@ -4,8 +4,8 @@ Last updated: 2026-10-27
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1125 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 273 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
+1. Close 1124 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 272 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking. Advance the self-hosted editor through the dependency stages below rather than waiting for the whole runtime backlog. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 [External text providers](../components/text-server.md#external-provider-prerequisite) first require a provider-aware consumer layout/font-cache boundary, callback-safe read lifetimes, coherent glyph/run/paragraph metadata, primary-selection invalidation and real drawing. Registry methods and virtual facades alone do not supply those native consumers.
@@ -41,7 +41,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Performance](classes/Performance.md) | 2 | 2 |
 | [DirAccess](classes/DirAccess.md) | 1 | 39 |
 | [Input](classes/Input.md) | 1 | 34 |
-| [SceneTree](classes/SceneTree.md) | 1 | 7 |
 | [Environment](classes/Environment.md) | 0 | 40 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 32 |
 | [Image](classes/Image.md) | 0 | 26 |
@@ -58,6 +57,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [RDTextureFormat](classes/RDTextureFormat.md) | 0 | 7 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 6 |
 | [NavigationServer2D](classes/NavigationServer2D.md) | 0 | 6 |
+| [SceneTree](classes/SceneTree.md) | 0 | 6 |
 | [ImageTexture](classes/ImageTexture.md) | 0 | 5 |
 | [InputEventMouseMotion](classes/InputEventMouseMotion.md) | 0 | 5 |
 | [ResourceLoader](classes/ResourceLoader.md) | 0 | 4 |

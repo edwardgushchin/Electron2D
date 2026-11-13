@@ -20,6 +20,8 @@ Last updated: 2026-11-12
 
 [Color authoring](../components/color-authoring.md#desktop-and-application-sampling) connects the picker and its swatch button to live Windows and native X11 desktop pixels with an owned preview and cancelable pointer input. Embedded root windows retain application sampling.
 
+`SceneTree.GetFrame()` exposes the tree-local fixed-frame number to simulation code and host-driven tests. Direct and Engine-scheduled ticks share the [same publication boundary](../components/scene-tree.md#runtime-flow).
+
 ## Node scene-authoring metadata
 
 [Node authoring state](../classes/Node.md#scene-authoring-state) supplies stored descriptions, transient folding, explicit edited-subtree membership and target-owned editable flags. [PackedScene](../classes/PackedScene.md#editable-ownership-capture) includes editable-owned physical children in its flattened graph and restores typed origin/flag metadata from fresh-process files. Authoring observations cover persistent connections and groups; physical owner/borrow/capture guards remain applicable. Linked nested/inherited override graphs, full editor UI, hardware GPU and full-goal acceptance remain open.
