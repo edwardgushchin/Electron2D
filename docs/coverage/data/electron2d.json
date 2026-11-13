@@ -155860,6 +155860,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.IsSTDOUTVerbose()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "IsSTDOUTVerbose",
+    "signature": "public static System.Boolean IsSTDOUTVerbose()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.IsSandboxed()",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -155954,6 +155967,25 @@
         "name": "error",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.LogVerbose(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "LogVerbose",
+    "signature": "public static System.Void LogVerbose(System.String message)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -297216,6 +297248,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.VerboseSTDOUT()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "VerboseSTDOUT",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E VerboseSTDOUT { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {

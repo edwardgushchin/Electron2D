@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-26
 
+The [verbose stdout setting](diagnostics.md#verbose-stdout) uses the ordinary typed setting and feature override flow. Engine startup samples it for each lifecycle.
+
 ## Scope
 
 The built-in NodeNameNumberSeparator now drives [readable node collision names](scene-hierarchy.md#child-name-collisions), with zero default, validated 0–3 values, live feature overrides and independent-registry file persistence. Existing names remain unchanged until a naming operation resolves a collision.

@@ -27,6 +27,107 @@ internal static class DiagnosticsTests
     }
     [MethodImpl(MethodImplOptions.NoInlining)] private static ScriptBacktrace CaptureAtKnownFunction() => Engine.CaptureScriptBacktraces().Single();
 
+    private sealed class VerboseLoop(Action initialize, Action? finalize = null) : MainLoop
+    {
+        protected override void OnInitialize() => initialize();
+        protected override void OnFinalize() => finalize?.Invoke();
+    }
+
+    internal static void RunVerbose(string[] arguments)
+    {
+        var switchEnabled = arguments[0] == "enabled";
+        using var receiver = new Receiver();
+        var stdout = Console.Out;
+        var previousOutput = Engine.PrintToSTDOUT;
+        var setting = ProjectSettings.VerboseSTDOUT;
+        var directory = Directory.CreateTempSubdirectory("electron2d-verbose-");
+        var path = System.IO.Path.Combine(directory.FullName, "test.e2dres");
+        var loadMessage = "Resource load requested: " + path;
+        using var output = new StringWriter();
+        EOs.AddLogger(receiver);
+        try
+        {
+            Console.SetOut(output);
+            Engine.PrintToSTDOUT = true;
+            Check(!ProjectSettings.Get(setting) && EOs.IsSTDOUTVerbose() == switchEnabled, "The default and process switches are distinct.");
+            EOs.LogVerbose("before run");
+            Check(receiver.Messages.Contains(("before run", false)) == switchEnabled &&
+                output.ToString().Contains("before run", StringComparison.Ordinal) == switchEnabled, "Host switches gate the actual message and stdout.");
+            Reject<ArgumentNullException>(() => EOs.LogVerbose(null!));
+
+            var user = directory.CreateSubdirectory("user").FullName;
+            using (var saved = new ProjectSettingsRegistry(directory.FullName, user))
+            {
+                Check(!saved.Get(setting), "The typed definition is registered with its false default.");
+                saved.Set(setting, true);
+                saved.Save();
+            }
+            using (var loaded = new ProjectSettingsRegistry(directory.FullName, user))
+            {
+                loaded.Load();
+                Check(loaded.Get(setting), "The verbose setting survives a project-file round trip.");
+            }
+
+            using (var resource = new NavigationPolygon()) ResourceSaver.Save(resource, path);
+            ProjectSettings.SetFeatureOverride(setting, "verbose_fixture", true);
+            ProjectSettings.AddCustomFeature("verbose_fixture");
+            using (var loop = new VerboseLoop(() =>
+            {
+                Check(EOs.IsSTDOUTVerbose(), "The selected override is visible inside initialization.");
+                EOs.LogVerbose("initialization");
+            }, () => Check(EOs.IsSTDOUTVerbose(), "The run's setting stays active during finalization.")))
+            {
+                Engine.Start(loop);
+                try
+                {
+                    ProjectSettings.ClearFeatureOverride(setting, "verbose_fixture");
+                    Check(EOs.IsSTDOUTVerbose(), "A setting change takes effect on the next run.");
+                    Engine.PrintToSTDOUT = false;
+                    EOs.LogVerbose("suppressed physical output");
+                    Check(receiver.Messages.Contains(("suppressed physical output", false)) &&
+                        !output.ToString().Contains("suppressed physical output", StringComparison.Ordinal), "Physical suppression still delivers verbose callbacks.");
+
+                    var nested = 0;
+                    receiver.MessageAction = (message, _) =>
+                    {
+                        if (message != loadMessage || Interlocked.Increment(ref nested) != 1) return;
+                        using var resource = ResourceLoader.Load<Resource>(path, ResourceLoader.CacheMode.Ignore);
+                    };
+                    using (var resource = ResourceLoader.Load<Resource>(path, ResourceLoader.CacheMode.Ignore))
+                        Check(resource.ResourcePath == path && nested == 1, "A logger can load the reported resource without recursive delivery.");
+                    receiver.MessageAction = null;
+                    ResourceLoader.LoadThreadedRequest<Resource>(path, cacheMode: ResourceLoader.CacheMode.Ignore);
+                    using var threaded = ResourceLoader.LoadThreadedGet<Resource>(path);
+                    Check(threaded.ResourcePath == path && receiver.Messages.Count(entry => entry.Text == loadMessage) == 2,
+                        "Synchronous and threaded public loads report through the same verbose stream.");
+                }
+                finally { Engine.Stop(); }
+            }
+            Check(receiver.Messages.Contains(("initialization", false)) && EOs.IsSTDOUTVerbose() == switchEnabled,
+                "Shutdown retires the sampled setting and retains the command-line override.");
+            using (var loop = new VerboseLoop(() => Check(EOs.IsSTDOUTVerbose() == switchEnabled, "The next run resamples settings.")))
+            {
+                Engine.Start(loop);
+                Engine.Stop();
+            }
+            ProjectSettings.Set(setting, true);
+            using var failing = new VerboseLoop(() => throw new InvalidOperationException("startup failure"));
+            Reject<InvalidOperationException>(() => Engine.Start(failing));
+            Check(EOs.IsSTDOUTVerbose() == switchEnabled, "Failed startup retires the sampled setting.");
+        }
+        finally
+        {
+            ProjectSettings.Reset(setting);
+            ProjectSettings.ClearFeatureOverride(setting, "verbose_fixture");
+            ProjectSettings.RemoveCustomFeature("verbose_fixture");
+            EOs.RemoveLogger(receiver);
+            Engine.PrintToSTDOUT = previousOutput;
+            Console.SetOut(stdout);
+            directory.Delete(recursive: true);
+        }
+        Console.WriteLine("Verbose diagnostics settings, host switches, lifecycle and resource requests passed.");
+    }
+
     internal static void RunPortable()
     {
         using var receiver = new Receiver(); var output = Engine.PrintToSTDOUT; var errors = Engine.PrintErrorMessages;

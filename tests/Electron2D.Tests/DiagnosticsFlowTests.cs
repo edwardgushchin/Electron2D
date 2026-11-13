@@ -20,11 +20,12 @@ internal static class DiagnosticsFlowTests
     internal static void Run(string backend)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        ProjectSettings.Set(ProjectSettings.VerboseSTDOUT, true);
         using var receiver = new Receiver(); EOs.AddLogger(receiver);
         using var window = new Window { Size = new(40, 40) }; var canvas = new Entity(); window.AddChild(canvas);
         canvas.Draw += item => item.DrawRect(new(10, 10, 12, 12), Colors.Lime);
         using var target = window.GetTexture(); var frames = 0; var seen = false; long before = 0, allocated = -1;
-        window.Ready += _ => { EOs.LogMessage("ready diagnostic"); Task.Run(() => EOs.LogMessage("worker diagnostic")).GetAwaiter().GetResult(); RenderingServer.FramePostDraw += Capture; };
+        window.Ready += _ => { EOs.LogVerbose("ready diagnostic"); Task.Run(() => EOs.LogVerbose("worker diagnostic")).GetAwaiter().GetResult(); RenderingServer.FramePostDraw += Capture; };
         void Capture()
         {
             frames++;
@@ -51,6 +52,8 @@ internal static class DiagnosticsFlowTests
         Exception? caught = null;
         try { Engine.Run(badWindow); } catch (Exception error) { caught = error; }
         if (caught is not AggregateException aggregate || !aggregate.Flatten().InnerExceptions.Any(error => ReferenceEquals(error, failure)) || receiver.Errors.Count != initialErrors + 1 || Engine.MainLoop is not null || RenderingServer.IsAvailable) throw new InvalidOperationException("Native failure identity, exactly-once delivery or cleanup changed.");
+        ProjectSettings.Reset(ProjectSettings.VerboseSTDOUT);
+        if (EOs.IsSTDOUTVerbose()) throw new InvalidOperationException("The native window left its verbose mode active after cleanup.");
         var snapshot = receiver.Errors.Last();
         if (!snapshot.Code.Contains(nameof(AggregateException)) || snapshot.Function.Length == 0 || snapshot.Traces.Length != 1 || snapshot.Traces[0].IsEmpty()) throw new InvalidOperationException("Native failure omitted its C# metadata.");
         Console.WriteLine($"Diagnostics {backend}: retained native host/worker delivery, actual pixel, 64 warmed full frames ({allocated} B), exactly-once failure/throwing logger and cleanup passed.");

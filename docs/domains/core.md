@@ -390,6 +390,8 @@ Factory construction provenance is shared by resource, script, file and scene cr
 
 The typed project schema includes ordered LocaleResourceRemaps with compiled JSON persistence. Localization commits Culture/options, then ResourceLoader refreshes associated live file resources before current-MainLoop notification. This is cold allocation-capable file work; a prepared empty map preserves zero owner-managed bytes. String-alias normalization in startup locale settings remains distinct from typed CultureInfo assignment. See [localized resources](../components/localized-resources.md).
 
+[Verbose diagnostics](../components/diagnostics.md#verbose-stdout) let a project or host launch opt into resource request messages and conditional application messages through the ordinary logger stream.
+
 ## Host platform integration
 
 `OS.GetEntropy` supplies caller-owned cryptographic random bytes from the host runtime without opening native engine services. [Host entropy](../components/host-platform.md#host-entropy)

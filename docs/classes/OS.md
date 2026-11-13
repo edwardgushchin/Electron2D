@@ -295,6 +295,10 @@ finalization. Native naming changes no managed Thread.Name and does not truncate
 overlong UTF-8 input. Unsupported profiles fail explicitly. See the
 [complete behavior and verification](../components/os-thread-identity.md).
 
+## Verbose diagnostics
+
+`OS.IsSTDOUTVerbose()` reports whether the current engine run or process arguments enable verbose output. `OS.LogVerbose(string message)` delivers a message to registered loggers and, when `Engine.PrintToSTDOUT` is enabled, to stdout. Null messages throw `ArgumentNullException`. See [verbose stdout](../components/diagnostics.md#verbose-stdout) for setting precedence and lifecycle.
+
 ## Host entropy
 
 `OS.GetEntropy(int size)` returns the requested number of cryptographically secure bytes from the host runtime provider. Each positive request returns a caller-owned array. Zero returns an empty array. Negative sizes throw `ArgumentOutOfRangeException` and provider failures propagate. Calls can run concurrently before engine startup. [Host entropy](../components/host-platform.md#host-entropy)

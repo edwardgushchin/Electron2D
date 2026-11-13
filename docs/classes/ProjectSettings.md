@@ -25,6 +25,8 @@ MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (4800
 Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Config/ProjectSettings.API.cs).
 
 
+`VerboseSTDOUT` is the false-by-default typed setting `debug/settings/stdout/verbose_stdout`. Startup samples its active feature override. See [verbose diagnostics](../components/diagnostics.md#verbose-stdout).
+
 ## MeshLODThreshold
 
 `ProjectSettings.MeshLODThreshold` registers the float setting

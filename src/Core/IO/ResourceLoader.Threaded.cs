@@ -65,6 +65,7 @@ public sealed partial class ResourceLoader
     public static void LoadThreadedRequest<TResource>(string path, bool useSubThreads = false, CacheMode cacheMode = CacheMode.Reuse, CancellationToken cancellationToken = default, SceneTree? publicationTree = null) where TResource : Resource
     {
         path = CheckFilePath(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); cancellationToken.ThrowIfCancellationRequested();
+        RuntimeDiagnostics.Instance.ReportResourceRequest(path);
         publicationTree ??= Engine.MainLoop as SceneTree;
         if (publicationTree is not null) { ObjectDisposedException.ThrowIf(publicationTree.IsDisposed, publicationTree); }
         var localization = LocaleMap(); var locale = TranslationServer.Culture.Name;

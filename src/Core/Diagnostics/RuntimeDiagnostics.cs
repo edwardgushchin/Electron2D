@@ -10,7 +10,32 @@ internal sealed unsafe class RuntimeDiagnostics
     internal static readonly RuntimeDiagnostics Instance = new();
     private readonly object _gate = new();
     private Logger[] _loggers = [];
-    private bool _stdout = true, _errors = true;
+    private readonly bool _commandLineVerbose = HasVerboseSwitch(Environment.GetCommandLineArgs());
+    private bool _stdout = true, _errors = true, _projectVerbose;
+
+    internal bool IsSTDOUTVerbose => _commandLineVerbose || Volatile.Read(ref _projectVerbose);
+
+    private static bool HasVerboseSwitch(ReadOnlySpan<string> arguments)
+    {
+        for (var i = 1; i < arguments.Length; i++)
+        {
+            var argument = arguments[i];
+            if (argument is "--" or "++") break;
+            if (argument is "--verbose" or "-v") return true;
+        }
+        return false;
+    }
+
+    internal void BeginRun() => Volatile.Write(ref _projectVerbose, ProjectSettings.GetWithOverride(ProjectSettings.VerboseSTDOUT));
+    internal void EndRun() => Volatile.Write(ref _projectVerbose, false);
+
+    internal void ReportResourceRequest(string path)
+    {
+        if (!IsSTDOUTVerbose || _dispatchDepth != 0 || string.IsNullOrEmpty(path)) return;
+        try { Message($"Resource load requested: {path}", error: false); }
+        catch (Exception failure) { CallbackFailure(failure); }
+    }
+
     [ThreadStatic] private static int _dispatchDepth;
     private sealed record NativeSink(nint Output, nint Data, SDL3.SDL.LogOutputFunction? Root);
     private nint _nativeHandle;

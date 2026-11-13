@@ -1,3 +1,5 @@
+[Verbose stdout diagnostics](../components/diagnostics.md#verbose-stdout) connect the typed setting, host switches, message API and resource loading. One Unimplemented, one Partial and one Blocked row move to Implemented. Coverage is **13,969/18,900 (73.91%)**, with 1,120 Partial, 269 Unimplemented, 3,542 Blocked, 8,393 Excluded and zero unmapped.
+
 [Host version and device identity](../components/host-platform.md#os-version-and-device-model) adds native release aliases and device-model queries. Two Unimplemented rows move to Partial pending their remaining host runs. Coverage is **13,966/18,900 (73.89%)**, with 1,121 Partial, 270 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [Weighted same-polygon navigation](../components/navigation-maps.md#weighted-routes-within-one-polygon) compares the direct route with cheaper link chains. The exact query rows remain Partial for distinct entry positions on one portal and larger tied corridors. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

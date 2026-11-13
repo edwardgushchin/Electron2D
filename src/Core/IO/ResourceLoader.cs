@@ -78,7 +78,11 @@ public sealed partial class ResourceLoader : ElectronObject
     /// <exception cref="FormatException">Encoded audio is malformed or outside its verified channel profile.</exception>
     /// <exception cref="InvalidDataException">The encoded resource is malformed or exceeds supported limits.</exception>
     /// <exception cref="System.Security.Cryptography.CryptographicException">Certificate/key input is malformed or does not match the requested key role.</exception>
-    public static TResource Load<TResource>(string path, CacheMode cacheMode = CacheMode.Reuse) where TResource : Resource => (TResource)LoadCore(path, cacheMode, typeof(TResource));
+    public static TResource Load<TResource>(string path, CacheMode cacheMode = CacheMode.Reuse) where TResource : Resource
+    {
+        RuntimeDiagnostics.Instance.ReportResourceRequest(path);
+        return (TResource)LoadCore(path, cacheMode, typeof(TResource));
+    }
 
     internal static Resource LoadCore(string path, CacheMode cacheMode, Type requestedType)
     {

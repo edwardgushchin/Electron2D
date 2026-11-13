@@ -71,6 +71,7 @@ public sealed partial class Engine
 
     private void ReleaseWindowRun()
     {
+        RuntimeDiagnostics.Instance.EndRun();
         Volatile.Write(ref _writeMoviePath, "");
         Volatile.Write(ref _mainLoop, null);
         OS.SetMainThreadOwner(0);
@@ -96,6 +97,7 @@ public sealed partial class Engine
         try
         {
             if (reserved) ValidateRunWindow(window);
+            RuntimeDiagnostics.Instance.BeginRun();
             if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
                 SDL3.SDL.SetMainReady();
             TranslationServer.LoadProjectLocalization();

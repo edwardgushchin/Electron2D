@@ -17,6 +17,22 @@ public sealed partial class OS
     /// <exception cref="ArgumentNullException">Logger is null.</exception>
     public static void RemoveLogger(Logger logger) => RuntimeDiagnostics.Instance.Remove(logger);
 
+    /// <summary>Reports whether verbose stdout diagnostics are enabled.</summary>
+    /// <returns>True for a host verbose switch or an active run with verbose diagnostics enabled.</returns>
+    /// <remarks>The physical stdout gate is independent of this mode.</remarks>
+    public static bool IsSTDOUTVerbose() => RuntimeDiagnostics.Instance.IsSTDOUTVerbose;
+
+    /// <summary>Writes a diagnostic message when verbose stdout diagnostics are enabled.</summary>
+    /// <param name="message">The diagnostic message delivered to stdout and registered loggers.</param>
+    /// <remarks>Physical output follows Engine.PrintToSTDOUT. A disabled verbose mode emits nothing.</remarks>
+    /// <exception cref="ArgumentNullException">The message is null.</exception>
+    /// <exception cref="IOException">The host output writer fails.</exception>
+    public static void LogVerbose(string message)
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        if (IsSTDOUTVerbose()) LogMessage(message);
+    }
+
     /// <summary>Sends an engine message to registered loggers and its permitted physical output stream.</summary>
     /// <param name="message">Diagnostic text; physical output appends a newline.</param>
     /// <param name="error">Whether to use stderr instead of stdout.</param>

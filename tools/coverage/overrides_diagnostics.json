@@ -1,6 +1,24 @@
 {
   "mappings": [
     {
+      "godot": "OS::method:is_stdout_verbose()",
+      "electron2d": "method:Electron2D.OS.IsSTDOUTVerbose()",
+      "state": "Implemented",
+      "reason": "ADR 0108: reports the effective startup-sampled setting or process switch. Manual and window runs sample before callbacks and retire on failure or shutdown; process switches persist. See docs/components/diagnostics.md#verbose-stdout."
+    },
+    {
+      "godot": "@GlobalScope::method:print_verbose()",
+      "electron2d": "method:Electron2D.OS.LogVerbose(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0108 typed C# projection: accepts a caller-formatted string, gates actual stdout and logger delivery on the shared verbose mode and respects the independent physical output flag."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/settings/stdout/verbose_stdout",
+      "electron2d": "property:Electron2D.ProjectSettings.VerboseSTDOUT()",
+      "state": "Implemented",
+      "reason": "ADRs 0019/0108: the false-by-default registered boolean uses ordinary typed persistence and feature overrides. Manual and window startup sample it before user callbacks, feeding real verbose resource-request and application diagnostics."
+    },
+    {
       "godot": "class:Logger",
       "electron2d": "T:Electron2D.Logger",
       "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
@@ -107,6 +125,15 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "OS::method:is_stdout_verbose()",
+        "@GlobalScope::method:print_verbose()",
+        "ProjectSettings::property:debug/settings/stdout/verbose_stdout"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0108: persistent typed setting and process switches feed the same startup-sampled mode for manual and windowed lifecycles. Real verbose messages and synchronous/threaded resource requests use ordinary Logger delivery and physical output gates. Windows managed and GPU/Compatibility profiles verify lifecycle and output; foreign packaged acceptance remains separate. See docs/components/diagnostics.md#verbose-stdout."
+    },
     {
       "godot": [
         "class:Logger",

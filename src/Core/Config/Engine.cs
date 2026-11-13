@@ -192,6 +192,7 @@ public sealed partial class Engine : ElectronObject
         OS.SetMainThreadOwner(Environment.CurrentManagedThreadId);
         try
         {
+            RuntimeDiagnostics.Instance.BeginRun();
             TextServerManager.LoadProjectDriver();
             Volatile.Write(ref _mainLoop, mainLoop);
             TranslationServer.LoadProjectLocalization();
@@ -210,6 +211,7 @@ public sealed partial class Engine : ElectronObject
             Volatile.Write(ref _mainLoop, null);
             OS.SetMainThreadOwner(0);
             Volatile.Write(ref _runtimeOwnerThreadId, 0);
+            RuntimeDiagnostics.Instance.EndRun();
             Volatile.Write(ref _runtimeState, RuntimeIdle);
             if (midiCloseFailure is not null) throw new AggregateException("Engine startup and MIDI cleanup failed.", error, midiCloseFailure);
             throw;
@@ -345,6 +347,7 @@ public sealed partial class Engine : ElectronObject
             Volatile.Write(ref _mainLoop, null);
             OS.SetMainThreadOwner(0);
             Volatile.Write(ref _runtimeOwnerThreadId, 0);
+            RuntimeDiagnostics.Instance.EndRun();
             Volatile.Write(ref _runtimeState, RuntimeIdle);
         }
         if (errors is { Count: 1 }) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(errors[0]).Throw();
