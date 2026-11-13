@@ -284,7 +284,10 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOY_MOTION") is { } joyM
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FRAME_RATE") is { } frameRateMode)
 {
     if (frameRateMode is "gpu" or "compatibility") FrameRateTests.Windowed(frameRateMode, args.Length == 0 ? null : int.Parse(args[0], System.Globalization.CultureInfo.InvariantCulture));
-    else if (frameRateMode == "invalid") FrameRateTests.InvalidLimit();
+    else if (frameRateMode is "delay-gpu" or "delay-compatibility")
+        FrameRateTests.WindowDelay(frameRateMode[6..], args.Length == 0 ? null : int.Parse(args[0], System.Globalization.CultureInfo.InvariantCulture));
+    else if (frameRateMode is "invalid" or "invalid-delay")
+        FrameRateTests.InvalidLimit(frameRateMode == "invalid" ? "--max-fps" : "--frame-delay");
     else FrameRateTests.Managed(frameRateMode == "command");
     return;
 }
@@ -375,6 +378,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_MOVIE") is { }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MOVIE_WRITER") is { } movieMode)
 {
     if (movieMode == "portable") MovieWriterTests.Portable();
+    else if (movieMode is "delay-gpu" or "delay-compatibility")
+        MovieWriterTests.NativeFrameDelay(movieMode[6..], IOPath.GetTempPath());
     else MovieWriterTests.Native(movieMode, Environment.GetEnvironmentVariable("ELECTRON2D_MOVIE_OUTPUT") ?? IOPath.Combine(IOPath.GetTempPath(), "electron2d-movie-" + movieMode));
     return;
 }

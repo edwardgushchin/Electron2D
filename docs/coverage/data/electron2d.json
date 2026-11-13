@@ -295197,6 +295197,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.FrameDelayMsec()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "FrameDelayMsec",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E FrameDelayMsec { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.FrameQueueSize()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

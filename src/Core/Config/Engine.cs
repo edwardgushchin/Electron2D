@@ -192,7 +192,7 @@ public sealed partial class Engine : ElectronObject
         OS.SetMainThreadOwner(Environment.CurrentManagedThreadId);
         try
         {
-            ConfigureFrameRateDiagnostics(windowed: false);
+            ConfigureFrameRateSettings(windowed: false);
             RuntimeDiagnostics.Instance.BeginRun();
             TextServerManager.LoadProjectDriver();
             Volatile.Write(ref _mainLoop, mainLoop);

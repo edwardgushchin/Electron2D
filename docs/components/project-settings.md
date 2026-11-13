@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-26
 
-The [verbose stdout setting](diagnostics.md#verbose-stdout) uses the ordinary typed setting and feature override flow. Engine startup samples it for each lifecycle.
+The [verbose stdout setting](diagnostics.md#verbose-stdout) uses the ordinary typed setting and feature override flow. Engine startup samples it for each lifecycle. The [frame-rate settings](engine-runtime.md#frame-rate-settings) use the same flow for window pacing and rate diagnostics.
 
 ## Scope
 

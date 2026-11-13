@@ -197,16 +197,7 @@ internal static class MovieWriterTests
         catch (AggregateException error) { Check(error.ToString().Contains("frame failure") && error.ToString().Contains("end failure"), "Both callback failures survive cleanup."); }
         writer.Fail = ""; writer.Resize = true; writer.Limit = 3; writer.Window = Scene(source);
         Engine.Run(writer.Window, Path.Combine(folder, "resize.movieprobe"), 59); writer.Resize = false;
-        writer.Limit = 2; writer.Window = Scene(source);
-        var priorContext = SynchronizationContext.Current; var context = new PumpContext(); SynchronizationContext.SetSynchronizationContext(context);
-        try
-        {
-            var pending = Engine.RunAsync(writer.Window, Path.Combine(folder, "async.movieprobe"), 59);
-            var deadline = System.Diagnostics.Stopwatch.StartNew();
-            while (!pending.IsCompleted) { if (deadline.Elapsed.TotalSeconds > 10) throw new TimeoutException("Async movie host did not finish."); context.Pump(); }
-            Check(pending.GetAwaiter().GetResult() == 17 && writer.Frames == 2, "Yielding recording uses the same owner and frame/audio flow.");
-        }
-        finally { SynchronizationContext.SetSynchronizationContext(priorContext); }
+        RunAsyncRecording(writer, source, folder);
         writer.Dispose();
         using (var unknown = new Window()) { Reject<NotSupportedException>(() => Engine.Run(unknown, Path.Combine(folder, "unknown.not-a-writer"))); Check(unknown.IsDisposed, "Unsupported output consumes/cleans a reserved root."); }
         File.WriteAllText(Path.Combine(folder, "sequence00000009.png"), "old-frame");
@@ -243,6 +234,36 @@ internal static class MovieWriterTests
         private sealed class BrokenInstance : AudioEffectInstance
         { protected override void OnProcess(ReadOnlySpan<Vector2> source, Span<Vector2> destination) => throw new FormatException("native effect failure"); }
     }
+    internal static void NativeFrameDelay(string backend, string folder)
+    {
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        using var source = Source();
+        using var writer = new Writer();
+        MovieWriter.AddWriter(writer);
+        RunAsyncRecording(writer, source, folder);
+        Console.WriteLine($"Fixed-rate {backend} recording bypassed the real-time frame delay.");
+    }
+
+    private static void RunAsyncRecording(Writer writer, AudioStream source, string folder)
+    {
+        writer.Limit = 2; writer.Window = Scene(source);
+        ProjectSettings.Set(ProjectSettings.FrameDelayMsec, int.MaxValue);
+        var priorContext = SynchronizationContext.Current; var context = new PumpContext(); SynchronizationContext.SetSynchronizationContext(context);
+        try
+        {
+            var pending = Engine.RunAsync(writer.Window, Path.Combine(folder, "async.movieprobe"), 59);
+            var deadline = System.Diagnostics.Stopwatch.StartNew();
+            while (!pending.IsCompleted) { if (deadline.Elapsed.TotalSeconds > 10) throw new TimeoutException("Async movie host did not finish."); context.Pump(); }
+            Check(pending.GetAwaiter().GetResult() == 17 && writer.Frames == 2, "Yielding recording uses the same owner and frame/audio flow.");
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(priorContext);
+            ProjectSettings.Reset(ProjectSettings.FrameDelayMsec);
+        }
+    }
+
     private sealed class HookLoop : MainLoop { }
     internal sealed class PumpContext : SynchronizationContext
     {

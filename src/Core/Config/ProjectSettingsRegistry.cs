@@ -69,6 +69,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(MaxTimestampQueryElements, isBasic: false);
         RegisterInternal(VerboseSTDOUT, isBasic: false);
         RegisterInternal(MaxFPS, isBasic: false);
+        RegisterInternal(FrameDelayMsec, isBasic: false);
         RegisterInternal(PrintFPS, isBasic: false);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(GUIThemeCustom, isBasic: true);
@@ -1258,6 +1259,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MaxTimestampQueryElements) ||
         ReferenceEquals(setting, VerboseSTDOUT) ||
         ReferenceEquals(setting, MaxFPS) ||
+        ReferenceEquals(setting, FrameDelayMsec) ||
         ReferenceEquals(setting, PrintFPS) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||

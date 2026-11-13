@@ -107,7 +107,8 @@ public sealed partial class Engine
         try
         {
             if (reserved) ValidateRunWindow(window);
-            ConfigureFrameRateDiagnostics(windowed: true);
+            var frameDelay = ConfigureFrameRateSettings(windowed: true) / 1000d;
+            if (moviePath is not null) frameDelay = 0;
             RuntimeDiagnostics.Instance.BeginRun();
             if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
                 SDL3.SDL.SetMainReady();
@@ -168,11 +169,13 @@ public sealed partial class Engine
                 while (!tree.QuitRequested)
                 {
                     var limit = movie is null ? MaxFPSCore : 0;
-                    var lowWait = movie is null && OS.LowProcessorUsageMode ? OS.LowProcessorUsageModeSleepUsec / 1_000_000d - Stopwatch.GetElapsedTime(waitStart).TotalSeconds : 0d;
-                    var remaining = Math.Max(lowWait, limit == 0 ? 0d : 1d / limit - Stopwatch.GetElapsedTime(lastFrame).TotalSeconds);
+                    var lowProcessorDelay = movie is null && OS.LowProcessorUsageMode ? OS.LowProcessorUsageModeSleepUsec / 1_000_000d : 0d;
+                    var postFrameWait = Math.Max(frameDelay, lowProcessorDelay);
+                    if (postFrameWait > 0d) postFrameWait -= Stopwatch.GetElapsedTime(waitStart).TotalSeconds;
+                    var remaining = Math.Max(postFrameWait, limit == 0 ? 0d : 1d / limit - Stopwatch.GetElapsedTime(lastFrame).TotalSeconds);
                     if (remaining <= 0d && !asynchronous)
                         break;
-                    var delay = Math.Clamp((int)Math.Ceiling(remaining * 1000d), 1, 10);
+                    var delay = (int)Math.Clamp(Math.Ceiling(remaining * 1000d), 1d, 10d);
                     if (asynchronous)
                         await frameTimer!.WaitForNextTickAsync();
                     else

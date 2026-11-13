@@ -19,7 +19,7 @@ public sealed partial class Engine
     /// <returns>The exit code supplied by SceneTree.Quit, or zero for an automatically accepted close.</returns>
     /// <remarks>The runtime owns the window and children after validation and successful reservation of the idle
     /// engine, including failed native startup or scene activation. It prepares registered project shader globals while opening the renderer before ready, pumps
-    /// events before frames, limits cadence with MaxFPS, finalizes and disposes the scene, then releases native resources.
+    /// events before frames, applies MaxFPS and ProjectSettings.FrameDelayMsec, finalizes and disposes the scene, then releases native resources.
     /// A new window may be run after successful cleanup. Native services opened directly through DisplayServer must
     /// finish before teardown; pending asynchronous dialogs can reject native disposal and the error is reported. Manual Start/AdvanceFrame/Stop cannot interfere with this run.
     /// Canvas frames are submitted after each successful process step. Project locale and pseudolocalization settings are sampled
@@ -41,7 +41,7 @@ public sealed partial class Engine
     /// the runtime's org.electron2d.GameActivity launcher starts; that internal activity runs the scene on its native video thread.
     /// Other platforms require a main-thread application synchronization context; console applications use Run instead.
     /// Borrowed textures and fonts must remain alive until the task completes. No background game thread is created
-    /// except the Android platform's required native video entry thread. MaxFPS also applies to asynchronous runs.
+    /// except the Android platform's required native video entry thread. MaxFPS and ProjectSettings.FrameDelayMsec also apply to asynchronous runs.
     /// Registered project shader globals prepare with the renderer before scene readiness.
     /// Manual lifecycle operations cannot interfere with an active run, including pending Android startup.
     /// If the Android activity is destroyed before native startup, the task is cancelled after its root is disposed

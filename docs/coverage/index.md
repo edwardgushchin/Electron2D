@@ -1,3 +1,5 @@
+[Fixed frame delay](../components/engine-runtime.md#frame-rate-settings) adds project and host control of the wait between real-time window frames. One Blocked row moves to Implemented. Coverage is **13,972/18,900 (73.93%)**, with 1,120 Partial, 269 Unimplemented, 3,539 Blocked, 8,393 Excluded and zero unmapped.
+
 [Frame-rate settings](../components/engine-runtime.md#frame-rate-settings) connect the persistent window cap and periodic stdout diagnostics to live engine timing. Two Blocked rows move to Implemented. Coverage is **13,971/18,900 (73.92%)**, with 1,120 Partial, 269 Unimplemented, 3,540 Blocked, 8,393 Excluded and zero unmapped.
 
 [Verbose stdout diagnostics](../components/diagnostics.md#verbose-stdout) connect the typed setting, host switches, message API and resource loading. One Unimplemented, one Partial and one Blocked row move to Implemented. Coverage is **13,969/18,900 (73.91%)**, with 1,120 Partial, 269 Unimplemented, 3,542 Blocked, 8,393 Excluded and zero unmapped.

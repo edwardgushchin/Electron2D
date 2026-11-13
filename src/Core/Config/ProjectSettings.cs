@@ -182,6 +182,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>Zero initially, meaning unlimited. Negative values are invalid.</value>
     public static ProjectSetting<int> MaxFPS { get; } = new("application/run/max_fps", 0, value => value >= 0);
 
+    /// <summary>Gets the fixed delay in milliseconds after each real-time frame of an owned window run.</summary>
+    /// <value>Zero initially. Negative values are invalid.</value>
+    /// <remarks>Startup samples the active feature override. The host --frame-delay switch can supply a positive
+    /// override, including in editor runs. Manual advancement and fixed-rate recording skip this wait.</remarks>
+    public static ProjectSetting<int> FrameDelayMsec { get; } = new("application/run/frame_delay_msec", 0, value => value >= 0);
+
     /// <summary>Gets the setting for periodic process-frame rate diagnostics.</summary>
     /// <value>False initially. A host --print-fps switch can enable reporting.</value>
     public static ProjectSetting<bool> PrintFPS { get; } = new("debug/settings/stdout/print_fps", false);

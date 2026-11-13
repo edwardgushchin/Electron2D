@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "ProjectSettings::property:application/run/frame_delay_msec",
+      "electron2d": "property:Electron2D.ProjectSettings.FrameDelayMsec()",
+      "reason": "ADRs 0016/0019: typed fixed frame delay for ordinary owned window runs, with feature and command-line selection."
+    },
+    {
       "godot": "ProjectSettings::property:application/run/max_fps",
       "electron2d": "property:Electron2D.ProjectSettings.MaxFPS()",
       "reason": "ADRs 0016/0019: typed window startup cap sampled with project features or overridden by the host switch; runtime assignments and movie/manual cadence retain their established behavior."
@@ -135,6 +140,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["ProjectSettings::property:application/run/frame_delay_msec"],
+      "state": "Implemented",
+      "reason": "ADRs 0016/0019: synchronous and yielding window hosts honor a startup-sampled fixed post-frame wait with responsive native event handling. Manual frames and fixed-rate capture bypass pacing. See docs/components/engine-runtime.md#frame-rate-settings."
+    },
     {
       "godot": ["ProjectSettings::property:application/run/max_fps", "ProjectSettings::property:debug/settings/stdout/print_fps"],
       "state": "Implemented",
