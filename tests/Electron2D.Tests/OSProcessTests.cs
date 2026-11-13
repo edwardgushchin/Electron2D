@@ -1,27 +1,33 @@
 using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Electron2D;
 using static TextureArrayTests;
 using IOFileAccess = Electron2D.FileAccess;
 
-internal static class OSProcessTests
+internal static partial class OSProcessTests
 {
+    internal sealed record Report(int PID, string[] Arguments, string[] UserArguments, string Executable);
+    internal sealed record ParentReport(int Parent, int Child);
     internal static void Child(string[] args)
     {
         Console.OutputEncoding = new UTF8Encoding(false); Console.InputEncoding = new UTF8Encoding(false);
+        if (OperatingSystem.IsWindows() && WindowsChild(args)) return;
         switch (args[1])
         {
-            case "arguments": Console.Write(JsonSerializer.Serialize(args[2..])); Console.Error.Write("Ошибка λ\n"); Environment.ExitCode = 23; break;
-            case "detach-parent": var daughter = Launch("delayed-file", args[2]); var detached = OS.CreateProcess(daughter.Path, daughter.Arguments); File.WriteAllText(args[2] + ".parent", JsonSerializer.Serialize(new { Parent = OS.GetProcessID(), Child = detached })); break;
+            case "arguments": Console.Write(JsonSerializer.Serialize(args[2..], OSProcessJSON.Default.StringArray)); Console.Error.Write("Ошибка λ\n"); Environment.ExitCode = 23; break;
+            case "detach-parent": var daughter = Launch("delayed-file", args[2]); var detached = OS.CreateProcess(daughter.Path, daughter.Arguments); File.WriteAllText(args[2] + ".parent", JsonSerializer.Serialize(new ParentReport(OS.GetProcessID(), detached), OSProcessJSON.Default.ParentReport)); break;
             case "delayed-file": Thread.Sleep(1500); File.WriteAllText(args[2], "survived"); break;
-            case "file": System.IO.File.WriteAllText(args[2], JsonSerializer.Serialize(new { PID = OS.GetProcessID(), Arguments = args[3..], UserArguments = OS.GetCommandLineUserArgs(), Executable = OS.GetExecutablePath() })); break;
+            case "file": System.IO.File.WriteAllText(args[2], JsonSerializer.Serialize(new Report(OS.GetProcessID(), args[3..], OS.GetCommandLineUserArgs(), OS.GetExecutablePath()), OSProcessJSON.Default.Report)); break;
             case "echo": var text = Console.ReadLine(); Console.Write("OUT:" + text + "\rNEXT\n"); Console.Error.Write("ERR:" + text + "\n"); Environment.ExitCode = 17; break;
             case "ordered": Console.Error.Write("FIRST:"); Console.Error.Flush(); Console.Write("SECOND"); break;
             case "large": Console.Write(new string('O', 2 * 1024 * 1024)); Console.Error.Write(new string('E', 2 * 1024 * 1024)); break;
             case "duplex": Console.OpenStandardOutput().Write(new byte[1048576]); var duplex = new byte[1048576]; Console.OpenStandardInput().ReadExactly(duplex); Console.Write(Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(duplex)) + "\n"); break;
             case "exit-high": Environment.ExitCode = 137; break;
+            case "exit-native": Environment.ExitCode = unchecked((int)0xc0000005); break;
+            case "exit-still-active": Environment.ExitCode = 259; break;
+            case "utf8-bytes": Console.OpenStandardOutput().Write([0xef, 0xbb, 0xbf, 65, 0xff, 0xce, 0xbb]); break;
             case "hold": Thread.Sleep(30000); break;
             case "transfer": var bytes = new byte[int.Parse(args[2])]; Console.OpenStandardInput().ReadExactly(bytes); Console.Write(Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(bytes)) + "\n"); break;
             default: throw new ArgumentException("Unknown child mode.");
@@ -29,7 +35,7 @@ internal static class OSProcessTests
     }
     private static (string Path, string[] Arguments) Launch(string mode, params string[] arguments)
     {
-        var path = Environment.ProcessPath!; var prefix = System.IO.Path.GetFileNameWithoutExtension(path).Equals("dotnet", StringComparison.OrdinalIgnoreCase) ? new[] { Assembly.GetExecutingAssembly().Location } : Array.Empty<string>();
+        var path = Environment.ProcessPath!; var prefix = System.IO.Path.GetFileNameWithoutExtension(path).Equals("dotnet", StringComparison.OrdinalIgnoreCase) ? new[] { System.IO.Path.Combine(AppContext.BaseDirectory, System.Reflection.Assembly.GetEntryAssembly()!.GetName().Name + ".dll") } : Array.Empty<string>();
         return (path, [.. prefix, "--os-process-child", mode, .. arguments]);
     }
     private static void Wait(int pid)
@@ -43,12 +49,15 @@ internal static class OSProcessTests
         Check(OS.GetExecutablePath() == Environment.ProcessPath && OS.GetCommandLineArgs().SequenceEqual(Environment.GetCommandLineArgs()[1..]), "Current executable and copied command arguments.");
         Check(OS.GetProcessID() == Environment.ProcessId && OS.IsProcessRunning(OS.GetProcessID()), "Native current-process identity and external process lookup.");
         Reject<ArgumentException>(() => OS.CreateProcess("", [])); Reject<ArgumentException>(() => OS.CreateProcess("x\0", [])); Reject<ArgumentException>(() => OS.CreateProcess("x", ["bad\0arg"])); Reject<ArgumentOutOfRangeException>(() => OS.IsProcessRunning(0)); Reject<EncoderFallbackException>(() => OS.CreateProcess("valid", ["\ud800"]));
-        Reject<IOException>(() => OS.CreateProcess("/missing/executable/invalid", [])); Reject<IOException>(() => OS.ExecuteWithPipe("/missing/executable/invalid", []));
+        if (OperatingSystem.IsWindows()) Reject<System.ComponentModel.Win32Exception>(() => OS.CreateProcess("/missing/executable/invalid", []));
+        else Reject<IOException>(() => OS.CreateProcess("/missing/executable/invalid", []));
+        Reject<IOException>(() => OS.ExecuteWithPipe("/missing/executable/invalid", []));
         var literal = new[] { "", "two words", "quote\"\\tail", "$(touch never-executed); &", "Привет λ" }; var launch = Launch("arguments", literal); var output = new List<string> { "preserve" }; var code = OS.Execute(launch.Path, launch.Arguments, output, readStderr: true);
-        Check(code == 23 && output.Count == 2 && output[0] == "preserve" && output[1] == JsonSerializer.Serialize(literal) + "Ошибка λ\n", "Literal argv, captured UTF8 stdout/stderr, append and actual nonzero exit.");
-        var onlyOutput = new List<string>(); Check(OS.Execute(launch.Path, launch.Arguments, onlyOutput) == 23 && onlyOutput[0] == JsonSerializer.Serialize(literal), "Disabled stderr capture discards errors while preserving stdout."); Check(OS.Execute(launch.Path, launch.Arguments) == 23, "Omitted output discards capture and retains exit status.");
+        Check(code == 23 && output.Count == 2 && output[0] == "preserve" && output[1] == JsonSerializer.Serialize(literal, OSProcessJSON.Default.StringArray) + "Ошибка λ\n", "Literal argv, captured UTF8 stdout/stderr, append and actual nonzero exit.");
+        var onlyOutput = new List<string>(); Check(OS.Execute(launch.Path, launch.Arguments, onlyOutput) == 23 && onlyOutput[0] == JsonSerializer.Serialize(literal, OSProcessJSON.Default.StringArray), "Disabled stderr capture discards errors while preserving stdout."); Check(OS.Execute(launch.Path, launch.Arguments) == 23, "Omitted output discards capture and retains exit status.");
         var ordered = Launch("ordered"); var order = new List<string>(); Check(OS.Execute(ordered.Path, ordered.Arguments, order, true) == 0 && order[0] == "FIRST:SECOND", "Captured stdout/stderr preserve actual shared-pipe write order.");
         var large = Launch("large"); var bulk = new List<string>(); Check(OS.Execute(large.Path, large.Arguments, bulk, true) == 0 && bulk[0] == new string('O', 2 * 1024 * 1024) + new string('E', 2 * 1024 * 1024), "Both channels drain beyond native pipe capacity without deadlock.");
+        var encoded = Launch("utf8-bytes"); var decoded = new List<string>(); Check(OS.Execute(encoded.Path, encoded.Arguments, decoded, true) == 0 && decoded.Single() == "\ufeffA\ufffdλ", "UTF8 capture retains BOM characters and replaces malformed bytes without encoding autodetection.");
         var dir = System.IO.Path.GetFullPath("bin/os-process-validation/2026-10-12"); Directory.CreateDirectory(dir); var file = System.IO.Path.Combine(dir, "created.json"); var create = Launch("file", file, "literal value"); var pid = OS.CreateProcess(create.Path, create.Arguments); Wait(pid); Check(OS.GetProcessExitCode(pid) == 0 && File.Exists(file), "Independent launch and retained child exit status.");
         var survived = System.IO.Path.Combine(dir, "survival.txt"); File.Delete(survived); var parentLaunch = Launch("detach-parent", survived); var parent = OS.CreateProcess(parentLaunch.Path, parentLaunch.Arguments); Wait(parent); using (var parentReport = JsonDocument.Parse(File.ReadAllText(survived + ".parent"))) { var daughter = parentReport.RootElement.GetProperty("Child").GetInt32(); Check(OS.IsProcessRunning(daughter), "Independent child remains alive after its launching application exits."); Wait(daughter); Check(File.ReadAllText(survived) == "survived", "Independent child completes useful work after parent exit."); }
         var again = System.IO.Path.Combine(dir, "instance.json"); var instance = OS.CreateInstance(["--os-process-child", "file", again, "new args", "--", "user value", "++", "tail"]); Wait(instance); using (var report = JsonDocument.Parse(File.ReadAllText(again))) Check(report.RootElement.GetProperty("PID").GetInt32() == instance && report.RootElement.GetProperty("Arguments")[0].GetString() == "new args" && report.RootElement.GetProperty("UserArguments")[0].GetString() == "user value" && report.RootElement.GetProperty("UserArguments")[1].GetString() == "++", "CreateInstance restarts the current application and preserves literal arguments.");
@@ -81,6 +90,12 @@ internal static class OSProcessTests
             Wait(pipes.PID); Check(pipes.StandardIO.ReadLine() == Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(payload)), "Partial-write retries preserve every byte exactly once.");
         }
         var forgotten = Forgotten(hold.Path, hold.Arguments); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); Check(OS.IsProcessRunning(forgotten), "Finalized pipe handles release streams without killing the independent child."); OS.Kill(forgotten); Wait(forgotten);
+        if (OperatingSystem.IsWindows()) RunWindows();
         Console.WriteLine("OS processes: literal argv, independent/current instances, actual exit/kill, 4MiB capture, blocking/nonblocking native stdin/stdout/stderr, EOF, partial-write state and cleanup passed.");
     }
 }
+
+[JsonSerializable(typeof(string[]))]
+[JsonSerializable(typeof(OSProcessTests.Report))]
+[JsonSerializable(typeof(OSProcessTests.ParentReport))]
+internal partial class OSProcessJSON : JsonSerializerContext;

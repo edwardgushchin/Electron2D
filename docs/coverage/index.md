@@ -1,3 +1,5 @@
+[Windows process launch and capture](../components/processes.md#windows-console-and-capture) closes shared-output capture and separate console identity on the exercised Windows x64 host. Counts remain **13,983/18,900 (73.98412698412699%)**, with 1,120 Partial, 269 Unimplemented, 3,528 Blocked, 8,393 Excluded and zero unmapped. All status deltas are zero: Android launch/pipe and general macOS bundle prerequisites keep the shared process rows Partial. The broader API goal remains incomplete.
+
 [Native texture import delivery](../components/native-texture-handles.md#verification) restores the Vulkan and GPU Direct3D 12 import entry points in the common native module. Both public import methods stay Partial for the remaining formats, resource roles and adapters. Coverage is **13,983/18,900 (73.98%)**.
 
 [Zstandard project options](../components/file-access.md#compression-levels) select the native level, matching strategy and window limit for file and byte-buffer operations. Three Blocked rows move to Implemented. Coverage is **13,983/18,900 (73.98%)**, with 1,120 Partial, 269 Unimplemented, 3,528 Blocked, 8,393 Excluded and zero unmapped.
