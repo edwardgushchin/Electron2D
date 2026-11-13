@@ -13,7 +13,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 | Component | Responsibility | State |
 | --- | --- | --- |
 | [A-star point graph](../components/astar-graph.md) | Directed weighted points, nearest-segment queries and full/partial path search | Implemented and verified in managed execution |
-| [Authored maps](../components/navigation-maps.md) | World map ownership, scene regions, convex portal routes and deferred publication | Implemented profile; further capabilities retain coverage dependencies |
+| [Authored maps](../components/navigation-maps.md) | World map ownership, scene regions, [weighted portal routes](../components/navigation-maps.md#arrivals-through-the-same-portal) and deferred publication | Implemented profile; further capabilities retain coverage dependencies |
 | [A-star grid](../components/astar-grid.md) | Rectangular cells, obstacles, weights, diagonal and jump-point search | Implemented and verified in managed execution |
 
 ## Public surface

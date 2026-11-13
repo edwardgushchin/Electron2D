@@ -85,7 +85,7 @@ public sealed partial class NavigationServer
     /// <param name="map">Live map identity.</param><param name="origin">Finite world start.</param><param name="destination">Finite world destination.</param>
     /// <param name="optimize">True uses portal funnel; false retains crossed portal midpoints.</param><param name="navigationLayers">Applicable region-layer bits, one by default.</param>
     /// <returns>Projected path points. An unreachable goal uses a reachable polygon selected by its reached portal entry.</returns>
-    /// <remarks>Uses the same weighted corridor search as QueryPath, including competing portal entries
+    /// <remarks>Uses the same weighted corridor search as QueryPath, including competing arrival points on the same portal
     /// and travel from the final portal to the destination. A route may take a cheaper detour when both endpoints project onto the same polygon.</remarks>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
     public static Vector2[] MapGetPath(RID map, Vector2 origin, Vector2 destination, bool optimize, uint navigationLayers = 1)

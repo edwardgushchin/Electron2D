@@ -1,3 +1,5 @@
+[Competing arrivals on the same navigation portal](../components/navigation-maps.md#arrivals-through-the-same-portal) retain distinct entry points for server queries and scene agents. The two query rows remain Partial for larger equal-priority corridor equivalence. Coverage remains **13,988/18,900 (74.01%)**, with 1,122 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
+
 [Canvas redraw on accumulating targets](../components/canvas-rendering.md#canvas-redraw-diagnostic) composes fading highlights over the finished frame and preserves clean history on GPU and Compatibility. Two ProjectSettings rows move to Implemented. Coverage is **13,988/18,900 (74.01%)**, with 1,122 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
 
 [Desktop window content limits](../components/window-runtime.md#fitting-child-controls) apply the live content minimum to native resizing while preserving authored limits. `Window.ChildControlsChanged` moves from Partial to Implemented. Coverage is **13,986/18,900 (74.00%)**, with 1,124 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.

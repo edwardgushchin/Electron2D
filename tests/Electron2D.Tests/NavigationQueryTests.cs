@@ -38,7 +38,7 @@ internal static class NavigationQueryTests
         Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "2000 changing scalar settings/result-reset cycles allocate zero bytes, excluding query/array copies.");
         NavigationServer.FreeRID(link); NavigationServer.FreeRID(a); NavigationServer.FreeRID(b); NavigationServer.FreeRID(map); Reject<ArgumentException>(() => NavigationServer.QueryPath(parameters, result));
         using var disposed = new NavigationPathQueryResult(); disposed.Dispose(); Reject<ObjectDisposedException>(() => NavigationServer.QueryPath(parameters, disposed));
-        Simplification(); PostProcessing(); Console.WriteLine("Typed navigation query filters, metadata, limits, modes, simplification, callbacks, lifetime and scalar allocation checks passed.");
+        Simplification(); PostProcessing(); SamePortalEntries(); Console.WriteLine("Typed navigation query filters, metadata, limits, modes, simplification, callbacks, lifetime and scalar allocation checks passed.");
         void Bind(RID rid, NavigationPolygon polygon, ulong owner) { NavigationServer.RegionSetMap(rid, map); NavigationServer.RegionSetNavigationPolygon(rid, polygon); NavigationServer.RegionSetOwnerID(rid, owner); }
     }
     private static void Simplification()
@@ -51,6 +51,111 @@ internal static class NavigationQueryTests
         using var polygon = new NavigationPolygon(); polygon.SetVertices([new(0, 0), new(10, 0), new(10, 20), new(0, 20), new(20, 0), new(20, 20), new(30, 0), new(30, 20)]); polygon.AddPolygon([0, 1, 2, 3]); polygon.AddPolygon([1, 4, 5, 2]); polygon.AddPolygon([4, 6, 7, 5]); var map = NavigationServer.MapCreate(); var region = NavigationServer.RegionCreate(); NavigationServer.MapSetActive(map, true); NavigationServer.RegionSetMap(region, map); NavigationServer.RegionSetNavigationPolygon(region, polygon); NavigationServer.Synchronize(); using var p = new NavigationPathQueryParameters { Map = map, StartPosition = new(5, 5), TargetPosition = new(25, 5) }; using var r = new NavigationPathQueryResult();
         p.PostProcessing = NavigationPathQueryParameters.PathPostProcessing.None; NavigationServer.QueryPath(p, r); Check(r.Path.SequenceEqual(new Vector2[] { new(5, 5), new(10, 5), new(20, 5), new(25, 5) }), "Raw entries preserve the nearest crossed positions."); p.PostProcessing = NavigationPathQueryParameters.PathPostProcessing.EdgeCentered; NavigationServer.QueryPath(p, r); Check(r.Path.SequenceEqual(new Vector2[] { new(5, 5), new(10, 10), new(20, 10), new(25, 5) }), "Edge-centered mode moves points to actual polygon edge centers."); p.PathReturnMaxRadius = 8; NavigationServer.QueryPath(p, r); Check(r.Path[^1].IsEqualApprox(new(5 + MathF.Sqrt(39), 10)) && r.PathLength > 8, "Circle radius clips a bent path independently of traveled length."); p.PathReturnMaxLength = 8; NavigationServer.QueryPath(p, r); Check(MathF.Abs(r.PathLength - 8) < .0001f && r.Path[^1].IsEqualApprox(new(10 + 8 - MathF.Sqrt(50), 10)), "Combined limits choose the tighter traveled length on a bent segment."); p.PathReturnMaxRadius = 0; p.PathReturnMaxLength = 0;
         p.PostProcessing = NavigationPathQueryParameters.PathPostProcessing.CorridorFunnel; NavigationServer.QueryPath(p, r); Check(r.Path.SequenceEqual(new Vector2[] { new(5, 5), new(10, 5), new(20, 5), new(25, 5) }), "Funnel keeps crossed-edge provenance on a straight corridor."); p.PathReturnMaxRadius = 8; p.PathReturnMaxLength = 0; NavigationServer.QueryPath(p, r); Check(r.Path[^1].IsEqualApprox(new(13, 5)), "Circle clipping crosses an ordinary region segment."); NavigationServer.FreeRID(region); NavigationServer.FreeRID(map);
+    }
+    private static void SamePortalEntries()
+    {
+        using var startShape = NavigationTests.Rectangle(0, 0, 10, 40);
+        using var approachShape = NavigationTests.Rectangle(20, 0, 10, 40);
+        using var exitShape = NavigationTests.Rectangle(30, 0, 10, 40);
+        using var goalShape = NavigationTests.Rectangle(50, 0, 10, 40);
+        var map = NavigationServer.MapCreate();
+        var regions = new List<RID>();
+        var links = new List<RID>();
+        try
+        {
+            NavigationServer.MapSetActive(map, true);
+            NavigationServer.MapSetUseEdgeConnections(map, false);
+            Bind(startShape, 1);
+            Bind(approachShape, 1);
+            var exit = Bind(exitShape, 4);
+            Bind(goalShape, 1);
+            var lowerEntry = Link(new(5, 4), new(24, 4));
+            var upperEntry = Link(new(5, 10), new(24, 34));
+            var goalLink = Link(new(36, 34), new(54, 34));
+            NavigationServer.Synchronize();
+
+            using var parameters = new NavigationPathQueryParameters
+            {
+                Map = map,
+                StartPosition = new(5, 4),
+                TargetPosition = new(56, 34),
+                PostProcessing = NavigationPathQueryParameters.PathPostProcessing.None,
+                PathSearchMaxPolygons = 7
+            };
+            using var result = new NavigationPathQueryResult();
+            NavigationServer.QueryPath(parameters, result);
+            Vector2[] expected = [new(5, 4), new(5, 10), new(24, 34), new(30, 34), new(36, 34), new(54, 34), new(56, 34)];
+            Check(result.Path.SequenceEqual(expected) && result.PathRIDs[1] == upperEntry &&
+                result.PathRIDs[3] == exit && result.PathRIDs[4] == goalLink,
+                $"Both entries at the shared portal compete within one polygon budget: {string.Join(", ", result.Path)}.");
+            foreach (var mode in Enum.GetValues<NavigationPathQueryParameters.PathPostProcessing>())
+            {
+                parameters.PostProcessing = mode;
+                NavigationServer.QueryPath(parameters, result);
+                Check(result.PathRIDs.Contains(upperEntry) && !result.PathRIDs.Contains(lowerEntry) &&
+                    result.PathRIDs.Contains(goalLink) && result.Path[^1] == parameters.TargetPosition,
+                    $"The selected corridor keeps link provenance in {mode}.");
+                if (mode != NavigationPathQueryParameters.PathPostProcessing.None)
+                    Check(result.Path.SequenceEqual(NavigationServer.MapGetPath(map, parameters.StartPosition,
+                        parameters.TargetPosition, mode == NavigationPathQueryParameters.PathPostProcessing.CorridorFunnel)),
+                        $"MapGetPath uses the same corridor in {mode}.");
+            }
+
+            using var root = new SubViewport();
+            var actor = new Entity { Position = parameters.StartPosition };
+            var agent = new NavigationAgent
+            {
+                PathPostprocessing = NavigationPathQueryParameters.PathPostProcessing.None,
+                PathSearchMaxPolygons = parameters.PathSearchMaxPolygons,
+                PathDesiredDistance = .5f
+            };
+            root.AddChild(actor);
+            actor.AddChild(agent);
+            using var tree = new SceneTree(root);
+            agent.SetNavigationMap(map);
+            agent.TargetPosition = parameters.TargetPosition;
+            Check(agent.GetNextPathPosition() == expected[1] && agent.GetCurrentNavigationPath().SequenceEqual(expected) &&
+                agent.GetCurrentNavigationResult().PathRIDs[1] == upperEntry, "The scene agent follows the winning portal arrival.");
+
+            NavigationServer.LinkSetEnterCost(upperEntry, 200);
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.PathRIDs.Contains(upperEntry), "Staged link costs preserve the committed route.");
+            NavigationServer.Synchronize();
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.PathRIDs.Contains(lowerEntry) && !result.PathRIDs.Contains(upperEntry),
+                "A published cost change can make the lower entry cheaper overall.");
+            agent.GetNextPathPosition();
+            Check(agent.GetCurrentNavigationResult().PathRIDs.Contains(lowerEntry),
+                "A scene agent observes the committed route change.");
+
+            RID Bind(NavigationPolygon polygon, float cost)
+            {
+                var region = NavigationServer.RegionCreate();
+                regions.Add(region);
+                NavigationServer.RegionSetMap(region, map);
+                NavigationServer.RegionSetNavigationPolygon(region, polygon);
+                NavigationServer.RegionSetTravelCost(region, cost);
+                return region;
+            }
+
+            RID Link(Vector2 from, Vector2 to)
+            {
+                var link = NavigationServer.LinkCreate();
+                links.Add(link);
+                NavigationServer.LinkSetMap(link, map);
+                NavigationServer.LinkSetStartPosition(link, from);
+                NavigationServer.LinkSetEndPosition(link, to);
+                NavigationServer.LinkSetBidirectional(link, false);
+                NavigationServer.LinkSetTravelCost(link, 0);
+                return link;
+            }
+        }
+        finally
+        {
+            foreach (var link in links) NavigationServer.FreeRID(link);
+            foreach (var region in regions) NavigationServer.FreeRID(region);
+            NavigationServer.FreeRID(map);
+        }
     }
     private sealed class Traveler : Entity
     {
@@ -65,7 +170,7 @@ internal static class NavigationQueryTests
         private readonly NavigationPathQueryParameters _parameters = new()
         {
             PostProcessing = NavigationPathQueryParameters.PathPostProcessing.None,
-            PathSearchMaxPolygons = 6
+            PathSearchMaxPolygons = 7
         };
         private readonly NavigationPathQueryResult _result = new();
         protected override void OnPhysicsProcess(double delta)
@@ -81,11 +186,11 @@ internal static class NavigationQueryTests
                 _rids = _result.PathRIDs;
                 _owners = _result.PathOwnerIDs;
                 var expected = new List<Vector2> { Position };
-                foreach (var link in Links)
-                {
-                    expected.Add(link.StartPosition);
-                    expected.Add(link.EndPosition);
-                }
+                expected.Add(Links[0].StartPosition);
+                expected.Add(Links[0].EndPosition);
+                expected.Add(new(32, 42));
+                expected.Add(Links[1].StartPosition);
+                expected.Add(Links[1].EndPosition);
                 expected.Add(_parameters.TargetPosition);
                 Check(Path.SequenceEqual(expected), "Native query chooses the cheaper continuation through the relay.");
             }
@@ -125,8 +230,8 @@ internal static class NavigationQueryTests
         {
             var floor = new Color(.2f, .2f, .2f);
             DrawRect(new(4, 4, 16, 48), floor);
-            DrawRect(new(24, 4, 8, 48), floor);
-            DrawRect(new(36, 4, 16, 48), floor);
+            DrawRect(new(24, 4, 12, 48), floor);
+            DrawRect(new(40, 4, 16, 48), floor);
             if (Traveler.Path.Length > 1)
                 DrawPolyline(Traveler.Path, Colors.Green, 2);
             foreach (var link in Traveler.Links)
@@ -144,17 +249,20 @@ internal static class NavigationQueryTests
         Engine.MaxFPS = 60;
         using var left = NavigationTests.Rectangle(4, 4, 16, 48);
         using var relay = NavigationTests.Rectangle(24, 4, 8, 48);
-        using var right = NavigationTests.Rectangle(36, 4, 16, 48);
+        using var sharedExit = NavigationTests.Rectangle(32, 4, 4, 48);
+        using var right = NavigationTests.Rectangle(40, 4, 16, 48);
         var window = new Window { Size = new(64, 64) };
         var leftRegion = new NavigationRegion { Name = "Left", NavigationPolygon = left };
         var relayRegion = new NavigationRegion { Name = "Relay", NavigationPolygon = relay };
         var rightRegion = new NavigationRegion { Name = "Right", NavigationPolygon = right };
         window.AddChild(leftRegion);
         window.AddChild(relayRegion);
+        var exitRegion = new NavigationRegion { Name = "SharedExit", NavigationPolygon = sharedExit, TravelCost = 4 };
+        window.AddChild(exitRegion);
         window.AddChild(rightRegion);
         window.AddChild(new NavigationLink { Name = "FarRelayEntry", StartPosition = new(12, 44), EndPosition = new(28, 6), Bidirectional = false, TravelCost = 0 });
         var nearEntry = new NavigationLink { Name = "NearRelayEntry", StartPosition = new(18, 32), EndPosition = new(28, 42), Bidirectional = false, TravelCost = 0 };
-        var exit = new NavigationLink { Name = "RelayExit", StartPosition = new(28, 44), EndPosition = new(38, 44), Bidirectional = false, TravelCost = 0 };
+        var exit = new NavigationLink { Name = "RelayExit", StartPosition = new(34, 44), EndPosition = new(42, 44), Bidirectional = false, TravelCost = 0 };
         window.AddChild(nearEntry);
         window.AddChild(exit);
         var actor = new Traveler { Links = [nearEntry, exit], Position = new(12, 44), PhysicsProcessEnabled = true };
@@ -171,6 +279,7 @@ internal static class NavigationQueryTests
             NavigationServer.MapSetUseEdgeConnections(map, false);
             NavigationServer.RegionSetUseAsyncIterations(leftRegion.GetRID(), false);
             NavigationServer.RegionSetUseAsyncIterations(relayRegion.GetRID(), false);
+            NavigationServer.RegionSetUseAsyncIterations(exitRegion.GetRID(), false);
             NavigationServer.RegionSetUseAsyncIterations(rightRegion.GetRID(), false);
             RenderingServer.SetDefaultClearColor(Colors.Black);
             RenderingServer.FramePostDraw += () =>
