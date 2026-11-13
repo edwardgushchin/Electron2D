@@ -30,17 +30,8 @@ internal static class ImageCodecTests
         image.LoadWebPFromBuffer(Convert.FromBase64String(WEBP));
         CheckPixels(image, Pixels);
         VerifyAnimatedWebP();
-        image.LoadSVGFromString(SVG);
-        Check(image.Size == new Vector2i(3, 2) && image.PixelFormat == Image.Format.Rgba8 && image.GetPixel(1, 1) == Colors.Red,
-            "SVG string rasterizes at intrinsic size and color.");
-        image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(SVG), 2);
-        Check(image.Size == new Vector2i(6, 4) && image.GetPixel(3, 2) == Colors.Red,
-            "SVG buffer scale changes raster dimensions and preserves fill.");
-        image.LoadSVGFromString("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 3\"><rect width=\"4\" height=\"3\" fill=\"#00ff00\"/></svg>");
-        Check(image.Size == new Vector2i(4, 3) && image.GetPixel(1, 1) == Colors.Green,
-            "SVG viewBox supplies intrinsic dimensions.");
+        VerifySVG();
         VerifyBMP();
-        ImageHDRTests.Run();
         VerifyTGA();
         VerifyPNG();
 
@@ -84,6 +75,64 @@ internal static class ImageCodecTests
         if (!OperatingSystem.IsBrowser())
             Parallel.For(0, 12, _ => { using var copy = new Image(); copy.LoadPNGFromBuffer(png); copy.LoadPNGFromBuffer(copy.SavePNGToBuffer()); CheckPixels(copy, Pixels); });
         Console.WriteLine("Image codec checks passed (PNG/JPEG/WebP/BMP/TGA/SVG; buffers, files, failures, ownership).");
+    }
+
+    internal static void VerifySVG()
+    {
+        using var image = new Image();
+        image.LoadSVGFromString(SVG);
+        Check(image.Size == new Vector2i(3, 2) && image.PixelFormat == Image.Format.Rgba8 && image.GetPixel(1, 1) == Colors.Red,
+            "SVG string rasterizes at intrinsic size and color.");
+        image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(SVG), 2);
+        Check(image.Size == new Vector2i(6, 4) && image.GetPixel(3, 2) == Colors.Red,
+            "SVG buffer scale changes raster dimensions and preserves fill.");
+        image.LoadSVGFromString("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 3\"><rect width=\"4\" height=\"3\" fill=\"#00ff00\"/></svg>");
+        Check(image.Size == new Vector2i(4, 3) && image.GetPixel(1, 1) == Colors.Green,
+            "SVG viewBox supplies intrinsic dimensions.");
+
+        const string styled = """<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" style="width:6px; height:3px"><rect width="4" height="3" fill="red"/></svg>""";
+        var changes = 0;
+        image.Changed += _ => changes++;
+        image.LoadSVGFromString(styled);
+        Check(image.Size == new Vector2i(6, 3) && image.GetPixel(3, 2) == Colors.Red &&
+            image.GetPixel(5, 2).A == 0 && changes == 1, "Inline dimensions override the attributes and set the actual viewport.");
+        image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(styled), 2);
+        Check(image.Size == new Vector2i(12, 6) && image.GetPixel(7, 4) == Colors.Red &&
+            image.GetPixel(11, 4).A == 0 && changes == 2, "The inline viewport scales without stretching its contents.");
+
+        const string viewBox = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4" style="--ignored:'; height:100px'; width:2px; WIDTH:8px !important; width:9px; height:/**/100%"><rect width="4" height="4" fill="#00ff00"/></svg>""";
+        image.LoadSVGFromString(viewBox);
+        Check(image.Size == new Vector2i(8, 4) && image.GetPixel(0, 1).A == 0 &&
+            image.GetPixel(3, 1) == Colors.Lime && image.GetPixel(7, 1).A == 0, "Inline declaration precedence and viewBox alignment determine raster pixels.");
+        image.LoadSVGFromString("""<svg style="width:5.2px;height:2.1px"><rect width="2" height="2" fill="red"/></svg>""", 1.5f);
+        Check(image.Size == new Vector2i(8, 3) && image.GetPixel(1, 1) == Colors.Red,
+            "Fractional lengths round once at the requested scale.");
+
+        image.LoadSVGFromString("""<svg width="99" viewBox="0 0 4 3" preserveAspectRatio="none" style="width:auto;height:6px"><rect width="4" height="3" fill="#00ff00"/></svg>""");
+        Check(image.Size == new Vector2i(4, 6) && image.GetPixel(3, 5) == Colors.Lime,
+            "Auto overrides the attribute and explicit aspect-ratio behavior survives rasterization.");
+
+        var before = image.GetData();
+        var beforeChanges = changes;
+        foreach (var style in new[] { "width:20000px;height:2px", "width:2px;height:-1px", "width:calc(2px + 3px)", "width:1e-100px;height:1px" })
+            Reject<InvalidDataException>(() => image.LoadSVGFromString($"<svg style=\"{style}\"/>"));
+        Reject<InvalidDataException>(() => image.LoadSVGFromString("""<svg style="width:6px;height:3px"><rect"""));
+        Check(image.GetData().SequenceEqual(before) && changes == beforeChanges,
+            "Invalid styled SVG leaves previous pixels and the notification count intact.");
+
+        var path = IOPath.Combine(IOPath.GetTempPath(), "electron2d-svg-" + Guid.NewGuid().ToString("N") + ".svg");
+        try
+        {
+            File.WriteAllText(path, styled);
+            using var file = Image.LoadFromFile(path);
+            using var texture = ResourceLoader.Load<ImageTexture>(path, ResourceLoader.CacheMode.Ignore);
+            using var pixels = texture.GetImage()!;
+            Check(file.Size == new Vector2i(6, 3) && pixels.GetData().SequenceEqual(file.GetData()),
+                "File and texture loading share the styled rasterizer.");
+        }
+        finally { File.Delete(path); }
+
+        Console.WriteLine("SVG checks passed (viewport dimensions, raster pixels, scaling, file and resource loading, failure rollback).");
     }
 
     internal static byte[] VerifyJPEG()

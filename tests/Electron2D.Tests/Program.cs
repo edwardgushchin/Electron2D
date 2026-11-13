@@ -682,10 +682,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "png")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "jpeg") { ImageCodecTests.VerifyJPEG(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "hdr") { ImageHDRTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "bmp") { ImageCodecTests.VerifyBMP(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "svg") { ImageCodecTests.VerifySVG(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "tga") { ImageCodecTests.VerifyTGA(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
 {
     ImageCodecTests.Run();
+    ImageHDRTests.Run();
     ImageWebPTests.RunManaged();
     ImageKTXTests.RunManaged();
     ImageBlockTests.RunManaged();

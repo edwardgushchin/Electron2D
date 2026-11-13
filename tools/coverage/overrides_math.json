@@ -3389,16 +3389,20 @@
     {
       "state": "Partial",
       "godot": ["Image::method:load(String:)", "Image::method:load_from_file(String:)"],
-      "reason": "ADR 0039: existing typed file loads now include bounded Radiance HDR decoding to RGBE9995 with raw, legacy and planar-RLE scanlines and both axis orders. ResourceLoader uses the same codec for ImageTexture discovery and loading. SVG CSS sizing, additional file variants, color metadata and target qualification remain open. See docs/components/images.md#radiance-hdr-loading."
+      "reason": "ADR 0039: existing typed file loads now include bounded Radiance HDR decoding to RGBE9995 with raw, legacy and planar-RLE scanlines and both axis orders. ResourceLoader uses the same codec for ImageTexture discovery and loading. Inline root SVG dimensions also execute through both file APIs and the ImageTexture loader. Stylesheet-driven geometry, additional file variants, color metadata and target qualification remain open. See docs/components/images.md#radiance-hdr-loading and #svg-viewport-sizing."
     },
     {
       "state": "Partial",
       "godot": [
         "Image::method:load_svg_from_buffer(PackedByteArray:,float:)",
-        "Image::method:load_svg_from_string(String:,float:)",
-        "Image::method:load_webp_from_buffer(PackedByteArray:)"
+        "Image::method:load_svg_from_string(String:,float:)"
       ],
-      "reason": "Executable file/buffer codecs use bounded preflight and atomic publication. PNG preserves decoded channel roles and the sRGB transfer encoding via the private libpng codec. JPEG preserves L8 or RGB8. BMP supports palettes, packed channels, and RLE4/RLE8. TGA handles all four origins, raw and run-length encoded indexed, grayscale and color samples. WebP, BMP, TGA and SVG retain the RGBA8 profile. WebP uses the existing private libwebp decoder for straight RGBA8 and first-frame canvas reconstruction, preserving offsets and atomic malformed-input failure independently of platform SDL_image support. The changed decoder ABI and Apple demux closure require renewed target/package verification. SVG CSS sizing, source channel layouts, color/profile metadata, full codec variants, additional Load formats and AOT remain unaudited or unfinished. See docs/classes/Image.md and ADR 0039."
+      "reason": "ADR 0039: bounded XML preflight and atomic RGBA8 publication. Root inline width and height override presentation attributes, resolve pixel/physical/percent/auto dimensions and drive the actual scaled native viewport. Tests cover exact pixels and rollback, as well as file and scalable texture consumers. Remaining: stylesheet-driven geometry, additional CSS units/functions, nested viewport fidelity and foreign-target qualification. See docs/components/images.md#svg-viewport-sizing."
+    },
+    {
+      "state": "Partial",
+      "godot": ["Image::method:load_webp_from_buffer(PackedByteArray:)"],
+      "reason": "ADR 0039: the private libwebp decoder supplies straight RGBA8 and first-frame canvas reconstruction with offsets, bounded preflight and atomic publication. Color/profile metadata, complete source-layout and variant equivalence, and renewed target/package qualification of the decoder ABI and Apple demux closure remain open. See docs/components/image-webp.md."
     },
     {
       "state": "Implemented",

@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-20
 
-DPITexture integrates SVG source, typed paint remapping, image processing, resource storage and retained canvas rendering. The existing SDL SVG decoder supplies raster pixels. No new codec or modified vendored source is introduced. Paint replacement operates on source attributes before rasterization, preserving antialiased edges and gradient interpolation rather than recoloring completed pixels.
+DPITexture integrates SVG source, typed paint remapping, image processing, resource storage and retained canvas rendering. The existing SDL SVG decoder supplies raster pixels. Logical dimensions and raster variants share the [Image SVG viewport rules](images.md#svg-viewport-sizing), including dimensions from the root style. No new codec or modified vendored source is introduced. Paint replacement operates on source attributes before rasterization, preserving antialiased edges and gradient interpolation rather than recoloring completed pixels.
 
 ## Viewport and ownership
 

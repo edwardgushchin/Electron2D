@@ -4,7 +4,7 @@ Last updated: 2026-10-20
 
 Namespace: Electron2D. Inherits Texture → Resource → ElectronObject.
 
-DPITexture retains SVG authoring data and rasterizes it with the existing native SVG decoder. Canvas replay selects a retained raster matching the actual viewport and optional CanvasItem scale oversampling. BaseScale changes intrinsic logical dimensions; SetSizeOverride changes independent drawing axes without resampling. An override of zero restores that axis. Empty source produces an empty texture and suppresses retained draws until source is restored.
+DPITexture retains SVG authoring data and rasterizes it with the existing native SVG decoder. Canvas replay selects a retained raster matching the actual viewport and optional CanvasItem scale oversampling. The [Image SVG viewport rules](../components/images.md#svg-viewport-sizing) also apply to inline dimensions in retained source. BaseScale changes intrinsic logical dimensions; SetSizeOverride changes independent drawing axes without resampling. An override of zero restores that axis. Empty source produces an empty texture and suppresses retained draws until source is restored.
 
 ```csharp
 using var icon = DPITexture.CreateFromString(svg, colorMap: new()

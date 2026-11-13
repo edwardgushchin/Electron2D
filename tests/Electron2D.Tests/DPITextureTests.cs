@@ -3,7 +3,7 @@ using Path = System.IO.Path;
 
 internal static class DPITextureTests
 {
-    internal const string Source = """<svg xmlns="http://www.w3.org/2000/svg" width="16" height="8"><rect width="8" height="8" fill="red"/><rect x="8" width="8" height="8" fill="blue"/></svg>""";
+    internal const string Source = """<svg xmlns="http://www.w3.org/2000/svg" style="width:16px;height:8px"><rect width="8" height="8" fill="red"/><rect x="8" width="8" height="8" fill="blue"/></svg>""";
     private static int _checks;
     internal static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); _checks++; }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { _checks++; return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }

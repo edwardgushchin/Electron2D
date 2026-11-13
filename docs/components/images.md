@@ -169,6 +169,16 @@ Encoded input and decoded pixels each have a 64 MiB limit. The decoder checks th
 
 `ImageCodecTests` exercised buffer, file and texture loading on Windows x64 and Linux x64 under WSL. Package, NativeAOT and system clipboard checks remain separate.
 
+## SVG viewport sizing
+
+SVG file, byte and string inputs resolve root width and height from supported inline declarations before presentation attributes. Positive numeric, pixel and physical lengths use the existing 96 DPI profile. Percentages resolve against the corresponding viewBox axis or the 300×150 default viewport, and inline `auto` uses 100%. Among inline declarations of the same property, the last declaration wins at the highest specified priority. A missing axis retains the existing viewBox-ratio or default fallback. The raster scale applies once to the resulting logical viewport, with integer rounding and the existing 16,384-pixel axis limit.
+
+For styled dimensions, the loader passes a normalized integer viewport to SDL_image with the authored viewBox or a logical viewBox derived from the resolved dimensions. Explicit aspect-ratio settings are preserved and the default is centered meet. Image and texture-file loading use the same decode path. [DPITexture](scalable-svg.md) also uses the shared sizing rules when validating source and regenerating raster variants. Failed validation or decoding preserves the previous image and emits no change notification.
+
+On Windows the SVG codec profile checks exact raster dimensions and pixels, scaled buffer and file paths, texture-file loading and rollback. DPITexture tests cover styled source through typed archive reload and rendered GPU and Compatibility viewport variants at unit, twofold and threefold scale. The two renderer profiles each pass 64 warmed frames at zero measured managed allocation.
+
+The inline profile covers root width and height. Remaining SVG work includes stylesheet-driven geometry, additional CSS units and functions, and nested viewport and renderer fidelity. The [SVG sizing properties](https://www.w3.org/TR/SVG2/geometry.html#Sizing) and [SDL_image viewport scaling](https://github.com/libsdl-org/SDL_image/blob/release-3.4.6/src/IMG_svg.c#L96-L148) describe the source behavior at each boundary.
+
 ## Exclusions and deferred integration
 
 PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR loading and PNG/JPEG/WebP/EXR saving are executable. BC1–BC7 compression/decompression and DDS file/buffer load/save feed existing resource and texture consumers. PNG preserves the decoded luminance or RGB layout and alpha. JPEG preserves grayscale or RGB. WebP, BMP, TGA and SVG produce RGBA8; DDS retains supported byte/BCn storage and EXR retains HDR channels and precision. Encoded input/output and decoder dimensions follow the documented codec budgets. The private WebP encoder supports exact RGB/RGBA and lossy saving. KTX1/KTX2 and Basis LDR/HDR loading now execute through the [private KTX reader](image-ktx.md), retaining complete mips and applicable precision. Importing and complete color/metadata semantics remain pending. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) records exact dependencies. BC1–BC7 and RA-as-RG decode; S3TC/BPTC encode. [ETC/EAC/ASTC decoding](image-block-decoding.md) now supplies all remaining block roles; their encoding remains unavailable.

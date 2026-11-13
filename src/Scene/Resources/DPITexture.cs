@@ -38,7 +38,7 @@ public sealed partial class DPITexture : Texture
     /// <returns>The source, or an empty string for an empty resource.</returns>
     public string GetSource() { lock (_gate) { ThrowIfDisposed(); return _source; } }
     /// <summary>Replaces SVG source, invalidating raster variants after validation.</summary>
-    /// <param name="source">A bounded SVG document, or empty to clear the texture.</param>
+    /// <param name="source">A bounded SVG document with the Image SVG sizing rules, or empty to clear the texture.</param>
     /// <exception cref="ArgumentNullException">Source is null.</exception>
     /// <exception cref="InvalidDataException">Source or raster dimensions are invalid.</exception>
     public void SetSource(string source)

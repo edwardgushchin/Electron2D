@@ -87,7 +87,8 @@ public sealed partial class Image
     /// <summary>Rasterizes an uncompressed UTF-8 SVG buffer and replaces the image atomically.</summary>
     /// <param name="buffer">SVG data, copied before validation and decoding, at most 64 MiB.</param>
     /// <param name="scale">Finite positive multiplier for the SVG's intrinsic dimensions.</param>
-    /// <remarks>Produces an RGBA8 base image without mipmaps. The document must have finite intrinsic dimensions or a viewBox; external XML entities are rejected. Failure preserves the previous image.</remarks>
+    /// <remarks>Produces an RGBA8 base image without mipmaps. The root style can supply width and height as positive pixel or physical lengths, percentages, or auto.
+    /// XML DTDs are rejected. Failure preserves the previous image.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Scale is not finite and positive.</exception>
     /// <exception cref="InvalidDataException">The document is malformed or exceeds image limits.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
@@ -188,7 +189,7 @@ public sealed partial class Image
         var format = Format.Rgba8;
         var size = codec switch
         {
-            "SVG" => SVGSize(bytes, scale),
+            "SVG" => PrepareSVG(ref bytes, scale, forRaster: true),
             "JPG" => ReadJPEGLayout(bytes, out format),
             _ => EncodedSize(bytes, codec)
         };

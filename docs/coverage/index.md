@@ -1,3 +1,5 @@
+[SVG viewport sizing](../components/images.md#svg-viewport-sizing) supports inline root dimensions in image, file and scalable texture consumers. The SVG and general file-loading rows retain their remaining Partial scope. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Radiance HDR file loading](../components/images.md#radiance-hdr-loading) adds RGBE image and texture loading to the file APIs. The general file-loading rows remain Partial. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [Navigation projection](../components/navigation-maps.md#projection-ownership) resolves overlap and committed ownership. Four Partial rows move to Implemented. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
