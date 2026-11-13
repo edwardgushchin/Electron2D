@@ -30,9 +30,17 @@ Weighted search charges the entered owner on a transition and multiplies each se
 
 Each directed incoming portal retains its own best arrival. A more expensive entry can win when its continuation to the next portal costs less. Alternative entries into a polygon share one place in the polygon-count budget. Queue ties use polygon order followed by discovery order.
 
-Arrivals at different points of the same directed portal still share one search state. Equivalence across those routes and larger tied corridors remains Partial. Overlapping projection ownership beyond the verified corridors also remains Partial. Margin matching compares eligible free edges quadratically. Source parsing and outline/clearance baking execute through the connected producer. Async map iterations and [global controls/scene diagnostics](navigation-diagnostics.md) have their own verification. Deprecated outline generation, force-update and region-RID aliases remain excluded.
+Arrivals at different points of the same directed portal still share one search state. Equivalence across those routes and larger tied corridors remains Partial. Margin matching compares eligible free edges quadratically. Source parsing and outline/clearance baking execute through the connected producer. Async map iterations and [global controls/scene diagnostics](navigation-diagnostics.md) have their own verification. Deprecated outline generation, force-update and region-RID aliases remain excluded.
 
 [NavigationTopologyTests](../../tests/Electron2D.Tests/NavigationTopologyTests.cs) compares twelve independently executed official pinned-runtime fixtures for raster/negative keys, first-two ownership, internal merges, margin eligibility, disabled/layer/inactive states, raw/funnel routes, pathways and all counters. Additional checks cover transactional failures, region versions, membership refresh, area/nonuniform statistics, filtered/disabled/detached/extreme sampling, worker resource delivery and warmed allocations. [Rendered topology checks](../../tests/Electron2D.Tests/NavigationTopologyRenderingTests.cs) move a real actor across a quantized gap with margin connections disabled, verify scene-lane metrics and goal pixels, and clean up the borrowed map on GPU/compatibility. Oracle generation is [a development-only script](../../tools/navigation/topology_reference.gd); source geometry archives and fresh-process navigation checks remain the existing NavigationTests contract.
+
+## Projection ownership
+
+Map projection returns the closest point on enabled polygon surfaces in the committed iteration. It uses every region layer mask, including zero. Link segments are excluded. A point strictly inside a polygon stays at that coordinate. For overlaps the last published region with a strictly containing polygon wins, matching the nested-region traversal of the pinned query. Boundary and exterior distance ties keep the first candidate. Projection uses double arithmetic for edge tests and distances, including collinear edges and large finite coordinates.
+
+`RegionOwnsPoint` resolves the same owner through the region's published map membership. Staged assignment does not redirect the query before publication. `RegionGetClosestPoint` projects onto the region's own committed polygons, including while disabled or detached. A map without eligible polygons yields zero and an empty owner.
+
+`NavigationTests` exercises overlap, boundary, exterior ties, opposite winding, zero layers, staged map moves, detached and disabled queries, finite large coordinates and warmed projection allocation.
 
 ## Links across separated surfaces
 

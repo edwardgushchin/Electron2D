@@ -50,11 +50,33 @@ internal sealed partial class NavigationMapIteration
         }
     }
     private static bool Near(Vector2 a, Vector2 b, float margin) => DistanceSquared(a, b) <= (double)margin * margin;
-    internal static Vector2 Closest(Cell cell, Vector2 point)
+    internal static Vector2 Closest(Cell cell, Vector2 point) => Closest(cell, point, out _);
+
+    private static Vector2 Closest(Cell cell, Vector2 point, out bool interior)
     {
-        var sign = 0; var inside = true;
-        for (var i = 0; i < cell.Vertices.Length; i++) { var area = Area(cell.Vertices[i], cell.Vertices[(i + 1) % cell.Vertices.Length], point); if (area == 0) continue; var next = Math.Sign(area); if (sign != 0 && sign != next) { inside = false; break; } sign = next; }
-        if (inside) return point;
+        var sign = 0;
+        var boundary = false;
+        var outside = false;
+        for (var i = 0; i < cell.Vertices.Length; i++)
+        {
+            var area = Area(cell.Vertices[i], cell.Vertices[(i + 1) % cell.Vertices.Length], point);
+            if (area == 0)
+            {
+                boundary = true;
+                continue;
+            }
+            var next = Math.Sign(area);
+            if (sign != 0 && sign != next)
+            {
+                outside = true;
+                break;
+            }
+            sign = next;
+        }
+
+        interior = !outside && !boundary;
+        if (!outside)
+            return point;
         var best = cell.Vertices[0]; var distance = double.PositiveInfinity;
         for (var i = 0; i < cell.Vertices.Length; i++) { var p = ClosestSegment(point, cell.Vertices[i], cell.Vertices[(i + 1) % cell.Vertices.Length]); var d = DistanceSquared(point, p); if (d < distance) { distance = d; best = p; } }
         return best;
@@ -64,13 +86,38 @@ internal sealed partial class NavigationMapIteration
     { var dx = (double)b.X - a.X; var dy = (double)b.Y - a.Y; var length = dx * dx + dy * dy; return length == 0 ? a : Interpolate(a, b, Math.Clamp((((double)point.X - a.X) * dx + ((double)point.Y - a.Y) * dy) / length, 0, 1)); }
     private static double Area(Vector2 origin, Vector2 a, Vector2 b) => ((double)a.X - origin.X) * ((double)b.Y - origin.Y) - ((double)a.Y - origin.Y) * ((double)b.X - origin.X);
     private static double DistanceSquared(Vector2 a, Vector2 b) { var x = (double)a.X - b.X; var y = (double)a.Y - b.Y; return x * x + y * y; }
-    private int Project(Vector2 point, uint layers, out Vector2 projected)
+    internal (Vector2 Point, RID Owner) Closest(Vector2 point, bool regionOnly = false)
     {
-        var best = -1; projected = Vector2.Zero; var distance = double.PositiveInfinity;
-        for (var i = 0; i < Cells.Length; i++) { if (!Cells[i].Enabled || Cells[i].IsLink || (Cells[i].Layers & layers) == 0) continue; var p = Closest(Cells[i], point); var d = DistanceSquared(p, point); if (d < distance) { distance = d; best = i; projected = p; } }
-        return best;
+        var projected = Vector2.Zero;
+        var owner = default(RID);
+        var distance = double.PositiveInfinity;
+        foreach (var cell in Cells)
+        {
+            if (!regionOnly && (!cell.Enabled || cell.IsLink))
+                continue;
+
+            var candidate = Closest(cell, point, out var interior);
+            if (interior)
+            {
+                // The last containing region wins. An equally close boundary keeps the earlier owner.
+                projected = point;
+                owner = cell.Region;
+                distance = 0;
+                if (regionOnly)
+                    break;
+                continue;
+            }
+
+            var squared = DistanceSquared(candidate, point);
+            if (squared < distance)
+            {
+                projected = candidate;
+                owner = cell.Region;
+                distance = squared;
+            }
+        }
+        return (projected, owner);
     }
-    internal (Vector2 Point, RID Owner) Closest(Vector2 point) { var index = Project(point, uint.MaxValue, out var p); return (p, index < 0 ? default : Cells[index].Region); }
     internal Rect2 Bounds(RID region)
     {
         var found = false; var minimum = Vector2.Zero; var maximum = Vector2.Zero;

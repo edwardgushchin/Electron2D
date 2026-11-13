@@ -68,16 +68,18 @@ public sealed partial class NavigationServer
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
     public static float MapGetEdgeConnectionMargin(RID map) { lock (Shared._gate) return Shared.Map(map).EdgeMargin; }
     /// <summary>Projects a finite world point onto the committed map, or returns zero for empty topology.</summary>
-    /// <param name="map">Live navigation map RID; empty is accepted only when detaching a region.</param>
+    /// <param name="map">Live navigation map RID.</param>
     /// <param name="point">Finite world-space query position.</param>
     /// <returns>Projects a finite world point onto the committed map, or returns zero for empty topology.</returns>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
+    /// <remarks>Uses enabled region surfaces from the published iteration across all navigation layers.</remarks>
     public static Vector2 MapGetClosestPoint(RID map, Vector2 point) { Finite(point); lock (Shared._gate) return Shared.Map(map).Iteration.Closest(point).Point; }
     /// <summary>Returns the closest committed region identity, or empty for empty topology.</summary>
-    /// <param name="map">Live navigation map RID; empty is accepted only when detaching a region.</param>
+    /// <param name="map">Live navigation map RID.</param>
     /// <param name="point">Finite world-space query position.</param>
     /// <returns>Returns the closest committed region identity, or empty for empty topology.</returns>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
+    /// <remarks>The last published region containing the point strictly inside one of its polygons wins. Other distance ties retain the first region.</remarks>
     public static RID MapGetClosestPointOwner(RID map, Vector2 point) { Finite(point); lock (Shared._gate) return Shared.Map(map).Iteration.Closest(point).Owner; }
     /// <summary>Returns a copied path across the committed polygon map.</summary>
     /// <param name="map">Live map identity.</param><param name="origin">Finite world start.</param><param name="destination">Finite world destination.</param>
@@ -186,14 +188,22 @@ public sealed partial class NavigationServer
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
     public static Vector2 RegionGetClosestPoint(RID region, Vector2 point)
     {
-        Finite(point); lock (Shared._gate) { var r = Shared.Region(region); var best = Vector2.Zero; var distance = double.PositiveInfinity; foreach (var cell in r.Iteration.Cells) if (cell.Region == region) { var p = NavigationMapIteration.Closest(cell, point); var dx = (double)p.X - point.X; var dy = (double)p.Y - point.Y; var d = dx * dx + dy * dy; if (d < distance) { distance = d; best = p; } } return best; }
+        Finite(point);
+        lock (Shared._gate)
+            return Shared.Region(region).Iteration.Closest(point, regionOnly: true).Point;
     }
     /// <summary>Reports whether this region owns the closest committed point, preserving map tie ownership.</summary>
     /// <param name="region">Live navigation region RID.</param>
     /// <param name="point">Finite world-space query position.</param>
     /// <returns>Reports whether this region owns the closest committed point, preserving map tie ownership.</returns>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
-    public static bool RegionOwnsPoint(RID region, Vector2 point) { Finite(point); lock (Shared._gate) { var r = Shared.Region(region); return r.Map.IsValid() && Shared.Map(r.Map).Iteration.Closest(point).Owner == region; } }
+    /// <remarks>Uses the published map membership and the same owner selection as <see cref="MapGetClosestPointOwner"/>.</remarks>
+    public static bool RegionOwnsPoint(RID region, Vector2 point)
+    {
+        Finite(point);
+        lock (Shared._gate)
+            return Shared.RegionMapIteration(Shared.Region(region)).Closest(point).Owner == region;
+    }
     private static void Nonnegative(float value) { if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value)); }
     private static void Finite(Vector2 value) { if (!value.IsFinite()) throw new ArgumentException("Navigation points must be finite.", nameof(value)); }
 }

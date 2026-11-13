@@ -36,7 +36,7 @@ internal static class NavigationTests
         using var world = new World(); Check(world.NavigationMap.IsValid() && NavigationServer.MapIsActive(world.NavigationMap), "World lazily owns a real active map."); Reject<InvalidOperationException>(() => NavigationServer.FreeRID(world.NavigationMap)); var wrid = world.NavigationMap; world.Dispose(); Reject<ArgumentException>(() => NavigationServer.MapGetRegions(wrid));
         using var geometry = Rectangle(0, 0, 20, 20); var root = new SubViewport(); var region = new NavigationRegion { NavigationPolygon = geometry }; root.AddChild(region); using var tree = new SceneTree(root); var srid = region.GetRID(); Reject<InvalidOperationException>(() => NavigationServer.FreeRID(srid)); tree.PhysicsFrame(0); Check(NavigationServer.MapGetClosestPointOwner(root.World!.NavigationMap, new(2, 2)) == srid, "Scene region publishes through the selected World map on a physics boundary.");
         using var other = new World(); root.World = other; tree.PhysicsFrame(0); Check(region.GetNavigationMap() == other.NavigationMap && NavigationServer.MapGetClosestPointOwner(other.NavigationMap, new(2, 2)) == srid, "World replacement preserves region identity and updates map membership."); region.Position = new(30, 0); tree.ProcessFrame(0); tree.PhysicsFrame(0); Check(NavigationServer.MapGetClosestPoint(other.NavigationMap, new(0, 0)) == new Vector2(30, 0), "Global scene transform changes reach committed topology.");
-        WeightedRoutes(); AtomicPublication(); WeakSceneLifetime(); LargeCoordinates(); Storage();
+        ProjectionOwnership(); WeightedRoutes(); AtomicPublication(); WeakSceneLifetime(); LargeCoordinates(); Storage();
         Console.WriteLine("Navigation authored polygons, deferred maps, paths, ownership, scene worlds and 2000 allocation-free projections passed.");
         void Bind(RID region, NavigationPolygon polygon) { NavigationServer.RegionSetMap(region, map); NavigationServer.RegionSetNavigationPolygon(region, polygon); }
     }
@@ -85,6 +85,74 @@ internal static class NavigationTests
         Check(!abandoned.Weak.TryGetTarget(out _), "Server/resource subscriptions retain scene identity weakly.");
         NavigationServer.Synchronize(); Reject<ArgumentException>(() => NavigationServer.RegionGetMap(abandoned.RID)); polygon.ClearPolygons();
     }
+    private static void ProjectionOwnership()
+    {
+        using var firstShape = Rectangle(0, 0, 10, 10);
+        using var secondShape = new NavigationPolygon();
+        secondShape.SetVertices([new(5, 0), new(5, 10), new(15, 10), new(15, 0)]);
+        secondShape.AddPolygon([0, 1, 2, 3]);
+        var map = NavigationServer.MapCreate();
+        var otherMap = NavigationServer.MapCreate();
+        var first = NavigationServer.RegionCreate();
+        var second = NavigationServer.RegionCreate();
+        try
+        {
+            NavigationServer.MapSetActive(map, true);
+            NavigationServer.MapSetActive(otherMap, true);
+            NavigationServer.RegionSetMap(first, map);
+            NavigationServer.RegionSetMap(second, map);
+            NavigationServer.RegionSetNavigationPolygon(first, firstShape);
+            NavigationServer.RegionSetNavigationPolygon(second, secondShape);
+            NavigationServer.RegionSetNavigationLayers(second, 0);
+
+            var inside = new Vector2(8, 5);
+            Check(NavigationServer.MapGetClosestPoint(map, inside) == Vector2.Zero &&
+                !NavigationServer.MapGetClosestPointOwner(map, inside).IsValid() &&
+                !NavigationServer.RegionOwnsPoint(first, inside), "Unpublished surfaces have no projection owner.");
+            NavigationServer.Synchronize();
+
+            Check(NavigationServer.MapGetClosestPoint(map, inside) == inside &&
+                NavigationServer.MapGetClosestPointOwner(map, inside) == second &&
+                NavigationServer.RegionOwnsPoint(second, inside) && !NavigationServer.RegionOwnsPoint(first, inside),
+                "The last containing region wins an interior overlap independently of winding and layers.");
+            Check(NavigationServer.MapGetClosestPointOwner(map, new(10, 5)) == second &&
+                NavigationServer.MapGetClosestPointOwner(map, new(5, 5)) == first,
+                "A containing interior takes precedence over another region's boundary.");
+            Check(NavigationServer.MapGetClosestPointOwner(map, new(8, 0)) == first &&
+                NavigationServer.MapGetClosestPointOwner(map, new(8, -2)) == first &&
+                NavigationServer.MapGetClosestPoint(map, new(8, -2)) == new Vector2(8, 0),
+                "Equal boundary and exterior distances keep the first region.");
+
+            NavigationServer.RegionSetMap(second, otherMap);
+            Check(NavigationServer.RegionOwnsPoint(second, inside), "Staged map changes retain committed ownership.");
+            NavigationServer.Synchronize();
+            Check(NavigationServer.MapGetClosestPointOwner(map, inside) == first &&
+                NavigationServer.MapGetClosestPointOwner(otherMap, inside) == second &&
+                NavigationServer.RegionOwnsPoint(second, inside), "Synchronization publishes ownership on the receiving map.");
+
+            NavigationServer.RegionSetEnabled(second, false);
+            NavigationServer.Synchronize();
+            Check(!NavigationServer.RegionOwnsPoint(second, inside) &&
+                NavigationServer.RegionGetClosestPoint(second, new(17, 5)) == new Vector2(15, 5),
+                "A disabled region keeps its local geometry and no longer owns a map projection.");
+
+            NavigationServer.RegionSetMap(second, default);
+            NavigationServer.Synchronize();
+            Check(!NavigationServer.RegionOwnsPoint(second, inside) &&
+                NavigationServer.RegionGetClosestPoint(second, inside) == inside,
+                "Detached geometry can still be queried without a map owner.");
+            Reject<ArgumentException>(() => NavigationServer.MapGetClosestPointOwner(map, new(float.NaN, 0)));
+            Reject<ArgumentException>(() => NavigationServer.RegionGetClosestPoint(map, inside));
+        }
+        finally
+        {
+            NavigationServer.FreeRID(second);
+            NavigationServer.FreeRID(first);
+            NavigationServer.FreeRID(otherMap);
+            NavigationServer.FreeRID(map);
+        }
+    }
+
     private static void LargeCoordinates()
     {
         using var polygon = Rectangle(0, 0, 1e20f, 1e20f); var map = NavigationServer.MapCreate(); var region = NavigationServer.RegionCreate();

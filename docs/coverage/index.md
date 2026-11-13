@@ -1,3 +1,5 @@
+[Navigation projection](../components/navigation-maps.md#projection-ownership) resolves overlap and committed ownership. Four Partial rows move to Implemented. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [RGBE conversion](../components/images.md#rgbe-to-srgb) builds the RGB8 mip chain from the converted base. One Partial row moves to Implemented. Coverage is **13,962/18,900 (73.87%)**, with 1,123 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [SceneTree fixed-frame numbering](../components/scene-tree.md#runtime-flow) supplies the public fixed-frame index and verifies the frame-start phases. One Unimplemented and one Partial row move to Implemented. Coverage is **13,961/18,900 (73.87%)**, with 1,124 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

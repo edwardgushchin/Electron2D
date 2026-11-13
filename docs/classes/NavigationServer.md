@@ -116,7 +116,7 @@ Configuration setters stage the next iteration; configuration getters report sta
 <a id="mapgetclosestpointowner"></a>
 ### `public static RID MapGetClosestPointOwner(RID map, Vector2 point)`
 
-Returns the closest committed region identity, or empty for empty topology.
+Returns the closest committed region identity, or empty for empty topology. The last region whose polygon strictly contains the point wins. Other equal-distance projections retain the first region. All navigation layers participate, including regions with a zero layer mask. See [projection ownership](../components/navigation-maps.md#projection-ownership).
 
 `map`: Live navigation map RID; empty is accepted only when detaching a region. `point`: Finite world-space query position.
 
@@ -303,7 +303,7 @@ Configuration setters stage the next iteration; configuration getters report sta
 <a id="regionownspoint"></a>
 ### `public static bool RegionOwnsPoint(RID region, Vector2 point)`
 
-Reports whether this region owns the closest committed point, preserving map tie ownership.
+Reports whether this region owns the closest point under the same selection as `MapGetClosestPointOwner`. It uses committed map membership. A region without a published map owner returns false.
 
 `region`: Live navigation region RID. `point`: Finite world-space query position.
 
