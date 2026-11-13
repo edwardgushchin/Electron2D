@@ -154,7 +154,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)`](#method-windowsetcurrentscreen) | Requests that the main window move to another connected display. |
 | [`public static float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)`](#method-screengetrefreshrate) | Gets the current mode's refresh rate in hertz, or `-1` when unavailable. |
 | [`public static float ScreenGetMaxScale()`](#method-screengetmaxscale) | Gets the largest reported content scale among connected displays. |
-| [`public static Vector2i WindowGetMinSize(int windowId = MainWindowId)`](#method-windowgetminsize) | Gets the requested minimum client size. |
+| [`public static Vector2i WindowGetMinSize(int windowId = MainWindowId)`](#method-windowgetminsize) | Gets the requested minimum client size. [Wrapped content](../components/window-runtime.md#fitting-child-controls) can raise the native lower bound. |
 | [`public static void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetminsize) | Requests minimum client dimensions. |
 | [`public static Vector2i WindowGetMaxSize(int windowId = MainWindowId)`](#method-windowgetmaxsize) | Gets the requested maximum client size. |
 | [`public static void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetmaxsize) | Requests maximum client dimensions. |

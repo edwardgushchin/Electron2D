@@ -471,7 +471,8 @@ public sealed partial class DisplayServer
 
     /// <summary>Gets the requested minimum size of the selected native window.</summary>
     /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
-    /// <returns>The requested pixel dimensions on Wayland or native window dimensions elsewhere; zero means no bound on that axis.</returns>
+    /// <returns>The requested pixel dimensions on Wayland or native window dimensions elsewhere; zero means no authored bound on that axis.</returns>
+    /// <remarks>A wrapped scene window can impose an additional content minimum on its native host.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i WindowGetMinSize(int windowId = MainWindowId) => RequireService().WindowGetMinSizeCore(windowId);
 

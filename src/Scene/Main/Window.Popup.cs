@@ -50,6 +50,7 @@ public partial class Window
     }
     /// <summary>Gets or sets whether child control minimums constrain this window's size.</summary>
     /// <value>False initially; Popup defaults to true.</value>
+    /// <remarks>Desktop native hosts apply the measured content minimum within the authored size limits.</remarks>
     public bool WrapControls { get { ThrowIfDisposed(); return _wrapControls; } set { EnsureMutable(); _wrapControls = value; UpdateEmbeddedContents(); } }
     /// <summary>Gets or sets the popup input and outside-click close-request policy.</summary>
     /// <value>False initially; Popup defaults to true.</value>
@@ -256,16 +257,24 @@ public partial class Window
     private void UpdateEmbeddedContents(ulong? generation)
     {
         bool Current() => generation is null || generation == _childControlsGeneration && !IsDisposed && _visible;
-        if (WrapControls || _keepTitleVisible)
+        var content = MeasureContentMinimum();
+        if (!Current()) return;
+        Vector2i? resize = null;
+        if (_wrapControls || _keepTitleVisible)
         {
-            var minimum = GetWindowMinimumSize();
-            if (!Current()) return;
-            var size = _size.Max(minimum);
+            var size = _size.Max(MinSize).Max(TitleMinimum()).Max(content);
             var maximum = MaxSize;
             if (maximum.X > 0) size.X = Math.Min(size.X, maximum.X);
             if (maximum.Y > 0) size.Y = Math.Min(size.Y, maximum.Y);
-            if (size != _size) RequestMeasuredWindowSize(size);
+            if (size != _size) resize = size;
         }
+        if (_display is { } display && SupportsNativeSizeLimits)
+        {
+            ValidateNodeMutation();
+            RenderingOwner?.EnsureViewportMutation();
+            display.SetWindowContentMinimum(content, resize);
+        }
+        else if (resize is { } measuredSize) RequestMeasuredWindowSize(measuredSize);
         if (!Current()) return;
         if (ClampToEmbedder && Embedder is not null) Position = Position;
         _embeddedCanvas?.QueueRedraw();

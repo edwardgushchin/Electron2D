@@ -52,8 +52,8 @@ public sealed partial class DisplayServer : ElectronObject
     private string _accessibilityTitle = "";
     internal string AccessibilityTitle => IsNativePopup ? _popupTitle : _accessibilityTitle;
     internal Vector2i ObservedWindowPosition => _windowRect.Position;
-    private Vector2i _waylandMinimumSize = new(64, 64);
-    private Vector2i _waylandMaximumSize;
+    private Vector2i? _requestedMinimumSize, _requestedMaximumSize;
+    private Vector2i _contentMinimumSize;
     private WaylandInput? _waylandInput;
 
     private DisplayServer(nint window, nint gtkScreen, nint gtkTitlebarProvider, string? previousGamepadBackgroundHint,
@@ -71,6 +71,11 @@ public sealed partial class DisplayServer : ElectronObject
         _accessibilityTitle = SDL.GetWindowTitle(window);
         var videoDriver = _videoDriver = SDL.GetCurrentVideoDriver();
         _waylandWindowPosition = videoDriver == "wayland";
+        if (_waylandWindowPosition)
+        {
+            _requestedMinimumSize = root is null ? new(64, 64) : Vector2i.Zero;
+            _requestedMaximumSize = Vector2i.Zero;
+        }
         _pixelWindowCoordinates = _waylandWindowPosition || OperatingSystem.IsAndroid() ||
             OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser();
         _linuxPortalThemeDriver = videoDriver is "wayland" or "x11";

@@ -211,7 +211,6 @@ public sealed partial class DisplayServer
             child.SceneWindow = sceneWindow;
             child.PopupInputPolicy = popupParent is not null && (sceneWindow?.PopupWindow ?? true);
             child.ApplyDefaultWindowIcon();
-            child._waylandMinimumSize = Vector2i.Zero;
             child._requestedVSync = WindowGetVSyncMode();
             child._vSyncConfigured = true;
             root._childWindows.Add(id, child);

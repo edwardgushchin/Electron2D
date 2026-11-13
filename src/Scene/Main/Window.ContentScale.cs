@@ -81,11 +81,13 @@ public partial class Window
     {
         EnsureMutable(); RenderingOwner?.EnsureViewportMutation();
         if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        var previousScale = _contentScaleFactor;
         var previous = field; field = value;
         WindowContentLayout layout;
         try { layout = CalculateContentLayout(); } catch { field = previous; throw; }
         _contentScaleFactor = layout.Factor; _contentLayout = layout; _contentLayoutValid = true;
         InvalidateViewportRecording(); _embeddedCanvas?.QueueRedraw();
+        if (_wrapControls && previousScale != _contentScaleFactor) ChildControlsChanged();
         NotifyContentSizeChanged();
     }
     private void NotifyContentSizeChanged()

@@ -101,8 +101,9 @@ public partial class Window : Viewport
             RenderingOwner?.EnsureViewportMutation();
             value = value.Max(GetWindowMinimumSize());
             EnsureMutable();
-            if (_maxSize.X > 0) value.X = Math.Min(value.X, _maxSize.X);
-            if (_maxSize.Y > 0) value.Y = Math.Min(value.Y, _maxSize.Y);
+            var maximum = MaxSize;
+            if (maximum.X > 0) value.X = Math.Min(value.X, maximum.X);
+            if (maximum.Y > 0) value.Y = Math.Min(value.Y, maximum.Y);
             RequestMeasuredWindowSize(value);
         }
     }
@@ -332,13 +333,16 @@ public partial class Window : Viewport
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }
 
+    private static bool SupportsNativeSizeLimits =>
+        !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() && !OperatingSystem.IsBrowser();
+
     private void ConfigureNative()
     {
         if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         var display = _display ?? throw new InvalidOperationException("The native window is absent.");
         display.SetHDROutputRequestCore(_hdrOutputRequested);
         _observedNativePosition = display.ObservedWindowPosition;
-        if (OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser())
+        if (!SupportsNativeSizeLimits)
         {
             if (_minSize.X != 0 || _minSize.Y != 0 || _maxSize.X != 0 || _maxSize.Y != 0)
                 throw new NotSupportedException("Mobile, TV and browser surfaces do not support window size limits.");

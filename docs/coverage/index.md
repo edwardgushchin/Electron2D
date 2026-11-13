@@ -1,3 +1,5 @@
+[Desktop window content limits](../components/window-runtime.md#fitting-child-controls) apply the live content minimum to native resizing while preserving authored limits. `Window.ChildControlsChanged` moves from Partial to Implemented. Coverage is **13,986/18,900 (74.00%)**, with 1,124 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
+
 [Window content fitting](../components/window-runtime.md#fitting-child-controls) connects dynamic Control bounds to coalesced embedded and native resize requests. One Blocked row moves to Partial pending live window-manager size constraints. Coverage is **13,985/18,900 (73.99%)**, with 1,125 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
 
 [Window drawability](../components/window-runtime.md#window-drawability) exposes presentation eligibility and suppresses presentation to hidden or minimized native windows while keeping viewport rendering available. Two Blocked rows move to Implemented. Coverage is **13,985/18,900 (73.99%)**, with 1,124 Partial, 269 Unimplemented, 3,522 Blocked, 8,393 Excluded and zero unmapped.

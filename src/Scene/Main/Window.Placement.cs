@@ -52,19 +52,17 @@ public partial class Window
         else CommitSize(size);
     }
     private bool _measuringWindowMinimum;
-    private Vector2i GetWindowMinimumSize()
+    private Vector2i GetWindowMinimumSize() => MinSize.Max(TitleMinimum()).Max(MeasureContentMinimum());
+
+    private Vector2i MeasureContentMinimum()
     {
         if (_measuringWindowMinimum) throw new InvalidOperationException("Window minimum measurement cannot be reentered.");
         _measuringWindowMinimum = true;
         try
         {
-            var minimum = _minSize.Max(TitleMinimum());
-            if (_wrapControls)
-            {
-                var content = (GetContentsMinimumSize() * _contentScaleFactor).Ceil();
-                minimum = minimum.Max(new Vector2i(checked((int)content.X), checked((int)content.Y)));
-            }
-            return minimum;
+            if (!_wrapControls) return default;
+            var content = (GetContentsMinimumSize() * _contentScaleFactor).Ceil();
+            return new(checked((int)content.X), checked((int)content.Y));
         }
         finally { _measuringWindowMinimum = false; }
     }

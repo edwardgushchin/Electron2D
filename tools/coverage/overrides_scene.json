@@ -3,8 +3,7 @@
     {
       "godot": "Window::method:child_controls_changed()",
       "electron2d": "method:Electron2D.Window.ChildControlsChanged()",
-      "state": "Partial",
-      "reason": "ADRs 0008/0028/0040: deferred fitting grows visible embedded and native windows from current child bounds, with coalescing, owner/lifetime guards and native resize acknowledgement. Trigger: combine authored SDL size limits with a separate live content minimum for window-manager-driven resizes, including atomic updates when a new maximum is smaller."
+      "reason": "Coalesced scene refresh and desktop native content minimum under ADRs 0008/0028/0040."
     },
     {
       "godot": "Window::method:can_draw()",
@@ -8796,6 +8795,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028/0040: deferred fitting grows visible embedded and native windows. On desktop SDL also applies the effective content minimum to native resizing, preserves authored bounds, and orders and rolls back changes to the native limit pair. Windows Vulkan/Direct3D 11 and embedded execution are verified; foreign platform qualification remains separate.",
+      "godot": ["Window::method:child_controls_changed()"]
+    },
     {
       "godot": ["ProjectSettings::property:application/run/main_loop_type"],
       "state": "Partial",

@@ -269,88 +269,115 @@ public sealed partial class DisplayServer
 
     internal Vector2i WindowGetMinSizeCore(int windowId = MainWindowId)
     {
-        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetMinSizeCore(MainWindowId);
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetMinSizeCore();
         EnsureOwner();
-        if (_waylandWindowPosition)
-        {
-            _ = GetWindow(windowId);
-            return _waylandMinimumSize;
-        }
-        if (!SDL.GetWindowMinimumSize(GetWindow(windowId), out var width, out var height))
-            throw SDLFailure("read minimum window size");
-        return new Vector2i(width, height);
+        return _requestedMinimumSize ?? ReadNativeWindowLimit(minimum: true);
     }
 
     internal void WindowSetMinSizeCore(Vector2i size, int windowId = MainWindowId)
     {
-        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetMinSizeCore(size, MainWindowId); return; }
-        EnsureOwner();
-        if (size.X < 0 || size.Y < 0)
-            throw new ArgumentOutOfRangeException(nameof(size), size, "Minimum dimensions cannot be negative.");
-        var maximum = WindowGetMaxSizeCore(windowId);
-        if ((maximum.X > 0 && size.X > maximum.X) || (maximum.Y > 0 && size.Y > maximum.Y))
-            throw new ArgumentOutOfRangeException(nameof(size), size, "Minimum dimensions cannot exceed the maximum dimensions.");
-        var window = GetWindow(windowId);
-        var nativeSize = _waylandWindowPosition ? WaylandLogicalWindowLimit(size, window, minimum: true) : size;
-        if (_waylandWindowPosition)
-        {
-            var nativeMaximum = WaylandLogicalWindowLimit(maximum, window, minimum: false);
-            if ((nativeMaximum.X > 0 && nativeSize.X > nativeMaximum.X) ||
-                (nativeMaximum.Y > 0 && nativeSize.Y > nativeMaximum.Y))
-                throw new ArgumentOutOfRangeException(nameof(size), size, "The minimum and maximum cannot both be represented at the current pixel density.");
-        }
-        if (!SDL.SetWindowMinimumSize(window, nativeSize.X, nativeSize.Y))
-            throw SDLFailure("set minimum window size");
-        if (_waylandWindowPosition)
-            _waylandMinimumSize = size;
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetMinSizeCore(size); return; }
+        ApplyWindowLimits(size, WindowGetMaxSizeCore(), _contentMinimumSize);
     }
 
     internal Vector2i WindowGetMaxSizeCore(int windowId = MainWindowId)
     {
-        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetMaxSizeCore(MainWindowId);
+        if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetMaxSizeCore();
         EnsureOwner();
-        if (_waylandWindowPosition)
-        {
-            _ = GetWindow(windowId);
-            return _waylandMaximumSize;
-        }
-        if (!SDL.GetWindowMaximumSize(GetWindow(windowId), out var width, out var height))
-            throw SDLFailure("read maximum window size");
-        return new Vector2i(width, height);
+        return _requestedMaximumSize ?? ReadNativeWindowLimit(minimum: false);
     }
 
     internal void WindowSetMaxSizeCore(Vector2i size, int windowId = MainWindowId)
     {
-        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetMaxSizeCore(size, MainWindowId); return; }
-        EnsureOwner();
-        if (size.X < 0 || size.Y < 0)
-            throw new ArgumentOutOfRangeException(nameof(size), size, "Maximum dimensions cannot be negative.");
-        var minimum = WindowGetMinSizeCore(windowId);
-        if ((size.X > 0 && size.X < minimum.X) || (size.Y > 0 && size.Y < minimum.Y))
-            throw new ArgumentOutOfRangeException(nameof(size), size, "Maximum dimensions cannot be smaller than the minimum dimensions.");
-        var window = GetWindow(windowId);
-        var nativeSize = _waylandWindowPosition ? WaylandLogicalWindowLimit(size, window, minimum: false) : size;
-        if (_waylandWindowPosition)
-        {
-            var nativeMinimum = WaylandLogicalWindowLimit(minimum, window, minimum: true);
-            if ((nativeSize.X > 0 && nativeSize.X < nativeMinimum.X) ||
-                (nativeSize.Y > 0 && nativeSize.Y < nativeMinimum.Y))
-                throw new ArgumentOutOfRangeException(nameof(size), size, "The minimum and maximum cannot both be represented at the current pixel density.");
-        }
-        if (!SDL.SetWindowMaximumSize(window, nativeSize.X, nativeSize.Y))
-            throw SDLFailure("set maximum window size");
-        if (_waylandWindowPosition)
-            _waylandMaximumSize = size;
+        if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetMaxSizeCore(size); return; }
+        ApplyWindowLimits(WindowGetMinSizeCore(), size, _contentMinimumSize);
     }
 
-    private void ReapplyWaylandWindowLimits()
+    internal void SetWindowContentMinimum(Vector2i minimum, Vector2i? resize)
     {
-        var window = GetWindow(MainWindowId);
-        var minimum = WaylandLogicalWindowLimit(_waylandMinimumSize, window, minimum: true);
-        var maximum = WaylandLogicalWindowLimit(_waylandMaximumSize, window, minimum: false);
-        if (!SDL.SetWindowMinimumSize(window, minimum.X, minimum.Y) ||
-            !SDL.SetWindowMaximumSize(window, maximum.X, maximum.Y))
-            throw SDLFailure("update window size limits for the pixel density");
+        EnsureOwner();
+        if (_contentMinimumSize != minimum)
+            ApplyWindowLimits(WindowGetMinSizeCore(), WindowGetMaxSizeCore(), minimum, resize);
+        else if (resize is { } size)
+            WindowSetSizeCore(size);
+    }
+
+    private void ReapplyWaylandWindowLimits() =>
+        ApplyWindowLimits(WindowGetMinSizeCore(), WindowGetMaxSizeCore(), _contentMinimumSize);
+
+    private static bool LimitsConflict(Vector2i minimum, Vector2i maximum) =>
+        maximum.X > 0 && minimum.X > maximum.X || maximum.Y > 0 && minimum.Y > maximum.Y;
+
+    private static Vector2i CapWindowMinimum(Vector2i minimum, Vector2i maximum) =>
+        new(maximum.X > 0 ? Math.Min(minimum.X, maximum.X) : minimum.X,
+            maximum.Y > 0 ? Math.Min(minimum.Y, maximum.Y) : minimum.Y);
+
+    private Vector2i ReadNativeWindowLimit(bool minimum)
+    {
+        var window = _window.DangerousGetHandle();
+        var success = minimum ? SDL.GetWindowMinimumSize(window, out var width, out var height)
+            : SDL.GetWindowMaximumSize(window, out width, out height);
+        return success ? new(width, height) : throw SDLFailure("read native window size limits");
+    }
+
+    private void ApplyWindowLimits(Vector2i minimum, Vector2i maximum, Vector2i content, Vector2i? resize = null)
+    {
+        EnsureOwner();
+        if (minimum.X < 0 || minimum.Y < 0 || maximum.X < 0 || maximum.Y < 0 || LimitsConflict(minimum, maximum))
+            throw new ArgumentOutOfRangeException(nameof(minimum), "Window limits must be nonnegative and ordered on each axis.");
+
+        var window = _window.DangerousGetHandle();
+        var nativeMinimum = _waylandWindowPosition ? WaylandLogicalWindowLimit(minimum, window, minimum: true) : minimum;
+        var nativeMaximum = _waylandWindowPosition ? WaylandLogicalWindowLimit(maximum, window, minimum: false) : maximum;
+        if (LimitsConflict(nativeMinimum, nativeMaximum))
+            throw new ArgumentOutOfRangeException(nameof(minimum), "The limits cannot both be represented at the current pixel density.");
+        var nativeContent = _waylandWindowPosition ? WaylandLogicalWindowLimit(content, window, minimum: true) : content;
+        nativeMinimum = CapWindowMinimum(nativeMinimum.Max(nativeContent), nativeMaximum);
+
+        var previousMinimum = ReadNativeWindowLimit(minimum: true);
+        var previousMaximum = ReadNativeWindowLimit(minimum: false);
+        if (previousMinimum == nativeMinimum && previousMaximum == nativeMaximum)
+        {
+            if (resize is { } size) WindowSetSizeCore(size);
+        }
+        else
+        {
+            if (!SDL.GetWindowSize(window, out var width, out var height))
+                throw SDLFailure("read window size before changing limits");
+            try
+            {
+                SetNativeWindowLimits(window, previousMinimum, previousMaximum, nativeMinimum, nativeMaximum);
+                if (resize is { } size) WindowSetSizeCore(size);
+            }
+            catch (Exception error)
+            {
+                try
+                {
+                    SetNativeWindowLimits(window, ReadNativeWindowLimit(minimum: true), ReadNativeWindowLimit(minimum: false), previousMinimum, previousMaximum);
+                    if (!SDL.SetWindowSize(window, width, height)) throw SDLFailure("restore window size after changing limits");
+                }
+                catch (Exception rollback) { throw new AggregateException("Window size limits and rollback both failed.", error, rollback); }
+                throw;
+            }
+        }
+        _requestedMinimumSize = minimum;
+        _requestedMaximumSize = maximum;
+        _contentMinimumSize = content;
+    }
+
+    private static void SetNativeWindowLimits(nint window, Vector2i oldMinimum, Vector2i oldMaximum, Vector2i minimum, Vector2i maximum)
+    {
+        // SDL checks each setter against the opposite limit and may resize while applying it.
+        if (LimitsConflict(oldMinimum, maximum))
+        {
+            oldMinimum = oldMinimum.Min(minimum);
+            if (!SDL.SetWindowMinimumSize(window, oldMinimum.X, oldMinimum.Y))
+                throw SDLFailure("lower minimum before changing maximum window size");
+        }
+        if (oldMaximum != maximum && !SDL.SetWindowMaximumSize(window, maximum.X, maximum.Y))
+            throw SDLFailure("set maximum window size");
+        if (oldMinimum != minimum && !SDL.SetWindowMinimumSize(window, minimum.X, minimum.Y))
+            throw SDLFailure("set minimum window size");
     }
 
     internal WindowMode WindowGetModeCore(int windowId = MainWindowId)

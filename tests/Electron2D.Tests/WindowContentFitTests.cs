@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Electron2D;
+using SDL3;
 using static MovieWriterTests;
 
 internal static class WindowContentFitTests
@@ -118,8 +119,8 @@ internal static class WindowContentFitTests
         using var window = new Window { Borderless = true, Size = new(128, 96), WrapControls = true };
         var content = new ColorRect { Position = new(6, 4), Size = new(32, 24), Color = Colors.Green };
         window.AddChild(content);
-        var complete = false;
-        window.Ready += _ =>
+        var phase = 0;
+        window.Ready += _window =>
         {
             var timeout = Stopwatch.StartNew();
             content.CustomMinimumSize = new(184, 130);
@@ -127,16 +128,55 @@ internal static class WindowContentFitTests
             RenderingServer.FramePostDraw += () =>
             {
                 Check(timeout.Elapsed < TimeSpan.FromSeconds(12), "Native fitting did not deliver the resized frame.");
-                if (window.Size != new Vector2i(190, 134)) return;
-                Check(DisplayServer.WindowGetSize() == window.Size, "Native client geometry acknowledges the new size.");
-                using var pixels = window.GetTexture().GetImage();
-                if (pixels?.Size != window.Size) return;
-                Check(pixels.GetPixel(170, 115).IsEqualApprox(Colors.Green), "The expanded client contains real child pixels.");
-                complete = true;
-                window.Tree!.Quit();
+                if (phase == 0)
+                {
+                    if (window.Size != new Vector2i(190, 134)) return;
+                    Check(DisplayServer.WindowGetSize() == window.Size, "Native client geometry acknowledges the new size.");
+                    using var pixels = window.GetTexture().GetImage();
+                    if (pixels?.Size != window.Size) return;
+                    Check(pixels.GetPixel(170, 115).IsEqualApprox(Colors.Green), "The expanded client contains real child pixels.");
+                    var native = SDL.GetWindows(out var count);
+                    Check(count == 1, "One window owns the native limits.");
+                    CheckNativeMinimum(native![0], new(190, 134));
+                    Check(window.MinSize == default && DisplayServer.WindowGetMinSize() == default, "The authored minimum excludes the content constraint.");
+                    window.MinSize = new(140, 110);
+                    Reject<ArgumentOutOfRangeException>(() => window.MaxSize = new(139, 0));
+                    CheckNativeMinimum(native[0], new(190, 134));
+                    window.MaxSize = new(160, 0);
+                    CheckNativeMinimum(native[0], new(160, 134));
+                    Check(window.MinSize == new Vector2i(140, 110) && window.MaxSize == new Vector2i(160, 0), "A lower maximum clamps the effective minimum only.");
+                    DisplayServer.WindowSetSize(new(130, 120));
+                    phase++;
+                    return;
+                }
+
+                if (phase != 1 || window.Size != new Vector2i(160, 134)) return;
+                var handle = SDL.GetWindows(out _)![0];
+                Check(DisplayServer.WindowGetSize() == window.Size, "The native size request respects the effective minimum.");
+                window.ContentScaleFactor = .5f;
+                window.Tree!.Defer(() =>
+                {
+                    CheckNativeMinimum(handle, new(140, 110));
+                    window.ContentScaleFactor = 1;
+                    window.Tree!.Defer(() =>
+                    {
+                        CheckNativeMinimum(handle, new(160, 134));
+                        window.WrapControls = false;
+                        CheckNativeMinimum(handle, new(140, 110));
+                        phase++;
+                        window.Tree!.Quit();
+                    });
+                });
+                phase++;
             };
         };
-        Check(Engine.Run(window) == 0 && complete && window.IsDisposed, "Fitting completes through the ordinary native host.");
+        Check(Engine.Run(window) == 0 && phase == 3 && window.IsDisposed, "Fitting completes through the ordinary native host.");
+    }
+
+    private static void CheckNativeMinimum(nint window, Vector2i expected)
+    {
+        Check(SDL.GetWindowMinimumSize(window, out var width, out var height) && new Vector2i(width, height) == expected,
+            $"SDL minimum ({width}, {height}) should equal {expected}.");
     }
 
     private sealed class ProbeWindow : Window
