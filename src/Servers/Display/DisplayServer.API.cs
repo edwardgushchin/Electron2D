@@ -503,6 +503,15 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static WindowMode WindowGetMode(int windowId = MainWindowId) => RequireService().WindowGetModeCore(windowId);
 
+    /// <summary>Reports whether a native window is eligible for automatic on-screen presentation.</summary>
+    /// <param name="windowID">A live native window identity. Zero selects the main window.</param>
+    /// <returns>True for a shown, non-minimized window with an active screen renderer and automatic drawing enabled.</returns>
+    /// <remarks>Headless video drivers and display-only hosts return false. Availability can change independently
+    /// of this query, and a subsequent swapchain acquisition may still defer presentation.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The window identity is absent or retired.</exception>
+    /// <exception cref="InvalidOperationException">The display server is inactive or the caller is off-owner.</exception>
+    public static bool WindowCanDraw(int windowID = MainWindowId) => RequireService().ResolveWindow(windowID).CanDrawWindow();
+
     /// <summary>Requests a native main-window mode.</summary>
     /// <param name="mode">Windowed, minimized, maximized, borderless fullscreen, or exclusive fullscreen.</param>
     /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>

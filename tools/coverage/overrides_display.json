@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:window_can_draw(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowCanDraw(System.Int32)",
+      "reason": "ADRs 0028/0040/0095: retained native-window identity and automatic renderer eligibility; shown and minimized state come from SDL."
+    },
+    {
       "godot": "DisplayServer::method:beep()",
       "electron2d": "method:Electron2D.DisplayServer.Beep()",
       "reason": "Requests the native system bell on the display owner through Win32, AppKit, X11 or optional Wayland system-bell protocol. Missing providers and system policy can yield no feedback."
@@ -1383,8 +1388,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First renderer and presentation loop; drawability needs a real rendering backend.",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0040: observes live native visibility, minimization and active renderer policy; display-only and headless sessions report false. Presentation shares native visibility eligibility. See docs/components/window-runtime.md#window-drawability.",
       "godot": [
         "DisplayServer::method:window_can_draw(int:)"
       ]

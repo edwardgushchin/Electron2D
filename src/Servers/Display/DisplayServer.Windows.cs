@@ -131,6 +131,16 @@ public sealed partial class DisplayServer
         return handle != 0 ? handle : throw new InvalidOperationException("The native handle is currently unavailable.");
     }
 
+    internal bool CanDrawWindow()
+    {
+        EnsureOwner();
+        return _outputBackend is not null && _videoDriver is not ("dummy" or "offscreen") &&
+            RenderingServer.Service?.RenderLoopEnabledCore == true && IsNativePresentationVisible;
+    }
+
+    internal bool IsNativePresentationVisible =>
+        (SDL.GetWindowFlags(_window.DangerousGetHandle()) & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) == 0;
+
     internal int GetWindowAtScreenPositionCore(Vector2i position)
     {
         EnsureOwner(); EnsureGlobalWindowCoordinatesAvailable();

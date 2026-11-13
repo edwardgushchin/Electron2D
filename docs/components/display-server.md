@@ -2,7 +2,7 @@
 
 The production Android host's [system back producer](window-runtime.md#system-back-navigation) posts to the active display's retained owner queue. `DisplayServer.GoBackRequested` delivers after buffered native input, before frame callbacks, including in `ForceProcessAndDropEvents`. Request capture, callback failure and retirement follow [ADR 0040](../decisions/display.md#adr-0040).
 
-Last updated: 2026-10-27
+Last updated: 2026-11-14
 
 ## Scope
 
@@ -21,6 +21,8 @@ This component owns the native SDL video connection, one main window, display an
 4. The host completes and pumps pending native file dialogs, then disposes the server after stopping its loop. Cursor, window, and video ownership are released, then the process singleton is cleared.
 
 The scene Window now consumes the existing `TextInput` and `TextEditing` events during Engine.Run. DisplayServer commits preedit/selection state before its text callbacks and clears it before a committed string callback; the root SceneTree then notifies live nodes and the focused Control in that order. DisplayServer itself retains only native event/IME ownership. A committed string can contain multiple Unicode scalars and is not assigned to a preceding key event. [TextDeliveryNativeTests](../../tests/Electron2D.Tests/TextDeliveryNativeTests.cs) verifies this bridge on Linux Wayland GPU and compatibility; a real input-method popup remains unverified.
+
+The per-window [drawability query](window-runtime.md#window-drawability) combines live native state and the screen renderer lifecycle.
 
 ## Per-window typed events
 

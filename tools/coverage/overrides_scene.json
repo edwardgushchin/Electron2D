@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "Window::method:can_draw()",
+      "electron2d": "method:Electron2D.Window.CanDraw()",
+      "reason": "ADRs 0028/0040: uses current native eligibility or attached embedded visibility under the scene owner guard."
+    },
+    {
       "godot": "ProjectSettings::property:application/run/main_loop_type",
       "electron2d": "property:Electron2D.ProjectSettings.MainLoopType()",
       "reason": "ADRs 0015/0016/0019/0027: typed selection of the owned scene or custom application loop."
@@ -10611,8 +10616,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "First rendered Window viewport, presentation and content-scaling slice; HDR requires a separate capability audit (ADR 0028).",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0040: detached and hidden windows return false, attached embedded windows use viewport composition, and live native windows query the shared presentation state. The owned custom-loop root uses its native host. See docs/components/window-runtime.md#window-drawability.",
       "godot": [
         "Window::method:can_draw()"
       ]

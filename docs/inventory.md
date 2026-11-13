@@ -139,6 +139,8 @@ CanvasItem TopLevel rebinding now connects to the existing recursive presentatio
 
 Last updated: 2026-11-14
 
+[Window drawability](components/window-runtime.md#window-drawability) extends the existing Window and DisplayServer types and is consumed by native presentation.
+
 [Configured project recording](components/movie-writing.md#recording-the-configured-project) adds explicit recording overloads to Engine over its existing project selector and MovieRecording lifecycle.
 
 [Animation movie completion](components/movie-writing.md#animation-completion) adds AnimationPlayer.MovieQuitOnFinish and connects the existing Engine/MovieWriter owners. No production type is added.

@@ -2,7 +2,7 @@
 
 [Native Windows capture exclusion](window-capture.md) preserves per-window authoring across packing, duplication and native child recreation, with independent capture verification and explicit unsupported-host behavior.
 
-Last updated: 2026-11-07
+Last updated: 2026-11-14
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -364,6 +364,16 @@ BootImageTests verifies real main-window alpha pixels, the native transparency f
 ## Custom decoration input
 
 Window.NonclientArea and NonclientWindowInput preserve mouse reception while an exclusive child blocks ordinary input. The shared window-reception path runs this signal before native suppression or embedded WindowInput. The final blocked viewport cannot consume client input, including direct injection, and clears stale handled state. Stored rectangles, typed inheritance, synchronous borrowed events, failure continuation and retirement share ordinary Window/scene ownership. See [the complete contract and verification](../classes/Window.md#custom-decoration-input).
+
+## Window drawability
+
+`DisplayServer.WindowCanDraw(windowID)` queries a live native window on the display owner. It requires an active screen renderer, automatic rendering enabled, and a shown, non-minimized SDL window. Display-only, dummy and offscreen hosts return false. This query observes eligibility at the time of the call. The window system can still defer the next actual presentation.
+
+`Window.CanDraw()` uses that same query on native windows, including the root of a custom MainLoop. Detached windows have no destination. A visible attached embedded window can compose into its viewport and does not need a separate native identity.
+
+The normal presentation and direct-to-screen paths use the same SDL visibility check. A minimized window can still render its viewport texture and retain pending device screen output. Restoration uses the existing redraw invalidation. Explicit ForceDraw controls presentation separately from automatic rendering policy. Compositor occlusion is independent of this check.
+
+On Windows x64, `ELECTRON2D_TEST_WINDOW_DRAWABILITY=gpu` and `compatibility` exercise actual minimize/restore, child identity retirement, detached and embedded states, disabled automatic rendering, and viewport pixels. Vulkan also verifies that pending device-screen output survives minimization and is consumed after restore. The `headless` profile uses SDL dummy/software to verify false screen eligibility with working viewport readback. Other platform window managers and physical display timing remain unverified.
 
 ## Native device screens
 

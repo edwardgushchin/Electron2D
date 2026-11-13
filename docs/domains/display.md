@@ -14,9 +14,11 @@
 
 # Display domain
 
+[Window drawability](../components/window-runtime.md#window-drawability) projects live native presentation eligibility through DisplayServer and Window.
+
 [Android system back](../components/window-runtime.md#system-back-navigation) uses actual framework callbacks and a retained display-owner request batch, including drop-input pumps and lifetime/error handling.
 
-Last updated: 2026-11-07
+Last updated: 2026-11-14
 
 Native driver identity is retained per opened display context for capability queries; device-dependent availability remains live. The [physics window allocation check](../components/physics-window-allocations.md) covers its passive-pointer hot path.
 

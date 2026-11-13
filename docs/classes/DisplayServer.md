@@ -2,7 +2,7 @@
 
 [Native Windows capture exclusion](../components/window-capture.md) applies WindowFlag.ExcludeFromCapture to the selected HWND and reads observed OS state. ScreenExcludeFromCapture requires Windows 10 version 2004 or later and DWM composition; other native backends currently reject this flag.
 
-Last updated: 2026-11-07
+Last updated: 2026-11-14
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -158,6 +158,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetminsize) | Requests minimum client dimensions. |
 | [`public static Vector2i WindowGetMaxSize(int windowId = MainWindowId)`](#method-windowgetmaxsize) | Gets the requested maximum client size. |
 | [`public static void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetmaxsize) | Requests maximum client dimensions. |
+| [`public static bool WindowCanDraw(int windowID = MainWindowId)`](#method-windowcandraw) | Reports eligibility for automatic on-screen presentation. |
 | [`public static WindowMode WindowGetMode(int windowId = MainWindowId)`](#method-windowgetmode) | Gets the main window's current native mode. |
 | [`public static void WindowSetMode(WindowMode mode, int windowId = MainWindowId)`](#method-windowsetmode) | Requests a native main-window mode. |
 | [`public static bool WindowIsFocused(int windowId = MainWindowId)`](#method-windowisfocused) | Gets whether the main window currently has keyboard focus. |
@@ -800,6 +801,11 @@ Requests maximum client dimensions for the main window. Wayland converts each pi
 **Errors:** `ArgumentOutOfRangeException` if a bound is negative, falls below a nonzero minimum, or cannot be represented without violating a pixel limit at the current density. Rejection preserves the previous native constraint.
 
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
+
+<a id="method-windowcandraw"></a>
+#### `public static bool WindowCanDraw(int windowID = MainWindowId)`
+
+Returns true for a shown, non-minimized native window with an active screen renderer and automatic drawing enabled. Zero selects the root window. Display-only, dummy and offscreen hosts return false. Unknown or retired identities, inactive service and off-owner access reject. See [window drawability](../components/window-runtime.md#window-drawability).
 
 <a id="method-windowgetmode"></a>
 #### `public static WindowMode WindowGetMode(int windowId = MainWindowId)`

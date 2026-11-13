@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-11-07
+Last updated: 2026-11-14
 
 [Native HDR output](../components/native-hdr-output.md) now provides stored
 HDROutputRequested, GetOutputMaxLinearValue() and the typed
@@ -102,6 +102,7 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | [`public void GrabFocus()`](#grabfocus) | Requests keyboard focus and foreground placement from the native system. |
 | [`public void StartDrag()`](#interactive-window-gestures) | Starts a move from a client-area left-button press. |
 | [`public void StartResize(DisplayServer.WindowResizeEdge edge)`](#interactive-window-gestures) | Starts resizing from a client-area press and a chosen edge. |
+| [`public bool CanDraw()`](#candraw) | Reports native or embedded drawing eligibility. |
 | [`public bool HasFocus()`](#hasfocus) | Reports whether the active native window has keyboard focus. |
 | [`public void RequestAttention()`](#requestattention) | Requests a platform attention indication until this window is focused. |
 | [`public bool GetFlag(Flags flag)`](#getflag) | Gets a configured window policy. |
@@ -395,6 +396,11 @@ The operating system may deny focus. Wayland submits no foreground activation re
 **InvalidOperationException:** The window is inactive, accessed off-thread, or the native request fails.
 
 **ObjectDisposedException:** The window is disposed.
+
+<a id="candraw"></a>
+### `public bool CanDraw()`
+
+Queries the live native host when present, including the root of an owned custom MainLoop. An attached embedded window uses its current visibility. Detached and hidden windows return false. Disposed and off-owner access reject. See [window drawability](../components/window-runtime.md#window-drawability).
 
 <a id="hasfocus"></a>
 ### `public bool HasFocus()`

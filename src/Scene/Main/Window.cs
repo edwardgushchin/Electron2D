@@ -247,6 +247,19 @@ public partial class Window : Viewport
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public int GetWindowID() { ThrowIfDisposed(); return _display?.WindowID ?? DisplayServer.InvalidWindowId; }
 
+    /// <summary>Reports whether this window can draw through its native or embedded host.</summary>
+    /// <returns>False while detached or hidden. Native windows use the display server's presentation
+    /// eligibility. A visible attached embedded window is eligible for composition in its viewport.</returns>
+    /// <remarks>The root of an active custom MainLoop uses its native host.</remarks>
+    /// <exception cref="InvalidOperationException">The caller is off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    public bool CanDraw()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
+        return _display is { } display ? display.CanDrawWindow() : Visible && IsInsideTree && Embedder is not null;
+    }
+
     /// <summary>Reports whether the active native window has keyboard focus.</summary>
     /// <returns>The platform's current focus observation.</returns>
     /// <exception cref="InvalidOperationException">The window is inactive or accessed off-thread.</exception>
