@@ -283,6 +283,13 @@ endif()
             name = names[0]
             self.assertTrue({"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode", "e2d_image_encode", "e2d_image_encoded_free"} <= package.required_exports(name))
 
+    def test_png_bridge_is_required_in_every_profile(self):
+        for profile, names in package.LIBRARIES.items():
+            with self.subTest(profile=profile):
+                self.assertTrue({"e2d_png_decode", "e2d_png_encode"} <= package.required_exports(names[0]))
+                if profile in ("iOS", "tvOS", "Web"):
+                    self.assertIn("libElectron2DPNG.a", names)
+
     def test_ogv_bridge_is_required_in_every_profile(self):
         for profile, names in package.LIBRARIES.items():
             name = names[0]

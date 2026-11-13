@@ -29,9 +29,10 @@ public sealed partial class Image
     /// <summary>Classifies the alpha values used by the base level.</summary>
     /// <returns><see cref="AlphaMode.None"/>, <see cref="AlphaMode.Bit"/>, or <see cref="AlphaMode.Blend"/>.</returns>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public AlphaMode DetectAlpha()
+    public AlphaMode DetectAlpha() => DetectAlpha(Snapshot());
+
+    private static AlphaMode DetectAlpha(State state)
     {
-        var state = Snapshot();
         if (state.Data.Length == 0)
             return AlphaMode.None;
         if (IsCompressedFormat(state.Format))

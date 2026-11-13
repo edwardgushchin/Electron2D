@@ -59,6 +59,8 @@ e2d_ogv_destroy
 e2d_ogv_finish
 e2d_ogv_frame
 e2d_ogv_memory
+e2d_png_decode
+e2d_png_encode
 e2d_regex_create
 e2d_regex_destroy
 e2d_regex_error

@@ -20,7 +20,7 @@ All 47 raw [`Image.Format`](Image.Format.md) identities are accepted for storage
 
 Pixel coordinates use a top-left origin: X increases rightward and Y increases downward. Rectangles are half-open. Stored multi-byte components use little-endian order. `GetData` and data-taking APIs copy their arrays, so callers never share mutable buffer ownership with an image.
 
-The browser platform package statically links the existing SDL core/image codecs and private WebP codec/demux closure. Its contract app executes PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving through this same API, including decoder rejection and state preservation. Canvas presentation and additional codec formats remain outside that check.
+The browser platform package statically links the SDL core/image codecs and private codec archives. The browser contract app covers the same image API. The current PNG bridge requires a new browser package run.
 
 Every state read and mutation is synchronized per instance. Bulk mutations prepare and commit a complete replacement state; `SetPixel` updates only the addressed pixel under serialization. Both raise inherited [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) after releasing locks. A throwing subscriber observes committed state and propagates its exception. Calls involving multiple images snapshot sources before changing the destination; no cross-image lock is held during callbacks.
 
@@ -474,7 +474,7 @@ When `disposing` is true, serializes with mutations, releases the managed pixel 
 
 ## Encoded image methods
 
-The current native codec profile decodes to copied `Rgba8` base pixels without mipmaps. Input is limited to 64 MiB and image dimensions are checked before invoking a decoder. Sixteen-bit PNG input is reduced to eight bits per channel. Source channel-layout preservation, color-profile/gamma metadata and complete codec-variant parity remain pending; this is not the complete codec contract.
+PNG decodes to copied L8, LA8, RGB8 or RGBA8 base pixels. JPEG, WebP, BMP, TGA and SVG yield RGBA8. Input is limited to 64 MiB and dimensions are checked before decoding. See [PNG loading and saving](../components/images.md#png-loading-and-saving) for channel, transfer and work limits.
 
 <a id="load"></a>
 ### `public void Load(string path)`
@@ -489,7 +489,7 @@ Returns an independent caller-owned image decoded from a file. Decoding and nati
 <a id="loadpngfrombuffer"></a>
 ### `public void LoadPNGFromBuffer(ReadOnlySpan<byte> buffer)`
 
-Replaces pixels from PNG bytes. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
+Replaces pixels from PNG bytes. The result preserves its decoded luminance or RGB layout and straight alpha. Samples use the sRGB transfer encoding. Decoding and native cleanup finish before committing all image state and emitting one synchronous `Changed` event. Decoder, input and I/O failures preserve previous pixels; an observer exception occurs after commit. The input span is copied before validation. Invalid or truncated data raises `InvalidDataException`; disposed instances reject access.
 
 <a id="loadjpgfrombuffer"></a>
 ### `public void LoadJPGFromBuffer(ReadOnlySpan<byte> buffer)`
@@ -524,7 +524,7 @@ Encodes the string as strict UTF-8 and follows the buffer method's rasterization
 <a id="savepngtobuffer"></a>
 ### `public byte[] SavePNGToBuffer()`
 
-Encodes a stable base-level snapshot as PNG. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. PNG converts the snapshot to RGBA8. Returned bytes belong to the caller.
+Encodes a stable base-level snapshot as PNG. L8, LA8, RGB8 and RGBA8 keep their samples. Supported blocks are decompressed on the snapshot. Other layouts convert to RGB8 or RGBA8 based on the alpha used. Empty images are rejected. Encoding leaves the image and its notifications untouched. Input pixels and encoded output are each bounded to 64 MiB. Returned bytes belong to the caller.
 
 <a id="savejpgtobuffer"></a>
 ### `public byte[] SaveJPGToBuffer(float quality = 0.75f)`
@@ -534,7 +534,7 @@ Encodes the base level as lossy JPEG without alpha. Empty and compressed images 
 <a id="savepng"></a>
 ### `public void SavePNG(string path)`
 
-Atomically replaces a file with encoded PNG bytes. Empty and compressed images are rejected. Encoding reads an independent snapshot and neither mutates pixels nor emits `Changed`. Only the base level is encoded; output is capped at 64 MiB. PNG converts the snapshot to RGBA8. Encoding completes before `AtomicFile` replaces the destination in the same directory. Parent directories must exist; failures before replacement preserve an existing file. Paths use the same `res://`/`user://` resolution as loading.
+Atomically replaces a file with the bytes produced by SavePNGToBuffer. Encoding completes before `AtomicFile` replaces the destination in the same directory. Parent directories must exist; failures before replacement preserve an existing file. Paths use the same `res://`/`user://` resolution as loading.
 
 <a id="savejpg"></a>
 ### `public void SaveJPG(string path, float quality = 0.75f)`

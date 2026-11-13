@@ -1,3 +1,5 @@
+[PNG loading and saving](../components/images.md#png-loading-and-saving) preserves four channel layouts, expands palettes and transparency, handles interlacing and converts encoded transfer to 8-bit sRGB. PNG export accepts supported compressed images through the existing block decoders. Three PNG-specific rows move to Implemented. Coverage is **13,950/18,900 (73.81%)**, with 1,134 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Image format conversion](../components/images.md#image-format-conversion) preserves compatible stored channel bits, computes byte luminance, and applies both sRGB transfer directions across all stored mip levels. Three rows move to Implemented. Coverage is **13,947/18,900 (73.79%)**, with 1,137 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [Image regions](../components/images.md#image-regions) keep the requested extent with zero padding and support exact clipped copies and alias-safe composition. Seven rows move to Implemented. Coverage is **13,944/18,900 (73.78%)**, with 1,140 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

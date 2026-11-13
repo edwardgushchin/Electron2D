@@ -11,7 +11,8 @@ public sealed partial class Image
 
     /// <summary>Replaces this image with decoded pixels from a file.</summary>
     /// <param name="path">An operating-system, res://, user:// or registered UID path to an image file.</param>
-    /// <remarks>Input is bounded to 64 MiB. The six standard raster/vector decoders produce copied RGBA8 base pixels. DDS and KTX retain stored mip layouts; EXR and KTX retain applicable channel precision.
+    /// <remarks>Input is bounded to 64 MiB. PNG retains its decoded luminance or RGB layout and any alpha channel.
+    /// JPEG, WebP, BMP, TGA and SVG produce copied RGBA8 base pixels. DDS and KTX retain stored mip layouts; EXR and KTX retain applicable channel precision.
     /// Registered extensions may return other valid Image layouts. Their state is copied before publication.
     /// A failure preserves the previous image. Changed is emitted after a successful replacement.
     /// Custom decoders execute on this thread using borrowed temporary Image and FileAccess objects.
@@ -42,8 +43,10 @@ public sealed partial class Image
 
     /// <summary>Decodes a PNG buffer and replaces the image atomically.</summary>
     /// <param name="buffer">PNG data, copied before validation and decoding, at most 64 MiB.</param>
-    /// <remarks>Produces RGBA8 without mipmaps. Failure preserves pixels; success emits Changed.</remarks>
+    /// <remarks>Produces L8, LA8, RGB8 or RGBA8 base pixels, expanding palettes and transparency and converting to
+    /// the sRGB transfer encoding. Decoded pixels are bounded to 64 MiB. Failure preserves pixels; success emits Changed.</remarks>
     /// <exception cref="InvalidDataException">Data is malformed or exceeds image limits.</exception>
+    /// <exception cref="IOException">The decoder cannot allocate working memory.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void LoadPNGFromBuffer(ReadOnlySpan<byte> buffer) => DecodeAndCommit(buffer, "PNG");
 
@@ -87,12 +90,14 @@ public sealed partial class Image
 
     /// <summary>Encodes the base image as a PNG byte array.</summary>
     /// <returns>Caller-owned encoded bytes.</returns>
-    /// <remarks>Uses a stable snapshot converted to RGBA8; mipmaps are not encoded. Does not mutate this image.</remarks>
-    /// <exception cref="InvalidOperationException">The image is empty.</exception>
-    /// <exception cref="NotSupportedException">The image is compressed.</exception>
-    /// <exception cref="IOException">Encoding fails or its output exceeds 64 MiB.</exception>
+    /// <remarks>Uses a stable base-level snapshot. Supported block formats are decompressed. L8, LA8, RGB8 and RGBA8
+    /// retain their channels. Other formats are converted to RGB8 or RGBA8 according to their base-level alpha values.
+    /// PNG stores the resulting samples as sRGB without changing the source image.</remarks>
+    /// <exception cref="InvalidOperationException">The image is empty or block expansion exceeds the codec work budget.</exception>
+    /// <exception cref="InvalidDataException">The source blocks are invalid.</exception>
+    /// <exception cref="IOException">Encoding fails or its input or output exceeds 64 MiB.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
-    public byte[] SavePNGToBuffer() => Encode("PNG", 100);
+    public byte[] SavePNGToBuffer() => EncodePNG();
 
     /// <summary>Encodes the base image as JPEG bytes, discarding alpha.</summary>
     /// <param name="quality">Finite quality from 0.01 to 1.0, rounded to a percentage.</param>
@@ -107,15 +112,15 @@ public sealed partial class Image
     {
         ThrowIfDisposed();
         if (!float.IsFinite(quality) || quality is < 0.01f or > 1) throw new ArgumentOutOfRangeException(nameof(quality));
-        return Encode("JPG", (int)Mathf.Round(quality * 100));
+        return EncodeJPEG((int)Mathf.Round(quality * 100));
     }
 
     /// <summary>Atomically saves the base image to a PNG file.</summary>
     /// <param name="path">An operating-system, res:// or user:// destination path.</param>
     /// <remarks>Uses SavePNGToBuffer, then atomically replaces the destination. Parent directories must exist.</remarks>
     /// <exception cref="IOException">Encoding or saving fails; an existing destination is preserved before replacement.</exception>
-    /// <exception cref="InvalidOperationException">The image is empty.</exception>
-    /// <exception cref="NotSupportedException">The image is compressed.</exception>
+    /// <exception cref="InvalidOperationException">The image is empty or block expansion exceeds the codec work budget.</exception>
+    /// <exception cref="InvalidDataException">The source blocks are invalid.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void SavePNG(string path) => SaveEncodedFile(path, SavePNGToBuffer());
 
@@ -166,6 +171,11 @@ public sealed partial class Image
         var size = codec == "SVG" ? SVGSize(bytes, scale) : EncodedSize(bytes, codec);
         try { ValidateDimensions(size.X, size.Y); }
         catch (ArgumentOutOfRangeException e) { throw new InvalidDataException("Encoded dimensions exceed the image limits.", e); }
+        if (codec == "PNG")
+        {
+            Commit(DecodePNG(bytes, size));
+            return;
+        }
         if (codec == "WEBP")
         {
             Commit(DecodeWebP(bytes, size));
@@ -180,9 +190,6 @@ public sealed partial class Image
             {
                 var surface = codec switch
                 {
-                    // SDL_image 3.4.6 corrupts grayscale and RGB16 PNG colors. SDL's PNG
-                    // decoder already ships with the engine and preserves the 8-bit result.
-                    "PNG" => SDL.LoadPNGIO(stream, false),
                     "JPG" => SDL3.Image.LoadJPGIO(stream),
                     "BMP" => SDL3.Image.LoadBMPIO(stream),
                     "TGA" => SDL3.Image.LoadTGAIO(stream),
@@ -222,17 +229,16 @@ public sealed partial class Image
 
     private static SDL.PixelFormat RGBASurfaceFormat => BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888;
 
-    private unsafe byte[] Encode(string codec, int quality)
+    private unsafe byte[] EncodeJPEG(int quality)
     {
         var state = Snapshot();
         if (state.Width == 0) throw new InvalidOperationException("An empty image cannot be encoded.");
         if (IsCompressedFormat(state.Format)) throw new NotSupportedException("Decompress image pixels before encoding.");
-        state = ConvertState(state, codec == "JPG" ? Format.Rgb8 : Format.Rgba8);
+        state = ConvertState(state, Format.Rgb8);
         fixed (byte* pointer = state.Data)
         {
-            var pixelBytes = codec == "JPG" ? 3 : 4;
-            var surface = SDL.CreateSurfaceFrom(state.Width, state.Height, codec == "JPG" ? SDL.PixelFormat.RGB24 : RGBASurfaceFormat,
-                (nint)pointer, checked(state.Width * pixelBytes));
+            var surface = SDL.CreateSurfaceFrom(state.Width, state.Height, SDL.PixelFormat.RGB24,
+                (nint)pointer, checked(state.Width * 3));
             if (surface == 0) throw new IOException("Could not prepare image encoding: " + SDL.GetError());
             try
             {
@@ -240,8 +246,8 @@ public sealed partial class Image
                 if (stream == 0) throw new IOException("Could not create encoded image output: " + SDL.GetError());
                 try
                 {
-                    var success = codec == "JPG" ? SDL3.Image.SaveJPGIO(surface, stream, false, quality) : SDL3.Image.SavePNGIO(surface, stream, false);
-                    if (!success) throw new IOException($"Cannot encode {codec}: {SDL.GetError()}");
+                    if (!SDL3.Image.SaveJPGIO(surface, stream, false, quality))
+                        throw new IOException("Cannot encode JPEG: " + SDL.GetError());
                     var length = SDL.GetIOSize(stream);
                     if (length is <= 0 or > MaximumEncodedBytes) throw new IOException("Encoded output exceeds the 64 MiB image limit.");
                     var result = new byte[(int)length];
@@ -274,7 +280,14 @@ public sealed partial class Image
                 if (length > data.Length - offset - 12) throw Invalid();
                 var tag = data.Slice(offset + 4, 4);
                 if (offset != 8 && tag.SequenceEqual("IHDR"u8)) throw Invalid();
-                if (tag.SequenceEqual("IEND"u8)) { if (length != 0) throw Invalid(); ended = true; break; }
+                if (tag.SequenceEqual("IEND"u8))
+                {
+                    // IEND has a fixed CRC. Some decoders stop at the chunk header.
+                    if (length != 0 || BinaryPrimitives.ReadUInt32BigEndian(data[(offset + 8)..]) != 0xAE426082)
+                        throw Invalid();
+                    ended = true;
+                    break;
+                }
                 offset += (int)length + 12;
             }
             if (!ended) throw Invalid();

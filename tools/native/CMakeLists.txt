@@ -6,6 +6,7 @@ set(ELECTRON2D_UNIFIED_NATIVE ON)
 set(ELECTRON2D_STATIC_NATIVE ON)
 set(base "${CMAKE_CURRENT_LIST_DIR}/..")
 add_subdirectory("${base}/enet-native" enet)
+include("${CMAKE_CURRENT_LIST_DIR}/png.cmake")
 add_subdirectory("${base}/../src/Servers/Text/Native" text)
 foreach(component mesh render webp ogv ktx)
     add_subdirectory("${base}/${component}-native" ${component})
@@ -25,8 +26,9 @@ set(kind SHARED)
 if(EMSCRIPTEN OR CMAKE_SYSTEM_NAME MATCHES "^(iOS|tvOS)$")
     set(kind STATIC)
 endif()
-add_library(Electron2DNative ${kind} unified.c)
+add_library(Electron2DNative ${kind} unified.c png.c)
 target_compile_features(Electron2DNative PRIVATE c_std_11)
+target_link_libraries(Electron2DNative PRIVATE png_static)
 set_target_properties(Electron2DNative PROPERTIES OUTPUT_NAME Electron2D PREFIX lib
     C_VISIBILITY_PRESET hidden CXX_VISIBILITY_PRESET hidden
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}" RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"

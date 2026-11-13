@@ -106,9 +106,17 @@ The image-storage profile checks independent mip values, luma and alpha, signed 
 
 Image encoders reject a directory destination with `IOException` before starting atomic replacement. Other path and permission errors retain the file layer's behavior.
 
+## PNG loading and saving
+
+The file and buffer APIs decode to L8, LA8, RGB8 or RGBA8 base pixels. Indexed samples expand to RGB, low-bit grayscale expands to full-range bytes, and a transparency key or palette alpha expands to straight alpha. Interlaced images reconstruct all rows. libpng converts to the sRGB transfer encoding using the PNG transfer metadata. Samples without transfer metadata use the sRGB default, including 16-bit input. Alpha is scaled independently, and transparency keys compare at the original bit depth. The image owns pixels only.
+
+PNG export uses a stable base-level snapshot. L8, LA8, RGB8 and RGBA8 keep their channels and bytes. Supported blocks are decompressed on that snapshot. Other layouts convert to RGB8 or RGBA8 based on base-level alpha. Export writes 8-bit samples tagged sRGB and shares the atomic file replacement path with the other image encoders.
+
+Encoded input, decoded pixels, source pixels for encoding, and encoded output each have a 64 MiB ceiling. Native storage uses the common allocation ledger. PNG header and chunk structure are checked before native decode. A malformed file or allocation failure preserves the destination image, including its format and mip levels. Existing texture consumers receive the decoded layout through the standard ImageTexture path. The unified module reuses the FreeType libpng pin on desktop and Android and the existing packaged libpng archive for static Apple and Web builds.
+
 ## Exclusions and deferred integration
 
-PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR loading and PNG/JPEG/WebP/EXR saving are executable. BC1–BC7 compression/decompression and DDS file/buffer load/save feed existing resource and texture consumers. The SDL_image load profile normalizes ordinary files to RGBA8; DDS retains supported byte/BCn storage and EXR retains HDR channels and precision. Encoded input/output and decoder dimensions follow the documented codec budgets. The private WebP encoder supports exact RGB/RGBA and lossy saving. KTX1/KTX2 and Basis LDR/HDR loading now execute through the [private KTX reader](image-ktx.md), retaining complete mips and applicable precision. Importing and complete color/metadata semantics remain pending. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) records exact dependencies. BC1–BC7 and RA-as-RG decode; S3TC/BPTC encode. [ETC/EAC/ASTC decoding](image-block-decoding.md) now supplies all remaining block roles; their encoding remains unavailable.
+PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR loading and PNG/JPEG/WebP/EXR saving are executable. BC1–BC7 compression/decompression and DDS file/buffer load/save feed existing resource and texture consumers. PNG preserves the decoded luminance or RGB layout and alpha. The remaining standard raster/vector loaders produce RGBA8; DDS retains supported byte/BCn storage and EXR retains HDR channels and precision. Encoded input/output and decoder dimensions follow the documented codec budgets. The private WebP encoder supports exact RGB/RGBA and lossy saving. KTX1/KTX2 and Basis LDR/HDR loading now execute through the [private KTX reader](image-ktx.md), retaining complete mips and applicable precision. Importing and complete color/metadata semantics remain pending. [ADR 0039](../decisions/resources.md#deferred-coverage-and-exact-implementation-triggers) records exact dependencies. BC1–BC7 and RA-as-RG decode; S3TC/BPTC encode. [ETC/EAC/ASTC decoding](image-block-decoding.md) now supplies all remaining block roles; their encoding remains unavailable.
 
 ## Verification
 
@@ -116,7 +124,7 @@ PNG/JPEG/WebP/BMP/TGA/SVG/DDS/EXR loading and PNG/JPEG/WebP/EXR saving are execu
 
 `BitMapTests` covers the new mask contract, including contour crossings and resource duplication.
 
-The managed checks are Linux/.NET 8 only. Native `ImageCodecTests` separately verifies all six integrated loaders, including SVG string/buffer scaling and XML rejection, PNG/JPEG saves, header/decoder failure atomicity, independent concurrent calls, virtual paths and atomic file failures. RenderingTextureTests verifies decoded PNG pixels in the fourteenth GPU frame for each source language. Visual-quality, memory-pressure, AOT and other-target acceptance remain pending.
+Native `ImageCodecTests` verifies the six loaders, PNG/JPEG saving, SVG scale and XML rejection, failure atomicity, concurrent calls, virtual paths and file replacement. The PNG profile checks all four layouts, 16-bit gamma and transparency, indexed alpha, Adam7, IDAT/IEND corruption, used alpha, BC export and LA8 through ImageTexture. It checks that tracked native storage returns to baseline after success and failure. The updated codec ran on Linux x64 with the pinned libpng source. The earlier GPU texture tests used the preceding codec. The changed native ABI still needs package, AOT and full target qualification under ADR 0021.
 
 ## Decisions
 

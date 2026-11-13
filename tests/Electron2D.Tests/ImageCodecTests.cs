@@ -48,20 +48,7 @@ internal static class ImageCodecTests
             CheckPixels(image, Pixels);
         }
 
-        // Independent PNG vectors catch grayscale palette scaling and RGB16 byte-order corruption.
-        foreach (var (encoded, expected) in new (string, byte[])[]
-        {
-            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP4DwABAQEAsTj2FAAAAABJRU5ErkJggg==", [255, 255, 255, 255]),
-            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP43wAAAoEBgFnpL/wAAAAASUVORK5CYII=", [255, 255, 255, 128]),
-            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABEAIAAADA54+dAAAAD0lEQVR4nGMQMgmrmLUHAAYnAmsO3tV6AAAAAElFTkSuQmCC", [18, 86, 154, 255]),
-            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABEAYAAABPhRjKAAAAEUlEQVR4nGMQMgmrmLXn3gcADakEOVMAyboAAAAASUVORK5CYII=", [18, 86, 154, 222]),
-            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABEAAAAABq7kcWAAAAC0lEQVR4nGNYfRYAAiYBee5J6uwAAAAASUVORK5CYII=", [171, 171, 171, 255]),
-            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABEAQAAADljNBBAAAADUlEQVR4nGMQMll9FgADDAG/brnGXQAAAABJRU5ErkJggg==", [18, 18, 18, 171]),
-        })
-        {
-            image.LoadPNGFromBuffer(Convert.FromBase64String(encoded));
-            Check(image.GetData().SequenceEqual(expected), "PNG grayscale, alpha and 16-bit samples convert correctly to 8-bit pixels.");
-        }
+        VerifyPNG();
 
         using var solid = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8);
         solid.Fill(new Color(0.25f, 0.5f, 0.75f, 0.25f));
@@ -102,8 +89,6 @@ internal static class ImageCodecTests
 
         using var empty = new Image();
         Reject<InvalidOperationException>(() => empty.SavePNGToBuffer());
-        using var compressed = Image.CreateFromData(4, 4, false, Image.Format.Dxt1, new byte[8]);
-        Reject<NotSupportedException>(() => compressed.SavePNGToBuffer());
         VerifyFiles(source, png, jpg);
         using var callback = new Image();
         callback.Changed += _ => throw new ApplicationException("codec callback");
@@ -116,6 +101,74 @@ internal static class ImageCodecTests
         if (!OperatingSystem.IsBrowser())
             Parallel.For(0, 12, _ => { using var copy = new Image(); copy.LoadPNGFromBuffer(png); copy.LoadPNGFromBuffer(copy.SavePNGToBuffer()); CheckPixels(copy, Pixels); });
         Console.WriteLine("Image codec checks passed (PNG/JPEG/WebP/BMP/TGA/SVG; buffers, files, failures, ownership).");
+    }
+
+    internal static void VerifyPNG()
+    {
+        var nativeBefore = NativeAllocation.Snapshot().Current;
+        using var image = new Image();
+        foreach (var (encoded, width, height, format, expected) in new (string, int, int, Image.Format, byte[])[]
+        {
+            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP4DwABAQEAsTj2FAAAAABJRU5ErkJggg==", 1, 1, Image.Format.L8, [255]),
+            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP43wAAAoEBgFnpL/wAAAAASUVORK5CYII=", 1, 1, Image.Format.La8, [255, 128]),
+            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABEAIAAADA54+dAAAAD0lEQVR4nGMQMgmrmLUHAAYnAmsO3tV6AAAAAElFTkSuQmCC", 1, 1, Image.Format.Rgb8, [18, 86, 154]),
+            ("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABEAYAAABPhRjKAAAAEUlEQVR4nGMQMgmrmLXn3gcADakEOVMAyboAAAAASUVORK5CYII=", 1, 1, Image.Format.Rgba8, [18, 86, 154, 222]),
+            // 16-bit alpha stays linear while gAMA converts color to display samples.
+            ("iVBORw0KGgoAAAANSUhEUgAAAAIAAAABEAQAAAAOu2tCAAAABGdBTUEAAYagMeiWXwAAAA9JREFUeJxjcGBoAMIDDAAIiQIBLVBEoAAAAABJRU5ErkJggg==", 2, 1, Image.Format.La8, [136, 128, 186, 191]),
+            // Both colors quantize to 18. Only the exact source key is transparent.
+            ("iVBORw0KGgoAAAANSUhEUgAAAAIAAAABEAAAAACB2fwVAAAAAnRSTlMSNC/TSV4AAAANSURBVHicYxAyEQoFAAFiAK6jp76HAAAAAElFTkSuQmCC", 2, 1, Image.Format.La8, [18, 0, 18, 255]),
+            ("iVBORw0KGgoAAAANSUhEUgAAAAMAAAABAgMAAABmjvwnAAAACVBMVEX/AAAA/wAAAP8tSs2KAAAAAnRSTlMAgJsrThgAAAAKSURBVHicY5AAAAAaABktiPQ2AAAAAElFTkSuQmCC", 3, 1, Image.Format.Rgba8, [255, 0, 0, 0, 0, 255, 0, 128, 0, 0, 255, 255]),
+            ("iVBORw0KGgoAAAANSUhEUgAAAAIAAAACEAAAAAFwSr4tAAAAE0lEQVR4nGMQMmEIq2CYtefeBwAPBQQ5DUPaigAAAABJRU5ErkJggg==", 2, 2, Image.Format.L8, [18, 86, 154, 222]),
+        })
+        {
+            var data = Convert.FromBase64String(encoded);
+            image.LoadPNGFromBuffer(data);
+            Check(image.Size == new Vector2i(width, height) && image.PixelFormat == format && image.GetData().SequenceEqual(expected), "PNG channel, transfer and transparency contract.");
+            image.GenerateMIPMaps();
+            var before = image.GetData();
+            var png = image.SavePNGToBuffer();
+            var colorType = format switch { Image.Format.L8 => 0, Image.Format.La8 => 4, Image.Format.Rgb8 => 2, _ => 6 };
+            Check(png[24] == 8 && png[25] == colorType && image.GetData().SequenceEqual(before), "PNG IHDR matches the source layout and encoding preserves the source.");
+            image.LoadPNGFromBuffer(png);
+            Check(!image.HasMIPMaps && image.PixelFormat == format && image.GetData().SequenceEqual(expected), "PNG saves the base level with exact channel bytes.");
+            var invalidCRC = (byte[])data.Clone();
+            invalidCRC[^1] ^= 1;
+            Reject<InvalidDataException>(() => image.LoadPNGFromBuffer(invalidCRC));
+            var idat = data.AsSpan().IndexOf("IDAT"u8);
+            var payloadLength = BinaryPrimitives.ReadInt32BigEndian(data.AsSpan(idat - 4));
+            data[idat + 4 + payloadLength] ^= 1;
+            Reject<InvalidDataException>(() => image.LoadPNGFromBuffer(data));
+            Check(image.GetData().SequenceEqual(expected), "A late PNG failure preserves the published pixels.");
+        }
+
+        using var block = Image.CreateFromData(4, 4, false, Image.Format.Dxt1, [0, 248, 0, 0, 0, 0, 0, 0]);
+        image.LoadPNGFromBuffer(block.SavePNGToBuffer());
+        Check(block.IsCompressed && image.GetPixel(3, 3) == Colors.Red, "PNG export decompresses blocks in a private snapshot.");
+        foreach (var alpha in new[] { 1f, 0.5f })
+        {
+            using var floating = Image.CreateEmpty(1, 1, false, Image.Format.Rgbaf);
+            floating.SetPixel(0, 0, new Color(0, 1, 0, alpha));
+            image.LoadPNGFromBuffer(floating.SavePNGToBuffer());
+            Check(image.PixelFormat == (alpha == 1f ? Image.Format.Rgb8 : Image.Format.Rgba8) &&
+                image.GetPixel(0, 0).G == 1, "PNG converts other formats according to used alpha.");
+        }
+
+        // A cached texture must retain the source channel layout as well as its pixel values.
+        var folder = Directory.CreateTempSubdirectory("Electron2D-png-");
+        try
+        {
+            var path = IOPath.Combine(folder.FullName, "gray.png");
+            using var source = Image.CreateFromData(2, 1, false, Image.Format.La8, [37, 0, 144, 255]);
+            source.SavePNG(path);
+            using var decoded = Image.LoadFromFile(path);
+            using var texture = ResourceLoader.Load<ImageTexture>(path, ResourceLoader.CacheMode.Ignore);
+            using var snapshot = texture.GetImage()!;
+            Check(decoded.PixelFormat == Image.Format.La8 && snapshot.PixelFormat == Image.Format.La8 &&
+                snapshot.GetData().SequenceEqual(source.GetData()), "PNG file and resource texture paths retain LA8 samples.");
+        }
+        finally { folder.Delete(recursive: true); }
+        Check(NativeAllocation.Snapshot().Current == nativeBefore, "PNG temporaries drain after successful and failed operations.");
+        Console.WriteLine("PNG channel, transfer, file/resource, failure and ownership checks passed.");
     }
 
     private static void VerifyAnimatedWebP()
