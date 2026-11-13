@@ -192,6 +192,7 @@ public sealed partial class Engine : ElectronObject
         OS.SetMainThreadOwner(Environment.CurrentManagedThreadId);
         try
         {
+            ConfigureFrameRateDiagnostics(windowed: false);
             RuntimeDiagnostics.Instance.BeginRun();
             TextServerManager.LoadProjectDriver();
             Volatile.Write(ref _mainLoop, mainLoop);
@@ -517,13 +518,16 @@ public sealed partial class Engine : ElectronObject
         if (_fpsElapsed < 1d - 1e-12d)
             return;
 
-        AtomicFloatingPoint.Write(ref _framesPerSecond, _fpsFrames / _fpsElapsed);
+        var framesPerSecond = _fpsFrames / _fpsElapsed;
+        AtomicFloatingPoint.Write(ref _framesPerSecond, framesPerSecond);
         _fpsElapsed %= 1d;
 
         if (_fpsElapsed > 1d - 1e-12d)
             _fpsElapsed = 0d;
 
         _fpsFrames = 0;
+        if (_printFPS)
+            PrintFrameRateSample(framesPerSecond);
     }
 
     private readonly struct FrameTiming(double processStep, int physicsSteps, double interpolationFraction)

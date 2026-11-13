@@ -281,6 +281,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOY_MOTION") is { } joyM
     else throw new ArgumentException("Unknown controller-motion profile.");
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FRAME_RATE") is { } frameRateMode)
+{
+    if (frameRateMode is "gpu" or "compatibility") FrameRateTests.Windowed(frameRateMode, args.Length == 0 ? null : int.Parse(args[0], System.Globalization.CultureInfo.InvariantCulture));
+    else if (frameRateMode == "invalid") FrameRateTests.InvalidLimit();
+    else FrameRateTests.Managed(frameRateMode == "command");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FRAME_MONITORS") is { } frameMonitorMode)
 {
     if (frameMonitorMode == "managed") FrameMonitorTests.Run();

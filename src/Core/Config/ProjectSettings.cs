@@ -178,6 +178,14 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>False by default. The host command-line verbose switch takes precedence.</value>
     public static ProjectSetting<bool> VerboseSTDOUT { get; } = new("debug/settings/stdout/verbose_stdout", false);
 
+    /// <summary>Gets the process cadence cap sampled when a windowed engine run starts.</summary>
+    /// <value>Zero initially, meaning unlimited. Negative values are invalid.</value>
+    public static ProjectSetting<int> MaxFPS { get; } = new("application/run/max_fps", 0, value => value >= 0);
+
+    /// <summary>Gets the setting for periodic process-frame rate diagnostics.</summary>
+    /// <value>False initially. A host --print-fps switch can enable reporting.</value>
+    public static ProjectSetting<bool> PrintFPS { get; } = new("debug/settings/stdout/print_fps", false);
+
     /// <summary>Defines the initial low-processor wait between owned frames, in microseconds.</summary>
     /// <value>application/run/low_processor_mode_sleep_usec; 6900 initially. Negative values are rejected.</value>
     public static ProjectSetting<int> LowProcessorModeSleepUsec { get; } = new("application/run/low_processor_mode_sleep_usec", 6900, validator: value => value >= 0);

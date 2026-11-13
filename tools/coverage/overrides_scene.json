@@ -10583,7 +10583,7 @@
     },
     {
       "state": "Partial",
-      "reason": "MaxFPS is executable Run cadence control with zero unlimited, runtime updates and unscaled monotonic waiting. Persistent ProjectSettings application/run/max_fps integration and presentation/VSync interaction await their explicit settings and rendering slices (ADRs 0016 and 0028).",
+      "reason": "MaxFPS is executable Run cadence control with zero unlimited, runtime updates and unscaled monotonic waiting. Typed project startup and --max-fps supply defaults with live property precedence. Complete presentation/VSync equivalence still requires the native display/backend matrix (ADRs 0016 and 0028).",
       "godot": [
         "Engine::property:max_fps"
       ]

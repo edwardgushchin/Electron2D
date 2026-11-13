@@ -6,7 +6,8 @@ namespace Electron2D;
 public sealed partial class Engine
 {
     private int _applicationRun;
-    private int _maxFps;
+    private int _maxFpsOverride = -1;
+    private int _windowMaxFps;
     private string _writeMoviePath = "";
     internal bool IsRuntimeIdle => Volatile.Read(ref _runtimeState) == RuntimeIdle;
 
@@ -16,8 +17,16 @@ public sealed partial class Engine
 
     internal int MaxFPSCore
     {
-        get => Volatile.Read(ref _maxFps);
-        set { ArgumentOutOfRangeException.ThrowIfNegative(value); Volatile.Write(ref _maxFps, value); }
+        get
+        {
+            var explicitLimit = Volatile.Read(ref _maxFpsOverride);
+            return explicitLimit >= 0 ? explicitLimit : Volatile.Read(ref _windowMaxFps);
+        }
+        set
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
+            Volatile.Write(ref _maxFpsOverride, value);
+        }
     }
 
     internal int RunCore(Window window, Action<Window, ulong>? beforeFrame = null)
@@ -72,6 +81,7 @@ public sealed partial class Engine
     private void ReleaseWindowRun()
     {
         RuntimeDiagnostics.Instance.EndRun();
+        Volatile.Write(ref _windowMaxFps, 0);
         Volatile.Write(ref _writeMoviePath, "");
         Volatile.Write(ref _mainLoop, null);
         OS.SetMainThreadOwner(0);
@@ -97,6 +107,7 @@ public sealed partial class Engine
         try
         {
             if (reserved) ValidateRunWindow(window);
+            ConfigureFrameRateDiagnostics(windowed: true);
             RuntimeDiagnostics.Instance.BeginRun();
             if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
                 SDL3.SDL.SetMainReady();

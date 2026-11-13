@@ -101,7 +101,7 @@ int exitCode = Engine.Run(window);
 <a id="p-electron2d-engine-maxfps"></a>
 ### `public static int MaxFPS { get; set; }`
 
-Maximum cadence for Run. Zero (default) is unlimited; negative values throw ArgumentOutOfRangeException. Atomic reads/writes are allowed from any thread; this runtime value is not persisted in ProjectSettings. Waiting measures unscaled monotonic time and pumps events in intervals of at most 10 ms. Manual AdvanceFrame does not wait.
+Maximum cadence for Run. Zero (default) is unlimited; negative values throw ArgumentOutOfRangeException. Atomic reads and writes are allowed from any thread. Window startup samples the [project or command-line cap](../components/engine-runtime.md#frame-rate-settings). An explicit property assignment takes precedence across runs. Waiting measures unscaled monotonic time and pumps events in intervals of at most 10 ms. Manual AdvanceFrame does not wait.
 
 <a id="p-electron2d-engine-physicstickspersecond"></a>
 ### `public static int PhysicsTicksPerSecond { get; set; }`

@@ -32,7 +32,12 @@ internal sealed unsafe class RuntimeDiagnostics
     internal void ReportResourceRequest(string path)
     {
         if (!IsSTDOUTVerbose || _dispatchDepth != 0 || string.IsNullOrEmpty(path)) return;
-        try { Message($"Resource load requested: {path}", error: false); }
+        ReportMessage($"Resource load requested: {path}");
+    }
+
+    internal void ReportMessage(string message)
+    {
+        try { Message(message, error: false); }
         catch (Exception failure) { CallbackFailure(failure); }
     }
 

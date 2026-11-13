@@ -1,6 +1,16 @@
 {
   "mappings": [
     {
+      "godot": "ProjectSettings::property:application/run/max_fps",
+      "electron2d": "property:Electron2D.ProjectSettings.MaxFPS()",
+      "reason": "ADRs 0016/0019: typed window startup cap sampled with project features or overridden by the host switch; runtime assignments and movie/manual cadence retain their established behavior."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/settings/stdout/print_fps",
+      "electron2d": "property:Electron2D.ProjectSettings.PrintFPS()",
+      "reason": "ADR 0108: emits periodic measured FPS and milliseconds per frame to the ordinary output and logger sinks."
+    },
+    {
       "godot": "OS::method:is_stdout_verbose()",
       "electron2d": "method:Electron2D.OS.IsSTDOUTVerbose()",
       "state": "Implemented",
@@ -125,6 +135,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["ProjectSettings::property:application/run/max_fps", "ProjectSettings::property:debug/settings/stdout/print_fps"],
+      "state": "Implemented",
+      "reason": "ADRs 0016/0019/0108: stored typed settings and feature overrides have executable cadence and periodic diagnostics consumers. Host switches, unscaled reporting, exact warmup count, effective cap, rendered pacing and live property assignments execute. See docs/components/engine-runtime.md#frame-rate-settings for verification boundaries."
+    },
     {
       "godot": [
         "OS::method:is_stdout_verbose()",

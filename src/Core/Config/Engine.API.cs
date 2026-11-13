@@ -4,7 +4,8 @@ public sealed partial class Engine
 {
     /// <summary>Gets or sets the maximum process cadence used by Run and RunAsync.</summary>
     /// <value>Zero, meaning unlimited, by default; otherwise a positive number of frames per second.</value>
-    /// <remarks>May change from any thread. Manual AdvanceFrame calls do not wait. Waiting uses monotonic,
+    /// <remarks>Window startup samples ProjectSettings.MaxFPS or --max-fps before readiness. An explicit property
+    /// assignment overrides both and can change from any thread. Manual AdvanceFrame calls do not wait. Waiting uses monotonic,
     /// unscaled time and continues to pump window events at intervals of at most ten milliseconds.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The limit is negative.</exception>
     public static int MaxFPS
