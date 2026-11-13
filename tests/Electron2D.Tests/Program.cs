@@ -4379,14 +4379,49 @@ static void VerifyImages()
 
     using (var bump = Image.CreateEmpty(2, 2, false, Image.Format.L8))
     {
-        bump.Fill(Colors.Black);
-        bump.SetPixel(1, 0, Colors.White);
+        bump.SetData(2, 2, true, Image.Format.L8, [0, 255, 0, 0, 255]);
         bump.BumpMapToNormalMap(1f);
-        Require(bump.PixelFormat == Image.Format.Rgba8 && bump.GetPixel(0, 0).A == 1f,
-            "Bump-map conversion must produce opaque RGBA8 normals.");
+        Require(bump.PixelFormat == Image.Format.Rgba8 && !bump.HasMIPMaps &&
+            bump.GetData().AsSpan().SequenceEqual(new byte[] { 37, 127, 217, 255, 201, 53, 201, 255, 127, 127, 255, 255, 127, 217, 217, 255 }),
+            "Bump conversion wraps each axis, uses only the base level and truncates the encoded normal bytes.");
         bump.NormalMapToXY();
-        Require(bump.PixelFormat == Image.Format.La8 && bump.DataSize == 8,
-            "NormalMapToXY must pack X and Y into two channels.");
+        Require(bump.PixelFormat == Image.Format.La8 &&
+            bump.GetData().AsSpan().SequenceEqual(new byte[] { 127, 37, 53, 201, 127, 127, 217, 127 }),
+            "NormalMapToXY packs Y into luminance and X into alpha.");
+    }
+
+    using (var bump = Image.CreateEmpty(2, 1, false, Image.Format.Rf))
+    {
+        bump.SetPixel(0, 0, new Color(-float.MaxValue, 0, 0));
+        bump.SetPixel(1, 0, new Color(float.MaxValue, 0, 0));
+        var before = bump.GetData();
+        var changes = 0;
+        bump.Changed += _ => changes++;
+        Expect<ArgumentOutOfRangeException>(() => bump.BumpMapToNormalMap(float.NaN), "A nonfinite bump scale must fail.");
+        Require(changes == 0 && bump.GetData().AsSpan().SequenceEqual(before), "A refused scale must preserve the image.");
+        bump.BumpMapToNormalMap(-float.MaxValue);
+        Require(changes == 1 &&
+            bump.GetData().AsSpan().SequenceEqual(new byte[] { 255, 127, 127, 255, 0, 127, 127, 255 }),
+            "Extreme finite heights and a negative scale must preserve the tangent direction.");
+        bump.SetData(2, 1, false, Image.Format.Rf, before);
+        bump.BumpMapToNormalMap(0f);
+        Require(bump.GetData().AsSpan().SequenceEqual(new byte[] { 127, 127, 255, 255, 127, 127, 255, 255 }),
+            "Zero scale must flatten even extreme finite heights.");
+        bump.SetData(2, 1, false, Image.Format.Rf, before);
+        bump.SetPixel(0, 0, new Color(float.PositiveInfinity, 0, 0));
+        bump.BumpMapToNormalMap();
+        Require(bump.GetData().AsSpan().SequenceEqual(new byte[] { 127, 127, 127, 255, 127, 127, 127, 255 }),
+            "Nonfinite height gradients must encode the zero normal.");
+    }
+
+    using (var normals = Image.CreateFromData(2, 1, true, Image.Format.Rgb8, [3, 5, 7, 11, 13, 17, 19, 23, 29]))
+    {
+        normals.NormalMapToXY();
+        using var texture = ImageTexture.CreateFromImage(normals);
+        using var packed = texture.GetImage()!;
+        Require(packed.PixelFormat == Image.Format.La8 && packed.HasMIPMaps &&
+            packed.GetData().AsSpan().SequenceEqual(new byte[] { 5, 3, 13, 11, 23, 19 }),
+            "Normal XY packing must preserve independently authored mip pixels through texture storage.");
     }
 
     using (var rgbe = Image.CreateEmpty(2, 1, true, Image.Format.Rgbe9995))

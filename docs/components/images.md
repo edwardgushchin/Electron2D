@@ -106,6 +106,14 @@ The image-storage profile checks independent mip values, luma and alpha, signed 
 
 Image encoders reject a directory destination with `IOException` before starting atomic replacement. Other path and permission errors retain the file layer's behavior.
 
+## Normal-map conversion
+
+`BumpMapToNormalMap` samples red or luminance in the base image and wraps forward differences at the right and bottom edges. It encodes the normalized tangent-space vector in opaque RGBA8 and drops the old mip chain. Finite heights and scale retain their direction when float gradient arithmetic overflows. A gradient involving a nonfinite height encodes the zero vector. `NoiseTexture` uses this operation before generating its mip chain.
+
+`NormalMapToXY` quantizes channels to RGBA8 as needed, then writes Y to luminance and X to alpha in LA8. It preserves independently authored levels. `ImageTexture` retains the packed source bytes.
+
+The image storage profile checks exact wrapping and packing bytes, extreme and nonfinite inputs, and texture snapshots on Windows x64 and Linux x64 under WSL. On Windows x64 the noise image profile matches 122 pinned image cases and 20 RGBA kernel cases.
+
 ## PNG loading and saving
 
 The file and buffer APIs decode to L8, LA8, RGB8 or RGBA8 base pixels. Indexed samples expand to RGB, low-bit grayscale expands to full-range bytes, and a transparency key or palette alpha expands to straight alpha. Interlaced images reconstruct all rows. libpng converts to the sRGB transfer encoding using the PNG transfer metadata. Samples without transfer metadata use the sRGB default, including 16-bit input. Alpha is scaled independently, and transparency keys compare at the original bit depth. The image owns pixels only.

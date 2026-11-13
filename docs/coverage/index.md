@@ -1,3 +1,5 @@
+[Normal-map conversion](../components/images.md#normal-map-conversion) preserves tangent direction for extreme finite heights and packs X/Y from each authored mip level. Two rows move to Implemented. Coverage is **13,956/18,900 (73.84%)**, with 1,128 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [TGA loading](../components/images.md#tga-loading) handles right-origin images, packed alpha, nonzero palette origins and bounded raw/RLE decoding. One TGA row moves to Implemented. Coverage is **13,954/18,900 (73.83%)**, with 1,130 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [JPEG loading and saving](../components/images.md#jpeg-loading-and-saving) preserves L8 and RGB8, checks scan framing and exports supported block images from a base-level snapshot. Three JPEG rows move to Implemented. Coverage is **13,953/18,900 (73.83%)**, with 1,131 Partial, 273 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

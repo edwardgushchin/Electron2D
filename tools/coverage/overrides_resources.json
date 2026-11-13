@@ -609,6 +609,14 @@
   "statusGroups": [
     {
       "godot": [
+        "Image::method:bump_map_to_normal_map(float:)",
+        "Image::method:normal_map_to_xy()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039: wrapping forward gradients from red/luminance produce opaque RGBA8 base normals. Finite overflow uses a wider calculation and nonfinite gradients encode zero. XY packs Y into LA8 luminance and X into alpha for each authored mip. See docs/components/images.md#normal-map-conversion."
+    },
+    {
+      "godot": [
         "Image::method:convert(int:Image.Format)",
         "Image::method:linear_to_srgb()",
         "Image::method:srgb_to_linear()"

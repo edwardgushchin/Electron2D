@@ -421,12 +421,12 @@ Transforms RGB components of every stored `Rgb8` or `Rgba8` pixel from linear to
 <a id="bumpmaptonormalmap"></a>
 ### `public void BumpMapToNormalMap(float bumpScale = 1f)`
 
-Uses each pixel's red/luminance-derived height and wrapping right/below differences to create a normalized `Rgba8` tangent-space normal. The result has no mipmaps. `bumpScale` must be finite.
+Uses each pixel's red or luminance height and wrapping right/below differences to create an opaque `Rgba8` tangent-space normal. The result has no mipmaps. `bumpScale` must be finite. Nonfinite height gradients encode the zero vector. See [normal-map conversion](../components/images.md#normal-map-conversion).
 
 <a id="normalmaptoxy"></a>
 ### `public void NormalMapToXY()`
 
-Converts readable data to `Rgba8`, then stores green as luminance and red as alpha in `La8`. The existing mipmap layout is retained.
+Converts readable data to `Rgba8`, then stores green as luminance and red as alpha in `La8`. Each stored mip level is packed independently.
 
 <a id="rgbetosrgb"></a>
 ### `public Image RGBEToSRGB()`

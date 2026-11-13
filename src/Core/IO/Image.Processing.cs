@@ -530,6 +530,8 @@ public sealed partial class Image
 
     /// <summary>Converts a height image into a wrapping RGBA8 tangent-space normal map.</summary>
     /// <param name="bumpScale">The finite multiplier applied to neighboring height differences.</param>
+    /// <remarks>Uses red or luminance from the base level. Output discards mipmaps. Nonfinite height samples
+    /// encode a zero normal for pixels whose gradient uses those samples.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="bumpScale"/> is not finite.</exception>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
@@ -543,7 +545,7 @@ public sealed partial class Image
             state =>
             {
                 RequireReadablePixels(state);
-                var source = ConvertState(state with { HasMIPMaps = false, Data = BaseData(state) }, Format.Rf);
+                var stride = GetBytesPerPixel(state.Format);
                 var result = new byte[GetRequiredDataSize(state.Width, state.Height, Format.Rgba8, false)];
                 for (var y = 0; y < state.Height; y++)
                 {
@@ -551,30 +553,49 @@ public sealed partial class Image
                     for (var x = 0; x < state.Width; x++)
                     {
                         var right = (x + 1) % state.Width;
-                        var here = ReadColor(source.Data, ((y * state.Width) + x) * 4, Format.Rf).R;
-                        var toRight = ReadColor(source.Data, ((y * state.Width) + right) * 4, Format.Rf).R;
-                        var down = ReadColor(source.Data, ((below * state.Width) + x) * 4, Format.Rf).R;
+                        var here = ReadColor(state.Data, ((y * state.Width) + x) * stride, state.Format).R;
+                        var toRight = ReadColor(state.Data, ((y * state.Width) + right) * stride, state.Format).R;
+                        var down = ReadColor(state.Data, ((below * state.Width) + x) * stride, state.Format).R;
                         var nx = (here - toRight) * bumpScale;
                         var ny = (down - here) * bumpScale;
                         var nz = 1f;
-                        var inverseLength = 1f / Mathf.Sqrt((nx * nx) + (ny * ny) + 1f);
+                        var lengthSquared = (nx * nx) + (ny * ny) + 1f;
+                        if (float.IsFinite(lengthSquared))
+                        {
+                            var inverseLength = 1f / Mathf.Sqrt(lengthSquared);
+                            nx *= inverseLength;
+                            ny *= inverseLength;
+                            nz = inverseLength;
+                        }
+                        else if (float.IsFinite(here) && float.IsFinite(toRight) && float.IsFinite(down))
+                        {
+                            // Finite height and scale products fit in double, including their squares.
+                            var wideX = ((double)here - toRight) * bumpScale;
+                            var wideY = ((double)down - here) * bumpScale;
+                            var wideLength = Math.Sqrt(wideX * wideX + wideY * wideY + 1d);
+                            nx = (float)(wideX / wideLength);
+                            ny = (float)(wideY / wideLength);
+                            nz = (float)(1d / wideLength);
+                        }
+                        else
+                            nx = ny = nz = 0f;
                         WriteColor(
                             result,
                             ((y * state.Width) + x) * 4,
                             Format.Rgba8,
                             new Color(
-                                0.5f + (nx * inverseLength * 0.5f),
-                                0.5f + (ny * inverseLength * 0.5f),
-                                0.5f + (nz * inverseLength * 0.5f),
+                                0.5f + (nx * 0.5f),
+                                0.5f + (ny * 0.5f),
+                                0.5f + (nz * 0.5f),
                                 1f));
                     }
                 }
 
                 return new State(state.Width, state.Height, Format.Rgba8, false, result);
-            });
+            }, copyData: false);
     }
 
-    /// <summary>Packs normal-map X and Y components into LA8 luminance and alpha storage.</summary>
+    /// <summary>Packs normal-map Y into LA8 luminance and X into alpha for every stored level.</summary>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the conversion commits.</exception>
@@ -591,7 +612,7 @@ public sealed partial class Image
             }
 
             return state with { Format = Format.La8, Data = result };
-        });
+        }, copyData: false);
 
     /// <summary>Creates an RGB8 image by decoding RGBE9995 pixels and applying linear-to-sRGB conversion.</summary>
     /// <returns>A new independent image that preserves the source mipmap policy.</returns>
@@ -983,12 +1004,6 @@ public sealed partial class Image
     }
 
     private static State RebuildMIPMapsIfNeeded(State state) => state.HasMIPMaps ? BuildMIPMaps(state, false) : state;
-
-    private static byte[] BaseData(State state)
-    {
-        var length = GetLevelByteCount(state.Width, state.Height, state.Format);
-        return state.Data[..length];
-    }
 
     private static State CropState(State state, int width, int height)
     {
