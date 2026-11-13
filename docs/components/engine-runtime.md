@@ -2,13 +2,75 @@
 
 The Android activity retains actual framework back callbacks and transfers accepted requests to the existing owner pump without invoking scene code from the UI thread. [System back navigation](window-runtime.md#system-back-navigation) uses the ordinary Engine.RunAsync result, failure and owned teardown paths. Callback unregistration and SDL onCreate/onDestroy dispatch belong to the same activity lifetime.
 
-Last updated: 2026-10-27
+Last updated: 2026-11-14
 
 [Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 
 [Movie recording](movie-writing.md) uses Run/RunAsync path/FPS overloads over this same lifecycle, an exact fixed process delta and all due physics steps. GetWriteMoviePath remains visible through owned teardown. The offline FAudio graph is prepared before SceneTree construction/Autoplay; writer cleanup precedes scene/native cleanup.
 
 ## Scope
+
+### Distribution metadata
+
+`Engine.GetAuthorInfo()`, `GetDonorInfo()`, `GetCopyrightInfo()`,
+`GetLicenseInfo()` and `GetLicenseText()` read one immutable catalog embedded in
+the engine assembly. Calls work before startup, from any thread, without native
+libraries, filesystem discovery or a project session. Concurrent first access
+publishes a complete snapshot; every nested collection rejects mutation through
+its mutable collection interfaces. Consumers borrow these process-lifetime values.
+
+The build runs [the metadata generator](../../tools/licenses/generate_engine_metadata.py).
+Developers come directly from the package's `Authors` property, currently Eduard
+Gushchin. The reviewed [catalog](../../tools/licenses/engine_metadata.json) supplies
+additional contributor roles and donors. None are currently recorded: the three
+other author categories and all eight sponsor/donor categories are present and
+empty. Empty categories describe the records in this distribution, rather than
+asserting that no other person has ever contributed.
+
+The catalog accounts for all 97 distributed `.txt`/`.md` legal documents in
+`licence/`, including composite notices, patent terms, optional platform/runtime
+dependencies and retained provider versions. It excludes the comparison-only
+`ReferenceData-LICENSE.txt` and the routing document `THIRD_PARTY_NOTICES.md`.
+The latter's local links are validated during generation. This is a distribution
+catalog, not an inventory of libraries loaded by a particular application.
+It does not replace the final application's platform license audit.
+
+`GetLicenseInfo()` maps exact unique document filenames to their full text.
+Keeping document identities preserves differing copyright notices, provider
+versions, alternatives and nested terms within the same license family.
+UTF8 BOMs are removed and CRLF is normalized to LF; all other document content is
+retained. `GetLicenseText()` returns exactly the Electron2D MIT entry in that map.
+
+The 71 named catalog entries contain typed [EngineCopyrightInfo](../classes/EngineCopyrightInfo.md)
+and [EngineCopyrightPart](../classes/EngineCopyrightPart.md) values. Each part
+identifies its legal document, exact distribution notice path, applicable vendored
+source scopes when recorded, and verbatim attribution blocks from that document
+or explicitly recorded source headers. Clipper2 and the two MPL transport
+components retain their actual source-header owners alongside generic license
+terms. An empty attribution list means that the recorded sources supply terms
+without a specific attribution. File scopes are catalog sources, not an exhaustive
+per-compilation-unit copyright census. The complete linked document retains all
+original legal content, including multiline and nested notices.
+
+Every part pins the SHA-256 of its normalized legal document and any extra source
+header used for attribution. A changed document,
+new or missing legal file, duplicate entry, missing source scope, broken notice
+link or attribution absent from its recorded sources fails the build. Review the relevant
+notices/source supply and update the catalog and hash together when dependencies
+change. Generated metadata stays in `obj/`; legal text is never duplicated in C#
+source or generated API XML. The binary format uses explicit UTF8 strings and
+counts without reflection-based serialization, so trimming retains the same data.
+
+`tools/licenses/test_engine_metadata.py` checks source drift and refusal controls.
+`tests/EngineMetadata.Consumer` exercises all five operations, concurrent first
+reads, nested mutation refusals, source text/catalog equality and a deterministic
+digest through the public API. Source/package CLR and strict full-trim NativeAOT
+execution are separate qualification profiles. The Windows x64 profiles run with
+SDK 10.0.101 and explicit corrected NativeAOT compiler/runtime 10.0.14; the SDK's
+default 10.0.1 AOT compiler is refused by NuGet vulnerability audit. The same
+catalog also runs without an external source tree. Full FastTests requires the
+matching private native library; `--engine-metadata` exercises this slice without
+that dependency. Other platforms and the full ADR 0021 matrix remain unverified.
 
 Floating-point timing snapshots use [integer-backed atomics](../classes/AtomicFloatingPoint.md) to retain cross-thread and 32-bit access semantics. Public TimeScale round trips are checked in the shared portability applications.
 

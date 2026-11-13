@@ -131,6 +131,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - `MainLoop`: explicit initialization, variable/fixed frame callbacks, host-stop results, finalization, system notification IDs, typed permission results, internal original-delta context, and Input transition/dispatch integration.
 - `Engine`: singleton runtime configuration, bounded host-driven scheduling, scaled/original delta delivery, callback metrics, architecture/version data, and typed named-singleton lookup including permanent Input/InputMap services.
 - `EngineVersionInfo`: immutable typed assembly version metadata.
+- `EngineCopyrightInfo` and `EngineCopyrightPart`: deeply immutable typed distribution component attribution; [Engine metadata](../components/engine-runtime.md#distribution-metadata) also exposes recorded authors/donors and full license documents.
 - `Mathf`: seven scalar constants and 127 integer/float/double/decimal operations covering transcendental math, angles, interpolation, approximation, rounding, periodic values, and audio conversion.
 - `RandomNumberGenerator`: independent managed PCG32 stream with restorable 64-bit seed/state and integer, float, normal and weighted sampling; it is not a cryptographic random source.
 - `RegEx` and `RegExMatch`: compiled managed text search, substitution and immutable capture inspection with documented PCRE2 compatibility gaps.

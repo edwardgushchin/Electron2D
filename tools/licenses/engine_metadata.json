@@ -1,0 +1,1444 @@
+{
+  "authors": {},
+  "donors": {},
+  "components": [
+    {
+      "name": "AudioFFT-WOL",
+      "parts": [
+        {
+          "files": [
+            "licence/AudioFFT-WOL-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 1996, 1999-2015 Stephan M. Bernsee"
+          ],
+          "license": "AudioFFT-WOL-LICENSE.txt",
+          "sha256": "20bbf36756f46e24910efd66066c37965fc590d57b77350761d92f9bb84cd5f3"
+        }
+      ]
+    },
+    {
+      "name": "BasisUniversal",
+      "parts": [
+        {
+          "files": [
+            "licence/BasisUniversal-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright 2019-2026 Binomial LLC"
+          ],
+          "license": "BasisUniversal-LICENSE.txt",
+          "sha256": "065fcf48d6af21c0b75e23be5ed5753aee75c892e1c2cf178fa6736305614a5c"
+        }
+      ]
+    },
+    {
+      "name": "BCnEncoder",
+      "parts": [
+        {
+          "files": [
+            "licence/BCnEncoder-LICENSE.txt",
+            "src/Vendor/BCn/**"
+          ],
+          "copyright": [
+            "Copyright 2020 Nomi Lakkala"
+          ],
+          "license": "BCnEncoder-LICENSE.txt",
+          "sha256": "e2b6a70c0a540789d0d312c248d67bc571e3e84eaa191a391974bc0443e17ee0"
+        }
+      ]
+    },
+    {
+      "name": "Box2D.NET",
+      "parts": [
+        {
+          "files": [
+            "licence/Box2D.NET-LICENSE.txt",
+            "src/Vendor/Box2D.NET/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2022 Erin Catto\nCopyright (c) 2025 Choi Ikpil"
+          ],
+          "license": "Box2D.NET-LICENSE.txt",
+          "sha256": "eb7462ebd32e475c0d2e4469811066306d9e12874ed94663d9a3656da18c7385"
+        }
+      ]
+    },
+    {
+      "name": "Brotli-1.2.0",
+      "parts": [
+        {
+          "files": [
+            "licence/Brotli-1.2.0-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors."
+          ],
+          "license": "Brotli-1.2.0-LICENSE.txt",
+          "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94"
+        }
+      ]
+    },
+    {
+      "name": "Brotli",
+      "parts": [
+        {
+          "files": [
+            "licence/Brotli-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors."
+          ],
+          "license": "Brotli-LICENSE.txt",
+          "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94"
+        }
+      ]
+    },
+    {
+      "name": "BufferTools",
+      "parts": [
+        {
+          "files": [
+            "licence/BufferTools-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright © .NET Foundation and Contributors"
+          ],
+          "license": "BufferTools-LICENSE.txt",
+          "sha256": "1e1101b893f295b4526da2c167e4234610f1078e2fe43a0e814c1a883656877b"
+        }
+      ]
+    },
+    {
+      "name": "CanvasStyleGeometry",
+      "parts": [
+        {
+          "files": [
+            "licence/CanvasStyleGeometry-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md).\nCopyright (c) 2007-2014 Juan Linietsky, Ariel Manzur."
+          ],
+          "license": "CanvasStyleGeometry-LICENSE.txt",
+          "sha256": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80"
+        }
+      ]
+    },
+    {
+      "name": "Clipper2",
+      "parts": [
+        {
+          "files": [
+            "licence/Clipper2-LICENSE.txt",
+            "src/Vendor/Clipper2/**",
+            "src/Vendor/Clipper2/Clipper.Core.cs"
+          ],
+          "copyright": [
+            "* Copyright :  Angus Johnson 2010-2025"
+          ],
+          "license": "Clipper2-LICENSE.txt",
+          "sha256": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+          "attributionSources": {
+            "src/Vendor/Clipper2/Clipper.Core.cs": "7bded57786bd1d6706fb0dd7a0f42206b7520d0b6cf8a8ac79b2efcadfdae5fc"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dav1d",
+      "parts": [
+        {
+          "files": [
+            "licence/dav1d-COPYING.txt"
+          ],
+          "copyright": [
+            "Copyright © 2018-2025, VideoLAN and dav1d authors\nAll rights reserved."
+          ],
+          "license": "dav1d-COPYING.txt",
+          "sha256": "dd92c3c2247c5651606fc23a5e2d6a1ebc5ace9a3e49cbde0e12f05ad1cb1ee5"
+        },
+        {
+          "files": [
+            "licence/dav1d-PATENTS.txt"
+          ],
+          "copyright": [],
+          "license": "dav1d-PATENTS.txt",
+          "sha256": "335eca574598bf4ca181b12f708d6669e5a5e78c8e1513e5b35fa1f03901484b"
+        }
+      ]
+    },
+    {
+      "name": "Detex",
+      "parts": [
+        {
+          "files": [
+            "licence/Detex-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2015 Harm Hanemaaijer <fgenfb@yahoo.com>"
+          ],
+          "license": "Detex-LICENSE.txt",
+          "sha256": "226c3e9c2b76a872d4e90733ac0293cf4bd66ffbddf654c69ace09e4ec89e341"
+        }
+      ]
+    },
+    {
+      "name": "dotnet-10.0.1",
+      "parts": [
+        {
+          "files": [
+            "licence/dotnet-10.0.1-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) .NET Foundation and Contributors"
+          ],
+          "license": "dotnet-10.0.1-LICENSE.txt",
+          "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310"
+        },
+        {
+          "files": [
+            "licence/dotnet-10.0.1-ThirdPartyNotices.txt"
+          ],
+          "copyright": [
+            "Copyright (c) .NET Foundation. All rights reserved.\nLicensed under the Apache License, Version 2.0.",
+            "Copyright (c) 2004-2006 Intel Corporation - All Rights Reserved",
+            "Copyright © 1991-2024 Unicode, Inc. All rights reserved.\nDistributed under the Terms of Use in https://www.unicode.org/copyright.html.",
+            "(C) 1995-2024 Jean-loup Gailly and Mark Adler",
+            "Copyright The OpenTelemetry Authors",
+            "Copyright (c) .NET Foundation Contributors",
+            "Portions (C) International Organization for Standardization 1986:\n     Permission to copy in any form is granted for use with\n     conforming SGML systems and applications as defined in\n     ISO 8879, provided this notice is included in all copies.",
+            "\"Copyright (c) 2004-2006 Intel Corporation - All Rights Reserved",
+            "Copyright (c) 2015 Xamarin, Inc (http://www.xamarin.com)",
+            "Copyright (c) 2011 Novell, Inc (http://www.novell.com)",
+            "descriptions are © 1997-2005 Sean Eron Anderson. The code and descriptions are\ndistributed in the hope that they will be useful, but WITHOUT ANY WARRANTY and\nwithout even the implied warranty of merchantability or fitness for a particular\npurpose.",
+            "Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.",
+            "Copyright (c) 2011, Google Inc.\nAll rights reserved.",
+            "Copyright (c) 2015 The Chromium Authors. All rights reserved.",
+            "Copyright (c) 2007 James Newton-King",
+            "Copyright (c) 2005-2007, Nick Galbreath\nCopyright (c) 2013-2017, Alfred Klomp\nCopyright (c) 2015-2017, Wojciech Mula\nCopyright (c) 2016-2017, Matthieu Darbois\nAll rights reserved.",
+            "Copyright (c) 2022, Geoff Langdale\nCopyright (c) 2022, Wojciech Mula\nAll rights reserved.",
+            "Copyright (C) The Internet Society (2003).  All Rights Reserved.",
+            "Copyright(C) The Internet Society 1997. All Rights Reserved.",
+            "Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.\nCopyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &\nDigital Equipment Corporation, Maynard, Mass.\nCopyright (c) 1998 Microsoft.\nTo anyone who acknowledges that this file is provided \"AS IS\"\nwithout any express or implied warranty: permission to use, copy,\nmodify, and distribute this file for any purpose is hereby\ngranted without fee, provided that the above copyright notices and\nthis notice appears in all source code copies, and that none of\nthe names of Open Software Foundation, Inc., Hewlett-Packard\nCompany, Microsoft, or Digital Equipment Corporation be used in\nadvertising or publicity pertaining to distribution of the software\nwithout specific, written prior permission. Neither Open Software\nFoundation, Inc., Hewlett-Packard Company, Microsoft, nor Digital\nEquipment Corporation makes any representations about the\nsuitability of this software for any purpose.\"",
+            "Copyright (c) 2014 Ryan Juckett\n  http://www.ryanjuckett.com/",
+            "Copyright 2012 the V8 project authors. All rights reserved.\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are\nmet:",
+            "Copyright (C) 2012-2021 Yann Collet",
+            "Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 The Regents of the\nUniversity of California.  All rights reserved.",
+            "Copyright 2018 Daniel Lemire",
+            "Copyright (c) 2008-2016, Wojciech Mula\n   All rights reserved.",
+            "Copyright (c) 2017 Yoshifumi Kawai",
+            "Copyright (c) 2013-2017, Milosz Krajewski",
+            "Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip. All rights reserved.",
+            "Copyright (c) 2011-2020 Microsoft Corp",
+            "Copyright (c) 2018 Alexander Chermyanin",
+            "Copyright (c) 2020 Dan Shechter",
+            "Copyright © 2005-2020 Rich Felker, et al.",
+            "Copyright (c) 2019 Microsoft Corporation, Daan Leijen",
+            "Copyright 2019 LLVM Project",
+            "Copyright (c) 1980, 1986, 1993\n   The Regents of the University of California.  All rights reserved.",
+            "Copyright (c) 2021 csFastFloat authors\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.",
+            "Copyright (c) 2020 Mara Bos <m-ou.se@m-ou.se>\nAll rights reserved.",
+            "Copyright (C) 1999 Lucent Technologies",
+            "Copyright (C) 2008-2020 Advanced Micro Devices, Inc. All rights reserved.",
+            "Copyright (c) 2012 - present, Victor Zverovich",
+            "Copyright (c) 2006 Jb Evain (jbevain@gmail.com)",
+            "Copyright(c) 2011-2015 Intel Corporation All rights reserved.",
+            "Copyright (c) 2015 Andrew Gallant",
+            "Copyright (c) 2015-2018, Wojciech Muła\nAll rights reserved.",
+            "Copyright (c) 2022 FormatJS",
+            "Copyright (c) 2018 Nemanja Mijailovic"
+          ],
+          "license": "dotnet-10.0.1-ThirdPartyNotices.txt",
+          "sha256": "66f1d4e44973185519bb4aa8a9718eb22fc7af2cc532e3ae9cfc4c127ee7fc54"
+        }
+      ]
+    },
+    {
+      "name": "DXC",
+      "parts": [
+        {
+          "files": [
+            "licence/DXC-LICENSE-LLVM.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2003-2015 University of Illinois at Urbana-Champaign.\nAll rights reserved."
+          ],
+          "license": "DXC-LICENSE-LLVM.txt",
+          "sha256": "b2551288a0381a79527d63c1590ae8bac98de4dafa1afd0702625d6e82524b85"
+        },
+        {
+          "files": [
+            "licence/DXC-LICENSE-MS.txt"
+          ],
+          "copyright": [],
+          "license": "DXC-LICENSE-MS.txt",
+          "sha256": "1dcac77dad56673dcd66d6a162340c9d648166bb3aa6df18ef866ed75a155abc"
+        },
+        {
+          "files": [
+            "licence/DXC-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2003-2015 University of Illinois at Urbana-Champaign.\nAll rights reserved.",
+            "Copyright 2013-2014 RAD Game Tools and Valve Software\nCopyright 2010-2014 Rich Geldreich and Tenacious Software LLC",
+            "Copyright 2001-2004 Unicode, Inc.",
+            "This software was written by Alexander Peslyak in 2001.  No copyright is\nclaimed, and the software is hereby placed in the public domain.\nIn case this attempt to disclaim copyright and place the software in the\npublic domain is deemed null and void, then the software is\nCopyright (c) 2001 Alexander Peslyak and it is hereby released to the\ngeneral public under the following terms:",
+            "Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>",
+            "Copyright 2008, Google Inc.\nAll rights reserved.",
+            "Copyright (c) 2006 Kirill Simonov",
+            "Copyright (C) 1989, 1991 Free Software Foundation, Inc.,\n 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA\n Everyone is permitted to copy and distribute verbatim copies\n of this license document, but changing it is not allowed."
+          ],
+          "license": "DXC-LICENSE.txt",
+          "sha256": "27a49e35d1da96eba18fba54bc882667ff0ff8c0254f16f2b6e165d605ba7df8"
+        },
+        {
+          "files": [
+            "licence/DXC-ThirdPartyNotices.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2003-2015 University of Illinois at Urbana-Champaign.\nAll rights reserved.",
+            "Copyright (c) 2007-2015 University of Illinois at Urbana-Champaign.\nAll rights reserved.",
+            "Copyright (c) 2006 Kirill Simonov",
+            "Copyright (C) 2004 eXtensible Systems, Inc.",
+            "$OpenBSD: COPYRIGHT,v 1.3 2003/06/02 20:18:36 millert Exp $",
+            "Copyright 1992, 1993, 1994 Henry Spencer.  All rights reserved.\nThis software is not subject to any license of the American Telephone\nand Telegraph Company or of the Regents of the University of California.",
+            "* Copyright (c) 1994\n *\tThe Regents of the University of California.  All rights reserved.\n *\n * Redistribution and use in source and binary forms, with or without\n * modification, are permitted provided that the following conditions\n * are met:\n * 1. Redistributions of source code must retain the above copyright\n *    notice, this list of conditions and the following disclaimer.\n * 2. Redistributions in binary form must reproduce the above copyright\n *    notice, this list of conditions and the following disclaimer in the\n *    documentation and/or other materials provided with the distribution.\n * 3. Neither the name of the University nor the names of its contributors\n *    may be used to endorse or promote products derived from this software\n *    without specific prior written permission.\n *\n * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND\n * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\n * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE\n * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS\n * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)\n * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY\n * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF\n * SUCH DAMAGE.\n *\n *\t@(#)COPYRIGHT\t8.1 (Berkeley) 3/16/94\n */"
+          ],
+          "license": "DXC-ThirdPartyNotices.txt",
+          "sha256": "19512a5d0a015ef16d167272c164da49a604614a786206212a80ad486ed0be6d"
+        }
+      ]
+    },
+    {
+      "name": "Electron2D",
+      "parts": [
+        {
+          "files": [
+            "licence/Electron2D-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2026 Eduard Gushchin"
+          ],
+          "license": "Electron2D-LICENSE.txt",
+          "sha256": "a0d65bb33b9f8de5d7f0e27c6a773b118af4b488e08e05af66262d53041b205e"
+        }
+      ]
+    },
+    {
+      "name": "Emscripten",
+      "parts": [
+        {
+          "files": [
+            "licence/Emscripten-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2010-2014 Emscripten authors, see AUTHORS file.",
+            "Copyright (c) 2010-2014 Emscripten authors, see AUTHORS file.\nAll rights reserved.",
+            "Copyright Joyent, Inc. and other Node contributors. All rights reserved.\n        Permission is hereby granted, free of charge, to any person obtaining a copy\n        of this software and associated documentation files (the \"Software\"), to\n        deal in the Software without restriction, including without limitation the\n        rights to use, copy, modify, merge, publish, distribute, sublicense, and/or\n        sell copies of the Software, and to permit persons to whom the Software is\n        furnished to do so, subject to the following conditions:"
+          ],
+          "license": "Emscripten-LICENSE.txt",
+          "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86"
+        }
+      ]
+    },
+    {
+      "name": "ENet",
+      "parts": [
+        {
+          "files": [
+            "licence/ENet-LICENSE.txt",
+            "src/Vendor/ENet/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2002-2024 Lee Salzman"
+          ],
+          "license": "ENet-LICENSE.txt",
+          "sha256": "a29cd246638974da7c6edf423a0a69d4a6f7d759940b7cfa9a2bc3442ac3834c"
+        }
+      ]
+    },
+    {
+      "name": "FastLZ",
+      "parts": [
+        {
+          "files": [
+            "licence/FastLZ-LICENSE.txt",
+            "src/Vendor/FastLZ/**"
+          ],
+          "copyright": [
+            "Copyright (C) 2005-2020 Ariya Hidayat <ariya.hidayat@gmail.com>"
+          ],
+          "license": "FastLZ-LICENSE.txt",
+          "sha256": "8bfb790e1c32b13a6d5492b171032e8fe7d5bebf0bebec720e07607192d10d12"
+        }
+      ]
+    },
+    {
+      "name": "FastNoiseLite",
+      "parts": [
+        {
+          "files": [
+            "licence/FastNoiseLite-LICENSE.txt",
+            "src/Vendor/FastNoiseLite/**"
+          ],
+          "copyright": [
+            "Copyright(c) 2020 Jordan Peck (jordan.me2@gmail.com)\nCopyright(c) 2020 Contributors"
+          ],
+          "license": "FastNoiseLite-LICENSE.txt",
+          "sha256": "c08da3239b919c12f4ec616b457a8dd0fc923c8102c8a742c4006fcb5de28fb0"
+        }
+      ]
+    },
+    {
+      "name": "FAudio",
+      "parts": [
+        {
+          "files": [
+            "licence/FAudio-LICENSE.txt",
+            "src/Vendor/FAudio/**"
+          ],
+          "copyright": [
+            "* Copyright (c) 2011-2024 Ethan Lee, Luigi Auriemma, and the MonoGame Team\n *\n * This software is provided 'as-is', without any express or implied warranty.\n * In no event will the authors be held liable for any damages arising from\n * the use of this software.\n *\n * Permission is granted to anyone to use this software for any purpose,\n * including commercial applications, and to alter it and redistribute it\n * freely, subject to the following restrictions:\n *\n * 1. The origin of this software must not be misrepresented; you must not\n * claim that you wrote the original software. If you use this software in a\n * product, an acknowledgment in the product documentation would be\n * appreciated but is not required.\n *\n * 2. Altered source versions must be plainly marked as such, and must not be\n * misrepresented as being the original software.\n *\n * 3. This notice may not be removed or altered from any source distribution.\n *\n * Ethan \"flibitijibibo\" Lee <flibitijibibo@flibitijibibo.com>\n *\n */"
+          ],
+          "license": "FAudio-LICENSE.txt",
+          "sha256": "18325126e220d6898c4a8d1e3896a7b8c0e10e15b9d08bc6630f403bf4981215"
+        }
+      ]
+    },
+    {
+      "name": "FAudioSharp",
+      "parts": [
+        {
+          "files": [
+            "licence/FAudioSharp-LICENSE.txt"
+          ],
+          "copyright": [
+            "* Copyright (c) 2018-2024 Ethan Lee.\n *\n * This software is provided 'as-is', without any express or implied warranty.\n * In no event will the authors be held liable for any damages arising from\n * the use of this software.\n *\n * Permission is granted to anyone to use this software for any purpose,\n * including commercial applications, and to alter it and redistribute it\n * freely, subject to the following restrictions:\n *\n * 1. The origin of this software must not be misrepresented; you must not\n * claim that you wrote the original software. If you use this software in a\n * product, an acknowledgment in the product documentation would be\n * appreciated but is not required.\n *\n * 2. Altered source versions must be plainly marked as such, and must not be\n * misrepresented as being the original software.\n *\n * 3. This notice may not be removed or altered from any source distribution.\n *\n * Ethan \"flibitijibibo\" Lee <flibitijibibo@flibitijibibo.com>\n *\n */"
+          ],
+          "license": "FAudioSharp-LICENSE.txt",
+          "sha256": "cfd20ec6c40bc4173259ad2cd9e8cf4391b0fb5a0986335618d57abd818c3c6d"
+        }
+      ]
+    },
+    {
+      "name": "FreeType",
+      "parts": [
+        {
+          "files": [
+            "licence/FreeType-2.14.3-FTL.txt"
+          ],
+          "copyright": [
+            "Copyright 1996-2002, 2006 by\n          David Turner, Robert Wilhelm, and Werner Lemberg",
+            "The FreeType  Project is copyright (C) 1996-2000  by David Turner,\n  Robert Wilhelm, and Werner Lemberg.  All rights reserved except as\n  specified below."
+          ],
+          "license": "FreeType-2.14.3-FTL.txt",
+          "sha256": "5a5ee54c5001bbad1cdc1a57cc3dd4c42199b2da09d39c7ee41fab002d02967f"
+        },
+        {
+          "files": [
+            "licence/FreeType-FTL.txt"
+          ],
+          "copyright": [
+            "Copyright 1996-2002, 2006 by\n          David Turner, Robert Wilhelm, and Werner Lemberg",
+            "The FreeType  Project is copyright (C) 1996-2000  by David Turner,\n  Robert Wilhelm, and Werner Lemberg.  All rights reserved except as\n  specified below."
+          ],
+          "license": "FreeType-FTL.txt",
+          "sha256": "08c135755dd589039470f1fdbb400daaabaaa50d0b366d19cebff4d22986baa1"
+        },
+        {
+          "files": [
+            "licence/FreeType-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "FreeType-LICENSE.txt",
+          "sha256": "2e3bbb7d7c5c396368dd0853a790ec29ce5b8647163dde42a0493fb0d6556b2b"
+        }
+      ]
+    },
+    {
+      "name": "GamepadMotionHelpers",
+      "parts": [
+        {
+          "files": [
+            "licence/GamepadMotionHelpers-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2020-2023 Julian \"Jibb\" Smart"
+          ],
+          "license": "GamepadMotionHelpers-LICENSE.txt",
+          "sha256": "cab235520dc9bda018e27ccc8c533ecf375766823f9ed918f3698fa52aaffa33"
+        }
+      ]
+    },
+    {
+      "name": "HarfBuzz-15.0.0",
+      "parts": [
+        {
+          "files": [
+            "licence/HarfBuzz-15.0.0-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright © 2010-2022  Google, Inc.\nCopyright © 2015-2020  Ebrahim Byagowi\nCopyright © 2019,2020  Facebook, Inc.\nCopyright © 2012,2015  Mozilla Foundation\nCopyright © 2011  Codethink Limited\nCopyright © 2008,2010  Nokia Corporation and/or its subsidiary(-ies)\nCopyright © 2009  Keith Stribley\nCopyright © 2011  Martin Hosken and SIL International\nCopyright © 2007  Chris Wilson\nCopyright © 2005,2006,2020,2021,2022,2023  Behdad Esfahbod\nCopyright © 2004,2007,2008,2009,2010,2013,2021,2022,2023  Red Hat, Inc.\nCopyright © 1998-2005  David Turner and Werner Lemberg\nCopyright © 2016  Igalia S.L.\nCopyright © 2022  Matthias Clasen\nCopyright © 2018,2021  Khaled Hosny\nCopyright © 2018,2019,2020  Adobe, Inc\nCopyright © 2013-2015  Alexei Podtelezhnikov"
+          ],
+          "license": "HarfBuzz-15.0.0-LICENSE.txt",
+          "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+        }
+      ]
+    },
+    {
+      "name": "HarfBuzz-5.2.0",
+      "parts": [
+        {
+          "files": [
+            "licence/HarfBuzz-5.2.0-COPYING.txt"
+          ],
+          "copyright": [
+            "Copyright © 2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020  Google, Inc.\nCopyright © 2018,2019,2020  Ebrahim Byagowi\nCopyright © 2019,2020  Facebook, Inc.\nCopyright © 2012  Mozilla Foundation\nCopyright © 2011  Codethink Limited\nCopyright © 2008,2010  Nokia Corporation and/or its subsidiary(-ies)\nCopyright © 2009  Keith Stribley\nCopyright © 2009  Martin Hosken and SIL International\nCopyright © 2007  Chris Wilson\nCopyright © 2005,2006,2020,2021  Behdad Esfahbod\nCopyright © 2005  David Turner\nCopyright © 2004,2007,2008,2009,2010  Red Hat, Inc.\nCopyright © 1998-2004  David Turner and Werner Lemberg"
+          ],
+          "license": "HarfBuzz-5.2.0-COPYING.txt",
+          "sha256": "4345e1735f8bc6d812fed5180cabb5a5e88a4109d332652f2a45c13cfa5ee692"
+        }
+      ]
+    },
+    {
+      "name": "ICUText",
+      "parts": [
+        {
+          "files": [
+            "licence/ICUText-LICENSE.txt",
+            "src/Vendor/ICU/**"
+          ],
+          "copyright": [
+            "Copyright © 2016-2025 Unicode, Inc.",
+            "Copyright (c) 1995-2016 International Business Machines Corporation and others\nAll rights reserved.",
+            "#  Copyright (C) 2006-2008, Google Inc.\n #\n #  All rights reserved.\n #\n #  Redistribution and use in source and binary forms, with or without\n # modification, are permitted provided that the following conditions are met:\n #\n #  Redistributions of source code must retain the above copyright notice,\n # this list of conditions and the following disclaimer.\n #  Redistributions in binary form must reproduce the above\n # copyright notice, this list of conditions and the following\n # disclaimer in the documentation and/or other materials provided with\n # the distribution.\n #  Neither the name of  Google Inc. nor the names of its\n # contributors may be used to endorse or promote products derived from\n # this software without specific prior written permission.\n #\n #\n #  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND\n # CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES,\n # INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n # MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n # DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE\n # LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\n # CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n # SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR\n # BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF\n # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING\n # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n #\n #\n #  The word list in cjdict.txt are generated by combining three word lists\n # listed below with further processing for compound word breaking. The\n # frequency is generated with an iterative training against Google web\n # corpora.\n #\n #  * Libtabe (Chinese)\n #    - https://sourceforge.net/project/?group_id=1519\n #    - Its license terms and conditions are shown below.\n #\n #  * IPADIC (Japanese)\n #    - http://chasen.aist-nara.ac.jp/chasen/distribution.html\n #    - Its license terms and conditions are shown below.\n #\n #  ---------COPYING.libtabe ---- BEGIN--------------------\n #\n #  /*\n #   * Copyright (c) 1999 TaBE Project.\n #   * Copyright (c) 1999 Pai-Hsiang Hsiao.\n #   * All rights reserved.\n #   *\n #   * Redistribution and use in source and binary forms, with or without\n #   * modification, are permitted provided that the following conditions\n #   * are met:\n #   *\n #   * . Redistributions of source code must retain the above copyright\n #   *   notice, this list of conditions and the following disclaimer.\n #   * . Redistributions in binary form must reproduce the above copyright\n #   *   notice, this list of conditions and the following disclaimer in\n #   *   the documentation and/or other materials provided with the\n #   *   distribution.\n #   * . Neither the name of the TaBE Project nor the names of its\n #   *   contributors may be used to endorse or promote products derived\n #   *   from this software without specific prior written permission.\n #   *\n #   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n #   * \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n #   * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n #   * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n #   * REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n #   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n #   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n #   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)\n #   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,\n #   * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n #   * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED\n #   * OF THE POSSIBILITY OF SUCH DAMAGE.\n #   */\n #\n #  /*\n #   * Copyright (c) 1999 Computer Systems and Communication Lab,\n #   *                    Institute of Information Science, Academia\n #       *                    Sinica. All rights reserved.\n #   *\n #   * Redistribution and use in source and binary forms, with or without\n #   * modification, are permitted provided that the following conditions\n #   * are met:\n #   *\n #   * . Redistributions of source code must retain the above copyright\n #   *   notice, this list of conditions and the following disclaimer.\n #   * . Redistributions in binary form must reproduce the above copyright\n #   *   notice, this list of conditions and the following disclaimer in\n #   *   the documentation and/or other materials provided with the\n #   *   distribution.\n #   * . Neither the name of the Computer Systems and Communication Lab\n #   *   nor the names of its contributors may be used to endorse or\n #   *   promote products derived from this software without specific\n #   *   prior written permission.\n #   *\n #   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n #   * \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n #   * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n #   * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n #   * REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n #   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n #   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n #   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)\n #   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,\n #   * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n #   * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED\n #   * OF THE POSSIBILITY OF SUCH DAMAGE.\n #   */\n #\n #  Copyright 1996 Chih-Hao Tsai @ Beckman Institute,\n #      University of Illinois\n #  c-tsai4@uiuc.edu  http://casper.beckman.uiuc.edu/~c-tsai4\n #\n #  ---------------COPYING.libtabe-----END--------------------------------\n #\n #\n #  ---------------COPYING.ipadic-----BEGIN-------------------------------\n #\n #  Copyright 2000, 2001, 2002, 2003 Nara Institute of Science\n #  and Technology.  All Rights Reserved.\n #\n #  Use, reproduction, and distribution of this software is permitted.\n #  Any copy of this software, whether in its original form or modified,\n #  must include both the above copyright notice and the following\n #  paragraphs.\n #\n #  Nara Institute of Science and Technology (NAIST),\n #  the copyright holders, disclaims all warranties with regard to this\n #  software, including all implied warranties of merchantability and\n #  fitness, in no event shall NAIST be liable for\n #  any special, indirect or consequential damages or any damages\n #  whatsoever resulting from loss of use, data or profits, whether in an\n #  action of contract, negligence or other tortuous action, arising out\n #  of or in connection with the use or performance of this software.\n #\n #  A large portion of the dictionary entries\n #  originate from ICOT Free Software.  The following conditions for ICOT\n #  Free Software applies to the current dictionary as well.\n #\n #  Each User may also freely distribute the Program, whether in its\n #  original form or modified, to any third party or parties, PROVIDED\n #  that the provisions of Section 3 (\"NO WARRANTY\") will ALWAYS appear\n #  on, or be attached to, the Program, which is distributed substantially\n #  in the same form as set out herein and that such intended\n #  distribution, if actually made, will neither violate or otherwise\n #  contravene any of the laws and regulations of the countries having\n #  jurisdiction over the User or the intended distribution itself.\n #\n #  NO WARRANTY\n #\n #  The program was produced on an experimental basis in the course of the\n #  research and development conducted during the project and is provided\n #  to users as so produced on an experimental basis.  Accordingly, the\n #  program is provided without any warranty whatsoever, whether express,\n #  implied, statutory or otherwise.  The term \"warranty\" used herein\n #  includes, but is not limited to, any warranty of the quality,\n #  performance, merchantability and fitness for a particular purpose of\n #  the program and the nonexistence of any infringement or violation of\n #  any right of any third party.\n #\n #  Each user of the program will agree and understand, and be deemed to\n #  have agreed and understood, that there is no warranty whatsoever for\n #  the program and, accordingly, the entire risk arising from or\n #  otherwise connected with the program is assumed by the user.\n #\n #  Therefore, neither ICOT, the copyright holder, or any other\n #  organization that participated in or was otherwise related to the\n #  development of the program and their respective officials, directors,\n #  officers and other employees shall be held liable for any and all\n #  damages, including, without limitation, general, special, incidental\n #  and consequential damages, arising out of or otherwise in connection\n #  with the use or inability to use the program or any product, material\n #  or result produced or otherwise obtained by using the program,\n #  regardless of whether they have been advised of, or otherwise had\n #  knowledge of, the possibility of such damages at any time during the\n #  project or thereafter.  Each user will be deemed to have agreed to the\n #  foregoing by his or her commencement of use of the program.  The term\n #  \"use\" as used herein includes, but is not limited to, the use,\n #  modification, copying and distribution of the program and the\n #  production of secondary products from the program.\n #\n #  In the case where the program, whether in its original form or\n #  modified, was distributed or delivered to or received by a user from\n #  any person, organization or entity other than ICOT, unless it makes or\n #  grants independently of ICOT any specific warranty to the user in\n #  writing, such person, organization or entity, will also be exempted\n #  from and not be held liable to the user for any such damages as noted\n #  above as far as the program is concerned.\n #\n #  ---------------COPYING.ipadic-----END----------------------------------",
+            "# Copyright (C) 2016 and later: Unicode, Inc. and others.\n # License & terms of use: http://www.unicode.org/copyright.html\n # Copyright (c) 2015 International Business Machines Corporation\n # and others. All Rights Reserved.\n #\n # Project: https://github.com/rober42539/lao-dictionary\n # Dictionary: https://github.com/rober42539/lao-dictionary/laodict.txt\n # License: https://github.com/rober42539/lao-dictionary/LICENSE.txt\n #          (copied below)\n #\n #\tThis file is derived from the above dictionary version of Nov 22, 2020\n #  ----------------------------------------------------------------------\n #  Copyright (C) 2013 Brian Eugene Wilson, Robert Martin Campbell.\n #  All rights reserved.\n #\n #  Redistribution and use in source and binary forms, with or without\n #  modification, are permitted provided that the following conditions are met:\n #\n #  Redistributions of source code must retain the above copyright notice, this\n #  list of conditions and the following disclaimer. Redistributions in binary\n #  form must reproduce the above copyright notice, this list of conditions and\n #  the following disclaimer in the documentation and/or other materials\n #  provided with the distribution.\n #\n # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n # \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n # FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n # COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,\n # INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n # (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)\n # HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,\n # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED\n # OF THE POSSIBILITY OF SUCH DAMAGE.\n #  --------------------------------------------------------------------------",
+            "#  Copyright (c) 2014 International Business Machines Corporation\n #  and others. All Rights Reserved.\n #\n #  This list is part of a project hosted at:\n #    github.com/kanyawtech/myanmar-karen-word-lists\n #\n #  --------------------------------------------------------------------------\n #  Copyright (c) 2013, LeRoy Benjamin Sharon\n #  All rights reserved.\n #\n #  Redistribution and use in source and binary forms, with or without\n #  modification, are permitted provided that the following conditions\n #  are met: Redistributions of source code must retain the above\n #  copyright notice, this list of conditions and the following\n #  disclaimer.  Redistributions in binary form must reproduce the\n #  above copyright notice, this list of conditions and the following\n #  disclaimer in the documentation and/or other materials provided\n #  with the distribution.\n #\n #    Neither the name Myanmar Karen Word Lists, nor the names of its\n #    contributors may be used to endorse or promote products derived\n #    from this software without specific prior written permission.\n #\n #  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND\n #  CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES,\n #  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n #  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n #  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS\n #  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,\n #  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED\n #  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,\n #  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON\n #  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR\n #  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF\n #  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF\n #  SUCH DAMAGE.\n #  --------------------------------------------------------------------------",
+            "Copyright 2006-2011, the V8 project authors. All rights reserved.\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are\nmet:",
+            "Copyright (c) 2013-2022 Niels Lohmann",
+            "Copyright © 2004 Scott James Remnant <scott@netsplit.com>.\nCopyright © 2012-2015 Dan Nicholson <dbn.lists@gmail.com>",
+            "Copyright 1991 by the Massachusetts Institute of Technology",
+            "Copyright (c) 1997-date Stuart Langridge"
+          ],
+          "license": "ICUText-LICENSE.txt",
+          "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+        }
+      ]
+    },
+    {
+      "name": "JetBrainsMono",
+      "parts": [
+        {
+          "files": [
+            "licence/JetBrainsMono.txt",
+            "src/Scene/Theme/Fonts/JetBrainsMono*"
+          ],
+          "copyright": [
+            "Copyright 2020, The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)"
+          ],
+          "license": "JetBrainsMono.txt",
+          "sha256": "cba21c71f3727ba46904a35430c384cedc1e7fcdbb2b8ac0aae093af729290f6"
+        }
+      ]
+    },
+    {
+      "name": "KTX-Software",
+      "parts": [
+        {
+          "files": [
+            "licence/KTX-Apache-2.0-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "KTX-Apache-2.0-LICENSE.txt",
+          "sha256": "44b0a56e80b41a1b0a6bd1292515e806539fd97b30be54c2719e6c763190ab57"
+        },
+        {
+          "files": [
+            "licence/KTX-ASTC-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "KTX-ASTC-LICENSE.txt",
+          "sha256": "494accc32e50eb523a0e384d0ae6d4b702db867a89d6971216760e92b240ee12"
+        },
+        {
+          "files": [
+            "licence/KTX-BSD-1-Clause-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "KTX-BSD-1-Clause-LICENSE.txt",
+          "sha256": "9f213b0e6f1b624e6b16c379486a77368a911f8cec17d9ebe4b859487adc79a4"
+        },
+        {
+          "files": [
+            "licence/KTX-BSD-2-Clause-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "KTX-BSD-2-Clause-LICENSE.txt",
+          "sha256": "b992a2e547b7ec8f02dc5d67fe3887d441f5749d31865ce2d6d835e52f0c4292"
+        },
+        {
+          "files": [
+            "licence/KTX-BSD-3-Clause-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "KTX-BSD-3-Clause-LICENSE.txt",
+          "sha256": "f2acfc9738e37a0a49bc376ebac221a847867b367ee9a49fa198b4389dcd9cc9"
+        },
+        {
+          "files": [
+            "licence/KTX-MIT-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "KTX-MIT-LICENSE.txt",
+          "sha256": "8f25018489d6fe0dec34a352314c38dc146247b7de65735790f4398a92afa84b"
+        },
+        {
+          "files": [
+            "licence/KTX-Source-Notices.md"
+          ],
+          "copyright": [
+            "Copyright 2013-2020 Mark Callow \n SPDX-License-Identifier: Apache-2.0\n-->"
+          ],
+          "license": "KTX-Source-Notices.md",
+          "sha256": "0f92b4ce771585dfebc963ede074a30b4431b9e327911db44097d83ccf372128"
+        },
+        {
+          "files": [
+            "licence/KTX-Zlib-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "KTX-Zlib-LICENSE.txt",
+          "sha256": "2259b985e96b3fec86eae5afc92e05691d9540073b3fb91cc06c120c507be9a0"
+        },
+        {
+          "files": [
+            "licence/KTX-Zstandard-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2016-present, Facebook, Inc. All rights reserved."
+          ],
+          "license": "KTX-Zstandard-LICENSE.txt",
+          "sha256": "2c1a7fa704df8f3a606f6fc010b8b5aaebf403f3aeec339a12048f1ba7331a0b"
+        }
+      ]
+    },
+    {
+      "name": "vkd3d",
+      "parts": [
+        {
+          "files": [
+            "licence/LGPL-2.1-or-later.txt"
+          ],
+          "copyright": [
+            "Copyright (C) 1991, 1999 Free Software Foundation, Inc.\n51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA"
+          ],
+          "license": "LGPL-2.1-or-later.txt",
+          "sha256": "5749785c8bdefafcb5d798270ed0a967036fe2ca63dcedade1627565dfef81d2"
+        },
+        {
+          "files": [
+            "licence/vkd3d-COPYING.txt"
+          ],
+          "copyright": [
+            "Copyright 2016-2024 the Vkd3d project authors (see the file AUTHORS for a\ncomplete list)"
+          ],
+          "license": "vkd3d-COPYING.txt",
+          "sha256": "02a0f51700a3e09d41ca61759ea80054595a89a8e66383acec6df3e6c3300df8"
+        }
+      ]
+    },
+    {
+      "name": "libaom",
+      "parts": [
+        {
+          "files": [
+            "licence/libaom-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2016, Alliance for Open Media. All rights reserved.",
+            "COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\nINCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\nBUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\nLOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\nLIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\nANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\nPOSSIBILITY OF SUCH DAMAGE."
+          ],
+          "license": "libaom-LICENSE.txt",
+          "sha256": "4764a286d8b2faeaf42f4418e7d7a28d58fc8fd4d00a3d0a7f44b0a4099de7f2"
+        },
+        {
+          "files": [
+            "licence/libaom-PATENTS.txt"
+          ],
+          "copyright": [],
+          "license": "libaom-PATENTS.txt",
+          "sha256": "661fb8e504744e95587b556b94a58343448300606a41bea8c7a9b97125696e61"
+        }
+      ]
+    },
+    {
+      "name": "libavif",
+      "parts": [
+        {
+          "files": [
+            "licence/libavif-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright 2019 Joe Drago. All rights reserved.",
+            "Copyright © 2018-2019, VideoLAN and dav1d authors\nAll rights reserved.",
+            "This software is copyright (C) 1991-2013, Thomas G. Lane, Guido Vollbeding.\nAll Rights Reserved except as specified below.",
+            "Copyright 2020 Emmanuel Gil Peyrot. All rights reserved.",
+            "Copyright 2011 The LibYuv Project Authors. All rights reserved."
+          ],
+          "license": "libavif-LICENSE.txt",
+          "sha256": "165abf92cc04b39e80d29cadea7a6a7e8fddf59407d4ad2616507a7ebe8216f9"
+        }
+      ]
+    },
+    {
+      "name": "libdatachannel",
+      "parts": [
+        {
+          "files": [
+            "licence/libdatachannel-LICENSE.txt",
+            "src/Vendor/libdatachannel/**",
+            "src/Vendor/libdatachannel/include/rtc/rtc.hpp"
+          ],
+          "copyright": [
+            "Copyright (c) 2019 Paul-Louis Ageneau"
+          ],
+          "license": "libdatachannel-LICENSE.txt",
+          "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+          "attributionSources": {
+            "src/Vendor/libdatachannel/include/rtc/rtc.hpp": "7e35eaf3fbe2cb83890d557a6f310d43fa4bc703571b13f07cea23edabec52d2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libjpeg-turbo",
+      "parts": [
+        {
+          "files": [
+            "licence/libjpeg-turbo-LICENSE.md"
+          ],
+          "copyright": [
+            "Copyright (C) 2009-2026 D. R. Commander<br>\nCopyright (C) 2018-2023 Randy <randy408@protonmail.com>"
+          ],
+          "license": "libjpeg-turbo-LICENSE.md",
+          "sha256": "ba6bceebcba0fdd35488477c2cca8c4632ce82c74dbfbc87d886ce6fc4433579"
+        }
+      ]
+    },
+    {
+      "name": "libjuice",
+      "parts": [
+        {
+          "files": [
+            "licence/libjuice-LICENSE.txt",
+            "src/Vendor/libdatachannel/deps/libjuice/**",
+            "src/Vendor/libdatachannel/deps/libjuice/include/juice/juice.h"
+          ],
+          "copyright": [
+            "Copyright (c) 2020-2022 Paul-Louis Ageneau"
+          ],
+          "license": "libjuice-LICENSE.txt",
+          "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+          "attributionSources": {
+            "src/Vendor/libdatachannel/deps/libjuice/include/juice/juice.h": "eb53b351bd3ae21ce9046daab3cd2e66b8b7bd7d329ed0c2a338c1b3d0dc2e2a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libpng-1.6.43",
+      "parts": [
+        {
+          "files": [
+            "licence/libpng-1.6.43-LICENSE.txt"
+          ],
+          "copyright": [
+            "* Copyright (c) 1995-2024 The PNG Reference Library Authors.\n * Copyright (c) 2018-2024 Cosmin Truta.\n * Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson.\n * Copyright (c) 1996-1997 Andreas Dilger.\n * Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.",
+            "Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson, are\nderived from libpng-1.0.6, and are distributed according to the same\ndisclaimer and license as libpng-1.0.6 with the following individuals\nadded to the list of Contributing Authors:",
+            "Copyright (c) 1998-2000 Glenn Randers-Pehrson, are derived from\nlibpng-0.96, and are distributed according to the same disclaimer and\nlicense as libpng-0.96, with the following individuals added to the\nlist of Contributing Authors:",
+            "Copyright (c) 1996-1997 Andreas Dilger, are derived from libpng-0.88,\nand are distributed according to the same disclaimer and license as\nlibpng-0.88, with the following individuals added to the list of\nContributing Authors:",
+            "Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc."
+          ],
+          "license": "libpng-1.6.43-LICENSE.txt",
+          "sha256": "7317e078e2d3b5d7ba5a6159e650945153262b44b76f6700f8e9edb261c5143e"
+        }
+      ]
+    },
+    {
+      "name": "libpng-1.6.59",
+      "parts": [
+        {
+          "files": [
+            "licence/libpng-1.6.59-LICENSE.txt"
+          ],
+          "copyright": [
+            "* Copyright (c) 1995-2026 The PNG Reference Library Authors.\n * Copyright (c) 2018-2026 Cosmin Truta.\n * Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson.\n * Copyright (c) 1996-1997 Andreas Dilger.\n * Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.",
+            "Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson, are\nderived from libpng-1.0.6, and are distributed according to the same\ndisclaimer and license as libpng-1.0.6 with the following individuals\nadded to the list of Contributing Authors:",
+            "Copyright (c) 1998-2000 Glenn Randers-Pehrson, are derived from\nlibpng-0.96, and are distributed according to the same disclaimer and\nlicense as libpng-0.96, with the following individuals added to the\nlist of Contributing Authors:",
+            "Copyright (c) 1996-1997 Andreas Dilger, are derived from libpng-0.88,\nand are distributed according to the same disclaimer and license as\nlibpng-0.88, with the following individuals added to the list of\nContributing Authors:",
+            "Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc."
+          ],
+          "license": "libpng-1.6.59-LICENSE.txt",
+          "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+        }
+      ]
+    },
+    {
+      "name": "libpng",
+      "parts": [
+        {
+          "files": [
+            "licence/libpng-LICENSE.txt"
+          ],
+          "copyright": [
+            "* Copyright (c) 1995-2026 The PNG Reference Library Authors.\n * Copyright (c) 2018-2026 Cosmin Truta.\n * Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson.\n * Copyright (c) 1996-1997 Andreas Dilger.\n * Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.",
+            "Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson, are\nderived from libpng-1.0.6, and are distributed according to the same\ndisclaimer and license as libpng-1.0.6 with the following individuals\nadded to the list of Contributing Authors:",
+            "Copyright (c) 1998-2000 Glenn Randers-Pehrson, are derived from\nlibpng-0.96, and are distributed according to the same disclaimer and\nlicense as libpng-0.96, with the following individuals added to the\nlist of Contributing Authors:",
+            "Copyright (c) 1996-1997 Andreas Dilger, are derived from libpng-0.88,\nand are distributed according to the same disclaimer and license as\nlibpng-0.88, with the following individuals added to the list of\nContributing Authors:",
+            "Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc."
+          ],
+          "license": "libpng-LICENSE.txt",
+          "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+        }
+      ]
+    },
+    {
+      "name": "libtiff",
+      "parts": [
+        {
+          "files": [
+            "licence/libtiff-LICENSE.md"
+          ],
+          "copyright": [
+            "Copyright © 1988-1997 Sam Leffler\\\nCopyright © 1991-1997 Silicon Graphics, Inc.",
+            "Copyright (c) 1985, 1986 The Regents of the University of California.\nAll rights reserved."
+          ],
+          "license": "libtiff-LICENSE.md",
+          "sha256": "0e27c2382d7b8147972bbb746e04059a1152c8d0fda9d03ef1399d1a433c4ade"
+        }
+      ]
+    },
+    {
+      "name": "libwebp",
+      "parts": [
+        {
+          "files": [
+            "licence/libwebp-COPYING.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2010, Google Inc. All rights reserved."
+          ],
+          "license": "libwebp-COPYING.txt",
+          "sha256": "e293d1dddc9785200b1f58a4f5293543cf8566d9e0b8a3c02fad955035b19f42"
+        }
+      ]
+    },
+    {
+      "name": "LineBuilder",
+      "parts": [
+        {
+          "files": [
+            "licence/LineBuilder-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md).\nCopyright (c) 2007-2014 Juan Linietsky, Ariel Manzur."
+          ],
+          "license": "LineBuilder-LICENSE.txt",
+          "sha256": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80"
+        }
+      ]
+    },
+    {
+      "name": "Meshoptimizer",
+      "parts": [
+        {
+          "files": [
+            "licence/Meshoptimizer-LICENSE.txt",
+            "src/Vendor/meshoptimizer/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2016-2026 Arseny Kapoulkine"
+          ],
+          "license": "Meshoptimizer-LICENSE.txt",
+          "sha256": "f03037ca7bad1e3eb7f4a63fa6084a8baabd5ba30d3c239a9a7f35705d873e26"
+        }
+      ]
+    },
+    {
+      "name": "MikkTSpaceSharp",
+      "parts": [
+        {
+          "files": [
+            "licence/MikkTSpaceSharp-LICENSE.txt",
+            "src/Vendor/MikkTSpaceSharp/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2025 Roman Shapiro",
+            "*  Copyright (C) 2011 by Morten S. Mikkelsen\n *\n *  This software is provided 'as-is', without any express or implied\n *  warranty.  In no event will the authors be held liable for any damages\n *  arising from the use of this software.\n *\n *  Permission is granted to anyone to use this software for any purpose,\n *  including commercial applications, and to alter it and redistribute it\n *  freely, subject to the following restrictions:\n *\n *  1. The origin of this software must not be misrepresented; you must not\n *     claim that you wrote the original software. If you use this software\n *     in a product, an acknowledgment in the product documentation would be\n *     appreciated but is not required.\n *  2. Altered source versions must be plainly marked as such, and must not be\n *     misrepresented as being the original software.\n *  3. This notice may not be removed or altered from any source distribution.\n */"
+          ],
+          "license": "MikkTSpaceSharp-LICENSE.txt",
+          "sha256": "e4d623d579590c145d8dcb0ec785b3579bdecf4b0dbd9122e870d62535aa0d8e"
+        }
+      ]
+    },
+    {
+      "name": "MSDFGen",
+      "parts": [
+        {
+          "files": [
+            "licence/MSDFGen-LICENSE.txt",
+            "src/Vendor/MSDFGen/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2014 - 2025 Viktor Chlumsky"
+          ],
+          "license": "MSDFGen-LICENSE.txt",
+          "sha256": "32a94b25ad7072a78457d35019b32d73d2c265c806b0b76e9638fe800330bbe4"
+        }
+      ]
+    },
+    {
+      "name": "NanoSVG",
+      "parts": [
+        {
+          "files": [
+            "licence/NanoSVG-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2013-14 Mikko Mononen memon@inside.org",
+            "Copyright (C) 2002-2004 Maxim Shemanarev (McSeem) (http://www.antigrain.com/)"
+          ],
+          "license": "NanoSVG-LICENSE.txt",
+          "sha256": "3d7ca4f5c89348a104acd7ea6ded548974c86e2ffeea26b6a6b61bef15f03f26"
+        }
+      ]
+    },
+    {
+      "name": "NLayer",
+      "parts": [
+        {
+          "files": [
+            "licence/NLayer-LICENSE.txt",
+            "src/Vendor/NLayer/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2018 Mark Heath, Andrew Ward & Contributors"
+          ],
+          "license": "NLayer-LICENSE.txt",
+          "sha256": "5c0358c3876d9655bc5b2d6555030516266c996c0efffb678807d53ade152850"
+        }
+      ]
+    },
+    {
+      "name": "NVorbis",
+      "parts": [
+        {
+          "files": [
+            "licence/NVorbis-LICENSE.txt",
+            "src/Vendor/NVorbis/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2020 Andrew Ward"
+          ],
+          "license": "NVorbis-LICENSE.txt",
+          "sha256": "208b7009937200cef2abff4e0eb7c2296456c66c40dd01ca62f5a1fbd9fb89e7"
+        }
+      ]
+    },
+    {
+      "name": "Ogg",
+      "parts": [
+        {
+          "files": [
+            "licence/Ogg-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2002, Xiph.org Foundation"
+          ],
+          "license": "Ogg-LICENSE.txt",
+          "sha256": "d2ab5758336489da61c12cc5bb757da5339c4ae9001f9bb0562b4370249af814"
+        }
+      ]
+    },
+    {
+      "name": "OpenSans",
+      "parts": [
+        {
+          "files": [
+            "licence/OpenSans.txt",
+            "src/Scene/Theme/Fonts/OpenSans*"
+          ],
+          "copyright": [
+            "Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)"
+          ],
+          "license": "OpenSans.txt",
+          "sha256": "01cd5ffb3a528c219a86e49a814c6c53bd8a69b9a3c305dd237074ba1c811af7"
+        },
+        {
+          "files": [
+            "licence/OpenSansRich.txt",
+            "src/Scene/Theme/Fonts/OpenSans*"
+          ],
+          "copyright": [
+            "Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)"
+          ],
+          "license": "OpenSansRich.txt",
+          "sha256": "01cd5ffb3a528c219a86e49a814c6c53bd8a69b9a3c305dd237074ba1c811af7"
+        }
+      ]
+    },
+    {
+      "name": "OpenSSL-4.1.0",
+      "parts": [
+        {
+          "files": [
+            "licence/OpenSSL-4.1.0-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "OpenSSL-4.1.0-LICENSE.txt",
+          "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+        }
+      ]
+    },
+    {
+      "name": "ParticleNoise",
+      "parts": [
+        {
+          "files": [
+            "licence/ParticleNoise-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md).\nCopyright (c) 2007-2014 Juan Linietsky, Ariel Manzur."
+          ],
+          "license": "ParticleNoise-LICENSE.txt",
+          "sha256": "d7f06f631b7530d92c91b584e7b726812ccc189d9bfdafd839dd3c0def6f8434"
+        }
+      ]
+    },
+    {
+      "name": "PCG32",
+      "parts": [
+        {
+          "files": [
+            "licence/PCG32-LICENSE.txt"
+          ],
+          "copyright": [
+            "PCG32 core: Copyright (c) 2014 M.E. O'Neill / pcg-random.org.\nLicensed under the Apache License, Version 2.0."
+          ],
+          "license": "PCG32-LICENSE.txt",
+          "sha256": "cfcb7f7db6134e1542e78109f8bf09867698c355b248d8a6883cd7df1ce405eb"
+        }
+      ]
+    },
+    {
+      "name": "PCRE2",
+      "parts": [
+        {
+          "files": [
+            "licence/PCRE2-LICENSE.md",
+            "src/Vendor/PCRE2/**"
+          ],
+          "copyright": [
+            "Copyright (c) 1997-2007 University of Cambridge\n    Copyright (c) 2007-2024 Philip Hazel\n    All rights reserved.",
+            "Copyright (c) 2010-2024 Zoltan Herczeg\n    All rights reserved.",
+            "Copyright (c) 2009-2024 Zoltan Herczeg\n    All rights reserved."
+          ],
+          "license": "PCRE2-LICENSE.md",
+          "sha256": "197d8a73ffee0d6b09adba2f9c677b5f5aede24edf89258a68e48248d010d811"
+        }
+      ]
+    },
+    {
+      "name": "plog",
+      "parts": [
+        {
+          "files": [
+            "licence/plog-LICENSE.txt",
+            "src/Vendor/libdatachannel/deps/plog/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2022 Sergey Podobry"
+          ],
+          "license": "plog-LICENSE.txt",
+          "sha256": "e4d01796524cbc13b1571a1f0914823c6a23b316ba039e7014f47a4eef7fd4c3"
+        }
+      ]
+    },
+    {
+      "name": "PolyPartition",
+      "parts": [
+        {
+          "files": [
+            "licence/PolyPartition-LICENSE.txt"
+          ],
+          "copyright": [
+            "PolyPartition: Copyright (c) 2011-2021 Ivan Fratric and contributors."
+          ],
+          "license": "PolyPartition-LICENSE.txt",
+          "sha256": "72a20f88d7feb6be1a04aadf531c36681f6bd534d15923c705b26f0665c15102"
+        }
+      ]
+    },
+    {
+      "name": "QOA",
+      "parts": [
+        {
+          "files": [
+            "licence/QOA-LICENSE.txt",
+            "src/Vendor/QOA/**"
+          ],
+          "copyright": [
+            "Copyright (C) 2023-2026 Piotr Fusik"
+          ],
+          "license": "QOA-LICENSE.txt",
+          "sha256": "5948b0c1074450ff76f2ce88d490436e9621b02399ff38fb46a4bd2e013f6fa0"
+        }
+      ]
+    },
+    {
+      "name": "RVO2",
+      "parts": [
+        {
+          "files": [
+            "licence/RVO2-LICENSE.txt"
+          ],
+          "copyright": [
+            "RVO2 ORCA adaptation: Copyright 2008 University of North Carolina at Chapel Hill.\nAuthors: Jur van den Berg, Stephen J. Guy, Jamie Snape, Ming C. Lin, Dinesh Manocha.\nAdapted to managed typed planar navigation by Electron2D contributors, 2026."
+          ],
+          "license": "RVO2-LICENSE.txt",
+          "sha256": "2ba36ea52a34148f78ecd8c40ac346f79bd3ba9765a232027ce4b6ba58eb31a7"
+        }
+      ]
+    },
+    {
+      "name": "SDL",
+      "parts": [
+        {
+          "files": [
+            "licence/SDL-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (C) 1997-2026 Sam Lantinga <slouken@libsdl.org>"
+          ],
+          "license": "SDL-LICENSE.txt",
+          "sha256": "1c040b8271b37e5076359f8fd54240e371114112924d2df81ef87c7d6a1dfdfd"
+        }
+      ]
+    },
+    {
+      "name": "SDL3-CS",
+      "parts": [
+        {
+          "files": [
+            "licence/SDL3-CS-LICENSE.txt",
+            "src/Vendor/SDL3-CS/**"
+          ],
+          "copyright": [
+            "Copyright (C) 2024-2026 Eduard Gushchin <eduardgushchin@yandex.ru>"
+          ],
+          "license": "SDL3-CS-LICENSE.txt",
+          "sha256": "312bc305dad033b85393c55fa2e0be9f8d369a9134a39008811ede44bad827de"
+        }
+      ]
+    },
+    {
+      "name": "SDL_image",
+      "parts": [
+        {
+          "files": [
+            "licence/SDL_image-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (C) 1997-2026 Sam Lantinga <slouken@libsdl.org>"
+          ],
+          "license": "SDL_image-LICENSE.txt",
+          "sha256": "e36997fe492c48e7ed873065cc3a694f38e8189a328d3709099ffdc9a8843f4c"
+        },
+        {
+          "files": [
+            "licence/SDLImage-stb-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2017 Sean Barrett\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
+          ],
+          "license": "SDLImage-stb-LICENSE.txt",
+          "sha256": "18a7f62000f1b1d25657b60992d216a1f9798708bf94ed8ef3dc33e82e54b815"
+        },
+        {
+          "files": [
+            "licence/SDLImage-zlib-LICENSE.txt"
+          ],
+          "copyright": [
+            "(C) 1995-2026 Jean-loup Gailly and Mark Adler"
+          ],
+          "license": "SDLImage-zlib-LICENSE.txt",
+          "sha256": "e32ff4e00d9d94930537635291da39e7e612703334bf6fde8c7f1686fe8a45a2"
+        }
+      ]
+    },
+    {
+      "name": "SDL_shadercross",
+      "parts": [
+        {
+          "files": [
+            "licence/SDL_shadercross-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (C) 2024 Sam Lantinga <slouken@libsdl.org>"
+          ],
+          "license": "SDL_shadercross-LICENSE.txt",
+          "sha256": "8a26804b7df662680b8ec6c76e2a502bb18045cde960dd98fc4d7eb497fdacdd"
+        }
+      ]
+    },
+    {
+      "name": "SMAA",
+      "parts": [
+        {
+          "files": [
+            "licence/SMAA-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (C) 2011 Jorge Jimenez (jorge@iryoku.com)\nCopyright (C) 2011 Jose I. Echevarria (joseignacioechevarria@gmail.com) \nCopyright (C) 2011 Belen Masia (bmasia@unizar.es) \nCopyright (C) 2011 Fernando Navarro (fernandn@microsoft.com) \nCopyright (C) 2011 Diego Gutierrez (diegog@unizar.es)\nAll rights reserved.",
+            "\"Uses SMAA. Copyright (C) 2011 by Jorge Jimenez, Jose I. Echevarria,\n       Tiago Sousa, Belen Masia, Fernando Navarro and Diego Gutierrez.\""
+          ],
+          "license": "SMAA-LICENSE.txt",
+          "sha256": "70086e9cb87b85f58919782bd387abc471f57e3243fb3b693ba0305e6cf6a228"
+        }
+      ]
+    },
+    {
+      "name": "SPIRV-Cross",
+      "parts": [
+        {
+          "files": [
+            "licence/SPIRV-Cross-LICENSE.txt"
+          ],
+          "copyright": [],
+          "license": "SPIRV-Cross-LICENSE.txt",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        }
+      ]
+    },
+    {
+      "name": "TextCase",
+      "parts": [
+        {
+          "files": [
+            "licence/TextCase-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright © 2016-2025 Unicode, Inc.",
+            "Copyright (c) 1995-2016 International Business Machines Corporation and others\nAll rights reserved."
+          ],
+          "license": "TextCase-LICENSE.txt",
+          "sha256": "cbbbe1c00abe815d52b0dc28b0c620fda6a2a61ffac8f00a6699e310eda1fa76"
+        }
+      ]
+    },
+    {
+      "name": "Theora",
+      "parts": [
+        {
+          "files": [
+            "licence/Theora-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (C) 2002-2009 Xiph.org Foundation"
+          ],
+          "license": "Theora-LICENSE.txt",
+          "sha256": "8417fad7da775735564e209484a2e011e0fa201e94f01fdbee6e4977e478e6fc"
+        }
+      ]
+    },
+    {
+      "name": "TinyEXR",
+      "parts": [
+        {
+          "files": [
+            "licence/TinyEXR-BSD-LICENSE.txt",
+            "src/Vendor/EXR/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2014 - 2021, Syoyo Fujita and many contributors.\nAll rights reserved.",
+            "Copyright (c) 2002, Industrial Light & Magic, a division of Lucas\nDigital Ltd. LLC"
+          ],
+          "license": "TinyEXR-BSD-LICENSE.txt",
+          "sha256": "fd49903551f5332ef3af7d7fe04e11e664b0146f13736baed0f084be4d67dd41"
+        },
+        {
+          "files": [
+            "licence/TinyEXR.NET-LICENSE.txt",
+            "src/Vendor/EXR/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2023 - 2026 ksgfk(1537100607@qq.com)"
+          ],
+          "license": "TinyEXR.NET-LICENSE.txt",
+          "sha256": "30ec59c966331b7f029a579410fbd69577456eaeb078c752e0b274e9fbdc0345"
+        }
+      ]
+    },
+    {
+      "name": "UnicodeText",
+      "parts": [
+        {
+          "files": [
+            "licence/UnicodeText-Apache-2.0.txt",
+            "src/Vendor/UnicodeText/**"
+          ],
+          "copyright": [],
+          "license": "UnicodeText-Apache-2.0.txt",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "files": [
+            "licence/UnicodeText-DotNet.txt",
+            "src/Vendor/UnicodeText/**"
+          ],
+          "copyright": [
+            "Copyright (c) .NET Foundation and Contributors"
+          ],
+          "license": "UnicodeText-DotNet.txt",
+          "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310"
+        },
+        {
+          "files": [
+            "licence/UnicodeText-foliojs-linebreak.txt",
+            "src/Vendor/UnicodeText/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2014-present Devon Govett"
+          ],
+          "license": "UnicodeText-foliojs-linebreak.txt",
+          "sha256": "cf22b8198f0886a8d4626121579114f23141070e1fceab02ab3c1c361e163440"
+        },
+        {
+          "files": [
+            "licence/UnicodeText-foliojs-unicode-trie.txt",
+            "src/Vendor/UnicodeText/**"
+          ],
+          "copyright": [
+            "Copyright 2018"
+          ],
+          "license": "UnicodeText-foliojs-unicode-trie.txt",
+          "sha256": "43439dbd4f43837aadab215cdbe5a422cc6323a50c4ea84d8d6bbc3671666a1d"
+        },
+        {
+          "files": [
+            "licence/UnicodeText-MIT.txt",
+            "src/Vendor/UnicodeText/**"
+          ],
+          "copyright": [
+            "Copyright (c) AvaloniaUI OÜ\nAll Rights Reserved"
+          ],
+          "license": "UnicodeText-MIT.txt",
+          "sha256": "213814d306090074d234d760239ff0f67eb9b8d20eefb4d5631bb39dbe0b769b"
+        },
+        {
+          "files": [
+            "licence/UnicodeText-Unicode.txt",
+            "src/Vendor/UnicodeText/**"
+          ],
+          "copyright": [
+            "Copyright © 2001-2024 Unicode, Inc."
+          ],
+          "license": "UnicodeText-Unicode.txt",
+          "sha256": "fe5c62b543e287981db198f2acfa0ca732d12591a1024536dc8fd85dacd77104"
+        }
+      ]
+    },
+    {
+      "name": "usrsctp",
+      "parts": [
+        {
+          "files": [
+            "licence/usrsctp-LICENSE.txt",
+            "src/Vendor/libdatachannel/deps/usrsctp/**"
+          ],
+          "copyright": [
+            "Copyright (c) 2015,  Randall Stewart and Michael Tuexen\nAll rights reserved."
+          ],
+          "license": "usrsctp-LICENSE.txt",
+          "sha256": "fa53711b25af4b9a9b8dadfea3cb38166ec4b96760c8d62b284055554537d9ef"
+        }
+      ]
+    },
+    {
+      "name": "Vazirmatn",
+      "parts": [
+        {
+          "files": [
+            "licence/Vazirmatn.txt",
+            "src/Scene/Theme/Fonts/Vazirmatn*"
+          ],
+          "copyright": [
+            "Copyright 2015 The Vazirmatn Project Authors (https://github.com/rastikerdar/vazirmatn)"
+          ],
+          "license": "Vazirmatn.txt",
+          "sha256": "17e355067c8284f47743a1ee3b1ef7ff684ff0601eda357f9353b10b3016ab31"
+        }
+      ]
+    },
+    {
+      "name": "Vorbis",
+      "parts": [
+        {
+          "files": [
+            "licence/Vorbis-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) 2002-2020 Xiph.org Foundation"
+          ],
+          "license": "Vorbis-LICENSE.txt",
+          "sha256": "ec1815db59fcd302846df949d7424876cb2e2dc5ed1606c5fb0b36787b1cf43a"
+        }
+      ]
+    },
+    {
+      "name": "zlib-1.3.1",
+      "parts": [
+        {
+          "files": [
+            "licence/zlib-1.3.1-LICENSE.txt"
+          ],
+          "copyright": [
+            "(C) 1995-2022 Jean-loup Gailly and Mark Adler"
+          ],
+          "license": "zlib-1.3.1-LICENSE.txt",
+          "sha256": "845efc77857d485d91fb3e0b884aaa929368c717ae8186b66fe1ed2495753243"
+        }
+      ]
+    },
+    {
+      "name": "zlib-1.3.2",
+      "parts": [
+        {
+          "files": [
+            "licence/zlib-1.3.2-LICENSE.txt"
+          ],
+          "copyright": [
+            "(C) 1995-2026 Jean-loup Gailly and Mark Adler"
+          ],
+          "license": "zlib-1.3.2-LICENSE.txt",
+          "sha256": "e32ff4e00d9d94930537635291da39e7e612703334bf6fde8c7f1686fe8a45a2"
+        }
+      ]
+    },
+    {
+      "name": "Zstandard-1.5.7",
+      "parts": [
+        {
+          "files": [
+            "licence/Zstandard-1.5.7-LICENSE.txt"
+          ],
+          "copyright": [
+            "Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved."
+          ],
+          "license": "Zstandard-1.5.7-LICENSE.txt",
+          "sha256": "7055266497633c9025b777c78eb7235af13922117480ed5c674677adc381c9d8"
+        }
+      ]
+    }
+  ]
+}

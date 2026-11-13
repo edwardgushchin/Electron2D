@@ -4728,6 +4728,32 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.EngineCopyrightInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.EngineCopyrightInfo",
+    "name": "EngineCopyrightInfo",
+    "signature": "public sealed class Electron2D.EngineCopyrightInfo",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.EngineCopyrightPart",
+    "kind": "type",
+    "declaringType": "Electron2D.EngineCopyrightPart",
+    "name": "EngineCopyrightPart",
+    "signature": "public sealed class Electron2D.EngineCopyrightPart",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.EngineVersionInfo",
     "kind": "type",
     "declaringType": "Electron2D.EngineVersionInfo",
@@ -115911,6 +115937,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.GetAuthorInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "GetAuthorInfo",
+    "signature": "public static System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E GetAuthorInfo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.GetCopyrightInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "GetCopyrightInfo",
+    "signature": "public static System.Collections.Generic.IReadOnlyList\u003CElectron2D.EngineCopyrightInfo\u003E GetCopyrightInfo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.EngineCopyrightInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.GetDonorInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "GetDonorInfo",
+    "signature": "public static System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E GetDonorInfo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.GetFramesDrawn()",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -115921,6 +115986,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.GetLicenseInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "GetLicenseInfo",
+    "signature": "public static System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E GetLicenseInfo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.GetLicenseText()",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "GetLicenseText",
+    "signature": "public static System.String GetLicenseText()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -279931,6 +280022,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.EngineVersionInfo",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.EngineCopyrightInfo.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.EngineCopyrightInfo",
+    "name": "Name",
+    "signature": "public System.String Name { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.EngineCopyrightInfo.Parts()",
+    "kind": "property",
+    "declaringType": "Electron2D.EngineCopyrightInfo",
+    "name": "Parts",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CElectron2D.EngineCopyrightPart\u003E Parts { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.EngineCopyrightPart\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.EngineCopyrightPart.Copyright()",
+    "kind": "property",
+    "declaringType": "Electron2D.EngineCopyrightPart",
+    "name": "Copyright",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Copyright { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.EngineCopyrightPart.Files()",
+    "kind": "property",
+    "declaringType": "Electron2D.EngineCopyrightPart",
+    "name": "Files",
+    "signature": "public System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E Files { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.EngineCopyrightPart.License()",
+    "kind": "property",
+    "declaringType": "Electron2D.EngineCopyrightPart",
+    "name": "License",
+    "signature": "public System.String License { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

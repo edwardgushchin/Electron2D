@@ -2,7 +2,7 @@
 
 [ExtensionManager](ExtensionManager.md) has one permanent reserved service identity in the built-in singleton registry. Its public module operations stay static; borrowed service disposal/unregistration reject.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-14
 
 [Frame timing monitors](../components/frame-monitors.md) expose actual completed-window process, fixed-step and navigation wall time through Performance. Start resets their current-run samples; Stop retains completed observations. Owned Window presentation contributes to process timing; manual AdvanceFrame adds no implicit rendering.
 
@@ -68,6 +68,22 @@ int exitCode = Engine.Run(window);
 | [`public static EngineVersionInfo VersionInfo { get; }`](#p-electron2d-engine-versioninfo) | Gets immutable version information for the loaded Electron2D assembly. |
 
 ## Methods
+
+The distribution metadata operations are static and available before startup:
+
+| Member | Result |
+| --- | --- |
+| `GetAuthorInfo()` | `IReadOnlyDictionary<string, IReadOnlyList<string>>` with the four contributor roles |
+| `GetDonorInfo()` | `IReadOnlyDictionary<string, IReadOnlyList<string>>` with the eight sponsor/donor categories |
+| `GetCopyrightInfo()` | `IReadOnlyList<EngineCopyrightInfo>` with typed parts, source scopes and attribution |
+| `GetLicenseInfo()` | `IReadOnlyDictionary<string, string>` keyed by exact legal-document filenames |
+| `GetLicenseText()` | Complete Electron2D MIT license text |
+
+All returned collections, including nested lists, reject mutation. The embedded
+catalog preserves full text with LF line endings and works without native
+services or external files. See [distribution metadata](../components/engine-runtime.md#distribution-metadata)
+for source identity, empty contributor categories, catalog scope and verification
+limits.
 
 | Member | Description |
 | --- | --- |

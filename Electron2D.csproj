@@ -87,6 +87,7 @@
     <Error Condition="!Exists('$(BrowserManagedAssetDirectory)/Electron2D.dll') or !Exists('$(BrowserManagedAssetDirectory)/Electron2D.xml')" Text="The browser managed runtime and XML documentation must be built before packing." />
   </Target>
   <Import Project="tools/shaders/RuntimeShaders.targets" />
+  <Import Project="tools/licenses/EngineMetadata.targets" />
   <Import Project="tools/audio-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/engine-native.targets" />
   <Import Project="tools/tls-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
