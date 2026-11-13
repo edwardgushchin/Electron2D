@@ -178,6 +178,23 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>False by default. The host command-line verbose switch takes precedence.</value>
     public static ProjectSetting<bool> VerboseSTDOUT { get; } = new("debug/settings/stdout/verbose_stdout", false);
 
+    /// <summary>Gets whether an engine run initially suppresses physical stdout diagnostics.</summary>
+    /// <value>False by default. Registered loggers still receive diagnostics.</value>
+    public static ProjectSetting<bool> DisableSTDOUT { get; } = new("application/run/disable_stdout", false);
+
+    /// <summary>Gets whether an engine run initially suppresses physical stderr diagnostics.</summary>
+    /// <value>False by default. Registered loggers still receive diagnostics.</value>
+    public static ProjectSetting<bool> DisableSTDERR { get; } = new("application/run/disable_stderr", false);
+
+    /// <summary>Gets whether the engine explicitly flushes its managed stdout writer after each printed message.</summary>
+    /// <value>False by default, with an implicit true override for the debug feature.</value>
+    /// <remarks>Sampled with active feature overrides at run startup. Emitted stderr messages always flush.</remarks>
+    public static ProjectSetting<bool> FlushSTDOUTOnPrint { get; } = new("application/run/flush_stdout_on_print", false);
+
+    /// <summary>Gets whether an owned window run emits the Electron2D version header during startup.</summary>
+    /// <value>True by default. The --no-header host switch can suppress it.</value>
+    public static ProjectSetting<bool> PrintHeader { get; } = new("application/run/print_header", true);
+
     /// <summary>Gets the startup scene path or resource UID used by <see cref="Engine.RunProject"/> and <see cref="Engine.RunProjectAsync"/>.</summary>
     /// <value>An empty string until a main scene is configured.</value>
     /// <remarks>The owned host samples the effective feature override once at startup. The selected file must load as a

@@ -134,7 +134,7 @@ public sealed partial class Engine
             if (reserved) ValidateRunWindow(window);
             var frameDelay = ConfigureFrameRateSettings(windowed: true) / 1000d;
             if (moviePath is not null) frameDelay = 0;
-            RuntimeDiagnostics.Instance.BeginRun();
+            RuntimeDiagnostics.Instance.BeginRun(windowed: true);
             var mainScenePath = runProject ? ProjectSettings.GetWithOverride(ProjectSettings.MainScene) : null;
             if (mainScenePath is { Length: 0 })
                 throw new InvalidOperationException("Configure a project main scene before running the project.");

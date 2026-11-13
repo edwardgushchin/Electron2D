@@ -392,6 +392,8 @@ The typed project schema includes ordered LocaleResourceRemaps with compiled JSO
 
 [Verbose diagnostics](../components/diagnostics.md#verbose-stdout) let a project or host launch opt into resource request messages and conditional application messages through the ordinary logger stream.
 
+The [startup output policy](../components/diagnostics.md#startup-output-policy) governs diagnostic output during engine-owned and manual runs.
+
 The [frame-rate settings](../components/engine-runtime.md#frame-rate-settings) connect the persisted window cap, fixed post-frame delay and periodic process FPS reporting to the engine lifecycle.
 
 ## Host platform integration

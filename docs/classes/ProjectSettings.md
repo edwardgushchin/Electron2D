@@ -31,6 +31,8 @@ Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Conf
 
 `GZIPCompressionLevel` and `ZLibCompressionLevel` control exact compression levels for new encodes. The default is -1 (the codec default), and 0 through 9 are valid explicit levels. See [compression levels](../components/file-access.md#compression-levels). See [frame-rate settings](../components/engine-runtime.md#frame-rate-settings).
 
+`DisableSTDOUT`, `DisableSTDERR`, `FlushSTDOUTOnPrint` and `PrintHeader` configure [startup output](../components/diagnostics.md#startup-output-policy).
+
 `VerboseSTDOUT` is the false-by-default typed setting `debug/settings/stdout/verbose_stdout`. Startup samples its active feature override. See [verbose diagnostics](../components/diagnostics.md#verbose-stdout).
 
 ## MeshLODThreshold

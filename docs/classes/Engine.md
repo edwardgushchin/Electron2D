@@ -534,7 +534,7 @@ The [IP service](../classes/IP.md) and [address-resolution component](../compone
 
 Runtime messages now use [diagnostic delivery](../components/diagnostics.md). Engine output flags affect its physical stream; typed logger callbacks retain delivery. Host Console writers retain ordinary C# semantics.
 
-`PrintToSTDOUT` and `PrintErrorMessages` are static bool properties with retained Engine descriptors; `CaptureScriptBacktraces()` returns immutable current-thread C# metadata. Live variable inspection retains its debugger dependency.
+`PrintToSTDOUT` and `PrintErrorMessages` are static bool properties with retained Engine descriptors and [startup output policy](../components/diagnostics.md#startup-output-policy); `CaptureScriptBacktraces()` returns immutable current-thread C# metadata. Live variable inspection retains its debugger dependency.
 
 <a id="m-electron2d-engine-run-electron2d-window-system-string-system-int32"></a>
 ### `public static int Run(Window window, string moviePath, int fps = 60)`

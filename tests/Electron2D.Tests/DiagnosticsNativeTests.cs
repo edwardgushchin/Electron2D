@@ -26,6 +26,16 @@ internal static class DiagnosticsNativeTests
         Sdl.SetLogOutputFunction(output, (IntPtr)987); EOs.AddLogger(receiver);
         return new(output);
     }
+    private sealed class OutputLoop : MainLoop
+    {
+        protected override void OnInitialize()
+        {
+            Check(!Engine.PrintToSTDOUT && !Engine.PrintErrorMessages, "Project switches select native gates before initialization.");
+            Sdl.LogMessage(Sdl.LogCategory.Application, Sdl.LogPriority.Info, "project-hidden-info");
+            Sdl.LogMessage(Sdl.LogCategory.Application, Sdl.LogPriority.Warn, "project-hidden-warning");
+        }
+    }
+
     internal static void Run()
     {
         Sdl.GetLogOutputFunction(out var original, out var originalData);
@@ -35,7 +45,19 @@ internal static class DiagnosticsNativeTests
         try
         {
             Sdl.SetLogPriority(Sdl.LogCategory.Application, Sdl.LogPriority.Trace);
-            Sdl.SetLogOutputFunction(Previous, (IntPtr)123); EOs.AddLogger(receiver);
+            Sdl.SetLogOutputFunction(Previous, (IntPtr)123);
+            ProjectSettings.Set(ProjectSettings.DisableSTDOUT, true);
+            ProjectSettings.Set(ProjectSettings.DisableSTDERR, true);
+            using (var loop = new OutputLoop())
+            {
+                Engine.Start(loop);
+                Engine.Stop();
+            }
+            Check(_previousCalls == 0, "Project policy intercepts native output without registered loggers.");
+            Sdl.GetLogOutputFunction(out var afterRun, out var afterRunData);
+            Check(Marshal.GetFunctionPointerForDelegate(afterRun) == Marshal.GetFunctionPointerForDelegate(Previous) && afterRunData == (IntPtr)123,
+                "Run retirement restores the prior SDL sink and userdata.");
+            EOs.AddLogger(receiver);
             Sdl.LogMessage(Sdl.LogCategory.Application, Sdl.LogPriority.Info, "native Кириллица 😀");
             Check(receiver.Messages == 1 && receiver.Errors == 0 && receiver.Last == "native Кириллица 😀" && _previousCalls == 1 && _badData == 0, "Native message, UTF8, prior sink and userdata.");
             Engine.PrintToSTDOUT = false; Sdl.LogMessage(Sdl.LogCategory.Application, Sdl.LogPriority.Info, "hidden-info");
@@ -59,6 +81,8 @@ internal static class DiagnosticsNativeTests
         }
         finally
         {
+            ProjectSettings.Reset(ProjectSettings.DisableSTDOUT);
+            ProjectSettings.Reset(ProjectSettings.DisableSTDERR);
             EOs.RemoveLogger(receiver); Engine.PrintToSTDOUT = oldOut; Engine.PrintErrorMessages = oldErr;
             Sdl.SetLogOutputFunction(original, originalData); Sdl.SetLogPriority(Sdl.LogCategory.Application, oldPriority);
         }

@@ -12,6 +12,16 @@ Engine.PrintToSTDOUT and PrintErrorMessages default to true and govern physical 
 
 Managed-only registration/message capture does not initialize video or load SDL. The dynamic core resolver attaches native logging when the actual core becomes available. The prior sink, userdata and managed delegate root are retained coherently; output is forwarded when enabled. Final removal/default flags restore that exact sink only if the service still owns the native callback, preserving a later foreign replacement. SDL Info remains a message, Warn a warning, and Error/Critical errors. Native callbacks cannot propagate managed exceptions across the ABI. Desktop native execution must be measured; distinct statically linked and mobile bootstrap paths retain their host hooks and acceptance gates.
 
+## Startup output policy
+
+Manual and owned runs sample the effective `DisableSTDOUT` and `DisableSTDERR` settings before initialization. Both default to false. The sampled settings suppress physical managed and attached native engine diagnostics while registered loggers continue to receive them. The startup policy combines with the host preferences. Explicit assignments to `Engine.PrintToSTDOUT` and `Engine.PrintErrorMessages` update the running gate and the host preference. Shutdown and startup failure retire the sampled policy after cleanup.
+
+`FlushSTDOUTOnPrint` explicitly flushes the current managed stdout writer after each emitted engine message. The base default is false. The debug feature supplies a true fallback that an authored feature override can supersede. Emitted managed stderr messages always flush. The original SDL sink and arbitrary host Console writes retain their own buffering policies.
+
+Owned window startup prints the Electron2D assembly version through the diagnostic ingress before Ready when `PrintHeader` and physical stdout are enabled. `--no-header` suppresses this line. `--quiet` and `-q` suppress physical stdout at run startup. Switch parsing stops at `--` or `++`.
+
+The managed policy checks run on Windows and Arch Linux under WSL. Windows GPU and Compatibility runs verify header delivery and suppression before Ready. Native SDL tests verify both output gates without logger registration and restore the original sink and userdata after retirement. Other packaged hosts remain unverified for this slice.
+
 ## Verbose stdout
 
 `OS.IsSTDOUTVerbose()` reports the effective mode. A standalone `--verbose` or `-v` before the first `--` or `++` enables it for the process. An engine-owned or manually started lifecycle also samples the feature-selected `ProjectSettings.VerboseSTDOUT` setting before startup callbacks and resource initialization. The setting defaults to false. Its sampled value remains active through teardown and is cleared on normal retirement or startup failure. A subsequent run samples settings again.

@@ -394,6 +394,11 @@ if (args.Length == 3 && args[0] == "--dpi-storage") { if (args[1] == "write") DP
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DPI_TEXTURE") == "managed") { DPITextureTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DPI_TEXTURE") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DPI_TEXTURE") is { } dpiBackend) { DPITextureFlowTests.Run(dpiBackend); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTIC_OUTPUT") is { } outputProfile)
+{
+    DiagnosticsTests.RunOutputPolicy(args.Length == 0 ? "" : args[0], outputProfile == "managed" ? null : outputProfile);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") == "verbose") { DiagnosticsTests.RunVerbose(args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIAGNOSTICS") == "portable") { DiagnosticsTests.RunPortable(); return; }
 

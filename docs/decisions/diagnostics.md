@@ -19,6 +19,8 @@ OS.LogMessage and OS.LogError are the typed CLR ingress for engine diagnostic me
 
 The typed verbose setting and process switches feed one effective mode, sampled before initialization and retired after callbacks and cleanup. The CLR verbose message operation uses the same ingress. Synchronous and threaded resource requests report through it without changing resource ownership or failure behavior. See [verbose stdout](../components/diagnostics.md#verbose-stdout).
 
+Each run combines its feature-selected physical output policy with the process host preferences. Live Engine flag assignments update both active and host state, and retirement drops the sampled policy. Managed sinks flush on stderr and optionally on stdout; the debug feature provides an implicit stdout flush default. The owned window startup prints its assembly version through the same diagnostics path. See [startup output policy](../components/diagnostics.md#startup-output-policy).
+
 The periodic FPS report uses the existing measured process cadence. It enters the ordinary diagnostics stream after three warmup windows and leaves frame state independent of output failures. See [frame-rate settings](../components/engine-runtime.md#frame-rate-settings).
 
 Engine's manual frame and owned window-run error boundaries report exceptions with immutable C# backtraces while preserving the same exception, owner-state recovery and cleanup behavior. Manual frames and windowed runs each report a failure once. Diagnostics must never turn an observed callback failure into successful execution. Shutdown errors remain separately observable. No AppDomain unhandled-exception interception or process-wide console redirection is introduced.

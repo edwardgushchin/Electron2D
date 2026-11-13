@@ -8,11 +8,13 @@ public sealed partial class Engine
     /// <summary>Gets or sets whether physical engine stdout messages are printed.</summary>
     /// <value>True initially. Registered loggers still receive messages when false.</value>
     /// <remarks>Applies to engine ingress and an attached native log stream; arbitrary host Console writes
-    /// retain ordinary C# behavior. Changing the flag does not initialize a native window.</remarks>
+    /// retain ordinary C# behavior. Startup applies the project stdout policy to the host preference.
+    /// An explicit assignment updates both the preference and the active run. Changing the flag does not initialize video.</remarks>
     public static bool PrintToSTDOUT { get => RuntimeDiagnostics.Instance.PrintToSTDOUT; set => RuntimeDiagnostics.Instance.PrintToSTDOUT = value; }
 
     /// <summary>Gets or sets whether physical engine stderr diagnostics are printed.</summary>
     /// <value>True initially. Registered loggers still receive errors when false.</value>
+    /// <remarks>Startup applies the project stderr policy to the host preference. An explicit assignment updates both the preference and the active run.</remarks>
     public static bool PrintErrorMessages { get => RuntimeDiagnostics.Instance.PrintErrorMessages; set => RuntimeDiagnostics.Instance.PrintErrorMessages = value; }
 
     /// <summary>Captures available C# stack metadata for the calling thread.</summary>

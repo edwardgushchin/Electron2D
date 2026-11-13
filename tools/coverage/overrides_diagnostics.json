@@ -1,6 +1,31 @@
 {
   "mappings": [
     {
+      "godot": "ProjectSettings::property:application/run/disable_stdout",
+      "electron2d": "property:Electron2D.ProjectSettings.DisableSTDOUT()",
+      "reason": "ADRs 0016/0019/0108: sampled physical stdout suppression feeds managed diagnostics and the retained SDL sink."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/disable_stderr",
+      "electron2d": "property:Electron2D.ProjectSettings.DisableSTDERR()",
+      "reason": "ADRs 0016/0019/0108: sampled physical stderr suppression feeds managed diagnostics and the retained SDL sink."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/flush_stdout_on_print",
+      "electron2d": "property:Electron2D.ProjectSettings.FlushSTDOUTOnPrint()",
+      "reason": "ADR 0108: explicitly flushes the host's managed writer after each enabled engine stdout message."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/flush_stdout_on_print.debug",
+      "electron2d": "property:Electron2D.ProjectSettings.FlushSTDOUTOnPrint()",
+      "reason": "ADR 0019: implicit true debug-feature default on the typed key, with ordinary stored feature overrides."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/print_header",
+      "electron2d": "property:Electron2D.ProjectSettings.PrintHeader()",
+      "reason": "ADRs 0016/0108: enables the engine version header through the owned window startup and diagnostic sink."
+    },
+    {
       "godot": "ProjectSettings::property:application/run/frame_delay_msec",
       "electron2d": "property:Electron2D.ProjectSettings.FrameDelayMsec()",
       "reason": "ADRs 0016/0019: typed fixed frame delay for ordinary owned window runs, with feature and command-line selection."
@@ -140,6 +165,17 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:application/run/disable_stdout",
+        "ProjectSettings::property:application/run/disable_stderr",
+        "ProjectSettings::property:application/run/flush_stdout_on_print",
+        "ProjectSettings::property:application/run/flush_stdout_on_print.debug",
+        "ProjectSettings::property:application/run/print_header"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0016/0019/0108: typed startup settings apply through the common diagnostic ingress, native gate and owned header producer. Managed writer flush and debug-feature selection execute. See docs/components/diagnostics.md#startup-output-policy for host and verification boundaries."
+    },
     {
       "godot": ["ProjectSettings::property:application/run/frame_delay_msec"],
       "state": "Implemented",

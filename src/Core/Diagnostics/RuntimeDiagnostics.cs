@@ -10,24 +10,53 @@ internal sealed unsafe class RuntimeDiagnostics
     internal static readonly RuntimeDiagnostics Instance = new();
     private readonly object _gate = new();
     private Logger[] _loggers = [];
-    private readonly bool _commandLineVerbose = HasVerboseSwitch(Environment.GetCommandLineArgs());
+    private readonly bool _commandLineVerbose = HasSwitch(Environment.GetCommandLineArgs(), "--verbose", "-v");
     private bool _stdout = true, _errors = true, _projectVerbose;
+    private sealed record RunOutput(bool Stdout, bool Stderr, bool FlushStdout);
+    private RunOutput? _runOutput;
 
     internal bool IsSTDOUTVerbose => _commandLineVerbose || Volatile.Read(ref _projectVerbose);
 
-    private static bool HasVerboseSwitch(ReadOnlySpan<string> arguments)
+    private static bool HasSwitch(ReadOnlySpan<string> arguments, string option, string? alias = null)
     {
         for (var i = 1; i < arguments.Length; i++)
         {
             var argument = arguments[i];
             if (argument is "--" or "++") break;
-            if (argument is "--verbose" or "-v") return true;
+            if (argument == option || argument == alias) return true;
         }
         return false;
     }
 
-    internal void BeginRun() => Volatile.Write(ref _projectVerbose, ProjectSettings.GetWithOverride(ProjectSettings.VerboseSTDOUT));
-    internal void EndRun() => Volatile.Write(ref _projectVerbose, false);
+    internal void BeginRun(bool windowed = false)
+    {
+        var arguments = Environment.GetCommandLineArgs();
+        var disableStdout = ProjectSettings.GetWithOverride(ProjectSettings.DisableSTDOUT) || HasSwitch(arguments, "--quiet", "-q");
+        var disableStderr = ProjectSettings.GetWithOverride(ProjectSettings.DisableSTDERR);
+        var flushStdout = ProjectSettings.GetWithOverride(ProjectSettings.FlushSTDOUTOnPrint);
+        var printHeader = windowed && ProjectSettings.GetWithOverride(ProjectSettings.PrintHeader) && !HasSwitch(arguments, "--no-header");
+        var verbose = ProjectSettings.GetWithOverride(ProjectSettings.VerboseSTDOUT);
+        lock (_gate)
+        {
+            Volatile.Write(ref _runOutput, new(_stdout && !disableStdout, _errors && !disableStderr, flushStdout));
+            try { UpdateNative(); }
+            catch { Volatile.Write(ref _runOutput, null); throw; }
+            Volatile.Write(ref _projectVerbose, verbose);
+        }
+        if (printHeader && PrintToSTDOUT)
+            ReportMessage($"Electron2D v{Engine.VersionInfo.InformationalVersion}");
+    }
+
+    internal void EndRun()
+    {
+        lock (_gate)
+        {
+            Volatile.Write(ref _projectVerbose, false);
+            if (_runOutput is null) return;
+            Volatile.Write(ref _runOutput, null);
+            UpdateNative();
+        }
+    }
 
     internal void ReportResourceRequest(string path)
     {
@@ -50,16 +79,24 @@ internal sealed unsafe class RuntimeDiagnostics
     private delegate* unmanaged[Cdecl]<nint, nint, void> _setOutput;
     private static nint NativeCallback => (nint)(delegate* unmanaged[Cdecl]<nint, int, int, byte*, void>)&NativeLog;
 
-    internal bool PrintToSTDOUT { get => Volatile.Read(ref _stdout); set => SetOutput(value, error: false); }
-    internal bool PrintErrorMessages { get => Volatile.Read(ref _errors); set => SetOutput(value, error: true); }
+    internal bool PrintToSTDOUT { get => Volatile.Read(ref _runOutput)?.Stdout ?? Volatile.Read(ref _stdout); set => SetOutput(value, error: false); }
+    internal bool PrintErrorMessages { get => Volatile.Read(ref _runOutput)?.Stderr ?? Volatile.Read(ref _errors); set => SetOutput(value, error: true); }
     private void SetOutput(bool value, bool error)
     {
         lock (_gate)
         {
             var previous = error ? _errors : _stdout;
+            var previousRun = _runOutput;
             if (error) Volatile.Write(ref _errors, value); else Volatile.Write(ref _stdout, value);
+            if (previousRun is not null)
+                Volatile.Write(ref _runOutput, error ? previousRun with { Stderr = value } : previousRun with { Stdout = value });
             try { UpdateNative(); }
-            catch { if (error) Volatile.Write(ref _errors, previous); else Volatile.Write(ref _stdout, previous); throw; }
+            catch
+            {
+                if (error) Volatile.Write(ref _errors, previous); else Volatile.Write(ref _stdout, previous);
+                Volatile.Write(ref _runOutput, previousRun);
+                throw;
+            }
         }
     }
 
@@ -89,6 +126,16 @@ internal sealed unsafe class RuntimeDiagnostics
         }
     }
 
+    private void WriteConsole(string message, bool error)
+    {
+        var run = Volatile.Read(ref _runOutput);
+        var enabled = error ? run?.Stderr ?? Volatile.Read(ref _errors) : run?.Stdout ?? Volatile.Read(ref _stdout);
+        if (!enabled) return;
+        var writer = error ? Console.Error : Console.Out;
+        writer.WriteLine(message);
+        if (error || run?.FlushStdout == true) writer.Flush();
+    }
+
     internal void Message(string message, bool error)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -97,7 +144,7 @@ internal sealed unsafe class RuntimeDiagnostics
         {
             var targets = Volatile.Read(ref _loggers);
             Exception? outputFailure = null;
-            try { if (error ? PrintErrorMessages : PrintToSTDOUT) (error ? Console.Error : Console.Out).WriteLine(message); }
+            try { WriteConsole(message, error); }
             catch (Exception failure) { outputFailure = failure; }
             if (!nested)
                 foreach (var logger in targets)
@@ -131,7 +178,7 @@ internal sealed unsafe class RuntimeDiagnostics
                 }
             }
             Exception? outputFailure = null;
-            try { if (PrintErrorMessages) Console.Error.WriteLine($"{type}: {rationale}" + (function.Length == 0 ? "" : $" [{file}:{line} @ {function}]")); }
+            try { if (PrintErrorMessages) WriteConsole($"{type}: {rationale}" + (function.Length == 0 ? "" : $" [{file}:{line} @ {function}]"), error: true); }
             catch (Exception failure) { outputFailure = failure; }
             if (!nested && targets.Length != 0)
             {
@@ -151,7 +198,7 @@ internal sealed unsafe class RuntimeDiagnostics
     }
     private void CallbackFailure(Exception error)
     {
-        try { if (PrintErrorMessages) Console.Error.WriteLine("Diagnostic receiver failed: " + error.Message); }
+        try { WriteConsole("Diagnostic receiver failed: " + error.Message, error: true); }
         catch { }
     }
 
@@ -166,7 +213,7 @@ internal sealed unsafe class RuntimeDiagnostics
     private void UpdateNative()
     {
         if (_nativeHandle == 0) return;
-        var wanted = _loggers.Length != 0 || !_stdout || !_errors;
+        var wanted = _loggers.Length != 0 || !PrintToSTDOUT || !PrintErrorMessages;
         if (wanted && !_nativeInstalled)
         {
             _getOutput = (delegate* unmanaged[Cdecl]<nint*, nint*, void>)NativeLibrary.GetExport(_nativeHandle, "SDL_GetLogOutputFunction");

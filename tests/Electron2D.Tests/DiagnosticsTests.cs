@@ -128,6 +128,131 @@ internal static class DiagnosticsTests
         Console.WriteLine("Verbose diagnostics settings, host switches, lifecycle and resource requests passed.");
     }
 
+    private sealed class FlushWriter : StringWriter
+    {
+        internal int Flushes;
+        public override void Flush() => Flushes++;
+    }
+
+    internal static void RunOutputPolicy(string mode, string? backend)
+    {
+        var stdout = Console.Out;
+        var stderr = Console.Error;
+        var oldOut = Engine.PrintToSTDOUT;
+        var oldErr = Engine.PrintErrorMessages;
+        var directory = Directory.CreateTempSubdirectory("electron2d-output-");
+        var user = directory.CreateSubdirectory("user");
+        const string feature = "output_fixture";
+        using var output = new FlushWriter();
+        using var errors = new FlushWriter();
+        using var receiver = new Receiver();
+        EOs.AddLogger(receiver);
+        try
+        {
+            using (var saved = new ProjectSettingsRegistry(directory.FullName, user.FullName))
+            {
+                Check(!saved.Get(ProjectSettings.DisableSTDOUT) && !saved.Get(ProjectSettings.DisableSTDERR) &&
+                    !saved.Get(ProjectSettings.FlushSTDOUTOnPrint) && saved.Get(ProjectSettings.PrintHeader), "Output defaults.");
+                Check(saved.GetWithOverride(ProjectSettings.FlushSTDOUTOnPrint, ["debug"]) &&
+                    !saved.GetWithOverride(ProjectSettings.FlushSTDOUTOnPrint, ["release"]), "The debug feature opts into flushing.");
+                saved.Set(ProjectSettings.DisableSTDERR, true);
+                saved.Set(ProjectSettings.PrintHeader, false);
+                saved.SetFeatureOverride(ProjectSettings.FlushSTDOUTOnPrint, "debug", false);
+                saved.Save();
+            }
+            using (var loaded = new ProjectSettingsRegistry(directory.FullName, user.FullName))
+            {
+                loaded.Load();
+                Check(loaded.Get(ProjectSettings.DisableSTDERR) && !loaded.Get(ProjectSettings.PrintHeader) &&
+                    !loaded.GetWithOverride(ProjectSettings.FlushSTDOUTOnPrint, ["debug"]), "Authored output overrides persist.");
+            }
+            Console.SetOut(output);
+            Console.SetError(errors);
+            Engine.PrintToSTDOUT = true;
+            Engine.PrintErrorMessages = true;
+            ProjectSettings.Set(ProjectSettings.DisableSTDERR, true);
+            ProjectSettings.SetFeatureOverride(ProjectSettings.DisableSTDOUT, feature, true);
+            ProjectSettings.SetFeatureOverride(ProjectSettings.FlushSTDOUTOnPrint, feature, true);
+            ProjectSettings.AddCustomFeature(feature);
+
+            using (var loop = new VerboseLoop(() =>
+            {
+                Check(!Engine.PrintToSTDOUT && !Engine.PrintErrorMessages, "Startup selects both physical output gates before initialization.");
+                EOs.LogMessage("muted normal");
+                EOs.LogError("muted error");
+                Check(receiver.Messages.Contains(("muted normal", false)) && receiver.Errors.Any(error => error.Text == "muted error"), "Muted output still reaches loggers.");
+                Check(output.GetStringBuilder().Length == 0 && errors.GetStringBuilder().Length == 0, "Muted writers receive nothing.");
+                Console.Out.WriteLine("host output");
+                Check(output.ToString().Contains("host output", StringComparison.Ordinal), "Host-owned output is independent.");
+                ProjectSettings.ClearFeatureOverride(ProjectSettings.DisableSTDOUT, feature);
+                Check(!Engine.PrintToSTDOUT, "Settings edits affect the next run.");
+                Engine.PrintToSTDOUT = true;
+                Engine.PrintErrorMessages = true;
+                EOs.LogMessage("enabled normal");
+                EOs.LogMessage("enabled error", error: true);
+                Check(output.Flushes == 1 && errors.Flushes == 1, "Both emitted writers flushed.");
+            }, () => EOs.LogMessage("final output")))
+            {
+                Engine.Start(loop);
+                Engine.Stop();
+            }
+            Check(output.Flushes == 2 && Engine.PrintToSTDOUT && Engine.PrintErrorMessages, "Active flushing spans finalization and the host preferences survive retirement.");
+
+            using (var failing = new VerboseLoop(() => throw new ArithmeticException("output startup failure")))
+            {
+                ProjectSettings.Set(ProjectSettings.DisableSTDOUT, true);
+                Reject<ArithmeticException>(() => Engine.Start(failing));
+                Check(Engine.PrintToSTDOUT && Engine.PrintErrorMessages && Engine.MainLoop is null, "Failed startup retires the sampled gates.");
+                ProjectSettings.Reset(ProjectSettings.DisableSTDOUT);
+            }
+            ProjectSettings.SetFeatureOverride(ProjectSettings.FlushSTDOUTOnPrint, feature, false);
+            using (var unflushed = new VerboseLoop(() =>
+            {
+                Engine.PrintToSTDOUT = true;
+                EOs.LogMessage("normal without explicit flush");
+                Check(output.Flushes == 2, "An authored false override does not explicitly flush stdout.");
+            }))
+            {
+                Engine.Start(unflushed);
+                Engine.Stop();
+            }
+            if (backend is not null)
+            {
+                ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+                ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+                ProjectSettings.Set(ProjectSettings.PrintHeader, mode != "setting");
+                var expectedHeader = mode == "header";
+                var initialOutput = output.GetStringBuilder().Length;
+                var heading = $"Electron2D v{Engine.VersionInfo.InformationalVersion}";
+                using var window = new Window { Size = new(48, 48) };
+                window.Ready += _ =>
+                {
+                    Check(output.ToString()[initialOutput..].Contains(heading, StringComparison.Ordinal) == expectedHeader, "The header setting and host switch govern real stdout before Ready.");
+                    Check(receiver.Messages.Contains((heading, false)) == expectedHeader, "The header follows ordinary diagnostic delivery.");
+                    Check(Engine.PrintToSTDOUT == (mode != "quiet"), "The quiet switch suppresses physical stdout.");
+                    window.Tree!.Quit(6);
+                };
+                Check(Engine.Run(window) == 6 && Engine.PrintToSTDOUT && Engine.PrintErrorMessages, "Window shutdown retires project output policy.");
+            }
+        }
+        finally
+        {
+            Console.SetOut(stdout);
+            Console.SetError(stderr);
+            EOs.RemoveLogger(receiver);
+            Engine.PrintToSTDOUT = oldOut;
+            Engine.PrintErrorMessages = oldErr;
+            ProjectSettings.ClearFeatureOverride(ProjectSettings.DisableSTDOUT, feature);
+            ProjectSettings.ClearFeatureOverride(ProjectSettings.FlushSTDOUTOnPrint, feature);
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.Reset(ProjectSettings.DisableSTDOUT);
+            ProjectSettings.Reset(ProjectSettings.DisableSTDERR);
+            ProjectSettings.Reset(ProjectSettings.PrintHeader);
+            directory.Delete(recursive: true);
+        }
+        Console.WriteLine("Startup output policy, host writers, logger delivery and lifecycle passed.");
+    }
+
     internal static void RunPortable()
     {
         using var receiver = new Receiver(); var output = Engine.PrintToSTDOUT; var errors = Engine.PrintErrorMessages;

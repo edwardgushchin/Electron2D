@@ -69,6 +69,11 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(LowProcessorModeSleepUsec, isBasic: false);
         RegisterInternal(MaxTimestampQueryElements, isBasic: false);
         RegisterInternal(VerboseSTDOUT, isBasic: false);
+        RegisterInternal(DisableSTDOUT, isBasic: false);
+        RegisterInternal(DisableSTDERR, isBasic: false);
+        RegisterInternal(FlushSTDOUTOnPrint, isBasic: false);
+        _settings[FlushSTDOUTOnPrint.Name].RestartIfChanged = true;
+        RegisterInternal(PrintHeader, isBasic: false);
         RegisterInternal(MaxFPS, isBasic: false);
         RegisterInternal(FrameDelayMsec, isBasic: false);
         RegisterInternal(GZIPCompressionLevel, isBasic: false);
@@ -1001,6 +1006,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
                     if (_document.TryGetSerializedValue(overrideKey, out var overrideValue))
                         return overrideValue;
                 }
+
+                if (ReferenceEquals(setting, FlushSTDOUTOnPrint) &&
+                    (features?.Contains("debug") ?? (_builtInFeatures.Contains("debug") || _customFeatures.Contains("debug"))))
+                    return "true";
             }
 
             return _document.TryGetSerializedValue(entry.BaseKey, out var value)
@@ -1262,6 +1271,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, LowProcessorModeSleepUsec) ||
         ReferenceEquals(setting, MaxTimestampQueryElements) ||
         ReferenceEquals(setting, VerboseSTDOUT) ||
+        ReferenceEquals(setting, DisableSTDOUT) ||
+        ReferenceEquals(setting, DisableSTDERR) ||
+        ReferenceEquals(setting, FlushSTDOUTOnPrint) ||
+        ReferenceEquals(setting, PrintHeader) ||
         ReferenceEquals(setting, MaxFPS) ||
         ReferenceEquals(setting, FrameDelayMsec) ||
         ReferenceEquals(setting, GZIPCompressionLevel) ||
@@ -1515,7 +1528,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
 
         internal string? GetActiveOverride(IReadOnlySet<string> builtInFeatures, IReadOnlySet<string> customFeatures) =>
             OverrideFeatures.FirstOrDefault(feature =>
-                builtInFeatures.Contains(feature) || customFeatures.Contains(feature));
+                builtInFeatures.Contains(feature) || customFeatures.Contains(feature)) ??
+            (ReferenceEquals(Definition, FlushSTDOUTOnPrint) &&
+                (builtInFeatures.Contains("debug") || customFeatures.Contains("debug")) ? "debug" : null);
 
         internal void ReloadOverrides(ConfigFile document, IReadOnlyList<string> names)
         {
