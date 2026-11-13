@@ -1,3 +1,5 @@
+[Radiance HDR file loading](../components/images.md#radiance-hdr-loading) adds RGBE image and texture loading to the file APIs. The general file-loading rows remain Partial. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Navigation projection](../components/navigation-maps.md#projection-ownership) resolves overlap and committed ownership. Four Partial rows move to Implemented. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [RGBE conversion](../components/images.md#rgbe-to-srgb) builds the RGB8 mip chain from the converted base. One Partial row moves to Implemented. Coverage is **13,962/18,900 (73.87%)**, with 1,123 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

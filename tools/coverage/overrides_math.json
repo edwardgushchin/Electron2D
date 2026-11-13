@@ -3388,9 +3388,12 @@
     },
     {
       "state": "Partial",
+      "godot": ["Image::method:load(String:)", "Image::method:load_from_file(String:)"],
+      "reason": "ADR 0039: existing typed file loads now include bounded Radiance HDR decoding to RGBE9995 with raw, legacy and planar-RLE scanlines and both axis orders. ResourceLoader uses the same codec for ImageTexture discovery and loading. SVG CSS sizing, additional file variants, color metadata and target qualification remain open. See docs/components/images.md#radiance-hdr-loading."
+    },
+    {
+      "state": "Partial",
       "godot": [
-        "Image::method:load(String:)",
-        "Image::method:load_from_file(String:)",
         "Image::method:load_svg_from_buffer(PackedByteArray:,float:)",
         "Image::method:load_svg_from_string(String:,float:)",
         "Image::method:load_webp_from_buffer(PackedByteArray:)"

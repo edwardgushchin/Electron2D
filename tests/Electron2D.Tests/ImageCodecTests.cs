@@ -40,6 +40,7 @@ internal static class ImageCodecTests
         Check(image.Size == new Vector2i(4, 3) && image.GetPixel(1, 1) == Colors.Green,
             "SVG viewBox supplies intrinsic dimensions.");
         VerifyBMP();
+        ImageHDRTests.Run();
         VerifyTGA();
         VerifyPNG();
 

@@ -4,7 +4,7 @@ public sealed partial class Image
 {
     private static readonly object FormatLoaderGate = new();
     private static readonly List<ImageFormatLoaderExtension> FormatLoaders = [];
-    private static readonly string[] BuiltInExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg", "dds", "exr", "ktx", "ktx2"];
+    private static readonly string[] BuiltInExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg", "dds", "exr", "hdr", "ktx", "ktx2"];
 
     internal static void AddFormatLoader(ImageFormatLoaderExtension loader)
     {
@@ -75,7 +75,8 @@ public sealed partial class Image
             CheckEncodedLength(length);
             var bytes = file.ReadBytes((int)length);
             if (bytes.Length != length || file.Length != length) throw new IOException("The encoded image changed while it was read.");
-            if (codec == "KTX") LoadKTXFromBuffer(bytes); else if (codec == "DDS") LoadDDSFromBuffer(bytes); else if (codec == "EXR") LoadEXRFromBuffer(bytes); else DecodeAndCommit(bytes, codec);
+            if (codec == "HDR") Commit(DecodeHDR(bytes));
+            else if (codec == "KTX") LoadKTXFromBuffer(bytes); else if (codec == "DDS") LoadDDSFromBuffer(bytes); else if (codec == "EXR") LoadEXRFromBuffer(bytes); else DecodeAndCommit(bytes, codec);
         }
         finally { file?.Dispose(); }
     }

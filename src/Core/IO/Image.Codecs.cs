@@ -16,6 +16,7 @@ public sealed partial class Image
     /// DDS and KTX retain stored mip layouts; EXR and KTX retain applicable channel precision.
     /// Registered extensions may return other valid Image layouts. Their state is copied before publication.
     /// A failure preserves the previous image. Changed is emitted after a successful replacement.
+    /// Radiance HDR files decode to linear RGBE9995 pixels.
     /// Custom decoders execute on this thread using borrowed temporary Image and FileAccess objects.
     /// Removal affects subsequent snapshots; retain registered decoders through pending calls.</remarks>
     /// <exception cref="InvalidDataException">The encoded image is malformed or exceeds supported limits.</exception>
@@ -156,6 +157,7 @@ public sealed partial class Image
         return IOPath.GetExtension(path).ToLowerInvariant() switch
         {
             ".exr" => "EXR",
+            ".hdr" => "HDR",
             ".dds" => "DDS",
             ".ktx" or ".ktx2" => "KTX",
             ".png" => "PNG",

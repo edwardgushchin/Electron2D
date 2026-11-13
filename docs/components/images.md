@@ -106,6 +106,14 @@ The image-storage profile checks independent mip values, luma and alpha, signed 
 
 Image encoders reject a directory destination with `IOException` before starting atomic replacement. Other path and permission errors retain the file layer's behavior.
 
+## Radiance HDR loading
+
+`Image.Load` and `Image.LoadFromFile` recognize `.hdr` paths. The managed decoder reads Radiance RGBE pixels into linear `Rgbe9995` base storage. It accepts both Radiance signatures, planar run-length packets, legacy repeat markers and flat scanlines. Both axis orders and signs normalize to top-left row order. Exponent zero decodes to black. The RGB9E5 output retains exact representable samples and rounds or saturates at the format limits. [Radiance picture format](https://radsite.lbl.gov/radiance/refer/Notes/picture_format.html).
+
+The loader bounds the text header to 64 KiB and encoded and decoded pixel storage to 64 MiB each. Truncated packets, inconsistent scanline sizes, invalid dimensions and unsupported pixel encodings raise `InvalidDataException` before replacement. A successful instance load publishes one `Changed` notification. Exposure and other descriptive header metadata leave the encoded samples unchanged.
+
+`ResourceLoader` discovers and loads `.hdr` as an `ImageTexture`, retaining RGB9E5 pixels in its source snapshot. For byte-color consumers, use `RGBEToSRGB`. The HDR codec profile checks exact values, both scanline encodings, orientation, retained texture storage and malformed-input atomicity.
+
 ## RGBE to sRGB
 
 `RGBEToSRGB` decodes the base-level RGB9E5 mantissas and shared exponent, applies the linear-to-sRGB transfer, and quantizes to owned RGB8 bytes. HDR components above the byte range saturate. The operation retains the source image dimensions and leaves its bytes and notifications untouched.
