@@ -22,6 +22,8 @@ e2d_enet_service
 e2d_enet_stat
 e2d_file_decode
 e2d_file_encode
+e2d_file_zstd_decode
+e2d_file_zstd_encode
 e2d_font_msdf_free
 e2d_font_msdf_generate
 e2d_gzip_create

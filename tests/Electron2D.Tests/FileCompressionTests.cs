@@ -124,6 +124,87 @@ internal static partial class FileCompressionTests
         }
     }
 
+    internal static void ZstandardOptions(bool legacy)
+    {
+        var directory = Directory.CreateTempSubdirectory("electron2d-zstandard-options-");
+        var user = directory.CreateSubdirectory("user");
+        const string feature = "file_zstandard_test";
+        var level = ProjectSettings.ZstandardCompressionLevel;
+        var matching = ProjectSettings.ZstandardLongDistanceMatching;
+        var window = ProjectSettings.ZstandardWindowLogSize;
+        const FileCompressionMode mode = FileCompressionMode.Zstandard;
+        try
+        {
+            using (var stored = new ProjectSettingsRegistry(directory.FullName, user.FullName))
+            {
+                Check(stored.Get(level) == 3 && !stored.Get(matching) && stored.Get(window) == 27, "Zstandard defaults.");
+                Reject<ArgumentOutOfRangeException>(() => stored.Set(level, 0));
+                Reject<ArgumentOutOfRangeException>(() => stored.Set(level, 23));
+                Reject<ArgumentOutOfRangeException>(() => stored.Set(window, 9));
+                Reject<ArgumentOutOfRangeException>(() => stored.Set(window, 31));
+                stored.Set(level, 22);
+                stored.Set(matching, true);
+                stored.SetFeatureOverride(window, feature, 10);
+                stored.Save();
+            }
+            using (var restored = new ProjectSettingsRegistry(directory.FullName, user.FullName))
+            {
+                restored.Load();
+                restored.AddCustomFeature(feature);
+                Check(restored.Get(level) == 22 && restored.Get(matching) && restored.GetWithOverride(window) == 10,
+                    "Zstandard values and feature overrides persist.");
+            }
+
+            var data = new byte[131_089];
+            new Random(790).NextBytes(data.AsSpan(0, 8192));
+            for (var offset = 16_384; offset < data.Length; offset++)
+                data[offset] = data[offset % 16_384];
+            var original = ByteBuffer.Compress(data, mode);
+            Check(ByteBuffer.Decompress(original, data.Length, mode).SequenceEqual(data), "The default profile remains compatible.");
+            ProjectSettings.SetFeatureOverride(level, feature, 1);
+            ProjectSettings.AddCustomFeature(feature);
+            if (legacy)
+            {
+                Reject<PlatformNotSupportedException>(() => ByteBuffer.Compress(data, mode));
+                ProjectSettings.Set(matching, true);
+                Reject<PlatformNotSupportedException>(() => ByteBuffer.Decompress(original, data.Length, mode));
+                Console.WriteLine("Legacy ABI keeps default compression and explicitly refuses configured options.");
+                return;
+            }
+
+            var fast = ByteBuffer.Compress(data, mode);
+            ProjectSettings.SetFeatureOverride(level, feature, 22);
+            var dense = ByteBuffer.Compress(data, mode);
+            Check(!fast.SequenceEqual(dense), "Effective level changes the encoded bytes.");
+            Check(ByteBuffer.Decompress(fast, data.Length, mode).SequenceEqual(data) &&
+                ByteBuffer.Decompress(dense, data.Length, mode).SequenceEqual(data), "Both selected levels preserve data.");
+
+            ProjectSettings.Set(matching, true);
+            ProjectSettings.SetFeatureOverride(window, feature, 10);
+            Reject<InvalidDataException>(() => ByteBuffer.Decompress(original, data.Length, mode));
+            var constrained = ByteBuffer.Compress(data, mode);
+            var path = Path.Combine(directory.FullName, "constrained.bin");
+            using (var output = FileAccess.OpenCompressed(path, FileAccessModeFlags.Write, mode)) output.WriteBytes(data);
+            Check(File.ReadAllBytes(path).SequenceEqual(constrained), "The file and buffer honor the same selected window.");
+            using (var input = FileAccess.OpenCompressed(path, FileAccessModeFlags.Read, mode))
+                Check(input.ReadBytes(data.Length).SequenceEqual(data), "A bounded window round-trips multiple blocks.");
+            ProjectSettings.SetFeatureOverride(window, feature, 16);
+            Check(ByteBuffer.Decompress(original, data.Length, mode).SequenceEqual(data), "Increasing the window accepts previously encoded frames.");
+            ProjectSettings.Set(matching, false);
+            ProjectSettings.SetFeatureOverride(window, feature, 10);
+            Check(ByteBuffer.Decompress(original, data.Length, mode).SequenceEqual(data), "The window applies only with long-distance matching enabled.");
+            Console.WriteLine("Zstandard settings: level, window enforcement, multiblock compatibility and shared file/buffer encoding passed.");
+        }
+        finally
+        {
+            ProjectSettings.ClearFeatureOverride(level, feature);
+            ProjectSettings.ClearFeatureOverride(window, feature);
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.Reset(matching);
+            directory.Delete(recursive: true);
+        }
+    }
+
     internal static void Child(string path, string mode)
     {
         using var file = FileAccess.OpenCompressed(path, FileAccessModeFlags.Read, Enum.Parse<FileCompressionMode>(mode));

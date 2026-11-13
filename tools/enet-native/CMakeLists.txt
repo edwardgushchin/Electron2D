@@ -90,6 +90,7 @@ add_executable(Electron2DENetMemory EXCLUDE_FROM_ALL check_memory.c
   "${base}/ENet/callbacks.c" "${base}/ENet/compress.c" "${base}/ENet/host.c"
   "${base}/ENet/list.c" "${base}/ENet/packet.c" "${base}/ENet/peer.c" "${base}/ENet/protocol.c"
   "${base}/FastLZ/fastlz.c")
+target_compile_features(Electron2DENetMemory PRIVATE c_std_11)
 target_include_directories(Electron2DENetMemory PRIVATE "${base}/ENet/include" "${base}/FastLZ")
 if(APPLE OR WIN32 OR ANDROID OR EMSCRIPTEN)
   target_include_directories(Electron2DENetMemory PRIVATE "${zstd_SOURCE_DIR}/lib")

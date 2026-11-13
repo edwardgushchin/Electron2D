@@ -28,7 +28,7 @@ Direct `ElectronObject` construction provides the concrete root role through the
 
 [Function-loaded extension modules](../components/extensions.md) execute typed entry/lifecycle callbacks through ExtensionManager and closed Resource copy/storage through Extension. Class registration and live reload remain open.
 
-[Binary buffers](../components/byte-buffers.md) expose span-based numeric/text conversion and shared file-container compression through ByteBuffer. The [GZIP and zlib levels](../components/file-access.md#compression-levels) govern file and buffer encoding.
+[Binary buffers](../components/byte-buffers.md) expose span-based numeric/text conversion and shared file-container compression through ByteBuffer. The [compression settings](../components/file-access.md#compression-levels) govern file and buffer encoding and the optional Zstandard decoder window limit.
 
 [Compiled owner source identity](../components/scripting.md#compiled-owner-source-identity) now exposes the borrowed Script through ElectronObject.GetScript, including constructor, copy, file and scene-local paths. [Source-publication notifications](../components/scripting.md#source-publication-notifications) report file/remapping changes; initialization uses typed project constructors. Live assignment remains open.
 

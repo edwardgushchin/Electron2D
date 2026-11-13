@@ -222,6 +222,22 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <remarks>Encoding samples the effective project value, including active feature overrides. Decoding is independent of this setting.</remarks>
     public static ProjectSetting<int> ZLibCompressionLevel { get; } = new("compression/formats/zlib/compression_level", -1, value => value is >= -1 and <= 9);
 
+    /// <summary>Gets the Zstandard level for file and byte-buffer compression.</summary>
+    /// <value>3 by default. The supported levels are 1 through 22.</value>
+    public static ProjectSetting<int> ZstandardCompressionLevel { get; } =
+        new("compression/formats/zstd/compression_level", 3, value => value is >= 1 and <= 22);
+
+    /// <summary>Gets whether Zstandard file and byte-buffer encoders use long-distance matching.</summary>
+    /// <value>False by default. Matching is bounded by each independent container block.</value>
+    public static ProjectSetting<bool> ZstandardLongDistanceMatching { get; } =
+        new("compression/formats/zstd/long_distance_matching", false);
+
+    /// <summary>Gets the base-two logarithm of the Zstandard window limit when long-distance matching is enabled.</summary>
+    /// <value>27 by default. Values from 10 through 30 are supported.</value>
+    /// <remarks>Applies to encoding and decoding. A frame that declares a larger window is rejected.</remarks>
+    public static ProjectSetting<int> ZstandardWindowLogSize { get; } =
+        new("compression/formats/zstd/window_log_size", 27, value => value is >= 10 and <= 30);
+
     /// <summary>Gets the setting for periodic process-frame rate diagnostics.</summary>
     /// <value>False initially. A host --print-fps switch can enable reporting.</value>
     public static ProjectSetting<bool> PrintFPS { get; } = new("debug/settings/stdout/print_fps", false);

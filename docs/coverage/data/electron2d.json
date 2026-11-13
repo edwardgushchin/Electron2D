@@ -297510,6 +297510,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.ZstandardCompressionLevel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ZstandardCompressionLevel",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E ZstandardCompressionLevel { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.ZstandardLongDistanceMatching()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ZstandardLongDistanceMatching",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E ZstandardLongDistanceMatching { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.ZstandardWindowLogSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ZstandardWindowLogSize",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E ZstandardWindowLogSize { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettingsRegistry.OverrideFilePath()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettingsRegistry",

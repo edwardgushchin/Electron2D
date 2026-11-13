@@ -29,7 +29,7 @@ Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Conf
 
 `MaxFPS` sets the initial window cadence cap, `FrameDelayMsec` adds a fixed delay after each continuing real-time window frame, and `PrintFPS` enables periodic rate diagnostics. These typed startup settings accept feature overrides.
 
-`GZIPCompressionLevel` and `ZLibCompressionLevel` control exact compression levels for new encodes. The default is -1 (the codec default), and 0 through 9 are valid explicit levels. See [compression levels](../components/file-access.md#compression-levels). See [frame-rate settings](../components/engine-runtime.md#frame-rate-settings).
+`GZIPCompressionLevel` and `ZLibCompressionLevel` control exact compression levels for new encodes. The default is -1 (the codec default), and 0 through 9 are valid explicit levels. `ZstandardCompressionLevel`, `ZstandardLongDistanceMatching` and `ZstandardWindowLogSize` select the native Zstandard file and buffer codec policy. See [compression levels](../components/file-access.md#compression-levels). See [frame-rate settings](../components/engine-runtime.md#frame-rate-settings).
 
 `DisableSTDOUT`, `DisableSTDERR`, `FlushSTDOUTOnPrint` and `PrintHeader` configure [startup output](../components/diagnostics.md#startup-output-policy).
 

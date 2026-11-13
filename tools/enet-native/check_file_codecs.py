@@ -21,6 +21,10 @@ def main():
         function = getattr(bridge, name)
         function.argtypes = signature
         function.restype = c.c_int
+    bridge.e2d_file_zstd_encode.argtypes = signature[1:] + [c.c_int, c.c_int]
+    bridge.e2d_file_zstd_encode.restype = c.c_int
+    bridge.e2d_file_zstd_decode.argtypes = signature[1:] + [c.c_int]
+    bridge.e2d_file_zstd_decode.restype = c.c_int
     with tempfile.TemporaryDirectory() as directory:
         oracle = Path(directory) / 'fastlz.so'
         source = Path(__file__).resolve().parents[2] / 'src/Vendor/FastLZ/fastlz.c'
@@ -55,7 +59,26 @@ def main():
                     cases += 1
         assert bridge.e2d_file_encode(99, None, 1, None, 0) == -1
         assert bridge.e2d_file_decode(0, None, 0, None, 0) == -1
-        print(f'{cases} independent bidirectional FastLZ/Zstandard block comparisons passed.')
+        data = (rng.randbytes(8192) + b'G' * 8192) * 4
+        source = c.create_string_buffer(data)
+        bound = bridge.e2d_file_encode(2, None, len(data), None, 0)
+        encoded = c.create_string_buffer(bound)
+        expected = c.create_string_buffer(bound)
+        decoded = c.create_string_buffer(len(data))
+        for level in (1, 7, 22):
+            count = bridge.e2d_file_zstd_encode(source, len(data), encoded, bound, level, 0)
+            oracle_count = zstd.ZSTD_compress(expected, bound, source, len(data), level)
+            assert count > 0 and count == oracle_count and encoded.raw[:count] == expected.raw[:oracle_count]
+        large = bridge.e2d_file_encode(2, source, len(data), encoded, bound)
+        assert large > 0 and bridge.e2d_file_zstd_decode(encoded, large, decoded, len(data), 10) == -1
+        assert bridge.e2d_file_zstd_decode(encoded, large, decoded, len(data), 16) == len(data)
+        small = bridge.e2d_file_zstd_encode(source, len(data), encoded, bound, 3, 10)
+        assert small > 0 and bridge.e2d_file_zstd_decode(encoded, small, decoded, len(data), 10) == len(data)
+        assert decoded.raw == data
+        assert bridge.e2d_file_zstd_decode(encoded, small + 1, decoded, len(data), 10) == -1
+        assert bridge.e2d_file_zstd_encode(source, len(data), encoded, bound, 23, 0) == -1
+        assert bridge.e2d_file_zstd_encode(source, len(data), encoded, bound, 3, 31) == -1
+        print(f'{cases} independent bidirectional block comparisons plus Zstandard level and window policy passed.')
 
 
 if __name__ == '__main__':

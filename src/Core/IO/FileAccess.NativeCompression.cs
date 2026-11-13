@@ -10,6 +10,10 @@ public sealed partial class FileAccess
     private const int NativeBlockSize = 65536;
     private static bool IsNativeCodec(FileCompressionMode mode) => mode is FileCompressionMode.FastLz or FileCompressionMode.Zstandard;
 
+    private static int GetZstandardWindowLog(FileCompressionMode mode) =>
+        mode == FileCompressionMode.Zstandard && ProjectSettings.GetWithOverride(ProjectSettings.ZstandardLongDistanceMatching)
+            ? ProjectSettings.GetWithOverride(ProjectSettings.ZstandardWindowLogSize) : 0;
+
     private static unsafe int NativeEncodeBound(FileCompressionMode mode, int length)
     {
         try
@@ -24,6 +28,8 @@ public sealed partial class FileAccess
     private static unsafe byte[] EncodeNativeBlocks(ReadOnlySpan<byte> data, FileCompressionMode mode)
     {
         if (data.IsEmpty) return [];
+        var level = mode == FileCompressionMode.Zstandard ? ProjectSettings.GetWithOverride(ProjectSettings.ZstandardCompressionLevel) : 3;
+        var windowLog = GetZstandardWindowLog(mode);
         var encoded = new byte[NativeEncodeBound(mode, NativeBlockSize)];
         using var output = new MemoryStream();
         Span<byte> header = stackalloc byte[4]; Span<byte> checksum = stackalloc byte[32];
@@ -32,7 +38,9 @@ public sealed partial class FileAccess
             var block = data.Slice(offset, Math.Min(NativeBlockSize, data.Length - offset));
             int count;
             fixed (byte* inputPointer = block) fixed (byte* outputPointer = encoded)
-                count = FileCodecNative.Encode((int)mode, inputPointer, block.Length, outputPointer, encoded.Length);
+                count = level == 3 && windowLog == 0
+                    ? FileCodecNative.Encode((int)mode, inputPointer, block.Length, outputPointer, encoded.Length)
+                    : FileCodecNative.EncodeZstandard(inputPointer, block.Length, outputPointer, encoded.Length, level, windowLog);
             if (count <= 0 || count > encoded.Length) throw new IOException("The native file codec could not encode the block.");
             BinaryPrimitives.WriteInt32LittleEndian(header, count); output.Write(header);
             SHA256.HashData(block, checksum); output.Write(checksum); output.Write(encoded, 0, count);
@@ -41,6 +49,7 @@ public sealed partial class FileAccess
     }
     private static unsafe byte[] DecodeNativeBlocks(ReadOnlySpan<byte> payload, int expectedLength, FileCompressionMode mode)
     {
+        var windowLog = GetZstandardWindowLog(mode);
         var offset = 0; var remaining = expectedLength;
         while (remaining > 0)
         {
@@ -63,7 +72,9 @@ public sealed partial class FileAccess
             var output = temporary ? padded.AsSpan() : block;
             int decoded;
             fixed (byte* inputPointer = encoded) fixed (byte* outputPointer = output)
-                decoded = FileCodecNative.Decode((int)mode, inputPointer, encoded.Length, outputPointer, output.Length);
+                decoded = windowLog == 0
+                    ? FileCodecNative.Decode((int)mode, inputPointer, encoded.Length, outputPointer, output.Length)
+                    : FileCodecNative.DecodeZstandard(inputPointer, encoded.Length, outputPointer, output.Length, windowLog);
             if (decoded != output.Length) throw new InvalidDataException("The native decoded block length is invalid.");
             if (temporary)
             {
@@ -87,4 +98,25 @@ internal static unsafe partial class FileCodecNative
     private static partial int DecodeCore(int mode, byte* input, int length, byte* output, int capacity);
     internal static int Decode(int mode, byte* input, int length, byte* output, int capacity)
     { ENetNative.PrepareMemory(); return DecodeCore(mode, input, length, output, capacity); }
+
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_file_zstd_encode"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int EncodeZstandardCore(byte* input, int length, byte* output, int capacity, int level, int windowLog);
+
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_file_zstd_decode"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int DecodeZstandardCore(byte* input, int length, byte* output, int capacity, int windowLog);
+
+    internal static int EncodeZstandard(byte* input, int length, byte* output, int capacity, int level, int windowLog)
+    {
+        try { return EncodeZstandardCore(input, length, output, capacity, level, windowLog); }
+        catch (EntryPointNotFoundException error) { throw MissingZstandardOptions(error); }
+    }
+
+    internal static int DecodeZstandard(byte* input, int length, byte* output, int capacity, int windowLog)
+    {
+        try { return DecodeZstandardCore(input, length, output, capacity, windowLog); }
+        catch (EntryPointNotFoundException error) { throw MissingZstandardOptions(error); }
+    }
+
+    private static PlatformNotSupportedException MissingZstandardOptions(Exception error) =>
+        new("Project Zstandard options require the matching source-built native bundle.", error);
 }

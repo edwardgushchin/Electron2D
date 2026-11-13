@@ -1,3 +1,5 @@
+[Zstandard project options](../components/file-access.md#compression-levels) select the native level, matching strategy and window limit for file and byte-buffer operations. Three Blocked rows move to Implemented. Coverage is **13,983/18,900 (73.98%)**, with 1,120 Partial, 269 Unimplemented, 3,528 Blocked, 8,393 Excluded and zero unmapped.
+
 [Startup output policy](../components/diagnostics.md#startup-output-policy) connects the version header, stream suppression and explicit writer flushing to runtime diagnostics. Five Blocked rows move to Implemented. Coverage is **13,980/18,900 (73.97%)**, with 1,120 Partial, 269 Unimplemented, 3,531 Blocked, 8,393 Excluded and zero unmapped.
 
 [Configured project startup](../components/engine-runtime.md#project-main-scene) loads the selected packed scene into the owned window lifecycle. One Blocked row moves to Implemented. Coverage is **13,975/18,900 (73.94%)**, with 1,120 Partial, 269 Unimplemented, 3,536 Blocked, 8,393 Excluded and zero unmapped.

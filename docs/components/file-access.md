@@ -86,6 +86,10 @@ The file-codec slice additionally exercises 110 random/repeated empty, tiny, blo
 
 The compression-level test runs on Windows and Arch Linux under WSL. It checks exact intermediate levels against the BCL, typed persistence and feature overrides, file/buffer round trips, scene and resource saves, and compressed dependency rewrites. The full FileAccess codec regression passes on Windows, including atomic replacement failure and fresh-process decoding. Other packaged targets remain unverified.
 
+`ZstandardCompressionLevel` accepts 1–22 and defaults to 3. `ZstandardLongDistanceMatching` defaults to false. When enabled, `ZstandardWindowLogSize` sets the base-two window limit for the encoder and reader, with a 10–30 range and default 27. The native reader checks the declared frame window before one-shot decompression. A window smaller than an existing frame rejects that frame. The container preserves independent 64 KiB blocks and checksums. Effective feature overrides are sampled for each encode or decode. Nondefault encoding and window-limited decoding require the updated private native bundle.
+
+Source-built Windows x64 and Arch Linux x64 codec bridges pass public multiblock file and buffer checks and 110 file-codec regressions per host. The Linux codec oracle independently verifies configured levels and both window acceptance and refusal. Both native allocation oracles verify cleanup at 74 failure positions. An older Windows bundle retains default operation and explicitly rejects the new options. These checks exercise the production codec bridge in isolation. Unified package and other target verification remain open.
+
 [ZIP archives](zip-archives.md) add owned ZIPReader/ZIPPacker sessions, streamed full-level deflate, ZIP64/prefix/append preservation, portable permission/time metadata and complete length/CRC validation. Bundled scene/resource ZIP round trips execute real GPU/compatibility rendering; they do not introduce automatic extraction or pack mounts.
 
 

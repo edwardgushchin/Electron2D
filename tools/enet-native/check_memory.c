@@ -1,10 +1,15 @@
 // Exercises the production bridge's private codec callbacks and allocation-failure cleanup.
 #include "bridge.c"
 #include <stdio.h>
-#include <stdalign.h>
+#include <stddef.h>
 
 static size_t calls, fail_at, live, peak;
+#ifdef _MSC_VER
+// Match the CRT malloc alignment on the Windows test host.
+typedef __declspec(align(MEMORY_ALLOCATION_ALIGNMENT)) struct { size_t size; } AllocationHeader;
+#else
 typedef union { max_align_t alignment; size_t size; } AllocationHeader;
+#endif
 static void *tracked_allocate(size_t size) {
   calls++;
   if (calls == fail_at || size > SIZE_MAX - sizeof(AllocationHeader)) return NULL;
@@ -50,9 +55,9 @@ static void host_case(int mode, int complete) {
 }
 static void file_case(int complete) {
   unsigned char source[65536], encoded[131136], decoded[65536]; memset(source, 23, sizeof(source));
-  int count = e2d_file_encode(2, source, sizeof(source), encoded, sizeof(encoded));
+  int count = e2d_file_zstd_encode(source, sizeof(source), encoded, sizeof(encoded), 7, 16);
   if (count > 0) {
-    int result = e2d_file_decode(2, encoded, count, decoded, sizeof(decoded));
+    int result = e2d_file_zstd_decode(encoded, count, decoded, sizeof(decoded), 16);
     if (complete) require(result == sizeof(source) && memcmp(source, decoded, sizeof(source)) == 0, "Complete file round trip failed");
   } else require(!complete, "Complete file encode failed");
 }

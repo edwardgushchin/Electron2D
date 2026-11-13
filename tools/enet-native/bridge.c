@@ -532,6 +532,44 @@ API int e2d_enet_compress(State *s, int mode) {
   return 0;
 }
 
+API int e2d_file_zstd_encode(const unsigned char *input, int length, unsigned char *output,
+                             int capacity, int level, int window_log) {
+  if (!allocate_cb || !input || !output || length < 0 || length > 65536 ||
+      capacity < (int)ZSTD_compressBound((size_t)length) || level < 1 || level > 22 ||
+      (window_log != 0 && (window_log < 10 || window_log > 30))) return -1;
+  ZSTD_CCtx *context = ZSTD_createCCtx_advanced(codec_memory());
+  if (!context) return -1;
+  size_t result = ZSTD_CCtx_setParameter(context, ZSTD_c_compressionLevel, level);
+  if (!ZSTD_isError(result) && window_log != 0) {
+    result = ZSTD_CCtx_setParameter(context, ZSTD_c_enableLongDistanceMatching, 1);
+    if (!ZSTD_isError(result))
+      result = ZSTD_CCtx_setParameter(context, ZSTD_c_windowLog, window_log);
+  }
+  if (!ZSTD_isError(result))
+    result = ZSTD_compress2(context, output, (size_t)capacity, input, (size_t)length);
+  ZSTD_freeCCtx(context);
+  return ZSTD_isError(result) || result > (size_t)capacity ? -1 : (int)result;
+}
+
+API int e2d_file_zstd_decode(const unsigned char *input, int length, unsigned char *output,
+                             int capacity, int window_log) {
+  if (!allocate_cb || !input || !output || length <= 0 || capacity <= 0 || capacity > 65536 ||
+      (window_log != 0 && (window_log < 10 || window_log > 30))) return -1;
+  size_t frame = ZSTD_findFrameCompressedSize(input, (size_t)length);
+  if (ZSTD_isError(frame) || frame != (size_t)length) return -1;
+  if (window_log != 0) {
+    ZSTD_frameHeader header;
+    // A one-shot decoder does not enforce the streaming window parameter.
+    if (ZSTD_getFrameHeader(&header, input, (size_t)length) != 0 ||
+        header.windowSize > (1ULL << window_log)) return -1;
+  }
+  ZSTD_DCtx *context = ZSTD_createDCtx_advanced(codec_memory());
+  if (!context) return -1;
+  size_t result = ZSTD_decompressDCtx(context, output, (size_t)capacity, input, (size_t)length);
+  ZSTD_freeDCtx(context);
+  return ZSTD_isError(result) || result > (size_t)capacity ? -1 : (int)result;
+}
+
 API int e2d_file_encode(int mode, const unsigned char *input, int length,
                         unsigned char *output, int capacity) {
   if (!allocate_cb || length < 0 || length > 65536 || (mode != 0 && mode != 2)) return -1;
@@ -544,11 +582,7 @@ API int e2d_file_encode(int mode, const unsigned char *input, int length,
     int result = fastlz_compress(input, length, output);
     return result > 0 && result <= capacity ? result : -1;
   }
-  ZSTD_CCtx *context = ZSTD_createCCtx_advanced(codec_memory());
-  if (!context) return -1;
-  size_t result = ZSTD_compressCCtx(context, output, (size_t)capacity, input, (size_t)length, 3);
-  ZSTD_freeCCtx(context);
-  return ZSTD_isError(result) || result > (size_t)capacity ? -1 : (int)result;
+  return e2d_file_zstd_encode(input, length, output, capacity, 3, 0);
 }
 API int e2d_file_decode(int mode, const unsigned char *input, int length,
                         unsigned char *output, int capacity) {
@@ -559,11 +593,5 @@ API int e2d_file_decode(int mode, const unsigned char *input, int length,
     int result = fastlz_decompress(input, length, output, capacity);
     return result > 0 ? result : -1;
   }
-  size_t frame = ZSTD_findFrameCompressedSize(input, (size_t)length);
-  if (ZSTD_isError(frame) || frame != (size_t)length) return -1;
-  ZSTD_DCtx *context = ZSTD_createDCtx_advanced(codec_memory());
-  if (!context) return -1;
-  size_t result = ZSTD_decompressDCtx(context, output, (size_t)capacity, input, (size_t)length);
-  ZSTD_freeDCtx(context);
-  return ZSTD_isError(result) || result > (size_t)capacity ? -1 : (int)result;
+  return e2d_file_zstd_decode(input, length, output, capacity, 0);
 }

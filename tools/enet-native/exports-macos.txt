@@ -14,6 +14,8 @@ _e2d_enet_host
 _e2d_enet_compress
 _e2d_file_encode
 _e2d_file_decode
+_e2d_file_zstd_encode
+_e2d_file_zstd_decode
 _e2d_gzip_create
 _e2d_gzip_process
 _e2d_gzip_reset

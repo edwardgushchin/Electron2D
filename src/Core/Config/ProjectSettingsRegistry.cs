@@ -78,6 +78,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(FrameDelayMsec, isBasic: false);
         RegisterInternal(GZIPCompressionLevel, isBasic: false);
         RegisterInternal(ZLibCompressionLevel, isBasic: false);
+        RegisterInternal(ZstandardCompressionLevel, isBasic: false);
+        RegisterInternal(ZstandardLongDistanceMatching, isBasic: false);
+        RegisterInternal(ZstandardWindowLogSize, isBasic: false);
         RegisterInternal(PrintFPS, isBasic: false);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(GUIThemeCustom, isBasic: true);
@@ -1279,6 +1282,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, FrameDelayMsec) ||
         ReferenceEquals(setting, GZIPCompressionLevel) ||
         ReferenceEquals(setting, ZLibCompressionLevel) ||
+        ReferenceEquals(setting, ZstandardCompressionLevel) ||
+        ReferenceEquals(setting, ZstandardLongDistanceMatching) ||
+        ReferenceEquals(setting, ZstandardWindowLogSize) ||
         ReferenceEquals(setting, PrintFPS) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||

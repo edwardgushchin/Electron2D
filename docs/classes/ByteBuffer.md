@@ -6,7 +6,7 @@ Last updated: 2026-10-27
 
 Part of [binary buffers](../components/byte-buffers.md), under [ADR 0020](../decisions/core-data-io.md#caller-owned-binary-buffers). Sources: [scalars](../../src/Core/IO/ByteBuffer.cs), [arrays](../../src/Core/IO/ByteBuffer.Arrays.cs), [text](../../src/Core/IO/ByteBuffer.Text.cs), [compression](../../src/Core/IO/ByteBuffer.Compression.cs).
 
-Caller-owned spans retain their ownership. All numeric bytes are little endian; offsets may be unaligned. Scalar/swap operations allocate no managed memory. String/array/compression results are independent preparation snapshots. Compression shares FileAccess’s versioned container and [project compression levels](../components/file-access.md#compression-levels).
+Caller-owned spans retain their ownership. All numeric bytes are little endian; offsets may be unaligned. Scalar/swap operations allocate no managed memory. String/array/compression results are independent preparation snapshots. Compression shares FileAccess’s versioned container and [project codec options](../components/file-access.md#compression-levels).
 
 ## Example
 
