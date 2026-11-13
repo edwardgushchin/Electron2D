@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-11-11
+Last updated: 2026-11-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
