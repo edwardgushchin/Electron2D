@@ -10,7 +10,7 @@ The complete [blend factor family](../components/blend-factors.md) executes cons
 
 [Built-in rendering textures](../components/rendering-builtin-textures.md) expose lazy RGB8 test/white RID sources through the ordinary native canvas/shader/cache lifetime.
 
-[Viewport render time](../components/viewport-render-time.md) measures completed native canvas CPU/GPU durations and common CPU frame setup through RenderingServer, with independent per-viewport lifetime and explicit backend limits.
+[Viewport render time](../components/viewport-render-time.md) measures completed native canvas CPU/GPU durations and common CPU frame setup through RenderingServer, with independent per-viewport lifetime and explicit backend limits. [GPU frame profiling](../components/gpu-timestamps.md#window-frame-profiling) reports renderer-queue stage durations through the normal diagnostics stream.
 
 Windows Direct3D 12 creates canvas and device graphics pipelines with private DXIL stage linkage for sparse fragment inputs. See [Direct3D 12 stage linkage](../components/shader-materials.md#direct3d-12-stage-linkage).
 

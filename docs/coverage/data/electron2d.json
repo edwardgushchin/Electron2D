@@ -297016,6 +297016,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.PrintGPUProfile()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "PrintGPUProfile",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E PrintGPUProfile { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.PrintHeader()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

@@ -9,9 +9,10 @@ public sealed partial class Engine
     private bool _printFPS;
     private int _fpsWarmupWindows;
 
-    private int ConfigureFrameRateSettings(bool windowed)
+    private (int FrameDelayMsec, bool PrintGPUProfile) ConfigureFrameRateSettings(bool windowed)
     {
         var printFPS = false;
+        var printGPUProfile = false;
         int? maxFPS = null;
         var frameDelay = 0;
         var arguments = Environment.GetCommandLineArgs();
@@ -20,6 +21,7 @@ public sealed partial class Engine
             var argument = arguments[index];
             if (argument is "--" or "++") break;
             if (argument == "--print-fps") printFPS = true;
+            if (argument == "--gpu-profile") printGPUProfile = true;
             if (!windowed || argument is not ("--max-fps" or "--frame-delay")) continue;
             if (++index == arguments.Length ||
                 !int.TryParse(arguments[index], NumberStyles.None, CultureInfo.InvariantCulture, out var value))
@@ -32,9 +34,10 @@ public sealed partial class Engine
             Volatile.Write(ref _windowMaxFps, maxFPS ?? ProjectSettings.GetWithOverride(ProjectSettings.MaxFPS));
         _printFPS = printFPS || !IsEditorHint && ProjectSettings.GetWithOverride(ProjectSettings.PrintFPS);
         _fpsWarmupWindows = 3;
-        return windowed && frameDelay == 0 && !IsEditorHint
-            ? ProjectSettings.GetWithOverride(ProjectSettings.FrameDelayMsec)
-            : frameDelay;
+        if (windowed && frameDelay == 0 && !IsEditorHint)
+            frameDelay = ProjectSettings.GetWithOverride(ProjectSettings.FrameDelayMsec);
+        return (frameDelay, windowed && (printGPUProfile ||
+            !IsEditorHint && ProjectSettings.GetWithOverride(ProjectSettings.PrintGPUProfile)));
     }
 
     private void PrintFrameRateSample(double framesPerSecond)

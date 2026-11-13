@@ -88,7 +88,7 @@ public sealed partial class RenderingServer : ElectronObject
     internal event Action? FramePostDrawCore { add => _publisherFramePostDrawCore.Add(value); remove => _publisherFramePostDrawCore.Remove(value); }
     private EventPublisher<Action> _publisherFramePostDrawCore;
 
-    internal static RenderingServer Open(Window window, System.Runtime.InteropServices.SafeHandle nativeWindow)
+    internal static RenderingServer Open(Window window, System.Runtime.InteropServices.SafeHandle nativeWindow, bool printGPUProfile)
     {
         if (Service is not null) throw new InvalidOperationException("A rendering server is already active.");
         var settings = ProjectSettings.Service;
@@ -110,6 +110,11 @@ public sealed partial class RenderingServer : ElectronObject
             DisplayServer.Service?.ApplyVSyncPolicy(backend);
             DisplayServer.Service?.AttachOutputPolicy(backend);
             var server = new RenderingServer(window, backend);
+            if (printGPUProfile)
+            {
+                if (backend is GPUCanvasBackend gpu) gpu.EnableFrameProfile();
+                else RuntimeDiagnostics.Instance.ReportMessage($"GPU profile unavailable on {backend.Driver}.");
+            }
             Volatile.Write(ref _instance, server);
             return server;
         }
@@ -216,6 +221,7 @@ public sealed partial class RenderingServer : ElectronObject
             capturedRevision = Volatile.Read(ref _changeRevision);
             _continuousCanvas = false;
             BeginEventEmission(_publisherFramePreDrawCore.Handlers)?.Invoke();
+            gpu?.MarkFrameProfile(GPUCanvasBackend.FrameProfileBoundary.Begin);
             var setupStart = Stopwatch.GetTimestamp();
             _globalParameters.BindScene(tree?.SelectedShaderGlobals?.Parameters);
             if (tree is not null) UpdatePhysicsContacts(tree);
@@ -245,6 +251,7 @@ public sealed partial class RenderingServer : ElectronObject
             _nativeFrameStarted = true;
             BeginNativeFrames();
             var setupTicks = Stopwatch.GetTimestamp() - setupStart;
+            gpu?.MarkFrameProfile(GPUCanvasBackend.FrameProfileBoundary.Canvas);
             for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (ScreenVisible(frame.Viewport) || UpdateMode(frame.Viewport) is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
             setupStart = Stopwatch.GetTimestamp();
             if (_backend is GPUCanvasBackend particlesBackend)
@@ -255,11 +262,13 @@ public sealed partial class RenderingServer : ElectronObject
             }
             ReplayNativeFrames();
             setupTicks += Stopwatch.GetTimestamp() - setupStart;
+            gpu?.MarkFrameProfile(GPUCanvasBackend.FrameProfileBoundary.Presentation);
             PresentViewports();
             setupStart = Stopwatch.GetTimestamp();
             _continuousCanvas |= HasVisibleTextureRedraw();
             EndNativeFrames();
             _nativeFrameStarted = false;
+            gpu?.MarkFrameProfile(GPUCanvasBackend.FrameProfileBoundary.End);
             gpu?.EndFrameQueue(completed: true);
             PublishRenderInfo();
             _renderingDevice?.PublishPerfReport();

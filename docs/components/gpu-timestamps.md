@@ -29,3 +29,15 @@ Build the runtime and tests with the matching native bridge, then run the compil
 Configure tools/render-native with the pinned SDL core library, build Electron2DRenderTimestampCheck and run it. The native check covers invalid ABI/capacity/index/count, querying unwritten slots without waiting, ordered actual GPU queries, partial-unavailable result rejection, full-width/fractional/subnormal scaling, overflow and pool retirement. An additional deterministic 20,000-case native comparison against exact rational arithmetic passed on the qualification host. Run the existing compute, device graphics, asynchronous readback and project-settings checks when changing these shared boundaries. These checks do not establish foreign-host or owner acceptance.
 
 Native semantics: [vkCmdWriteTimestamp](https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteTimestamp.html), [vkGetQueryPoolResults](https://docs.vulkan.org/refpages/latest/refpages/source/vkGetQueryPoolResults.html).
+
+## Window frame profiling
+
+`ProjectSettings.PrintGPUProfile` registers `debug/settings/stdout/print_gpu_profile` as a Boolean defaulting to false. The owned window host samples the effective setting when it opens the renderer, including for a custom main loop. `--gpu-profile` before `--` or `++` enables it independently of the project value. Editor-hint runs require the switch. Manual headless loops have no renderer to profile.
+
+On the Vulkan canvas backend, four hardware timestamp markers on the rendering queue bracket setup, canvas work (including pending particles), and presentation. The intervals measure GPU-clock time between submissions and can include idle gaps. The presentation interval covers queued rendering work through the last marker and does not measure scan-out. Offscreen draws submit the same marker sequence. Work submitted before the first marker and on separate devices is outside the measured frame.
+
+When a frame queue slot retires, the renderer reads that slot's completed sample. Interrupted frames and timestamp counter wraps are skipped. About once per unscaled second, the diagnostic prints the latest completed frame duration and the mean stage durations for samples collected since the previous report, in milliseconds. Ordinary Logger and stdout rules apply. Each queue slot owns its timestamp pool until renderer shutdown. Disabled runs allocate no profiler resources and submit no markers.
+
+Renderers without an integrated adapter report unavailability once and continue rendering. Desktop OpenGL still needs a frame-wide integration with its context, SDL command flushing and disjoint sample retirement. SDL GPU D3D12 and Metal need their own hardware timestamp adapters. Software rendering has no GPU timeline.
+
+Windows x64 checks use `ELECTRON2D_TEST_GPU_FRAME_PROFILE` with `setting`, `switch`, `editor`, `disabled`, and `unsupported`. The Vulkan profiles exercise startup feature overrides, an offscreen submission, report cadence, viewport pixels, stdout suppression, logger failure and a fresh renderer lifetime. The unsupported compatibility profile verifies the diagnostic and continued viewport rendering.

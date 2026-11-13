@@ -854,6 +854,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         _disposed = true;
         var idle = SDL.WaitForGPUIdle(Device);
         ReleaseFrameQueue();
+        ReleaseFrameProfile();
         foreach (var child in _childPresentations.ToArray()) child.Dispose();
         foreach (var pipeline in _pipelines.Values) pipeline.Dispose();
         foreach (var texture in _textures.Values) texture.Dispose();

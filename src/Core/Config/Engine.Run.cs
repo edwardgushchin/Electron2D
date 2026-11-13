@@ -134,7 +134,8 @@ public sealed partial class Engine
         try
         {
             if (reserved) ValidateRunWindow(window);
-            var frameDelay = ConfigureFrameRateSettings(windowed: true) / 1000d;
+            var (frameDelayMsec, printGPUProfile) = ConfigureFrameRateSettings(windowed: true);
+            var frameDelay = frameDelayMsec / 1000d;
             if (moviePath is not null) frameDelay = 0;
             RuntimeDiagnostics.Instance.BeginRun(windowed: true);
             var loopType = runProject ? ProjectSettings.GetWithOverride(ProjectSettings.MainLoopType) : nameof(SceneTree);
@@ -152,7 +153,7 @@ public sealed partial class Engine
             OS.LowProcessorUsageMode = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorMode);
             OS.LowProcessorUsageModeSleepUsec = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorModeSleepUsec);
             window.ApplyProjectHDROutput();
-            window.OpenNative(movieDisableVSync);
+            window.OpenNative(movieDisableVSync, printGPUProfile);
             window.ApplyProjectMSAA();
             window.ApplyProjectScreenSpaceAA();
             window.ApplyProjectMIPMapBias();

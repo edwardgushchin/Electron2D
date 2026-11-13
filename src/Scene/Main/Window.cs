@@ -307,13 +307,13 @@ public partial class Window : Viewport
 
     internal DisplayServer? NativeDisplay => _display;
 
-    internal void OpenNative(bool disableVSync = false)
+    internal void OpenNative(bool disableVSync = false, bool printGPUProfile = false)
     {
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible, transparent: Transparent);
         _display.SceneWindow = this;
         ConfigureNative();
         if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
-        _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow());
+        _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow(), printGPUProfile);
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }
 

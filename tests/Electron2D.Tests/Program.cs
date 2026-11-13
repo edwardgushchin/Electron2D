@@ -48,6 +48,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BYTE_BUFFERS") == "1") {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUILTIN_TEXTURES") is { } builtinTextureProfile) { RenderingRuntimeTests.RunBuiltinTextures(builtinTextureProfile); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TIMING") is { } viewportTimingProfile) { RenderingRuntimeTests.RunViewportTiming(viewportTimingProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_FRAME_PROFILE") is { } frameProfile) { RenderingRuntimeTests.RunGPUFrameProfile(frameProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TIMESTAMPS") is { } timestampProfile) { GPUTimestampTests.Run(timestampProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_GESTURES") is { } windowGestureProfile) { WindowGestureTests.Run(windowGestureProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FOREGROUND_GRANT") is { } foregroundGrantProfile) { ForegroundGrantTests.Run(foregroundGrantProfile, args); return; }

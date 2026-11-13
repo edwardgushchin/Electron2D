@@ -249,6 +249,10 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>False initially. A host --print-fps switch can enable reporting.</value>
     public static ProjectSetting<bool> PrintFPS { get; } = new("debug/settings/stdout/print_fps", false);
 
+    /// <summary>Enables periodic GPU frame timing diagnostics on supported windowed renderers.</summary>
+    /// <value>False initially. The host --gpu-profile switch can enable reporting.</value>
+    public static ProjectSetting<bool> PrintGPUProfile { get; } = new("debug/settings/stdout/print_gpu_profile", false);
+
     /// <summary>Defines the initial low-processor wait between owned frames, in microseconds.</summary>
     /// <value>application/run/low_processor_mode_sleep_usec; 6900 initially. Negative values are rejected.</value>
     public static ProjectSetting<int> LowProcessorModeSleepUsec { get; } = new("application/run/low_processor_mode_sleep_usec", 6900, validator: value => value >= 0);

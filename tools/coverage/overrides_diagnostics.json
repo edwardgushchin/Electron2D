@@ -51,6 +51,12 @@
       "reason": "ADR 0108: emits periodic measured FPS and milliseconds per frame to the ordinary output and logger sinks."
     },
     {
+      "godot": "ProjectSettings::property:debug/settings/stdout/print_gpu_profile",
+      "electron2d": "property:Electron2D.ProjectSettings.PrintGPUProfile()",
+      "state": "Partial",
+      "reason": "ADRs 0019/0028/0108: startup setting and --gpu-profile drive periodic completed frame and stage timings from the SDL GPU Vulkan timestamp adapter. Trigger: integrate and qualify completed frame and stage markers for desktop OpenGL contexts and target GPU APIs beyond Vulkan, including D3D12 and Metal."
+    },
+    {
       "godot": "OS::method:is_stdout_verbose()",
       "electron2d": "method:Electron2D.OS.IsSTDOUTVerbose()",
       "state": "Implemented",

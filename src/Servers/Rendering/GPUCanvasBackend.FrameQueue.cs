@@ -6,7 +6,7 @@ internal sealed unsafe partial class GPUCanvasBackend
 {
     private readonly nint[] _frameFences;
     private int _nextFrameSlot;
-    private nint _presentationFence;
+    private nint _frameWorkFence;
     private bool _trackingFrame;
 
     internal int FrameQueueSize => _frameFences.Length;
@@ -20,30 +20,32 @@ internal sealed unsafe partial class GPUCanvasBackend
             SDL.ReleaseGPUFence(Device, previous);
             _frameFences[_nextFrameSlot] = 0;
         }
+        CollectFrameProfile();
         _trackingFrame = true;
     }
 
-    private void SubmitPresentation(nint command)
+    private void SubmitFencedFrameWork(nint command)
     {
         if (!_trackingFrame)
         {
-            Check(SDL.SubmitGPUCommandBuffer(command), "submit presentation");
+            Check(SDL.SubmitGPUCommandBuffer(command), "submit renderer work");
             return;
         }
 
-        // The last presentation also fences earlier submissions on the same queue.
+        // This fence also covers earlier submissions on the same queue.
         var fence = SDL.SubmitGPUCommandBufferAndAcquireFence(command);
-        if (fence == 0) throw Failure("submit presentation with a frame fence");
-        if (_presentationFence != 0) SDL.ReleaseGPUFence(Device, _presentationFence);
-        _presentationFence = fence;
+        if (fence == 0) throw Failure("submit renderer work with a frame fence");
+        if (_frameWorkFence != 0) SDL.ReleaseGPUFence(Device, _frameWorkFence);
+        _frameWorkFence = fence;
     }
 
     internal void EndFrameQueue(bool completed)
     {
         if (!_trackingFrame) return;
         _trackingFrame = false;
-        var fence = _presentationFence;
-        _presentationFence = 0;
+        var fence = _frameWorkFence;
+        _frameWorkFence = 0;
+        if (!completed && _frameProfileReady is not null) _frameProfileReady[_nextFrameSlot] = false;
         if (!completed || fence == 0)
         {
             // Offscreen and interrupted frames can have work beyond the last present.
@@ -64,7 +66,7 @@ internal sealed unsafe partial class GPUCanvasBackend
 
     private void ReleaseFrameQueue()
     {
-        if (_presentationFence != 0) SDL.ReleaseGPUFence(Device, _presentationFence);
+        if (_frameWorkFence != 0) SDL.ReleaseGPUFence(Device, _frameWorkFence);
         foreach (var fence in _frameFences)
             if (fence != 0) SDL.ReleaseGPUFence(Device, fence);
     }

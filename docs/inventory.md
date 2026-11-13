@@ -28,7 +28,7 @@ Existing directory/xattr, OS process/MIDI/trash and DBus owners now share [UTF8 
 
 Existing RenderingServer, ServerTexture and RenderingTextureRegistry own [cached test/white textures](components/rendering-builtin-textures.md); no new production type is added.
 
-Existing RenderingDevice and ProjectSettings own [native GPU timestamps](components/gpu-timestamps.md). RenderingServer and both canvas backends now own [viewport render time](components/viewport-render-time.md), sharing private GPUTimestampQueries and retained CanvasRenderTiming state.
+Existing RenderingDevice and ProjectSettings own [native GPU timestamps](components/gpu-timestamps.md). RenderingServer and both canvas backends now own [viewport render time](components/viewport-render-time.md), sharing private GPUTimestampQueries and retained CanvasRenderTiming state. The Vulkan canvas backend also reuses GPUTimestampQueries for the [window GPU profile](components/gpu-timestamps.md#window-frame-profiling), retiring samples with the renderer frame queue.
 
 The existing [DisplayServer](classes/DisplayServer.md#method-dialoginputtext) now owns [native text input](components/native-text-input.md) through shared owner admission and private Win32/GTK adapters. The public surface retains the existing method and feature flag.
 
