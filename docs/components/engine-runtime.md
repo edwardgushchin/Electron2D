@@ -2,7 +2,7 @@
 
 The Android activity retains actual framework back callbacks and transfers accepted requests to the existing owner pump without invoking scene code from the UI thread. [System back navigation](window-runtime.md#system-back-navigation) uses the ordinary Engine.RunAsync result, failure and owned teardown paths. Callback unregistration and SDL onCreate/onDestroy dispatch belong to the same activity lifetime.
 
-Last updated: 2026-10-27
+Last updated: 2026-11-14
 
 [Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 
@@ -59,9 +59,17 @@ Managed scheduling, lifecycle integration, timing properties, metrics, architect
 
 ## Project main scene
 
-Configure `ProjectSettings.MainScene` with a packed-scene path or a registered resource UID. The key is `application/run/main_scene` and defaults to an empty string. A game calls `Engine.RunProject(window)` or `Engine.RunProjectAsync(window)` with its configured detached root. Startup samples active feature overrides after reserving the host and loads the scene through the ordinary resource loader. Relative and virtual paths, UID resolution, localization remaps and template retention follow the loader's rules. An empty setting, missing file, wrong type or failed startup aborts the run and releases the owned window.
+Call `Engine.RunProject(window)` or `Engine.RunProjectAsync(window)` with a configured detached window. The host samples the effective `ProjectSettings.MainLoopType` after reservation. Its default and empty value select `SceneTree`. This mode requires `ProjectSettings.MainScene` to name a packed-scene path or resource UID. Relative and virtual paths, UID resolution, localization remaps and template retention follow the resource loader's rules. An empty scene setting, missing file, wrong type or failed startup aborts the run and releases the owned window.
 
 The instance is appended after existing ordinary window children and becomes `SceneTree.CurrentScene` before tree entry. The tree is published before readiness. Existing children become ready in the normal order, then the main scene and then the window. Initial selection uses ordinary tree entry. Subsequent scene transitions use the deferred scene-change API and its signal. Explicit `Run`, `RunAsync` and recording calls use the caller's hierarchy.
+
+### Custom project loop
+
+For a compiled C# loop, mark a concrete `MainLoop` class with `[GlobalClass]`, register it with `Script.RegisterObject` and a static default factory, and set `MainLoopType` to the exact class name. Registered extension class identities also work and take precedence over a matching script name. Unknown, ambiguous, abstract, wrong-role and missing-factory selections fail startup. Compiled script selection uses the verified source document and portable PDB catalog. Generated registration and source delivery for stripped and AOT applications remain open.
+
+The native window opens before construction. The host publishes the loop as `Engine.MainLoop` before initialization and uses the same owner thread, event pump, frame timing and fixed/process callback lanes. A custom loop drives the window and offscreen viewports through RenderingServer RIDs. It skips packed-scene loading, node entry and node callbacks. A callback stop request, an accepted native close or an accepted platform back returns zero. The runtime finalizes the loop while its extension bindings, window and borrowed script asset are live, then disposes the loop and retires its dependencies. A pre-delete veto reports a disposal failure after finalization and keeps the source associated with the surviving loop. Scene-only policies and behavior are supplied by the default `SceneTree` path.
+
+[ProjectMainLoopTests](../../tests/Electron2D.Tests/ProjectMainLoopTests.cs) exercises the registered C# and extension factories, sync and async runs, invalid selection, native quit, window and offscreen pixels, and retirement after callback failures on Windows x64 Vulkan GPU and Direct3D 11 Compatibility. On both backends, 64 warmed canvas redraws with command changes and 64 warmed retained redraws allocate zero managed bytes on the window owner. Native allocations, fresh package consumers and other target hosts remain unverified for this path.
 
 The [project startup test](../../tests/Electron2D.Tests/ProjectMainSceneTests.cs) exercises typed persistence, path and UID resolution, sync and async ownership, window readiness order, startup failure and restart, and real pixels on Windows GPU and Compatibility. Packaged macOS, Linux, Android, Apple mobile/TV and Web hosts remain unverified for this workflow.
 

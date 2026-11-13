@@ -1,12 +1,12 @@
 # Explicit canvas frame execution
 
-Last updated: 2026-10-20
+Last updated: 2026-11-14
 
 ## Executable scope
 
 The retained [RenderingServer](../classes/RenderingServer.md) can draw the current native scene immediately, synchronize pending GPU work and schedule a one-shot completion action. [Engine.GetFramesDrawn](../classes/Engine.md) accounts for completed canvas frames. These operations support controlled rendering and capture on the existing native host. They supply runtime prerequisites for [ADR 0090](../decisions/agent-native.md#adr-0090), not a complete editor/batch-host implementation or tool acceptance from compilation.
 
-ForceDraw(bool swapBuffers = true, double frameStep = 0) uses the same scene capture, retained commands, materials, eligible viewport targets, compute/readback and screen-visibility pipeline as automatic rendering. It bypasses RenderLoopEnabled. With swapBuffers=false, the root texture and offscreen targets are still updated without presenting the root window. Existing target update/clear policy still applies. The current native window must have a scene tree; absent host, off-owner calls and reentrant rendering fail explicitly.
+ForceDraw(bool swapBuffers = true, double frameStep = 0) uses the same retained commands, materials, eligible viewport targets and compute/readback pipeline as automatic rendering. Scene runs also capture nodes and deliver screen-visibility notifications. A configured custom MainLoop draws through server canvas and viewport RIDs. ForceDraw bypasses RenderLoopEnabled. With swapBuffers=false, the root texture and offscreen targets still update without presenting the root window. Existing target update/clear policy still applies. Absent host, off-owner calls and reentrant rendering fail explicitly.
 
 frameStep advances only the rendering clock, using the existing rollover setting. It never advances scene process or physics callbacks. Negative/nonfinite/overflowing steps are rejected before animated-texture updates, observers, native work or callback consumption. GetFramesDrawn is a thread-safe process-lifetime count consistent with existing process/physics counters. One successful canvas interval counts once, including all of its viewports and explicit non-presenting frames. Headless work and disabled automatic rendering add none; a manual ForceDraw still draws. Native completion remains counted if a subsequent observer/action throws.
 

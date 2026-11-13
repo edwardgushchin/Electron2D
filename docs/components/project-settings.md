@@ -1,8 +1,10 @@
 # Project settings component
 
-Last updated: 2026-10-26
+Last updated: 2026-11-14
 
 The [verbose stdout setting](diagnostics.md#verbose-stdout) uses the ordinary typed setting and feature override flow. Engine startup samples it for each lifecycle. The [frame-rate settings](engine-runtime.md#frame-rate-settings) use the same flow for window pacing and rate diagnostics.
+
+The permanent nonbasic `MainLoopType` string selects the scene host or a registered custom loop for [configured project startup](engine-runtime.md#project-main-scene). Its default is `SceneTree`, and every independent registry supports the same validation, persistence and feature overrides.
 
 ## Scope
 

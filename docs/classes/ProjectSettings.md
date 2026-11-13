@@ -8,7 +8,7 @@ effective feature override only to an unassigned root Window before native
 creation. Explicit scene authoring wins; independent SubViewports retain their
 own HDR canvas policy.
 
-Last updated: 2026-11-06
+Last updated: 2026-11-14
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
@@ -26,6 +26,8 @@ Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Conf
 
 
 `MainScene` supplies the packed-scene path or resource UID for [configured project startup](../components/engine-runtime.md#project-main-scene). The default is empty.
+
+`public static ProjectSetting<string> MainLoopType { get; }` is the permanent nonbasic selector `application/run/main_loop_type`. `SceneTree` is the default, and an empty string selects the same host. A custom value names an extension class identity or an exact compiled C# global class with a registered default factory. Whitespace-only names and control characters are invalid. Configured project runs sample the effective value once after reservation.
 
 `MaxFPS` sets the initial window cadence cap, `FrameDelayMsec` adds a fixed delay after each continuing real-time window frame, and `PrintFPS` enables periodic rate diagnostics. These typed startup settings accept feature overrides.
 

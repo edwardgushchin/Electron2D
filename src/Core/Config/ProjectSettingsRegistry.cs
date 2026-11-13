@@ -57,6 +57,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(MainScene, isBasic: true);
+        RegisterInternal(MainLoopType, isBasic: false);
         RegisterInternal(AutoAcceptQuit, isBasic: true);
         RegisterInternal(QuitOnGoBack, isBasic: true);
         RegisterInternal(DeltaSmoothing, isBasic: false);
@@ -1264,6 +1265,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MovieWriterOGVKeyframeInterval) ||
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, MainScene) ||
+        ReferenceEquals(setting, MainLoopType) ||
         ReferenceEquals(setting, AutoAcceptQuit) ||
         ReferenceEquals(setting, QuitOnGoBack) ||
         ReferenceEquals(setting, DeltaSmoothing) ||

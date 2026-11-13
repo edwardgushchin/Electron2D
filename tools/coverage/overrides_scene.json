@@ -1,6 +1,21 @@
 {
   "mappings": [
     {
+      "godot": "ProjectSettings::property:application/run/main_loop_type",
+      "electron2d": "property:Electron2D.ProjectSettings.MainLoopType()",
+      "reason": "ADRs 0015/0016/0019/0027: typed selection of the owned scene or custom application loop."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_loop_type",
+      "electron2d": "method:Electron2D.Engine.RunProject(Electron2D.Window)",
+      "reason": "The owned synchronous project host constructs and runs the selected main loop."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_loop_type",
+      "electron2d": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window)",
+      "reason": "The owned asynchronous project host constructs and runs the selected main loop."
+    },
+    {
       "godot": "ProjectSettings::property:application/run/main_scene",
       "electron2d": "property:Electron2D.ProjectSettings.MainScene()",
       "reason": "ADRs 0016/0019/0027/0090: typed packed startup scene selection."
@@ -8760,6 +8775,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["ProjectSettings::property:application/run/main_loop_type"],
+      "state": "Partial",
+      "reason": "ADRs 0015/0016/0019/0027: SceneTree, registered extension identities and exact global C# script names select actual owned loops. Custom loops drive the native event pump, scheduling and RenderingServer canvas without activating a tree. Global scripts currently require the file-backed compiled catalog and matching portable PDB; generated registration and source delivery are needed for stripped and AOT hosts. See docs/components/engine-runtime.md#project-main-scene."
+    },
     {
       "godot": ["ProjectSettings::property:application/run/main_scene"],
       "state": "Implemented",

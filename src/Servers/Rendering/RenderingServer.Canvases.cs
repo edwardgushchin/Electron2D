@@ -126,10 +126,11 @@ public sealed partial class RenderingServer
         foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && ReferenceEquals(item.ServerState?.Owner, this)) { item.ServerState?.VisibilityNotifier?.Cancel(); item.ServerState?.Commands?.Dispose(); item.ServerState = null; }
         _serverSceneItems.Clear(); _capturedCanvasItems.Clear(); _canvasVisibilityItems.Clear(); _canvasVisibilityChanges.Clear();
     }
-    private void CaptureCanvasScene(Node root)
+    private void CaptureCanvasScene(SceneTree? tree)
     {
-        _capturedCanvasItems.Clear(); Capture(root);
+        _capturedCanvasItems.Clear();
+        if (tree is not null) Capture(tree.Root);
         foreach (var item in _ownedCanvasItems) if (!item.IsDisposed && _capturedCanvasItems.Add(item)) _nodes.Add(item);
-        foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && !ReferenceEquals(item.Tree, root.Tree) && _capturedCanvasItems.Add(item) && item.ServerState is { ParentAssigned: true }) _nodes.Add(item);
+        foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && (tree is null || !ReferenceEquals(item.Tree, tree)) && _capturedCanvasItems.Add(item) && item.ServerState is { ParentAssigned: true }) _nodes.Add(item);
     }
 }

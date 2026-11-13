@@ -2,7 +2,7 @@
 
 [ExtensionManager](ExtensionManager.md) has one permanent reserved service identity in the built-in singleton registry. Its public module operations stay static; borrowed service disposal/unregistration reject.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-14
 
 [Frame timing monitors](../components/frame-monitors.md) expose actual completed-window process, fixed-step and navigation wall time through Performance. Start resets their current-run samples; Stop retains completed observations. Owned Window presentation contributes to process timing; manual AdvanceFrame adds no implicit rendering.
 
@@ -73,8 +73,8 @@ int exitCode = Engine.Run(window);
 | --- | --- |
 | [`public static int Run(Window window)`](#m-electron2d-engine-run-electron2d-window) | Consumes a validated detached root Window after reserving the idle engine. |
 | [`public static Task<int> RunAsync(Window window)`](#m-electron2d-engine-runasync-electron2d-window) | Owns a yielding root-window lifecycle on the platform application thread. |
-| [`public static int RunProject(Window window)`](../components/engine-runtime.md#project-main-scene) | Runs the configured main scene under the supplied window. |
-| [`public static Task<int> RunProjectAsync(Window window)`](../components/engine-runtime.md#project-main-scene) | Runs the configured main scene on the yielding application host. |
+| [`public static int RunProject(Window window)`](../components/engine-runtime.md#project-main-scene) | Runs the configured scene or custom application loop under the supplied window. |
+| [`public static Task<int> RunProjectAsync(Window window)`](../components/engine-runtime.md#project-main-scene) | Runs the configured scene or custom application loop on the yielding application host. |
 | [`public static int RunMovie(Window window)`](#runmovie) | Records using the project's movie file and FPS profile. |
 | [`public static Task<int> RunMovieAsync(Window window)`](#runmovieasync) | Records the project profile on its yielding application owner. |
 | [`public static int Run(Window window, string moviePath, int fps = 60)`](#m-electron2d-engine-run-electron2d-window-system-string-system-int32) | Records fixed-duration real frames and synchronous audio. |

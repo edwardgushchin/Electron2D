@@ -151,11 +151,15 @@ public sealed partial class RenderingServer : ElectronObject
     private void UseFrame(CanvasFrame frame)
     { _viewport = frame.Viewport; _lighting = frame.Lighting; _nodes = frame.Nodes; _vertices = frame.Vertices; _instances = frame.Instances; _modelPoses = frame.ModelPoses; _batches = frame.Batches; _order = frame.Order; _repeatTransforms = frame.Repeats; _repeatModels = frame.RepeatModels; _canvasTransforms = frame.Transforms; _ySort = frame.YSort; }
     private Color FrameClear(Viewport viewport) => viewport.TransparentBG ? default : _clearColor with { A = 1 };
-    private void CaptureViewports(Node node)
+    private void CaptureViewports(SceneTree? tree)
     {
-        CaptureScene(node);
-        foreach (var viewport in _sceneViewports)
-            if (ReferenceEquals(viewport, _window) || viewport is SubViewport or Window { Embedder: not null } or Window { NativeDisplay: not null }) CaptureViewport(viewport);
+        if (tree is null) CaptureViewport(_window);
+        else
+        {
+            CaptureScene(tree.Root);
+            foreach (var viewport in _sceneViewports)
+                if (ReferenceEquals(viewport, _window) || viewport is SubViewport or Window { Embedder: not null } or Window { NativeDisplay: not null }) CaptureViewport(viewport);
+        }
         foreach (var pair in _serverViewports) if (pair.Value.Owned) CaptureViewport(pair.Key);
     }
     private void CaptureViewport(Viewport viewport)
@@ -187,7 +191,7 @@ public sealed partial class RenderingServer : ElectronObject
     internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return TargetSize(viewport); }
     internal Image? ReadbackViewport(Viewport viewport)
     { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); if (viewport is Window w && (w.ContentLayout.TargetSize.X == 0 || w.ContentLayout.TargetSize.Y == 0)) return null; var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
-    internal void Render(SceneTree tree, double step, bool force = false, bool swapBuffers = true)
+    internal void Render(SceneTree? tree, double step, bool force = false, bool swapBuffers = true)
     {
         EnsureOwner();
         if (_rendering) throw new InvalidOperationException("Canvas rendering cannot be re-entered.");
@@ -211,13 +215,26 @@ public sealed partial class RenderingServer : ElectronObject
             _continuousCanvas = false;
             BeginEventEmission(_publisherFramePreDrawCore.Handlers)?.Invoke();
             var setupStart = Stopwatch.GetTimestamp();
-            _globalParameters.BindScene(tree.SelectedShaderGlobals?.Parameters);
-            UpdatePhysicsContacts(tree);
+            _globalParameters.BindScene(tree?.SelectedShaderGlobals?.Parameters);
+            if (tree is not null) UpdatePhysicsContacts(tree);
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
-            _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.PhysicsInterpolationFraction : 1f;
-            _activeFrames.Clear(); CaptureViewports(tree.Root);
-            if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree.Root); foreach (var node in _nodes) { if (node is GPUParticles particles && !particles.IsDisposed) particles.PrepareParticleFrame(); if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas(); } }
-            _activeFrames.Clear(); CaptureViewports(tree.Root);
+            _interpolationFraction = tree?.PhysicsInterpolation == true ? (float)Engine.PhysicsInterpolationFraction : 1f;
+            _activeFrames.Clear();
+            if (tree is not null)
+            {
+                CaptureViewports(tree);
+                if (_activeFrames.Count != 0)
+                {
+                    UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree);
+                    foreach (var node in _nodes)
+                    {
+                        if (node is GPUParticles particles && !particles.IsDisposed) particles.PrepareParticleFrame();
+                        if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas();
+                    }
+                }
+                _activeFrames.Clear();
+            }
+            CaptureViewports(tree);
             _staleViewports.Clear(); foreach (var viewport in _canvasFrames.Keys) if (!ViewportLive(viewport, tree)) _staleViewports.Add(viewport);
             foreach (var viewport in _staleViewports) ReleaseViewport(viewport); _staleViewports.Clear();
             _renderingDevice?.FlushRendererCommands();
@@ -252,7 +269,8 @@ public sealed partial class RenderingServer : ElectronObject
             Engine.Service.RecordDrawnFrame();
             CaptureCanvasVisibilityChanges();
             CaptureFrameCallbacks();
-            foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); try { DispatchScreenVisibility(tree); } catch (Exception error) { AddCanvasVisibilityError(ref frameError, error); } }
+            if (tree is not null)
+                foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); try { DispatchScreenVisibility(tree); } catch (Exception error) { AddCanvasVisibilityError(ref frameError, error); } }
             DeliverCanvasVisibilityChanges(ref frameError);
             _renderingDevice?.CompleteRendererReadbacks();
             BeginEventEmission(_publisherFramePostDrawCore.Handlers)?.Invoke();
@@ -276,7 +294,7 @@ public sealed partial class RenderingServer : ElectronObject
         }
         if (frameError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(frameError).Throw();
     }
-    private void SubmitTexture(Texture? texture, SceneTree tree)
+    private void SubmitTexture(Texture? texture, SceneTree? tree)
     {
         if (texture is ServerTexture { IsProxy: true } proxy) texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
         while (texture is AtlasTexture atlas) texture = atlas.RenderingTexture;
@@ -296,7 +314,7 @@ public sealed partial class RenderingServer : ElectronObject
         if (UpdateMode(viewport) == ViewportUpdateMode.WhenParentVisible && !ScreenVisible(viewport) && (RenderParent(viewport) is not { } parent || !ViewportScheduled(parent))) return;
         frame.Wanted = true; SubmitFrame(frame, tree);
     }
-    private void SubmitFrame(CanvasFrame frame, SceneTree tree)
+    private void SubmitFrame(CanvasFrame frame, SceneTree? tree)
     {
         var viewport = frame.Viewport;
         if (frame.State != 0 || !frame.Wanted || !ViewportLive(viewport, tree) || !ViewportActive(viewport) ||
@@ -351,14 +369,14 @@ public sealed partial class RenderingServer : ElectronObject
         finally { _cpuRenderTiming = parentTiming; if (parentTiming is not null) _cpuRenderStart = Stopwatch.GetTimestamp(); }
 
     }
-    private void SubmitMaterialTextures(MaterialState material, CanvasFrame frame, SceneTree tree)
+    private void SubmitMaterialTextures(MaterialState material, CanvasFrame frame, SceneTree? tree)
     {
         if (material.Program.TimeUniform is not null || material.Program.Vertex?.TimeUniform is not null) _continuousCanvas = true;
         material.CopyTextures(frame.TextureScratch);
         for (var i = 0; i < material.Textures.Length; i++) SubmitTexture(frame.TextureScratch[i] as Texture, tree);
         Array.Clear(frame.TextureScratch);
     }
-    private void SubmitParticleTextures(CanvasFrame frame, SceneTree tree)
+    private void SubmitParticleTextures(CanvasFrame frame, SceneTree? tree)
     {
         foreach (var source in ParticleSchedule)
         {
@@ -382,14 +400,14 @@ public sealed partial class RenderingServer : ElectronObject
             Array.Clear(frame.TextureScratch);
         }
     }
-    private (CanvasBackgroundSettings Background, CanvasPostProcess Effects)? BuildFrame(CanvasFrame frame, SceneTree tree, Vector2i pixels, bool direct)
+    private (CanvasBackgroundSettings Background, CanvasPostProcess Effects)? BuildFrame(CanvasFrame frame, SceneTree? tree, Vector2i pixels, bool direct)
     {
         UseFrame(frame); _instances.Clear(); _modelPoses.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _repeatModels.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
         var viewport = frame.Viewport;
         var framebufferTransform = !direct && viewport is Window embedded ? new Transform(0, Vector2.One * embedded.RenderDensity, 0, Vector2.Zero) : Transform.Identity;
         // Drawing callbacks may change parenting, visibility or sibling order.
         _nodes.Clear();
-        if (!_serverViewports.TryGetValue(viewport, out var viewportState) || !viewportState.DisableCanvas) CaptureCanvasScene(tree.Root);
+        if (!_serverViewports.TryGetValue(viewport, out var viewportState) || !viewportState.DisableCanvas) CaptureCanvasScene(tree);
         var visibleCount = 0;
         for (var index = 0; index < _nodes.Count; index++)
         {

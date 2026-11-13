@@ -419,7 +419,23 @@ public partial class Window : Viewport
 
     internal void PumpEvents() => GetDisplay().ProcessEventsCore();
 
-    internal void Render(SceneTree tree, double step) => tree.RenderCanvas(_renderer ?? throw new InvalidOperationException("Rendering has not started."), step);
+    private bool _hostQuitOnClose, _hostQuitOnGoBack;
+    internal bool HostsCustomMainLoop { get; private set; }
+    internal bool HostQuitRequested { get; private set; }
+
+    internal void ConfigureCustomMainLoop()
+    {
+        HostsCustomMainLoop = true;
+        _hostQuitOnClose = ProjectSettings.GetWithOverride(ProjectSettings.AutoAcceptQuit);
+        _hostQuitOnGoBack = ProjectSettings.GetWithOverride(ProjectSettings.QuitOnGoBack);
+    }
+
+    internal void Render(SceneTree? tree, double step)
+    {
+        var renderer = _renderer ?? throw new InvalidOperationException("Rendering has not started.");
+        if (tree is null) renderer.Render(null, step);
+        else tree.RenderCanvas(renderer, step);
+    }
 
     private DisplayServer GetDisplay()
     {
@@ -434,7 +450,11 @@ public partial class Window : Viewport
         try { RequestEmbeddedClose(); }
         finally
         {
-            if (Parent is null) Tree?.AcceptWindowClose();
+            if (Parent is null)
+            {
+                if (Tree is { } tree) tree.AcceptWindowClose();
+                else if (_hostQuitOnClose) HostQuitRequested = true;
+            }
         }
     }
 
@@ -494,7 +514,14 @@ public partial class Window : Viewport
         if (what == NotificationWmWindowFocusOut) try { Tree?.CancelEmbeddedDecorationTree(this); } catch (Exception error) { CollectException(ref errors, error); }
         try { PropagateWindowNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         if (what == NotificationWmGoBackRequest)
-            try { if (!IsBlockingSignals() && Parent is null) Tree?.AcceptWindowGoBack(); }
+            try
+            {
+                if (!IsBlockingSignals() && Parent is null)
+                {
+                    if (Tree is { } tree) tree.AcceptWindowGoBack();
+                    else if (_hostQuitOnGoBack) HostQuitRequested = true;
+                }
+            }
             catch (Exception error) { CollectException(ref errors, error); }
         var handlers = what switch
         {

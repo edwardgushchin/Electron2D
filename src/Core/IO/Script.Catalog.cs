@@ -180,6 +180,22 @@ public sealed partial class Script
     }
     internal static ScriptRegistration? FindPath(string path) { lock (CatalogGate) return ByPath.GetValueOrDefault(System.IO.Path.GetFullPath(ResourceArchive.Absolute(path))); }
     private static ScriptRegistration? FindType(Type type) { lock (CatalogGate) return ByType.GetValueOrDefault(type); }
+    internal static Script LoadGlobalClass(string name)
+    {
+        ScriptRegistration? match = null;
+        lock (CatalogGate)
+        {
+            foreach (var record in ByType.Values)
+            {
+                if (record.Type.Name != name || !record.Type.IsDefined(typeof(GlobalClassAttribute), inherit: false))
+                    continue;
+                if (match is not null) throw new InvalidOperationException($"The global class name '{name}' is ambiguous.");
+                match = record;
+            }
+        }
+        if (match is null) throw new InvalidOperationException($"No global class named '{name}' is registered.");
+        return LoadSource(match.Path);
+    }
     private static ScriptRegistration FindID(string id) { lock (CatalogGate) return ByID.GetValueOrDefault(id) ?? throw new InvalidDataException("Unknown compiled script identity: " + id); }
     internal static byte[] ReadSource(ScriptDocument document)
     {

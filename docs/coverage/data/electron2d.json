@@ -296301,6 +296301,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.MainLoopType()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MainLoopType",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E MainLoopType { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.MainScene()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
