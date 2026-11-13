@@ -178,6 +178,13 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>False by default. The host command-line verbose switch takes precedence.</value>
     public static ProjectSetting<bool> VerboseSTDOUT { get; } = new("debug/settings/stdout/verbose_stdout", false);
 
+    /// <summary>Gets the startup scene path or resource UID used by <see cref="Engine.RunProject"/> and <see cref="Engine.RunProjectAsync"/>.</summary>
+    /// <value>An empty string until a main scene is configured.</value>
+    /// <remarks>The owned host samples the effective feature override once at startup. The selected file must load as a
+    /// <see cref="PackedScene"/>. A whitespace-only value or a value containing a null character is invalid.</remarks>
+    public static ProjectSetting<string> MainScene { get; } = new("application/run/main_scene", "",
+        value => value is not null && (value.Length == 0 || !string.IsNullOrWhiteSpace(value) && !value.Contains('\0')));
+
     /// <summary>Gets the process cadence cap sampled when a windowed engine run starts.</summary>
     /// <value>Zero initially, meaning unlimited. Negative values are invalid.</value>
     public static ProjectSetting<int> MaxFPS { get; } = new("application/run/max_fps", 0, value => value >= 0);

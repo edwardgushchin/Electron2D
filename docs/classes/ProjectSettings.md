@@ -25,6 +25,8 @@ MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (4800
 Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Config/ProjectSettings.API.cs).
 
 
+`MainScene` supplies the packed-scene path or resource UID for [configured project startup](../components/engine-runtime.md#project-main-scene). The default is empty.
+
 `MaxFPS` sets the initial window cadence cap, `FrameDelayMsec` adds a fixed delay after each continuing real-time window frame, and `PrintFPS` enables periodic rate diagnostics. These typed startup settings accept feature overrides.
 
 `GZIPCompressionLevel` and `ZLibCompressionLevel` control exact compression levels for new encodes. The default is -1 (the codec default), and 0 through 9 are valid explicit levels. See [compression levels](../components/file-access.md#compression-levels). See [frame-rate settings](../components/engine-runtime.md#frame-rate-settings).

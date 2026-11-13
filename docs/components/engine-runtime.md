@@ -57,6 +57,14 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, Trans
 
 Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run and Engine.RunAsync supply the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering draw counts and runtime diagnostic flags/delivery are integrated; [movie writing](movie-writing.md) now provides typed fixed-cadence capture and synchronous audio. Generated attribution/license maps, live script debugging and editor hints retain their coverage dependencies. Their exact reference-API disposition is in the [`Engine` class inventory](../coverage/classes/Engine.md).
 
+## Project main scene
+
+Configure `ProjectSettings.MainScene` with a packed-scene path or a registered resource UID. The key is `application/run/main_scene` and defaults to an empty string. A game calls `Engine.RunProject(window)` or `Engine.RunProjectAsync(window)` with its configured detached root. Startup samples active feature overrides after reserving the host and loads the scene through the ordinary resource loader. Relative and virtual paths, UID resolution, localization remaps and template retention follow the loader's rules. An empty setting, missing file, wrong type or failed startup aborts the run and releases the owned window.
+
+The instance is appended after existing ordinary window children and becomes `SceneTree.CurrentScene` before tree entry. The tree is published before readiness. Existing children become ready in the normal order, then the main scene and then the window. Initial selection uses ordinary tree entry. Subsequent scene transitions use the deferred scene-change API and its signal. Explicit `Run`, `RunAsync` and recording calls use the caller's hierarchy.
+
+The [project startup test](../../tests/Electron2D.Tests/ProjectMainSceneTests.cs) exercises typed persistence, path and UID resolution, sync and async ownership, window readiness order, startup failure and restart, and real pixels on Windows GPU and Compatibility. Packaged macOS, Linux, Android, Apple mobile/TV and Web hosts remain unverified for this workflow.
+
 ## Frame-rate settings
 
 `ProjectSettings.MaxFPS` defines `application/run/max_fps`, a nonnegative integer with zero meaning unlimited. Window startup samples its active feature override. `--max-fps N` before the application argument separator overrides that value, including with zero. Negative, missing, out-of-range or noninteger arguments reject window startup. An explicit `Engine.MaxFPS` assignment takes precedence and can update the running cap. The assignment is process-local. The sampled window value retires on shutdown or failure, and editing the stored setting takes effect on the next window run. Manual advancement and fixed-rate recording bypass the wait.

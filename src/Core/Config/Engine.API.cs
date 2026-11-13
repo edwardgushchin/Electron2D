@@ -53,6 +53,25 @@ public sealed partial class Engine
     /// <exception cref="Exception">A startup, frame or platform operation fails after owned cleanup.</exception>
     public static Task<int> RunAsync(Window window) => Service.RunAsyncCore(window);
 
+    /// <summary>Runs the configured project main scene under a caller-configured root window.</summary>
+    /// <param name="window">The live detached window, owned by the runtime after successful reservation.</param>
+    /// <returns>The scene's quit code after all owned cleanup.</returns>
+    /// <remarks>The effective <see cref="ProjectSettings.MainScene"/> is loaded as a packed scene. Its instance is
+    /// the tree's current scene from initial entry. Existing window children enter in their original order before it.
+    /// The window and scene follow the same owner-thread, scheduling and cleanup rules as <see cref="Run(Window)"/>.</remarks>
+    /// <exception cref="InvalidOperationException">The project has no main scene, or the window run cannot start.</exception>
+    /// <exception cref="Exception">Scene loading, instantiation, activation or another owned run operation fails.</exception>
+    public static int RunProject(Window window) => Service.RunCore(window, runProject: true);
+
+    /// <summary>Runs the configured project main scene using the yielding window host.</summary>
+    /// <param name="window">The live detached window, owned by the runtime after successful reservation.</param>
+    /// <returns>A task containing the scene's quit code after all owned cleanup.</returns>
+    /// <remarks>Uses the scene selection and lifecycle of <see cref="RunProject"/> and the platform entry and
+    /// synchronization requirements of <see cref="RunAsync(Window)"/>.</remarks>
+    /// <exception cref="InvalidOperationException">The project has no main scene, or the window run cannot start.</exception>
+    /// <exception cref="Exception">Scene loading, instantiation, activation or another owned run operation fails.</exception>
+    public static Task<int> RunProjectAsync(Window window) => Service.RunAsyncCore(window, runProject: true);
+
     /// <summary>Gets or sets whether this process is hosting scene authoring in an editor.</summary>
     /// <value>False initially; the editor host selects true before constructing its scene.</value>
     /// <remarks>This advisory process-wide hint is safe to read and write from any thread. Automatic audio,

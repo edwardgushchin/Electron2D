@@ -29,23 +29,48 @@ public sealed partial class Engine
         }
     }
 
-    internal int RunCore(Window window, Action<Window, ulong>? beforeFrame = null)
+    internal int RunCore(Window window, Action<Window, ulong>? beforeFrame = null, bool runProject = false)
     {
         if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
             throw new NotSupportedException("This platform requires Engine.RunAsync so its application event loop remains available.");
-        return RunWindowCore(window, asynchronous: false, beforeFrame: beforeFrame).GetAwaiter().GetResult();
+        return RunWindowCore(window, asynchronous: false, beforeFrame: beforeFrame, runProject: runProject).GetAwaiter().GetResult();
     }
 
-    internal Task<int> RunAsyncCore(Window window, Action<Window, ulong>? beforeFrame = null)
+    internal Task<int> RunAsyncCore(Window window, Action<Window, ulong>? beforeFrame = null, bool runProject = false)
     {
         ValidateRunWindow(window);
 #if ANDROID
         if (OperatingSystem.IsAndroid())
-            return AndroidWindowHost.RunAsync(window, beforeFrame: beforeFrame);
+            return AndroidWindowHost.RunAsync(window, beforeFrame: beforeFrame, runProject: runProject);
 #endif
         if (!OperatingSystem.IsBrowser() && SynchronizationContext.Current is null)
             throw new InvalidOperationException("RunAsync requires an application synchronization context on the native main thread.");
-        return RunWindowCore(window, asynchronous: true, beforeFrame: beforeFrame);
+        return RunWindowCore(window, asynchronous: true, beforeFrame: beforeFrame, runProject: runProject);
+    }
+
+    private static Node AttachProjectScene(Window window, string path)
+    {
+        var template = ResourceLoader.LoadSceneTemplate(path, out var retention);
+        using (retention)
+        {
+            var scene = template.Instantiate();
+            try
+            {
+                window.AddChild(scene);
+                if (!ReferenceEquals(scene.Parent, window))
+                    throw new InvalidOperationException("The project scene was detached during startup.");
+                return scene;
+            }
+            catch (Exception error)
+            {
+                if (scene.Parent is null && !scene.IsDisposed)
+                {
+                    try { scene.Dispose(); }
+                    catch (Exception cleanupError) { throw new AggregateException(error, cleanupError); }
+                }
+                throw;
+            }
+        }
     }
 
     private static void ValidateRunWindow(Window window)
@@ -66,8 +91,8 @@ public sealed partial class Engine
         Volatile.Write(ref _applicationRun, 1);
     }
 
-    internal int RunReservedWindowCore(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null) =>
-        RunWindowCore(window, asynchronous: false, reserved: true, moviePath: moviePath, movieFPS: movieFPS, movieDisableVSync: movieDisableVSync, beforeFrame: beforeFrame).GetAwaiter().GetResult();
+    internal int RunReservedWindowCore(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null, bool runProject = false) =>
+        RunWindowCore(window, asynchronous: false, reserved: true, moviePath: moviePath, movieFPS: movieFPS, movieDisableVSync: movieDisableVSync, beforeFrame: beforeFrame, runProject: runProject).GetAwaiter().GetResult();
 
     internal void CancelReservedWindowCore(Window window)
     {
@@ -90,7 +115,7 @@ public sealed partial class Engine
         Volatile.Write(ref _runtimeState, RuntimeIdle);
     }
 
-    private async Task<int> RunWindowCore(Window window, bool asynchronous, bool reserved = false, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null)
+    private async Task<int> RunWindowCore(Window window, bool asynchronous, bool reserved = false, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null, bool runProject = false)
     {
         if (!reserved)
         {
@@ -110,6 +135,9 @@ public sealed partial class Engine
             var frameDelay = ConfigureFrameRateSettings(windowed: true) / 1000d;
             if (moviePath is not null) frameDelay = 0;
             RuntimeDiagnostics.Instance.BeginRun();
+            var mainScenePath = runProject ? ProjectSettings.GetWithOverride(ProjectSettings.MainScene) : null;
+            if (mainScenePath is { Length: 0 })
+                throw new InvalidOperationException("Configure a project main scene before running the project.");
             if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
                 SDL3.SDL.SetMainReady();
             TranslationServer.LoadProjectLocalization();
@@ -131,7 +159,8 @@ public sealed partial class Engine
             {
                 movie = new MovieRecording(window.TextureDimensions, movieFPS, moviePath);
             }
-            tree = new SceneTree(window, attachToEngine: true);
+            var mainScene = mainScenePath is null ? null : AttachProjectScene(window, mainScenePath);
+            tree = new SceneTree(window, attachToEngine: true, initialScene: mainScene);
             Volatile.Write(ref _mainLoop, tree);
             tree.StartForEngine();
             ResetRunState();

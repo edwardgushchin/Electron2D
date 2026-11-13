@@ -116342,6 +116342,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.RunProject(Electron2D.Window)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunProject",
+    "signature": "public static System.Int32 RunProject(Electron2D.Window window)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunProjectAsync",
+    "signature": "public static System.Threading.Tasks.Task\u003CSystem.Int32\u003E RunProjectAsync(Electron2D.Window window)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      }
+    ],
+    "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.Start(Electron2D.MainLoop)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -296221,6 +296259,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Viewport.MSAA\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.MainScene()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MainScene",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E MainScene { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {

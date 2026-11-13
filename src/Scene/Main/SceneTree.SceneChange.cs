@@ -9,7 +9,7 @@ public sealed partial class SceneTree
     private bool _sceneChangePreparing;
 
     /// <summary>Gets or selects the active scene child of <see cref="Root"/>.</summary>
-    /// <value>The selected direct child, or null when no scene is selected.</value>
+    /// <value>The selected direct child, or null when no scene is selected. A project run selects its main scene before tree entry.</value>
     /// <remarks>Assigning a child changes only the selected reference. Use <see cref="ChangeSceneToNode"/> to replace a scene.</remarks>
     /// <exception cref="ArgumentException">The assigned node is not a direct child of <see cref="Root"/>.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>

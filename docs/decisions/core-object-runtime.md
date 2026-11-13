@@ -313,6 +313,8 @@ APIs that cannot act without an absent domain are not exposed as stored-but-unus
 
 `Engine.RunAsync(Window)` is the nonblocking projection of that same owned window lifecycle. The browser's single-threaded scheduler and UIKit's native main-thread synchronization context retain window ownership while the runtime yields between frames through one reusable periodic timer. Console callers continue to use Run; non-browser asynchronous startup without a main-thread context fails before ownership. Android's internal GameActivity receives a root queued by RunAsync from Application.OnCreate and invokes the same synchronous video-thread lifecycle. The host binding remains internal; examples use platform SDK entry points and public Electron2D operations, not backend bindings. Borrowed resources stay alive until the returned task completes. This adds no separate game loop, renderer or divergent public platform type set.
 
+`RunProject(Window)` and `RunProjectAsync(Window)` project configured project startup onto the same library host under ADRs 0019, 0027 and 0090. They require a nonempty effective `ProjectSettings.MainScene` path or resource UID, sampled after host reservation. The host loads a typed packed scene through the ordinary resource pipeline, appends the instance to the detached root and assigns it as `SceneTree.CurrentScene` before entry. Root and scene then use the same readiness, ownership and failure cleanup as a caller-built hierarchy. Explicit-window and capture entry points retain caller selection. See [project main scene](../components/engine-runtime.md#project-main-scene).
+
 ### Consequences
 
 - Applications have one timing/lifecycle entry point; manual embedding retains a host-controlled clock and thread.

@@ -1,6 +1,21 @@
 {
   "mappings": [
     {
+      "godot": "ProjectSettings::property:application/run/main_scene",
+      "electron2d": "property:Electron2D.ProjectSettings.MainScene()",
+      "reason": "ADRs 0016/0019/0027/0090: typed packed startup scene selection."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_scene",
+      "electron2d": "method:Electron2D.Engine.RunProject(Electron2D.Window)",
+      "reason": "Explicit configured game launch on the ordinary window host under ADR 0016."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_scene",
+      "electron2d": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window)",
+      "reason": "Asynchronous library-host projection of configured game launch under ADR 0016."
+    },
+    {
       "electron2d": "T:Electron2D.PackedSceneEditState",
       "godot": "SceneState::enum:GenEditState",
       "reason": "The four typed instantiation modes execute with their runtime/editor context and resource policies under ADR 0023."
@@ -8745,6 +8760,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["ProjectSettings::property:application/run/main_scene"],
+      "state": "Implemented",
+      "reason": "The effective scene path or UID selects a packed scene. The owned window host installs it as CurrentScene before tree entry and renders and retires it on the usual lifecycle. Sync and async Windows GPU and Compatibility tests exercise feature selection, startup failures and real pixels. See docs/components/engine-runtime.md#project-main-scene."
+    },
     {
       "godot": [
         "SceneTree::enum:GroupCallFlags",

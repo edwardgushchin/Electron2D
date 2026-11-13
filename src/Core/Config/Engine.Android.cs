@@ -15,6 +15,7 @@ internal static class AndroidWindowHost
     private static int _movieFPS;
     private static Action<Window, ulong>? _beforeFrame;
     private static bool _movieDisableVSync;
+    private static bool _runProject;
     private static WeakReference<AndroidGameActivity>? _activity;
 
     internal static void AttachActivity(AndroidGameActivity activity)
@@ -49,7 +50,7 @@ internal static class AndroidWindowHost
         loop.PostPermissionResults(permissions, granted);
     }
 
-    internal static Task<int> RunAsync(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null)
+    internal static Task<int> RunAsync(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null, bool runProject = false)
     {
         lock (Gate)
         {
@@ -58,6 +59,7 @@ internal static class AndroidWindowHost
             var completion = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
             Engine.Service.ReserveWindowRun();
             _window = window; _moviePath = moviePath; _movieFPS = movieFPS; _movieDisableVSync = movieDisableVSync; _beforeFrame = beforeFrame;
+            _runProject = runProject;
             _completion = completion;
             return _completion.Task;
         }
@@ -74,7 +76,7 @@ internal static class AndroidWindowHost
             completion = _completion!;
             _window = null;
             _completion = null;
-            _moviePath = null; _movieFPS = 0; _movieDisableVSync = false; _beforeFrame = null;
+            _moviePath = null; _movieFPS = 0; _movieDisableVSync = false; _beforeFrame = null; _runProject = false;
         }
         try { Engine.Service.CancelReservedWindowCore(window); completion.TrySetCanceled(); }
         catch (Exception error) { completion.TrySetException(error); }
@@ -93,9 +95,9 @@ internal static class AndroidWindowHost
         }
         var code = 0;
         Exception? failure = null;
-        try { code = Engine.Service.RunReservedWindowCore(window, _moviePath, _movieFPS, _movieDisableVSync, _beforeFrame); }
+        try { code = Engine.Service.RunReservedWindowCore(window, _moviePath, _movieFPS, _movieDisableVSync, _beforeFrame, _runProject); }
         catch (Exception error) { failure = error; }
-        finally { lock (Gate) { _window = null; _completion = null; _started = false; _moviePath = null; _movieFPS = 0; _movieDisableVSync = false; _beforeFrame = null; } }
+        finally { lock (Gate) { _window = null; _completion = null; _started = false; _moviePath = null; _movieFPS = 0; _movieDisableVSync = false; _beforeFrame = null; _runProject = false; } }
         if (failure is null) completion.TrySetResult(code);
         else completion.TrySetException(failure);
     }

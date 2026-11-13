@@ -169,7 +169,7 @@ Initially sampled from `ProjectSettings.QuitOnGoBack` with active feature overri
 <a id="p-electron2d-scenetree-currentscene"></a>
 ### `public Node? CurrentScene { get; set; }`
 
-The selected direct child of the stable `Root`, or null initially. Assigning an existing direct child changes only the selection; it does not add, remove or dispose nodes. Detachment clears the selection before `NodeRemoved`. Selection and inspection require the owner thread and a live tree; assigning a detached, foreign or non-direct node throws `ArgumentException`.
+The selected direct child of the stable `Root`. A [configured project run](../components/engine-runtime.md#project-main-scene) selects its main scene before tree entry. Other trees start with no selection. Assigning an existing direct child changes only the selection; it does not add, remove or dispose nodes. Detachment clears the selection before `NodeRemoved`. Selection and inspection require the owner thread and a live tree; assigning a detached, foreign or non-direct node throws `ArgumentException`.
 
 <a id="diagnostics-debugpathshint"></a>
 ### `public bool DebugPathsHint { get; set; }`

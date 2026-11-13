@@ -110,7 +110,7 @@ public sealed partial class SceneTree : MainLoop
     /// <exception cref="AggregateException">Activation or rollback callbacks fail.</exception>
     public SceneTree(Node root) : this(root, attachToEngine: false) { }
 
-    internal SceneTree(Node root, bool attachToEngine)
+    internal SceneTree(Node root, bool attachToEngine, Node? initialScene = null)
     {
         ArgumentNullException.ThrowIfNull(root);
         Node.EnsureSceneFactoryComplete();
@@ -129,6 +129,7 @@ public sealed partial class SceneTree : MainLoop
             throw new ArgumentException("A SceneTree root cannot be queued for deletion.", nameof(root));
 
         Root = root;
+        _currentScene = initialScene;
         _deferred = new(this);
         _deferredSpare = new(this);
         _typedDeferredScheduler = new DeferredScheduler(this);

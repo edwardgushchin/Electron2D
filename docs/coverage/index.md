@@ -1,3 +1,5 @@
+[Configured project startup](../components/engine-runtime.md#project-main-scene) loads the selected packed scene into the owned window lifecycle. One Blocked row moves to Implemented. Coverage is **13,975/18,900 (73.94%)**, with 1,120 Partial, 269 Unimplemented, 3,536 Blocked, 8,393 Excluded and zero unmapped.
+
 [GZIP and zlib compression levels](../components/file-access.md#compression-levels) control real file, byte-buffer and typed archive encoding. Two Blocked rows move to Implemented. Coverage is **13,974/18,900 (73.94%)**, with 1,120 Partial, 269 Unimplemented, 3,537 Blocked, 8,393 Excluded and zero unmapped.
 
 [Fixed frame delay](../components/engine-runtime.md#frame-rate-settings) adds project and host control of the wait between real-time window frames. One Blocked row moves to Implemented. Coverage is **13,972/18,900 (73.93%)**, with 1,120 Partial, 269 Unimplemented, 3,539 Blocked, 8,393 Excluded and zero unmapped.
