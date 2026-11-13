@@ -1,3 +1,5 @@
+[Host version and device identity](../components/host-platform.md#os-version-and-device-model) adds native release aliases and device-model queries. Two Unimplemented rows move to Partial pending their remaining host runs. Coverage is **13,966/18,900 (73.89%)**, with 1,121 Partial, 270 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
+
 [Weighted same-polygon navigation](../components/navigation-maps.md#weighted-routes-within-one-polygon) compares the direct route with cheaper link chains. The exact query rows remain Partial for distinct entry positions on one portal and larger tied corridors. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.
 
 [SVG viewport sizing](../components/images.md#svg-viewport-sizing) supports inline root dimensions in image, file and scalable texture consumers. The SVG and general file-loading rows retain their remaining Partial scope. Coverage is **13,966/18,900 (73.89%)**, with 1,119 Partial, 272 Unimplemented, 3,543 Blocked, 8,393 Excluded and zero unmapped.

@@ -42,7 +42,7 @@ public sealed partial class OS
         {
             ulong physicalValue = 0;
             nuint size = sizeof(ulong);
-            long physical = GetAppleMemoryValue("hw.memsize", &physicalValue, ref size, 0, 0) == 0 && size == sizeof(ulong)
+            long physical = QueryAppleSystemValue("hw.memsize", &physicalValue, ref size, 0, 0) == 0 && size == sizeof(ulong)
                 ? MemoryBytes(physicalValue, 1) : -1;
             long free = -1, available = -1;
             var count = (uint)sizeof(AppleMemoryStatus) / sizeof(uint);
@@ -56,7 +56,7 @@ public sealed partial class OS
                 {
                     AppleSwapStatus swap = default;
                     size = (nuint)sizeof(AppleSwapStatus);
-                    if (GetAppleMemoryValue("vm.swapusage", &swap, ref size, 0, 0) == 0 && size == (nuint)sizeof(AppleSwapStatus))
+                    if (QueryAppleSystemValue("vm.swapusage", &swap, ref size, 0, 0) == 0 && size == (nuint)sizeof(AppleSwapStatus))
                         available = AddMemoryBytes(free, MemoryBytes(swap.Available, 1));
                 }
                 else available = free;
@@ -113,7 +113,7 @@ public sealed partial class OS
     [LibraryImport("kernel32.dll")] private static partial void GetCurrentThreadStackLimits(out nuint low, out nuint high);
     [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "getrlimit")] private static partial int GetAppleResourceLimit(int resource, out ResourceLimit limit);
     [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "sysctlbyname", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
-    private static unsafe partial int GetAppleMemoryValue(string name, void* value, ref nuint size, nint newValue, nuint newSize);
+    private static unsafe partial int QueryAppleSystemValue(string name, void* value, ref nuint size, nint newValue, nuint newSize);
     [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "mach_host_self")] private static partial uint GetAppleMemoryHost();
     [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "host_statistics64")] private static partial int GetAppleMemory(uint host, int flavor, out AppleMemoryStatus info, ref uint count);
 }

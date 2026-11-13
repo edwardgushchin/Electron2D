@@ -8,6 +8,18 @@ internal static class ContractChecks
     internal static void Run(Action<string>? report = null)
     {
         report ??= Console.WriteLine;
+        if (OperatingSystem.IsBrowser())
+        {
+            Check(OS.GetVersion().Length == 0 && OS.GetVersionAlias().Length == 0 &&
+                OS.GetModelName() == "GenericDevice", "Browser host version and model fallbacks.");
+        }
+        else if (OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
+        {
+            var product = Environment.OSVersion.Version;
+            Check(OS.GetVersion() == $"{product.Major}.{product.Minor}.{Math.Max(0, product.Build)}" &&
+                OS.GetVersionAlias() == OS.GetVersion() && OS.GetModelName() != "GenericDevice",
+                "Apple embedded host exposes its product version and hardware identifier.");
+        }
         report("PORTABILITY CHECK: atomic floating-point settings.");
         var timeScale = Engine.TimeScale;
         var playbackScale = AudioServer.PlaybackSpeedScale;

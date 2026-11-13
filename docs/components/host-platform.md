@@ -16,6 +16,16 @@ Host/build/architecture tags are shared with typed settings, including pc/mobile
 
 GPU renderer startup captures complete s3tc/rgtc/bptc family support for ordinary native uploads. Compatibility reports no such native upload family and uses existing decoded image input. OS.HasFeature returns false for renderer tags before startup/after shutdown. RenderingServer.HasOSFeature requires an active service, reads immutable data on any thread and returns false for unknown names. A capability query never opens a renderer. Optional system-font discovery can initialize its existing provider on first use.
 
+## OS version and device model
+
+GetVersion returns the Windows kernel major, minor and build, the Apple product major, minor and patch, or the Android recognized ROM version or SDK plus incremental build. Android uses the same ordered ROM properties for GetDistributionName, with the stock platform family as fallback. Linux retains the distribution VERSION or kernel build text. Web returns an empty version.
+
+GetVersionAlias adds release branding on Windows and macOS and gives the stock release, SDK and incremental build on Android. Windows uses the native workstation/server product type with the build to identify the release. Android accepts the legacy release property when release-or-codename is absent. Linux, iOS, tvOS and Web return their ordinary version unchanged.
+
+GetModelName uses Windows firmware registry values, preferring the system product and then the board product while ignoring blank and standard placeholder values. macOS reads hw.model, iOS/tvOS read hw.machine, and Android reads the product-model property. An unavailable model or a platform without a model source returns GenericDevice. These queries retain immutable process snapshots and run before display startup.
+
+HostPlatform.Consumer identity compares Windows results with runtime version, installed product role and firmware registry data. The Windows identity profile also passes a NativeAOT publish using runtime and ILCompiler 10.0.14. The managed binary verifies Linux under WSL against os-release and the kernel build text. Both profiles check concurrent reads, zero managed allocation after warmup and unopened native services. The Apple, Android and browser test hosts include their corresponding assertions. The Android x64 test APK builds locally. Native execution on those hosts and package qualification remain open.
+
 ## Blocking thread delays
 
 `OS.DelayMSEC` and `OS.DelayUSEC` use a monotonic elapsed clock and widen both input units before converting to ticks. A positive delay blocks its caller for at least the requested duration, subject to managed thread interruption. Desktop and mobile runtimes sleep for whole milliseconds and check the remaining fraction against the same clock. The browser runtime polls that clock on its calling thread because the browser UI thread cannot sleep synchronously. A zero duration returns immediately and a negative one throws before waiting. No SDL timer or display is needed.
@@ -34,7 +44,7 @@ Host metadata and capability preparation are cold. Prepared immutable identity a
 
 ## Verification and limits
 
-`tests/HostPlatform.Consumer` uses only public runtime API. Managed mode checks Linux metadata, host/custom feature selection, persistence boundaries, LANG isolation and Snap combinations. `gpu OUTPUT` and `compatibility OUTPUT` select BC1 or RGBA input, render red pixels and save a native framebuffer. Root `ELECTRON2D_TEST_HOST_PLATFORM=1` links the same checks and adds exact-key/quote/malformed metadata fixtures. JIT, strict NativeAOT, both Linux display protocols and both renderer backends are separate observations. Warm queries measure owner-managed bytes only. Complete foreign version/model/sandbox and simulator/browser feature adapters, physical GPU, native allocation, editor and human acceptance remain open.
+`tests/HostPlatform.Consumer` uses only public runtime API. Managed mode checks Linux metadata, host/custom feature selection, persistence boundaries, LANG isolation and Snap combinations. `gpu OUTPUT` and `compatibility OUTPUT` select BC1 or RGBA input, render red pixels and save a native framebuffer. Root `ELECTRON2D_TEST_HOST_PLATFORM=1` links the same checks and adds exact-key/quote/malformed metadata fixtures. JIT, strict NativeAOT, both Linux display protocols and both renderer backends are separate observations. Warm queries measure owner-managed bytes only. Remaining version/model host qualification, foreign sandbox and simulator/browser feature adapters, physical GPU, native allocation, editor and human acceptance remain open.
 
 ## Decisions
 

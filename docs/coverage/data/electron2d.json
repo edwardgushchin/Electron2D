@@ -155398,6 +155398,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetModelName()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetModelName",
+    "signature": "public static System.String GetModelName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetName()",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -155711,6 +155724,19 @@
     "declaringType": "Electron2D.OS",
     "name": "GetVersion",
     "signature": "public static System.String GetVersion()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetVersionAlias()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetVersionAlias",
+    "signature": "public static System.String GetVersionAlias()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

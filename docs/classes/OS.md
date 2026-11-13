@@ -301,13 +301,15 @@ overlong UTF-8 input. Unsupported profiles fail explicitly. See the
 
 ## Host identity and feature queries
 
-Sources: [OS.Host.cs](../../src/Core/OS/OS.Host.cs), [OS.Features.cs](../../src/Core/OS/OS.Features.cs). All operations are static on the retained process service.
+Sources: [OS.Host.cs](../../src/Core/OS/OS.Host.cs), [OS.HostIdentity.cs](../../src/Core/OS/OS.HostIdentity.cs), [OS.Features.cs](../../src/Core/OS/OS.Features.cs). All operations are static on the retained process service.
 
 | Signature | Contract |
 | --- | --- |
 | `public static string GetName()` | Platform family; no renderer required. |
-| `public static string GetDistributionName()` | Exact Linux os-release NAME, otherwise platform-family fallback. |
-| `public static string GetVersion()` | Linux VERSION or kernel build description; other profiles currently use the managed OS description. |
+| `public static string GetDistributionName()` | Linux os-release NAME, Android ROM name or platform-family fallback. |
+| `public static string GetVersion()` | Production version reported by the host. |
+| `public static string GetVersionAlias()` | Windows, macOS and Android release branding with version or build. |
+| `public static string GetModelName()` | Native device model or GenericDevice. |
 | `public static int GetProcessorCount()` | Native logical CPU count; zero means unknown. |
 | `public static string GetProcessorName()` | Cached CPUID/Linux CPU model, empty when unavailable. |
 | `public static string GetLocale()` | Live host locale, independent of application Culture. |
@@ -322,11 +324,19 @@ Returns Windows, Linux, macOS, Android, iOS, tvOS or Web for supported platform 
 
 ### GetDistributionName
 
-Reads bounded optional metadata once. Linux uses the exact NAME key, ignoring PRETTY_NAME and other keys containing that word. Missing/empty NAME falls back to GetName. Other profile-specific distribution integration retains its platform gate.
+Reads bounded optional metadata once. Linux uses the exact NAME key, ignoring PRETTY_NAME and other keys containing that word. Missing/empty NAME falls back to GetName. Android selects the first recognized ROM property or falls back to Android.
 
 ### GetVersion
 
-Linux selects the exact VERSION key rather than VERSION_ID; missing/empty metadata falls back to the native uname version field. Initial I/O may allocate. Other detailed platform version descriptions still require their owning native adapters; a managed description is not a claim of exact foreign reference formatting.
+Linux selects the exact VERSION key rather than VERSION_ID; missing/empty metadata falls back to the native uname version field. Initial I/O may allocate. Windows uses major, minor and build. Apple targets use the product major, minor and patch. Android returns the ROM version or SDK/build. Web returns an empty string.
+
+### GetVersionAlias
+
+Returns the Windows product release and build, the macOS release name and product version, or the Android release, SDK and incremental build. Other targets reuse GetVersion.
+
+### GetModelName
+
+Returns the Windows firmware system product or board name, the Apple hardware identifier, or the Android product model. When unavailable, returns GenericDevice. See [version and device identity](../components/host-platform.md#os-version-and-device-model) for source and verification boundaries.
 
 ### GetProcessorCount
 

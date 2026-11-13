@@ -10,6 +10,10 @@ public sealed partial class OS
     private readonly Lazy<Dictionary<string, string>> _hostRelease = new(() => ParseHostRelease(ReadHostText("/etc/os-release", 65536)));
     private readonly Lazy<string> _processorName = new(ReadProcessorName);
     private readonly Lazy<string> _hostVersion = new(ReadHostVersion);
+    private readonly Lazy<string> _hostVersionAlias = new(ReadHostVersionAlias);
+    private readonly Lazy<string> _deviceModel = new(ReadDeviceModel);
+    private readonly Lazy<WindowsVersion> _windowsVersion = new(ReadWindowsVersion);
+    private readonly Lazy<(string Name, string Version)> _androidDistribution = new(ReadAndroidDistribution);
 
     /// <summary>Returns cryptographically secure random bytes from the host runtime provider.</summary>
     /// <param name="size">The number of bytes to generate.</param>
@@ -40,14 +44,31 @@ public sealed partial class OS
         return RuntimeInformation.OSDescription;
     }
     /// <summary>Gets the operating-system distribution name.</summary>
-    /// <returns>The Linux os-release NAME, or the platform family when a distribution name is unavailable.</returns>
-    /// <remarks>Linux metadata is read once, outside a real-time interval. Missing optional files use the family name.</remarks>
-    public static string GetDistributionName() => OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid() && Service._hostRelease.Value.TryGetValue("NAME", out var name) && name.Length != 0 ? name : GetName();
-    /// <summary>Gets the host operating-system version description.</summary>
-    /// <returns>The Linux os-release VERSION or kernel build description; other profiles use the managed OS version description.</returns>
+    /// <returns>The Linux os-release NAME, a recognized Android ROM name, or the platform family.</returns>
+    /// <remarks>Distribution metadata is prepared once, independently of engine startup.</remarks>
+    public static string GetDistributionName()
+    {
+        if (OperatingSystem.IsAndroid()) return Service._androidDistribution.Value.Name;
+        if (OperatingSystem.IsLinux() && Service._hostRelease.Value.TryGetValue("NAME", out var name) && name.Length != 0)
+            return name;
+        return GetName();
+    }
+    /// <summary>Gets the host operating-system version.</summary>
+    /// <returns>Windows major, minor and build, Apple product major, minor and patch, the Android SDK/build or ROM version,
+    /// or the Linux distribution VERSION or kernel build description. Web returns an empty string.</returns>
     /// <remarks>First use may read system metadata. This is independent of the engine and managed runtime versions.</remarks>
-    /// <exception cref="IOException">The native kernel identity query fails.</exception>
+    /// <exception cref="IOException">The Linux kernel identity query fails.</exception>
     public static string GetVersion() => Service._hostVersion.Value;
+    /// <summary>Gets the host operating-system version with its release branding.</summary>
+    /// <returns>The Windows release and build, macOS release name and product version, or Android release and SDK/build.
+    /// Other platforms return the same value as <see cref="GetVersion"/>.</returns>
+    /// <remarks>Prepared once, independently of engine startup.</remarks>
+    public static string GetVersionAlias() => Service._hostVersionAlias.Value;
+    /// <summary>Gets the host device model.</summary>
+    /// <returns>The Windows system or board product, Apple hardware identifier or Android product model,
+    /// or GenericDevice when a model is unavailable.</returns>
+    /// <remarks>Prepared once, independently of engine startup.</remarks>
+    public static string GetModelName() => Service._deviceModel.Value;
     /// <summary>Gets the number of logical CPU cores reported by the platform.</summary>
     /// <returns>The native logical-core count, or zero when the platform cannot identify it.</returns>
     /// <remarks>This describes the host rather than a recommended worker count or a guarantee of process CPU capacity.</remarks>
@@ -140,14 +161,26 @@ public sealed partial class OS
     }
     private static string ReadHostVersion()
     {
-        if (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid())
+        if (OperatingSystem.IsWindows())
+        {
+            var version = Service._windowsVersion.Value;
+            return version.Major == 0 ? string.Empty : FormattableString.Invariant($"{version.Major}.{version.Minor}.{version.Build}");
+        }
+        if (OperatingSystem.IsMacOS() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
+        {
+            var version = Environment.OSVersion.Version;
+            return FormattableString.Invariant($"{version.Major}.{version.Minor}.{Math.Max(0, version.Build)}");
+        }
+        if (OperatingSystem.IsAndroid()) return Service._androidDistribution.Value.Version;
+        if (OperatingSystem.IsBrowser()) return string.Empty;
+        if (OperatingSystem.IsLinux())
         {
             if (Service._hostRelease.Value.TryGetValue("VERSION", out var version) && version.Length != 0) return version;
             return ReadLinuxKernelVersion();
         }
-        // shortcut: exact foreign product-version descriptions need their native adapters and platform execution.
         return Environment.OSVersion.VersionString;
     }
+
     [LibraryImport("libc", EntryPoint = "uname", SetLastError = true)]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static unsafe partial int QueryKernelIdentity(byte* buffer);

@@ -7,6 +7,7 @@ internal static class HostPlatformChecks
 {
     internal static void Run(string[] args)
     {
+        if (args is ["identity"]) { Identity(); return; }
         if (args is ["entropy"]) { Entropy(); return; }
         if (args.Length > 0 && args[0] is "gpu" or "compatibility") { Native(args[0], args[1], args.Length > 2 && args[2] == "movie"); return; }
         Check(OS.GetName() == "Linux" && !RenderingServer.IsAvailable, "Host queries require no renderer.");
@@ -69,6 +70,67 @@ internal static class HostPlatformChecks
         }
         Console.WriteLine(System.Text.Encoding.UTF8.GetString(bytes.ToArray()));
     }
+    private static void Identity()
+    {
+        Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Identity runs before native startup.");
+        var version = OS.GetVersion();
+        var alias = OS.GetVersionAlias();
+        var model = OS.GetModelName();
+        if (OperatingSystem.IsWindows())
+        {
+            var runtimeVersion = Environment.OSVersion.Version;
+            Check(version == runtimeVersion.ToString(3), "Windows uses the kernel version triple.");
+            using var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            var client = (string?)key?.GetValue("InstallationType") == "Client";
+            var expected = client ? (runtimeVersion.Build >= 22000 ? "11" : "10")
+                : runtimeVersion.Build >= 26100 ? "Server 2025" : runtimeVersion.Build >= 20348 ? "Server 2022"
+                : runtimeVersion.Build >= 17763 ? "Server 2019" : "Server 2016";
+            Check(alias == $"{expected} (build {runtimeVersion.Build})", "Windows alias agrees with the installed product role and build.");
+            using var bios = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"HARDWARE\Description\System\BIOS");
+            var system = (bios?.GetValue("SystemProductName") as string)?.Trim();
+            var board = (bios?.GetValue("BaseBoardProduct") as string)?.Trim();
+            var expectedModel = string.IsNullOrEmpty(system) || system.Equals("System Product Name", StringComparison.OrdinalIgnoreCase)
+                ? string.IsNullOrEmpty(board) || board.Equals("Base Board Product", StringComparison.OrdinalIgnoreCase) ? "GenericDevice" : board
+                : system;
+            Check(model == expectedModel, "Windows model agrees with firmware registry data.");
+        }
+        else if (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid())
+        {
+            var release = File.ReadLines("/etc/os-release")
+                .LastOrDefault(line => line.StartsWith("VERSION=", StringComparison.Ordinal));
+            var expected = release?[8..].Trim('"', '\'');
+            if (string.IsNullOrEmpty(expected)) expected = File.ReadAllText("/proc/sys/kernel/version").TrimEnd('\n');
+            Check(version == expected && alias == version, "Linux version uses distribution data or kernel build text.");
+            Check(model == "GenericDevice", "Linux retains the documented generic device result.");
+        }
+        else if (OperatingSystem.IsBrowser())
+        {
+            Check(version.Length == 0 && alias == version && model == "GenericDevice", "Browser identity fallbacks.");
+        }
+
+        Parallel.For(0, 16, _ =>
+        {
+            Check(ReferenceEquals(version, OS.GetVersion()) && ReferenceEquals(alias, OS.GetVersionAlias()) &&
+                ReferenceEquals(model, OS.GetModelName()), "Concurrent queries return the retained snapshot.");
+        });
+        ReadPrepared();
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        ReadPrepared();
+        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Prepared identity reads allocate zero managed bytes.");
+        Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Identity leaves native services unopened.");
+        Console.WriteLine($"OS identity passed for {OS.GetName()} ({alias}).");
+
+        static void ReadPrepared()
+        {
+            for (var i = 0; i < 256; i++)
+            {
+                _ = OS.GetVersion();
+                _ = OS.GetVersionAlias();
+                _ = OS.GetModelName();
+            }
+        }
+    }
+
     private static void Entropy()
     {
         Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Entropy runs before native startup.");

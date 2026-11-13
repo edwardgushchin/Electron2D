@@ -34,6 +34,15 @@ internal sealed class MainActivity : SDLActivity
             };
             if (RuntimeInformation.ProcessArchitecture != expected)
                 throw new InvalidOperationException("The app did not execute the requested runtime architecture.");
+            var sdk = (int)Android.OS.Build.VERSION.SdkInt;
+            var build = Android.OS.Build.VERSION.Incremental;
+            var release = OperatingSystem.IsAndroidVersionAtLeast(30)
+                ? Android.OS.Build.VERSION.ReleaseOrCodename : Android.OS.Build.VERSION.Release;
+            var version = string.IsNullOrEmpty(build) ? $"{sdk}" : $"{sdk}.{build}";
+            if (Electron2D.OS.GetModelName() != Android.OS.Build.Model ||
+                (Electron2D.OS.GetDistributionName() == "Android" && Electron2D.OS.GetVersion() != version) ||
+                Electron2D.OS.GetVersionAlias() != $"{release} (SDK {sdk} build {build})")
+                throw new InvalidOperationException("Engine OS identity disagrees with Android Build metadata.");
             Log.Info("Electron2DTests", "CHECK managed contracts");
             ContractChecks.Run(message => Log.Info("Electron2DTests", message));
             Log.Info("Electron2DTests", "CHECK native font precision");
