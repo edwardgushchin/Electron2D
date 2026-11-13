@@ -76,7 +76,9 @@ RenderingDevice [native resource labels](../components/local-compute.md#native-r
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
+
+[Canvas redraw diagnostics](../components/canvas-rendering.md#canvas-redraw-diagnostic) use the shared canvas submission path to fade highlights over freshly recorded command bounds.
 
 [Viewport mipmap bias](../components/viewport-mipmap-bias.md) controls next-image mip selection through scene, RenderingServer and project policies while preserving authored sampler and target identities.
 

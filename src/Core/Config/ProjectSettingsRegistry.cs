@@ -83,6 +83,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(ZstandardLongDistanceMatching, isBasic: false);
         RegisterInternal(ZstandardWindowLogSize, isBasic: false);
         RegisterInternal(PrintFPS, isBasic: false);
+        RegisterInternal(DebugRedrawColor, isBasic: false);
+        RegisterInternal(DebugRedrawTime, isBasic: false);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(GUIThemeCustom, isBasic: true);
         RegisterInternal(GUIThemeCustomFont, isBasic: true);
@@ -1288,6 +1290,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, ZstandardLongDistanceMatching) ||
         ReferenceEquals(setting, ZstandardWindowLogSize) ||
         ReferenceEquals(setting, PrintFPS) ||
+        ReferenceEquals(setting, DebugRedrawColor) ||
+        ReferenceEquals(setting, DebugRedrawTime) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||
         ReferenceEquals(setting, AudioGeneralTextToSpeech) ||

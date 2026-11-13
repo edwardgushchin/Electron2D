@@ -78,7 +78,12 @@ public sealed partial class RenderingServer
     internal Rect2 DebugCanvasItemGetRectCore(RID rid) { EnsureOwner(); var item = RenderingCanvasItemRegistry.Resolve(rid); CheckCanvasItemOwner(item); return item.RenderBounds(); }
     internal void CanvasItemSetDefaultTextureFilterCore(RID item, TextureFilter filter) { if ((uint)filter >= (uint)TextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(filter)); Change(item, out _).Filter = filter; }
     internal void CanvasItemSetDefaultTextureRepeatCore(RID item, TextureRepeat repeat) { if ((uint)repeat >= (uint)TextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(repeat)); Change(item, out _).Repeat = repeat; }
-    internal void CanvasItemClearCore(RID rid) { var state = Change(rid, out var item); item.ServerCommandTarget(state).ClearServerCommands(); }
+    internal void CanvasItemClearCore(RID rid)
+    {
+        var state = Change(rid, out var item);
+        item.ServerCommandTarget(state).ClearServerCommands();
+        MarkCanvasRedraw(item);
+    }
     internal void CanvasItemAddMeshCore(RID rid, RID mesh, Transform transform, Color modulate, RID texture)
     {
         var state = Change(rid, out var item); var geometry = RenderingMeshRegistry.Resolve(mesh); var image = texture.IsValid() ? RenderingTextureRegistry.Resolve(texture) : null;

@@ -2542,3 +2542,5 @@ OS.WindowsTrash supplies the existing static OS/FileDialog trash workflow on Win
 The retained [DisplayServer](classes/DisplayServer.md) includes owner-thread [Windows](components/display-server.md#native-keyboard-layouts) and [X11](components/display-server.md#x11-keyboard-layouts) keyboard-layout operations and immediate SDL keymap refresh on activation.
 
 [Configured project loops](components/engine-runtime.md#custom-project-loop) use the existing Engine, MainLoop, Script, ProjectSettings, Window and RenderingServer types. The custom loop owns its callbacks and submits server canvas RIDs without creating a SceneTree.
+
+[Canvas redraw diagnostics](components/canvas-rendering.md#canvas-redraw-diagnostic) use the existing ProjectSettings, CanvasItem and RenderingServer types to highlight freshly recorded canvas command bounds.

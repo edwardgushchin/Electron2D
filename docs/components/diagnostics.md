@@ -1,6 +1,6 @@
 # Runtime diagnostics
 
-Last updated: 2026-10-15
+Last updated: 2026-11-14
 
 Logger receives the engine diagnostic stream through static OS.AddLogger/RemoveLogger registration. OS.LogMessage is a typed message ingress; OS.LogError supplies classification, expression/rationale and compiler caller information. Native SDL logs join the same stream after the selected native core loads. Engine lifecycle failures retain their existing exceptions and cleanup behavior while reporting structured C# metadata.
 
@@ -29,6 +29,10 @@ The managed policy checks run on Windows and Arch Linux under WSL. Windows GPU a
 `OS.LogVerbose(message)` sends caller-formatted text through the normal stdout and logger path only in verbose mode. `Engine.PrintToSTDOUT` can suppress physical output while loggers keep receiving messages. Public synchronous and threaded resource load requests report the requested path. A request diagnostic can precede a cache hit or a failed load. A console-writer failure in this internal diagnostic leaves resource loading independent. Logger callbacks that load resources do not re-emit those request diagnostics.
 
 The Windows managed profile verifies both switches and both argument separators, project-file persistence and feature overrides, restart/failure retirement, stdout suppression and synchronous/threaded load requests. The GPU and Compatibility window profiles exercise real frames, worker delivery and cleanup after Ready fails. Foreign packaged host qualification remains open.
+
+## Canvas redraw
+
+`--debug-canvas-item-redraw` shows which canvas items record their drawing commands again. Configure the startup color and fade duration in ProjectSettings. See [canvas redraw diagnostic](canvas-rendering.md#canvas-redraw-diagnostic).
 
 ## C# snapshots
 

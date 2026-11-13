@@ -27,6 +27,7 @@ public sealed partial class RenderingServer
             _batches[i] = batch with { Filter = filter, Repeat = repeat, MaxAnisotropy = 1 << (int)ViewportAnisotropy(_viewport), CanvasModulation = canvasModulation, Lighting = shaded ? new(node.RenderCanvas()?.Modulate ?? Colors.White, node.RenderLightMask, node.RenderZ, layer, mode) : null };
         }
         SampleCanvasVisibility(node, transform, clip, pixels);
+        if (_debugRedrawDuration > 0d) CaptureCanvasRedraw(node, transform, clip, pixels);
         if (node is not VisibleOnScreenNotifier notifier || notifier.ScreenCandidate || notifier.RenderInheritedModulate.A < 0.007f) return;
         var local = new Rect2().Merge(notifier.Rect.Abs());
         var bounds = transform * local;

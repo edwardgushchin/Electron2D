@@ -295170,6 +295170,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.DebugRedrawColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DebugRedrawColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E DebugRedrawColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.DebugRedrawTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DebugRedrawTime",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Double\u003E DebugRedrawTime { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DefaultClearColor()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

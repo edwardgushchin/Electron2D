@@ -809,6 +809,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_DIRECT") is { }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_PRESENTATION") is { } presentationProfile) { ViewportPresentationTests.Run(presentationProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS_NATIVE") == "1") { ServerViewportTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS") == "1") { ServerViewportTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_REDRAW") is { } redrawProfile) { CanvasRedrawTests.Run(redrawProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MANUAL_FRAMES_NATIVE") == "1") { ManualRenderFrameTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MANUAL_FRAMES") == "1") { ManualRenderFrameTests.RunManaged(); ManualRenderFrameTests.RunHeadless(); return; }
 if (args.Length == 2 && args[0] == "--os-stdio-child") { OSStandardInputTests.Child(args); return; }

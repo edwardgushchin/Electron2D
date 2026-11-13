@@ -6,6 +6,8 @@ The [verbose stdout setting](diagnostics.md#verbose-stdout) uses the ordinary ty
 
 The permanent nonbasic `MainLoopType` string selects the scene host or a registered custom loop for [configured project startup](engine-runtime.md#project-main-scene). Its default is `SceneTree`, and every independent registry supports the same validation, persistence and feature overrides.
 
+The permanent nonbasic `DebugRedrawColor` and `DebugRedrawTime` keys supply the startup values of the [canvas redraw diagnostic](canvas-rendering.md#canvas-redraw-diagnostic), including in independent registries and feature overrides.
+
 ## Scope
 
 The built-in NodeNameNumberSeparator now drives [readable node collision names](scene-hierarchy.md#child-name-collisions), with zero default, validated 0–3 values, live feature overrides and independent-registry file persistence. Existing names remain unchanged until a naming operation resolves a collision.

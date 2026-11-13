@@ -53,6 +53,7 @@ public sealed partial class RenderingServer : ElectronObject
         _viewport = window;
         _backend = backend;
         _clearColor = ProjectSettings.GetWithOverride(ProjectSettings.DefaultClearColor);
+        ConfigureCanvasRedraw();
         _canvasShadowTextureSize = CanvasShadowSize(ProjectSettings.GetWithOverride(ProjectSettings.CanvasShadowAtlasSize));
         _globalParameters = ShaderGlobalParameters.PrepareProject(ProjectSettings.Service);
     }
@@ -198,6 +199,7 @@ public sealed partial class RenderingServer : ElectronObject
         if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step)) throw new ArgumentOutOfRangeException(nameof(step));
         var frameError = DrainRenderCallbacks(); EnsureOwner();
         if (!_renderLoopEnabled && !force) { if (frameError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(frameError).Throw(); return; }
+        if (_debugRedrawDuration > 0d) AdvanceCanvasRedraw(step);
         _rendering = true;
         _swapBuffers = swapBuffers;
         long capturedRevision = 0;
@@ -229,7 +231,7 @@ public sealed partial class RenderingServer : ElectronObject
                     foreach (var node in _nodes)
                     {
                         if (node is GPUParticles particles && !particles.IsDisposed) particles.PrepareParticleFrame();
-                        if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas();
+                        if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas(this);
                     }
                 }
                 _activeFrames.Clear();
@@ -457,7 +459,9 @@ public sealed partial class RenderingServer : ElectronObject
             AppendCameraBackground(background.CameraFeedID, pixels);
         var backgroundLimit = !direct && environment?.Background is { Mode: CanvasBackgroundMode.Canvas } selectedBackground
             ? (int?)selectedBackground.CanvasMaxLayer : null;
+        _debugRedrawHighlights?.Clear();
         ComposeFrame(pixels, backgroundLimit);
+        AppendCanvasRedrawHighlights(pixels);
         return environment;
     }
 

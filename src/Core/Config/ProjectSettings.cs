@@ -566,6 +566,19 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<Color> DebugPathsColor { get; } =
         new("debug/shapes/paths/geometry_color", new Color(0.1f, 1f, 0.7f, 0.4f), value => value.IsFinite());
 
+    /// <summary>Gets the initial highlight color used by the canvas redraw diagnostic.</summary>
+    /// <value>A finite color, initially (1, 0.2, 0.2, 0.5).</value>
+    /// <remarks>The renderer samples the active feature override at startup. Enable the diagnostic with
+    /// the --debug-canvas-item-redraw host switch.</remarks>
+    public static ProjectSetting<Color> DebugRedrawColor { get; } =
+        new("debug/canvas_items/debug_redraw_color", new Color(1f, 0.2f, 0.2f, 0.5f), value => value.IsFinite());
+
+    /// <summary>Gets the duration in seconds of the canvas redraw highlight.</summary>
+    /// <value>One second by default. Zero suppresses highlights. Negative or nonfinite durations are invalid.</value>
+    /// <remarks>The renderer samples the active feature override at startup. The highlight fades linearly.</remarks>
+    public static ProjectSetting<double> DebugRedrawTime { get; } =
+        new("debug/canvas_items/debug_redraw_time", 1d, value => double.IsFinite(value) && value >= 0d);
+
     /// <summary>Defines the default native line-breaking strictness for text without explicit locale options.</summary>
     /// <value>internationalization/locale/line_breaking_strictness; 0 Auto, 1 Loose, 2 Normal or 3 Strict. Default 0.</value>
     /// <remarks>The effective feature override is captured at the first nonempty native line-boundary request.

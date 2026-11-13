@@ -35,6 +35,8 @@ Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Conf
 
 `DisableSTDOUT`, `DisableSTDERR`, `FlushSTDOUTOnPrint` and `PrintHeader` configure [startup output](../components/diagnostics.md#startup-output-policy).
 
+`public static ProjectSetting<Color> DebugRedrawColor { get; }` and `public static ProjectSetting<double> DebugRedrawTime { get; }` set the initial color and duration in seconds of [canvas redraw highlights](../components/canvas-rendering.md#canvas-redraw-diagnostic). The renderer samples active feature overrides at startup. Defaults are RGBA (1, 0.2, 0.2, 0.5) and one second. Colors must be finite. Duration must be finite and nonnegative.
+
 `VerboseSTDOUT` is the false-by-default typed setting `debug/settings/stdout/verbose_stdout`. Startup samples its active feature override. See [verbose diagnostics](../components/diagnostics.md#verbose-stdout).
 
 ## MeshLODThreshold
