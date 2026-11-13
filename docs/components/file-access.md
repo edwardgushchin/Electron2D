@@ -80,6 +80,12 @@ The file-codec slice additionally exercises 110 random/repeated empty, tiny, blo
 
 ## ZIP asset preparation
 
+## Compression levels
+
+`ProjectSettings.GZIPCompressionLevel` and `ProjectSettings.ZLibCompressionLevel` use the keys `compression/formats/gzip/compression_level` and `compression/formats/zlib/compression_level`. Both accept -1 through 9. The default -1 delegates to the codec, and 0 stores uncompressed blocks within the selected container. Each encode samples the effective level and active feature overrides. For files this occurs during a dirty flush or close. ByteBuffer shares the same file envelope and encoder. The zlib level also controls raw DEFLATE inside [compressed resource and scene archives](resource-files.md). Existing containers remain readable independently of the configured encoder levels. Streaming network codecs and ZIP packing retain their own policies.
+
+The compression-level test runs on Windows and Arch Linux under WSL. It checks exact intermediate levels against the BCL, typed persistence and feature overrides, file/buffer round trips, scene and resource saves, and compressed dependency rewrites. The full FileAccess codec regression passes on Windows, including atomic replacement failure and fresh-process decoding. Other packaged targets remain unverified.
+
 [ZIP archives](zip-archives.md) add owned ZIPReader/ZIPPacker sessions, streamed full-level deflate, ZIP64/prefix/append preservation, portable permission/time metadata and complete length/CRC validation. Bundled scene/resource ZIP round trips execute real GPU/compatibility rendering; they do not introduce automatic extraction or pack mounts.
 
 

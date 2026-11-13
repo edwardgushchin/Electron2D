@@ -7,7 +7,7 @@ public static partial class ByteBuffer
     /// <param name="compressionMode">Codec identity stored in the container.</param>
     /// <returns>A caller-owned compressed snapshot, readable by FileAccess.OpenCompressed.</returns>
     /// <remarks>All five codecs share the existing file envelope; native codecs retain checksummed 64 KiB blocks.
-    /// This is asset preparation, with allocations and no external raw-codec format promise.</remarks>
+    /// DEFLATE and GZIP use their effective project levels. This is asset preparation, with allocations and no external raw-codec format promise.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The codec is invalid.</exception>
     /// <exception cref="PlatformNotSupportedException">The native codec bundle is unavailable.</exception>
     public static byte[] Compress(ReadOnlySpan<byte> data, FileCompressionMode compressionMode = FileCompressionMode.FastLz)

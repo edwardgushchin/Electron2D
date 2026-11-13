@@ -295249,6 +295249,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.GZIPCompressionLevel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "GZIPCompressionLevel",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E GZIPCompressionLevel { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.HDR2D()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -297373,6 +297386,19 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "WorkerPoolMaxThreads",
     "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E WorkerPoolMaxThreads { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.ZLibCompressionLevel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ZLibCompressionLevel",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E ZLibCompressionLevel { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

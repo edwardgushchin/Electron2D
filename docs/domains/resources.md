@@ -13,6 +13,8 @@ in a fresh process; embedded scene IDs and UIDs remain separate.
 
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
+Compressed resource and scene archives use the effective [zlib compression level](../components/file-access.md#compression-levels) when saving or rewriting dependencies.
+
 [Embedded resource addresses](../components/resource-files.md#embedded-resource-addresses) select a stored scene ID from a typed archive. Synchronous and threaded loading share exact-address caching, independent graph ownership and locale-aware replacement.
 
 [Imported image textures](../components/compressed-textures.md) add ordinary `.ctex` loading, independent logical/physical dimensions, exact source mips and retained Texture consumers. Atomic replacement, typed cache/worker loading and embedded resource/scene archives run through the shared resource pipeline.

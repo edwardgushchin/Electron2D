@@ -15,7 +15,7 @@ public enum SaverFlags
     OmitEditorProperties = 8,
     /// <summary>Stores numeric payload values with big-endian byte ordering.</summary>
     SaveBigEndian = 16,
-    /// <summary>Compresses the archive payload with bounded Deflate.</summary>
+    /// <summary>Compresses the archive payload with bounded DEFLATE at the effective <see cref="ProjectSettings.ZLibCompressionLevel"/>.</summary>
     Compress = 32,
     /// <summary>Assigns internal subresource paths after a successful archive replacement.</summary>
     ReplaceSubresourcePaths = 64

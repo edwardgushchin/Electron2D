@@ -29,7 +29,7 @@ ResourceSaver.Save(scene, "user://level.e2dscene", flags);
 | --- | --- |
 | `public const Electron2D.SaverFlags BundleResources = 2` | Embeds external resources into this archive. |
 | `public const Electron2D.SaverFlags ChangePath = 4` | Temporarily exposes the destination ResourcePath while saving, then restores it. |
-| `public const Electron2D.SaverFlags Compress = 32` | Compresses the archive payload with bounded Deflate. |
+| `public const Electron2D.SaverFlags Compress = 32` | Compresses the archive payload with bounded DEFLATE at the effective [zlib level](../components/file-access.md#compression-levels). |
 | `public const Electron2D.SaverFlags None = 0` | Uses ordinary absolute dependency paths and little-endian uncompressed data. |
 | `public const Electron2D.SaverFlags OmitEditorProperties = 8` | Omits reserved editor metadata properties. |
 | `public const Electron2D.SaverFlags RelativePaths = 1` | Stores external dependency paths relative to the destination. |
@@ -57,7 +57,7 @@ Temporarily exposes the destination ResourcePath while saving, then restores it.
 
 `public const Electron2D.SaverFlags Compress = 32`
 
-Compresses the archive payload with bounded Deflate.
+Compresses the archive payload with bounded DEFLATE at the effective [zlib level](../components/file-access.md#compression-levels).
 
 <a id="member-eaf06f57447f"></a>
 ### None

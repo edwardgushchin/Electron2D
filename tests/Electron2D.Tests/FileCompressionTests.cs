@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using System.Diagnostics;
+using System.IO.Compression;
 using Electron2D;
 using FileAccess = Electron2D.FileAccess;
 using Path = System.IO.Path;
@@ -45,6 +46,84 @@ internal static partial class FileCompressionTests
         }
         finally { Directory.Delete(directory, true); }
     }
+    internal static void Levels()
+    {
+        var directory = Directory.CreateTempSubdirectory("electron2d-compression-levels-");
+        var user = directory.CreateSubdirectory("user");
+        const string feature = "compression_level_test";
+        var cases = new[]
+        {
+            (FileCompressionMode.Deflate, ProjectSettings.ZLibCompressionLevel),
+            (FileCompressionMode.Gzip, ProjectSettings.GZIPCompressionLevel)
+        };
+        try
+        {
+            using (var stored = new ProjectSettingsRegistry(directory.FullName, user.FullName))
+            {
+                foreach (var (mode, key) in cases)
+                {
+                    Check(stored.Get(key) == -1, $"Default {mode} level.");
+                    Reject<ArgumentOutOfRangeException>(() => stored.Set(key, -2));
+                    Reject<ArgumentOutOfRangeException>(() => stored.Set(key, 10));
+                    stored.Set(key, mode == FileCompressionMode.Deflate ? 3 : 7);
+                    stored.SetFeatureOverride(key, feature, 9);
+                }
+                stored.Save();
+            }
+            using (var restored = new ProjectSettingsRegistry(directory.FullName, user.FullName))
+            {
+                restored.Load();
+                Check(restored.Get(ProjectSettings.ZLibCompressionLevel) == 3 && restored.Get(ProjectSettings.GZIPCompressionLevel) == 7, "Independent levels persist.");
+                restored.AddCustomFeature(feature);
+                foreach (var (_, key) in cases) Check(restored.GetWithOverride(key) == 9, "Level feature overrides persist.");
+            }
+
+            var data = new byte[96_000];
+            new Random(1597).NextBytes(data.AsSpan(0, 2039));
+            for (var index = 2039; index < data.Length; index++) data[index] = data[index % 2039];
+            ProjectSettings.AddCustomFeature(feature);
+            foreach (var (mode, key) in cases)
+            {
+                ProjectSettings.Set(key, 0);
+                var uncompressed = ByteBuffer.Compress(data, mode);
+                ProjectSettings.SetFeatureOverride(key, feature, 4);
+                var encoded = ByteBuffer.Compress(data, mode);
+                Check(encoded.Length < uncompressed.Length / 2, $"{mode} override changes actual compressed size.");
+
+                using var expected = new MemoryStream();
+                var options = new ZLibCompressionOptions { CompressionLevel = 4 };
+                using (var encoder = mode == FileCompressionMode.Deflate
+                    ? (Stream)new DeflateStream(expected, options, leaveOpen: true)
+                    : new GZipStream(expected, options, leaveOpen: true))
+                    encoder.Write(data);
+                Check(encoded.AsSpan(16).SequenceEqual(expected.ToArray()), $"{mode} honors an intermediate level without changing the wire format.");
+
+                var path = Path.Combine(directory.FullName, mode.ToString());
+                using (var file = FileAccess.OpenCompressed(path, FileAccessModeFlags.Write, mode)) file.WriteBytes(data);
+                Check(File.ReadAllBytes(path).SequenceEqual(encoded), "FileAccess shares the selected encoder.");
+
+                ProjectSettings.SetFeatureOverride(key, feature, 9);
+                using var read = FileAccess.OpenCompressed(path, FileAccessModeFlags.Read, mode);
+                Check(read.ReadBytes(data.Length).SequenceEqual(data), "Changed encoder level preserves file reads.");
+                Check(ByteBuffer.Decompress(uncompressed, data.Length, mode).SequenceEqual(data), "Stored DEFLATE blocks decode after a level change.");
+                ProjectSettings.ClearFeatureOverride(key, feature);
+                ProjectSettings.Reset(key);
+            }
+            ResourceArchiveTests.VerifyCompressionLevel(directory.FullName);
+            Console.WriteLine("Project compression levels: persistence, exact stream options, file/buffer decode, resource/scene save and dependency rewrite passed.");
+        }
+        finally
+        {
+            foreach (var (_, key) in cases)
+            {
+                ProjectSettings.ClearFeatureOverride(key, feature);
+                ProjectSettings.Reset(key);
+            }
+            ProjectSettings.RemoveCustomFeature(feature);
+            directory.Delete(recursive: true);
+        }
+    }
+
     internal static void Child(string path, string mode)
     {
         using var file = FileAccess.OpenCompressed(path, FileAccessModeFlags.Read, Enum.Parse<FileCompressionMode>(mode));
@@ -103,7 +182,12 @@ internal static partial class FileCompressionTests
         Reject<InvalidDataException>(() => { using var file = FileAccess.OpenCompressed(path, FileAccessModeFlags.Read, mode == FileCompressionMode.FastLz ? FileCompressionMode.Zstandard : FileCompressionMode.FastLz); });
         using var editing = FileAccess.OpenCompressed(path, FileAccessModeFlags.ReadWrite, mode);
         editing.WriteBytes([99]); File.Delete(path); Directory.CreateDirectory(path);
-        try { Reject<IOException>(editing.Flush); Check(Directory.Exists(path), "Failed replace preserves destination."); }
+        try
+        {
+            try { editing.Flush(); throw new InvalidOperationException("Replacing a directory should fail."); }
+            catch (Exception error) when (error is IOException or UnauthorizedAccessException) { }
+            Check(Directory.Exists(path), "Failed replace preserves destination.");
+        }
         finally { Directory.Delete(path); File.WriteAllBytes(path, original); }
         editing.Close();
         Check(!Directory.EnumerateFiles(directory).Any(name => name.EndsWith(".tmp", StringComparison.Ordinal)), "Atomic commits retire temporary files.");

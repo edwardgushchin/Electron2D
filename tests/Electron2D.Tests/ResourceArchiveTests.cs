@@ -90,6 +90,43 @@ internal static partial class ResourceArchiveTests
             Directory.Delete(folder, true);
         }
     }
+    internal static void VerifyCompressionLevel(string folder)
+    {
+        var resourcePath = System.IO.Path.Combine(folder, "compression.e2dres");
+        var renamedPath = System.IO.Path.Combine(folder, "compression-renamed.e2dres");
+        var scenePath = System.IO.Path.Combine(folder, "compression.e2dscene");
+        var caption = new string('a', 30_000);
+        using var resource = new Gradient { ResourceName = caption };
+        using var material = new CanvasItemMaterial();
+        using var root = new Entity { Material = material };
+        var materialPath = System.IO.Path.Combine(folder, "material.e2dres");
+        ResourceSaver.Save(material, materialPath);
+        material.ResourcePath = materialPath;
+        root.AddToGroup(caption, persistent: true);
+
+        ProjectSettings.Set(ProjectSettings.GZIPCompressionLevel, 9);
+        ProjectSettings.Set(ProjectSettings.ZLibCompressionLevel, 0);
+        ResourceSaver.Save(resource, resourcePath, SaverFlags.Compress);
+        ResourceSaver.SaveScene(root, scenePath, SaverFlags.Compress);
+        var uncompressedResourceSize = new FileInfo(resourcePath).Length;
+        var uncompressedSceneSize = new FileInfo(scenePath).Length;
+        ProjectSettings.Set(ProjectSettings.ZLibCompressionLevel, 9);
+        ResourceSaver.Save(resource, resourcePath, SaverFlags.Compress);
+        var compactResourceSize = new FileInfo(resourcePath).Length;
+        Check(compactResourceSize < uncompressedResourceSize / 2, "The resource saver uses the zlib level.");
+        using var loaded = ResourceLoader.Load<Gradient>(resourcePath, ResourceLoader.CacheMode.Ignore);
+        Check(loaded.ResourceName == caption, "Compressed resource reload preserves authored data.");
+
+        ResourceSaver.Save(material, renamedPath);
+        ResourceLoader.RenameDependencies(scenePath, new Dictionary<string, string> { [materialPath] = renamedPath });
+        Check(new FileInfo(scenePath).Length < uncompressedSceneSize / 2, "The dependency rewrite uses the zlib level.");
+        Check(ResourceLoader.GetDependencies(scenePath).Any(path => path.EndsWith(renamedPath, StringComparison.Ordinal)), "The compressed archive retains the rewritten dependency.");
+        ProjectSettings.Set(ProjectSettings.ZLibCompressionLevel, -1);
+        using var packed = ResourceLoader.Load<PackedScene>(scenePath, ResourceLoader.CacheMode.IgnoreDeep);
+        using var instance = packed.Instantiate();
+        Check(instance.IsInGroup(caption), "Rewritten scene decodes at a different level.");
+    }
+
     private static void Graph(string folder, SaverFlags flags)
     {
         var path = System.IO.Path.Combine(folder, "data.e2dres");

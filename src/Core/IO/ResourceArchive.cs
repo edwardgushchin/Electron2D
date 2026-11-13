@@ -64,7 +64,7 @@ internal static partial class ResourceArchive
         if ((flags & SaverFlags.Compress) != 0)
         {
             using var output = new MemoryStream();
-            using (var compressor = new DeflateStream(output, CompressionLevel.Optimal, true)) compressor.Write(payload);
+            using (var compressor = FileAccess.CreateCompressionEncoder(output, FileCompressionMode.Deflate)) compressor.Write(payload);
             encoded = output.ToArray();
         }
         if (encoded.Length > Limit) throw new InvalidDataException("Encoded archive exceeds its byte budget.");
@@ -254,7 +254,7 @@ internal static partial class ResourceArchive
         if ((flags & SaverFlags.Compress) != 0)
         {
             using var buffer = new MemoryStream();
-            using (var compress = new DeflateStream(buffer, CompressionLevel.Optimal, true)) compress.Write(payload);
+            using (var compress = FileAccess.CreateCompressionEncoder(buffer, FileCompressionMode.Deflate)) compress.Write(payload);
             encoded = buffer.ToArray();
         }
         var file = new byte[64 + encoded.Length];

@@ -351,7 +351,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="mode">The required access mode.</param>
     /// <param name="compressionMode">The codec used to decode or encode the container.</param>
     /// <returns>A seekable view of the decoded bytes.</returns>
-    /// <remarks>Changes are atomically encoded by <see cref="Flush"/> or <see cref="Close"/>. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
+    /// <remarks>Changes are atomically encoded by <see cref="Flush"/> or <see cref="Close"/>. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or the mode is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="compressionMode"/> is unknown.</exception>
@@ -1380,7 +1380,13 @@ public sealed partial class FileAccess : ElectronObject
         if (IsNativeCodec(mode)) return DecodeNativeBlocks(envelope[offset..], (int)expectedLength, mode);
 
         using var input = new MemoryStream(envelope[offset..].ToArray(), writable: false);
-        using var decoder = CreateCompressionStream(input, mode, CompressionMode.Decompress, leaveOpen: false);
+        using var decoder = mode switch
+        {
+            FileCompressionMode.Deflate => (Stream)new DeflateStream(input, CompressionMode.Decompress),
+            FileCompressionMode.Gzip => new GZipStream(input, CompressionMode.Decompress),
+            FileCompressionMode.Brotli => new BrotliStream(input, CompressionMode.Decompress),
+            _ => throw new ArgumentOutOfRangeException(nameof(mode))
+        };
         var result = new byte[(int)expectedLength];
         try { decoder.ReadExactly(result); }
         catch (EndOfStreamException error) { throw new InvalidDataException("The decoded length does not match the compressed envelope.", error); }
@@ -1406,22 +1412,23 @@ public sealed partial class FileAccess : ElectronObject
         BinaryPrimitives.WriteInt64LittleEndian(length, data.Length);
         output.Write(length);
         if (IsNativeCodec(mode)) output.Write(EncodeNativeBlocks(data, mode));
-        else using (var encoder = CreateCompressionStream(output, mode, CompressionMode.Compress, leaveOpen: true))
-                encoder.Write(data);
+        else
+        {
+            using var encoder = CreateCompressionEncoder(output, mode);
+            encoder.Write(data);
+        }
         return output.ToArray();
     }
 
-    private static Stream CreateCompressionStream(
-        Stream stream,
-        FileCompressionMode mode,
-        CompressionMode direction,
-        bool leaveOpen) => mode switch
-        {
-            FileCompressionMode.Deflate => new DeflateStream(stream, direction, leaveOpen),
-            FileCompressionMode.Gzip => new GZipStream(stream, direction, leaveOpen),
-            FileCompressionMode.Brotli => new BrotliStream(stream, direction, leaveOpen),
-            _ => throw new ArgumentOutOfRangeException(nameof(mode))
-        };
+    internal static Stream CreateCompressionEncoder(Stream output, FileCompressionMode mode) => mode switch
+    {
+        FileCompressionMode.Deflate => new DeflateStream(output,
+            new ZLibCompressionOptions { CompressionLevel = ProjectSettings.GetWithOverride(ProjectSettings.ZLibCompressionLevel) }, leaveOpen: true),
+        FileCompressionMode.Gzip => new GZipStream(output,
+            new ZLibCompressionOptions { CompressionLevel = ProjectSettings.GetWithOverride(ProjectSettings.GZIPCompressionLevel) }, leaveOpen: true),
+        FileCompressionMode.Brotli => new BrotliStream(output, CompressionMode.Compress, leaveOpen: true),
+        _ => throw new ArgumentOutOfRangeException(nameof(mode))
+    };
 
     private static byte[] Decrypt(
         ReadOnlySpan<byte> envelope,

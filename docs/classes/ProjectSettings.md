@@ -25,7 +25,9 @@ MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (4800
 Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Config/ProjectSettings.API.cs).
 
 
-`MaxFPS` sets the initial window cadence cap, `FrameDelayMsec` adds a fixed delay after each continuing real-time window frame, and `PrintFPS` enables periodic rate diagnostics. These typed startup settings accept feature overrides. See [frame-rate settings](../components/engine-runtime.md#frame-rate-settings).
+`MaxFPS` sets the initial window cadence cap, `FrameDelayMsec` adds a fixed delay after each continuing real-time window frame, and `PrintFPS` enables periodic rate diagnostics. These typed startup settings accept feature overrides.
+
+`GZIPCompressionLevel` and `ZLibCompressionLevel` control exact compression levels for new encodes. The default is -1 (the codec default), and 0 through 9 are valid explicit levels. See [compression levels](../components/file-access.md#compression-levels). See [frame-rate settings](../components/engine-runtime.md#frame-rate-settings).
 
 `VerboseSTDOUT` is the false-by-default typed setting `debug/settings/stdout/verbose_stdout`. Startup samples its active feature override. See [verbose diagnostics](../components/diagnostics.md#verbose-stdout).
 

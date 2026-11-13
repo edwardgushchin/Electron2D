@@ -188,6 +188,16 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// override, including in editor runs. Manual advancement and fixed-rate recording skip this wait.</remarks>
     public static ProjectSetting<int> FrameDelayMsec { get; } = new("application/run/frame_delay_msec", 0, value => value >= 0);
 
+    /// <summary>Gets the GZIP level used to encode compressed files and byte buffers.</summary>
+    /// <value>Values from 0 through 9 select the exact codec level. The default, -1, uses the codec default.</value>
+    /// <remarks>Encoding samples the effective project value, including active feature overrides. Decoding is independent of this setting.</remarks>
+    public static ProjectSetting<int> GZIPCompressionLevel { get; } = new("compression/formats/gzip/compression_level", -1, value => value is >= -1 and <= 9);
+
+    /// <summary>Gets the zlib DEFLATE level used to encode compressed files, byte buffers and typed resource archives.</summary>
+    /// <value>Values from 0 through 9 select the exact codec level. The default, -1, uses the codec default.</value>
+    /// <remarks>Encoding samples the effective project value, including active feature overrides. Decoding is independent of this setting.</remarks>
+    public static ProjectSetting<int> ZLibCompressionLevel { get; } = new("compression/formats/zlib/compression_level", -1, value => value is >= -1 and <= 9);
+
     /// <summary>Gets the setting for periodic process-frame rate diagnostics.</summary>
     /// <value>False initially. A host --print-fps switch can enable reporting.</value>
     public static ProjectSetting<bool> PrintFPS { get; } = new("debug/settings/stdout/print_fps", false);

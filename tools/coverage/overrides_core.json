@@ -1,5 +1,7 @@
 {
   "mappings": [
+    {"godot": "ProjectSettings::property:compression/formats/gzip/compression_level", "electron2d": "property:Electron2D.ProjectSettings.GZIPCompressionLevel()", "reason": "ADRs 0019/0020: effective typed GZIP level is applied to file and byte-buffer encoding."},
+    {"godot": "ProjectSettings::property:compression/formats/zlib/compression_level", "electron2d": "property:Electron2D.ProjectSettings.ZLibCompressionLevel()", "reason": "ADRs 0019/0020: effective typed zlib level is applied to DEFLATE encoding for files, byte buffers and resource/scene archives."},
     {"godot": "OS::method:get_version_alias()", "electron2d": "method:Electron2D.OS.GetVersionAlias()", "state": "Partial", "reason": "ADR 0113: Windows release/build, Apple product branding on macOS, Android release/SDK/build and the GetVersion fallback execute through retained host sources. Windows and WSL Linux passed public identity tests. Native macOS/Android and other packaged platform execution remains open."},
     {"godot": "OS::method:get_model_name()", "electron2d": "method:Electron2D.OS.GetModelName()", "state": "Partial", "reason": "ADR 0113: Windows firmware product/board, macOS hw.model, iOS/tvOS hw.machine and Android product model use native sources. Linux uses GenericDevice. Windows and WSL Linux passed public identity tests. Apple, Android and browser/package execution remains open."},
     {"godot": "OS::method:get_entropy(int:)", "electron2d": "method:Electron2D.OS.GetEntropy(System.Int32)", "reason": "ADRs 0004/0095/0113: static OS access to the host runtime cryptographic random provider."},
@@ -1802,6 +1804,8 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["ProjectSettings::property:compression/formats/gzip/compression_level", "ProjectSettings::property:compression/formats/zlib/compression_level"], "state": "Implemented", "reason": "ADRs 0019/0020: exact integer levels -1 through 9 feed the existing BCL encoders. FileAccess and ByteBuffer share the settings; compressed resource/scene saves and dependency rewrites use the zlib level. Readers retain existing formats and ignore encoder settings. See docs/components/file-access.md#compression-levels."},
+    {"godot": ["ProjectSettings::property:compression/formats/zstd/compression_level", "ProjectSettings::property:compression/formats/zstd/long_distance_matching", "ProjectSettings::property:compression/formats/zstd/window_log_size"], "state": "Blocked", "reason": "Trigger: pass the configured level, long-distance matching flag and window limit into the packaged native Zstandard encoder and apply the decoder window policy to the existing bounded E2DCMP blocks (ADR 0020). The existing file-codec ABI exposes neither option state nor a parameterized context."},
     {
       "state": "Implemented",
       "reason": "ADRs 0004/0095/0113: the static OS operation returns the exact requested number of host runtime cryptographic bytes in a caller-owned array. Negative sizes and provider failures surface as typed exceptions. The public host consumer verifies empty, small and larger requests, ownership, concurrency and lifecycle independence on Windows and Linux.",
