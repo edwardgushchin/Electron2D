@@ -9,6 +9,8 @@ Last updated: 2026-10-26
 
 A getter-driven path follower for its direct Entity parent, with retained query/result versions, optional typed waypoint/link metadata, target progression, real map membership and node-owned RID.
 
+The agent can follow [weighted shortcuts within one polygon](../components/navigation-maps.md#weighted-routes-within-one-polygon), including consecutive link transitions.
+
 Inherits [Node](Node.md), not Entity: the parent supplies spatial movement. Set TargetPosition, call GetNextPathPosition from parent physics processing, and move the parent yourself. Path following, link actions and retained path diagnostics execute through their owning services. Avoidance controls execute through the shared ORCA kernel.
 
 Equal target assignments reset the request. Map/layer changes repath active targets. Other query settings take effect at the next query. Desired thresholds accept finite signed values and use strict comparisons; reachability is inclusive, off-path reload is inclusive. Empty routes remain unfinished; an unreachable final waypoint finishes without reaching the requested target. Completed requests do not repeat events. Internal snapshots avoid public array copies during warmed following updates.

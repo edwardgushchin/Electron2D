@@ -43,11 +43,18 @@ internal static class NavigationAgentTests
     { using var packed = ResourceLoader.Load<PackedScene>(file)!; using var actor = (Entity)packed.Instantiate(); var agent = (NavigationAgent)actor.GetChild(0); Check(agent.NavigationLayers == 3 && agent.TargetPosition == new Vector2(12, 13) && agent.PathDesiredDistance == 2 && agent.TargetDesiredDistance == 3 && agent.PathMaxDistance == 4 && agent.SimplifyPath && agent.SimplifyEpsilon == 2 && agent.PathReturnMaxLength == 60 && agent.PathReturnMaxRadius == 50 && agent.PathSearchMaxPolygons == -1 && agent.PathSearchMaxDistance == 70 && agent.PathPostprocessing == NavigationPathQueryParameters.PathPostProcessing.None && agent.PathMetadataFlags == NavigationPathQueryParameters.PathMetadataFlags.IncludeOwners && agent.GetPropertyList().Count(p => p.OwnerType == typeof(NavigationAgent)) == 30 && !agent.DebugEnabled && agent.GetChildCount() == 0 && agent.GetChildCount(includeInternal: true) == 1, "Fresh typed agent settings."); using var tree = new SceneTree(actor); tree.PhysicsFrame(0); Check(NavigationServer.MapGetAgents(agent.GetNavigationMap()).Contains(agent.GetRID()), "Fresh loaded agent registers real map membership."); Console.WriteLine("Fresh navigation agent scene passed."); }
     private sealed class Traveler : Entity
     {
-        internal NavigationLink Link = null!; internal Vector2[] Path = []; internal bool Done; internal int Teleports; internal readonly NavigationAgent Agent = new() { PathDesiredDistance = .1f, TargetDesiredDistance = .1f, PathPostprocessing = NavigationPathQueryParameters.PathPostProcessing.None, TargetPosition = new(44, 44) };
+        internal NavigationLink Link = null!; internal NavigationLink? SecondLink; internal Vector2[] Path = []; internal bool Done; internal int Teleports; internal readonly NavigationAgent Agent = new() { PathDesiredDistance = .1f, TargetDesiredDistance = .1f, PathPostprocessing = NavigationPathQueryParameters.PathPostProcessing.None, TargetPosition = new(44, 44) };
         internal Traveler()
         {
             AddChild(Agent);
-            Agent.LinkReached += details => { Check(details.Owner == Link && details.RID == Link.GetRID(), "Native agent resolves scene link."); Position = details.LinkExitPosition!.Value; Teleports++; };
+            Agent.LinkReached += details =>
+            {
+                var expected = Teleports == 0 ? Link : SecondLink;
+                Check(expected is not null && details.Owner == expected && details.RID == expected.GetRID(),
+                    "Native agent resolves the scene links in route order.");
+                Position = details.LinkExitPosition!.Value;
+                Teleports++;
+            };
         }
         protected override void OnPhysicsProcess(double delta)
         {
@@ -62,14 +69,54 @@ internal static class NavigationAgentTests
     private sealed class Journey : Entity
     {
         internal Traveler Traveler = null!;
-        protected override void OnDraw() { DrawRect(new(4, 4, 16, 48), new(.2f, .2f, .2f)); DrawRect(new(36, 4, 16, 48), new(.2f, .2f, .2f)); if (Traveler.Path.Length > 1) DrawPolyline(Traveler.Path, Colors.Green, 2); DrawCircle(new(18, 12), 2, Colors.Cyan); DrawCircle(new(38, 12), 2, Colors.Cyan); }
+        protected override void OnDraw() { DrawRect(new(4, 4, 16, 48), new(.2f, .2f, .2f)); DrawRect(new(36, 4, 16, 48), new(.2f, .2f, .2f)); if (Traveler.Path.Length > 1) DrawPolyline(Traveler.Path, Colors.Green, 2); DrawLink(Traveler.Link); if (Traveler.SecondLink is { } link) DrawLink(link); }
+        private void DrawLink(NavigationLink link)
+        {
+            DrawCircle(link.GetGlobalStartPosition(), 2, Colors.Cyan);
+            DrawCircle(link.GetGlobalEndPosition(), 2, Colors.Cyan);
+        }
     }
-    internal static void RunHost()
+    internal static void RunHost(bool samePolygon = false)
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu"; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); Engine.MaxFPS = 60; using var left = NavigationTests.Rectangle(4, 4, 16, 48); using var right = NavigationTests.Rectangle(36, 4, 16, 48); var window = new Window { Size = new(64, 64) };
-        window.AddChild(new NavigationRegion { Name = "Left", NavigationPolygon = left }); window.AddChild(new NavigationRegion { Name = "Right", NavigationPolygon = right }); var link = new NavigationLink { Name = "Teleporter", StartPosition = new(18, 12), EndPosition = new(38, 12), Bidirectional = false }; window.AddChild(link); var actor = new Traveler { Link = link, Position = new(12, 44), PhysicsProcessEnabled = true }; var journey = new Journey { Traveler = actor }; window.AddChild(journey); window.AddChild(actor); var frames = 0; RID map = default;
-        window.Ready += _ => { Check(RenderingServer.GetCurrentRenderingMethod() == backend && RenderingServer.GetCurrentRenderingDriverName() != "software", "Requested hardware backend."); map = window.World!.NavigationMap; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () => { frames++; journey.QueueRedraw(); if (!actor.Done) { Check(frames < 180, "Bounded metadata-driven navigation host."); return; } Check(actor.Agent.IsTargetReached() && actor.Agent.IsNavigationFinished(), "Agent emits target and navigation completion."); Check(actor.Teleports == 1, "Native actor executes exactly one metadata-driven teleport."); using var pixels = window.GetTexture().GetImage()!; Check(pixels.GetPixel(44, 44).R > .9f && pixels.GetPixel(44, 44).G > .9f, "Native metadata-driven actor reaches goal pixels."); if (Environment.GetEnvironmentVariable("ELECTRON2D_NAVIGATION_AGENT_SNAPSHOT") is { } capture) pixels.SavePNG(capture); window.Tree!.Quit(); }; };
-        Engine.Run(window); Check(window.IsDisposed && RenderingServer.Service is null, "Native navigation-agent scene teardown."); Reject<ArgumentException>(() => NavigationServer.MapGetLinks(map)); Console.WriteLine($"Navigation agent teleport/pixels/cleanup passed: {backend}, {frames} frames.");
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu";
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        Engine.MaxFPS = 60;
+        using var left = NavigationTests.Rectangle(4, 4, samePolygon ? 48 : 16, 48);
+        using var right = NavigationTests.Rectangle(36, 4, 16, 48);
+        var window = new Window { Size = new(64, 64) };
+        window.AddChild(new NavigationRegion { Name = "Left", NavigationPolygon = left });
+        if (!samePolygon)
+            window.AddChild(new NavigationRegion { Name = "Right", NavigationPolygon = right });
+        var link = new NavigationLink
+        {
+            Name = "Teleporter",
+            StartPosition = samePolygon ? new(14, 42) : new(18, 12),
+            EndPosition = samePolygon ? new(26, 42) : new(38, 12),
+            Bidirectional = false,
+            TravelCost = samePolygon ? 0 : 1
+        };
+        window.AddChild(link);
+        var actor = new Traveler { Link = link, Position = new(12, 44), PhysicsProcessEnabled = true };
+        if (samePolygon)
+        {
+            actor.SecondLink = new NavigationLink
+            {
+                Name = "SecondTeleporter",
+                StartPosition = new(28, 42),
+                EndPosition = new(42, 42),
+                Bidirectional = false,
+                TravelCost = 0
+            };
+            window.AddChild(actor.SecondLink);
+        }
+        var journey = new Journey { Traveler = actor };
+        window.AddChild(journey);
+        window.AddChild(actor);
+        var frames = 0;
+        RID map = default;
+        window.Ready += _ => { Check(RenderingServer.GetCurrentRenderingMethod() == backend && RenderingServer.GetCurrentRenderingDriverName() != "software", "Requested hardware backend."); map = window.World!.NavigationMap; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () => { frames++; journey.QueueRedraw(); if (!actor.Done) { Check(frames < 180, "Bounded metadata-driven navigation host."); return; } Check(actor.Agent.IsTargetReached() && actor.Agent.IsNavigationFinished(), "Agent emits target and navigation completion."); Check(actor.Teleports == (samePolygon ? 2 : 1), "Native actor executes all metadata-driven teleports."); using var pixels = window.GetTexture().GetImage()!; Check(pixels.GetPixel(44, 44).R > .9f && pixels.GetPixel(44, 44).G > .9f, "Native metadata-driven actor reaches goal pixels."); if (Environment.GetEnvironmentVariable("ELECTRON2D_NAVIGATION_AGENT_SNAPSHOT") is { } capture) pixels.SavePNG(capture); window.Tree!.Quit(); }; };
+        Engine.Run(window); Check(window.IsDisposed && RenderingServer.Service is null, "Native navigation-agent scene teardown."); Reject<ArgumentException>(() => NavigationServer.MapGetLinks(map)); Console.WriteLine($"Navigation agent {actor.Teleports} teleport(s), pixels and cleanup passed: {backend}, {frames} frames.");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }

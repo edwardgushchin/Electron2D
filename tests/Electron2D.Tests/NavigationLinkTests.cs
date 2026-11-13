@@ -36,7 +36,7 @@ internal static class NavigationLinkTests
         var allocated = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 2000; i++) { _ = NavigationServer.LinkGetStartPosition(link); NavigationServer.LinkSetStartPosition(link, new(8, 5)); NavigationServer.Synchronize(); }
         Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "2000 unchanged link identity/setting/sync cycles allocate zero bytes.");
         NavigationServer.FreeRID(map); Check(NavigationServer.LinkGetMap(link) == default, "Map free detaches surviving caller-owned links."); NavigationServer.FreeRID(link); Reject<ArgumentException>(() => NavigationServer.LinkGetIterationID(link)); NavigationServer.FreeRID(a); NavigationServer.FreeRID(b);
-        WeightedRoutes(); CompleteRouteCosts(); CompetingIntermediateArrivals(); SameRegion(); SceneAndStorage(); WeakLifetime();
+        WeightedRoutes(); CompleteRouteCosts(); CompetingIntermediateArrivals(); SamePolygonShortcuts(); SameRegion(); SceneAndStorage(); WeakLifetime();
         Console.WriteLine("Navigation links, direction/layers/costs/radius, surface ownership, scene transforms/storage and zero-allocation idle cycles passed.");
         void Bind(RID region, NavigationPolygon polygon) { NavigationServer.RegionSetMap(region, map); NavigationServer.RegionSetNavigationPolygon(region, polygon); }
         Vector2[] Path(Vector2 start, Vector2 end) => NavigationServer.MapGetPath(map, start, end, true);
@@ -234,6 +234,93 @@ internal static class NavigationLinkTests
             NavigationServer.LinkSetTravelCost(link, 0);
             NavigationServer.LinkSetMap(link, map);
             return link;
+        }
+    }
+
+    private static void SamePolygonShortcuts()
+    {
+        using var polygon = NavigationTests.Rectangle(0, 0, 100, 100);
+        var map = NavigationServer.MapCreate();
+        var region = NavigationServer.RegionCreate();
+        var first = NavigationServer.LinkCreate();
+        var second = NavigationServer.LinkCreate();
+        var origin = new Vector2(5, 10);
+        var target = new Vector2(95, 10);
+        Vector2[] direct = [origin, target];
+        Vector2[] shortcut = [origin, new(10, 15), new(45, 15), new(50, 15), new(90, 15), target];
+        using var parameters = new NavigationPathQueryParameters { Map = map, StartPosition = origin, TargetPosition = target };
+        using var result = new NavigationPathQueryResult();
+        try
+        {
+            NavigationServer.MapSetActive(map, true);
+            NavigationServer.RegionSetNavigationPolygon(region, polygon);
+            NavigationServer.RegionSetMap(region, map);
+            Bind(first, shortcut[1], shortcut[2]);
+            Bind(second, shortcut[3], shortcut[4]);
+            NavigationServer.Synchronize();
+
+            foreach (var mode in Enum.GetValues<NavigationPathQueryParameters.PathPostProcessing>())
+            {
+                parameters.PostProcessing = mode;
+                NavigationServer.QueryPath(parameters, result);
+                Check(result.Path.SequenceEqual(shortcut) &&
+                    result.PathRIDs.SequenceEqual(new[] { region, first, region, second, region, region }),
+                    "A cheaper chain can leave and reenter the goal polygon twice with both link identities.");
+            }
+            Check(NavigationServer.MapGetPath(map, origin, target, true).SequenceEqual(shortcut) &&
+                NavigationServer.MapGetPath(map, origin, target, false).SequenceEqual(shortcut),
+                "MapGetPath uses the same weighted route in both modes.");
+            Check(NavigationServer.MapGetPath(map, target, origin, true).SequenceEqual(direct.Reverse()),
+                "Directed links leave the reverse direct path available.");
+
+            parameters.PathSearchMaxPolygons = 1;
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.Path.SequenceEqual(direct), "A polygon budget can stop shortcut discovery without losing the direct route.");
+            parameters.PathSearchMaxPolygons = 3;
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.PathRIDs.Contains(first) && !result.PathRIDs.Contains(second) &&
+                result.Path[^1] == target, "The limit retains the completed one-link route before the next link is explored.");
+            parameters.PathSearchMaxPolygons = 0;
+            parameters.PathSearchMaxDistance = 1;
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.Path.SequenceEqual(direct), "A distance budget preserves the direct route.");
+            parameters.PathSearchMaxDistance = 0;
+
+            NavigationServer.LinkSetEnterCost(first, 100);
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.Path.SequenceEqual(shortcut), "Staged link costs preserve the old route.");
+            NavigationServer.Synchronize();
+            NavigationServer.QueryPath(parameters, result);
+            Check(!result.PathRIDs.Contains(first) && result.PathRIDs.Contains(second),
+                "A published entry charge removes the expensive shortcut.");
+            parameters.ExcludedRegions = [region];
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.Path.Length == 0, "Excluding the surface also excludes both endpoints and shortcuts.");
+            parameters.ExcludedRegions = [];
+            NavigationServer.RegionSetTravelCost(region, 0);
+            NavigationServer.Synchronize();
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.Path.SequenceEqual(direct), "A zero-cost direct segment wins ties and avoids zero-cost cycles.");
+            parameters.TargetPosition = origin;
+            NavigationServer.QueryPath(parameters, result);
+            Check(result.Path.SequenceEqual(new[] { origin }), "Identical projected endpoints return one point.");
+        }
+        finally
+        {
+            NavigationServer.FreeRID(second);
+            NavigationServer.FreeRID(first);
+            NavigationServer.FreeRID(region);
+            NavigationServer.FreeRID(map);
+            NavigationServer.Synchronize();
+        }
+
+        void Bind(RID link, Vector2 from, Vector2 to)
+        {
+            NavigationServer.LinkSetMap(link, map);
+            NavigationServer.LinkSetBidirectional(link, false);
+            NavigationServer.LinkSetStartPosition(link, from);
+            NavigationServer.LinkSetEndPosition(link, to);
+            NavigationServer.LinkSetTravelCost(link, 0);
         }
     }
 

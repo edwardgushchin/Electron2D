@@ -86,7 +86,7 @@ public sealed partial class NavigationServer
     /// <param name="optimize">True uses portal funnel; false retains crossed portal midpoints.</param><param name="navigationLayers">Applicable region-layer bits, one by default.</param>
     /// <returns>Projected path points. An unreachable goal uses a reachable polygon selected by its reached portal entry.</returns>
     /// <remarks>Uses the same weighted corridor search as QueryPath, including competing portal entries
-    /// and travel from the final portal to the destination.</remarks>
+    /// and travel from the final portal to the destination. A route may take a cheaper detour when both endpoints project onto the same polygon.</remarks>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
     public static Vector2[] MapGetPath(RID map, Vector2 origin, Vector2 destination, bool optimize, uint navigationLayers = 1)
     { Finite(origin); Finite(destination); NavigationMapIteration snapshot; lock (Shared._gate) snapshot = Shared.Map(map).Iteration; return snapshot.Path(origin, destination, optimize, navigationLayers); }

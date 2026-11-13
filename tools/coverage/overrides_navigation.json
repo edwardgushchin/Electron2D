@@ -1878,7 +1878,7 @@
       "godot": [
         "class:NavigationServer2D"
       ],
-      "reason": "ADR 0097 authored maps/regions/links, typed query controls, direct-parent agents, managed ORCA avoidance, source parsing/baking, async iterations and global simulation/drawing controls execute. Comprehensive weighted search/cost/tie/budget/fallback equivalence and overlapping projection ownership remain Partial on their exact query rows. Native allocator, foreign targets and large-scene performance retain separate verification gates."
+      "reason": "ADR 0097 authored maps/regions/links, typed query controls, direct-parent agents, managed ORCA avoidance, source parsing/baking, async iterations and global simulation/drawing controls execute. Remaining weighted-search state and tie equivalence are tracked on the two exact query rows. Native allocator, foreign targets and large-scene performance retain separate verification gates."
     },
     {
       "state": "Implemented",
@@ -2072,7 +2072,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0097/0095: typed controls, provenance and copied paths use committed topology. Disconnected and limited searches rebuild to a reached walkable polygon. Goal arrivals compare complete weighted cost, including the last in-region segment. The lower bound uses the smallest eligible travel multiplier. The entered owner pays its documented entry charge. Distinct incoming portals retain alternative arrivals at an intermediate polygon and share its polygon budget. Tests cover six-polygon relay routes, zero-cost link detours, alternative goal approaches, equal costs, deferred weights and bounded link fallback. Remaining: distinct entry positions on the same directed portal share one search state; broader equal-priority topology equivalence is open.",
+      "reason": "ADRs 0097/0095: typed controls, provenance and copied paths use committed topology. Disconnected and limited searches rebuild to a reached walkable polygon. Goal arrivals compare complete weighted cost, including the last in-region segment. The lower bound uses the smallest eligible travel multiplier. The entered owner pays its documented entry charge. Distinct incoming portals retain alternative arrivals at an intermediate polygon and share its polygon budget. Tests cover six-polygon relay routes, zero-cost link detours, alternative goal approaches, equal costs, deferred weights and bounded link fallback. Same-polygon goals compare the direct segment with multiple departures and reentries, preserving completed routes at search limits and link provenance through both server queries and NavigationAgent. Remaining: distinct entry positions on the same directed portal share one search state; broader equal-priority topology equivalence is open.",
       "godot": [
         "NavigationServer2D::method:map_get_path(RID:,Vector2:,Vector2:,bool:,int:)",
         "NavigationServer2D::method:query_path(NavigationPathQueryParameters2D:,NavigationPathQueryResult2D:,Callable:)"

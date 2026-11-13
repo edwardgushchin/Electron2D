@@ -10,6 +10,8 @@ public sealed partial class NavigationServer
     /// Its final point projects the original target onto that polygon.
     /// Search considers arrivals through distinct directed portals of a polygon. It scores travel along the route
     /// including the final segment and charges the entered owner at a transition.
+    /// If both endpoints project onto one polygon, the direct segment competes with cheaper detours and wins equal-cost ties.
+    /// Search limits preserve the best complete route found in that case.
     /// The result's path length measures world distance after output processing.
     /// Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication.
     /// Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.</remarks>

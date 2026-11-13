@@ -21,7 +21,13 @@ internal sealed partial class NavigationMapIteration
         var start = Project(settings.StartPosition, out var from); var finish = Project(settings.TargetPosition, out var to);
         if (start < 0 || finish < 0) return NavigationPathQueryData.Empty;
         var points = new List<(Vector2 Point, int Cell)>();
-        if (start == finish) { Add(points, from, start); Add(points, to, finish); return Complete(points); }
+        var samePolygon = start == finish;
+        if (samePolygon && (from == to || Cells[start].TravelCost == minimumTravelCost))
+        {
+            Add(points, from, start);
+            Add(points, to, finish);
+            return Complete(points);
+        }
         var bestArrivals = new Dictionary<(int Source, int PortalIndex), int>();
         var processedPolygons = new bool[Cells.Length];
         var arrivals = new List<CorridorArrival>();
@@ -32,7 +38,7 @@ internal sealed partial class NavigationMapIteration
         var processed = 0;
         var limitReached = false;
         var limitDistanceSquared = (double)settings.PathSearchMaxDistance * settings.PathSearchMaxDistance;
-        var reached = FindCorridor(finish, to, trackFrontier: true);
+        var reached = FindCorridor(finish, to, trackFrontier: !samePolygon);
         if (reached < 0)
         {
             to = Closest(Cells[start], target);
@@ -91,16 +97,34 @@ internal sealed partial class NavigationMapIteration
             arrivals.Add(new(start, from, default, -1, 0, startKey));
             queue.Clear();
             queue.Enqueue(0, (Math.Sqrt(DistanceSquared(from, destination)) * minimumTravelCost, 0, start, 0));
-            while (queue.TryDequeue(out var arrivalIndex, out _))
+            var startsInGoal = start == goal;
+            var completed = startsInGoal ? 0 : -1;
+            var completedCost = startsInGoal
+                ? Math.Sqrt(DistanceSquared(from, destination)) * Cells[start].TravelCost
+                : double.PositiveInfinity;
+            while (queue.TryDequeue(out var arrivalIndex, out var priority))
             {
                 var current = arrivals[arrivalIndex];
                 var index = current.Cell;
                 if (bestArrivals[current.Key] != arrivalIndex)
                     continue;
-                if (index == goal)
-                    return arrivalIndex;
+                if (priority.Total >= completedCost)
+                    break;
 
                 var cell = Cells[index];
+                if (index == goal)
+                {
+                    if (!startsInGoal)
+                        return arrivalIndex;
+
+                    // A return to the start polygon can finish here or continue via another shortcut.
+                    var cost = current.Cost + Math.Sqrt(DistanceSquared(current.Entry, destination)) * cell.TravelCost;
+                    if (cost < completedCost)
+                    {
+                        completed = arrivalIndex;
+                        completedCost = cost;
+                    }
+                }
                 if (trackFrontier && index != start && !cell.IsLink)
                 {
                     var remaining = DistanceSquared(current.Entry, target);
@@ -121,7 +145,7 @@ internal sealed partial class NavigationMapIteration
                     limitDistanceSquared > 0 && DistanceSquared(from, current.Entry) > limitDistanceSquared))
                 {
                     limitReached = true;
-                    return -1;
+                    break;
                 }
 
                 var portals = Edges[index];
@@ -136,7 +160,7 @@ internal sealed partial class NavigationMapIteration
                     var enter = cell.Region != Cells[next].Region ? Cells[next].EnterCost : 0;
                     var cost = current.Cost + travel + enter;
                     var remaining = Math.Sqrt(DistanceSquared(point, destination));
-                    var final = next == goal;
+                    var final = next == goal && !startsInGoal;
                     if (final)
                         cost += remaining * Cells[goal].TravelCost;
                     // Different incoming portals can have different costs to reach the next exit.
@@ -150,7 +174,7 @@ internal sealed partial class NavigationMapIteration
                     arrivals.Add(new(next, point, portal, arrivalIndex, cost, key));
                 }
             }
-            return -1;
+            return completed;
         }
 
         bool Allowed(RID region) => !settings.ExcludedRegions.AsSpan().Contains(region) && (settings.IncludedRegions.Length == 0 || settings.IncludedRegions.AsSpan().Contains(region));

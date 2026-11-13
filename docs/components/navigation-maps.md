@@ -28,6 +28,14 @@ For a disconnected or search-limited target, search tracks the reached walkable 
 
 Weighted search charges the entered owner on a transition and multiplies each segment by the travel cost of its polygon or link. When comparing arrivals in the goal polygon, it includes travel from the last portal to the projected target. The queue estimates remaining travel with the smallest multiplier among eligible polygons and links. A zero multiplier reduces this estimate to zero. Retained arrival records preserve the portal and entry point used to calculate each candidate. Equal complete costs keep the first accepted arrival. Published polygon order breaks remaining queue ties. The returned path length measures the geometry after postprocessing.
 
+### Weighted routes within one polygon
+
+When both projected endpoints lie on one polygon, its direct segment is the initial complete route. If any eligible travel multiplier is smaller, search can compare cheaper departures and reentries, including chains of same-polygon links. Each return can finish with a weighted final segment or continue through another portal. Equal total cost keeps the direct route or the earliest cheaper completion. Limits on explored polygons or entry distance preserve the best complete route already found. If both points project to the same location, or the start polygon already uses the smallest multiplier, the direct route is sufficient by the distance lower bound. Both server path APIs and NavigationAgent share this behavior and preserve link provenance.
+
+The Windows link tests cover all three postprocessing modes, reverse traversal, filters, committed costs, zero-cost ties and bounded searches. The rendered agent fixture follows two ordered link events and checks the final goal pixel and runtime retirement on Windows GPU and Compatibility.
+
+### Remaining search equivalence
+
 Each directed incoming portal retains its own best arrival. A more expensive entry can win when its continuation to the next portal costs less. Alternative entries into a polygon share one place in the polygon-count budget. Queue ties use polygon order followed by discovery order.
 
 Arrivals at different points of the same directed portal still share one search state. Equivalence across those routes and larger tied corridors remains Partial. Margin matching compares eligible free edges quadratically. Source parsing and outline/clearance baking execute through the connected producer. Async map iterations and [global controls/scene diagnostics](navigation-diagnostics.md) have their own verification. Deprecated outline generation, force-update and region-RID aliases remain excluded.

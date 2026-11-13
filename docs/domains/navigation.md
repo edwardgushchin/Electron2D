@@ -49,7 +49,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 
 [Navigation maps](../components/navigation-maps.md) now supply real RID ownership, World maps, convex region topology, deferred publication, projection and copied routes with a native scene path-following consumer. Baking, async iterations and global scene diagnostics each have executing producers and separate verification boundaries.
 
-NavigationLink and owned server links now provide directed/bidirectional off-surface travel, finite strict-radius attachment and weighted routes. [The map contract](../components/navigation-maps.md#links-across-separated-surfaces) records transforms, source storage, publication, typed query metadata and remaining raster/search equivalence.
+NavigationLink and owned server links now provide directed/bidirectional off-surface travel, finite strict-radius attachment and weighted routes. [The map contract](../components/navigation-maps.md#links-across-separated-surfaces) records transforms, source storage, publication, typed query metadata and remaining raster/search equivalence. [Same-polygon shortcuts](../components/navigation-maps.md#weighted-routes-within-one-polygon) execute through both server queries and scene agents.
 
 [Weighted route selection](../components/navigation-maps.md#geometry-and-routes) includes the destination approach, cheap link detours and alternative entrances to intermediate polygons. Agents and direct queries consume the same selected corridor.
 
