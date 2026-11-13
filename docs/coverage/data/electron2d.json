@@ -116361,6 +116361,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.RunProject(Electron2D.Window,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunProject",
+    "signature": "public static System.Int32 RunProject(Electron2D.Window window, System.String moviePath, System.Int32 fps = 60)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      },
+      {
+        "name": "moviePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": "60"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -116374,6 +116403,35 @@
         "name": "window",
         "type": "Electron2D.Window",
         "default": null
+      }
+    ],
+    "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunProjectAsync",
+    "signature": "public static System.Threading.Tasks.Task\u003CSystem.Int32\u003E RunProjectAsync(Electron2D.Window window, System.String moviePath, System.Int32 fps = 60)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      },
+      {
+        "name": "moviePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": "60"
       }
     ],
     "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",

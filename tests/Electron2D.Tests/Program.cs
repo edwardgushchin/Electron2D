@@ -282,6 +282,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOY_MOTION") is { } joyM
     else throw new ArgumentException("Unknown controller-motion profile.");
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_RECORDING") is { } projectRecordingBackend)
+{
+    ProjectRecordingTests.Run(projectRecordingBackend);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_MAIN_LOOP") is { } mainLoopBackend)
 {
     ProjectMainLoopTests.Run(mainLoopBackend);

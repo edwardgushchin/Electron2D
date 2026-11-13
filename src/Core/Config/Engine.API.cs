@@ -67,7 +67,7 @@ public sealed partial class Engine
     /// <summary>Runs the configured project loop using the yielding window host.</summary>
     /// <param name="window">The live detached window, owned by the runtime after successful reservation.</param>
     /// <returns>A task containing the scene's quit code or zero for a custom loop after owned cleanup.</returns>
-    /// <remarks>Uses the project selection and lifecycle of <see cref="RunProject"/> and the platform entry and
+    /// <remarks>Uses the project selection and lifecycle of <see cref="RunProject(Window)"/> and the platform entry and
     /// synchronization requirements of <see cref="RunAsync(Window)"/>.</remarks>
     /// <exception cref="InvalidOperationException">The scene is missing, the selected class cannot construct a MainLoop, or the run cannot start.</exception>
     /// <exception cref="Exception">Loading, construction, a lifecycle callback or another owned run operation fails.</exception>

@@ -137,7 +137,9 @@ AndroidGameActivity/AndroidWindowHost now produce actual framework system back r
 
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
+
+[Configured project recording](components/movie-writing.md#recording-the-configured-project) adds explicit recording overloads to Engine over its existing project selector and MovieRecording lifecycle.
 
 [Animation movie completion](components/movie-writing.md#animation-completion) adds AnimationPlayer.MovieQuitOnFinish and connects the existing Engine/MovieWriter owners. No production type is added.
 

@@ -75,6 +75,8 @@ int exitCode = Engine.Run(window);
 | [`public static Task<int> RunAsync(Window window)`](#m-electron2d-engine-runasync-electron2d-window) | Owns a yielding root-window lifecycle on the platform application thread. |
 | [`public static int RunProject(Window window)`](../components/engine-runtime.md#project-main-scene) | Runs the configured scene or custom application loop under the supplied window. |
 | [`public static Task<int> RunProjectAsync(Window window)`](../components/engine-runtime.md#project-main-scene) | Runs the configured scene or custom application loop on the yielding application host. |
+| [`public static int RunProject(Window window, string moviePath, int fps = 60)`](#recording-the-configured-project) | Records the selected project scene or custom loop. |
+| [`public static Task<int> RunProjectAsync(Window window, string moviePath, int fps = 60)`](#recording-the-configured-project) | Records the selected project while yielding on its application owner. |
 | [`public static int RunMovie(Window window)`](#runmovie) | Records using the project's movie file and FPS profile. |
 | [`public static Task<int> RunMovieAsync(Window window)`](#runmovieasync) | Records the project profile on its yielding application owner. |
 | [`public static int Run(Window window, string moviePath, int fps = 60)`](#m-electron2d-engine-run-electron2d-window-system-string-system-int32) | Records fixed-duration real frames and synchronous audio. |
@@ -550,6 +552,10 @@ Shares the recording Run overload's contract while retaining RunAsync's applicat
 ### `public static string GetWriteMoviePath()`
 
 Returns the unchanged requested path throughout recording startup, hooks and owned teardown; returns empty after reservation release and for nonrecording runs. Atomic reads are allowed from any thread. Does not open native services.
+
+### Recording the configured project
+
+Pass the output path and optional positive FPS to RunProject or RunProjectAsync. The configured scene or custom MainLoop uses the same native window, writer and synchronous audio as an explicit recording Run. The default recording cadence is 60 FPS. The scene quit code or custom-loop result is returned after cleanup. See [project recording](../components/movie-writing.md#recording-the-configured-project).
 
 <a id="runmovie"></a>
 ### `public static int RunMovie(Window window)`

@@ -36,6 +36,8 @@ Direct `ElectronObject` construction provides the concrete root role through the
 
 # Core domain
 
+[Configured project recording](../components/movie-writing.md#recording-the-configured-project) joins the owned scene or custom loop with fixed-cadence window capture and the offline mixer.
+
 [Prepared publisher membership](../components/event-connections.md#current-prepared-publisher-membership) now lets EventConnection observe exact wrapper removal/clear and release publisher references on token retirement. Captured/deferred delivery and ordinary field-like fallback retain their contracts.
 
 [Object lifetime monitors](../components/object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.

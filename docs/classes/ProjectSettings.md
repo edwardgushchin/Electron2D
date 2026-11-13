@@ -1619,7 +1619,7 @@ Projects editor/movie_writer/ogv/keyframe_interval. Nonbasic, default 64, range 
 <a id="moviewriterfps"></a>
 ### `public static ProjectSetting<int> MovieWriterFPS { get; }`
 
-Nonbasic editor/movie_writer/fps setting, default 60 and positive Int32 values. Engine.RunMovie/RunMovieAsync sample its active feature override before startup. Explicit recording Run/RunAsync FPS arguments retain precedence, including their optional 60 FPS default. Invalid nonpositive assignments reject.
+Nonbasic editor/movie_writer/fps setting, default 60 and positive Int32 values. Engine.RunMovie/RunMovieAsync sample its active feature override before startup. Explicit recording Run, RunAsync, RunProject and RunProjectAsync FPS arguments retain precedence, including their optional 60 FPS default. Invalid nonpositive assignments reject.
 
 <a id="moviewriterfile"></a>
 ### `public static ProjectSetting<string> MovieWriterFile { get; }`

@@ -195,7 +195,7 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>True by default. The --no-header host switch can suppress it.</value>
     public static ProjectSetting<bool> PrintHeader { get; } = new("application/run/print_header", true);
 
-    /// <summary>Gets the startup scene path or resource UID used by <see cref="Engine.RunProject"/> and <see cref="Engine.RunProjectAsync"/>.</summary>
+    /// <summary>Gets the startup scene path or resource UID used by <see cref="Engine.RunProject(Window)"/> and <see cref="Engine.RunProjectAsync(Window)"/>.</summary>
     /// <value>An empty string until a main scene is configured.</value>
     /// <remarks>The owned host samples the effective feature override when <see cref="MainLoopType"/> selects SceneTree. The selected file must load as a
     /// <see cref="PackedScene"/>. A whitespace-only value or a value containing a null character is invalid.</remarks>

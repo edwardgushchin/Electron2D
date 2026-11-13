@@ -1,6 +1,6 @@
 # Movie writing
 
-Last updated: 2026-10-29
+Last updated: 2026-11-14
 
 Owns non-real-time rendered recording through [MovieWriter](../classes/MovieWriter.md), [MovieRecording](../classes/MovieRecording.md) and internal [PNGMovieWriter](../classes/PNGMovieWriter.md)/[AVIMovieWriter](../classes/AVIMovieWriter.md)/[OGVMovieWriter](../classes/OGVMovieWriter.md). [ADR 0109](../decisions/movie-writing.md#adr-0109) owns the typed protocol and host adaptations.
 
@@ -67,6 +67,14 @@ OGVMovieWriterTests exercises portable settings/validation and actual GPU/Compat
 The OGV slice passes Linux public-package NativeAOT portable/GPU/Compatibility and self-contained JIT GPU profiles with candidate 0.1.0-movie.20261015.4, reflection-based JSON disabled and LD_LIBRARY_PATH unset. Independent FFmpeg decoding checks the produced package files. Native payload and license audits pass with 71 ELF files and 81 notices. The fresh source/ProjectReference/NuGet consumer gate also passes with native compilation blocked, including explicit-RID/default-host builds and publishes. The first NativeAOT GPU run failed during Vulkan surface creation; the same binary passed the explicit retry and Compatibility run. This transient host failure is retained in the evidence and is not a first-pass success claim.
 
 The user waived upstream PR submission for this residue allocation fix on 2026-10-15. The local guarded adaptation and before/after sanitizer evidence remain part of this integration. Linux checks do not establish foreign native execution, physical listening, full allocator totals or owner acceptance.
+
+## Recording the configured project
+
+`Engine.RunProject(window, moviePath, fps)` and `RunProjectAsync(window, moviePath, fps)` use the effective project loop and explicit movie path and cadence. The optional cadence is 60 FPS. The chosen project scene is loaded and entered with the offline audio graph ready for autoplay. A custom loop renders its root through RenderingServer and can start standalone sample playback in initialization. Window children remain detached from any scene tree in that mode. The writer captures the successful step that requests exit, then ends before loop finalization. A failing step contributes no frame or PCM block. Scene runs retain the scene quit code, and custom-loop runs return zero.
+
+The explicit path and cadence take precedence over the movie profile's file and FPS settings. The host still samples MovieWriterDisableVSync and validates blank paths, nonpositive cadence and async ownership before consuming a window. One-argument project runs remain real-time.
+
+Run `ELECTRON2D_TEST_PROJECT_RECORDING=gpu` or `compatibility` with the Windows x64 Release test host. The Vulkan and Direct3D 11 runs decode PNG pixels and inspect WAV samples for synchronous and asynchronous extension-loop startup, final-state capture, exactly sixty physics ticks and 48,000 audio frames at seven FPS, failed-step cleanup and packed-scene startup. Execution on other hosts and package/AOT qualification remain open.
 
 ## Project movie startup
 
