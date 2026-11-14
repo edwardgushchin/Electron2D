@@ -266,7 +266,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Opens a file with the requested access mode.</summary>
-    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <param name="mode">The required read, write, truncation, and creation behavior.</param>
     /// <returns>A new owner of the opened file stream.</returns>
     /// <remarks>OS.SetUseFileAccessSaveAndSwap selects staging for the exact Write mode at open. Path retains the
@@ -278,6 +278,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess Open(string path, FileAccessModeFlags mode)
     {
@@ -355,7 +356,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Opens a whole-file compressed container.</summary>
-    /// <param name="path">A nonempty ordinary or supported virtual path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <param name="mode">The required access mode.</param>
     /// <param name="compressionMode">The codec used to decode or encode the container.</param>
     /// <returns>A seekable view of the decoded bytes.</returns>
@@ -368,6 +369,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
     /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
+    /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess OpenCompressed(
         string path,
         FileAccessModeFlags mode,
@@ -387,7 +390,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Opens a whole-file container protected by a 256-bit key and authenticated encryption.</summary>
-    /// <param name="path">A nonempty ordinary or supported virtual path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <param name="mode">The required access mode.</param>
     /// <param name="key">Exactly 32 key bytes.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
@@ -400,6 +403,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
+    /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)
     {
         ValidateEncryptionKey(key);
@@ -426,7 +431,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Opens a whole-file container protected by a password and authenticated encryption.</summary>
-    /// <param name="path">A nonempty ordinary or supported virtual path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <param name="mode">The required access mode.</param>
     /// <param name="password">A nonempty password.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
@@ -440,6 +445,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
+    /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)
     {
         ArgumentNullException.ThrowIfNull(password);

@@ -15,7 +15,7 @@ Typed packed surface input/output for RenderingServer.MeshCreateFromSurfaces, Me
 | Signature | Contract |
 | --- | --- |
 | `public MeshSurfaceBuffers()` | Empty description with triangle topology and planar position flags. |
-| `public Mesh.PrimitiveType Primitive { get; set; }` | All five existing topologies; complete primitive records required. |
+| `public MeshPrimitiveType Primitive { get; set; }` | All five existing topologies; complete primitive records required. |
 | `public Mesh.ArrayFormat Format { get; set; }` | Exact supported channels and policies; requires explicit planar positions. |
 | `public byte[] VertexData { get; set; }` | Present VertexCount float32 XY pairs, followed by interleaved packed normal/tangent records; positions may be absent. |
 | `public int VertexCount { get; set; }` | Logical channel count; zero permits uint16 index-only procedural geometry. |

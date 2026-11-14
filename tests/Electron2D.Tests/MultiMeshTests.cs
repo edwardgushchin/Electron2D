@@ -39,7 +39,7 @@ internal static class MultiMeshTests
         resource.InstanceCount = 0; resource.UseColors = resource.UseCustomData = false; resource.InstanceCount = 1;
         Reject<InvalidOperationException>(() => resource.GetInstanceColor(0)); Reject<InvalidOperationException>(() => resource.SetInstanceCustomData(0, Colors.White));
         Check(resource.ColorArray.Length == 0 && resource.CustomDataArray.Length == 0, "Disabled arrays are empty.");
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad()); resource.Mesh = mesh;
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad()); resource.Mesh = mesh;
         resource.SetInstanceTransform2D(0, Transform.Identity); using var shallow = (MultiMesh)resource.Duplicate(); using var deep = (MultiMesh)resource.Duplicate(true);
         Check(ReferenceEquals(shallow.Mesh, mesh) && !ReferenceEquals(deep.Mesh, mesh) && deep.Mesh is ArrayMesh && deep.Buffer.SequenceEqual(resource.Buffer), "Mesh graph policy and independent instance storage.");
         shallow.SetInstanceTransform2D(0, new Transform(0, new(40, 0))); Check(resource.GetInstanceTransform2D(0) == Transform.Identity, "Copies do not alias records.");
@@ -48,7 +48,7 @@ internal static class MultiMeshTests
     }
     private static void Bounds()
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad());
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad());
         Check(mesh.GetAABB() == new Rect2(Vector2.Zero, new(20, 20)), "Mesh bounds include stored two-dimensional vertices.");
         using var resource = new MultiMesh { Mesh = mesh, InstanceCount = 2 };
         resource.SetInstanceTransform2D(0, new Transform(0, new(10, 20))); resource.SetInstanceTransform2D(1, new Transform(0, new(40, 30)));
@@ -61,7 +61,7 @@ internal static class MultiMeshTests
         var drawing = new CanvasMultiMesh(resource); var vertices = new List<CanvasVertex>(16); var batches = new List<CanvasBatch>(2);
         drawing.Append(vertices, batches, null, Transform.Identity, Colors.White, null, BlendMode.Mix, TextureFilter.Nearest, TextureRepeat.Disabled, 1, new(new(90, 90), new(10, 10)), false, 1, new(100, 100));
         Check(vertices.Count == 0, "Scissor rectangle culls the complete visible instance bounds.");
-        using var point = new ArrayMesh(); point.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [new(-.25f, 4)] });
+        using var point = new ArrayMesh(); point.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [new(-.25f, 4)] });
         resource.Mesh = point; resource.SetInstanceTransform2D(0, Transform.Identity);
         drawing.Append(vertices, batches, null, Transform.Identity, Colors.White, null, BlendMode.Mix, TextureFilter.Nearest, TextureRepeat.Disabled, 1, null, false, 1, new(100, 100));
         Check(vertices.Count == 6, "Culling conservatively retains framebuffer-width points whose centers sit outside the viewport.");
@@ -110,7 +110,7 @@ internal static class MultiMeshTests
         protected override MeshSurfaceData OnSurfaceGetArrays(int surfaceIndex) { Read?.Invoke(); return MeshTests.Quad(); }
         protected override int OnSurfaceGetArrayLen(int surfaceIndex) => 4;
         protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => 6;
-        protected override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => PrimitiveType.Triangles;
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => MeshPrimitiveType.Triangles;
         protected override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => ArrayFormat.Vertex | ArrayFormat.Use2DVertices | ArrayFormat.Index | ArrayFormat.Color | ArrayFormat.TexUV;
         protected override Material? OnSurfaceGetMaterial(int surfaceIndex) => null;
         protected override void OnSurfaceSetMaterial(int surfaceIndex, Material? material) => throw new NotSupportedException();
@@ -122,7 +122,7 @@ internal static class MultiMeshTests
     }
     private static void Replay()
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var resource = new MultiMesh { Mesh = mesh, UseColors = true, UseCustomData = true, InstanceCount = 2 };
         resource.SetInstanceTransform2D(0, Transform.Identity); resource.SetInstanceTransform2D(1, new Transform(0, new(30, 0))); resource.SetInstanceColor(0, Colors.Red); resource.SetInstanceColor(1, Colors.Blue); resource.SetInstanceCustomData(1, new(2, 3, 4, 5));
         var node = new DrawNode(resource); using var root = new Node(); root.AddChild(node); using var tree = new SceneTree(root);
@@ -138,9 +138,9 @@ internal static class MultiMeshTests
     private sealed class DrawNode(MultiMesh resource) : Entity { protected override void OnDraw() => DrawMultiMesh(resource); }
     private static void SurfaceOrder()
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.Red));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.Red));
         var blue = MeshTests.Quad(Colors.Blue); for (var i = 0; i < blue.Vertices.Length; i++) blue.Vertices[i].X += 20;
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, blue);
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, blue);
         using var resource = new MultiMesh { Mesh = mesh, InstanceCount = 2 }; resource.SetInstanceTransform2D(0, Transform.Identity); resource.SetInstanceTransform2D(1, new Transform(0, new(10, 0)));
         var drawing = new DrawNode(resource); using var root = new Node(); root.AddChild(drawing); using var tree = new SceneTree(root); drawing.PrepareCanvas();
         var vertices = new List<CanvasVertex>(32); var batches = new List<CanvasBatch>(2); drawing.AppendCanvas(vertices, batches, Transform.Identity);

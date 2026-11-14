@@ -243,7 +243,7 @@ Opens a file with the requested access mode.
 
 **Parameters**
 
-- `path`: A nonempty ordinary, `res://`, or `user://` path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 - `mode`: The required read, write, truncation, and creation behavior.
 
 **Returns:** A new owner of the opened file stream.
@@ -257,6 +257,7 @@ Opens a file with the requested access mode.
 - `ArgumentException`: The path is empty or `mode` is invalid.
 - `IO.IOException`: The file cannot be opened.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 <a id="m-electron2d-fileaccess-createtemp-electron2d-fileaccessmode-system-string-system-string-system-boolean"></a>
@@ -287,7 +288,7 @@ Opens a whole-file compressed container.
 
 **Parameters**
 
-- `path`: A nonempty ordinary or supported virtual path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 - `mode`: The required access mode.
 - `compressionMode`: The codec used to decode or encode the container.
 
@@ -302,6 +303,8 @@ Opens a whole-file compressed container.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
 - `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
+- `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 **Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encodes pending data and atomically creates or replaces the destination.
 
@@ -312,7 +315,7 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 
 **Parameters**
 
-- `path`: A nonempty ordinary or supported virtual path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 - `mode`: The required access mode.
 - `key`: Exactly 32 key bytes.
 
@@ -327,6 +330,8 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
+- `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 **Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data with a fresh random nonce and atomically creates or replaces the destination.
 
@@ -337,7 +342,7 @@ Opens a whole-file container protected by a password and authenticated encryptio
 
 **Parameters**
 
-- `path`: A nonempty ordinary or supported virtual path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 - `mode`: The required access mode.
 - `password`: A nonempty password.
 
@@ -352,6 +357,8 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
+- `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 **Remarks:** A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data with a fresh nonce and atomically creates or replaces the destination.
 

@@ -6809,6 +6809,20 @@ static void VerifyFileAccess()
         "Unknown resource identities fail explicitly.");
     Expect<NotSupportedException>(() => EngineFileAccess.FileExists("pipe://channel"),
         "Pipe paths must remain explicit until their platform backend exists.");
+    Func<string, EngineFileAccess>[] openForWrite =
+    [
+        path => EngineFileAccess.Open(path, FileAccessModeFlags.Write),
+        path => EngineFileAccess.OpenCompressed(path, FileAccessModeFlags.Write, FileCompressionMode.Deflate),
+        path => EngineFileAccess.OpenEncrypted(path, FileAccessModeFlags.Write, new byte[32]),
+        path => EngineFileAccess.OpenEncryptedWithPassword(path, FileAccessModeFlags.Write, "password")
+    ];
+    foreach (var open in openForWrite)
+    {
+        Expect<KeyNotFoundException>(() => open("uid://missing"),
+            "File factories must reject an unregistered UID during open, even in Write mode.");
+        Expect<NotSupportedException>(() => open("pipe://channel"),
+            "File factories must reject an unsupported scheme during open, even in Write mode.");
+    }
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(prefix: "bad/name"),
         "Temporary-file prefixes must reject directory separators.");
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(extension: "bad/name"),
@@ -7171,7 +7185,9 @@ static void VerifyDirAccess()
     Expect<DirectoryNotFoundException>(() => DirAccess.Open(IOPath.Combine(IOPath.GetTempPath(), Guid.NewGuid().ToString("N"))),
         "Directory opening must reject missing directories.");
     Expect<KeyNotFoundException>(() => DirAccess.Open("uid://missing"),
-        "Directory opening must reject unknown virtual schemes.");
+        "Directory opening must reject an unregistered UID.");
+    Expect<NotSupportedException>(() => DirAccess.Open("pipe://channel"),
+        "Directory opening must reject an unsupported virtual scheme.");
     Expect<ArgumentException>(() => DirAccess.GetFilesAt("relative"),
         "Static directory operations must reject relative paths.");
     Expect<ArgumentException>(() => DirAccess.CreateTemp("../invalid"),

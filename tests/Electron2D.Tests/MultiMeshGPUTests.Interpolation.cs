@@ -8,7 +8,7 @@ internal static partial class MultiMeshGPUTests
     {
         var interpolation = ProjectSettings.Get(ProjectSettings.PhysicsInterpolation); var fps = Engine.MaxFPS; var ticks = Engine.PhysicsTicksPerSecond;
         ProjectSettings.Set(ProjectSettings.PhysicsInterpolation, true); Engine.MaxFPS = 120; Engine.PhysicsTicksPerSecond = 30;
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var window = new Window { Size = new(128, 96) }; var resources = new List<MultiMesh>();
         var pairs = new List<(SubViewport Reference, SubViewport GPU, MultiMesh Source, MultiMesh Target, float[] Current, float[] Previous, string Name)>();
         foreach (var name in new[] { "fast", "high", "reflected", "singular", "half turn" })

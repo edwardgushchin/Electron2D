@@ -13,16 +13,16 @@ internal static partial class MeshPackedTests
     }
     internal static void Run()
     {
-        foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>()) foreach (var compressed in new[] { false, true }) foreach (var eight in new[] { false, true }) foreach (var first in new[] { 0, 4 })
+        foreach (var primitive in Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max)) foreach (var compressed in new[] { false, true }) foreach (var eight in new[] { false, true }) foreach (var first in new[] { 0, 4 })
                     {
                         using var original = new ArrayMesh(); original.AddBlendShape("A"); original.AddBlendShape("B");
-                        var data = MeshFrameTests.Data(); if (primitive == Mesh.PrimitiveType.Lines) data.Indices = [0, 1, 2, 3];
+                        var data = MeshFrameTests.Data(); if (primitive == MeshPrimitiveType.Lines) data.Indices = [0, 1, 2, 3];
                         data.Colors = [new(.1f, .2f, .3f, .4f), Colors.Red, Colors.Blue, Colors.White]; data.UVs = [new(-2, 3), new(4, 0), Vector2.One, Vector2.Zero]; data.UV2s = [new(1, 2), new(-3, -4), Vector2.Zero, Vector2.One];
                         for (var channel = 0; channel < 4; channel++) data.SetCustom(channel, MeshCustomTests.Channel((MeshCustomFormat)(first + channel), new(.25f, 0, 0, 1)));
                         var slots = eight ? 8 : 4; data.Bones = new int[4 * slots]; data.Weights = new float[data.Bones.Length];
                         for (var i = 0; i < 4; i++) { data.Bones[i * slots] = 2; data.Weights[i * slots] = .5f; data.Weights[i * slots + 1] = .5f; }
                         var shapes = new[] { new MeshSurfaceData { Vertices = [new(1, 0), new(17, 0), new(17, 16), new(1, 16)], Normals = (Vector3[])data.Normals.Clone(), Tangents = (Vector4[])data.Tangents.Clone() }, new MeshSurfaceData { Vertices = (Vector2[])data.Vertices.Clone(), Normals = (Vector3[])data.Normals.Clone(), Tangents = (Vector4[])data.Tangents.Clone() } };
-                        var lodCount = primitive switch { Mesh.PrimitiveType.Points => 1, Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip => 2, _ => 3 };
+                        var lodCount = primitive switch { MeshPrimitiveType.Points => 1, MeshPrimitiveType.Lines or MeshPrimitiveType.LineStrip => 2, _ => 3 };
                         var flags = (compressed ? Mesh.ArrayFormat.CompressAttributes : 0) | (eight ? Mesh.ArrayFormat.Use8BoneWeights : 0);
                         original.AddSurfaceFromArrays(primitive, data, shapes, new Dictionary<float, int[]> { [2] = Enumerable.Range(0, lodCount).ToArray() }, flags);
                         var buffers = original.ExportPacked(0); buffers.AABB = new(-2, -2, 20, 20);
@@ -35,11 +35,11 @@ internal static partial class MeshPackedTests
                     }
         foreach (var count in new[] { 65536, 65537 })
         {
-            var buffers = Minimal(count); buffers.Primitive = Mesh.PrimitiveType.Points; buffers.Format |= Mesh.ArrayFormat.Index; buffers.IndexCount = 1; buffers.IndexData = new byte[count <= 65536 ? 2 : 4];
+            var buffers = Minimal(count); buffers.Primitive = MeshPrimitiveType.Points; buffers.Format |= Mesh.ArrayFormat.Index; buffers.IndexCount = 1; buffers.IndexData = new byte[count <= 65536 ? 2 : 4];
             if (count == 65536) BinaryPrimitives.WriteUInt16LittleEndian(buffers.IndexData, 65535); else BinaryPrimitives.WriteUInt32LittleEndian(buffers.IndexData, 65536);
             using var mesh = new ArrayMesh(); mesh.AppendPacked(ArrayMesh.PreparePacked(buffers, 0)); Same(buffers, mesh.ExportPacked(0)); Check(mesh.SurfaceGetArrays(0).Indices[0] == count - 1, "Both exact index-width boundaries decode.");
         }
-        var colors = Minimal(256); colors.Primitive = Mesh.PrimitiveType.Points; colors.Format |= Mesh.ArrayFormat.Color; colors.AttributeData = Enumerable.Range(0, 1024).Select(i => (byte)i).ToArray();
+        var colors = Minimal(256); colors.Primitive = MeshPrimitiveType.Points; colors.Format |= Mesh.ArrayFormat.Color; colors.AttributeData = Enumerable.Range(0, 1024).Select(i => (byte)i).ToArray();
         using (var mesh = new ArrayMesh()) { mesh.AppendPacked(ArrayMesh.PreparePacked(colors, 0)); Same(colors, mesh.ExportPacked(0)); }
         IndependentShapeSchema(); Invalid(); Fresh();
         Reject<InvalidOperationException>(() => RenderingServer.MeshCreateFromSurfaces([])); Reject<InvalidOperationException>(() => RenderingServer.MeshAddSurface(default, Minimal())); Reject<InvalidOperationException>(() => RenderingServer.MeshGetSurface(default, 0));
@@ -51,7 +51,7 @@ internal static partial class MeshPackedTests
         {
             using var original = new ArrayMesh(); original.AddBlendShape("Target"); var data = MeshFrameTests.Data(); data.Tangents = [];
             var target = new MeshSurfaceData { Vertices = data.Vertices.Select(p => p + new Vector2(4, 0)).ToArray(), Normals = (Vector3[])data.Normals.Clone() };
-            original.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, data, [target], flags: compressed ? Mesh.ArrayFormat.CompressAttributes : 0); original.RegenNormalMaps();
+            original.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, data, [target], flags: compressed ? Mesh.ArrayFormat.CompressAttributes : 0); original.RegenNormalMaps();
             var buffers = original.ExportPacked(0); Check(buffers.BlendShapeFormat == (Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Normal), "Export retains the independent normal-only shape schema.");
             using var restored = new ArrayMesh(); restored.AddBlendShape("Target"); restored.AppendPacked(ArrayMesh.PreparePacked(buffers, 1)); Same(buffers, restored.ExportPacked(0)); Check(restored.SurfaceGetBlendShapeArrays(0)[0].Tangents.Length == 0, "Raw import does not fabricate authored target tangents.");
             foreach (var mode in Enum.GetValues<BlendShapeMode>())
@@ -73,7 +73,7 @@ internal static partial class MeshPackedTests
         Bad<ArgumentException>(b => b.AABB = new(0, 0, -1, 2)); Bad<ArgumentException>(b => b.AABB = new(float.MaxValue, 0, float.MaxValue, 1)); Bad<ArgumentException>(b => b.UVScale = new(float.NaN, 0, 0, 0));
         Bad<ArgumentException>(b => b.BoneAABBs = [new Rect2(0, 0, 1, 1)]); Bad<ArgumentException>(b => b.BlendShapeData = [1]); Bad<ArgumentException>(b => b.LODs = new Dictionary<float, byte[]> { [1] = [0] });
         Bad<NotSupportedException>(b => b.Format |= (Mesh.ArrayFormat)(1ul << 63)); Bad<NotSupportedException>(b => b.Format &= ~Mesh.ArrayFormat.Use2DVertices);
-        Bad<ArgumentOutOfRangeException>(b => b.Primitive = (Mesh.PrimitiveType)100);
+        Bad<ArgumentOutOfRangeException>(b => b.Primitive = (MeshPrimitiveType)100);
         using (var material = new CanvasItemMaterial()) { material.Dispose(); Bad<ObjectDisposedException>(b => b.Material = material); }
         Bad<ArgumentException>(b => b.BlendShapeFormat = Mesh.ArrayFormat.Color);
         Reject<ArgumentNullException>(() => ArrayMesh.PreparePacked(null!, 0)); Reject<ArgumentException>(() => ArrayMesh.PreparePacked(Minimal(), 1));
