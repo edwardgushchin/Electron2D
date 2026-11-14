@@ -1016,6 +1016,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
 
     /// <summary>Defines the maximum committed multiline undo steps sampled when an editor is constructed.</summary><value>The nonnegative gui/common/text_edit_undo_stack_max_size setting; 1024 initially, zero disables committed history.</value>
     public static ProjectSetting<int> TextEditUndoStackMaxSize { get; } = new("gui/common/text_edit_undo_stack_max_size", 1024, value => value >= 0);
+
+    /// <summary>Sets the idle interval after which interactive multiline edits form a separate undo step.</summary>
+    /// <value>Three seconds by default. Must be positive and finite. Each new editor samples the active feature override.</value>
+    public static ProjectSetting<double> TextEditIdleDetectSeconds { get; } =
+        new("gui/timers/text_edit_idle_detect_sec", 3d, value => double.IsFinite(value) && value > 0);
     /// <summary>Defines Enter and keypad Enter for multiline newline insertion.</summary><value>The typed input/ui_text_newline definition.</value>
     public static ProjectSetting<InputActionSettings> InputUITextNewline { get; } = new("input/ui_text_newline", new InputActionSettings { Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.KeypadEnter }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter, Modifiers = KeyModifierMask.Shift }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.KeypadEnter, Modifiers = KeyModifierMask.Shift }] });
     /// <summary>Defines Command/Control-Home for document start.</summary><value>The typed input/ui_text_caret_document_start definition.</value>

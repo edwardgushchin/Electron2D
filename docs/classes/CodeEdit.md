@@ -10,6 +10,8 @@ Viewport.PushTextInput uses the inherited Text replacement path. TextSet clears 
 
 ## Description
 
+Committed typing and deletion use the inherited [interactive undo interval](../components/multiline-editing.md#undo-for-interactive-edits), including edits that insert or remove delimiter pairs.
+
 CodeEdit specializes TextEdit rather than introducing another document or renderer. Logical lines, Unicode scalar columns, multiple carets, selections, undo/redo, wrapped geometry, highlighters, IME, clipboard and context menus use the inherited engine workflow. Three required custom gutters present line numbers, breakpoints/bookmarks/execution and folding. Marker metadata follows line identity through insertion, movement and history; breakpoint shifts publish the old and new line indices. Resources and application option values are borrowed. The hover Timer and base editor children are owned internal nodes.
 
 Automatic indentation inherits leading whitespace and expands the configured scalar prefixes. Indent/dedent and conversion use tab stops and configured spaces/tabs. Paired Unicode input wraps selections, skips an existing closer and deletes both keys on backspace; paired newline creates an indented body. Explicit line move, duplicate, delete, join and named-region operations preserve grouped history. Read-only input is ignored; explicit document line commands remain available programmatically. Duplicate operations advance caret identity to the copy. Joining rejects LF in its separator.

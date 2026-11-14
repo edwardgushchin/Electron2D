@@ -3581,6 +3581,11 @@
       "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates."
     },
     {
+      "godot": "ProjectSettings::property:gui/timers/text_edit_idle_detect_sec",
+      "electron2d": "property:Electron2D.ProjectSettings.TextEditIdleDetectSeconds()",
+      "reason": "Typed project setting for the interactive multiline undo timer."
+    },
+    {
       "godot": "ProjectSettings::property:gui/common/text_edit_undo_stack_max_size",
       "electron2d": "property:Electron2D.ProjectSettings.TextEditUndoStackMaxSize()",
       "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates."
@@ -4321,6 +4326,13 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:gui/timers/text_edit_idle_detect_sec"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0046. Typed finite positive timeout defaults to three seconds and each TextEdit/CodeEdit samples active project features at construction. Attached committed text, backspace and delete group by action and reset the timer on edits. Focus, movement and unrelated operations commit the pending step. Explicit C# groups retain caller-controlled boundaries."
+    },
     {
       "state": "Implemented",
       "godot": [

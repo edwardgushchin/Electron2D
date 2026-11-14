@@ -60,7 +60,24 @@ public partial class CodeEdit
         });
     }
     /// <inheritdoc />
-    protected override void OnTextInput(string text) { if (!Editable || !HasFocus()) return; CancelIME(); BeginComplexOperation(); try { foreach (var rune in text.EnumerateRunes()) { if (rune.Value == '\n') NewCodeLine(); else OnHandleUnicodeInput(rune.Value, -1); } } finally { EndComplexOperation(); } if (_completionEnabled) RequestCodeCompletion(); }
+    protected override void OnTextInput(string text)
+    {
+        if (!Editable || !HasFocus()) return;
+        CancelIME();
+        if (text.Length == 0) return;
+        EditFromInput(EditAction.Typing, () =>
+        {
+            BeginComplexOperation();
+            try
+            {
+                foreach (var rune in text.EnumerateRunes())
+                    if (rune.Value == '\n') NewCodeLine();
+                    else OnHandleUnicodeInput(rune.Value, -1);
+            }
+            finally { EndComplexOperation(); }
+        });
+        if (_completionEnabled) RequestCodeCompletion();
+    }
     /// <inheritdoc />
     protected override void OnBackspace(int caretIndex)
     {

@@ -79,7 +79,13 @@ public partial class TextEdit
         display.WindowSetIMEActiveCore(active, window.GetWindowID()); if (active) { var local = (Vector2)GetPosAtLineColumn(_carets[0].Position.Y, _carets[0].Position.X) + new Vector2(0, _rowHeight); var position = GetViewport()!.GetScreenTransform() * GetGlobalTransformWithCanvas() * local; display.WindowSetIMEPositionCore((Vector2i)position, window.GetWindowID()); }
     }
     /// <inheritdoc />
-    protected override void OnTextInput(string text) { if (!_editable || !HasFocus()) return; CancelIME(); InsertTextAtCaret(text); }
+    protected override void OnTextInput(string text)
+    {
+        if (!_editable || !HasFocus()) return;
+        CancelIME();
+        if (text.Length != 0)
+            EditFromInput(EditAction.Typing, () => InsertTextAtCaret(text));
+    }
     /// <inheritdoc />
     protected override void OnIMECompositionChanged(string text, Vector2i selection)
     {
@@ -92,7 +98,7 @@ public partial class TextEdit
     private bool Action(InputEvent input, string action) => InputMap.HasAction(action) && input.IsActionPressed(action, allowEcho: true, exactMatch: true);
     private void MoveCaretTo(int index, Vector2i target, bool extend)
     {
-        var caret = AtCaret(index); target = ClampPosition(target); if (extend && _selectingEnabled) { if (!caret.Selected) caret.Origin = caret.Position; caret.Selected = caret.Origin != target; _selectionMode = SelectionMode.Shift; } else { caret.Selected = false; caret.Origin = target; }
+        var caret = AtCaret(index); target = ClampPosition(target); EndInteractiveAction(); if (extend && _selectingEnabled) { if (!caret.Selected) caret.Origin = caret.Position; caret.Selected = caret.Origin != target; _selectionMode = SelectionMode.Shift; } else { caret.Selected = false; caret.Origin = target; }
         caret.Position = target; caret.Wrap = GetLineWrapIndexAtColumn(target.Y, target.X); CaretsChanged(); AdjustViewportToCaret(index);
     }
     private void DeleteAtCarets(bool backwards, bool word, bool toEdge, int caretIndex = -1)
@@ -137,6 +143,7 @@ public partial class TextEdit
             if (!mouse.Pressed) { _draggingCursor = _draggingMinimap = false; if (_dragAttempt && _dragPayload == null) { _dragAttempt = false; MoveCaretTo(0, GetLineColumnAtPos((Vector2i)mouse.Position), false); } if (HasSelection() && DisplayServer.Service is { } display && display.HasFeatureCore(DisplayServer.Feature.ClipboardPrimary)) display.ClipboardSetPrimaryCore(GetSelectedText()); AcceptEvent(); return; }
             EnsureTextLayout(); if (_minimapDraw && MinimapRect().HasPoint(mouse.Position)) { _draggingMinimap = true; SetLineAsCenterVisible(GetMinimapLineAtPos((Vector2i)mouse.Position)); AcceptEvent(); return; }
             var point = GetLineColumnAtPos((Vector2i)mouse.Position); var gutter = HitGutter(mouse.Position); if (gutter >= 0) { if (IsLineGutterClickable(point.Y, gutter)) BeginEventEmission(_publisherGutterClicked.Handlers)?.Invoke(point.Y, gutter); AcceptEvent(); return; }
+            EndInteractiveAction();
             if (mouse.AltPressed) { AddCaret(point.Y, point.X); AcceptEvent(); return; }
             RemoveSecondaryCarets();
             if (_selectingEnabled && point.Y == _doubleLine && Environment.TickCount64 - _lastDoubleClick < 500) { _lastDoubleClick = 0; _pointerOrigin = new(0, point.Y); Select(point.Y, 0, point.Y + 1 < _lines.Count ? point.Y + 1 : point.Y, point.Y + 1 < _lines.Count ? 0 : _lines[point.Y].Scalars); _selectionMode = SelectionMode.Line; _draggingCursor = true; }
@@ -156,8 +163,33 @@ public partial class TextEdit
             if (Action(key, "ui_redo")) { if (_editable) Redo(); AcceptEvent(); return; }
         }
         if (_ime.Length > 0) return;
-        if (_editable && (Action(key, "ui_text_backspace") || Action(key, "ui_text_backspace_word") || Action(key, "ui_text_backspace_all_to_left"))) { if (Action(key, "ui_text_backspace")) OnBackspace(-1); else DeleteAtCarets(true, Action(key, "ui_text_backspace_word"), Action(key, "ui_text_backspace_all_to_left")); AcceptEvent(); return; }
-        if (_editable && (Action(key, "ui_text_delete") || Action(key, "ui_text_delete_word") || Action(key, "ui_text_delete_all_to_right"))) { DeleteAtCarets(false, Action(key, "ui_text_delete_word"), Action(key, "ui_text_delete_all_to_right")); AcceptEvent(); return; }
+        if (_editable && Action(key, "ui_text_backspace"))
+        {
+            EditFromInput(EditAction.Backspace, () => OnBackspace(-1));
+            AcceptEvent();
+            return;
+        }
+        if (_editable && Action(key, "ui_text_delete"))
+        {
+            EditFromInput(EditAction.Delete, () => DeleteAtCarets(false, false, false));
+            AcceptEvent();
+            return;
+        }
+        if (_editable)
+        {
+            var backWord = Action(key, "ui_text_backspace_word");
+            var backEdge = Action(key, "ui_text_backspace_all_to_left");
+            var deleteWord = Action(key, "ui_text_delete_word");
+            var deleteEdge = Action(key, "ui_text_delete_all_to_right");
+            if (backWord || backEdge || deleteWord || deleteEdge)
+            {
+                var backwards = backWord || backEdge;
+                EditFromInput(backwards ? EditAction.Backspace : EditAction.Delete,
+                    () => DeleteAtCarets(backwards, backWord || deleteWord, backEdge || deleteEdge));
+                AcceptEvent();
+                return;
+            }
+        }
         if (_editable && Action(key, "ui_text_newline")) { InsertTextAtCaret("\n"); AcceptEvent(); return; }
         if (_editable && _tabInputMode && Action(key, "ui_focus_next")) { InsertTextAtCaret("\t"); AcceptEvent(); return; }
         using var movement = new InputEventKey { Keycode = key.Keycode, PhysicalKeycode = key.PhysicalKeycode, KeyLabel = key.KeyLabel, Pressed = true, ControlPressed = key.ControlPressed, AltPressed = key.AltPressed, MetaPressed = key.MetaPressed }; EnsureTextLayout(); var moved = false;
@@ -178,7 +210,7 @@ public partial class TextEdit
         }
         if (moved) { MergeOverlappingCarets(); AcceptEvent(); return; }
         if (Action(key, "ui_text_toggle_insert_mode")) { SetOvertypeModeEnabled(!_overtype); AcceptEvent(); return; }
-        if (_editable && key.Unicode >= 32 && Rune.IsValid(key.Unicode) && !key.ControlPressed && !key.AltPressed && !key.MetaPressed) { OnHandleUnicodeInput(key.Unicode, -1); AcceptEvent(); }
+        if (_editable && key.Unicode >= 32 && Rune.IsValid(key.Unicode) && !key.ControlPressed && !key.AltPressed && !key.MetaPressed) { EditFromInput(EditAction.Typing, () => OnHandleUnicodeInput(key.Unicode, -1)); AcceptEvent(); }
     }
     private int HitGutter(Vector2 point) { var x = IsLayoutRTL() ? _contentRect.End.X : _contentRect.Position.X - GetTotalGutterWidth(); for (var i = 0; i < _gutters.Count; i++) { var gutter = _gutters[i]; if (!gutter.Draw) continue; if (point.X >= x && point.X < x + gutter.Width) return i; x += gutter.Width; } return -1; }
     /// <summary>Reports whether the current pointer lies inside any nonempty selection.</summary><param name="edges">Includes selection endpoints.</param><param name="caretIndex">Specific caret or -1 for all.</param><returns>Selection hit.</returns>

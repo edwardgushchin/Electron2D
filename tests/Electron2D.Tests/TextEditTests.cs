@@ -5,7 +5,7 @@ internal static class TextEditTests
     private sealed class Root : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 480, 320); }
     internal static void Run()
     {
-        Buffer(); Highlighting(); Routing(); Persistence(); Console.WriteLine("TextEdit document, multicaret, history, Unicode, highlighting, routing and scene storage passed.");
+        Buffer(); Highlighting(); Routing(); IdleUndo(); Persistence(); Console.WriteLine("TextEdit document, multicaret, timed history, Unicode, highlighting, routing and scene storage passed.");
     }
     private static void Buffer()
     {
@@ -35,6 +35,134 @@ internal static class TextEditTests
         var root = new Root(); var t = new TextEdit { Size = new(220, 100), DrawSpaces = true }; t.GetLineHeight(); root.AddChild(t); using var tree = new SceneTree(root); tree.FlushDeferred(); t.GrabFocus(); tree.DispatchCommittedText(root, "A😀\nBC"); Check(t.Text == "A😀\nBC", "native committed text route"); KeyEvent(root, Key.Left, true); Check(t.GetSelectedText() == "C", "shift selection"); KeyEvent(root, Key.Backspace); Check(t.Text == "A😀\nB", "selection delete"); KeyEvent(root, Key.Enter); Check(t.Text == "A😀\nB\n", "newline action");
         tree.DispatchIMEComposition(root, "中", new(0, 1)); Check(t.HasIMEText() && t.GetLineWithIME(2) == "中" && t.GetLine(2) == "", "IME preedit"); tree.DispatchCommittedText(root, "中"); Check(!t.HasIMEText() && t.Text == "A😀\nB\n中", "IME commit"); t.Text = "ab\ncd"; t.SetCaretColumn(1); t.AddCaret(1, 1); tree.DispatchIMEComposition(root, "中", new(0, 1)); Check(t.GetLineWithIME(0) == "a中b" && t.GetLineWithIME(1) == "c中d", "multicaret preedit"); t.ApplyIME(); Check(t.Text == "a中b\nc中d", "multicaret composition apply"); t.Undo(); Check(t.Text == "ab\ncd", "composition group undo"); t.RemoveSecondaryCarets(); t.Text = "A😀\nB\n中"; t.Editable = false; tree.DispatchCommittedText(root, "ignored"); Check(t.GetLine(2) == "中", "readonly input");
     }
+    private static void IdleUndo()
+    {
+        var setting = ProjectSettings.TextEditIdleDetectSeconds;
+        const string feature = "text-edit-idle-test";
+        var saved = ProjectSettings.Get(setting);
+        var limitSetting = ProjectSettings.TextEditUndoStackMaxSize;
+        var savedLimit = ProjectSettings.Get(limitSetting);
+        try
+        {
+            Check(setting.DefaultValue == 3d, "idle setting default");
+            Reject<ArgumentException>(() => ProjectSettings.Set(setting, double.NaN));
+            Reject<ArgumentOutOfRangeException>(() => ProjectSettings.Set(setting, 0d));
+            ProjectSettings.Set(setting, 2d);
+            ProjectSettings.SetFeatureOverride(setting, feature, .5d);
+            ProjectSettings.AddCustomFeature(feature);
+
+            var root = new Root();
+            var t = new TextEdit { Size = new(220, 100) };
+            var code = new CodeEdit { Position = new(0, 110), Size = new(220, 100) };
+            ProjectSettings.Set(limitSetting, 0);
+            var noHistory = new TextEdit { Position = new(240, 0), Size = new(220, 100) };
+            ProjectSettings.Set(limitSetting, savedLimit);
+            root.AddChild(t);
+            root.AddChild(code);
+            root.AddChild(noHistory);
+            using var tree = new SceneTree(root);
+            ProjectSettings.ClearFeatureOverride(setting, feature);
+            ProjectSettings.Set(setting, 4d);
+            t.GrabFocus();
+            var changes = 0;
+            t.TextChanged += () => changes++;
+            Type("a");
+            tree.ProcessFrame(.375);
+            Check(changes == 1 && t.GetVersion() != 0 && t.HasUndo(), "the first change is visible before idle commit");
+            Type("b");
+            tree.ProcessFrame(.375);
+            Check(changes == 2, "typing resets the timeout while notifying each frame");
+            Type("c");
+            tree.ProcessFrame(.5);
+            Type("d");
+            t.Undo();
+            Check(t.Text == "abc" && t.GetCaretColumn() == 3 && t.HasRedo(), "timeout divides undo steps and preserves the caret");
+            t.Redo();
+            Check(t.Text == "abcd", "redo restores the timed step");
+            t.Undo();
+            Type("e");
+            Check(!t.HasRedo(), "uncommitted input immediately replaces a redo branch");
+            t.Undo();
+            t.Undo();
+            Check(t.Text == "" && !t.HasUndo(), "all input before the last idle boundary is one step");
+
+            t.Text = "abcd";
+            t.ClearUndoHistory();
+            t.SetCaretColumn(2);
+            KeyEvent(root, Key.Backspace);
+            KeyEvent(root, Key.Backspace);
+            KeyEvent(root, Key.Delete);
+            KeyEvent(root, Key.Delete);
+            Check(t.Text == "", "backward and forward deletion both execute");
+            t.Undo();
+            Check(t.Text == "cd", "forward deletes share an undo group");
+            t.Undo();
+            Check(t.Text == "abcd", "switching deletion direction starts a new group");
+
+            t.Text = "";
+            t.ClearUndoHistory();
+            Type("x");
+            KeyEvent(root, Key.Left);
+            Type("y");
+            t.InsertTextAtCaret("Z");
+            t.Undo();
+            Check(t.Text == "yx", "programmatic insertion is a separate step");
+            t.Undo();
+            Check(t.Text == "x", "caret movement separates typing");
+
+            t.StartAction(TextEdit.EditAction.Typing);
+            t.InsertTextAtCaret("1");
+            tree.ProcessFrame(1);
+            t.InsertTextAtCaret("2");
+            t.EndAction();
+            t.Undo();
+            Check(t.Text == "x", "explicit action remains grouped across the interactive timeout");
+
+            Type("F");
+            code.GrabFocus();
+            t.GrabFocus();
+            Type("G");
+            t.Undo();
+            Check(t.Text.Contains('F') && !t.Text.Contains('G'), "focus loss commits pending typing");
+
+            code.GrabFocus();
+            Type("i");
+            Type("f");
+            tree.ProcessFrame(.5);
+            Type("x");
+            code.Undo();
+            Check(code.Text == "if", "CodeEdit shares the idle setting through committed input");
+            code.Undo();
+            Check(code.Text == "", "CodeEdit groups consecutive text events");
+
+            noHistory.GrabFocus();
+            Type("x");
+            Type("y");
+            Check(noHistory.Text == "xy" && !noHistory.HasUndo(), "zero history limit disables undo");
+            noHistory.Undo();
+            Check(noHistory.Text == "xy", "disabled history keeps the current document");
+
+            t.GrabFocus();
+            Type("R");
+            root.RemoveChild(t);
+            using (t)
+            {
+                t.InsertTextAtCaret("S");
+                t.Undo();
+                Check(t.Text.Contains('R') && !t.Text.Contains('S'), "detach commits input before detached edits");
+            }
+
+            void Type(string text) => tree.DispatchCommittedText(root, text);
+        }
+        finally
+        {
+            ProjectSettings.ClearFeatureOverride(setting, feature);
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.Set(setting, saved);
+            ProjectSettings.Set(limitSetting, savedLimit);
+        }
+    }
+
     private static void Persistence()
     {
         using var h = new CodeHighlighter(); h.AddKeywordColor("let", Colors.Red); using var t = new TextEdit { Text = "let one\ntwo", WrapMode = TextEdit.LineWrappingMode.Boundary, SyntaxHighlighter = h }; using var packed = new PackedScene(); packed.Pack(t); using var copy = (TextEdit)packed.Instantiate(); Check(copy.Text == t.Text && copy.WrapMode == t.WrapMode && copy.SyntaxHighlighter is CodeHighlighter c && c.HasKeywordColor("let"), "scene highlighter copied independently");
@@ -72,7 +200,7 @@ internal static class TextEditTests
         {
             if (Frame++ == 0) { Check(field.Text == "native😀\nsecond", "SDL commit route"); var handle = SDL3.SDL.GetWindows(out var count)![0]; Check(SDL3.SDL.TextInputActive(handle), "native IME active"); var ptr = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUTF8("中"); _pointers.Add(ptr); var input = new SDL3.SDL.Event { Edit = new SDL3.SDL.TextEditingEvent { Type = SDL3.SDL.EventType.TextEditing, WindowID = _id, Text = ptr, Start = 0, Length = 1 } }; Check(SDL3.SDL.PushEvent(ref input), "SDL preedit producer"); }
             else if (Frame == 2) { Check(field.HasIMEText() && field.GetLineWithIME(1) == "second中", "SDL preedit route"); PushText("中"); }
-            else if (Frame == 3) { Check(field.Text == "native😀\nsecond中" && !field.HasIMEText(), "SDL composition commit"); field.SelectAll(); field.Copy(); Check(DisplayServer.ClipboardGet() == field.Text, "native clipboard copy"); field.Clear(); field.Paste(); Check(field.Text == "native😀\nsecond中", "native clipboard paste"); field.RemoveSecondaryCarets(); field.Deselect(); field.Copy(); field.SetCaretColumn(1); field.Paste(); Check(field.GetLineCount() == 3 && field.GetLine(1) == "second中", "linewise paste"); field.Text = "ab\ncd"; field.SetCaretColumn(1); field.AddCaret(1, 1); DisplayServer.ClipboardSet("X\nY"); field.Paste(); Check(field.Text == "aXb\ncYd", "one clipboard line per caret"); }
+            else if (Frame == 3) { Check(field.Text == "native😀\nsecond中" && !field.HasIMEText(), "SDL composition commit"); field.Undo(); Check(field.Text == "", "SDL commits inside the idle interval form one undo step"); field.Redo(); field.SelectAll(); field.Copy(); Check(DisplayServer.ClipboardGet().Replace("\r\n", "\n") == field.Text, "native clipboard copy"); field.Clear(); field.Paste(); Check(field.Text == "native😀\nsecond中", "native clipboard paste"); field.RemoveSecondaryCarets(); field.Deselect(); field.Copy(); field.SetCaretColumn(1); field.Paste(); Check(field.GetLineCount() == 3 && field.GetLine(1) == "second中", "linewise paste"); field.Text = "ab\ncd"; field.SetCaretColumn(1); field.AddCaret(1, 1); DisplayServer.ClipboardSet("X\nY"); field.Paste(); Check(field.Text == "aXb\ncYd", "one clipboard line per caret"); }
             else { field.Editable = false; var text = field.Text; field.Cut(); Check(field.Text == text, "readonly clipboard cut"); Tree!.Quit(); }
         }
         protected override void Dispose(bool disposing) { if (disposing) { foreach (var ptr in _pointers) System.Runtime.InteropServices.Marshal.FreeCoTaskMem(ptr); if (DisplayServer.Service != null) DisplayServer.ClipboardSet(_clipboard); } base.Dispose(disposing); }

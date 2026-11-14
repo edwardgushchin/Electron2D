@@ -298237,6 +298237,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.TextEditIdleDetectSeconds()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "TextEditIdleDetectSeconds",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Double\u003E TextEditIdleDetectSeconds { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.TextEditUndoStackMaxSize()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

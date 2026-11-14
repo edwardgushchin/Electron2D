@@ -275,6 +275,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(UDSConnectTimeoutSeconds, isBasic: false);
         RegisterInternal(InputUITextSubmit, isBasic: false);
         RegisterInternal(TextEditUndoStackMaxSize, isBasic: false);
+        RegisterInternal(TextEditIdleDetectSeconds, isBasic: false);
         RegisterInternal(InputUITextNewline, isBasic: false);
         RegisterInternal(InputUITextCompletionQuery, isBasic: false);
         RegisterInternal(InputUITextIndent, isBasic: false);

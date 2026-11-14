@@ -88,6 +88,9 @@ public partial class TextEdit : Control
     private readonly int _historyLimit;
     private int _tabSize = 4, _version, _nextVersion, _savedVersion, _historyPosition, _complex, _multiEdit;
     private EditAction _action;
+    private readonly double _undoIdleSeconds;
+    private double _undoIdleRemaining;
+    private bool _interactiveAction, _editingInput;
     private History? _operationBefore;
     private SelectionMode _selectionMode;
     private bool _overtype, _draggingCursor, _draggingMinimap, _dragAttempt;
@@ -117,6 +120,7 @@ public partial class TextEdit : Control
     public TextEdit()
     {
         _historyLimit = ProjectSettings.Get(ProjectSettings.TextEditUndoStackMaxSize);
+        _undoIdleSeconds = ProjectSettings.GetWithOverride(ProjectSettings.TextEditIdleDetectSeconds);
         FocusMode = FocusMode.All; MouseDefaultCursorShape = CursorShape.IBeam; ClipContents = true;
         _resourceChanged = ResourceChanged; _resourceDisposed = ResourceDisposed; _emitChanges = EmitChanges;
         _vBar = new OwnedVScroll(this) { Name = "_v_scroll" }; _hBar = new OwnedHScroll(this) { Name = "_h_scroll" }; _menu = new OwnedMenu(this) { Name = "_text_menu" };
@@ -176,7 +180,7 @@ public partial class TextEdit : Control
     private void ResourceDisposed(ElectronObject resource) => ResourceChanged((Resource)resource);
     private void Changed(int from, int to, bool text)
     { InvalidateTextLayout(); if (text) { if (!_settingText) _pendingTextChanged = true; _pendingFrom = Math.Min(_pendingFrom, from); _pendingTo = Math.Max(_pendingTo, to); } _pendingCaret = true; QueueChanges(); }
-    private void QueueChanges() { if (_complex > 0 || _multiEdit > 0 || _operationBefore != null || _changeQueued) return; _changeQueued = true; if (Tree is { IsClosing: false } tree) tree.Defer(_emitChanges); else if (Tree is null) EmitChanges(); }
+    private void QueueChanges() { if (_complex > 0 || _multiEdit > 0 || (_operationBefore != null && !_interactiveAction) || _changeQueued) return; _changeQueued = true; if (Tree is { IsClosing: false } tree) tree.Defer(_emitChanges); else if (Tree is null) EmitChanges(); }
     private void EmitChanges()
     {
         _changeQueued = false; if (IsDisposed || _disposing) return; var changed = _pendingTextChanged; var caret = _pendingCaret; var from = _pendingFrom; var to = _pendingTo;
