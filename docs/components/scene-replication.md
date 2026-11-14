@@ -1,6 +1,6 @@
 # Typed scene spawning and replication
 
-Last updated: 2026-10-04
+Last updated: 2026-11-14
 
 ## Public surface and direction
 
@@ -27,7 +27,7 @@ Direct edits to a shared config retain the existing next-frame preparation/error
 contract; user-provider callback effects after accepted registration are not
 transactionally rolled back.
 
-Root/interval/config/visibility settings are typed descriptors with PackedScene storage. Method/codec/factory tokens are authored by ordinary C# constructors/factories. Scene factories return default detached nodes without precreated children; PackedScene restores authored children. In-memory PackedScene instances carry internal template provenance, permitting automatic spawn identification even when ResourcePath is empty. File-backed scene add/get APIs require the typed scene disk-format/loader/saver producer and stay Partial in coverage; this delivery does not claim file/editor authoring.
+Root/interval/config/visibility settings are typed descriptors with PackedScene storage. Method/codec/factory tokens are authored by ordinary C# constructors/factories. Scene factories return default detached nodes without precreated children; PackedScene restores authored children. In-memory PackedScene instances carry internal template provenance, permitting automatic spawn identification even when ResourcePath is empty. File-backed registrations use the typed PackedScene loader and preserve the original path or UID. Participants load their own templates at matching indices. The spawner borrows cached templates and owns newly loaded ones. Clearing registrations releases owned templates while instances retain their resource graphs through despawn.
 
 ## Custom and automatic spawn
 
@@ -59,7 +59,9 @@ Constructors/configuration/first paths/membership/template construction/spawn/de
 
 [SceneReplicationTests](../../tests/Electron2D.Tests/SceneReplicationTests.cs) executes native WS/WSS server/two-client public branches, custom/automatic template spawning, initial pre-Ready fields, periodic/change-only state, unchanged-delta suppression, hide/reveal/current replay, late admission, removal, limits, hidden-root RPC filtering and committed remote cleanup/peer replacement despite throwing despawn observers. Each 64-cycle warmed active sync/delta interval and 64 idle process-frame interval reports zero managed bytes. Independent BinaryWriter fixtures verify whole-group 128-byte batching, requested modes, malformed second codec preserving state, valid little-endian payload, old sequence and wrong-authority rejection. Config defaults/ordering/duplicate/copy/reset/legacy modes and invalid interval/budget boundaries execute.
 
-These are programmatic authoring and headless native network checks. Native allocation totals, foreign packaging/execution, real routed throughput/application schema acceptance, file/editor workflows and human/rendered/agent acceptance remain separate gates. See [platform verification](../platform-verification.md) and [ADR 0094](../decisions/networking.md#adr-0094).
+[ResourceArchiveTests](../../tests/Electron2D.Tests/ResourceArchiveTests.cs) passes on Windows x64 with native UDP loopback. The public SceneTree flow retries a rejected client setup, negotiates 255 channels with default ENet parameters, restores node and resource values before Ready from independent scene files, and verifies live graphs after clearing their registrations and through the remote despawn callback. The instance is disposed after the callback. See [ENet verification](enet.md#verification-and-limits) for the loopback requirement.
+
+These are programmatic authoring and headless native network checks. Complete native allocation totals, foreign packaging/execution, routed throughput, application schema acceptance and editor/human/rendered/agent acceptance remain separate gates. See [platform verification](../platform-verification.md) and [ADR 0094](../decisions/networking.md#adr-0094).
 
 ### Rejected live synchronization edits, 2026-10-22
 

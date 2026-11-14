@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Replicates authored PackedScene children or explicit typed custom factories from its authority.</summary>
-/// <remarks>Registered scenes/factory tokens are borrowed. Spawn construction and membership are cold work.
+/// <remarks>In-memory templates, cached file templates and factory tokens are borrowed. Newly loaded file templates are owned by the spawner. Spawn construction and membership are cold work.
 /// Remote ownership belongs to the configured parent; Spawned/Despawned run only on remote participants.</remarks>
 public class MultiplayerSpawner : Node
 {
@@ -32,7 +32,7 @@ public class MultiplayerSpawner : Node
     /// <summary>Occurs when a remote instance is removed by its authority.</summary>
     public event Action<Node>? Despawned { add => _publisherDespawned.Add(value); remove => _publisherDespawned.Remove(value); }
     private EventPublisher<Action<Node>> _publisherDespawned;
-    /// <summary>Loads and registers a file-backed typed PackedScene for automatic replication.</summary><param name="path">Resource scene path or UID.</param><remarks>Cached templates remain borrowed. This spawner owns newly loaded templates until clear/disposal; live instances retain their file graph leases.</remarks>
+    /// <summary>Loads and registers a file-backed typed PackedScene for automatic replication.</summary><param name="path">Resource scene path or UID.</param><remarks>Cached templates remain borrowed. This spawner owns newly loaded templates until clear/disposal. Each peer loads its own template at the matching index, and restores its stored values before the instance enters the tree. Live instances retain their file graph leases.</remarks>
     public void AddSpawnableScene(string path)
     {
         Mutate(); if (_scenes.Count >= 255) throw new InvalidOperationException("At most 255 ordered spawnable scenes are supported.");
