@@ -133,8 +133,17 @@ internal static partial class IntegerSourceTextureTests
                         if (value is TextureLayered) Check(device.TextureGetData(storage, 1).AsSpan().SequenceEqual(group.Array.CaptureLayers()!.Layers[1].Upload.Data), "Actual second layer integer bits.");
                     }
                     group.Storage = RenderingServer.TextureGetRDTexture(group.Primary.GetRID());
+                    if (driver == "direct3d12")
+                    {
+                        var beforeClear = device.TextureGetData(group.Storage, 0);
+                        Reject<NotSupportedException>(() => device.TextureClear(group.Storage, Colors.Black, 0, 3, 0, 1));
+                        Check(device.TextureIsValid(group.Storage) && device.TextureGetData(group.Storage, 0).AsSpan().SequenceEqual(beforeClear),
+                            $"Rejected Clear preserves {group.Format} storage and every mip.");
+                    }
                     RenderingServer.TextureGetRDTexture(group.Server); RenderingServer.TextureGetRDTexture(group.ServerArray);
                 }
+                if (driver == "direct3d12")
+                    Console.WriteLine("D3D12 TextureClear rejected all four UInt16 exports and preserved every mip byte.");
                 root.Tree!.ProcessFrameStarted += _ => before = GC.GetAllocatedBytesForCurrentThread();
                 RenderingServer.FramePreDraw += () =>
                 {
