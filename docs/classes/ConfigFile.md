@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-26
 
-The built-in JSON context includes AudioServer.SpeakerMode for typed movie project settings, including reflection-disabled NativeAOT storage. This adds metadata for the existing enum and does not introduce untyped configuration values.
+The built-in JSON context includes `AudioServer.SpeakerMode` and `DisplayServer.VSyncMode` for typed project settings. It can snapshot their defaults during service initialization when JSON reflection is disabled, including in NativeAOT hosts.
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 

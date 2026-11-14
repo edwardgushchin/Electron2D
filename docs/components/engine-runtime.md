@@ -106,9 +106,13 @@ The accepted [agent-native contract](../decisions/agent-native.md#adr-0090) uses
 | --- | --- |
 | [`Engine`](../classes/Engine.md) | Process-wide coordinator, scheduler, metrics owner, and registry |
 | [`FrameDeltaSmoother`](../classes/FrameDeltaSmoother.md) | Internal scalar host-cadence estimator and carried-period filter |
-| [`EngineVersionInfo`](../classes/EngineVersionInfo.md) | Immutable typed assembly-version descriptor |
+| [`EngineVersionInfo`](../classes/EngineVersionInfo.md) | Immutable typed descriptor for the loaded engine's product version, assembly version and source provenance |
 
 [`MainLoop`](../classes/MainLoop.md) is owned by the separate [Main loop](main-loop.md) component and attached non-destructively by this component.
+
+## Build metadata
+
+[`Engine.ArchitectureName`](../classes/Engine.md#p-electron2d-engine-architecturename) identifies the process architecture selected for the loaded engine. [`Engine.VersionInfo`](../classes/EngineVersionInfo.md) gives the embedded product and assembly versions, build configuration and available source provenance. Both properties can be read before starting a loop and from any thread. The public metadata consumer accepts an independent expectation document for ordinary, trimmed and NativeAOT runs.
 
 ## Runtime flow
 
