@@ -67,11 +67,11 @@ public sealed class MeshSurfaceData
         ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(UV2s); ArgumentNullException.ThrowIfNull(Indices); ArgumentNullException.ThrowIfNull(Bones); ArgumentNullException.ThrowIfNull(Weights);
         return new() { VertexCount = _vertexCount, Vertices = (Vector2[])Vertices.Clone(), Colors = (Color[])Colors.Clone(), Normals = (Vector3[])Normals.Clone(), Tangents = (Vector4[])Tangents.Clone(), UVs = (Vector2[])UVs.Clone(), UV2s = (Vector2[])UV2s.Clone(), Indices = (int[])Indices.Clone(), Bones = (int[])Bones.Clone(), Weights = (float[])Weights.Clone(), Custom0 = Custom0?.Copy(), Custom1 = Custom1?.Copy(), Custom2 = Custom2?.Copy(), Custom3 = Custom3?.Copy() };
     }
-    internal void Validate(Mesh.PrimitiveType primitive)
+    internal void Validate(MeshPrimitiveType primitive)
     {
         ArgumentNullException.ThrowIfNull(Vertices); ArgumentNullException.ThrowIfNull(Colors); ArgumentNullException.ThrowIfNull(Normals); ArgumentNullException.ThrowIfNull(Tangents);
         ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(UV2s); ArgumentNullException.ThrowIfNull(Indices); ArgumentNullException.ThrowIfNull(Bones); ArgumentNullException.ThrowIfNull(Weights);
-        if (primitive is < Mesh.PrimitiveType.Points or > Mesh.PrimitiveType.TriangleStrip) throw new ArgumentOutOfRangeException(nameof(primitive));
+        if (primitive is < MeshPrimitiveType.Points or > MeshPrimitiveType.TriangleStrip) throw new ArgumentOutOfRangeException(nameof(primitive));
         if (VertexCount < 0 || Vertices.Length != 0 && VertexCount != Vertices.Length) throw new ArgumentException("The declared vertex count must match supplied positions.");
         if (VertexCount == 0 && Indices.Length == 0) throw new ArgumentException("A surface requires vertex invocations.");
         if (Normals.Length != 0 && Normals.Length != VertexCount || Tangents.Length != 0 && Tangents.Length != VertexCount || Colors.Length != 0 && Colors.Length != VertexCount || UVs.Length != 0 && UVs.Length != VertexCount || UV2s.Length != 0 && UV2s.Length != VertexCount) throw new ArgumentException("Attribute counts must match the vertex count.");
@@ -87,7 +87,7 @@ public sealed class MeshSurfaceData
         foreach (var uv in UV2s) if (!uv.IsFinite()) throw new ArgumentException("Secondary mesh coordinates must be finite.");
         foreach (var index in Indices) if (VertexCount == 0 ? (uint)index > ushort.MaxValue : (uint)index >= (uint)VertexCount) throw new ArgumentOutOfRangeException(nameof(Indices));
         var count = Indices.Length == 0 ? VertexCount : Indices.Length;
-        if (primitive == Mesh.PrimitiveType.Lines && count % 2 != 0 || primitive == Mesh.PrimitiveType.Triangles && count % 3 != 0 || primitive == Mesh.PrimitiveType.LineStrip && count < 2 || primitive == Mesh.PrimitiveType.TriangleStrip && count < 3)
+        if (primitive == MeshPrimitiveType.Lines && count % 2 != 0 || primitive == MeshPrimitiveType.Triangles && count % 3 != 0 || primitive == MeshPrimitiveType.LineStrip && count < 2 || primitive == MeshPrimitiveType.TriangleStrip && count < 3)
             throw new ArgumentException("The vertex order does not form complete primitives.");
     }
 }

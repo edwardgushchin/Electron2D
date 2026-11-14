@@ -24,7 +24,7 @@ internal static class MeshIndexTests
     {
         foreach (var count in new[] { 6, 65536, 65537 })
         {
-            using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data(count));
+            using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data(count));
             var changed = 0; mesh.Changed += _ => changed++;
             var right = Indices(count, true); var left = Indices(count, false); var stride = right.Length / 3;
             mesh.UpdateIndexRegion(0, 0, right);
@@ -55,15 +55,15 @@ internal static class MeshIndexTests
             finally { GC.EndNoGCRegion(); }
             Check(ownerBytes == 0 && allBytes == 0, $"128 prepared updates ({count} vertices) allocate zero owner/all-thread managed bytes: {ownerBytes}/{allBytes}.");
         }
-        foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>())
+        foreach (var primitive in Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max))
         {
-            using var mesh = new ArrayMesh(); var data = Data(); if (primitive == Mesh.PrimitiveType.Lines) data.Indices = [0, 1];
+            using var mesh = new ArrayMesh(); var data = Data(); if (primitive == MeshPrimitiveType.Lines) data.Indices = [0, 1];
             mesh.AddSurfaceFromArrays(primitive, data); mesh.UpdateIndexRegion(0, 0, [3]); Check(mesh.SurfaceGetPrimitiveType(0) == primitive && mesh.SurfaceGetArrays(0).Indices[0] == 3, "All topologies retain their format/count.");
         }
-        using var unindexed = new ArrayMesh(); var sequential = Data(); sequential.Indices = []; unindexed.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, sequential);
+        using var unindexed = new ArrayMesh(); var sequential = Data(); sequential.Indices = []; unindexed.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, sequential);
         Reject<InvalidOperationException>(() => unindexed.UpdateIndexRegion(0, 0, []));
         using var lod = new ArrayMesh(); var baseData = Data(); baseData.Indices = [0, 1, 2, 3, 4, 5];
-        lod.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, baseData, lods: new Dictionary<float, int[]> { [2] = [0, 1, 2] }); lod.UpdateIndexRegion(0, 0, [3]);
+        lod.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, baseData, lods: new Dictionary<float, int[]> { [2] = [0, 1, 2] }); lod.UpdateIndexRegion(0, 0, [3]);
         Check(lod.SurfaceGetLODs(0)[2][0] == 0, "Base updates preserve independent LOD indices."); Fresh(lod);
         unindexed.Dispose(); Reject<ObjectDisposedException>(() => unindexed.UpdateIndexRegion(0, 0, []));
         Console.WriteLine("Mesh index contracts: both widths, byte boundaries, all topologies, atomic failure, LODs, archives and 128 zero-byte updates passed.");
@@ -92,10 +92,10 @@ internal static class MeshIndexTests
         window.Ready += _ =>
         {
             Check(RenderingServer.GetCurrentRenderingMethod() == backend, "Requested backend executes without fallback."); RenderingServer.SetDefaultClearColor(Colors.Black); Layout();
-            for (var i = 0; i < 2; i++) { rows[i] = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(rows[i], Mesh.PrimitiveType.Triangles, Data(i == 0 ? 6 : 65537)); var draw = new Draw(rows[i], false) { Position = new(4, 4 + i * 24) }; draws.Add(draw); window.AddChild(draw); }
+            for (var i = 0; i < 2; i++) { rows[i] = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(rows[i], MeshPrimitiveType.Triangles, Data(i == 0 ? 6 : 65537)); var draw = new Draw(rows[i], false) { Position = new(4, 4 + i * 24) }; draws.Add(draw); window.AddChild(draw); }
             var multi = RenderingServer.MultiMeshCreate(); RenderingServer.MultiMeshAllocateData(multi, 2); RenderingServer.MultiMeshSetMesh(multi, rows[0]); RenderingServer.MultiMeshInstanceSetTransform2D(multi, 0, Transform.Identity); RenderingServer.MultiMeshInstanceSetTransform2D(multi, 1, new Transform(0, new(44, 0)));
             var instances = new Draw(multi, true) { Position = new(4, 52) }; draws.Add(instances); window.AddChild(instances);
-            using var borrowed = new ArrayMesh(); borrowed.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data()); Reject<InvalidOperationException>(() => RenderingServer.MeshSurfaceUpdateIndexRegion(borrowed.GetRID(), 0, 0, right[0]));
+            using var borrowed = new ArrayMesh(); borrowed.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data()); Reject<InvalidOperationException>(() => RenderingServer.MeshSurfaceUpdateIndexRegion(borrowed.GetRID(), 0, 0, right[0]));
             Reject<ArgumentException>(() => RenderingServer.MeshSurfaceUpdateIndexRegion(default, 0, 0, right[0])); Task.Run(() => Reject<InvalidOperationException>(() => RenderingServer.MeshSurfaceUpdateIndexRegion(rows[0], 0, 0, right[0]))).GetAwaiter().GetResult();
             window.Tree!.ProcessFrameStarted += _ => { before = GC.GetAllocatedBytesForCurrentThread(); if (frame < 80) for (var i = 0; i < 2; i++) RenderingServer.MeshSurfaceUpdateIndexRegion(rows[i], 0, 0, (frame & 1) != 0 ? right[i] : left[i]); };
             RenderingServer.FramePostDraw += () =>
@@ -121,7 +121,7 @@ internal static class MeshIndexTests
         var custom = all | Mesh.ArrayFormat.Custom0 | Mesh.ArrayFormat.Custom1 | Mesh.ArrayFormat.Custom2 | Mesh.ArrayFormat.Custom3 | (Mesh.ArrayFormat)((ulong)MeshCustomFormat.RGBFloat << 13 | (ulong)MeshCustomFormat.RGBAHalf << 16 | (ulong)MeshCustomFormat.RGFloat << 19);
         Check(RenderingServer.MeshSurfaceGetFormatOffset(custom, 4, Mesh.ArrayFormat.Custom3) == 48 && RenderingServer.MeshSurfaceGetFormatOffset(Mesh.ArrayFormat.None, 4, Mesh.ArrayFormat.Normal) == 0, "Custom layouts and absent channels.");
         var owned = RenderingServer.MeshCreate(); var data = Data(); data.Colors = Enumerable.Repeat(Colors.White, 6).ToArray(); data.UVs = new Vector2[6]; data.UV2s = new Vector2[6]; data.Normals = Enumerable.Repeat(new Vector3(0, 0, 1), 6).ToArray();
-        RenderingServer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, data); var format = RenderingServer.MeshSurfaceGetFormat(owned, 0); var patch = new byte[8];
+        RenderingServer.MeshAddSurfaceFromArrays(owned, MeshPrimitiveType.Triangles, data); var format = RenderingServer.MeshSurfaceGetFormat(owned, 0); var patch = new byte[8];
         BinaryPrimitives.WriteSingleLittleEndian(patch, .25f); BinaryPrimitives.WriteSingleLittleEndian(patch.AsSpan(4), .75f);
         RenderingServer.MeshSurfaceUpdateAttributeRegion(owned, 0, RenderingServer.MeshSurfaceGetFormatOffset(format, 6, Mesh.ArrayFormat.TexUV2), patch);
         BinaryPrimitives.WriteUInt32LittleEndian(patch, 0x7fffffff);

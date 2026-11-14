@@ -45,7 +45,7 @@ internal static class CanvasMSAATests
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Disabled);
         if (backend == "compatibility") { Compatibility(); return; }
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(2.2f, 2.4f), new(34.4f, 3.9f), new(7.3f, 31.8f)] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(2.2f, 2.4f), new(34.4f, 3.9f), new(7.3f, 31.8f)] });
         var window = new Window { Size = new(128, 96), MSAA2D = Viewport.MSAA.Samples2X, UseHDR2D = HDR };
         var view = new SubViewport { Size = new(128, 96), MSAA2D = Viewport.MSAA.Samples4X, UseHDR2D = HDR, RenderTargetUpdateMode = ViewportUpdateMode.Always }; window.AddChild(view);
         using var rootTexture = window.GetTexture(); using var viewTexture = view.GetTexture();

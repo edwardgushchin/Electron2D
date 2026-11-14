@@ -55,7 +55,7 @@ internal static partial class GraphChecks
             using var format = new RDTextureFormat { Width = 8, Height = 16, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = RenderingDevice.TextureUsageBits.Sampling };
             using var view = new RDTextureView(); var data = Enumerable.Repeat((byte)255, 8 * 16 * 4).ToArray();
             var rid = device.TextureCreate(format, view, [data]); var textureRD = KeepSize(new TextureRD { TextureRDRID = rid });
-            var mesh = KeepSize(new ArrayMesh()); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+            var mesh = KeepSize(new ArrayMesh()); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
             { Vertices = [Vector2.Zero, new(8, 0), new(8, 8), new(0, 8)], UVs = [Vector2.Zero, Vector2.Right, Vector2.One, Vector2.Down], Indices = [0, 1, 2, 0, 2, 3] });
             var multi = KeepSize(new MultiMesh { Mesh = mesh, InstanceCount = 1 }); multi.SetInstanceTransform2D(0, Transform.Identity);
             Texture?[] textures = [null, image, _override, atlas, _channels, empty, textureRD, viewport.GetTexture(), _dynamic, image, _override, image, image];

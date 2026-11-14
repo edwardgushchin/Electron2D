@@ -7574,24 +7574,6 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.Mesh.PrimitiveType",
-    "kind": "type",
-    "declaringType": "Electron2D.Mesh.PrimitiveType",
-    "name": "PrimitiveType",
-    "signature": "public enum Electron2D.Mesh.PrimitiveType",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
     "id": "T:Electron2D.MeshCustomData",
     "kind": "type",
     "declaringType": "Electron2D.MeshCustomData",
@@ -7647,6 +7629,24 @@
     "baseType": "Electron2D.Entity",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.MeshPrimitiveType",
+    "kind": "type",
+    "declaringType": "Electron2D.MeshPrimitiveType",
+    "name": "MeshPrimitiveType",
+    "signature": "public enum Electron2D.MeshPrimitiveType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -47451,71 +47451,6 @@
     "value": "2048"
   },
   {
-    "id": "enumValue:Electron2D.Mesh.PrimitiveType.LineStrip()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Mesh.PrimitiveType",
-    "name": "LineStrip",
-    "signature": "public const Electron2D.Mesh.PrimitiveType LineStrip = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
-    "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.Mesh.PrimitiveType.Lines()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Mesh.PrimitiveType",
-    "name": "Lines",
-    "signature": "public const Electron2D.Mesh.PrimitiveType Lines = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.Mesh.PrimitiveType.Points()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Mesh.PrimitiveType",
-    "name": "Points",
-    "signature": "public const Electron2D.Mesh.PrimitiveType Points = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.Mesh.PrimitiveType.TriangleStrip()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Mesh.PrimitiveType",
-    "name": "TriangleStrip",
-    "signature": "public const Electron2D.Mesh.PrimitiveType TriangleStrip = 4",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
-    "value": "4"
-  },
-  {
-    "id": "enumValue:Electron2D.Mesh.PrimitiveType.Triangles()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Mesh.PrimitiveType",
-    "name": "Triangles",
-    "signature": "public const Electron2D.Mesh.PrimitiveType Triangles = 3",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
-    "value": "3"
-  },
-  {
     "id": "enumValue:Electron2D.MeshCustomFormat.Max()",
     "kind": "enumValue",
     "declaringType": "Electron2D.MeshCustomFormat",
@@ -47631,6 +47566,84 @@
     "parameters": [],
     "returnType": "Electron2D.MeshCustomFormat",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshPrimitiveType.LineStrip()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshPrimitiveType",
+    "name": "LineStrip",
+    "signature": "public const Electron2D.MeshPrimitiveType LineStrip = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshPrimitiveType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshPrimitiveType.Lines()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshPrimitiveType",
+    "name": "Lines",
+    "signature": "public const Electron2D.MeshPrimitiveType Lines = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshPrimitiveType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshPrimitiveType.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshPrimitiveType",
+    "name": "Max",
+    "signature": "public const Electron2D.MeshPrimitiveType Max = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshPrimitiveType",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshPrimitiveType.Points()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshPrimitiveType",
+    "name": "Points",
+    "signature": "public const Electron2D.MeshPrimitiveType Points = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshPrimitiveType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshPrimitiveType.TriangleStrip()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshPrimitiveType",
+    "name": "TriangleStrip",
+    "signature": "public const Electron2D.MeshPrimitiveType TriangleStrip = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshPrimitiveType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.MeshPrimitiveType.Triangles()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MeshPrimitiveType",
+    "name": "Triangles",
+    "signature": "public const Electron2D.MeshPrimitiveType Triangles = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MeshPrimitiveType",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.MouseButton.Left()",
@@ -85517,18 +85530,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.ArrayMesh.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E,Electron2D.Mesh.ArrayFormat)",
+    "id": "method:Electron2D.ArrayMesh.AddSurfaceFromArrays(Electron2D.MeshPrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E,Electron2D.Mesh.ArrayFormat)",
     "kind": "method",
     "declaringType": "Electron2D.ArrayMesh",
     "name": "AddSurfaceFromArrays",
-    "signature": "public System.Void AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E blendShapes = null, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E lods = null, Electron2D.Mesh.ArrayFormat flags = None)",
+    "signature": "public System.Void AddSurfaceFromArrays(Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E blendShapes = null, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E lods = null, Electron2D.Mesh.ArrayFormat flags = None)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "primitive",
-        "type": "Electron2D.Mesh.PrimitiveType",
+        "type": "Electron2D.MeshPrimitiveType",
         "default": null
       },
       {
@@ -85872,7 +85885,7 @@
     "kind": "method",
     "declaringType": "Electron2D.ArrayMesh",
     "name": "OnSurfaceGetPrimitiveType",
-    "signature": "protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "signature": "protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
@@ -85883,7 +85896,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -130478,7 +130491,7 @@
     "kind": "method",
     "declaringType": "Electron2D.ImmediateMesh",
     "name": "OnSurfaceGetPrimitiveType",
-    "signature": "protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "signature": "protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
@@ -130489,7 +130502,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -130536,18 +130549,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.ImmediateMesh.SurfaceBegin(Electron2D.Mesh.PrimitiveType,Electron2D.Material)",
+    "id": "method:Electron2D.ImmediateMesh.SurfaceBegin(Electron2D.MeshPrimitiveType,Electron2D.Material)",
     "kind": "method",
     "declaringType": "Electron2D.ImmediateMesh",
     "name": "SurfaceBegin",
-    "signature": "public System.Void SurfaceBegin(Electron2D.Mesh.PrimitiveType primitive, Electron2D.Material material = null)",
+    "signature": "public System.Void SurfaceBegin(Electron2D.MeshPrimitiveType primitive, Electron2D.Material material = null)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "primitive",
-        "type": "Electron2D.Mesh.PrimitiveType",
+        "type": "Electron2D.MeshPrimitiveType",
         "default": null
       },
       {
@@ -130687,18 +130700,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.ImporterMesh.AddSurface(Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E,Electron2D.Material,System.String,Electron2D.Mesh.ArrayFormat)",
+    "id": "method:Electron2D.ImporterMesh.AddSurface(Electron2D.MeshPrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E,Electron2D.Material,System.String,Electron2D.Mesh.ArrayFormat)",
     "kind": "method",
     "declaringType": "Electron2D.ImporterMesh",
     "name": "AddSurface",
-    "signature": "public System.Void AddSurface(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E blendShapes = null, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E lods = null, Electron2D.Material material = null, System.String name = \u0022\u0022, Electron2D.Mesh.ArrayFormat flags = None)",
+    "signature": "public System.Void AddSurface(Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E blendShapes = null, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E lods = null, Electron2D.Material material = null, System.String name = \u0022\u0022, Electron2D.Mesh.ArrayFormat flags = None)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "primitive",
-        "type": "Electron2D.Mesh.PrimitiveType",
+        "type": "Electron2D.MeshPrimitiveType",
         "default": null
       },
       {
@@ -131111,7 +131124,7 @@
     "kind": "method",
     "declaringType": "Electron2D.ImporterMesh",
     "name": "GetSurfacePrimitiveType",
-    "signature": "public Electron2D.Mesh.PrimitiveType GetSurfacePrimitiveType(System.Int32 surface)",
+    "signature": "public Electron2D.MeshPrimitiveType GetSurfacePrimitiveType(System.Int32 surface)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -131122,7 +131135,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -142865,7 +142878,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Mesh",
     "name": "OnSurfaceGetPrimitiveType",
-    "signature": "protected abstract Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "signature": "protected abstract Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
@@ -142876,7 +142889,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -143065,7 +143078,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Mesh",
     "name": "SurfaceGetPrimitiveType",
-    "signature": "public Electron2D.Mesh.PrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "signature": "public Electron2D.MeshPrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -143076,7 +143089,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -171792,7 +171805,7 @@
     "kind": "method",
     "declaringType": "Electron2D.PlaceholderMesh",
     "name": "OnSurfaceGetPrimitiveType",
-    "signature": "protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "signature": "protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
@@ -171803,7 +171816,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -175010,7 +175023,7 @@
     "kind": "method",
     "declaringType": "Electron2D.PrimitiveMesh",
     "name": "OnSurfaceGetPrimitiveType",
-    "signature": "protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "signature": "protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
@@ -175021,7 +175034,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -186966,11 +186979,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingServer.MeshAddSurfaceFromArrays(Electron2D.RID,Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,Electron2D.Mesh.ArrayFormat,System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E)",
+    "id": "method:Electron2D.RenderingServer.MeshAddSurfaceFromArrays(Electron2D.RID,Electron2D.MeshPrimitiveType,Electron2D.MeshSurfaceData,Electron2D.Mesh.ArrayFormat,System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
     "name": "MeshAddSurfaceFromArrays",
-    "signature": "public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None, System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E blendShapes = null, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E lods = null)",
+    "signature": "public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None, System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E blendShapes = null, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E lods = null)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -186982,7 +186995,7 @@
       },
       {
         "name": "primitive",
-        "type": "Electron2D.Mesh.PrimitiveType",
+        "type": "Electron2D.MeshPrimitiveType",
         "default": null
       },
       {
@@ -187554,7 +187567,7 @@
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
     "name": "MeshSurfaceGetPrimitiveType",
-    "signature": "public static Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)",
+    "signature": "public static Electron2D.MeshPrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -187570,7 +187583,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -208198,18 +208211,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.SurfaceTool.Begin(Electron2D.Mesh.PrimitiveType)",
+    "id": "method:Electron2D.SurfaceTool.Begin(Electron2D.MeshPrimitiveType)",
     "kind": "method",
     "declaringType": "Electron2D.SurfaceTool",
     "name": "Begin",
-    "signature": "public System.Void Begin(Electron2D.Mesh.PrimitiveType primitive)",
+    "signature": "public System.Void Begin(Electron2D.MeshPrimitiveType primitive)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "primitive",
-        "type": "Electron2D.Mesh.PrimitiveType",
+        "type": "Electron2D.MeshPrimitiveType",
         "default": null
       }
     ],
@@ -208291,11 +208304,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.SurfaceTool.CreateFromArrays(Electron2D.MeshSurfaceData,Electron2D.Mesh.PrimitiveType)",
+    "id": "method:Electron2D.SurfaceTool.CreateFromArrays(Electron2D.MeshSurfaceData,Electron2D.MeshPrimitiveType)",
     "kind": "method",
     "declaringType": "Electron2D.SurfaceTool",
     "name": "CreateFromArrays",
-    "signature": "public System.Void CreateFromArrays(Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.PrimitiveType primitiveType = Triangles)",
+    "signature": "public System.Void CreateFromArrays(Electron2D.MeshSurfaceData arrays, Electron2D.MeshPrimitiveType primitiveType = Triangles)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -208307,7 +208320,7 @@
       },
       {
         "name": "primitiveType",
-        "type": "Electron2D.Mesh.PrimitiveType",
+        "type": "Electron2D.MeshPrimitiveType",
         "default": "Triangles"
       }
     ],
@@ -208444,12 +208457,12 @@
     "kind": "method",
     "declaringType": "Electron2D.SurfaceTool",
     "name": "GetPrimitiveType",
-    "signature": "public Electron2D.Mesh.PrimitiveType GetPrimitiveType()",
+    "signature": "public Electron2D.MeshPrimitiveType GetPrimitiveType()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {
@@ -287670,12 +287683,12 @@
     "kind": "property",
     "declaringType": "Electron2D.MeshSurfaceBuffers",
     "name": "Primitive",
-    "signature": "public Electron2D.Mesh.PrimitiveType Primitive { get; set; }",
+    "signature": "public Electron2D.MeshPrimitiveType Primitive { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "returnType": "Electron2D.MeshPrimitiveType",
     "value": null
   },
   {

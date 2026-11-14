@@ -15,7 +15,7 @@ public sealed partial class SurfaceTool
     /// <param name="arrays">Finite supported channel arrays and complete topology.</param>
     /// <param name="primitiveType">Topology, triangles by default.</param>
     /// <exception cref="ArgumentException">The arrays, counts or topology are invalid.</exception>
-    public void CreateFromArrays(MeshSurfaceData arrays, Mesh.PrimitiveType primitiveType = Mesh.PrimitiveType.Triangles)
+    public void CreateFromArrays(MeshSurfaceData arrays, MeshPrimitiveType primitiveType = MeshPrimitiveType.Triangles)
     {
         lock (_gate) { Mutable(); ArgumentNullException.ThrowIfNull(arrays); var copy = arrays.Copy(); copy.Validate(primitiveType); Import(copy, primitiveType, null); }
     }
@@ -83,7 +83,7 @@ public sealed partial class SurfaceTool
     {
         lock (_gate)
         {
-            Active(); if (_primitive != Mesh.PrimitiveType.Triangles) throw new InvalidOperationException("Fans require triangle topology.");
+            Active(); if (_primitive != MeshPrimitiveType.Triangles) throw new InvalidOperationException("Fans require triangle topology.");
             if (uvs.Length > vertices.Length || colors.Length > vertices.Length || uv2s.Length > vertices.Length || normals.Length > vertices.Length || tangents.Length > vertices.Length) throw new ArgumentException("Fan attributes exceed their vertex count.");
             foreach (var v in vertices) if (!v.IsFinite()) throw new ArgumentException("Fan positions must be finite.", nameof(vertices));
             foreach (var v in uvs) if (!v.IsFinite()) throw new ArgumentException("Fan UVs must be finite.", nameof(uvs));
@@ -146,11 +146,11 @@ public sealed partial class SurfaceTool
         }
         return result;
     }
-    private void Import(MeshSurfaceData data, Mesh.PrimitiveType primitive, Material? material)
+    private void Import(MeshSurfaceData data, MeshPrimitiveType primitive, Material? material)
     {
         var vertices = Vertices(data); var indices = new List<int>(data.Indices); var format = Format(data); Reset(); _vertices = vertices; _indices = indices; _primitive = primitive; _material = material; _format = format; for (var channel = 0; channel < 4; channel++) _customFormats[channel] = data.Custom(channel)?.Format ?? MeshCustomFormat.Max; _skin = data.SkinSlots == 8 ? SkinWeightCount.Eight : SkinWeightCount.Four;
     }
-    private readonly record struct Source(MeshSurfaceData Data, Mesh.PrimitiveType Primitive, Material? Material);
+    private readonly record struct Source(MeshSurfaceData Data, MeshPrimitiveType Primitive, Material? Material);
     private Source ReadSource(Mesh mesh, int surface)
     {
         ArgumentNullException.ThrowIfNull(mesh); _readingSource = true;

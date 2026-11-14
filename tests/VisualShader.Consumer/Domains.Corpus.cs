@@ -58,8 +58,8 @@ internal static partial class GraphChecks
             if (kind != 0)
             {
                 var count = kind == 4 ? 4097 : 1;
-                mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = Enumerable.Repeat(new Vector2(2, 0), count).ToArray(), Normals = Enumerable.Repeat(new Vector3(.2f, .3f, 1), count).ToArray(), Colors = Enumerable.Repeat(new Color(.25f, .5f, .75f, 1), count).ToArray(), UVs = Enumerable.Repeat(new Vector2(.1f, .2f), count).ToArray(), UV2s = Enumerable.Repeat(new Vector2(.6f, .7f), count).ToArray() });
-                mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [new(3, 4)] });
+                mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = Enumerable.Repeat(new Vector2(2, 0), count).ToArray(), Normals = Enumerable.Repeat(new Vector3(.2f, .3f, 1), count).ToArray(), Colors = Enumerable.Repeat(new Color(.25f, .5f, .75f, 1), count).ToArray(), UVs = Enumerable.Repeat(new Vector2(.1f, .2f), count).ToArray(), UV2s = Enumerable.Repeat(new Vector2(.6f, .7f), count).ToArray() });
+                mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [new(3, 4)] });
             }
             using var emitter = new VisualShaderNodeParticleMeshEmitter { Mesh = kind == 0 ? null : mesh, UseAllSurfaces = kind == 3, SurfaceIndex = kind == 2 ? 100 : 0 };
             graph.AddNode(V.Type.Start, emitter, default, 2); graph.ConnectNodes(V.Type.Start, 2, 0, 0, 4); graph.ConnectNodes(V.Type.Start, 2, 2, 0, 2); graph.ConnectNodes(V.Type.Start, 2, 3, 0, 3);

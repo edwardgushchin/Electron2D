@@ -6,7 +6,7 @@ internal static partial class MeshBoundsTests
 {
     internal static void Run()
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad());
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad());
         var geometry = mesh.GetAABB(); var manual = new Rect2(-40, -20, 100, 80); var changed = 0; mesh.Changed += _ => changed++;
         Check(mesh.CustomAABB == default, "Automatic visibility initially.");
         mesh.CustomAABB = manual; mesh.CustomAABB = manual;
@@ -41,7 +41,7 @@ internal static partial class MeshBoundsTests
         using var imported = new ArrayMesh(); imported.AppendPacked(ArrayMesh.PreparePacked(packed, 0)); imported.CustomAABB = manual;
         Check(imported.GetAABB() == packed.AABB && new CanvasMesh(imported, Transform.Identity, Colors.White).GetDrawBounds(item) == manual && imported.ExportPacked(0).AABB == packed.AABB, "Mesh override preserves packed surface bounds.");
         using var shaped = new ArrayMesh(); shaped.AddBlendShape("shift"); var basis = MeshTests.Quad(); var delta = new MeshSurfaceData { Vertices = Enumerable.Repeat(new Vector2(2, 0), 4).ToArray() };
-        shaped.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, basis, [delta]); shaped.CustomAABB = manual;
+        shaped.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, basis, [delta]); shaped.CustomAABB = manual;
         using var pose = new MeshMorphPose(); var output = pose.Prepare(shaped, [.5f]); Check(output.CustomAABB == manual && output.GetAABB().Position == new Vector2(1, 0), "Morph output retains independent manual bounds.");
         shaped.CustomAABB = default; Check(pose.Prepare(shaped, [.5f]).CustomAABB == default, "Live reset reaches prepared morph output.");
         for (var pass = 0; pass < 2; pass++)

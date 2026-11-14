@@ -36,7 +36,7 @@ internal static partial class GraphChecks
             _first = new DirectionalLight { Energy = .25f, Height = 1, Enabled = false }; _second = new DirectionalLight { Energy = .25f, Height = 1, Enabled = false };
             _modulate = new CanvasModulate { Color = Colors.White }; AddChild(_first); AddChild(_second); AddChild(_modulate);
             var mesh = KeepPoint(new ArrayMesh()); var cpu = KeepPoint(new ArrayMesh());
-            foreach (var target in new[] { mesh, cpu }) target.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new()
+            foreach (var target in new[] { mesh, cpu }) target.AddSurfaceFromArrays(MeshPrimitiveType.Points, new()
             {
                 Vertices = [new(16.5f, 16.5f), new(40.5f, 16.5f)],
                 Colors = [Colors.White, Colors.White],
@@ -45,7 +45,7 @@ internal static partial class GraphChecks
                 Weights = target == cpu ? [1, 0, 0, 0, 1, 0, 0, 0] : []
             });
             var procedural = KeepPoint(new ArrayMesh { CustomAABB = new(-64, -64, 128, 128) });
-            procedural.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { VertexCount = 2, Indices = [1, 0], Colors = [Colors.White, Colors.White] }, flags: Mesh.ArrayFormat.UseEmptyVertexArray);
+            procedural.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { VertexCount = 2, Indices = [1, 0], Colors = [Colors.White, Colors.White] }, flags: Mesh.ArrayFormat.UseEmptyVertexArray);
             var process = KeepPoint(ResourceLoader.Load<VisualShader>(IOPath.Combine(folder, "support/point-process.e2dres"), ResourceLoader.CacheMode.IgnoreDeep));
             var processMaterial = KeepPoint(new ShaderMaterial { Shader = process });
             for (var row = 0; row < PointPrograms.Length; row++)

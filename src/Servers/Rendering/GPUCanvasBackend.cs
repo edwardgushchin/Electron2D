@@ -11,7 +11,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private readonly nint _window;
     private readonly RenderHandle _vertexShader, _instancedVertexShader, _lightingVertexShader, _lightingInstancedVertexShader;
     private readonly byte[] _defaultFragment;
-    private readonly record struct PipelineKey(byte[] Code, byte[]? Vertex, BlendMode Blend, bool Instanced, SDL.GPUSampleCount Samples, bool LCD, SDL.GPUTextureFormat Format, Mesh.PrimitiveType Primitive);
+    private readonly record struct PipelineKey(byte[] Code, byte[]? Vertex, BlendMode Blend, bool Instanced, SDL.GPUSampleCount Samples, bool LCD, SDL.GPUTextureFormat Format, MeshPrimitiveType Primitive);
     private readonly Dictionary<PipelineKey, RenderHandle> _pipelines = [];
     // Keep one previous frame to avoid recreating pipelines for alternating visibility.
     private HashSet<PipelineKey> _usedPrograms = [], _previousPrograms = [];
@@ -75,7 +75,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             _lightingVertexShader = lightingVertex = CreateShader(BuiltInShaders.LightingVertex, fragment: false);
             _lightingInstancedVertexShader = lightingInstanced = CreateShader(BuiltInShaders.LightingInstancedVertex, fragment: false);
             _defaultFragment = BuiltInShaders.Fragment;
-            _pipelines.Add(new(_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles), CreatePipeline(_defaultFragment, BlendMode.Mix));
+            _pipelines.Add(new(_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, MeshPrimitiveType.Triangles), CreatePipeline(_defaultFragment, BlendMode.Mix));
         }
         catch
         {
@@ -97,7 +97,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         return new RenderHandle(ShaderCompiler.CreateShader(Device, code, fragment, SupportsSizedPoints), h => SDL.ReleaseGPUShader(Device, h), _device);
     }
 
-    private RenderHandle CreatePipeline(byte[] code, BlendMode blend, bool overwrite = false, bool instanced = false, bool lighting = false, SDL.GPUTextureFormat format = SDL.GPUTextureFormat.R8G8B8A8Unorm, SDL.GPUSampleCount samples = SDL.GPUSampleCount.SampleCount1, bool lcd = false, byte[]? vertexCode = null, Mesh.PrimitiveType primitive = Mesh.PrimitiveType.Triangles)
+    private RenderHandle CreatePipeline(byte[] code, BlendMode blend, bool overwrite = false, bool instanced = false, bool lighting = false, SDL.GPUTextureFormat format = SDL.GPUTextureFormat.R8G8B8A8Unorm, SDL.GPUSampleCount samples = SDL.GPUSampleCount.SampleCount1, bool lcd = false, byte[]? vertexCode = null, MeshPrimitiveType primitive = MeshPrimitiveType.Triangles)
     {
         var (builtInVertexCode, builtInVertexShader) = (lighting, instanced) switch
         {
@@ -152,7 +152,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         {
             VertexShader = (vertex ?? builtInVertexShader).DangerousGetHandle(),
             FragmentShader = fragment.DangerousGetHandle(),
-            PrimitiveType = primitive switch { Mesh.PrimitiveType.Points => SDL.GPUPrimitiveType.PointList, Mesh.PrimitiveType.Lines => SDL.GPUPrimitiveType.LineList, Mesh.PrimitiveType.LineStrip => SDL.GPUPrimitiveType.LineStrip, Mesh.PrimitiveType.TriangleStrip => SDL.GPUPrimitiveType.TriangleStrip, _ => SDL.GPUPrimitiveType.TriangleList },
+            PrimitiveType = primitive switch { MeshPrimitiveType.Points => SDL.GPUPrimitiveType.PointList, MeshPrimitiveType.Lines => SDL.GPUPrimitiveType.LineList, MeshPrimitiveType.LineStrip => SDL.GPUPrimitiveType.LineStrip, MeshPrimitiveType.TriangleStrip => SDL.GPUPrimitiveType.TriangleStrip, _ => SDL.GPUPrimitiveType.TriangleList },
             // Required when the Android device does not support depth clamping.
             RasterizerState = new() { EnableDepthClip = true },
             MultisampleState = new() { SampleCount = samples },
@@ -207,9 +207,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             if (batch.MaskShader) _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
             if (batch.GroupShader)
             {
-                _usedPrograms.Add(new(_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, Mesh.PrimitiveType.Triangles));
-                if (!_pipelines.ContainsKey(new(_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, Mesh.PrimitiveType.Triangles)))
-                    _pipelines.Add(new(_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, Mesh.PrimitiveType.Triangles), CreatePipeline(_defaultFragment, BlendMode.PremultAlpha, format: format, samples: samples));
+                _usedPrograms.Add(new(_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, MeshPrimitiveType.Triangles));
+                if (!_pipelines.ContainsKey(new(_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, MeshPrimitiveType.Triangles)))
+                    _pipelines.Add(new(_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, MeshPrimitiveType.Triangles), CreatePipeline(_defaultFragment, BlendMode.PremultAlpha, format: format, samples: samples));
                 _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
             }
             if (!batch.GroupShader && UsesCanvasTexture(batch)) _ = CanvasBinding(batch);
@@ -759,7 +759,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void ReleaseTemporaryTexture(Texture texture)
     { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Dispose(); }
 
-    internal override void BeginFrame() { _sampledSwizzles.BeginFrame(); _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedLinearArrayViews.Clear(); BeginGlyphFrame(); (_usedLightMaskPipelines, _previousLightMaskPipelines) = (_previousLightMaskPipelines, _usedLightMaskPipelines); _usedLightMaskPipelines.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add(new(_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); }
+    internal override void BeginFrame() { _sampledSwizzles.BeginFrame(); _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedLinearArrayViews.Clear(); BeginGlyphFrame(); (_usedLightMaskPipelines, _previousLightMaskPipelines) = (_previousLightMaskPipelines, _usedLightMaskPipelines); _usedLightMaskPipelines.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add(new(_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, MeshPrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); }
     internal override void EndFrame()
     {
         RetireParticleVertices(); RetireParticlePrograms();

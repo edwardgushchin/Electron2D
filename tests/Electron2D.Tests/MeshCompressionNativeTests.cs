@@ -15,7 +15,7 @@ internal static class MeshCompressionNativeTests
         using var shader = backend == "gpu" ? Shader(language) : null; using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
         using var mesh = MeshCompressionTests.Mesh(); using var shaped = MeshCompressionTests.Mesh(true); mesh.SurfaceSetMaterial(0, material); shaped.SurfaceSetMaterial(0, material);
         var skinData = mesh.SurfaceGetArrays(0); skinData.Bones = new int[32]; skinData.Weights = new float[32]; for (var i = 0; i < 4; i++) { skinData.Bones[i * 8 + 7] = 7; skinData.Weights[i * 8 + 7] = 1; }
-        using var skin = new ArrayMesh(); skin.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, skinData, flags: Mesh.ArrayFormat.CompressAttributes | Mesh.ArrayFormat.Use8BoneWeights); skin.SurfaceSetMaterial(0, material);
+        using var skin = new ArrayMesh(); skin.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, skinData, flags: Mesh.ArrayFormat.CompressAttributes | Mesh.ArrayFormat.Use8BoneWeights); skin.SurfaceSetMaterial(0, material);
         using var multi = new MultiMesh { Mesh = mesh, InstanceCount = 2 }; multi.SetInstanceTransform2D(0, Transform.Identity); multi.SetInstanceTransform2D(1, new(new Vector2(.5f, 0), new Vector2(0, .5f), new(20, 0)));
         using var custom = new MeshCompressionTests.Custom();
         using var window = new Window { Size = new(256, 64), Visible = true };
@@ -27,7 +27,7 @@ internal static class MeshCompressionNativeTests
         {
             window.Tree!.ProcessFrameStarted += _ => { if (frame >= 24) before = GC.GetAllocatedBytesForCurrentThread(); }; RenderingServer.SetDefaultClearColor(Colors.Black); Check(RenderingServer.GetCurrentRenderingMethod() == backend, "Compression backend without fallback.");
             palette = RenderingServer.SkeletonCreate(); RenderingServer.SkeletonAllocateData(palette, 8); RenderingServer.SkeletonBoneSetTransform2D(palette, 7, new(0, new(4, 0))); RenderingServer.CanvasItemAttachSkeleton(skinned.GetCanvasItem(), palette);
-            owned = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, mesh.SurfaceGetArrays(0), Mesh.ArrayFormat.CompressAttributes, lods: mesh.SurfaceGetLODs(0)); RenderingServer.MeshSurfaceSetMaterial(owned, 0, material); window.AddChild(new Owned(owned) { Name = "Owned", Position = new(200, 4) });
+            owned = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(owned, MeshPrimitiveType.Triangles, mesh.SurfaceGetArrays(0), Mesh.ArrayFormat.CompressAttributes, lods: mesh.SurfaceGetLODs(0)); RenderingServer.MeshSurfaceSetMaterial(owned, 0, material); window.AddChild(new Owned(owned) { Name = "Owned", Position = new(200, 4) });
             var format = mesh.SurfaceGetFormat(0); Check(RenderingServer.MeshSurfaceGetFormatVertexStride(format, 4) == 8 && RenderingServer.MeshSurfaceGetFormatNormalTangentStride(format, 4) == 6 && RenderingServer.MeshSurfaceGetFormatAttributeStride(format, 4) == 40, "Public compressed position/frame/attribute strides.");
             RenderingServer.FramePreDraw += Pre; RenderingServer.FramePostDraw += Post;
         };
