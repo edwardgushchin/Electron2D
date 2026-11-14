@@ -10,6 +10,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--os-crash-child") { OSCrashTests.Child(args[1]); return; }
+if (args.Length == 1 && args[0] == "--os-crash") { OSCrashTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENGINE_METADATA") == "1") { EngineMetadataChecks.Run(args.Length == 0 ? null : args[0]); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_FILE_DIALOG") is { } chooserProfile) { if (chooserProfile == "regression") DisplayServerDialogTests.Run(); else WindowsFileDialogChecks.Run(chooserProfile, args[0], args[1]); return; }
@@ -2063,6 +2066,7 @@ SubtreeResourceAuthoringTests.Run();
 IndexedPropertyTests.Run();
 StaticServiceTests.Run();
 SceneDiagnosticsTests.Run();
+OSCrashTests.Run();
 GeometryTests.Run();
 PathTests.Run();
 CurveTests.Run();

@@ -1,9 +1,35 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
 public sealed partial class OS
 {
+    /// <summary>Reports a fatal error and terminates the current process to test its crash handler.</summary>
+    /// <param name="message">The diagnostic rationale. An empty string is allowed.</param>
+    /// <remarks>May be called from any thread, including before engine startup. Structured diagnostics
+    /// use the normal synchronous logger rules. The runtime then terminates the process without unwinding
+    /// caller frames, running normal shutdown handlers, or honoring restart-on-exit.</remarks>
+    /// <exception cref="ArgumentNullException">The message is null.</exception>
+    [DoesNotReturn]
+    public static void Crash(string message) => Service.CrashCore(message);
+
+    [DoesNotReturn]
+    private void CrashCore(string message)
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        const string reason = "Fatal error requested by OS.Crash.";
+        try
+        {
+            RuntimeDiagnostics.Instance.Error(nameof(Crash), "", 0, reason, message, LoggerErrorType.Error);
+        }
+        catch (Exception)
+        {
+            // A diagnostic failure must not escape to caller exception filters.
+        }
+        Environment.FailFast(message.Length == 0 ? reason : $"{reason} {message}");
+    }
+
     /// <summary>Registers a borrowed logger once by identity, retaining it until removal or disposal.</summary>
     /// <param name="logger">A live diagnostic receiver.</param>
     /// <remarks>Callbacks run synchronously on sending threads and may overlap. Registry changes during a
