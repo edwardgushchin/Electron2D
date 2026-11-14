@@ -100,7 +100,7 @@ internal static class CanvasVertexProgramTests
         using var material = new ShaderMaterial { Shader = shader }; material.SetShaderParameter("gain", 1f); material.SetShaderParameter("offset", new Vector2(16, 0));
         if (resources) material.SetShaderParameter("vertexMap", texture);
         var window = new Window { Size = new(96, 64), UseHDR2D = hdr, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var multi = new MultiMesh { Mesh = mesh, UseColors = true, UseCustomData = true, InstanceCount = 2 };
         multi.SetInstanceTransform2D(0, new Transform(0, new Vector2(8, 8))); multi.SetInstanceTransform2D(1, new Transform(0, new Vector2(48, 8)));
         multi.SetInstanceColor(0, Colors.Red); multi.SetInstanceColor(1, Colors.Blue);

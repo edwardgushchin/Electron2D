@@ -29,7 +29,7 @@ public sealed partial class SurfaceTool
     {
         lock (_gate)
         {
-            Mutable(); if (_primitive != Mesh.PrimitiveType.Triangles) throw new InvalidOperationException("Normal generation requires triangle topology.");
+            Mutable(); if (_primitive != MeshPrimitiveType.Triangles) throw new InvalidOperationException("Normal generation requires triangle topology.");
             ValidateIndices(); var indexed = _indices.Count != 0; var count = indexed ? _indices.Count : _vertices.Count;
             if (count % 3 != 0) throw new ArgumentException("Normal generation requires complete triangle order.");
             var vertices = new List<Vertex>(count);

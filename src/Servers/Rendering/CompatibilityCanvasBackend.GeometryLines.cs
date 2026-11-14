@@ -5,11 +5,11 @@ namespace Electron2D;
 internal sealed partial class CompatibilityCanvasBackend
 {
     // Adapted SDL geometry-line endpoint squares and connecting triangles; see licence/SDL-LICENSE.txt.
-    private int DrawGeometryAttributeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    private int DrawGeometryAttributeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, MeshPrimitiveType primitive, bool snap)
     {
         var capacity = checked(vertices.Length * 18);
         if (_attributeTriangles.Length < capacity) Array.Resize(ref _attributeTriangles, Math.Max(capacity, _attributeTriangles.Length * 2));
-        var connected = primitive == Mesh.PrimitiveType.LineStrip; var count = 0;
+        var connected = primitive == MeshPrimitiveType.LineStrip; var count = 0;
         var first = vertices[0]; first.Position = LinePoint(first.Position, snap);
         if (connected && !EqualPoint(first.Position, LinePoint(vertices[^1].Position, snap)))
             AppendGeometryLine(first, first, [0, 1, 2, 0, 2, 3], ref count);

@@ -23,13 +23,13 @@ CanvasGeometry.Append(vertices, command, viewportTransform * drawingTransform, i
 
 | Declaration | Contract |
 | --- | --- |
-| `internal static (int Count, Mesh.PrimitiveType Primitive) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)` | [Append](#append) |
+| `internal static (int Count, MeshPrimitiveType Primitive) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)` | [Append](#append) |
 
 ## Member descriptions
 
 ### Append
 
-`internal static (int Count, Mesh.PrimitiveType Primitive) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)`
+`internal static (int Count, MeshPrimitiveType Primitive) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)`
 
 Appends geometry without clearing prior output. Returns the native prefix count/topology; trailing vertices remain triangles for optional line feathers. Zero count means there is no native prefix. Applies color multiplication, local line feathering through CanvasStroke and texture UV transforms. Retained strokes provide rectangle fills/outlines and their local feathers. Texture clipping subdivides half-texel borders to preserve interior interpolation. Texture quads below the 0.000001 cross-product threshold contribute nothing; degenerate retained stroke triangles are left to the backend. CanvasStroke shares straight-line geometry with independent segments; pooled curves replay their cached local triangles. Nonfinite transformed coordinates, modulation or UVs throw InvalidOperationException. Missing/disposed texture pixels fail explicitly. A command without geometry throws InvalidOperationException; interval/transform state must be consumed by CanvasItem. On failure the caller must discard the incomplete frame; this helper is not a transactional list append.
 

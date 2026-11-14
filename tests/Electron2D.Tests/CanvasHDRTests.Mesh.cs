@@ -16,7 +16,7 @@ internal static partial class CanvasHDRTests
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var mesh = new ArrayMesh();
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData
         { Vertices = [new(0, 0), new(16, 0), new(0, 16)], Colors = [new(.5f, .5f, .5f, 1), new(.5f, .5f, .5f, 1), new(.5f, .5f, .5f, 1)] });
         using var instances = new MultiMesh { Mesh = mesh, UseColors = true, InstanceCount = 1 };
         instances.SetInstanceTransform2D(0, new(0, new(32, 4))); instances.SetInstanceColor(0, new(.5f, .5f, .5f, 1));

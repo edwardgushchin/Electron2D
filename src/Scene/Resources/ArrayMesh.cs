@@ -7,7 +7,7 @@ namespace Electron2D;
 /// listeners do not roll back committed geometry. Mesh draws retain this resource and observe live data.</remarks>
 public sealed partial class ArrayMesh : Mesh
 {
-    internal sealed class Surface(MeshSurfaceData data, PrimitiveType primitive, ArrayFormat flags, uint[]? frameWords = null, MeshSurfaceData[]? blendShapes = null, ArrayFormat blendMask = ArrayFormat.Vertex, IReadOnlyDictionary<float, int[]>? lods = null, MeshCompression? compression = null)
+    internal sealed class Surface(MeshSurfaceData data, MeshPrimitiveType primitive, ArrayFormat flags, uint[]? frameWords = null, MeshSurfaceData[]? blendShapes = null, ArrayFormat blendMask = ArrayFormat.Vertex, IReadOnlyDictionary<float, int[]>? lods = null, MeshCompression? compression = null)
     {
         internal readonly MeshSurfaceData Data = data;
         internal readonly MeshSurfaceData[] BlendShapes = blendShapes ?? [];
@@ -16,7 +16,7 @@ public sealed partial class ArrayMesh : Mesh
         internal readonly uint[] FrameWords = Prepare(data, frameWords, (flags & ArrayFormat.CompressAttributes) != 0);
         internal readonly MeshLOD[] LODs = MeshLOD.Capture(lods, data, primitive);
         private static uint[] Prepare(MeshSurfaceData data, uint[]? words, bool compressed) { data.PrepareCustoms(); return compressed ? [] : words ?? MeshFrameCodec.Capture(data); }
-        internal readonly PrimitiveType Primitive = primitive;
+        internal readonly MeshPrimitiveType Primitive = primitive;
         internal readonly ArrayFormat Format = Channels(data) | flags;
         internal static ArrayFormat Channels(MeshSurfaceData data) => MeshCustomCodec.Channels(data) | (data.IsProcedural ? ArrayFormat.UseEmptyVertexArray : ArrayFormat.Vertex | ArrayFormat.Use2DVertices) |
             (data.Normals.Length != 0 ? ArrayFormat.Normal : 0) | (data.Tangents.Length != 0 ? ArrayFormat.Tangent : 0) | (data.Colors.Length != 0 ? ArrayFormat.Color : 0) | (data.UVs.Length != 0 ? ArrayFormat.TexUV : 0) | (data.UV2s.Length != 0 ? ArrayFormat.TexUV2 : 0) | (data.Indices.Length != 0 ? ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? ArrayFormat.Bones | ArrayFormat.Weights : 0);
@@ -47,9 +47,9 @@ public sealed partial class ArrayMesh : Mesh
     /// <exception cref="ArgumentOutOfRangeException">An index or primitive is invalid.</exception>
     /// <exception cref="NotSupportedException">Flags require an unimplemented storage/attribute layer.</exception>
     /// <exception cref="ObjectDisposedException">The mesh is disposed.</exception>
-    public void AddSurfaceFromArrays(PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null, ArrayFormat flags = ArrayFormat.None)
+    public void AddSurfaceFromArrays(MeshPrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null, ArrayFormat flags = ArrayFormat.None)
         => AddSurface(primitive, arrays, blendShapes, lods, flags, null);
-    internal void AddSurface(PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes, IReadOnlyDictionary<float, int[]>? lods, ArrayFormat flags, Material? material, MeshCompression? compression = null)
+    internal void AddSurface(MeshPrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes, IReadOnlyDictionary<float, int[]>? lods, ArrayFormat flags, Material? material, MeshCompression? compression = null)
     {
         ArgumentNullException.ThrowIfNull(arrays);
         if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
@@ -201,7 +201,7 @@ public sealed partial class ArrayMesh : Mesh
     /// <inheritdoc />
     protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).Data.Indices.Length; }
     /// <inheritdoc />
-    protected override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).Primitive; }
+    protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).Primitive; }
     /// <inheritdoc />
     protected override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) { lock (Gate) return Get(surfaceIndex).Format; }
     /// <inheritdoc />

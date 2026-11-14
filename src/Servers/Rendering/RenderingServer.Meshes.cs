@@ -7,7 +7,7 @@ public sealed partial class RenderingServer
     {
         EnsureTextureChange(); if ((uint)blendShapeCount > 4096) throw new ArgumentOutOfRangeException(nameof(blendShapeCount)); var mesh = new ArrayMesh(); for (var i = 0; i < blendShapeCount; i++) mesh.AddBlendShape(i.ToString(System.Globalization.CultureInfo.InvariantCulture)); var rid = mesh.RegisterOwned(this); _ownedMeshRIDs.Add(rid); return rid;
     }
-    internal void MeshAddSurfaceFromArraysCore(RID mesh, Mesh.PrimitiveType primitive, MeshSurfaceData arrays, Mesh.ArrayFormat flags = Mesh.ArrayFormat.None, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null)
+    internal void MeshAddSurfaceFromArraysCore(RID mesh, MeshPrimitiveType primitive, MeshSurfaceData arrays, Mesh.ArrayFormat flags = Mesh.ArrayFormat.None, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null)
     { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).AddSurfaceFromArrays(primitive, arrays, blendShapes, lods, flags); }
     internal int MeshGetSurfaceCountCore(RID mesh) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).GetSurfaceCount(); }
     internal MeshSurfaceData MeshSurfaceGetArraysCore(RID mesh, int surface) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).SurfaceGetArrays(surface); }
@@ -52,7 +52,7 @@ public sealed partial class RenderingServer
             throw new NotSupportedException("The mesh format requires unsupported attribute storage or non-2D vertices.");
     }
     internal Mesh.ArrayFormat MeshSurfaceGetFormatCore(RID mesh, int surface) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).SurfaceGetFormat(surface); }
-    internal Mesh.PrimitiveType MeshSurfaceGetPrimitiveTypeCore(RID mesh, int surface) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).SurfaceGetPrimitiveType(surface); }
+    internal MeshPrimitiveType MeshSurfaceGetPrimitiveTypeCore(RID mesh, int surface) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).SurfaceGetPrimitiveType(surface); }
     internal int MeshSurfaceGetArrayLenCore(RID mesh, int surface) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).SurfaceGetArrayLen(surface); }
     internal int MeshSurfaceGetArrayIndexLenCore(RID mesh, int surface) { EnsureOwner(); return RenderingMeshRegistry.Resolve(mesh).SurfaceGetArrayIndexLen(surface); }
     internal void MeshSurfaceSetMaterialCore(RID mesh, int surface, Material? material) { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).SurfaceSetMaterial(surface, material); }

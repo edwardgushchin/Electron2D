@@ -34,7 +34,7 @@ internal static partial class SamplerArrayTests
         material.SetShaderTextureParameterArray("colorMaps", fragmentMaps); if (split) material.SetShaderTextureParameterArray("vertexMaps", vertexMaps);
         using var referenceShader = Shader.CreateFromSPIRV(Module("GLSL", "SamplerReference")); using var reference = new ShaderMaterial { Shader = referenceShader };
         using var root = new Window { Size = new(96, 32), UseHDR2D = profile.Contains("hdr", StringComparison.Ordinal), MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [new(0, 0), new(40, 0), new(40, 24), new(0, 24)], Indices = [0, 1, 2, 0, 2, 3] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [new(0, 0), new(40, 0), new(40, 24), new(0, 24)], Indices = [0, 1, 2, 0, 2, 3] });
         using var instances = new MultiMesh { Mesh = mesh, InstanceCount = 1 }; instances.SetInstanceTransform2D(0, Transform.Identity);
         using var white = Solid(Colors.White); var glyph = profile.Contains("glyph", StringComparison.Ordinal); var lcd = profile.Contains("lcd", StringComparison.Ordinal);
         CanvasItem item = glyph ? new GlyphPatch(white, lcd) { Material = material, Position = new(0, 4) } : instanced ? new MultiMeshInstance { MultiMesh = instances, Material = material, Position = new(0, 4) } : new Patch { Material = material, Position = new(0, 4) };

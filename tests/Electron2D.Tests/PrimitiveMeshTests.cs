@@ -28,7 +28,7 @@ internal static partial class PrimitiveMeshTests
         Check(!mesh.FlipFaces && !mesh.AddUV2 && mesh.UV2Padding == 2 && mesh.Material is null && mesh.CustomAABB == default, "Generator defaults.");
         mesh.RequestUpdate(); mesh.AddUV2 = true; mesh.Material = material;
         Check(mesh.Calls == 0 && changed == 0 && mesh.SurfaceGetMaterial(0) == material, "Settings and material leave first generation pending.");
-        var data = mesh.GetMeshArrays(); Check(mesh.Calls == 1 && changed == 1 && mesh.GetSurfaceCount() == 1 && mesh.SurfaceGetPrimitiveType(0) == Mesh.PrimitiveType.Triangles && mesh.SurfaceGetArrayLen(0) == 3 && mesh.SurfaceGetArrayIndexLen(0) == 3, "First geometry query publishes one triangle surface.");
+        var data = mesh.GetMeshArrays(); Check(mesh.Calls == 1 && changed == 1 && mesh.GetSurfaceCount() == 1 && mesh.SurfaceGetPrimitiveType(0) == MeshPrimitiveType.Triangles && mesh.SurfaceGetArrayLen(0) == 3 && mesh.SurfaceGetArrayIndexLen(0) == 3, "First geometry query publishes one triangle surface.");
         Check(data.UV2s[1] == new Vector2(1 - 2f / 1024, 0) && mesh.SurfaceGetFormat(0).HasFlag(Mesh.ArrayFormat.TexUV2), "Pinned fallback padding and channel mask.");
         mesh.Data.Vertices[0] = new(5, 5); data.Vertices[1] = new(99, 99); Check(mesh.GetMeshArrays().Vertices[0] == Vector2.Zero && mesh.SurfaceGetArrays(0).Vertices[1] == new Vector2(20, 0), "Input and output arrays cannot mutate retained geometry.");
         mesh.RequestUpdate(); Check(mesh.Calls == 2 && mesh.GetMeshArrays().Vertices[0] == new Vector2(5, 5), "Later updates synchronously replace generated data.");
