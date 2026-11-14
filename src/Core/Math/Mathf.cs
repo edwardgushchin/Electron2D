@@ -16,7 +16,8 @@ public static class Mathf
     private const float DegreesToRadiansFloat = 0.0174532925199432957692369077f;
     private const double DegreesToRadiansDouble = 0.0174532925199432957692369077d;
     private const float RadiansToDegreesFloat = 57.295779513082320876798154814f;
-    private const double RadiansToDegreesDouble = 57.295779513082320876798154814d;
+    // Converting the decimal literal gives the audited double coefficient.
+    private const double RadiansToDegreesDouble = (double)57.295779513082320876798154814m;
 
     /// <summary>The ratio of a circle's circumference to its radius.</summary>
     public const float Tau = 6.2831853071795864769252867666f;
@@ -225,9 +226,10 @@ public static class Mathf
     public static float CubicInterpolate(float from, float to, float pre, float post, float weight)
     {
         var squared = weight * weight;
+        var cubed = squared * weight;
         return 0.5f * ((2f * from) + ((-pre + to) * weight) +
             (((2f * pre) - (5f * from) + (4f * to) - post) * squared) +
-            ((-pre + (3f * from) - (3f * to) + post) * squared * weight));
+            ((-pre + (3f * from) - (3f * to) + post) * cubed));
     }
 
     /// <summary>Performs double-precision Catmull-Rom cubic interpolation.</summary>
@@ -240,9 +242,10 @@ public static class Mathf
     public static double CubicInterpolate(double from, double to, double pre, double post, double weight)
     {
         var squared = weight * weight;
+        var cubed = squared * weight;
         return 0.5d * ((2d * from) + ((-pre + to) * weight) +
             (((2d * pre) - (5d * from) + (4d * to) - post) * squared) +
-            ((-pre + (3d * from) - (3d * to) + post) * squared * weight));
+            ((-pre + (3d * from) - (3d * to) + post) * cubed));
     }
 
     /// <summary>Performs shortest-path Catmull-Rom interpolation between angles.</summary>
@@ -387,8 +390,10 @@ public static class Mathf
         var inverse = 1f - weight;
         var inverseSquared = inverse * inverse;
         var weightSquared = weight * weight;
-        return (start * inverseSquared * inverse) + (control1 * inverseSquared * weight * 3f) +
-            (control2 * inverse * weightSquared * 3f) + (end * weightSquared * weight);
+        var inverseCubed = inverseSquared * inverse;
+        var weightCubed = weightSquared * weight;
+        return (start * inverseCubed) + (control1 * inverseSquared * weight * 3f) +
+            (control2 * inverse * weightSquared * 3f) + (end * weightCubed);
     }
 
     /// <summary>Evaluates a double-precision one-dimensional cubic Bezier curve.</summary>
@@ -403,8 +408,10 @@ public static class Mathf
         var inverse = 1d - weight;
         var inverseSquared = inverse * inverse;
         var weightSquared = weight * weight;
-        return (start * inverseSquared * inverse) + (control1 * inverseSquared * weight * 3d) +
-            (control2 * inverse * weightSquared * 3d) + (end * weightSquared * weight);
+        var inverseCubed = inverseSquared * inverse;
+        var weightCubed = weightSquared * weight;
+        return (start * inverseCubed) + (control1 * inverseSquared * weight * 3d) +
+            (control2 * inverse * weightSquared * 3d) + (end * weightCubed);
     }
 
     /// <summary>Evaluates the derivative of a one-dimensional cubic Bezier curve.</summary>
@@ -414,12 +421,15 @@ public static class Mathf
     /// <param name="end">The end value.</param>
     /// <param name="weight">The curve parameter.</param>
     /// <returns>The derivative at the parameter.</returns>
+    /// <remarks>The squared weights are evaluated before multiplying by the control-point differences.</remarks>
     public static float BezierDerivative(float start, float control1, float control2, float end, float weight)
     {
         var inverse = 1f - weight;
-        return (3f * (control1 - start) * inverse * inverse) +
-            (6f * (control2 - control1) * inverse * weight) +
-            (3f * (end - control2) * weight * weight);
+        var inverseSquared = inverse * inverse;
+        var weightSquared = weight * weight;
+        return ((control1 - start) * 3f * inverseSquared) +
+            ((control2 - control1) * 6f * inverse * weight) +
+            ((end - control2) * 3f * weightSquared);
     }
 
     /// <summary>Evaluates the derivative of a double-precision one-dimensional cubic Bezier curve.</summary>
@@ -429,22 +439,25 @@ public static class Mathf
     /// <param name="end">The end value.</param>
     /// <param name="weight">The curve parameter.</param>
     /// <returns>The derivative at the parameter.</returns>
+    /// <remarks>The squared weights are evaluated before multiplying by the control-point differences.</remarks>
     public static double BezierDerivative(double start, double control1, double control2, double end, double weight)
     {
         var inverse = 1d - weight;
-        return (3d * (control1 - start) * inverse * inverse) +
-            (6d * (control2 - control1) * inverse * weight) +
-            (3d * (end - control2) * weight * weight);
+        var inverseSquared = inverse * inverse;
+        var weightSquared = weight * weight;
+        return ((control1 - start) * 3d * inverseSquared) +
+            ((control2 - control1) * 6d * inverse * weight) +
+            ((end - control2) * 3d * weightSquared);
     }
 
-    /// <summary>Converts decibels to linear energy.</summary>
+    /// <summary>Converts decibels to linear amplitude.</summary>
     /// <param name="decibels">The decibel value.</param>
-    /// <returns>The corresponding linear energy.</returns>
+    /// <returns>The corresponding linear amplitude.</returns>
     public static float DBToLinear(float decibels) => System.MathF.Exp(decibels * 0.11512925464970228420089957273422f);
 
-    /// <summary>Converts double-precision decibels to linear energy.</summary>
+    /// <summary>Converts double-precision decibels to linear amplitude.</summary>
     /// <param name="decibels">The decibel value.</param>
-    /// <returns>The corresponding linear energy.</returns>
+    /// <returns>The corresponding linear amplitude.</returns>
     public static double DBToLinear(double decibels) => Math.Exp(decibels * 0.11512925464970228420089957273422d);
 
     /// <summary>Converts degrees to radians.</summary>
@@ -661,13 +674,13 @@ public static class Mathf
     /// <returns>The interpolated angle.</returns>
     public static double LerpAngle(double from, double to, double weight) => from + (AngleDifference(from, to) * weight);
 
-    /// <summary>Converts linear energy to decibels.</summary>
-    /// <param name="linear">The linear energy.</param>
+    /// <summary>Converts linear amplitude to decibels.</summary>
+    /// <param name="linear">The linear amplitude.</param>
     /// <returns>The decibel value; zero produces negative infinity and negative input produces NaN.</returns>
     public static float LinearToDB(float linear) => System.MathF.Log(linear) * 8.6858896380650365530225783783321f;
 
-    /// <summary>Converts double-precision linear energy to decibels.</summary>
-    /// <param name="linear">The linear energy.</param>
+    /// <summary>Converts double-precision linear amplitude to decibels.</summary>
+    /// <param name="linear">The linear amplitude.</param>
     /// <returns>The decibel value; zero produces negative infinity and negative input produces NaN.</returns>
     public static double LinearToDB(double linear) => Math.Log(linear) * 8.6858896380650365530225783783321d;
 
@@ -737,7 +750,7 @@ public static class Mathf
 
     /// <summary>Returns the smallest representable power of two not less than a positive integer.</summary>
     /// <param name="value">The input value.</param>
-    /// <returns>Zero for ordinary nonpositive values, the input for a power of two, or the next power of two; overflow wraps exactly as 32-bit arithmetic.</returns>
+    /// <returns>Zero for ordinary nonpositive values, or the smallest power of two at least as large as a positive input. Returns Int32.MinValue for Int32.MinValue and values above 2^30.</returns>
     public static int NearestPo2(int value)
     {
         unchecked

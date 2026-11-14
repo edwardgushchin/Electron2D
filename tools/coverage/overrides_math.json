@@ -376,504 +376,719 @@
       "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
     },
     {
+      "electron2d": "method:Electron2D.Mathf.Abs(System.Double)",
+      "godot": "@GlobalScope::method:abs(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Abs(System.Int32)",
+      "godot": "@GlobalScope::method:abs(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Abs(System.Single)",
+      "godot": "@GlobalScope::method:abs(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Abs(System.Double)",
+      "godot": "@GlobalScope::method:absf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Abs(System.Single)",
+      "godot": "@GlobalScope::method:absf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Abs(System.Int32)",
+      "godot": "@GlobalScope::method:absi(int:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Ceil(System.Double)",
+      "godot": "@GlobalScope::method:ceil(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Ceil(System.Single)",
+      "godot": "@GlobalScope::method:ceil(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Ceil(System.Double)",
+      "godot": "@GlobalScope::method:ceilf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Ceil(System.Single)",
+      "godot": "@GlobalScope::method:ceilf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Clamp(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:clamp(Variant:,Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Clamp(System.Int32,System.Int32,System.Int32)",
+      "godot": "@GlobalScope::method:clamp(Variant:,Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Clamp(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:clamp(Variant:,Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Clamp(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:clampf(float:,float:,float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Clamp(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:clampf(float:,float:,float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Clamp(System.Int32,System.Int32,System.Int32)",
+      "godot": "@GlobalScope::method:clampi(int:,int:,int:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Floor(System.Double)",
+      "godot": "@GlobalScope::method:floor(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Floor(System.Single)",
+      "godot": "@GlobalScope::method:floor(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Floor(System.Double)",
+      "godot": "@GlobalScope::method:floorf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Floor(System.Single)",
+      "godot": "@GlobalScope::method:floorf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Lerp(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:lerp(Variant:,Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Lerp(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:lerp(Variant:,Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Lerp(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:lerpf(float:,float:,float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Lerp(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:lerpf(float:,float:,float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.NearestPo2(System.Int32)",
+      "godot": "@GlobalScope::method:nearest_po2(int:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Round(System.Double)",
+      "godot": "@GlobalScope::method:round(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Round(System.Single)",
+      "godot": "@GlobalScope::method:round(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Round(System.Double)",
+      "godot": "@GlobalScope::method:roundf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Round(System.Single)",
+      "godot": "@GlobalScope::method:roundf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sign(System.Double)",
+      "godot": "@GlobalScope::method:sign(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sign(System.Int32)",
+      "godot": "@GlobalScope::method:sign(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sign(System.Single)",
+      "godot": "@GlobalScope::method:sign(Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sign(System.Double)",
+      "godot": "@GlobalScope::method:signf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sign(System.Single)",
+      "godot": "@GlobalScope::method:signf(float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Sign(System.Int32)",
+      "godot": "@GlobalScope::method:signi(int:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Snapped(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:snapped(Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Snapped(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:snapped(Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Snapped(System.Double,System.Double)",
+      "godot": "@GlobalScope::method:snappedf(float:,float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Snapped(System.Single,System.Single)",
+      "godot": "@GlobalScope::method:snappedf(float:,float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Wrap(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:wrap(Variant:,Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Wrap(System.Int32,System.Int32,System.Int32)",
+      "godot": "@GlobalScope::method:wrap(Variant:,Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Wrap(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:wrap(Variant:,Variant:,Variant:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Wrap(System.Double,System.Double,System.Double)",
+      "godot": "@GlobalScope::method:wrapf(float:,float:,float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Wrap(System.Single,System.Single,System.Single)",
+      "godot": "@GlobalScope::method:wrapf(float:,float:,float:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.Wrap(System.Int32,System.Int32,System.Int32)",
+      "godot": "@GlobalScope::method:wrapi(int:,int:,int:)",
+      "reason": "Typed scalar projection under ADR 0034."
+    },
+    {
       "electron2d": "method:Electron2D.Mathf.Acos(System.Double)",
       "godot": "@GlobalScope::method:acos(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Acos(System.Single)",
       "godot": "@GlobalScope::method:acos(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Acosh(System.Double)",
       "godot": "@GlobalScope::method:acosh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Acosh(System.Single)",
       "godot": "@GlobalScope::method:acosh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.AngleDifference(System.Double,System.Double)",
       "godot": "@GlobalScope::method:angle_difference(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.AngleDifference(System.Single,System.Single)",
       "godot": "@GlobalScope::method:angle_difference(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Asin(System.Double)",
       "godot": "@GlobalScope::method:asin(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Asin(System.Single)",
       "godot": "@GlobalScope::method:asin(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Asinh(System.Double)",
       "godot": "@GlobalScope::method:asinh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Asinh(System.Single)",
       "godot": "@GlobalScope::method:asinh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Atan(System.Double)",
       "godot": "@GlobalScope::method:atan(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Atan(System.Single)",
       "godot": "@GlobalScope::method:atan(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Atan2(System.Double,System.Double)",
       "godot": "@GlobalScope::method:atan2(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Atan2(System.Single,System.Single)",
       "godot": "@GlobalScope::method:atan2(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Atanh(System.Double)",
       "godot": "@GlobalScope::method:atanh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Atanh(System.Single)",
       "godot": "@GlobalScope::method:atanh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.BezierDerivative(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:bezier_derivative(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.BezierDerivative(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:bezier_derivative(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.BezierInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:bezier_interpolate(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.BezierInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:bezier_interpolate(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CeilToInt(System.Double)",
       "godot": "@GlobalScope::method:ceili(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CeilToInt(System.Single)",
       "godot": "@GlobalScope::method:ceili(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Cos(System.Double)",
       "godot": "@GlobalScope::method:cos(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Cos(System.Single)",
       "godot": "@GlobalScope::method:cos(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Cosh(System.Double)",
       "godot": "@GlobalScope::method:cosh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Cosh(System.Single)",
       "godot": "@GlobalScope::method:cosh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CubicInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:cubic_interpolate(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CubicInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:cubic_interpolate(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngle(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:cubic_interpolate_angle(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngle(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:cubic_interpolate_angle(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngleInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:cubic_interpolate_angle_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngleInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:cubic_interpolate_angle_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CubicInterpolateInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:cubic_interpolate_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.CubicInterpolateInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:cubic_interpolate_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.DBToLinear(System.Double)",
       "godot": "@GlobalScope::method:db_to_linear(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.DBToLinear(System.Single)",
       "godot": "@GlobalScope::method:db_to_linear(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
-    },
-    {
-      "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Decimal)",
-      "godot": "@GlobalScope::method:step_decimals(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
-    },
-    {
-      "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Double)",
-      "godot": "@GlobalScope::method:step_decimals(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.DegToRad(System.Double)",
       "godot": "@GlobalScope::method:deg_to_rad(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.DegToRad(System.Single)",
       "godot": "@GlobalScope::method:deg_to_rad(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Ease(System.Double,System.Double)",
       "godot": "@GlobalScope::method:ease(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Ease(System.Single,System.Single)",
       "godot": "@GlobalScope::method:ease(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Exp(System.Double)",
       "godot": "@GlobalScope::method:exp(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Exp(System.Single)",
       "godot": "@GlobalScope::method:exp(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.FloorToInt(System.Double)",
       "godot": "@GlobalScope::method:floori(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.FloorToInt(System.Single)",
       "godot": "@GlobalScope::method:floori(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.InverseLerp(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:inverse_lerp(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.InverseLerp(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:inverse_lerp(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Double,System.Double)",
       "godot": "@GlobalScope::method:is_equal_approx(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single)",
       "godot": "@GlobalScope::method:is_equal_approx(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsFinite(System.Double)",
       "godot": "@GlobalScope::method:is_finite(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsFinite(System.Single)",
       "godot": "@GlobalScope::method:is_finite(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsInf(System.Double)",
       "godot": "@GlobalScope::method:is_inf(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsInf(System.Single)",
       "godot": "@GlobalScope::method:is_inf(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsNaN(System.Double)",
       "godot": "@GlobalScope::method:is_nan(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsNaN(System.Single)",
       "godot": "@GlobalScope::method:is_nan(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsZeroApprox(System.Double)",
       "godot": "@GlobalScope::method:is_zero_approx(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.IsZeroApprox(System.Single)",
       "godot": "@GlobalScope::method:is_zero_approx(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.LerpAngle(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:lerp_angle(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.LerpAngle(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:lerp_angle(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.LinearToDB(System.Double)",
       "godot": "@GlobalScope::method:linear_to_db(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.LinearToDB(System.Single)",
       "godot": "@GlobalScope::method:linear_to_db(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Log(System.Double)",
       "godot": "@GlobalScope::method:log(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Log(System.Single)",
       "godot": "@GlobalScope::method:log(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Max(System.Double,System.Double)",
       "godot": "@GlobalScope::method:maxf(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Max(System.Int32,System.Int32)",
       "godot": "@GlobalScope::method:maxi(int:,int:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Max(System.Single,System.Single)",
       "godot": "@GlobalScope::method:maxf(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Min(System.Double,System.Double)",
       "godot": "@GlobalScope::method:minf(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Min(System.Int32,System.Int32)",
       "godot": "@GlobalScope::method:mini(int:,int:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Min(System.Single,System.Single)",
       "godot": "@GlobalScope::method:minf(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.MoveToward(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:move_toward(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.MoveToward(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:move_toward(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.PingPong(System.Double,System.Double)",
       "godot": "@GlobalScope::method:pingpong(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.PingPong(System.Single,System.Single)",
       "godot": "@GlobalScope::method:pingpong(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.PosMod(System.Double,System.Double)",
       "godot": "@GlobalScope::method:fposmod(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.PosMod(System.Int32,System.Int32)",
       "godot": "@GlobalScope::method:posmod(int:,int:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.PosMod(System.Single,System.Single)",
       "godot": "@GlobalScope::method:fposmod(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Pow(System.Double,System.Double)",
       "godot": "@GlobalScope::method:pow(float:,float:)",
-      "reason": "Double-precision floating power under ADR 0034; exact numeric behavior remains for semantic audit."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Pow(System.Single,System.Single)",
       "godot": "@GlobalScope::method:pow(float:,float:)",
-      "reason": "Single-precision floating power under ADR 0034; exact numeric behavior remains for semantic audit."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.RadToDeg(System.Double)",
       "godot": "@GlobalScope::method:rad_to_deg(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.RadToDeg(System.Single)",
       "godot": "@GlobalScope::method:rad_to_deg(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Remap(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:remap(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:remap(float:,float:,float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.RotateToward(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:rotate_toward(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.RotateToward(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:rotate_toward(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.RoundToInt(System.Double)",
       "godot": "@GlobalScope::method:roundi(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.RoundToInt(System.Single)",
       "godot": "@GlobalScope::method:roundi(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Sin(System.Double)",
       "godot": "@GlobalScope::method:sin(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Sin(System.Single)",
       "godot": "@GlobalScope::method:sin(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Sinh(System.Double)",
       "godot": "@GlobalScope::method:sinh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Sinh(System.Single)",
       "godot": "@GlobalScope::method:sinh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.SmoothStep(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:smoothstep(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.SmoothStep(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:smoothstep(float:,float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Sqrt(System.Double)",
       "godot": "@GlobalScope::method:sqrt(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Sqrt(System.Single)",
       "godot": "@GlobalScope::method:sqrt(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.StepDecimals(System.Double)",
       "godot": "@GlobalScope::method:step_decimals(float:)",
-      "reason": "Double-precision C# form of global step_decimals; compare rounding behavior separately."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Tan(System.Double)",
       "godot": "@GlobalScope::method:tan(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Tan(System.Single)",
       "godot": "@GlobalScope::method:tan(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Tanh(System.Double)",
       "godot": "@GlobalScope::method:tanh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Tanh(System.Single)",
       "godot": "@GlobalScope::method:tanh(float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Typed scalar projection under ADR 0034."
     },
     {
       "electron2d": "method:Electron2D.Rect2.GetCenter()",
@@ -2053,6 +2268,16 @@
   ],
   "extras": [
     {
+      "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Decimal)",
+      "reason": "Managed C# decimal scale helper. Reads the stored scale after conversion where applicable.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
+      "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Double)",
+      "reason": "Managed C# decimal scale helper. Reads the stored scale after conversion where applicable.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
       "electron2d": "T:Electron2D.Colors",
       "reason": "C# container for Color named values; the XML declares those constants on Color itself.",
       "adr": "core-math.md#adr-0024"
@@ -2639,6 +2864,573 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "Positive infinity is exposed as Single.PositiveInfinity. The Single projection follows ADR 0034.",
+      "godot": [
+        "@GDScript::constant:INF"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "NaN is exposed as Single.NaN. The Single projection follows ADR 0034.",
+      "godot": [
+        "@GDScript::constant:NAN"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Pi is rounded to the nearest Single. The Single projection follows ADR 0034.",
+      "godot": [
+        "@GDScript::constant:PI"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Tau is rounded to the nearest Single. The Single projection follows ADR 0034.",
+      "godot": [
+        "@GDScript::constant:TAU"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Int32 absolute value throws for Int32.MinValue. Floating absolute value clears the sign of zero. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:abs(Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Int32 absolute value throws for Int32.MinValue. Floating absolute value clears the sign of zero. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:absf(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Int32 absolute value throws for Int32.MinValue. Floating absolute value clears the sign of zero. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:absi(int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses radians. Inputs outside [-1, 1] yield NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:acos(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Inputs below one yield NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:acosh(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses the shortest signed angular difference. Positive half turns map to negative pi and negative half turns to positive pi. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:angle_difference(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses radians. Inputs outside [-1, 1] yield NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:asin(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Preserves signed zero and signed infinity. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:asinh(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses radians and preserves signed zero. Signed infinities map to the signed half-pi limits. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:atan(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses y before x, including the .NET quadrant and signed-zero rules. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:atan2(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Returns signed infinity at В±1 and NaN outside the domain. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:atanh(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Evaluates the analytic tangent with squared weights formed before multiplication by the control-point differences. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:bezier_derivative(float:,float:,float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Evaluates the cubic Bernstein basis, including extrapolation and overflow in the powers. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:bezier_interpolate(float:,float:,float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Rounds floating values toward positive infinity. Integral callers already hold an integral value. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:ceil(Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Rounds floating values toward positive infinity. Integral callers already hold an integral value. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:ceilf(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Ceils before unchecked Int32 conversion. The target .NET runtime governs out-of-range results. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:ceili(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses inclusive bounds and throws ArgumentException for reversed bounds. Floating NaN follows .NET. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:clamp(Variant:,Variant:,Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses inclusive bounds and throws ArgumentException for reversed bounds. Floating NaN follows .NET. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:clampf(float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses inclusive bounds and throws ArgumentException for reversed bounds. Floating NaN follows .NET. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:clampi(int:,int:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses radians. Non-finite angles yield NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:cos(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Maps both infinities to positive infinity. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:cosh(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Evaluates the Catmull-Rom polynomial with the powers formed before multiplication by their coefficients. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:cubic_interpolate(float:,float:,float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Unwraps adjacent angles before Catmull-Rom interpolation, including half-turn ties. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:cubic_interpolate_angle(float:,float:,float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Unwraps adjacent angles before time-aware interpolation, including coincident-knot fallbacks. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:cubic_interpolate_angle_in_time(float:,float:,float:,float:,float:,float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses Barry-Goldman interpolation on nonuniform knots. Coincident times select prescribed constant weights. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:cubic_interpolate_in_time(float:,float:,float:,float:,float:,float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Converts decibels to amplitude, equivalent to 10 raised to dB/20 in the ordinary finite domain. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:db_to_linear(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Multiplies by the typed degrees-to-radians coefficient, preserving signed zero. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:deg_to_rad(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Clamps input to [0, 1]. Positive curves use power or inverse-power easing, negative curves use two halves, and zero or NaN curve returns zero. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:ease(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Negative infinity maps to zero. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:exp(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Rounds floating values toward negative infinity. Integral callers already hold an integral value. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:floor(Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Rounds floating values toward negative infinity. Integral callers already hold an integral value. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:floorf(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Floors before unchecked Int32 conversion. The target .NET runtime governs out-of-range results. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:floori(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Adjusts a nonzero remainder to the divisor's sign. Exact negative multiples preserve negative zero. A zero divisor yields NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:fposmod(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Normalizes without clamping. Coincident edges produce NaN or signed infinity. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:inverse_lerp(float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Accepts exact equality first, then uses strict left-scaled tolerance floored at 1e-6 for Single and 1e-14 for Double. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:is_equal_approx(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Rejects NaN and both infinities. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:is_finite(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Recognizes both infinities. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:is_inf(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Detects NaN regardless of sign. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:is_nan(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses strict absolute thresholds of 1e-6 for Single and 1e-14 for Double. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:is_zero_approx(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Interpolates or extrapolates numerically. Geometry exposes its own typed interpolation. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:lerp(Variant:,Variant:,Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Interpolates the shortest signed angular difference, including extrapolation and opposite-angle ties. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:lerp_angle(float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Interpolates or extrapolates numerically. Geometry exposes its own typed interpolation. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:lerpf(float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Converts amplitude to decibels. Zero maps to negative infinity and negative values to NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:linear_to_db(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Natural logarithm maps zero to negative infinity and negative inputs to NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:log(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Selects the larger floating value using .NET NaN and signed-zero semantics. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:maxf(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Selects the larger Int32, including both endpoints. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:maxi(int:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Selects the smaller floating value using .NET NaN and signed-zero semantics. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:minf(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Selects the smaller Int32, including both endpoints. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:mini(int:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Stops at the target for sufficient positive delta. Negative delta moves away and an unordered difference throws ArithmeticException. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:move_toward(float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Returns zero for zero and ordinary negative values. Int32.MinValue and values above 2^30 return Int32.MinValue. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:nearest_po2(int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Reflects a periodic triangle wave, using the magnitude of negative lengths and returning positive zero for either zero length. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:pingpong(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Aligns nonzero Int32 remainder with the divisor. Zero divisor throws DivideByZeroException and Int32.MinValue modulo -1 throws OverflowException. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:posmod(int:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses .NET floating exponentiation and its domain rules. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:pow(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses the typed radians-to-degrees coefficient, including the decimal-to-Double conversion. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:rad_to_deg(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Composes unclamped inverse interpolation and interpolation. Equal input bounds propagate IEEE results. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:remap(float:,float:,float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Clamps signed movement at the target or at its opposite heading when moving away. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:rotate_toward(float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Rounds floating values midpoint-to-even. Integral callers already hold a rounded value. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:round(Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Rounds floating values midpoint-to-even. Integral callers already hold a rounded value. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:roundf(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Rounds midpoint-to-even before unchecked Int32 conversion. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:roundi(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Returns Int32 -1, 0 or 1. Floating NaN throws ArithmeticException. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:sign(Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Returns Int32 -1, 0 or 1. Floating NaN throws ArithmeticException. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:signf(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Returns Int32 -1, 0 or 1. Floating NaN throws ArithmeticException. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:signi(int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses radians and preserves negative zero. Non-finite angles yield NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:sin(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Preserves signed zero and infinities. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:sinh(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Evaluates a clamped cubic Hermite step. Approximately equal edges return the first edge. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:smoothstep(float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses floor(value / step + 0.5) times step, returning the input for zero step. Geometry exposes its own typed snapping. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:snapped(Variant:,Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses floor(value / step + 0.5) times step, returning the input for zero step. Geometry exposes its own typed snapping. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:snappedf(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Returns the principal square root, preserving negative zero and returning NaN for negative inputs. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:sqrt(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Tests nine fractional thresholds in pinned order after unchecked Int32 conversion. Managed DecimalCount has a separate scale contract. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:step_decimals(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses radians. Non-finite angles yield NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:tan(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Maps signed infinities to В±1. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:tanh(float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses remainder wrapping. Int32 retains unchecked arithmetic and the exceptional remainder case. Floating intervals return the first bound for a strictly near-zero width. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:wrap(Variant:,Variant:,Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses remainder wrapping. Int32 retains unchecked arithmetic and the exceptional remainder case. Floating intervals return the first bound for a strictly near-zero width. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:wrapf(float:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Uses remainder wrapping. Int32 retains unchecked arithmetic and the exceptional remainder case. Floating intervals return the first bound for a strictly near-zero width. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:wrapi(int:,int:,int:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Variadic Variant dispatch requires dynamic ordering and return typing. ADRs 0001/0034 project scalar comparison through fixed-arity Max (maxf/maxi).",
+      "godot": [
+        "@GlobalScope::method:max()"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Variadic Variant dispatch requires dynamic ordering and return typing. ADRs 0001/0034 project scalar comparison through fixed-arity Min (minf/mini).",
+      "godot": [
+        "@GlobalScope::method:min()"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "This floating input and Int64 step/result utility has no scalar overload in the accepted C# family (ADR 0034). The floating overloads and integer geometry snapping have their own rows.",
+      "godot": [
+        "@GlobalScope::method:snappedi(float:,int:)"
+      ]
+    },
     {
       "godot": ["class:Rect2"],
       "state": "Implemented",

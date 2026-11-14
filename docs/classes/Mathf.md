@@ -1,6 +1,6 @@
 # Mathf
 
-Last updated: 2026-09-23
+Last updated: 2026-11-14
 
 **Inherits:** —
 
@@ -86,8 +86,8 @@ float value = Mathf.Lerp(0f, 10f, 0.25f);
 | [`public static double BezierInterpolate(double start, double control1, double control2, double end, double weight)`](#m-electron2d-mathf-bezierinterpolate-system-double-system-double-system-double-system-double-system-double) | Evaluates a double-precision one-dimensional cubic Bezier curve. |
 | [`public static float BezierDerivative(float start, float control1, float control2, float end, float weight)`](#m-electron2d-mathf-bezierderivative-system-single-system-single-system-single-system-single-system-single) | Evaluates the derivative of a one-dimensional cubic Bezier curve. |
 | [`public static double BezierDerivative(double start, double control1, double control2, double end, double weight)`](#m-electron2d-mathf-bezierderivative-system-double-system-double-system-double-system-double-system-double) | Evaluates the derivative of a double-precision one-dimensional cubic Bezier curve. |
-| [`public static float DBToLinear(float decibels)`](#m-electron2d-mathf-dbtolinear-system-single) | Converts decibels to linear energy. |
-| [`public static double DBToLinear(double decibels)`](#m-electron2d-mathf-dbtolinear-system-double) | Converts double-precision decibels to linear energy. |
+| [`public static float DBToLinear(float decibels)`](#m-electron2d-mathf-dbtolinear-system-single) | Converts decibels to linear amplitude. |
+| [`public static double DBToLinear(double decibels)`](#m-electron2d-mathf-dbtolinear-system-double) | Converts double-precision decibels to linear amplitude. |
 | [`public static float DegToRad(float degrees)`](#m-electron2d-mathf-degtorad-system-single) | Converts degrees to radians. |
 | [`public static double DegToRad(double degrees)`](#m-electron2d-mathf-degtorad-system-double) | Converts double-precision degrees to radians. |
 | [`public static int DecimalCount(double value)`](#m-electron2d-mathf-decimalcount-system-double) | Returns the number of encoded decimal fractional digits. |
@@ -118,8 +118,8 @@ float value = Mathf.Lerp(0f, 10f, 0.25f);
 | [`public static double Lerp(double from, double to, double weight)`](#m-electron2d-mathf-lerp-system-double-system-double-system-double) | Linearly interpolates double-precision values without clamping the weight. |
 | [`public static float LerpAngle(float from, float to, float weight)`](#m-electron2d-mathf-lerpangle-system-single-system-single-system-single) | Linearly interpolates between angles along their shortest path. |
 | [`public static double LerpAngle(double from, double to, double weight)`](#m-electron2d-mathf-lerpangle-system-double-system-double-system-double) | Linearly interpolates between double-precision angles along their shortest path. |
-| [`public static float LinearToDB(float linear)`](#m-electron2d-mathf-lineartodb-system-single) | Converts linear energy to decibels. |
-| [`public static double LinearToDB(double linear)`](#m-electron2d-mathf-lineartodb-system-double) | Converts double-precision linear energy to decibels. |
+| [`public static float LinearToDB(float linear)`](#m-electron2d-mathf-lineartodb-system-single) | Converts linear amplitude to decibels. |
+| [`public static double LinearToDB(double linear)`](#m-electron2d-mathf-lineartodb-system-double) | Converts double-precision linear amplitude to decibels. |
 | [`public static float Log(float value)`](#m-electron2d-mathf-log-system-single) | Returns the natural logarithm. |
 | [`public static double Log(double value)`](#m-electron2d-mathf-log-system-double) | Returns the double-precision natural logarithm. |
 | [`public static int Max(int left, int right)`](#m-electron2d-mathf-max-system-int32-system-int32) | Returns the larger integer. |
@@ -725,6 +725,8 @@ Evaluates the derivative of a one-dimensional cubic Bezier curve.
 
 **Returns:** The derivative at the parameter.
 
+**Remarks:** The squared weights are evaluated before multiplying by the control-point differences.
+
 <a id="m-electron2d-mathf-bezierderivative-system-double-system-double-system-double-system-double-system-double"></a>
 ### `public static double BezierDerivative(double start, double control1, double control2, double end, double weight)`
 
@@ -740,27 +742,29 @@ Evaluates the derivative of a double-precision one-dimensional cubic Bezier curv
 
 **Returns:** The derivative at the parameter.
 
+**Remarks:** The squared weights are evaluated before multiplying by the control-point differences.
+
 <a id="m-electron2d-mathf-dbtolinear-system-single"></a>
 ### `public static float DBToLinear(float decibels)`
 
-Converts decibels to linear energy.
+Converts decibels to linear amplitude.
 
 **Parameters**
 
 - `decibels`: The decibel value.
 
-**Returns:** The corresponding linear energy.
+**Returns:** The corresponding linear amplitude.
 
 <a id="m-electron2d-mathf-dbtolinear-system-double"></a>
 ### `public static double DBToLinear(double decibels)`
 
-Converts double-precision decibels to linear energy.
+Converts double-precision decibels to linear amplitude.
 
 **Parameters**
 
 - `decibels`: The decibel value.
 
-**Returns:** The corresponding linear energy.
+**Returns:** The corresponding linear amplitude.
 
 <a id="m-electron2d-mathf-degtorad-system-single"></a>
 ### `public static float DegToRad(float degrees)`
@@ -1127,22 +1131,22 @@ Linearly interpolates between double-precision angles along their shortest path.
 <a id="m-electron2d-mathf-lineartodb-system-single"></a>
 ### `public static float LinearToDB(float linear)`
 
-Converts linear energy to decibels.
+Converts linear amplitude to decibels.
 
 **Parameters**
 
-- `linear`: The linear energy.
+- `linear`: The linear amplitude.
 
 **Returns:** The decibel value; zero produces negative infinity and negative input produces NaN.
 
 <a id="m-electron2d-mathf-lineartodb-system-double"></a>
 ### `public static double LinearToDB(double linear)`
 
-Converts double-precision linear energy to decibels.
+Converts double-precision linear amplitude to decibels.
 
 **Parameters**
 
-- `linear`: The linear energy.
+- `linear`: The linear amplitude.
 
 **Returns:** The decibel value; zero produces negative infinity and negative input produces NaN.
 
@@ -1283,7 +1287,7 @@ Returns the smallest representable power of two not less than a positive integer
 
 - `value`: The input value.
 
-**Returns:** Zero for ordinary nonpositive values, the input for a power of two, or the next power of two; overflow wraps exactly as 32-bit arithmetic.
+**Returns:** Zero for ordinary nonpositive values, or the smallest power of two at least as large as a positive input. Returns Int32.MinValue for Int32.MinValue and values above 2^30.
 
 <a id="m-electron2d-mathf-posmod-system-int32-system-int32"></a>
 ### `public static int PosMod(int value, int divisor)`
@@ -1828,14 +1832,14 @@ The default absolute single-precision comparison tolerance.
 - `PosMod(int)` throws `DivideByZeroException` for zero and `OverflowException` for `int.MinValue % -1`. Floating overloads do not throw for a zero divisor.
 - `DecimalCount(double)` throws `OverflowException` for NaN, infinity, or values outside the decimal range. The decimal overload reports retained scale, including trailing zeroes.
 - Integer-returning rounding overloads deliberately use unchecked managed conversion for NaN, infinity, and out-of-range values; callers must validate when those inputs are possible.
-- `NearestPo2` and integer `Wrap` deliberately retain unchecked 32-bit arithmetic. Power-of-two overflow wraps; the extreme `int.MinValue % -1` wrap case can throw `OverflowException`.
-- `StepDecimals` is the audited threshold estimator, not a general decimal parser: it returns zero through eight and also returns zero for integral or smaller-than-table fractions.
+- `NearestPo2` and integer `Wrap` deliberately retain unchecked 32-bit arithmetic. Int32.MinValue and values above 2^30 return Int32.MinValue; the extreme `int.MinValue % -1` wrap case can throw `OverflowException`.
+- `StepDecimals` is the audited threshold estimator, not a general decimal parser: it tests nine thresholds after subtracting the unchecked Int32 conversion of the absolute value. In the Int32 range, integral or smaller-than-table fractions return zero.
 
 ## Lifecycle, threading, and allocation
 
 There is no lifecycle or state transition. Every call is independent and safe across threads. Methods do not retain references or mutate process state.
 
-Normal nonthrowing calls allocate zero managed memory after JIT warmup; thrown managed exceptions allocate normally. Tuple results are value tuples and decimal inspection uses stack storage. Runtime transcendental accuracy and unchecked floating-to-integer sentinel values remain properties of the target .NET runtime; the current executable verification covers Linux/.NET 8 only.
+Normal nonthrowing calls allocate zero managed memory after JIT warmup; thrown managed exceptions allocate normally. Tuple results are value tuples and decimal inspection uses stack storage. Runtime transcendental accuracy and unchecked floating-to-integer sentinel values remain properties of the target .NET runtime; the current audit runs on Windows x64/.NET 10.
 
 ## Dependencies and interactions
 
@@ -1845,7 +1849,7 @@ The migration intentionally corrected the former `1e-5f` component-comparison to
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` reflects the exact seven-constant/127-overload surface and exercises every method family across float and double paths. Tests cover ordinary results, extrapolation, opposite angles, coincident times, NaN/infinity, strict epsilon boundaries, reversed clamps, integer zero division/overflow, unchecked rounding conversion, decimal failures, wrapping, power-of-two overflow, downstream geometry migration, and warmed zero allocation.
+`tests/Electron2D.Tests/Program.cs` reflects the exact seven-constant/127-overload surface and exercises every method family across float and double paths. Tests cover ordinary results, extrapolation, opposite angles, coincident times, NaN/infinity, strict epsilon boundaries, reversed clamps, integer zero division/overflow, unchecked rounding conversion, decimal failures, wrapping, power-of-two overflow, downstream geometry migration, and zero warmed managed allocations across four threads. Independent Catmull-Rom, Barry-Goldman and Bezier examples exercise nontrivial weights and extrapolation boundaries. See the [scalar verification](../components/scalar-math.md#verification).
 
 The implementation was audited against the official 4.7.2 stable typed C# scalar-math sources and their inheritance-independent global math contract. There is no generic-math facade, random-number generation, vector overload, configurable epsilon, fast-approximation mode, SIMD API, or cube-root member. Those are absent rather than speculative wrappers.
 
