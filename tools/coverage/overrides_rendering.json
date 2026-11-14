@@ -6543,9 +6543,15 @@
     },
     {
       "state": "Excluded",
-      "reason": "Selects a 3D scene pass for dispatch with that pass type and live scene RenderData. [ADR 0004](../../decisions/product.md#adr-0004)",
+      "reason": "Receives the selected 3D scene pass type and live RenderData at dispatch. [ADR 0004](../../decisions/product.md#adr-0004)",
       "godot": [
-        "CompositorEffect::method:_render_callback(int:,RenderData:)",
+        "CompositorEffect::method:_render_callback(int:,RenderData:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Selects the 3D scene pass that dispatches the effect. [ADR 0004](../../decisions/product.md#adr-0004)",
+      "godot": [
         "CompositorEffect::property:effect_callback_type",
         "CompositorEffect::enum:EffectCallbackType",
         "RenderingServer::enum:CompositorEffectCallbackType",
