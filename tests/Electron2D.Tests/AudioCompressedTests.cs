@@ -34,6 +34,7 @@ internal static class AudioCompressedTests
         VerifyBoundaries(mp3, ogg, trace);
         using var surround = VerifyMultichannel();
         VerifyIdentificationFraming(surround);
+        VerifySetupTimeTransform(surround);
         VerifyLoaderAndNative(mp3, surround, native);
         Console.WriteLine(native ? "Compressed format/PCM/cursor/loop/loader/native and 64-pass allocation checks passed." : "Compressed CPU/cursor/loop/loader checks passed; native checks run separately.");
     }
@@ -177,19 +178,40 @@ internal static class AudioCompressedTests
         Check(encoded[26] == 1 && encoded[27] == 30 && (encoded[28 + framingByte] & 1) == 1,
             "Surround fixture begins with one complete, framed identification packet.");
         encoded[28 + framingByte] &= 0xfe;
-        // Keep the first page's CRC valid so both loaders reach identification header validation.
+        VerifyRejectedHeader(stream, encoded, 0, 58, 0, framingByte, 1, "identification framing");
+    }
+
+    private static void VerifySetupTimeTransform(AudioStreamOggVorbis stream)
+    {
+        // The pinned surround fixture has one time-domain transform after its setup codebooks.
+        const int firstTransformBit = 56141;
+        var encoded = Fixture("surround.ogg");
+        var setup = encoded.AsSpan().IndexOf("\x05vorbis"u8);
+        var offset = firstTransformBit / 8;
+        var mask = (byte)(1 << (firstTransformBit % 8));
+        Check(setup == 177 && (encoded[setup + offset] & mask) == 0,
+            "Surround fixture has the expected zero setup transform.");
+        encoded[setup + offset] |= mask;
+        VerifyRejectedHeader(stream, encoded, 58, 7412, 2, offset, mask, "setup time-domain transform");
+    }
+
+    private static void VerifyRejectedHeader(AudioStreamOggVorbis stream, byte[] encoded,
+        int pageStart, int pageEnd, int packetIndex, int packetOffset, byte mask, string field)
+    {
+        var page = encoded.AsSpan(pageStart, pageEnd - pageStart);
+        // A valid page CRC lets the loaders reach the Vorbis header check.
         uint crc = 0;
-        encoded.AsSpan(22, 4).Clear();
-        foreach (var value in encoded.AsSpan(0, 28 + 30))
+        page.Slice(22, 4).Clear();
+        foreach (var value in page)
         {
             crc ^= (uint)value << 24;
             for (var bit = 0; bit < 8; bit++)
                 crc = (crc << 1) ^ ((crc & 0x80000000u) == 0 ? 0 : 0x04c11db7u);
         }
-        System.Buffers.Binary.BinaryPrimitives.WriteUInt32LittleEndian(encoded.AsSpan(22, 4), crc);
+        System.Buffers.Binary.BinaryPrimitives.WriteUInt32LittleEndian(page.Slice(22, 4), crc);
         Reject<FormatException>(() => AudioStreamOggVorbis.LoadFromBuffer(encoded).Dispose());
 
-        var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-vorbis-framing-" + Guid.NewGuid() + ".ogg");
+        var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-vorbis-header-" + Guid.NewGuid() + ".ogg");
         var original = stream.PacketSequence!;
         using var before = stream.GenerateSample();
         var tags = stream.Tags;
@@ -203,24 +225,24 @@ internal static class AudioCompressedTests
             Reject<FormatException>(() => AudioStreamOggVorbis.LoadFromFile(path).Dispose());
             Reject<FormatException>(() => ResourceLoader.Load<AudioStreamOggVorbis>(path, ResourceLoader.CacheMode.Replace));
             Check(ReferenceEquals(ResourceLoader.GetCachedRef<AudioStreamOggVorbis>(path), cached) &&
-                ReferenceEquals(cached.PacketSequence, cachedPackets), "Invalid identification framing preserves the cached resource and packets.");
+                ReferenceEquals(cached.PacketSequence, cachedPackets), $"Invalid {field} preserves the cached resource and packets.");
             using var cachedSample = cached.GenerateSample();
-            Check(cachedSample.Data.SequenceEqual(before.Data), "Invalid identification framing preserves cached PCM.");
+            Check(cachedSample.Data.SequenceEqual(before.Data), $"Invalid {field} preserves cached PCM.");
         }
         finally { System.IO.File.Delete(path); }
 
         using var malformed = (OggPacketSequence)original.Duplicate();
         var pages = malformed.PacketData;
-        pages[0][0][framingByte] &= 0xfe;
+        pages.SelectMany(packets => packets).ElementAt(packetIndex)[packetOffset] ^= mask;
         malformed.PacketData = pages;
         malformed.SamplingRate = 123;
         Reject<FormatException>(() => stream.PacketSequence = malformed);
         Check(ReferenceEquals(stream.PacketSequence, original) && stream.Tags.SequenceEqual(tags) &&
             stream.GetLength() == duration && malformed.SamplingRate == 123,
-            "Invalid identification framing changes neither the published resource nor candidate metadata.");
+            $"Invalid {field} preserves the published resource and candidate metadata.");
         using var after = stream.GenerateSample();
-        Check(after.Data.SequenceEqual(before.Data), "Invalid identification framing preserves published PCM.");
-        Console.WriteLine("Vorbis identification framing: valid Ogg CRC, both loaders, cache replacement, and PacketSequence rollback passed.");
+        Check(after.Data.SequenceEqual(before.Data), $"Invalid {field} preserves published PCM.");
+        Console.WriteLine($"Vorbis {field}: valid Ogg CRC, both loaders, cache replacement, and PacketSequence rollback passed.");
     }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
     private static void VerifyLoaderAndNative(AudioStreamMP3 mp3, AudioStreamOggVorbis ogg, bool runNative)

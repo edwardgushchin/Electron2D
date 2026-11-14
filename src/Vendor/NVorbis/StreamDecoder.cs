@@ -248,9 +248,15 @@ namespace Electron2D.NVorbisBindings
                 books[i].Init(packet, huffman);
             }
 
-            // Vorbis never used this feature, so we just skip the appropriate number of bits
+            // Vorbis I reserves these placeholders for time-domain transforms.
             var times = (int)packet.ReadBits(6) + 1;
-            packet.SkipBits(16 * times);
+            for (var i = 0; i < times; i++)
+            {
+                if (packet.ReadBits(16) != 0)
+                {
+                    throw new InvalidDataException("Setup header contains a nonzero time-domain transform.");
+                }
+            }
 
             // read the floors
             var floors = new IFloor[packet.ReadBits(6) + 1];
