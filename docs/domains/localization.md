@@ -1,6 +1,6 @@
 # Localization domain
 
-Last updated: 2026-10-21
+Last updated: 2026-11-13
 
 ## Responsibility
 
@@ -45,6 +45,8 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 - No native locale-discovery or localization verification on all targets exists yet.
 
 ## Verification
+
+Catalog queries share ordinal exact or positive-score locale matching with live borrowed resources. The public Windows GPU/compatibility language selector and independent membership/lifetime checks are described in [catalog queries](../components/localization.md#catalog-queries), including the remaining platform and package limits.
 
 `tests/Electron2D.Tests/Program.cs`, `TranslationDomainTests.cs`, `LocalizationProjectSettingsTests.cs`, and `NodeLocalizationTests.cs` verify scored resource-locale and configured fallback selection, source fallback, direct and resource plural selection, contextual and optimized catalogs, duplication, disposal, domain lifecycle and locale override, singular pseudolocalization, per-object translation disabling, inherited node domains and policies, root setting persistence/sampling, managed Engine startup sampling, and live transform reload. `WindowRuntimeTests` verifies Run sampling before scene ready with the SDL dummy driver; other native platforms remain unverified for this setting.
 

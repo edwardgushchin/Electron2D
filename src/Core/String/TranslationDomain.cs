@@ -157,14 +157,18 @@ public sealed class TranslationDomain : ElectronObject
     /// <summary>Returns a snapshot of registered catalogs in registration order.</summary>
     public Translation[] GetTranslations() { lock (_gate) { ThrowIfDisposed(); return [.. _translations]; } }
 
-    /// <summary>Returns a snapshot of catalogs matching a locale exactly or by language.</summary>
-    /// <param name="locale">The requested locale.</param>
-    /// <param name="exact">Whether a normalized exact match is required.</param>
+    /// <summary>Returns matching borrowed catalogs in registration order.</summary>
+    /// <param name="locale">The requested locale text; exact queries use the stored <see cref="Translation.Locale"/> spelling.</param>
+    /// <param name="exact">True requires ordinal equality; false accepts a positive <see cref="TranslationServer.CompareLocales"/> score.</param>
+    /// <returns>An independent array of live catalog references, without message-priority sorting.</returns>
+    /// <remarks>Nonexact queries apply fixed aliases and script/region defaults without requiring a managed culture.
+    /// Catalog edits remain live. Enablement, locale override, direct entries and project fallback do not filter this query.</remarks>
+    /// <exception cref="ArgumentNullException">The locale is null.</exception>
+    /// <exception cref="ObjectDisposedException">The domain is disposed.</exception>
     public Translation[] FindTranslations(string locale, bool exact)
     {
-        var normalized = NormalizeLocale(locale);
-        var translations = GetTranslations();
-        return translations.Where(item => MatchesLocale(normalized, item, exact)).ToArray();
+        ArgumentNullException.ThrowIfNull(locale);
+        return GetLookupSnapshot().Where(item => MatchesLocale(locale, item, exact)).ToArray();
     }
 
     /// <summary>Reports whether a resource is registered by identity.</summary>
@@ -176,29 +180,21 @@ public sealed class TranslationDomain : ElectronObject
     }
 
     /// <summary>Reports whether any catalog matches a locale.</summary>
-    /// <param name="locale">The requested locale.</param>
-    /// <param name="exact">Whether a normalized exact match is required.</param>
-    public bool HasTranslationForLocale(string locale, bool exact) => HasNormalizedLocale(NormalizeLocale(locale), exact);
-
-    internal bool HasTranslationForCulture(CultureInfo culture, bool exact) => HasNormalizedLocale(culture.Name, exact);
-
-    private bool HasNormalizedLocale(string locale, bool exact)
+    /// <param name="locale">The requested locale text; exact queries use the stored <see cref="Translation.Locale"/> spelling.</param>
+    /// <param name="exact">True requires ordinal equality; false accepts a positive <see cref="TranslationServer.CompareLocales"/> score.</param>
+    /// <returns>True when <see cref="FindTranslations"/> would return at least one catalog.</returns>
+    /// <remarks>Uses the same live resource predicate as FindTranslations without allocating a result array.</remarks>
+    /// <exception cref="ArgumentNullException">The locale is null.</exception>
+    /// <exception cref="ObjectDisposedException">The domain is disposed.</exception>
+    public bool HasTranslationForLocale(string locale, bool exact)
     {
-        var separator = locale.IndexOf('-'); var language = locale.AsSpan(0, separator < 0 ? locale.Length : separator);
+        ArgumentNullException.ThrowIfNull(locale);
         foreach (var translation in GetLookupSnapshot())
-        {
-            try
-            {
-                var candidate = translation.Locale;
-                if (candidate == locale) return true;
-                if (exact) continue;
-                var candidateSeparator = candidate.IndexOf('-');
-                if (language.SequenceEqual(candidate.AsSpan(0, candidateSeparator < 0 ? candidate.Length : candidateSeparator))) return true;
-            }
-            catch (ObjectDisposedException) when (translation.IsDisposed) { }
-        }
+            if (MatchesLocale(locale, translation, exact)) return true;
         return false;
     }
+
+    internal bool HasTranslationForCulture(CultureInfo culture, bool exact) => HasTranslationForLocale(culture.Name, exact);
 
     /// <summary>Resolves a singular message using this domain's catalogs, effective culture and project fallback.</summary>
     /// <param name="message">The source message.</param>
@@ -390,19 +386,12 @@ public sealed class TranslationDomain : ElectronObject
         if (_translations.Remove(translation)) { translation.Disposed -= OnTranslationDisposed; _lookupSnapshot = null; }
     }
 
-    private static string NormalizeLocale(string locale)
-    {
-        ArgumentNullException.ThrowIfNull(locale);
-        return CultureInfo.GetCultureInfo(locale.Replace('_', '-')).Name;
-    }
-
-    private static bool MatchesLocale(string normalized, Translation translation, bool exact)
+    private static bool MatchesLocale(string locale, Translation translation, bool exact)
     {
         try
         {
             var candidate = translation.Locale;
-            if (candidate == normalized) return true;
-            return !exact && TranslationServer.CompareLocales(normalized, candidate) > 0;
+            return exact ? candidate == locale : TranslationServer.CompareLocales(locale, candidate) > 0;
         }
         catch (ObjectDisposedException) when (translation.IsDisposed) { return false; }
     }

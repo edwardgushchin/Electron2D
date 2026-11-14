@@ -1,6 +1,6 @@
 # TranslationServer
 
-Last updated: 2026-10-21
+Last updated: 2026-11-13
 
 **Inherits:** —
 
@@ -189,7 +189,9 @@ Removes all direct singular/plural registrations and resource registrations with
 
 `GetOrAddDomain` returns the same live domain for an exact case-sensitive name; callers may register resources and set locale override, enablement and pseudolocalization options on it. `HasDomain("")` is true even before the main domain is materialized. `RemoveDomain` rejects the empty name, removes direct entries for a custom name and leaves the detached domain alive with its borrowed catalogs. Disposing a registered domain removes it and its direct entries. Null names throw `ArgumentNullException`.
 
-`GetTranslations`, `FindTranslations`, `HasTranslation`, `HasTranslationForLocale`, and `GetLoadedLocales` are convenience operations on the main domain. Arrays are independent snapshots of borrowed resources. `FindTranslations` accepts normalized exact locale or positive-score language matches, according to `exact`. A concurrently disposed catalog is omitted from locale queries.
+`GetTranslations`, `FindTranslations`, `HasTranslation`, `HasTranslationForLocale`, and `GetLoadedLocales` query only borrowed resources in the main domain. `FindTranslations` and `HasTranslationForLocale` share the [domain predicate](TranslationDomain.md#member-behavior): exact queries compare the supplied text ordinally with stored `Translation.Locale`, while nonexact queries accept a positive default-aware locale score, including fixed aliases and script/region modifiers. Query text is not first converted to `CultureInfo`. Arrays preserve registration order and are independent snapshots of membership with live borrowed references. A catalog disposed before its locale is read is skipped; a returned resource may subsequently change or retire.
+
+`GetLoadedLocales` returns copied stored locale strings in first registration order, with ordinal duplicates removed. Locale changes and retirement affect the next call; old string arrays retain their values. Direct entries, custom domains, configured fallback, domain override and enablement do not add or filter resource-query results. The stored managed culture spelling remains authoritative for exact queries: use a value from `GetLoadedLocales`, or the catalog's `Locale`, when selecting an exact match.
 
 `PseudolocalizationEnabled` and `Pseudolocalize` use the main domain's options. Every server switch assignment, including an equal value, sends a post-commit synchronous notification to the current MainLoop; direct domain option changes keep explicit refresh. `Pseudolocalize` applies those options even if the switch is false. Singular lookup transforms both translated text and missing-message fallback when the switch is true. Plural lookup does not transform its result. See [`TranslationDomain`](TranslationDomain.md) for the options and limits.
 
@@ -220,6 +222,8 @@ One process-wide lock protects direct catalogs, the domain registry, and `Cultur
 `ElectronObject.Tr()` and `TrN()` use the object's `TranslationDomain` and `CanTranslateMessages` before calling this server. The server uses .NET globalization/collections/threading, typed ProjectSettings and Resource catalogs. Its change orchestration calls ResourceLoader for localized file refresh and Engine.MainLoop for synchronous notification after releasing the catalog lock; file decoding remains in the resource domain.
 
 ## Verification and limitations
+
+The public [`TranslationQueries.Consumer`](../../tests/TranslationQueries.Consumer/TranslationQueries.Consumer.csproj) checks independent ordered memberships for exact and nonexact queries, aliases/casing/scripts/regions, live edits and borrowed lifetime, loaded-locale snapshots, concurrent retirement and unchanged message ranking. Its Windows x64 GPU/compatibility language menus verify French/Hebrew state pixels and teardown using the local native bundle. Foreign hosts, NativeAOT and release packages remain unqualified for this slice; see [catalog queries](../components/localization.md#catalog-queries).
 
 Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, per-object disabling, domain lifecycle and pseudolocalization. `LocalizationProjectSettingsTests` checks typed startup settings, managed locale scoring, regional catalog selection, project fallback for singular/plural lookup, and runtime transform reload. `WindowRuntimeTests` checks startup sampling with SDL dummy.
 

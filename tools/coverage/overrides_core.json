@@ -135,7 +135,7 @@
     {"electron2d": "method:Electron2D.Input.GetCurrentCursorShape()", "godot": "Input::method:get_current_cursor_shape()", "reason": "Returns the active display cursor shape, including direct display changes."},
     {"electron2d": "method:Electron2D.TranslationDomain.GetTranslations()", "godot": "TranslationDomain::method:get_translations()", "reason": "Returns a snapshot of borrowed catalogs in registration order."},
     {"electron2d": "property:Electron2D.TranslationDomain.LocaleOverride()", "godot": "TranslationDomain::method:set_locale_override(String:)", "reason": "A normalized CultureInfo name replaces the locale string setter under ADR 0007."},
-    {"electron2d": "method:Electron2D.TranslationServer.GetLoadedLocales()", "godot": "TranslationServer::method:get_loaded_locales()", "reason": "Lists distinct live locales registered in the main domain; culture and editor locale lists remain a separate audit."},
+    {"electron2d": "method:Electron2D.TranslationServer.GetLoadedLocales()", "godot": "TranslationServer::method:get_loaded_locales()", "reason": "ADR 0007: independent stored-locale string snapshots from live main-domain resources, ordinal deduplication in first registration order, live Locale edits and retirement. Direct entries and other domains are excluded. TranslationQueryChecks verifies duplicates, mutation, removal/disposal, independent snapshots and public language selection; docs/components/localization.md#catalog-queries records platform qualification separately."},
     {"electron2d": "method:Electron2D.TranslationServer.GetTranslations()", "godot": "TranslationServer::method:get_translations()", "reason": "Returns a snapshot of borrowed main-domain catalogs."},
     {"electron2d": "method:Electron2D.XMLParser.GetAttributeCount()", "godot": "XMLParser::method:get_attribute_count()", "reason": "Count of the current or last element's ordered attributes; non-element tokens retain the list."},
     {"electron2d": "method:Electron2D.XMLParser.GetCurrentLine()", "godot": "XMLParser::method:get_current_line()", "reason": "Zero-based count of newline bytes consumed by the token cursor."},
@@ -1901,6 +1901,7 @@
   ],
   "statusGroups": [
     {"godot": ["Engine::method:get_author_info()", "Engine::method:get_copyright_info()", "Engine::method:get_donor_info()", "Engine::method:get_license_info()", "Engine::method:get_license_text()"], "state": "Implemented", "reason": "ADR 0016/0095: complete executable distribution-metadata projection with actual package authors, reviewed contributor records, all 71 component/97 legal-document parts, full legal text, typed deeply immutable values and exact source/header attribution. Public source/package CLR and strict full-trim NativeAOT checks audit all fields, texts, nested mutation refusals and concurrent first reads. No known semantic gap remains in these five operations; foreign-host qualification remains separate under ADR 0021. See engine-runtime.md#distribution-metadata."},
+    {"godot": ["TranslationServer::method:get_loaded_locales()"], "state": "Implemented", "reason": "ADR 0007: independent stored-locale string snapshots from live main-domain resources, ordinal deduplication in first registration order, live Locale edits and retirement. Direct entries and other domains are excluded. TranslationQueryChecks verifies duplicates, mutation, removal/disposal, independent snapshots and public language selection; docs/components/localization.md#catalog-queries records platform qualification separately."},
     {
       "state": "Implemented",
       "reason": "ADRs 0019/0091: typed metadata from the explicitly registered compiled C# source catalog, scoped to the current project. Snapshots include the name, nearest global or native base, language, source path, icon and abstract/tool flags. The source path loads through ResourceLoader and constructs the registered class without editor UI.",
@@ -2226,14 +2227,7 @@
       "state": "Implemented",
       "reason": "ADR 0018 accepts the versioned typed AES-256-GCM envelope in place of external encrypted-file format. VerifyConfigFiles checks independent PBKDF2/AES-GCM decoding, 32-byte raw keys, 600000 SHA-256 iterations, fresh 16-byte salt/12-byte nonce, authenticated header/tag/ciphertext, wrong credentials/modes, malformed headers, authenticated invalid text/UTF-8, merge rollback and temporary cleanup. SaveEncryptedPass now clears owned key/salt/plaintext buffers even when snapshot creation fails."
     },
-    {
-      "godot": [
-        "TranslationServer::method:find_translations(String:,bool:)",
-        "TranslationServer::method:has_translation_for_locale(String:,bool:)"
-      ],
-      "state": "Partial",
-      "reason": "Managed main-domain queries use normalized exact or positive-score locale matching; reference alias/default-script tables and editor behavior remain unaudited (ADR 0007)."
-    },
+    {"godot": ["TranslationServer::method:find_translations(String:,bool:)", "TranslationServer::method:has_translation_for_locale(String:,bool:)", "TranslationDomain::method:find_translations(String:,bool:)", "TranslationDomain::method:has_translation_for_locale(String:,bool:)"], "state": "Implemented", "reason": "ADR 0007: shared live resource predicate uses ordinal stored-locale equality for exact queries and positive fixed CompareLocales scores for nonexact aliases/scripts/regions, without CultureInfo query coercion. Registration-order arrays retain the accepted typed adaptation. TranslationQueryChecks verifies 156 independent memberships across standalone/registered/main domains, snapshots, live Locale edits, borrowed retirement, concurrent disposal, errors and unchanged singular/plural ranking; prepared active/missing availability uses zero current-thread managed bytes. Windows x64 GPU/compatibility public language-menu pixels execute with the local native closure. Foreign hosts, NativeAOT and release packages remain unqualified; docs/components/localization.md#catalog-queries."},
     {
       "godot": [
         "InputMap::signal:project_settings_loaded()"
@@ -2440,16 +2434,7 @@
       "state": "Implemented",
       "reason": "The domain stores the pinned defaults and typed setter values; TranslationDomainTests checks configuration and lookup effects. BIDI and Unicode transform fidelity is classified on pseudolocalize itself."
     },
-    {
-      "godot": [
-        "TranslationDomain::method:find_translations(String:,bool:)",
-        "TranslationDomain::method:has_translation_for_locale(String:,bool:)",
-        "TranslationDomain::method:get_locale_override()",
-        "TranslationDomain::method:set_locale_override(String:)"
-      ],
-      "state": "Partial",
-      "reason": "Executable domain lookup, override, scored catalog selection and configured fallback are tested; reference alias/default-script normalization and plural-rule parity remain unaudited."
-    },
+    {"godot": ["TranslationDomain::method:get_locale_override()", "TranslationDomain::method:set_locale_override(String:)"], "state": "Partial", "reason": "Executable domain lookup, override, scored catalog selection and configured fallback are tested; reference alias/default-script normalization and plural-rule parity remain unaudited."},
     {
       "godot": [
         "Translation::method:get_message_count()",
