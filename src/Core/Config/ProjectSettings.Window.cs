@@ -97,4 +97,11 @@ public sealed partial class ProjectSettings
     /// <remarks>Applies independently of the native window transparency request.</remarks>
     public static ProjectSetting<bool> ViewportTransparentBackground { get; } =
         new("rendering/viewport/transparent_background", false);
+
+    /// <summary>Requests the configured project's main-window presentation synchronization mode.</summary>
+    /// <value>Enabled by default. Undefined modes are invalid. The effective feature value is read at startup.</value>
+    /// <remarks>The --disable-vsync launch option and <see cref="MovieWriterDisableVSync"/> take precedence.
+    /// Unsupported modes fall back to Enabled. Use <see cref="DisplayServer.WindowSetVSyncMode"/> to change a live window.</remarks>
+    public static ProjectSetting<DisplayServer.VSyncMode> WindowVSyncMode { get; } =
+        new("display/window/vsync/vsync_mode", DisplayServer.VSyncMode.Enabled, Enum.IsDefined);
 }

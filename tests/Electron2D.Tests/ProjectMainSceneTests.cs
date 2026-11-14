@@ -41,6 +41,7 @@ internal static class ProjectMainSceneTests
             VerifyProjectWindow(project.FullName, user.FullName, main, backend);
             VerifyProjectPlacement(project.FullName, user.FullName);
             VerifyProjectChrome(project.FullName, user.FullName);
+            VerifyProjectVSync(project.FullName, user.FullName, backend);
             if (OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy")
                 VerifyProjectTransparency(project.FullName, user.FullName, backend);
 
@@ -440,6 +441,104 @@ internal static class ProjectMainSceneTests
             window.Ready += _ => { verify(); window.Tree!.Quit(); };
             Check(Engine.RunProject(window) == 0 && window.IsDisposed && !DisplayServer.IsAvailable,
                 "The window chrome host retires cleanly.");
+        }
+    }
+
+    private static void VerifyProjectVSync(string project, string user, string backend)
+    {
+        var setting = ProjectSettings.WindowVSyncMode;
+        const string feature = "root_vsync_test";
+        var unsupported = backend == "gpu" ? DisplayServer.VSyncMode.Adaptive : DisplayServer.VSyncMode.Mailbox;
+        var commandLineDisablesVSync = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EXPECT_DISABLE_VSYNC") == "1";
+        ProjectSettings.Save();
+        using (var saved = new ProjectSettingsRegistry(project, user))
+        {
+            saved.Load();
+            Check(saved.Get(setting) == DisplayServer.VSyncMode.Enabled, "The project defaults to Enabled VSync.");
+            Reject<ArgumentOutOfRangeException>(() => saved.Set(setting, (DisplayServer.VSyncMode)4));
+            Reject<ArgumentOutOfRangeException>(() => saved.SetFeatureOverride(setting, feature, (DisplayServer.VSyncMode)(-1)));
+            saved.Set(setting, DisplayServer.VSyncMode.Disabled);
+            saved.SetFeatureOverride(setting, feature, unsupported);
+            saved.Save();
+        }
+
+        ProjectSettings.Load();
+        try
+        {
+            Check(ProjectSettings.Get(setting) == DisplayServer.VSyncMode.Disabled, "The typed VSync setting survives reload.");
+            Verify(DisplayServer.VSyncMode.Disabled);
+
+            ProjectSettings.AddCustomFeature(feature);
+            Check(ProjectSettings.GetWithOverride(setting) == unsupported, "The VSync feature override survives reload.");
+            Verify(unsupported, asynchronous: true);
+
+            if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy")
+            {
+                ProjectSettings.Set(ProjectSettings.MovieWriterDisableVSync, true);
+                Verify(DisplayServer.VSyncMode.Disabled, moviePath: Path.Combine(project, "vsync.png"));
+                ProjectSettings.Reset(ProjectSettings.MovieWriterDisableVSync);
+                Verify(unsupported, moviePath: Path.Combine(project, "vsync.png"));
+            }
+
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.Reset(setting);
+            Verify(DisplayServer.VSyncMode.Enabled);
+            ProjectSettings.Set(setting, unsupported);
+            Verify(DisplayServer.VSyncMode.Enabled, configured: false);
+        }
+        finally
+        {
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.ClearFeatureOverride(setting, feature);
+            ProjectSettings.Reset(setting);
+            ProjectSettings.Reset(ProjectSettings.MovieWriterDisableVSync);
+        }
+
+        void Verify(DisplayServer.VSyncMode requested, bool asynchronous = false, string? moviePath = null, bool configured = true)
+        {
+            if (commandLineDisablesVSync)
+                requested = DisplayServer.VSyncMode.Disabled;
+            using var window = new Window { Size = new(96, 72) };
+            if (!configured)
+                window.AddChild(new ColorRect { Size = new(48, 48), Color = Colors.Red });
+            var rendered = false;
+            window.Ready += _ =>
+            {
+                var actual = DisplayServer.WindowGetVSyncMode();
+                Check(window.NativeDisplay!.RequestedVSync == requested, "The configured policy is sent to the display before Ready.");
+                if (configured || commandLineDisablesVSync)
+                {
+                    var accepted = requested == DisplayServer.VSyncMode.Disabled
+                        ? actual is DisplayServer.VSyncMode.Disabled or DisplayServer.VSyncMode.Enabled
+                        : actual == DisplayServer.VSyncMode.Enabled;
+                    Check(accepted, "The renderer reports the applied policy or the supported Enabled fallback.");
+                    DisplayServer.WindowSetVSyncMode(requested);
+                    Check(actual == DisplayServer.WindowGetVSyncMode(), "Startup and live requests resolve to the same native policy.");
+                }
+                if (!configured)
+                {
+                    DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Enabled);
+                    Check(DisplayServer.WindowGetVSyncMode() == DisplayServer.VSyncMode.Enabled, "A live request still overrides the startup policy.");
+                }
+                RenderingServer.FramePostDraw += () =>
+                {
+                    using var image = window.GetTexture().GetImage()!;
+                    Check(image.GetPixel(16, 16).IsEqualApprox(Colors.Red), "The renderer presents the configured scene with the requested policy.");
+                    rendered = true;
+                    window.Tree!.Quit();
+                };
+            };
+            int result;
+            if (moviePath is not null)
+                result = Engine.RunProject(window, moviePath, 30);
+            else if (asynchronous)
+                result = RunAsync(window);
+            else
+                result = configured ? Engine.RunProject(window) : Engine.Run(window);
+            Check(result == 0 && rendered && window.IsDisposed && !DisplayServer.IsAvailable, "VSync retires with the rendering host.");
+            if (moviePath is not null)
+                Check(File.Exists(Path.ChangeExtension(moviePath, ".wav")) && File.Exists(Path.Combine(project, "vsync00000000.png")),
+                    "The project recording writes the rendered frame and audio.");
         }
     }
 

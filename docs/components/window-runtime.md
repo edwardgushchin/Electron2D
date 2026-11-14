@@ -107,6 +107,12 @@ Wayland leaves native top-level stacking and focus under compositor control. The
 
 Windows GPU and Compatibility checks read back the SDL flags and the Windows 11 corner preference, then verify that explicitly stored false values override the same settings. A dummy Compatibility run exercises startup with configured flags on the headless driver. Wayland, mobile and release-package checks remain separate.
 
+## Project startup VSync
+
+Configured project runs request [WindowVSyncMode](../classes/ProjectSettings.md#project-window-vsync) after opening the display and before constructing the renderer. The launch option `--disable-vsync` before the argument separator or a true `MovieWriterDisableVSync` during recording requests Disabled. Otherwise the effective project value applies to configured runs. Explicit scene runs use the ordinary renderer default. The renderer uses its supported-mode fallback, and DisplayServer.WindowGetVSyncMode reports the result. Use DisplayServer.WindowSetVSyncMode to change an active window. Editing the setting applies on the next configured run.
+
+The project-scene profiles exercise setting persistence and validation, startup and live readback on GPU and Compatibility, rendered frames, supported-mode fallback, command-line and recording precedence, and teardown. Physical display timing, foreign hosts and release packages require separate qualification.
+
 ## Window content scaling
 
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.

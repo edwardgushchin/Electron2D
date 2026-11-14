@@ -401,7 +401,10 @@ public partial class Window : Viewport
         if (runProject)
             ApplyProjectChrome(_display);
         ConfigureNative(placement);
-        if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
+        if (disableVSync)
+            DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
+        else if (runProject)
+            DisplayServer.WindowSetVSyncMode(ProjectSettings.GetWithOverride(ProjectSettings.WindowVSyncMode));
         _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow(), printGPUProfile);
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }

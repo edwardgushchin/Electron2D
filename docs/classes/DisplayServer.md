@@ -1527,7 +1527,7 @@ The complete coverage and exact implementation triggers for absent services are 
 
 ## Presentation synchronization
 
-`public static void WindowSetVSyncMode(DisplayServer.VSyncMode vsyncMode, int windowId = MainWindowId)` selects the native main-window policy. `public static DisplayServer.VSyncMode WindowGetVSyncMode(int windowId = MainWindowId)` returns the applied policy, or the pending request before rendering starts. Both enforce the display owner thread and main-window identity; invalid enum values fail before mutation. Changes during active canvas submission are rejected. See [VSyncMode](DisplayServer.VSyncMode.md).
+`public static void WindowSetVSyncMode(DisplayServer.VSyncMode vsyncMode, int windowId = MainWindowId)` selects the policy for an active native window. `public static DisplayServer.VSyncMode WindowGetVSyncMode(int windowId = MainWindowId)` returns the applied policy, or the pending request before rendering starts. Both enforce the display owner thread and validate the window identity. The setter rejects invalid enum values before mutation and rejects changes during active rendering. See [VSyncMode](DisplayServer.VSyncMode.md) and [project startup VSync](../components/window-runtime.md#project-startup-vsync).
 
 GPU presentation uses immediate, FIFO or mailbox modes according to device support; adaptive requests fall back to Enabled. Compatibility rendering uses swap intervals 0, 1 or -1, with unsupported modes falling back to Enabled. Readback reflects that fallback. This is independent of Engine.MaxFPS, and a desktop compositor can impose its own final synchronization. Feature.SwapBuffers reports whether a renderer is attached. Renderer hide/show restores its policy after reclaiming a surface.
 

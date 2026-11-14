@@ -5579,6 +5579,11 @@
       "reason": "Typed configured-root window flag."
     },
     {
+      "godot": "ProjectSettings::property:display/window/vsync/vsync_mode",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowVSyncMode()",
+      "reason": "Typed enum for the configured root window's startup presentation policy."
+    },
+    {
       "godot": "ProjectSettings::property:display/window/size/sharp_corners",
       "electron2d": "property:Electron2D.ProjectSettings.WindowSharpCorners()",
       "reason": "Typed configured-root window flag."
@@ -8905,6 +8910,13 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/vsync/vsync_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0040/0109. Configured startup passes the feature-resolved enum to the display before renderer creation. The --disable-vsync launch option and movie override request Disabled. Both renderers use their native supported-mode fallback and the live getter reports the effective policy. The Windows project-scene profiles cover startup, persistence, fallback, precedence and rendered pixels."
+    },
     {
       "godot": [
         "ProjectSettings::property:display/window/size/resizable",

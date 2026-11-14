@@ -134,7 +134,7 @@ public sealed partial class Engine
         try
         {
             if (reserved) ValidateRunWindow(window);
-            var (frameDelayMsec, printGPUProfile) = ConfigureFrameRateSettings(windowed: true);
+            var (frameDelayMsec, printGPUProfile, disableVSync) = ConfigureFrameRateSettings(windowed: true);
             var frameDelay = frameDelayMsec / 1000d;
             if (moviePath is not null) frameDelay = 0;
             RuntimeDiagnostics.Instance.BeginRun(windowed: true);
@@ -155,7 +155,7 @@ public sealed partial class Engine
             if (runProject)
                 window.ApplyProjectContent();
             window.ApplyProjectHDROutput();
-            window.OpenNative(movieDisableVSync, printGPUProfile, runProject);
+            window.OpenNative(movieDisableVSync || disableVSync, printGPUProfile, runProject);
             var splashStarted = runProject && window.Visible && !OperatingSystem.IsBrowser() &&
                 RenderingServer.Service!.PresentProjectBootSplash() ? Stopwatch.GetTimestamp() : (long?)null;
             var splashMinimum = splashStarted.HasValue && !IsEditorHint

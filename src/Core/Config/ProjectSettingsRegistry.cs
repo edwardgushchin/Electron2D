@@ -89,6 +89,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         _settings[AllowPerPixelTransparency.Name].RestartIfChanged = true;
         RegisterInternal(WindowTransparent, isBasic: false);
         RegisterInternal(ViewportTransparentBackground, isBasic: false);
+        RegisterInternal(WindowVSyncMode, isBasic: true);
         RegisterInternal(WindowStretchAspect, isBasic: false);
         RegisterInternal(WindowStretchScale, isBasic: false);
         RegisterInternal(WindowStretchScaleMode, isBasic: false);
@@ -1445,6 +1446,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationIcon) ||
         ReferenceEquals(setting, WindowsNativeIcon) ||
+        ReferenceEquals(setting, WindowVSyncMode) ||
         ReferenceEquals(setting, MainScene) ||
         ReferenceEquals(setting, MainLoopType) ||
         ReferenceEquals(setting, AutoAcceptQuit) ||
