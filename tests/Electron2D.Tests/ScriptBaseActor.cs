@@ -1,5 +1,6 @@
 using Electron2D;
 [Tool]
+[GlobalClass]
 internal abstract class ScriptBaseActor : Node
 {
     internal static readonly string SourcePath = Source();

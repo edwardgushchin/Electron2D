@@ -2,6 +2,12 @@ namespace Electron2D;
 
 public sealed partial class ProjectSettings
 {
+    /// <summary>Lists the registered global C# source classes in the current project.</summary>
+    /// <returns>A caller-owned snapshot ordered by class name and project-relative source path.</returns>
+    /// <remarks>The catalog uses explicit compiled registrations. Queries do not open source files, construct objects
+    /// or run tool callbacks. Each source path can be passed to ResourceLoader to load the Script.</remarks>
+    public static GlobalScriptClass[] GetGlobalClassList() => Script.GetGlobalClasses(ProjectRoot);
+
     /// <summary>Gets the current absolute project resource directory.</summary>
     /// <value>The directory to which <c>res://</c> resolves.</value>
     public new static string ProjectRoot

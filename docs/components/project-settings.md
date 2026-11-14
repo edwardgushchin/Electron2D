@@ -97,7 +97,7 @@ Four typed `physics/2d/default_*` settings supply the new physics world's gravit
 
 ## Exclusions and deferred integration
 
-- Global script-class discovery requires a scripting domain.
+- [Global script-class discovery](scripting.md#global-class-discovery) uses the registered compiled C# catalog.
 - Resource pack loading and ZIP-backed `res://` use the existing file-access/resource-pack layer; locale selection shares that input route. Import/editor metadata remains separate.
 - Editor-specific hints, override layers, hidden-prefix UI, and settings dialogs require an editor.
 - Rendering registers backend selection, startup fallback, clear color and the implemented canvas mip/anisotropy defaults with its executable canvas integration. Four 2D physics world defaults are implemented; remaining settings enter with their owning input, audio, networking, physics or other domain capabilities. Three-dimensional settings will never be added.

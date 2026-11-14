@@ -5502,6 +5502,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.GlobalScriptClass",
+    "kind": "type",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "GlobalScriptClass",
+    "signature": "public sealed class Electron2D.GlobalScriptClass",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
     "kind": "type",
     "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
@@ -6087,6 +6100,19 @@
       "System.IFormattable",
       "System.ISpanFormattable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.IconAttribute",
+    "kind": "type",
+    "declaringType": "Electron2D.IconAttribute",
+    "name": "IconAttribute",
+    "signature": "public sealed class Electron2D.IconAttribute",
+    "visibility": "public",
+    "baseType": "System.Attribute",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -23422,6 +23448,25 @@
       {
         "name": "Addresses",
         "type": "System.String[]",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.IconAttribute..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.IconAttribute",
+    "name": ".ctor",
+    "signature": "public IconAttribute(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -175116,6 +175161,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ProjectSettings.GetGlobalClassList()",
+    "kind": "method",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "GetGlobalClassList",
+    "signature": "public static Electron2D.GlobalScriptClass[] GetGlobalClassList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GlobalScriptClass[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ProjectSettings.GetOrder\u00601(ProjectSetting\u003CT\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.ProjectSettings",
@@ -282644,6 +282702,97 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.GlobalScriptClass.BaseType()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "BaseType",
+    "signature": "public System.Type BaseType { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Type",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.IconPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "IconPath",
+    "signature": "public System.String IconPath { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.IsAbstract()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "IsAbstract",
+    "signature": "public System.Boolean IsAbstract { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.IsTool()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "IsTool",
+    "signature": "public System.Boolean IsTool { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "Language",
+    "signature": "public System.String Language { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "Name",
+    "signature": "public System.String Name { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.Path()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "Path",
+    "signature": "public System.String Path { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.GlobalShaderParameterSettings\u003CT\u003E.Type()",
     "kind": "property",
     "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
@@ -283741,6 +283890,19 @@
     "declaringType": "Electron2D.IPInterfaceInfo",
     "name": "Name",
     "signature": "public System.String Name { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.IconAttribute.Path()",
+    "kind": "property",
+    "declaringType": "Electron2D.IconAttribute",
+    "name": "Path",
+    "signature": "public System.String Path { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

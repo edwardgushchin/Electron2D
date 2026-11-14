@@ -179,6 +179,43 @@ public sealed partial class Script
             return documents.Where(d => !d.IsNil).Select(d => { var doc = pdb.GetDocument(d); if (pdb.GetGuid(doc.Language) != new Guid("3F5162F8-07C6-11D3-9053-00C04FA302A1")) throw new NotSupportedException("The script document must be C# source."); var algorithm = pdb.GetGuid(doc.HashAlgorithm); if (algorithm != SHA256ID && algorithm != SHA1ID) throw new NotSupportedException("Unsupported compiled source checksum."); return new ScriptDocument(System.IO.Path.GetFullPath(pdb.GetString(doc.Name)), algorithm, pdb.GetBlobBytes(doc.Hash)); }).OrderBy(d => d.Path, StringComparer.Ordinal).ToArray();
         }
     }
+    internal static GlobalScriptClass[] GetGlobalClasses(string projectRoot)
+    {
+        ScriptRegistration[] registrations;
+        lock (CatalogGate) registrations = ByType.Values.ToArray();
+        var classes = new List<GlobalScriptClass>();
+        foreach (var entry in registrations)
+        {
+            var type = entry.Type;
+            if (!IsGlobalClass(type) || ProjectPath(entry.Path) is not { } path)
+                continue;
+
+            var baseType = type.BaseType;
+            while (baseType is not null && baseType.Assembly != typeof(Script).Assembly &&
+                !ExtensionBindings.IsExtensionRole(baseType) && !IsGlobalClass(baseType))
+                baseType = baseType.BaseType;
+
+            var icon = type.GetCustomAttribute<IconAttribute>(inherit: false)?.Path.Replace('\\', '/');
+            var iconPath = icon is null ? "" : ProjectPath(icon.StartsWith("res://", StringComparison.Ordinal)
+                ? System.IO.Path.Combine(projectRoot, icon[6..])
+                : System.IO.Path.Combine(System.IO.Path.GetDirectoryName(entry.Path)!, icon)) ?? "";
+            classes.Add(new(type.Name, baseType, iconPath, path, type.IsAbstract,
+                type.IsDefined(typeof(ToolAttribute), inherit: true)));
+        }
+        return classes.OrderBy(item => item.Name, StringComparer.Ordinal)
+            .ThenBy(item => item.Path, StringComparer.Ordinal).ToArray();
+
+        string? ProjectPath(string absolute)
+        {
+            var relative = System.IO.Path.GetRelativePath(projectRoot, absolute).Replace('\\', '/');
+            return relative is "." or ".." || relative.StartsWith("../", StringComparison.Ordinal) ||
+                System.IO.Path.IsPathRooted(relative) ? null : "res://" + relative;
+        }
+    }
+
+    private static bool IsGlobalClass(Type type) => !type.IsGenericType &&
+        type.IsDefined(typeof(GlobalClassAttribute), inherit: false);
+
     internal static ScriptRegistration? FindPath(string path) { lock (CatalogGate) return ByPath.GetValueOrDefault(System.IO.Path.GetFullPath(ResourceArchive.Absolute(path))); }
     private static ScriptRegistration? FindType(Type type) { lock (CatalogGate) return ByType.GetValueOrDefault(type); }
     internal static void RegisterMainLoop<TLoop>(Func<TLoop> factory) where TLoop : MainLoop
@@ -208,7 +245,7 @@ public sealed partial class Script
             compiled = MainLoopFactories.GetValueOrDefault(name);
             foreach (var record in ByType.Values)
             {
-                if (record.Type.Name != name || !record.Type.IsDefined(typeof(GlobalClassAttribute), inherit: false))
+                if (record.Type.Name != name || !IsGlobalClass(record.Type))
                     continue;
                 if (match is not null || compiled is not null && compiled.Type != record.Type) throw new InvalidOperationException($"The global class name '{name}' is ambiguous.");
                 match = record;

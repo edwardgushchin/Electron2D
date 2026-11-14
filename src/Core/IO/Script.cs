@@ -34,7 +34,7 @@ public sealed partial class Script : Resource
     /// <summary>Reports the compiled class's editor tool declaration.</summary><returns>Whether the class carries ToolAttribute.</returns>
     public bool IsTool() => CompiledType?.IsDefined(typeof(ToolAttribute), inherit: true) ?? false;
     /// <summary>Returns the declared global class name.</summary><returns>The CLR class name with GlobalClassAttribute, or empty.</returns>
-    public string GetGlobalName() { var type = CompiledType; return type?.IsDefined(typeof(GlobalClassAttribute), inherit: false) == true ? type.Name : ""; }
+    public string GetGlobalName() { var type = CompiledType; return type is not null && IsGlobalClass(type) ? type.Name : ""; }
     /// <summary>Returns the native base of a fixed class, or the declared stable owner role of a live binding.</summary><returns>Owner CLR role, or null when unbound.</returns>
     public Type? GetInstanceBaseType() { lock (_gate) { ThrowIfDisposed(); if (_registration?.BindingOwner is { } owner) return owner; } var type = CompiledType?.BaseType; while (type != null && type.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(type)) type = type.BaseType; return type; }
     /// <summary>Loads the directly inherited registered script asset, when the project base class has one.</summary><returns>Borrowed cached base Script, or null for a native/unregistered base.</returns>

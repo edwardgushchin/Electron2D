@@ -122,7 +122,7 @@ Feature overrides are explicit typed operations. Tags normalize to lowercase; th
 
 `res://` and `user://` map to configured directories. An explicitly supplied user-data root takes precedence. With automatic selection, project Load resolves `UseCustomUserDir`, `CustomUserDirName` and the application name from the effective candidate document. It uses the preliminary root to resolve a configured `user://` override, then publishes the final root and validated document together. A later load can change the directory; open filesystem instances retain their existing scope. Resolution blocks lexical `..` escape, supports reverse localization and upward project discovery, and explicitly does not claim symbolic-link security. Mounted resource overlays are defined below.
 
-Script global classes, editor-only metadata/UI, and settings for absent domains remain documented deferrals. Three-dimensional settings are permanently excluded.
+ProjectSettings exposes registered global C# source classes under ADR 0091. Editor-only metadata/UI and settings for absent domains remain documented deferrals. Three-dimensional settings are permanently excluded.
 
 ### Consequences
 

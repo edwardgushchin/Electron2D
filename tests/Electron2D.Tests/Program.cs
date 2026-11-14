@@ -1220,6 +1220,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_OBJECTS") is { } 
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_CHILD") is { } scriptPath) { ScriptTests.RunChild(scriptPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GLOBAL_CLASSES") == "1") { ScriptTests.VerifyGlobalClasses(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_HOST") == "1") { ScriptTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_INITIALIZATION") is { } initializationBackend)
 {

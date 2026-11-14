@@ -573,6 +573,11 @@
       "reason": "Typed key plus explicit features (ADR 0019)."
     },
     {
+      "electron2d": "method:Electron2D.ProjectSettings.GetGlobalClassList()",
+      "godot": "ProjectSettings::method:get_global_class_list()",
+      "reason": "ADRs 0019/0091: typed metadata from the explicitly registered compiled C# source catalog, scoped to the current project. Snapshots include the name, nearest global or native base, language, source path, icon and abstract/tool flags. The source path loads through ResourceLoader and constructs the registered class without editor UI."
+    },
+    {
       "electron2d": "property:Electron2D.ProjectSettings.ApplicationName()",
       "godot": "ProjectSettings::property:application/config/name",
       "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
@@ -1776,6 +1781,17 @@
     {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectRoot()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
     {"electron2d": "property:Electron2D.ProjectSettingsRegistry.UserDataRoot()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
     {"electron2d": "property:Electron2D.ProjectSettingsRegistry.Version()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "T:Electron2D.GlobalScriptClass", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "T:Electron2D.IconAttribute", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "constructor:Electron2D.IconAttribute..ctor(System.String)", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "property:Electron2D.IconAttribute.Path()", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "property:Electron2D.GlobalScriptClass.Name()", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "property:Electron2D.GlobalScriptClass.BaseType()", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "property:Electron2D.GlobalScriptClass.Language()", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "property:Electron2D.GlobalScriptClass.Path()", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "property:Electron2D.GlobalScriptClass.IconPath()", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "property:Electron2D.GlobalScriptClass.IsAbstract()", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
+    {"electron2d": "property:Electron2D.GlobalScriptClass.IsTool()", "reason": "Typed fields and icon declaration of the compiled global script class catalog.", "adr": "ADR 0004/0019/0091"},
     {"electron2d": "T:Electron2D.GlobalClassAttribute", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
     {"electron2d": "T:Electron2D.ToolAttribute", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
     {"electron2d": "constructor:Electron2D.GlobalClassAttribute..ctor()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
@@ -1882,6 +1898,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0019/0091: typed metadata from the explicitly registered compiled C# source catalog, scoped to the current project. Snapshots include the name, nearest global or native base, language, source path, icon and abstract/tool flags. The source path loads through ResourceLoader and constructs the registered class without editor UI.",
+      "godot": ["ProjectSettings::method:get_global_class_list()"]
+    },
     {
       "state": "Implemented",
       "reason": "ADRs 0015/0019/0040: Windows window startup samples the typed feature policy. Root and independent child windows dispatch the Alt+Space system command to the native menu when enabled. Editor-hint runs enable it. The callback is bound to the native window lifetime; other drivers keep their own behavior.",

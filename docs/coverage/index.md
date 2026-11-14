@@ -1,3 +1,5 @@
+[Global C# class discovery](../components/scripting.md#global-class-discovery) publishes project-scoped typed source metadata from the compiled registration catalog. One Unimplemented row moves to Implemented. Coverage is **14,014/18,898 (74.16%)**, with 1,122 Partial, 268 Unimplemented, 3,494 Blocked, 8,395 Excluded and zero unmapped.
+
 [Windows system menu](../components/window-runtime.md#windows-system-menu) connects the Alt+Space startup policy to real Win32 menus. One Blocked row moves to Implemented. Coverage is **14,013/18,898 (74.15%)**, with 1,122 Partial, 269 Unimplemented, 3,494 Blocked, 8,395 Excluded and zero unmapped.
 
 [Project user-data selection](../components/project-settings.md#user-data-directory) applies two typed settings to the automatic user directory and configured override lookup. Two Blocked rows move to Implemented. Coverage is **14,012/18,898 (74.15%)**, with 1,122 Partial, 269 Unimplemented, 3,495 Blocked, 8,395 Excluded and zero unmapped.

@@ -20,6 +20,46 @@ internal static partial class ScriptTests
         Script.RegisterNodeWithRPC<RequiredScriptRPCActor>("ScriptTest.RequiredRPC", RequiredScriptRPCActor.SourcePath, null, []);
         _registered = true;
     }
+    internal static void VerifyGlobalClasses()
+    {
+        Check(ProjectSettings.GetGlobalClassList().Length == 0, "Before registration the class catalog is empty.");
+        Register();
+        var currentProject = ProjectSettings.ProjectRoot;
+        var currentUser = ProjectSettings.UserDataRoot;
+        var project = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(ScriptActor.SourcePath)!, "../.."));
+        try
+        {
+            ProjectSettings.ConfigurePaths(project);
+            ActorFactory = static () => throw new InvalidOperationException("Discovery must not construct the owner.");
+            var classes = ProjectSettings.GetGlobalClassList();
+            Check(classes.Select(item => item.Name).SequenceEqual([nameof(ScriptActor), nameof(ScriptBaseActor)]),
+                "Own global attributes, alphabetical order and source registration determine membership.");
+            var actor = classes[0];
+            var basis = classes[1];
+            Check(actor.BaseType == typeof(ScriptBaseActor) && actor.Language == "C#" && actor.IsTool && !actor.IsAbstract &&
+                actor.IconPath == "res://docs/design/assets/sprite/app-icon.svg",
+                "The catalog exposes a typed global base, language, relative icon and tool/abstract roles.");
+            Check(basis.BaseType == typeof(Node) && basis.IconPath == "" && basis.IsAbstract && basis.IsTool, "The abstract class falls back to its engine base.");
+            classes[0] = basis;
+            Check(ProjectSettings.GetGlobalClassList()[0].Name == nameof(ScriptActor), "The returned array is independent.");
+            ActorFactory = null;
+            using var script = ResourceLoader.Load<Script>(actor.Path, ResourceLoader.CacheMode.Ignore);
+            using var instance = script.New<Node>();
+            using var scene = new SceneTree(instance);
+            scene.ProcessFrame(.01);
+            Check(instance is ScriptActor { ReadyCalls: 1, Frames: > 0 }, "The discovered source constructs and runs the authored class through the public loader.");
+
+            ProjectSettings.ConfigurePaths(Path.Combine(project, "docs"));
+            Check(ProjectSettings.GetGlobalClassList().Length == 0, "Changing the project root hides registrations outside it.");
+        }
+        finally
+        {
+            ActorFactory = null;
+            ProjectSettings.ConfigurePaths(currentProject, currentUser);
+        }
+        Console.WriteLine("Global class discovery, typed metadata, source loading and headless scene execution passed.");
+    }
+
     internal static void Run()
     {
         if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_RPC_PHASE") is { } phase) { ScriptRPCTests.Run(phase); return; }
