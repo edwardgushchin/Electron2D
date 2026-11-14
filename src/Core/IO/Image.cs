@@ -411,7 +411,7 @@ public sealed partial class Image : Resource
     /// <remarks>Existing mip levels are not regenerated; call <see cref="GenerateMIPMaps(bool)"/> after a batch of pixel edits when they must reflect the base level.</remarks>
     /// <param name="x">The zero-based horizontal coordinate.</param>
     /// <param name="y">The zero-based vertical coordinate.</param>
-    /// <param name="color">The color to encode in the current format.</param>
+    /// <param name="color">The color to encode using the current format's clamping and precision rules.</param>
     /// <exception cref="ArgumentOutOfRangeException">A coordinate lies outside the base image.</exception>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
@@ -426,7 +426,7 @@ public sealed partial class Image : Resource
                 ThrowIfDisposed();
                 var state = CaptureState(copyData: false);
                 ValidatePixelAccess(state, x, y);
-                WriteColor(_data, ((y * _width) + x) * GetBytesPerPixel(_format), _format, color);
+                WriteColor(_data, ((y * _width) + x) * GetBytesPerPixel(_format), _format, color, pixelWrite: true);
             }
         }
 
@@ -775,7 +775,7 @@ public sealed partial class Image : Resource
         return new Color(r, g, b, a);
     }
 
-    internal static void WriteColor(byte[] data, int offset, Format format, Color color)
+    internal static void WriteColor(byte[] data, int offset, Format format, Color color, bool pixelWrite = false)
     {
         switch (format)
         {
@@ -830,10 +830,10 @@ public sealed partial class Image : Resource
             case Format.Rgh:
             case Format.Rgbh:
             case Format.Rgbah:
-                WriteHalf(data, offset, color.R);
-                if (format >= Format.Rgh) WriteHalf(data, offset + 2, color.G);
-                if (format >= Format.Rgbh) WriteHalf(data, offset + 4, color.B);
-                if (format == Format.Rgbah) WriteHalf(data, offset + 6, color.A);
+                WriteHalf(data, offset, color.R, pixelWrite);
+                if (format >= Format.Rgh) WriteHalf(data, offset + 2, color.G, pixelWrite);
+                if (format >= Format.Rgbh) WriteHalf(data, offset + 4, color.B, pixelWrite);
+                if (format == Format.Rgbah) WriteHalf(data, offset + 6, color.A, pixelWrite);
                 return;
             case Format.Rgbe9995:
                 BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan(offset), ToRGBE9995(color));
@@ -875,18 +875,42 @@ public sealed partial class Image : Resource
     private static float ReadHalf(byte[] data, int offset) =>
         (float)BitConverter.UInt16BitsToHalf(ReadUInt16(data, offset));
 
-    private static void WriteHalf(byte[] data, int offset, float value) =>
-        WriteUInt16(data, offset, BitConverter.HalfToUInt16Bits((Half)value));
+    private static void WriteHalf(byte[] data, int offset, float value, bool pixelWrite = false)
+    {
+        if (pixelWrite)
+            WriteImageHalf(data, offset, value);
+        else
+            WriteUInt16(data, offset, BitConverter.HalfToUInt16Bits((Half)value));
+    }
 
-    private static byte ToByte(float value) => (byte)Math.Clamp((int)(value * 255f), 0, 255);
+    private static void WriteImageHalf(byte[] data, int offset, float value)
+    {
+        // Image color writes truncate the significand and flush half subnormals.
+        var bits = BitConverter.SingleToUInt32Bits(value);
+        var sign = (bits >> 16) & 0x8000;
+        var magnitude = bits & 0x7fffffff;
+        var encoded = magnitude switch
+        {
+            < 0x38800000 => 0u,
+            < 0x47800000 => sign | ((magnitude - 0x38000000) >> 13),
+            > 0x7f800000 => sign | 0x7fff,
+            _ => sign | 0x7c00,
+        };
+        WriteUInt16(data, offset, (ushort)encoded);
+    }
 
-    private static int ToNibble(float value) => Math.Clamp((int)(value * 15f), 0, 15);
+    private static byte ToByte(float value) => (byte)ToBits(value, 255);
 
-    private static int ToBits(float value, int maximum) => Math.Clamp((int)(value * maximum), 0, maximum);
+    private static int ToNibble(float value) => ToBits(value, 15);
 
-    private static ushort ToUShortNormalized(float value) => (ushort)Math.Clamp((int)(value * 65535f), 0, 65535);
+    // Use the same precision as decoding so an encoded sample survives a decode/encode round trip.
+    private static int ToBits(float value, int maximum) => (int)(ClampUnsigned(value, 1f) * maximum);
 
-    private static ushort ToUShortInteger(float value) => (ushort)Math.Clamp((int)value, 0, 65535);
+    private static ushort ToUShortNormalized(float value) => (ushort)ToBits(value, 65535);
+
+    private static ushort ToUShortInteger(float value) => (ushort)ClampUnsigned(value, 65535f);
+
+    private static float ClampUnsigned(float value, float maximum) => value > 0f ? Math.Min(value, maximum) : 0f;
 
     private static uint ToRGBE9995(Color color)
     {

@@ -95,8 +95,8 @@ byte[] ownedCopy = image.GetData();
 | [`public void Convert(Image.Format format)`](#convert) | Converts all stored levels to an uncompressed format. |
 | [`public void Crop(int width, int height)`](#crop) | Crops or expands from the top-left corner. |
 | [`public Image GetRegion(Rect2i region)`](#getregion) | Copies the requested extent and pads outside the source. |
-| [`public void FlipX()`](#flipx) | Flips all levels horizontally. |
-| [`public void FlipY()`](#flipy) | Flips all levels vertically. |
+| [`public void FlipX()`](#flipx) | Flips horizontally and regenerates existing mipmaps. |
+| [`public void FlipY()`](#flipy) | Flips vertically and regenerates existing mipmaps. |
 | [`public void Rotate90(ClockDirection direction)`](#rotate90) | Rotates by 90 degrees. |
 | [`public void Rotate180()`](#rotate180) | Rotates by 180 degrees. |
 | [`public void ShrinkX2()`](#shrinkx2) | Promotes a stored mip level or halves dimensions with the mip filter. |
@@ -341,12 +341,12 @@ Returns a new image with the requested positive dimensions. Pixels outside the s
 <a id="flipx"></a>
 ### `public void FlipX()`
 
-Reverses pixel order horizontally in each stored level.
+Reverses pixel order horizontally in the base level and regenerates any existing mip chain.
 
 <a id="flipy"></a>
 ### `public void FlipY()`
 
-Reverses row order vertically in each stored level.
+Reverses row order vertically in the base level and regenerates any existing mip chain.
 
 <a id="rotate90"></a>
 ### `public void Rotate90(ClockDirection direction)`
@@ -356,7 +356,7 @@ Rotates the base level 90 degrees, swaps width and height, and regenerates a pri
 <a id="rotate180"></a>
 ### `public void Rotate180()`
 
-Rotates every stored level by 180 degrees.
+Reverses both axes in the base level and regenerates any existing mip chain.
 
 <a id="shrinkx2"></a>
 ### `public void ShrinkX2()`
