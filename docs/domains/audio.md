@@ -1,6 +1,6 @@
 # Audio domain
 
-Last updated: 2026-10-27
+Last updated: 2026-11-14
 
 [Movie writing](../components/movie-writing.md) reuses this domain's FAudio graph through an offline mastering voice without an SDL output stream. Prepared PCM is consumed on the recording owner; native sample/stream sources and bus effects retain their ordinary roles.
 
@@ -19,6 +19,8 @@ Process-wide service operations and events use static access to retained objects
 
 Owns audio resource decoding, independent playback state, non-spatial and spatial 2D scene playback, listener selection and output bus routing. The [audio playback component](../components/audio-playback.md) implements the first output path under [ADR 0047](../decisions/audio.md#adr-0047). AudioStream, AudioStreamPlayback, AudioStreamPlaybackResampled, AudioStreamWAV, AudioWAVImportOptions, AudioStreamGenerator, AudioStreamGeneratorPlayback, AudioStreamRandomizer, AudioStreamMP3, AudioStreamOggVorbis, AudioStreamPlaybackOggVorbis, OggPacketSequence, OggPacketSequencePlayback, AudioStreamPlayer, AudioStreamEmitter, AudioListener and AudioServer expose engine-owned types only.
 
+[Stream usage tagging](../components/audio-playback.md#stream-usage-tagging) reports the positions of active managed streams and their mixed children from completed realtime and movie audio quanta.
+
 Concrete sources provide immutable prepared PCM; random pools provide borrowed-child selection/configuration and own independent child playback wrappers; playback holds cursors/history; scene nodes borrow streams and own playback/voices; AudioServer owns native output and bus configuration. The runtime embeds internal FAudio#, qoa-fu, NLayer and NVorbis source in Electron2D.dll and ships the pinned native FAudio library sharing SDL3. Private native build/package assets use `runtimes/<RID>/native`, preserved through project references and resolved by the engine under [ADR 0012](../decisions/product.md#adr-0012). Engine teardown closes output without disposing borrowed stream resources or the process singleton.
 
 Linux x64 output and packaging are checked locally. Both macOS FAudio/SDL identity and package audits passed; its runtime loading/public consumer/full-suite execution is implemented with target execution pending. Other platforms, multichannel speakers and physical listening retain separate gates. Remaining concrete API dependencies stay explicit in [coverage](../coverage/index.md). Recording input executes; no batch audio-export public capability is claimed under [ADR 0090](../decisions/agent-native.md#adr-0090).
@@ -30,7 +32,7 @@ Procedural generator streams own configuration and independent bounded copied PC
 [AudioStreamMicrophone](../classes/AudioStreamMicrophone.md) and AudioServer recording methods share an independently owned SDL3 input stream with finite stereo conversion, bounded history and independent server/playback cursors. The typed AudioDriverEnableInput setting gates starts. Device changes, explicit global pause, automatic request ownership and engine teardown execute; Linux dummy capture, injected native conversion/FAudio output and Wayland host tests establish runtime behavior while physical input/permissions and other platforms remain unverified.
 
 
-[AudioEffect](../classes/AudioEffect.md), [AudioEffectInstance](../classes/AudioEffectInstance.md), [AudioEffectCapture](../classes/AudioEffectCapture.md) and the AudioServer chain API now execute ordered native stereo processing, raw bounded capture, bypass/enable, pre-gain effect ordering and post-gain peaks. Buses own pair instances and borrow resources. Prepared activity preserves silent tails and explicit ProcessSilence behavior. Native callback exceptions latch silence and reach the owner frame; closure/removal and failed custom cleanup release references coherently. Saved bus layouts now persist these effects; file export and usage tagging retain separate triggers. See [verification](../components/audio-playback.md#bus-effects).
+[AudioEffect](../classes/AudioEffect.md), [AudioEffectInstance](../classes/AudioEffectInstance.md), [AudioEffectCapture](../classes/AudioEffectCapture.md) and the AudioServer chain API now execute ordered native stereo processing, raw bounded capture, bypass/enable, pre-gain effect ordering and post-gain peaks. Buses own pair instances and borrow resources. Prepared activity preserves silent tails and explicit ProcessSilence behavior. Native callback exceptions latch silence and reach the owner frame; closure/removal and failed custom cleanup release references coherently. Saved bus layouts now persist these effects. See [verification](../components/audio-playback.md#bus-effects).
 
 [AudioEffectRecord](../classes/AudioEffectRecord.md) adds front-pair bus recording and caller-owned WAV snapshots in all four supported sample formats. Start, stop, restart, copy and failed-chain rollback execute through the existing bus graph; see [bus recording](../components/audio-playback.md#bus-recording). It does not create a disk file or provide a batch capture host.
 

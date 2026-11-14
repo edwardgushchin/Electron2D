@@ -217,7 +217,12 @@ public sealed partial class AudioStreamRandomizer : AudioStream
                 selected?.EnsurePlaybackOwner();
             }
             child = selected?.InstantiatePlayback();
-            for (var i = chain.Count - 1; i >= 0; i--) { chain[i].ThrowIfDisposed(); child = new Playback(chain[i], child); }
+            for (var i = chain.Count - 1; i >= 0; i--)
+            {
+                chain[i].ThrowIfDisposed();
+                child = new Playback(chain[i], child);
+                child.BindUsageStream(chain[i]);
+            }
             return child!;
         }
         catch (Exception error)

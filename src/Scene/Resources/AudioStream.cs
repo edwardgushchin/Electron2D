@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Electron2D;
 
 /// <summary>Describes reusable audio data and creates independent playback state.</summary>
@@ -5,6 +7,46 @@ namespace Electron2D;
 /// thread; custom streams must keep their repeated processing allocation-free and synchronize mutable data.</remarks>
 public abstract class AudioStream : Resource
 {
+    private const int MaxTaggedOffsets = 8;
+
+    [InlineArray(MaxTaggedOffsets)]
+    private struct TaggedOffsets
+    {
+        private double _first;
+    }
+
+    private TaggedOffsets _taggedOffsets;
+    private ulong _taggedMix;
+    private int _taggedCount;
+
+    /// <summary>Copies the playback positions tagged for this resource in the latest completed output quantum.</summary>
+    /// <returns>Up to eight positions in seconds, in mix order. An empty array indicates no usage in that quantum.</returns>
+    /// <remarks>Requires stream usage tagging. Positions describe managed stream mixing, including nested playbacks.</remarks>
+    /// <exception cref="ObjectDisposedException">The stream is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Called during an audio callback.</exception>
+    public double[] GetTaggedPlaybackOffsets() => AudioServer.Service.CopyTaggedPlaybackOffsets(this);
+
+    internal double[] CopyTaggedPlaybackOffsets(ulong mix)
+    {
+        ThrowIfDisposed();
+        return mix != 0 && _taggedMix == mix ? _taggedOffsets[.._taggedCount].ToArray() : [];
+    }
+
+    internal int AddTaggedOffset(ulong mix, double position)
+    {
+        if (_taggedMix != mix)
+        {
+            _taggedMix = mix;
+            _taggedCount = 0;
+        }
+        if (_taggedCount == MaxTaggedOffsets) return -1;
+        var index = _taggedCount++;
+        _taggedOffsets[index] = position;
+        return index;
+    }
+
+    internal void UpdateTaggedOffset(int index, double position) => _taggedOffsets[index] = position;
+
     // ponytail: one gate serializes composite authoring and cycle checks; partition only after measured contention.
     [ThreadStatic] internal static bool PreparingAnimation;
     internal static readonly object GraphGate = new();
@@ -54,7 +96,14 @@ public abstract class AudioStream : Resource
     /// <returns>A new caller-owned playback that borrows this resource.</returns>
     /// <exception cref="ObjectDisposedException">The stream is disposed.</exception>
     /// <exception cref="InvalidOperationException">The factory returns invalid state or composite callbacks exceed their recursion bounds.</exception>
-    public AudioStreamPlayback InstantiatePlayback() { ThrowIfDisposed(); var playback = PreparingAnimation && this is AudioStreamRandomizer randomizer ? randomizer.InstantiatePreparedPlayback() : OnInstantiatePlayback(); if (playback is null || playback.IsDisposed) throw new InvalidOperationException("A stream must create a live playback."); return playback; }
+    public AudioStreamPlayback InstantiatePlayback()
+    {
+        ThrowIfDisposed();
+        var playback = PreparingAnimation && this is AudioStreamRandomizer randomizer ? randomizer.InstantiatePreparedPlayback() : OnInstantiatePlayback();
+        if (playback is null || playback.IsDisposed) throw new InvalidOperationException("A stream must create a live playback.");
+        playback.BindUsageStream(this);
+        return playback;
+    }
     /// <summary>Creates independent playback state.</summary>
     /// <returns>A new caller-owned playback.</returns>
     protected abstract AudioStreamPlayback OnInstantiatePlayback();
@@ -130,6 +179,18 @@ public abstract class AudioStream : Resource
 /// With an owned sample association, native output replaces managed OnMix and MixAudio returns no frames.</remarks>
 public abstract class AudioStreamPlayback : ElectronObject
 {
+    [ThreadStatic] internal static ulong StreamUsageMix;
+    [ThreadStatic] private static AudioStreamPlayback? _taggingPlayback;
+    private AudioStream? _usageStream;
+    private UsageAlias? _usageAliases;
+    private ulong _taggedMix;
+    private int _taggedOffsetIndex = -1;
+    private sealed class UsageAlias(AudioStream stream, UsageAlias? next)
+    {
+        internal readonly AudioStream Stream = stream;
+        internal readonly UsageAlias? Next = next;
+        internal int OffsetIndex = -1;
+    }
     private AudioSamplePlayback? _samplePlayback;
     internal FAudioStreamVoice? SceneOwner;
     internal AudioStreamPlayback? CompositeOwner;
@@ -227,7 +288,73 @@ public abstract class AudioStreamPlayback : ElectronObject
     {
         ThrowIfDisposed(); if (!float.IsFinite(rateScale) || rateScale < 0) throw new ArgumentOutOfRangeException(nameof(rateScale));
         if (_samplePlayback is not null) { buffer.Clear(); return 0; }
-        var count = OnMix(buffer, rateScale); if ((uint)count > (uint)buffer.Length) throw new InvalidOperationException("Audio mixing returned an invalid frame count."); return count;
+        var count = OnMix(buffer, rateScale);
+        if ((uint)count > (uint)buffer.Length) throw new InvalidOperationException("Audio mixing returned an invalid frame count.");
+        var mix = StreamUsageMix;
+        if (mix != 0 && !buffer.IsEmpty && _taggingPlayback is null && OnIsPlaying()) TrackStreamUsage(mix);
+        return count;
+    }
+
+    internal void BindUsageStream(AudioStream stream)
+    {
+        var previous = Interlocked.CompareExchange(ref _usageStream, stream, null);
+        if (previous is null || ReferenceEquals(previous, stream)) return;
+
+        // A custom factory can delegate construction to another stream and return that fresh playback.
+        UsageAlias? head;
+        do
+        {
+            head = Volatile.Read(ref _usageAliases);
+            for (var alias = head; alias is not null; alias = alias.Next)
+                if (ReferenceEquals(alias.Stream, stream)) return;
+        }
+        while (Interlocked.CompareExchange(ref _usageAliases, new UsageAlias(stream, head), head) != head);
+    }
+
+    private void TrackStreamUsage(ulong mix)
+    {
+        var first = _taggedMix != mix;
+        _taggedMix = mix;
+        if (_usageStream is { } stream)
+        {
+            var position = OnGetPlaybackPosition();
+            TrackOffset(stream, mix, first, position, ref _taggedOffsetIndex);
+            for (var alias = _usageAliases; alias is not null; alias = alias.Next)
+                TrackOffset(alias.Stream, mix, first, position, ref alias.OffsetIndex);
+        }
+        if (!first) return;
+        _taggingPlayback = this;
+        try { OnTagUsedStreams(); }
+        finally { _taggingPlayback = null; }
+    }
+
+    private static void TrackOffset(AudioStream stream, ulong mix, bool first, double position, ref int index)
+    {
+        if (first) index = -1;
+        if (stream.IsDisposed || !double.IsFinite(position) || position < 0) return;
+        if (index < 0) index = stream.AddTaggedOffset(mix, position);
+        else stream.UpdateTaggedOffset(index, position);
+    }
+
+    /// <summary>Reports additional resources used by this playback in the current output quantum.</summary>
+    /// <remarks>Runs once per quantum after mixing while the playback is active. The engine tags the source
+    /// automatically. This callback must follow the same threading and allocation constraints as <see cref="OnMix"/>.</remarks>
+    protected virtual void OnTagUsedStreams() { }
+
+    /// <summary>Tags an additional stream at a playback position during <see cref="OnTagUsedStreams"/>.</summary>
+    /// <param name="stream">Live stream resource to tag.</param>
+    /// <param name="position">Finite nonnegative position in seconds.</param>
+    /// <exception cref="ArgumentNullException">The stream is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The position is negative or nonfinite.</exception>
+    /// <exception cref="ObjectDisposedException">The stream is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Called outside this playback's tagging callback.</exception>
+    protected void TagUsedStream(AudioStream stream, double position)
+    {
+        if (!ReferenceEquals(_taggingPlayback, this)) throw new InvalidOperationException("Tag streams during the playback's tagging callback.");
+        ArgumentNullException.ThrowIfNull(stream);
+        ObjectDisposedException.ThrowIf(stream.IsDisposed, stream);
+        if (!double.IsFinite(position) || position < 0) throw new ArgumentOutOfRangeException(nameof(position));
+        stream.AddTaggedOffset(StreamUsageMix, position);
     }
     /// <summary>Fills the prepared stereo frame span and reports frames before the first silence.</summary>
     /// <remarks>Player-owned mixing runs on the native output thread or, for final pause/stop preparation,
@@ -240,6 +367,6 @@ public abstract class AudioStreamPlayback : ElectronObject
     /// <inheritdoc />
     protected override void ValidateDisposal() { if (SceneOwner is not null || CompositeOwner is not null) throw new InvalidOperationException("Owned audio playback is borrowed and must be released by its owner."); if (_samplePlayback is not null) { AudioServer.Service.Check(); if (_samplePlayback.Native?.Wrapped == true) throw new InvalidOperationException("A scene-owned native sample must be released by its player."); } base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { try { if (disposing && _samplePlayback is { } sample) { sample.Native?.Dispose(); sample.Owner = null; _samplePlayback = null; sample.Dispose(); } } finally { base.Dispose(disposing); } }
+    protected override void Dispose(bool disposing) { try { if (disposing && _samplePlayback is { } sample) { sample.Native?.Dispose(); sample.Owner = null; _samplePlayback = null; sample.Dispose(); } } finally { _usageStream = null; _usageAliases = null; base.Dispose(disposing); } }
 
 }

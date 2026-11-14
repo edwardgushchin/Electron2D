@@ -1,3 +1,5 @@
+[Stream usage tagging](../components/audio-playback.md#stream-usage-tagging) publishes active managed playback cursors from completed realtime and movie audio quanta. Two rows move from Blocked to Implemented. Coverage is **13,991/18,900 (74.03%)**, with 1,121 Partial, 269 Unimplemented, 3,519 Blocked, 8,393 Excluded and zero unmapped.
+
 [Source-free project MainLoop registration](../components/engine-runtime.md#custom-project-loop) runs compiled global classes in ordinary and recording hosts, including full-trim NativeAOT. The project selector moves to Implemented. Coverage is **13,989/18,900 (74.02%)**, with 1,121 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
 
 [Competing arrivals on the same navigation portal](../components/navigation-maps.md#arrivals-through-the-same-portal) retain distinct entry points for server queries and scene agents. The two query rows remain Partial for larger equal-priority corridor equivalence. Coverage remains **13,988/18,900 (74.01%)**, with 1,122 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
@@ -1071,7 +1073,7 @@ The [code-authoring slice](../components/code-authoring.md) now implements all 1
 
 The executable TabBar slice adds shaped/theme-rendered tabs, selection/scroll/RTL/close behavior, typed identity-stable group drags, a real hover timer and fresh-process scene persistence. CPU and current Linux Wayland GPU/compatibility pixel/visual checks pass; 64 warmed active selection/layout/record/render frames measure zero managed bytes per backend. TabContainer now executes through the tab-panel consumer; native accessibility and editor authoring remain separate dependencies.
 
-Saved AudioBusLayout resources now execute generate/apply, all 27 effect archive schemas and project-default startup before initialization/autoplay. Fresh-process, native Stream/Sample replacement, factory/lifetime/failure and current public GPU/compatibility checks verify the slice; physical and other-target gates remain separate. Usage tagging/editor integration retains its exact dependency.
+Saved AudioBusLayout resources now execute generate/apply, all 27 effect archive schemas and project-default startup before initialization/autoplay. Fresh-process, native Stream/Sample replacement, factory/lifetime/failure and current public GPU/compatibility checks verify the slice; physical and other-target gates remain separate. [Stream usage tagging](../components/audio-playback.md#stream-usage-tagging) adds executable runtime position snapshots and an extension callback for authoring consumers.
 
 Desktop DTLS oracle portability now avoids console-banner readiness and platform newline translation, with stderr-preserving process failures and native DTLS/ENet stage diagnostics. Linux focused checks passed; target Windows/macOS reruns remain required. These test-only changes do not alter production declarations or coverage states.
 

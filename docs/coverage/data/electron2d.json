@@ -89487,6 +89487,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioServer.SetEnableTaggingUsedAudioStreams(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "SetEnableTaggingUsedAudioStreams",
+    "signature": "public static System.Void SetEnableTaggingUsedAudioStreams(System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioServer.SetInputDeviceActive(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.AudioServer",
@@ -89629,6 +89648,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.PropertyDescriptor[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStream.GetTaggedPlaybackOffsets()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStream",
+    "name": "GetTaggedPlaybackOffsets",
+    "signature": "public System.Double[] GetTaggedPlaybackOffsets()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double[]",
     "value": null
   },
   {
@@ -91737,6 +91769,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioStreamPlayback.OnTagUsedStreams()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlayback",
+    "name": "OnTagUsedStreams",
+    "signature": "protected virtual System.Void OnTagUsedStreams()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioStreamPlayback.Seek(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.AudioStreamPlayback",
@@ -91803,6 +91848,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlayback.TagUsedStream(Electron2D.AudioStream,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlayback",
+    "name": "TagUsedStream",
+    "signature": "protected System.Void TagUsedStream(Electron2D.AudioStream stream, System.Double position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "stream",
+        "type": "Electron2D.AudioStream",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },

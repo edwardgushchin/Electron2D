@@ -1,6 +1,16 @@
 {
   "mappings": [
     {
+      "godot": "AudioServer::method:set_enable_tagging_used_audio_streams(bool:)",
+      "electron2d": "method:Electron2D.AudioServer.SetEnableTaggingUsedAudioStreams(System.Boolean)",
+      "reason": "ADR 0047: opt-in bounded playback offsets publish after each realtime or movie FAudio quantum."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_tag_used_streams()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.OnTagUsedStreams()",
+      "reason": "ADR 0047: runs for active managed playback in a real output quantum. The typed hook can tag additional resources; the engine tracks the source and mixed child playbacks automatically."
+    },
+    {
       "godot": "class:AudioEffectPitchShift",
       "electron2d": "T:Electron2D.AudioEffectPitchShift",
       "reason": "ADR 0047/0051: executable stereo phase-vocoder resource on the existing FAudio effect chain."
@@ -2458,6 +2468,14 @@
   ],
   "extras": [
     {
+      "electron2d": "method:Electron2D.AudioStream.GetTaggedPlaybackOffsets()",
+      "reason": "ADR 0047: typed caller-owned snapshot of up to eight positions from the latest completed output quantum for diagnostics and authoring consumers."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayback.TagUsedStream(Electron2D.AudioStream,System.Double)",
+      "reason": "ADR 0047: typed callback-scoped companion to OnTagUsedStreams records an additional live resource at a finite nonnegative position."
+    },
+    {
       "electron2d": "T:Electron2D.AudioWAVImportOptions",
       "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
     },
@@ -3998,8 +4016,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: stream usage/offset tracking and editor consumers; raw callback metadata alone does not tag active resources (ADR 0047).",
+      "state": "Implemented",
+      "reason": "ADR 0047: realtime and offline FAudio collect up to eight positions per live resource and quantum for active managed playbacks, including mixed children and custom tags.",
       "godot": [
         "AudioServer::method:set_enable_tagging_used_audio_streams(bool:)",
         "AudioStreamPlayback::method:_tag_used_streams()"

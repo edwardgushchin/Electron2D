@@ -1,6 +1,6 @@
 # AudioStream
 
-Last updated: 2026-10-05
+Last updated: 2026-11-14
 
 **Declaration:** `public abstract class Electron2D.AudioStream` · **Source:** [AudioStream.cs](../../src/Scene/Resources/AudioStream.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -8,9 +8,9 @@ Last updated: 2026-10-05
 
 ## Description
 
-Abstract Resource extension contract with independent caller-owned playback instances. The player borrows the stream. Base duration is zero, monophonic policy true and meta policy false. Optional name, BPM, beat/bar, loop and textual tag hooks retain their source contracts for custom/composite streams. Typed parameter descriptors replace the untyped list, but player-to-playback typed descriptor propagation executes; usage tagging and complete composite parameter surfaces retain their own prerequisites. Callbacks used in actual playback run on the native audio thread; mutable custom data must be synchronized and warmed mixing must not allocate. CanBeSampled defaults false; GenerateSample rejects unsupported resources. WAV/MP3/Vorbis override both and return caller-owned immutable PCM snapshots for native playback.
+Abstract Resource extension contract with independent caller-owned playback instances. The player borrows the stream. Base duration is zero, monophonic policy true and meta policy false. Optional name, BPM, beat/bar, loop and textual tag hooks retain their source contracts for custom/composite streams. Typed parameter descriptors replace the untyped list. Player-to-playback typed descriptor propagation executes. Complete composite parameter surfaces remain tracked in coverage. Callbacks used in actual playback run on the native audio thread; mutable custom data must be synchronized and warmed mixing must not allocate. CanBeSampled defaults false; GenerateSample rejects unsupported resources. WAV/MP3/Vorbis override both and return caller-owned immutable PCM snapshots for native playback.
 
-InstantiatePlayback rejects null/disposed factory results and recursive composite callbacks with InvalidOperationException. Consecutive randomizer factories are traversed iteratively while preserving the shared 256-operation bound and independent wrapper ownership. Construction remains cold allocating work.
+InstantiatePlayback rejects null or disposed factory results and recursive composite callbacks with InvalidOperationException. A custom factory can return fresh playback delegated to another stream. Both resources then report the same cursor. Consecutive randomizer factories are traversed iteratively while preserving the shared 256-operation bound and independent wrapper ownership. Construction remains cold allocating work.
 
 ## API summary
 
@@ -19,6 +19,7 @@ InstantiatePlayback rejects null/disposed factory results and recursive composit
 | `protected AudioStream()` | Initializes the independent stream resource. |
 | `public event System.Action? ParameterListChanged` | Occurs when the available parameter descriptors change. |
 | `protected override System.Void Dispose(System.Boolean disposing)` | Projects the inherited typed callback; see the concrete behavior above and base-class contract. |
+| `public double[] GetTaggedPlaybackOffsets()` | Copies up to eight positions in seconds from the last completed output quantum. See [stream usage tagging](../components/audio-playback.md#stream-usage-tagging). |
 | `public System.Double GetLength()` | Gets the duration in seconds; zero represents an unknown or empty duration. Duration in seconds. |
 | `public Electron2D.PropertyDescriptor[] GetParameterList()` | Returns typed parameter descriptors for a custom stream. A caller-owned array of descriptors; empty for parameterless streams. |
 | `public Electron2D.AudioStreamPlayback InstantiatePlayback()` | Creates independent playback state for this stream. A new caller-owned playback that borrows this resource. |
@@ -46,6 +47,10 @@ InstantiatePlayback rejects null/disposed factory results and recursive composit
 | `public virtual AudioSample GenerateSample()` | Returns an independent copied snapshot; unsupported resources throw NotSupportedException. |
 
 ## Method Descriptions
+
+### GetTaggedPlaybackOffsets
+
+Returns a caller-owned array of up to eight positions in seconds, in mix order. Use [AudioServer.SetEnableTaggingUsedAudioStreams](AudioServer.md#setenabletaggingusedaudiostreams) to enable collection. An empty array indicates that the last completed quantum has no position for this resource or that there is no published quantum. Call from outside audio callbacks. Disposed resources reject queries.
 
 ### CanBeSampled
 

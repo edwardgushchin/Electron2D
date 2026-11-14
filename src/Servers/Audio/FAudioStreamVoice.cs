@@ -44,6 +44,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     private static void Process(nint callback, uint bytesRequired)
     {
         var source = (FAudioStreamVoice)GCHandle.FromIntPtr(((Callback*)callback)->User).Target!;
+        AudioStreamPlayback.StreamUsageMix = source._context.StreamUsageMix;
         try
         {
             source.MixBlock(source._output);
@@ -52,6 +53,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
             source._cursor = (source._cursor + source._context.QuantumFrames) % (source._ring.Length / source._context.Channels);
         }
         catch (Exception error) { source._error = error; source._ending = true; source._ring.AsSpan().Clear(); source._tail.AsSpan().Clear(); source._tailPending = false; }
+        finally { AudioStreamPlayback.StreamUsageMix = 0; }
     }
     // Caller holds the context gate; the same prepared block path serves mixing and owner transitions.
     internal void MixBlock(Span<float> output)

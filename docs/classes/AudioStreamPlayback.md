@@ -1,6 +1,6 @@
 # AudioStreamPlayback
 
-Last updated: 2026-10-03
+Last updated: 2026-11-14
 
 **Declaration:** `public abstract class Electron2D.AudioStreamPlayback` · **Source:** [AudioStream.cs](../../src/Scene/Resources/AudioStream.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-03
 
 ## Description
 
-Caller-owned independent playback. Start/Seek accept finite seconds, including negative requests for the concrete stream to interpret; MixAudio accepts finite nonnegative rate and nonnegative frame count, and allocates a caller-owned result trimmed to the reported mixed count. The engine uses the same OnMix contract with a prepared span. Invalid callback counts throw; native callback failures are captured, silence output and are reported on the owner scene frame, with failed voices stopped. A player-exposed playback is borrowed and must not be disposed or mixed concurrently with its player; replacement/removal/release of its native slot disposes that old handle. Concrete cursors can include decode prefetch. Typed nullable looping control executes for compressed playback; GetSamplePlayback/SetSamplePlayback expose typed owned native association. Start/Stop/Seek/IsPlaying/position execute through the native driver when associated; MixAudio returns an empty result because native output is independent of managed mixing. Usage tagging and further composite parameters retain separate dependencies.
+Caller-owned independent playback. Start/Seek accept finite seconds, including negative requests for the concrete stream to interpret; MixAudio accepts finite nonnegative rate and nonnegative frame count, and allocates a caller-owned result trimmed to the reported mixed count. The engine uses the same OnMix contract with a prepared span. Invalid callback counts throw; native callback failures are captured, silence output and are reported on the owner scene frame, with failed voices stopped. A player-exposed playback is borrowed and must not be disposed or mixed concurrently with its player; replacement/removal/release of its native slot disposes that old handle. Concrete cursors can include decode prefetch. Typed nullable looping control executes for compressed playback; GetSamplePlayback/SetSamplePlayback expose typed owned native association. Start/Stop/Seek/IsPlaying/position execute through the native driver when associated; MixAudio returns an empty result because native output is independent of managed mixing. Active managed playback contributes positions through [stream usage tagging](../components/audio-playback.md#stream-usage-tagging). Further composite parameters remain tracked in coverage.
 
 ## API summary
 
@@ -29,6 +29,8 @@ Caller-owned independent playback. Start/Seek accept finite seconds, including n
 | `protected abstract System.Int32 OnMix(System.Span<Electron2D.Vector2> buffer, System.Single rateScale)` | Fills the prepared stereo frame span and reports frames before the first silence. Mixed frame count, between zero and buffer.Length. |
 | buffer | Prepared caller-owned output storage. |
 | rateScale | Finite nonnegative playback-rate multiplier. |
+| `protected virtual void OnTagUsedStreams()` | Reports additional usage once per active playback and tagged output quantum. |
+| `protected void TagUsedStream(AudioStream stream, double position)` | Records a live resource and finite nonnegative position during this playback's tagging callback. |
 | `protected abstract System.Void OnSeek(System.Double time)` | Moves the concrete cursor. |
 | time | Finite time in seconds. |
 | `protected abstract System.Void OnStart(System.Double fromPosition)` | Starts the concrete playback. |
@@ -53,6 +55,14 @@ Caller-owned independent playback. Start/Seek accept finite seconds, including n
 | `public void SetSamplePlayback(AudioSamplePlayback? playbackSample)` | Transfers ownership on the audio owner; replacing scene-attached state rejects. |
 
 ## Method Descriptions
+
+### OnTagUsedStreams
+
+Override to report additional resource positions once per tagged quantum in which the playback mixes and remains active. The source and any managed child playbacks that mix are tracked automatically. The callback follows the same constraints as `OnMix`.
+
+### TagUsedStream
+
+Call from this playback's `OnTagUsedStreams` with a live resource and a finite nonnegative position in seconds. The position occupies one of the resource's eight slots for the current quantum.
 
 ### GetSamplePlayback
 

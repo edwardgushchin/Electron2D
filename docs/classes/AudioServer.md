@@ -1,6 +1,6 @@
 # AudioServer
 
-Last updated: 2026-10-15
+Last updated: 2026-11-14
 
 During [movie recording](../components/movie-writing.md), the ordinary bus graph targets an offline master at the selected writer rate/channel mode. Last-player detachment retains that graph until runtime cleanup. Changing OutputDevice rejects in this mode; input remains a separately timed external device.
 
@@ -28,6 +28,7 @@ Borrowed process-wide service; disposing it throws before logical disposal. The 
 | System.ArgumentOutOfRangeException | The insertion range or bus limit is invalid. |
 | `public static System.Int32 GetBusChannels(System.Int32 index)` | Gets the number of stereo channel pairs on a bus. Actual native output channels divided by two. |
 | index | Live bus index. |
+| `public static void SetEnableTaggingUsedAudioStreams(bool enable)` | Enables [stream usage tagging](../components/audio-playback.md#stream-usage-tagging) on the audio owner. Disabled by default. |
 | `public static System.Int32 GetBusIndex(System.String busName)` | Gets the index of a bus by exact name. Minus one when absent. |
 | busName | Nonnull exact bus name. |
 | `public static System.String GetBusName(System.Int32 index)` | Gets a bus name. The unique exact name. |
@@ -162,6 +163,10 @@ If the final automatic native pause fails, its microphone request is still relea
 | `public static void RegisterStreamAsSample(AudioStream stream)` | Transactionally generates/replaces a cold sample snapshot; unsupported resources and callback reentry reject. |
 
 ## Method Descriptions
+
+### SetEnableTaggingUsedAudioStreams
+
+Pass `true` on the audio owner to collect managed stream positions in subsequent output quanta. Pass `false` to disable collection and immediately clear the published snapshot. Query a specific resource with [AudioStream.GetTaggedPlaybackOffsets](AudioStream.md#gettaggedplaybackoffsets).
 
 ### IsStreamRegisteredAsSample
 
