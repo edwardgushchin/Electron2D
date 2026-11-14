@@ -104,8 +104,6 @@ public static partial class ResourceFileTypes
         RegisterNode("Panel", CreatePanelFileNode);
         RegisterNode("PanelContainer", CreatePanelContainerFileNode);
         RegisterNode("Parallax", CreateParallaxFileNode);
-        RegisterNode("ParallaxBackground", CreateParallaxBackgroundFileNode);
-        RegisterNode("ParallaxLayer", CreateParallaxLayerFileNode);
         RegisterNode("Path", CreatePathFileNode);
         RegisterNode("PathFollow", CreatePathFollowFileNode);
         RegisterNode("PinJoint", CreatePinJointFileNode);
@@ -185,8 +183,6 @@ public static partial class ResourceFileTypes
     private static Panel CreatePanelFileNode() => new();
     private static PanelContainer CreatePanelContainerFileNode() => new();
     private static Parallax CreateParallaxFileNode() => new();
-    private static ParallaxBackground CreateParallaxBackgroundFileNode() => new();
-    private static ParallaxLayer CreateParallaxLayerFileNode() => new();
     private static Path CreatePathFileNode() => new();
     private static PathFollow CreatePathFollowFileNode() => new();
     private static PinJoint CreatePinJointFileNode() => new();

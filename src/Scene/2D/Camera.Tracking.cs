@@ -136,8 +136,7 @@ public partial class Camera
         if (viewport.CanvasTransform != canvas) viewport.CanvasTransform = canvas;
         _targetPosition = target; _smoothedPosition = smoothed; _screenRotation = angle; _screenCenter = center;
         _horizontalOffsetChanged = horizontalChanged; _verticalOffsetChanged = verticalChanged; _first = false;
-        viewport.NotifyParallaxCameraMoved(center - halfSize * scale, canvas,
-            _anchorMode == AnchorMode.DragCenter ? halfSize : Vector2.Zero);
+        viewport.NotifyParallaxCameraMoved(center - halfSize * scale);
     }
 
     internal void PublishFinalScroll()
