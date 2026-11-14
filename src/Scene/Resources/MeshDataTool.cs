@@ -34,10 +34,10 @@ public sealed partial class MeshDataTool : ElectronObject
             ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(mesh); MeshSurfaceData data; Mesh.ArrayFormat format; Material? material;
             lock (mesh.Gate)
             {
-                var source = mesh.Get(surface); if (source.Primitive != Mesh.PrimitiveType.Triangles) throw new ArgumentException("Topology editing requires triangles.", nameof(surface));
+                var source = mesh.Get(surface); if (source.Primitive != MeshPrimitiveType.Triangles) throw new ArgumentException("Topology editing requires triangles.", nameof(surface));
                 if (source.Data.IsProcedural) throw new ArgumentException("Topology editing requires position geometry.", nameof(surface));
                 data = source.Data.Copy(); format = source.Format; material = source.Material;
-                if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material)); data.Validate(Mesh.PrimitiveType.Triangles);
+                if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material)); data.Validate(MeshPrimitiveType.Triangles);
             }
             if (data.Indices.Length == 0) { data.Indices = new int[data.Vertices.Length]; for (var i = 0; i < data.Indices.Length; i++) data.Indices[i] = i; }
             var edgeIDs = new Dictionary<(int, int), int>(); var endpoints = new List<(int A, int B)>(); var edgeFaces = new List<List<int>>(); var vertexEdges = new List<int>[data.Vertices.Length]; var vertexFaces = new List<int>[data.Vertices.Length];
@@ -72,7 +72,7 @@ public sealed partial class MeshDataTool : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(mesh); if (_faces.Length == 0) throw new InvalidOperationException("Import a triangle surface before committing.");
-            mesh.AddSurface(Mesh.PrimitiveType.Triangles, _data, null, null, compressionFlags | (_format & Mesh.ArrayFormat.Use8BoneWeights), _material);
+            mesh.AddSurface(MeshPrimitiveType.Triangles, _data, null, null, compressionFlags | (_format & Mesh.ArrayFormat.Use8BoneWeights), _material);
         }
     }
     /// <summary>Gets the copied channel/policy mask, including newly enabled channels.</summary>

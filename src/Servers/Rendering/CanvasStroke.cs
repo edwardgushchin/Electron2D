@@ -135,7 +135,7 @@ internal sealed class CanvasStroke
         }
     }
 
-    internal Mesh.PrimitiveType Primitive => _connected ? Mesh.PrimitiveType.LineStrip : Mesh.PrimitiveType.Lines;
+    internal MeshPrimitiveType Primitive => _connected ? MeshPrimitiveType.LineStrip : MeshPrimitiveType.Lines;
 
     internal int Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)
     {

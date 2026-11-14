@@ -5,13 +5,13 @@ using static Electron2D.MaterialLightingProgram;
 
 internal static class MeshVertexIDTests
 {
-    private static MeshSurfaceData Data(Mesh.PrimitiveType primitive = Mesh.PrimitiveType.Triangles, bool wide = false)
+    private static MeshSurfaceData Data(MeshPrimitiveType primitive = MeshPrimitiveType.Triangles, bool wide = false)
     {
         var count = wide ? 65538 : 6; var a = wide ? 65536 : 4; var b = 2; var c = wide ? 65537 : 5;
         var vertices = new Vector2[count]; vertices[a] = new(0, 0); vertices[b] = new(24, 0); vertices[c] = new(0, 24); vertices[1] = new(24, 24);
-        if (primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip) { vertices[a] = new(0, 12.5f); vertices[b] = new(24, 12.5f); vertices[c] = new(24, 24); }
-        if (primitive == Mesh.PrimitiveType.Points) vertices[a] = new(12.5f, 12.5f);
-        return new() { Vertices = vertices, UVs = Enumerable.Range(0, count).Select(i => new Vector2(i, 0)).ToArray(), Indices = primitive switch { Mesh.PrimitiveType.Points => [a], Mesh.PrimitiveType.Lines => [a, b], Mesh.PrimitiveType.LineStrip => [a, b, c], Mesh.PrimitiveType.TriangleStrip => [a, b, c, 1], _ => [a, b, c, b, 1, c] } };
+        if (primitive is MeshPrimitiveType.Lines or MeshPrimitiveType.LineStrip) { vertices[a] = new(0, 12.5f); vertices[b] = new(24, 12.5f); vertices[c] = new(24, 24); }
+        if (primitive == MeshPrimitiveType.Points) vertices[a] = new(12.5f, 12.5f);
+        return new() { Vertices = vertices, UVs = Enumerable.Range(0, count).Select(i => new Vector2(i, 0)).ToArray(), Indices = primitive switch { MeshPrimitiveType.Points => [a], MeshPrimitiveType.Lines => [a, b], MeshPrimitiveType.LineStrip => [a, b, c], MeshPrimitiveType.TriangleStrip => [a, b, c, 1], _ => [a, b, c, b, 1, c] } };
     }
     private static byte[] Module(string language, string stage)
     {
@@ -31,15 +31,15 @@ internal static class MeshVertexIDTests
     internal static void Run()
     {
         CanvasVertexLayoutTests.Run();
-        foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>())
+        foreach (var primitive in Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max))
         {
             using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(primitive, Data(primitive));
             var vertices = MeshLODTests.Draw(mesh, new Transform(.3f, new(20, 30)));
             Check(vertices.Count > 0 && vertices.All(v => v.VertexID == (uint)v.UV.X), $"Original indices survive {primitive} expansion and transforms.");
         }
-        using var wide = new ArrayMesh(); wide.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data(wide: true));
+        using var wide = new ArrayMesh(); wide.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data(wide: true));
         Check(MeshLODTests.Draw(wide, Transform.Identity).Select(v => v.VertexID).SequenceEqual(new uint[] { 65536, 2, 65537, 2, 1, 65537 }), "Vertex IDs retain their full 32-bit width.");
-        using var sequential = new ArrayMesh(); sequential.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, Vector2.Right, Vector2.Down], UVs = [Vector2.Zero, Vector2.Right, new(2, 0)] });
+        using var sequential = new ArrayMesh(); sequential.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, Vector2.Right, Vector2.Down], UVs = [Vector2.Zero, Vector2.Right, new(2, 0)] });
         Check(MeshLODTests.Draw(sequential, Transform.Identity).Select(v => v.VertexID).SequenceEqual(new uint[] { 0, 1, 2 }), "Sequential vertices use their source ordinals.");
         using var lod = MeshLODTests.Mesh(); var lodVertices = MeshLODTests.Draw(lod, new Transform(0, Vector2.Zero).Scaled(new(.1f, .1f)));
         Check(lodVertices.Select(v => v.VertexID).SequenceEqual(new uint[] { 0, 1, 2 }), "LOD indices remain source vertex identities.");
@@ -73,26 +73,26 @@ internal static class MeshVertexIDTests
         using var window = new Window { Size = new(520, 144) };
         window.AddChild(new Rectangle { Position = new(4, 100) }); window.AddChild(new Rectangle { Position = new(44, 100), Material = rawMaterial });
         var samples = new List<Vector2i>(); var resources = new List<Resource>(); var column = 0;
-        MeshInstance Add(Mesh mesh, Mesh.PrimitiveType primitive = Mesh.PrimitiveType.Triangles)
+        MeshInstance Add(Mesh mesh, MeshPrimitiveType primitive = MeshPrimitiveType.Triangles)
         {
             resources.Add(mesh); var origin = new Vector2(4 + column++ * 36, 4); var node = new MeshInstance { Mesh = mesh, Material = material, Position = origin }; window.AddChild(node);
-            samples.Add(new((int)origin.X + (primitive == Mesh.PrimitiveType.Points ? 12 : 6), (int)origin.Y + (primitive is Mesh.PrimitiveType.Points or Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip ? 12 : 6))); return node;
+            samples.Add(new((int)origin.X + (primitive == MeshPrimitiveType.Points ? 12 : 6), (int)origin.Y + (primitive is MeshPrimitiveType.Points or MeshPrimitiveType.Lines or MeshPrimitiveType.LineStrip ? 12 : 6))); return node;
         }
-        foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>()) { var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(primitive, Data(primitive)); Add(mesh, primitive); }
-        var wide = new ArrayMesh(); wide.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data(wide: true)); Add(wide);
-        var basis = new ArrayMesh(); basis.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data()); Add(basis);
+        foreach (var primitive in Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max)) { var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(primitive, Data(primitive)); Add(mesh, primitive); }
+        var wide = new ArrayMesh(); wide.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data(wide: true)); Add(wide);
+        var basis = new ArrayMesh(); basis.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data()); Add(basis);
         using var tool = new SurfaceTool(); tool.CreateFrom(basis, 0); Add(tool.Commit());
-        var immediate = new ImmediateMesh(); immediate.SurfaceBegin(Mesh.PrimitiveType.Triangles);
+        var immediate = new ImmediateMesh(); immediate.SurfaceBegin(MeshPrimitiveType.Triangles);
         var seq = new[] { Vector2.Zero, new Vector2(24, 0), new Vector2(0, 24) };
         for (var i = 0; i < 3; i++) { immediate.SurfaceSetUV(new(i, 0)); immediate.SurfaceAddVertex2D(seq[i]); }
         immediate.SurfaceEnd(); Add(immediate);
-        var morph = new ArrayMesh(); morph.AddBlendShape("move"); morph.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data(), [new() { Vertices = Enumerable.Repeat(new Vector2(2, 0), 6).ToArray() }]); morph.BlendShapeMode = BlendShapeMode.Relative; Add(morph).SetBlendShapeValue(0, .5f);
+        var morph = new ArrayMesh(); morph.AddBlendShape("move"); morph.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data(), [new() { Vertices = Enumerable.Repeat(new Vector2(2, 0), 6).ToArray() }]); morph.BlendShapeMode = BlendShapeMode.Relative; Add(morph).SetBlendShapeValue(0, .5f);
         using var skeleton = new Skeleton(); var bone = new Bone { Rest = Transform.Identity }; bone.SetAutocalculateLengthAndAngle(false); bone.SetLength(24); skeleton.AddChild(bone); window.AddChild(skeleton);
         var skinData = Data(); skinData.Bones = new int[48]; skinData.Weights = new float[48]; for (var i = 0; i < 6; i++) skinData.Weights[i * 8 + 7] = 1;
-        var skin = new ArrayMesh(); skin.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, skinData, flags: Mesh.ArrayFormat.Use8BoneWeights); var skinned = Add(skin);
+        var skin = new ArrayMesh(); skin.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, skinData, flags: Mesh.ArrayFormat.Use8BoneWeights); var skinned = Add(skin);
         using var multi = new MultiMesh { Mesh = basis, InstanceCount = 2 }; multi.SetInstanceTransform2D(0, new(0, new(4, 48))); multi.SetInstanceTransform2D(1, new(0, new(40, 48))); window.AddChild(new MultiMeshInstance { MultiMesh = multi, Material = material }); samples.Add(new(10, 54)); samples.Add(new(46, 54));
         var group = new CanvasGroup { Position = new(84, 48) }; group.AddChild(new MeshInstance { Mesh = basis, Material = material }); window.AddChild(group); samples.Add(new(90, 54));
-        var lodData = Data(); var lod = new ArrayMesh(); lod.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, lodData, lods: new Dictionary<float, int[]> { [4] = [4, 2, 5] }); var lodNode = Add(lod); lodNode.Scale = new(.5f, .5f); samples[^1] -= new Vector2i(3, 3);
+        var lodData = Data(); var lod = new ArrayMesh(); lod.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, lodData, lods: new Dictionary<float, int[]> { [4] = [4, 2, 5] }); var lodNode = Add(lod); lodNode.Scale = new(.5f, .5f); samples[^1] -= new Vector2i(3, 3);
         if (profile.Contains("lit")) { window.AddChild(new CanvasModulate { Color = new(.5f, .5f, .5f, 1) }); window.AddChild(new DirectionalLight { Color = Colors.White, Energy = .5f }); }
         var forward = new byte[] { 4, 0, 2, 0 }; var reverse = new byte[] { 2, 0, 4, 0 };
         var frame = 0; long before = 0, active = 0, idle = 0;

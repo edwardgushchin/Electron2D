@@ -26,7 +26,7 @@ graph.GetNode(VisualShader.Type.Fragment, 0).SetInputPortDefaultValue(1, 1f);
 ResourceSaver.Save(graph, "res://point.e2dres", SaverFlags.BundleResources);
 ```
 
-Import with `ShaderImport point.e2dres graph point.compiled.e2dres --visual-shader`, then load the compiled resource into `ShaderMaterial.Shader`. Draw a one-vertex `DrawPrimitive` command or a `Mesh.PrimitiveType.Points` surface. A two-vertex primitive command selects a line; use separate one-vertex commands for separate points. Mesh indices, original vertex IDs, skinning, LOD selection and instance/particle poses keep their existing order. As with authored vertex positions, shader output does not enlarge retained/group-fit bounds; provide appropriate custom bounds or group margins when needed.
+Import with `ShaderImport point.e2dres graph point.compiled.e2dres --visual-shader`, then load the compiled resource into `ShaderMaterial.Shader`. Draw a one-vertex `DrawPrimitive` command or a `MeshPrimitiveType.Points` surface. A two-vertex primitive command selects a line; use separate one-vertex commands for separate points. Mesh indices, original vertex IDs, skinning, LOD selection and instance/particle poses keep their existing order. As with authored vertex positions, shader output does not enlarge retained/group-fit bounds; provide appropriate custom bounds or group margins when needed.
 
 | Value | Stage and type | Contract |
 | --- | --- | --- |

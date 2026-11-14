@@ -41,7 +41,7 @@ internal static partial class GraphChecks
         {
             OS.LowProcessorUsageMode = false; RenderingServer.SetDefaultClearColor(Colors.Black);
             using var pixels = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8); pixels.Fill(Colors.White); var image = KeepVarying(ImageTexture.CreateFromImage(pixels));
-            var mesh = KeepVarying(new ArrayMesh()); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+            var mesh = KeepVarying(new ArrayMesh()); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
             { Vertices = [Vector2.Zero, new(20, 0), new(20, 20), new(0, 20)], UVs = [Vector2.Zero, Vector2.Right, Vector2.One, Vector2.Down], Indices = [0, 1, 2, 0, 2, 3] });
             var multi = KeepVarying(new MultiMesh { Mesh = mesh, InstanceCount = 1 }); multi.SetInstanceTransform2D(0, Transform.Identity);
             _light = new DirectionalLight { Color = Colors.White, Energy = 1, Height = 1, Enabled = false }; _modulate = new CanvasModulate { Color = Colors.White }; AddChild(_modulate); AddChild(_light);

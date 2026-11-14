@@ -6,12 +6,12 @@ namespace Electron2D;
 /// Individual operations serialize; callers synchronize complete authoring sequences.</remarks>
 public sealed partial class ImporterMesh : Resource
 {
-    private sealed class Surface(MeshSurfaceData data, MeshSurfaceData[] shapes, MeshLOD[] lods, Mesh.PrimitiveType primitive, Mesh.ArrayFormat flags, string name, Material? material)
+    private sealed class Surface(MeshSurfaceData data, MeshSurfaceData[] shapes, MeshLOD[] lods, MeshPrimitiveType primitive, Mesh.ArrayFormat flags, string name, Material? material)
     {
         internal readonly MeshSurfaceData Data = data;
         internal readonly MeshSurfaceData[] Shapes = shapes;
         internal MeshLOD[] LODs = lods;
-        internal readonly Mesh.PrimitiveType Primitive = primitive;
+        internal readonly MeshPrimitiveType Primitive = primitive;
         internal readonly Mesh.ArrayFormat Flags = flags;
         internal string Name = name;
         internal Material? Material = material;
@@ -56,7 +56,7 @@ public sealed partial class ImporterMesh : Resource
     /// <param name="flags">Supported raw channel/storage flags; kept exactly for GetSurfaceFormat.</param>
     /// <remarks>Channel/skin/schema failures leave prior surfaces intact. Changed runs after commit.
     /// UseEmptyVertexArray retains absent positions and the independent logical count; drawing the compiled mesh requires an authored vertex stage.</remarks>
-    public void AddSurface(Mesh.PrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null, Material? material = null, string name = "", Mesh.ArrayFormat flags = Mesh.ArrayFormat.None)
+    public void AddSurface(MeshPrimitiveType primitive, MeshSurfaceData arrays, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null, Material? material = null, string name = "", Mesh.ArrayFormat flags = Mesh.ArrayFormat.None)
     {
         ArgumentNullException.ThrowIfNull(arrays); ArgumentNullException.ThrowIfNull(name);
         var data = arrays.Copy(); data.Validate(primitive); if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
@@ -76,7 +76,7 @@ public sealed partial class ImporterMesh : Resource
     /// <summary>Gets a surface topology.</summary>
     /// <param name="surface">Existing surface index.</param>
     /// <returns>The authored topology.</returns>
-    public Mesh.PrimitiveType GetSurfacePrimitiveType(int surface) { lock (_gate) return Get(surface).Primitive; }
+    public MeshPrimitiveType GetSurfacePrimitiveType(int surface) { lock (_gate) return Get(surface).Primitive; }
     /// <summary>Gets independent copies of raw surface channels.</summary>
     /// <param name="surface">Existing surface index.</param>
     /// <returns>Copied arrays with authoring precision.</returns>

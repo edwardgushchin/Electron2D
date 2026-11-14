@@ -13,7 +13,7 @@ internal static class MeshDataToolNativeTests
     }
     private static void Device(string language)
     {
-        using var source = new ArrayMesh(); source.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, SurfaceToolTests.Grid(8)); using var tool = new MeshDataTool(); tool.CreateFromSurface(source, 0);
+        using var source = new ArrayMesh(); source.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, SurfaceToolTests.Grid(8)); using var tool = new MeshDataTool(); tool.CreateFromSurface(source, 0);
         for (var i = 0; i < tool.GetVertexCount(); i++) { tool.SetVertexColor(i, Colors.Green); tool.SetVertex(i, tool.GetVertex(i) * .5f); }
         using var output = new ArrayMesh(); tool.CommitToSurface(output); var data = output.SurfaceGetArrays(0);
         using var device = RenderingServer.CreateLocalRenderingDevice(); using var module = RenderingDeviceGraphicsTests.Load("DeviceSurfaceTool" + language); var shader = device.ShaderCreateFromSPIRV(module);

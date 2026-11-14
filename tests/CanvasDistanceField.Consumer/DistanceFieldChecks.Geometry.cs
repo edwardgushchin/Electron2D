@@ -6,7 +6,7 @@ internal static partial class DistanceFieldChecks
     {
         private void Geometry(Texture texture)
         {
-            var mesh = Own(new ArrayMesh()); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+            var mesh = Own(new ArrayMesh()); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData
             { Vertices = [new(0, 0), new(64, 0), new(64, 16), new(0, 16)], UVs = [new(0, 0), new(1, 0), new(1, 1), new(0, 1)], Indices = [0, 1, 2, 0, 2, 3] });
             var rid = RenderingServer.CanvasItemCreate(); _items.Add(rid); RenderingServer.CanvasItemSetParent(rid, _canvas); RenderingServer.CanvasItemSetDefaultTextureFilter(rid, TextureFilter.Nearest);
             RenderingServer.CanvasItemSetDistanceFieldMode(rid, true); RenderingServer.CanvasItemAddMesh(rid, mesh.GetRID(), new Transform(0, new(8, 80)), Tint, texture.GetRID()); Probes(8, 80, 0, true, "mesh");

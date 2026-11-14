@@ -45,7 +45,7 @@ internal static partial class GraphChecks
                 var first = positions.Count; positions.AddRange([new(i * 4, 0), new(i * 4 + 3, 0), new(i * 4 + 3, 8), new(i * 4, 8)]);
                 uv.AddRange([new(i, 0), new(i + .75f, 0), new(i + .75f, 1), new(i, 1)]); indices.AddRange([first, first + 1, first + 2, first, first + 2, first + 3]);
             }
-            var mesh = KeepMatrix(new ArrayMesh()); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = procedural ? [] : positions.ToArray(), VertexCount = positions.Count, UVs = uv.ToArray(), Indices = indices.ToArray() }, flags: procedural ? Mesh.ArrayFormat.UseEmptyVertexArray : 0);
+            var mesh = KeepMatrix(new ArrayMesh()); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = procedural ? [] : positions.ToArray(), VertexCount = positions.Count, UVs = uv.ToArray(), Indices = indices.ToArray() }, flags: procedural ? Mesh.ArrayFormat.UseEmptyVertexArray : 0);
             if (procedural) mesh.CustomAABB = new(-128, -128, 512, 512); return mesh;
         }
         private ShaderMaterial MatrixMaterial(string name, int row)

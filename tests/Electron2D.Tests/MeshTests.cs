@@ -7,7 +7,7 @@ internal static class MeshTests
     {
         VerifyBoundaries(); VerifyCustomMesh();
         using var mesh = new ArrayMesh(); Check(mesh.GetSurfaceCount() == 0, "Empty mesh.");
-        var data = Quad(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, data, flags: Mesh.ArrayFormat.UseDynamicUpdate);
+        var data = Quad(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, data, flags: Mesh.ArrayFormat.UseDynamicUpdate);
         data.Vertices[0] = new(500, 500); var copy = mesh.SurfaceGetArrays(0); Check(copy.Vertices[0] == Vector2.Zero && copy.Indices.Length == 6, "Copied surface data."); copy.Vertices[0] = new(99, 99); Check(mesh.SurfaceGetArrays(0).Vertices[0] == Vector2.Zero, "Queries copy data.");
         mesh.SurfaceSetName(0, "front"); Check(mesh.SurfaceFindByName("front") == 0 && mesh.SurfaceFindByName("missing") == -1 && mesh.SurfaceGetArrayLen(0) == 4 && mesh.SurfaceGetArrayIndexLen(0) == 6, "Surface metadata.");
         var bytes = new byte[8]; BinaryPrimitives.WriteSingleLittleEndian(bytes, 2); BinaryPrimitives.WriteSingleLittleEndian(bytes.AsSpan(4), 3); mesh.SurfaceUpdateVertexRegion(0, 0, bytes); Check(mesh.SurfaceGetArrays(0).Vertices[0] == new Vector2(2, 3), "Live vertex regions.");
@@ -19,13 +19,13 @@ internal static class MeshTests
         Action<Resource> failure = _ => throw new ApplicationException("Changed failure"); mesh.Changed += failure; BinaryPrimitives.WriteSingleLittleEndian(bytes, 4);
         try { Reject<ApplicationException>(() => mesh.SurfaceUpdateVertexRegion(0, 0, bytes)); Check(mesh.SurfaceGetArrays(0).Vertices[0].X == 4, "Committed update survives listener failure."); } finally { mesh.Changed -= failure; }
         using var duplicated = (ArrayMesh)mesh.Duplicate(); Check(duplicated.SurfaceGetName(0) == "front" && duplicated.SurfaceGetArrays(0).Vertices[0].X == 4, "Mesh duplication.");
-        foreach (var type in Enum.GetValues<Mesh.PrimitiveType>())
+        foreach (var type in Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max))
         {
-            using var primitive = new ArrayMesh(); primitive.AddSurfaceFromArrays(type, new() { Vertices = type == Mesh.PrimitiveType.Triangles ? [new(0, 0), new(8, 0), new(0, 8)] : [new(0, 0), new(8, 0), new(0, 8), new(8, 8)] });
+            using var primitive = new ArrayMesh(); primitive.AddSurfaceFromArrays(type, new() { Vertices = type == MeshPrimitiveType.Triangles ? [new(0, 0), new(8, 0), new(0, 8)] : [new(0, 0), new(8, 0), new(0, 8), new(8, 8)] });
             Check(primitive.SurfaceGetPrimitiveType(0) == type, "Every primitive policy.");
         }
-        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, Vector2.One] }));
-        Reject<ArgumentOutOfRangeException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero], Indices = [1] }));
+        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, Vector2.One] }));
+        Reject<ArgumentOutOfRangeException>(() => mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [Vector2.Zero], Indices = [1] }));
         var rid = mesh.GetRID(); Check(rid.IsValid() && rid == mesh.GetRID(), "Stable borrowed mesh identity.");
         mesh.ResourcePath = "res://test-mesh"; using var node = new MeshInstance { Mesh = mesh }; using var scene = new PackedScene(); scene.Pack(node); using var restored = (MeshInstance)scene.Instantiate(); Check(ReferenceEquals(restored.Mesh, mesh), "Packed node retains external borrowed mesh.");
         var textures = 0; node.TextureChanged += () => textures++; node.Texture = null; Check(textures == 0, "Equal texture is silent.");
@@ -41,14 +41,14 @@ internal static class MeshTests
     private static void VerifyBoundaries()
     {
         using var mesh = new ArrayMesh();
-        Reject<ArgumentNullException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = null! }));
-        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [new(float.PositiveInfinity, 0)] }));
-        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero], Colors = [Colors.Red, Colors.Blue] }));
-        Reject<NotSupportedException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, flags: (Mesh.ArrayFormat)(1UL << 60)));
-        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, blendShapes: [new()]));
-        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, lods: new Dictionary<float, int[]> { [1] = [0] }));
+        Reject<ArgumentNullException>(() => mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = null! }));
+        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [new(float.PositiveInfinity, 0)] }));
+        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [Vector2.Zero], Colors = [Colors.Red, Colors.Blue] }));
+        Reject<NotSupportedException>(() => mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, flags: (Mesh.ArrayFormat)(1UL << 60)));
+        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, blendShapes: [new()]));
+        Reject<ArgumentException>(() => mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [Vector2.Zero] }, lods: new Dictionary<float, int[]> { [1] = [0] }));
         Check(mesh.GetSurfaceCount() == 0, "Rejected additions preserve surface count.");
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Quad());
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Quad());
         var bytes = new byte[24]; BinaryPrimitives.WriteSingleLittleEndian(bytes.AsSpan(4), .25f); BinaryPrimitives.WriteSingleLittleEndian(bytes.AsSpan(16), float.NaN);
         Reject<ArgumentException>(() => mesh.SurfaceUpdateAttributeRegion(0, 0, bytes));
         Check(mesh.SurfaceGetArrays(0).Colors[0] == Colors.Red && mesh.SurfaceGetArrays(0).UVs[0] == Vector2.Zero, "Invalid later UV rolls back earlier color and UV records.");
@@ -58,10 +58,10 @@ internal static class MeshTests
         Reject<ArgumentOutOfRangeException>(() => mesh.SurfaceGetArrays(-1)); Reject<ArgumentOutOfRangeException>(() => mesh.SurfaceRemove(1));
         mesh.SurfaceUpdateVertexRegion(0, 32, []); mesh.SurfaceUpdateAttributeRegion(0, 48, []);
         var faces = mesh.GetFaces(); Check(faces.Length == 6 && faces[3] == Vector2.Zero, "Indexed triangle faces."); faces[0] = Vector2.One; Check(mesh.GetFaces()[0] == Vector2.Zero, "Face copies are independent.");
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.TriangleStrip, new() { Vertices = [new(0, 0), new(1, 0), new(0, 1), new(1, 1)] });
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.TriangleStrip, new() { Vertices = [new(0, 0), new(1, 0), new(0, 1), new(1, 1)] });
         faces = mesh.GetFaces(); Check(faces.Length == 12 && faces[9] == new Vector2(0, 1) && faces[10] == new Vector2(1, 0), "Strip faces preserve alternating winding.");
         mesh.SurfaceSetName(0, "same"); mesh.SurfaceSetName(1, "same"); Check(mesh.SurfaceFindByName("same") == 0, "Duplicate names select first surface.");
-        mesh.SurfaceRemove(0); Check(mesh.SurfaceGetPrimitiveType(0) == Mesh.PrimitiveType.TriangleStrip && mesh.SurfaceGetArrayIndexLen(0) == 0, "Removal shifts metadata and geometry together.");
+        mesh.SurfaceRemove(0); Check(mesh.SurfaceGetPrimitiveType(0) == MeshPrimitiveType.TriangleStrip && mesh.SurfaceGetArrayIndexLen(0) == 0, "Removal shifts metadata and geometry together.");
         using var material = new CanvasItemMaterial(); mesh.SurfaceSetMaterial(0, material);
         using var duplicate = (ArrayMesh)mesh.Duplicate(true); Check(!ReferenceEquals(duplicate.SurfaceGetMaterial(0), material), "Deep copy duplicates borrowed subresources.");
         duplicate.SurfaceGetMaterial(0)!.Dispose(); mesh.ClearSurfaces(); Check(!material.IsDisposed && mesh.GetFaces().Length == 0, "Clear borrows material and empties face query.");
@@ -88,7 +88,7 @@ internal static class MeshTests
         mesh.Count = -1; mesh.Notify(); Reject<InvalidOperationException>(Replay); mesh.Count = 0; mesh.Notify(); Replay(); Check(vertices.Count == 0, "Invalid custom count rejects; removal clears cached surfaces.");
         mesh.Count = 1; mesh.Notify(); Replay(); var before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) Replay(); Check(GC.GetAllocatedBytesForCurrentThread() == before, "Prepared custom idle replay allocates zero managed bytes.");
         mesh.Dispose(); Reject<ObjectDisposedException>(Replay);
-        using var line = new ArrayMesh(); line.AddSurfaceFromArrays(Mesh.PrimitiveType.Lines, new() { Vertices = [new(-1e30f, 0), new(1e30f, 0)] });
+        using var line = new ArrayMesh(); line.AddSurfaceFromArrays(MeshPrimitiveType.Lines, new() { Vertices = [new(-1e30f, 0), new(1e30f, 0)] });
         var large = new CanvasMesh(line, Transform.Identity, Colors.White); vertices.Clear(); batches.Clear();
         large.Append(vertices, batches, null, Transform.Identity, Colors.White, null, BlendMode.Mix, TextureFilter.Nearest, TextureRepeat.Disabled, 1, null, false);
         Check(vertices.Count == 6 && Math.Abs(vertices[0].Position.Y) == .5f, "Large finite line spans preserve framebuffer width without squared-length overflow.");
@@ -101,7 +101,7 @@ internal static class MeshTests
         protected override MeshSurfaceData OnSurfaceGetArrays(int surfaceIndex) { Reads++; if (Failure) throw new ApplicationException("Custom geometry failure"); if (Mutate) EmitChanged(); return Quad(); }
         protected override int OnSurfaceGetArrayLen(int surfaceIndex) => 4;
         protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => 6;
-        protected override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => PrimitiveType.Triangles;
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => MeshPrimitiveType.Triangles;
         protected override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => ArrayFormat.Vertex | ArrayFormat.Use2DVertices | ArrayFormat.Index | ArrayFormat.Color | ArrayFormat.TexUV;
         protected override Material? OnSurfaceGetMaterial(int surfaceIndex) => null;
         protected override void OnSurfaceSetMaterial(int surfaceIndex, Material? material) => throw new NotSupportedException();

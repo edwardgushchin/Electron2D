@@ -16,7 +16,7 @@ internal static class RenderingCanvasTests
         using var authored = new Entity { Modulate = Colors.Green, Position = new(3, 4) }; authored.ServerState = new(null!, false) { Modulate = Colors.Red, Transform = new(0, new(99, 99)) };
         using var packed = new PackedScene(); packed.Pack(authored); using var restored = (Entity)packed.Instantiate(); Check(restored.Position == new Vector2(3, 4) && restored.Modulate == Colors.Green && restored.ServerState is null, "Packed scenes retain authored fields without native overrides.");
         using var layer = new CanvasLayer(); var rid = layer.GetCanvas(); Check(rid.IsValid() && layer.GetCanvas() == rid, "Stable borrowed layer canvas before startup."); layer.Dispose(); Check(RenderingCanvasRegistry.ResolveOrNull(rid) is null, "Layer disposal releases weak canvas identity.");
-        using var geometry = new ArrayMesh(); geometry.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(0, 0), new(8, 0), new(0, 8)] });
+        using var geometry = new ArrayMesh(); geometry.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(0, 0), new(8, 0), new(0, 8)] });
         using var repeated = new MultiMesh { Mesh = geometry, InstanceCount = 1 }; repeated.SetInstanceTransform2D(0, Transform.Identity);
         using var recorder = new RenderingServerCanvasItem { ServerState = new(null!, true) }; var vertices = new List<CanvasVertex>(64); var batches = new List<CanvasBatch>(8);
         void Replay() { recorder.ClearServerCommands(); recorder.AppendServerMesh(geometry, null, Transform.Identity, Colors.White); recorder.AppendServerMultiMesh(repeated, null); vertices.Clear(); batches.Clear(); recorder.AppendCanvas(vertices, batches, Transform.Identity); }
@@ -29,7 +29,7 @@ internal static class RenderingCanvasTests
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu";
         Engine.MaxFPS = 60; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(0, 0), new(8, 0), new(8, 8), new(0, 8)], Indices = [0, 1, 2, 0, 2, 3] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(0, 0), new(8, 0), new(8, 8), new(0, 8)], Indices = [0, 1, 2, 0, 2, 3] });
         using var skinned = MeshSkinTests.Mesh(8, 5);
         using var multi = new MultiMesh { Mesh = mesh }; multi.InstanceCount = 1; multi.SetInstanceTransform2D(0, Transform.Identity);
         var window = new Window { Size = new(96, 64) }; var sub = new SubViewport { Name = "OtherView", Size = new(96, 64), RenderTargetUpdateMode = ViewportUpdateMode.Always }; window.AddChild(sub);
