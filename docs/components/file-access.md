@@ -52,6 +52,18 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Instance calls are lock-serialized; compound caller sequences require caller synchronization.
 - The component is blocking and allocating, never a real-time hot-path service.
 
+## Directory enumeration
+
+An open [DirAccess](../classes/DirAccess.md) holds its captured physical root. Resource accessors also see the live PCK/ZIP overlay while that root is the configured project root. A mounted file masks an exact-name physical directory and its descendants. Physical absolute paths and `user://` use the filesystem.
+
+`ListDirBegin` captures immediate names and kinds. Both include flags default to false and apply when `GetNext` advances. Windows physical hidden entries carry the Hidden attribute. Unix-family hosts also hide dot names. Mounted dot names are hidden. The navigational names `.` and `..` are governed by `IncludeNavigational`, including at virtual roots, where changing to an escaping path still fails.
+
+`CurrentIsDir` describes the last returned entry and is false before the first entry and after EOF, end, restart, or a successful directory change. A failed begin or directory change preserves the current path and cursor. Disposal closes the listing. Calls on one owner are serialized, so concurrent advances consume distinct entries. Use caller synchronization to read a name and its kind as a pair.
+
+`GetFiles` and `GetDirectories` return independent, ordinally sorted, read-only snapshots and leave any active cursor intact. The static `At` methods accept fully qualified native or virtual paths and use the default filters. A missing directory, a mounted file masking the directory, or denied physical enumeration raises a standard exception.
+
+See the [coverage audit](../coverage/dir-access-listing.md) for the pinned source comparison and verification limits.
+
 ## Text framing
 
 `ReadLine` consumes LF, CRLF, lone CR or NUL. A final unterminated line is returned with EOF set. For seekable files, a physical terminator at the end of the file sets EOF on the next incomplete read. `ReadCSVLine` uses the same framing, normalizing terminators inside quotes to LF. An empty record has one empty field. Exhaustion returns an empty array. Misplaced and unclosed quotes raise `FormatException`. CSV uses a single nonsurrogate character as delimiter, excluding quote and line terminators.

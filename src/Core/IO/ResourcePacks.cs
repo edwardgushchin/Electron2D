@@ -181,12 +181,20 @@ internal sealed class ResourcePacks
         var name = Name(path); lock (_gate) return name is not null && _directories.Contains(name);
     }
 
-    internal (string Name, bool Directory)[] List(string path)
+    // DirAccess provides a normalized resource path relative to the root it captured.
+    internal (string Name, bool Directory)[]? GetDirectoryEntries(string path, bool includeEntries)
     {
-        var name = Name(path); if (name is null) return [];
-        var prefix = name.Length == 0 ? "" : name + "/";
+        var name = PCKFormat.Normalize(path, directory: true);
         lock (_gate)
         {
+            if (_entries.ContainsKey(name) || HasFileAncestorLocked(name))
+                throw new DirectoryNotFoundException($"A mounted file blocks directory '{path}'.");
+            if (!_directories.Contains(name))
+                return null;
+            if (!includeEntries)
+                return [];
+
+            var prefix = name.Length == 0 ? "" : name + "/";
             var result = new Dictionary<string, bool>(StringComparer.Ordinal);
             foreach (var file in _entries.Keys)
             {
@@ -201,12 +209,19 @@ internal sealed class ResourcePacks
     internal bool HasFileAncestor(string path)
     {
         var name = Name(path); if (name is null) return false;
-        lock (_gate)
+        lock (_gate) return HasFileAncestorLocked(name);
+    }
+
+    private bool HasFileAncestorLocked(string name)
+    {
+        var slash = name.IndexOf('/');
+        while (slash >= 0)
         {
-            var slash = name.IndexOf('/');
-            while (slash >= 0) { if (_entries.ContainsKey(name[..slash])) return true; slash = name.IndexOf('/', slash + 1); }
-            return false;
+            if (_entries.ContainsKey(name[..slash]))
+                return true;
+            slash = name.IndexOf('/', slash + 1);
         }
+        return false;
     }
     internal void EnsureReadablePath(string path)
     {

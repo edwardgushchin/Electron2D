@@ -1910,6 +1910,48 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["DirAccess::method:get_open_error()"],
+      "state": "Excluded",
+      "reason": "ADR 0022 excludes the thread-local last-open error slot. The non-null Open factory reports failures by standard exception."
+    },
+    {
+      "godot": [
+        "DirAccess::method:list_dir_begin()",
+        "DirAccess::method:list_dir_end()",
+        "DirAccess::method:get_next()",
+        "DirAccess::method:current_is_dir()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0022: a replaceable in-memory cursor over captured entries, live filters, explicit current-entry reset on EOF/end/restart, and standard exceptions. Windows public cursor and failure regressions."
+    },
+    {
+      "godot": [
+        "DirAccess::method:get_files()",
+        "DirAccess::method:get_directories()",
+        "DirAccess::method:get_files_at(String:)",
+        "DirAccess::method:get_directories_at(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: independent ordinal read-only snapshots, instance filters, default-filter absolute/virtual helpers, and standard exceptions. Windows physical, user data and merged PCK/ZIP checks."
+    },
+    {
+      "godot": [
+        "DirAccess::method:change_dir(String:)",
+        "DirAccess::method:open(String:)",
+        "DirAccess::method:get_current_dir(bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: non-null scoped owner, captured physical roots and live resource overlays, native or virtual current paths, drive included by default, and transactional directory changes. Windows public regressions."
+    },
+    {
+      "godot": [
+        "DirAccess::property:include_hidden",
+        "DirAccess::property:include_navigational"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0022: both flags start false, apply at read time and affect independent snapshots. Windows checks cover native Hidden attributes, mounted dot names and navigation candidates."
+    },
     {"state":"Blocked","godot":["EditorInspector::method:instantiate_property_editor(Object:,int:Variant.Type,String:,int:PropertyHint,String:,int:,bool:)"],"reason":"Trigger: a generalized property-control factory in the existing self-hosted editor (ADRs 0005/0090). Pass the owner and compiled PropertyDescriptor with ValueType, advisory hints, usage and wide layout. Visit eligible providers in reverse registration order. For each provider, dispose every result after the first. Return the first result if it is a property control. If the first result has another type, dispose it and continue to the next provider. Continue also when a provider yields no results, and return null if none supplies a property control. [Pinned selection](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/editor/inspector/editor_inspector.cpp#L3829-L3851)."},
     {"state":"Blocked","godot":["EditorInspectorPlugin::method:_parse_property(Object:,int:Variant.Type,String:,int:PropertyHint,String:,int:PropertyUsageFlags,bool:)"],"reason":"Trigger: a typed inspector provider extension point connected to descriptor enumeration in the existing editor (ADRs 0005/0090). Give the provider the owner and compiled property descriptor with hints, usage and wide layout. Verify insertion before the default editor and the exclusive result that suppresses it and stops later providers."},
     {"state":"Blocked","godot":["EditorScenePostImportPlugin::method:add_import_option_advanced(int:Variant.Type,String:,Variant:,int:PropertyHint,String:,int:)"],"reason":"Trigger: an executable 2D scene import and reimport workflow with a scoped option-registration callback (ADRs 0001/0004/0090). Register a named typed option with its typed default, advisory hint and usage; verify registration scope, presentation and persistence through reimport. The internal 3D import dialog is excluded under ADR 0004."},
