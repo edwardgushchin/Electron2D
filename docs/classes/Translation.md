@@ -1,6 +1,6 @@
 # Translation
 
-Last updated: 2026-10-13
+Last updated: 2026-11-14
 
 **Inherits:** [Resource](Resource.md)
 
@@ -16,7 +16,7 @@ Last updated: 2026-10-13
 
 The message-count and list methods are virtual so a compressed derived catalog can omit source keys while retaining the same server lookup contract. [OptimizedTranslation](OptimizedTranslation.md) supplies that implementation.
 
-Reads and writes are serialized per resource. `Resource.Changed` is raised after a mutation commits, outside the resource lock; a throwing handler does not roll it back. The managed `Resource` duplication hooks copy message containers independently and retain the plural-selector delegate reference. All public operations except construction reject a disposed resource.
+Reads and writes are serialized per resource. `Resource.Changed` is raised after a mutation commits, outside the resource lock; a throwing handler does not roll it back. The managed `Resource` duplication hooks copy message containers independently and retain the plural-selector delegate reference. Catalog operations reject a disposed resource. Direct lookup can return an empty value, while empty resource results let the server continue to the next candidate. A ranked lookup also skips the candidate if its locale changed before the lookup captured the forms and rule or accepted an override result.
 
 ## Example
 
@@ -70,7 +70,7 @@ The snippet assumes `using System.Globalization;` and leaves any prior process-w
 
 ### Locale
 
-`Locale` starts at `en`. Assignment normalizes underscores to hyphens and resolves the name through `CultureInfo`; a null or unsupported locale throws before mutation. The committed change raises `Resource.Changed`. The locale determines which server culture tier may use this catalog and selects the fixed automatic plural rule.
+`Locale` starts at `en`. Assignment normalizes underscores to hyphens and resolves the name through `CultureInfo`; the empty name selects the invariant culture. A null or unsupported locale throws before mutation. The committed change raises `Resource.Changed`. The locale determines which server culture tier may use this catalog and selects the fixed automatic plural rule.
 
 ### PluralSelector
 
@@ -84,7 +84,7 @@ The snippet assumes `using System.Globalization;` and leaves any prior process-w
 
 ### AddMessage
 
-Stores one translated string under the exact, case-sensitive source and context. A previous plural entry at that key is replaced. Null arguments throw; a successful assignment emits `Changed` after commitment.
+Stores one translated string under the exact, case-sensitive source and context. A previous plural entry at that key is replaced. Empty strings and literal EOT are valid in-memory; the EOT-separated message list can be ambiguous for keys containing EOT. Null arguments throw; a successful assignment emits `Changed` after commitment.
 
 ### AddPluralMessage
 
@@ -100,7 +100,7 @@ Calls `OnGetMessage` first. A non-null result is returned even when it is empty;
 
 ### GetPluralMessage
 
-Calls `OnGetPluralMessage` first. Without a custom result, negative counts and missing entries return an empty string. For present entries, `PluralSelector`, the stored definition or the fixed locale rule chooses a form; unsupported or invalid selection throws. The source plural text is passed to the override but does not change the storage key. Null arguments throw.
+Calls `OnGetPluralMessage` first. Without a custom result, negative counts and missing entries return an empty string. For present entries, `PluralSelector`, the stored definition or the fixed locale rule chooses a form; unsupported or invalid selection throws. The override receives the original signed 64-bit count and the source plural text. Local lookup uses the captured forms and rule together, and the source plural text does not change its key. Null arguments throw.
 
 ### GetMessageCount
 
@@ -116,11 +116,11 @@ Returns a fresh flattened array containing every stored translated form. Enumera
 
 ### OnGetMessage
 
-Derived catalogs may return a translation or null to continue into local storage. The callback runs outside the resource lock and may throw to the caller.
+Derived catalogs may return a translation (including an empty string) or null to continue into local storage. The callback runs outside the resource lock and may throw to the caller.
 
 ### OnGetPluralMessage
 
-Derived catalogs may return a translation or null to continue into local plural selection. It runs before the default negative-count check and outside the resource lock.
+Derived catalogs may return a translation (including an empty string) or null to continue into local plural selection. It runs before the default negative-count check and outside the resource lock.
 
 ### CreateDuplicateInstance
 
@@ -140,16 +140,16 @@ Clears stored entries. Registered catalogs are detached by the server's disposal
 
 ## Verification and limitations
 
-`VerifyTranslations` in [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) covers context keys, plural forms, edits after registration, parent-culture lookup, duplication, removal, disposal, invalid forms, and missing selectors. Built-in non-English plural rules, textual plural-rule expressions, asset-file loading, and full locale-identifier parity remain unimplemented; [coverage](../coverage/classes/Translation.md) retains those gaps.
+`VerifyTranslations` in [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) covers context keys, plural forms, edits after registration, parent-culture lookup, duplication, removal, disposal, invalid forms, and missing selectors. The [public catalog consumer](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.Catalog.cs) also checks virtual dispatch, concurrent lookup and change delivery, and ordinary and optimized archive loads. See [the localization component](../components/localization.md#catalog-queries) for the windowed language menu and qualification scope.
 
 ## Decisions
 
 - [ADR 0007: Typed localization](../decisions/localization.md#adr-0007)
 - [ADR 0013: Managed Resource](../decisions/resources.md#adr-0013)
 
-The fixed locale catalog exposes language/script/country names, aliases, script/regional defaults and gettext definitions through TranslationServer. Translation resources without a caller PluralSelector use these prepared integer rules; copying and archive loading restore the automatic locale policy. Unknown multi-form rules require a caller selector. Runtime Culture remains CultureInfo. Decimal CLDR category selection remains separate; integer PO/MO import executes through ResourceLoader.
+The fixed locale catalog exposes language/script/country names, aliases, script/regional defaults and gettext definitions through TranslationServer. Translation resources use these prepared integer rules when neither a caller PluralSelector nor a valid stored PluralRulesOverride takes precedence. If the locale has no built-in rule, a catalog with multiple forms needs either a valid PluralRulesOverride or a caller PluralSelector. The stored definition survives archive loading. Runtime Culture remains CultureInfo. Decimal CLDR category selection remains separate; integer PO/MO import executes through ResourceLoader.
 
-Resource archives support exact Translation catalogs. The stored Messages descriptor is a copied string-array record stream of context/source/form-count/forms. Its setter validates non-null forms and unique complete records before replacing state. Arbitrary PluralSelector delegates cannot be archived and cause failure before file replacement. OptimizedTranslation hash-payload persistence remains a separate codec dependency.
+Resource archives support exact Translation catalogs. The stored Messages descriptor is a copied string-array record stream of context/source/form-count/forms. Its setter validates non-null forms and unique complete records before replacing state. Arbitrary PluralSelector delegates cannot be archived and cause failure before file replacement. OptimizedTranslation persists its separate [versioned hash payload](OptimizedTranslation.md#resource-files).
 
 ## Imported plural definitions
 
