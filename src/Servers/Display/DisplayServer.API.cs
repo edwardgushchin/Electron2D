@@ -546,7 +546,7 @@ public sealed partial class DisplayServer
     /// <returns>Whether the policy is enabled in the observed native flags.</returns>
     /// <remarks>On Wayland, <see cref="WindowFlag.AlwaysOnTop"/> and <see cref="WindowFlag.NoFocus"/> are unavailable for the selected native window.
     /// Capture exclusion reads the operating-system policy and requires Windows 10 version 2004 or later with desktop composition.
-    /// SharpCorners reads the actual DWM preference on Windows 11.</remarks>
+    /// SharpCorners reads the actual DWM preference on Windows 11. Windows caption flags report the retained disable policy.</remarks>
     /// <exception cref="IOException">Reading a native window policy fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="flag"/> is not a defined policy.</exception>
     /// <exception cref="NotSupportedException">The defined policy requires a display capability that is not integrated.</exception>
@@ -559,17 +559,19 @@ public sealed partial class DisplayServer
     /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
     /// <remarks>A platform may reject the policy or apply it asynchronously. Wayland cannot apply <see cref="WindowFlag.AlwaysOnTop"/> to an ordinary top-level window, and SDL can change its internal focusable flag before rejecting <see cref="WindowFlag.NoFocus"/> there; both requests are rejected before native mutation.
     /// Capture exclusion requires Windows 10 version 2004 or later with desktop composition; it does not restrict engine texture readback or guarantee content security.
-    /// SharpCorners uses the Windows 11 DWM preference. Disabling it restores the system default.</remarks>
+    /// SharpCorners uses the Windows 11 DWM preference. Disabling it restores the system default.
+    /// Windows top-level windows support disabling the minimize and maximize caption buttons independently.</remarks>
     /// <exception cref="IOException">Changing a native window policy fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="flag"/> is not a defined policy.</exception>
     /// <exception cref="NotSupportedException">The defined policy requires a display capability that is not integrated.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId) => RequireService().WindowSetFlagCore(flag, enabled, windowId);
 
-    /// <summary>Gets whether the current SDL resize policy permits a maximize request.</summary>
+    /// <summary>Gets whether the current window policy permits user maximization.</summary>
     /// <param name="windowId">An active native window ID; zero selects the selected native window.</param>
-    /// <returns><see langword="true"/> when the window is resizable, regardless of its current mode.</returns>
-    /// <remarks>The Wayland compositor may independently disable maximization through its window-manager capabilities; SDL does not expose that native policy here. A fullscreen window can leave fullscreen before requesting maximization.</remarks>
+    /// <returns>On Windows, whether the native maximize style is present. Other backends report the resize policy.</returns>
+    /// <remarks>The Wayland compositor may independently disable maximization through its window-manager capabilities.</remarks>
+    /// <exception cref="IOException">The native window style cannot be read.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId) => RequireService().WindowIsMaximizeAllowedCore(windowId);
 

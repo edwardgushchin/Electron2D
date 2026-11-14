@@ -119,6 +119,8 @@ public partial class Window
         var bit = 1u << (int)flag;
         if (GetFlag(flag) == enabled)
         {
+            if (flag is WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled && _display?.SupportsCaptionButtons == true)
+                _display.WindowSetFlagCore(flag, enabled);
             _assignedFlags |= bit;
             return;
         }
@@ -133,8 +135,8 @@ public partial class Window
         QueueEmbeddedRedraw();
     }
 
-    /// <summary>Reports whether the current resize policy permits native maximization.</summary>
-    /// <returns>Whether resizing is allowed; the compositor may impose further restrictions.</returns>
+    /// <summary>Reports whether the current native frame or detached window policy permits user maximization.</summary>
+    /// <returns>On Windows, whether the native maximize style is present. Other active backends report the resize policy.</returns>
     /// <exception cref="InvalidOperationException">An active window is accessed off-thread.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowedCore() ?? (!Unresizable && !MaximizeDisabled); }
@@ -251,6 +253,8 @@ public partial class Window
         ApplyProjectFlag(WindowFlag.AlwaysOnTop, settings.AlwaysOnTop && display.SupportsTopLevelFocusAndStacking);
         ApplyProjectFlag(WindowFlag.NoFocus, settings.NoFocus && display.SupportsTopLevelFocusAndStacking);
         ApplyProjectFlag(WindowFlag.SharpCorners, settings.SharpCorners && display.SupportsSharpCorners);
+        ApplyProjectFlag(WindowFlag.MinimizeDisabled, settings.MinimizeDisabled && display.SupportsCaptionButtons);
+        ApplyProjectFlag(WindowFlag.MaximizeDisabled, settings.MaximizeDisabled && display.SupportsCaptionButtons);
     }
 
     private void ApplyProjectFlag(WindowFlag flag, bool enabled)

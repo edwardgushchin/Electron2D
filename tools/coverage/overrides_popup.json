@@ -384,6 +384,11 @@
   ],
   "statusGroups": [
     {
+      "state": "Partial",
+      "reason": "ADRs 0008/0040. Windows ordinary roots and children apply independent native caption policies with live and packed assignments. Native popups keep both buttons disabled. Remaining adapters include macOS standard window buttons and X11 window-manager function hints.",
+      "godot": ["Window::property:maximize_disabled", "Window::property:minimize_disabled"]
+    },
+    {
       "state": "Implemented",
       "reason": "ADRs 0008/0038/0040/0083: embedded popup composition plus real parent-relative native desktop surfaces, nested menu/panel/control anchors, safe areas, exclusive mouse/touch routing and failure-safe parent retirement. NativePopupWindowTests exercises Linux Wayland/X11 software GPU and compatibility output, prepared render allocation and fresh-process scenes. Transparent native presentation executes on compatibility; SDL GPU alpha presentation, top-level popup input without the popup role, live embedding migration and native decoration capabilities retain exact remaining dependencies. Global Wayland placement is explicitly unavailable.",
       "godot": [
@@ -432,8 +437,6 @@
         "Window::method:popup_exclusive_centered_clamped(Node:,Vector2i:,float:)",
         "Window::method:popup_exclusive_centered_ratio(Node:,float:)",
         "Window::property:exclusive",
-        "Window::property:maximize_disabled",
-        "Window::property:minimize_disabled",
         "Window::property:popup_window",
         "Window::property:transient",
         "Window::method:get_layout_direction()",

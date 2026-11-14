@@ -107,6 +107,12 @@ Wayland leaves native top-level stacking and focus under compositor control. The
 
 Windows GPU and Compatibility checks read back the SDL flags and the Windows 11 corner preference, then verify that explicitly stored false values override the same settings. A dummy Compatibility run exercises startup with configured flags on the headless driver. Wayland, mobile and release-package checks remain separate.
 
+### Native caption buttons
+
+Windows native top-level windows support independent MinimizeDisabled and MaximizeDisabled policies. Configured projects sample the [project caption settings](../classes/ProjectSettings.md#caption-buttons) for the root. Each explicit window flag takes precedence, including a packed false value. Live updates go through the display owner. Windows caption style writes refresh the frame and retain disabled buttons through SDL changes to borders, resizability and fullscreen. Window and DisplayServer flag getters report the accepted requests. IsMaximizeAllowed and WindowIsMaximizeAllowed read the current native maximize style.
+
+Native popups use their fixed caption policy. Other top-level backends retain their default project caption styles and reject unsupported explicit native changes. macOS needs the standard-window-button adapter. X11 needs window-manager function hints and observable restoration. Wayland still needs an observable compositor maximize capability. The Windows GPU and Compatibility project-scene checks inspect actual HWND styles for the root and child, live updates, child recreation, packed false values and frame-mode transitions. Physical caption clicks and other native hosts remain unverified.
+
 ## Project startup VSync
 
 Configured project runs request [WindowVSyncMode](../classes/ProjectSettings.md#project-window-vsync) after opening the display and before constructing the renderer. The launch option `--disable-vsync` before the argument separator or a true `MovieWriterDisableVSync` during recording requests Disabled. Otherwise the effective project value applies to configured runs. Explicit scene runs use the ordinary renderer default. The renderer uses its supported-mode fallback, and DisplayServer.WindowGetVSyncMode reports the result. Use DisplayServer.WindowSetVSyncMode to change an active window. Editing the setting applies on the next configured run.

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Electron2D;
 using SDL3;
 using Path = System.IO.Path;
@@ -42,6 +43,7 @@ internal static class ProjectMainSceneTests
             VerifyProjectWindow(project.FullName, user.FullName, main, backend);
             VerifyProjectPlacement(project.FullName, user.FullName);
             VerifyProjectChrome(project.FullName, user.FullName);
+            VerifyCaptionButtons(project.FullName, user.FullName);
             VerifyProjectVSync(project.FullName, user.FullName, backend);
             VerifyProjectScreenPolicy(project.FullName, user.FullName);
             if (OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy")
@@ -445,6 +447,115 @@ internal static class ProjectMainSceneTests
                 "The window chrome host retires cleanly.");
         }
     }
+
+    private static void VerifyCaptionButtons(string project, string user)
+    {
+        var minimize = ProjectSettings.WindowMinimizeDisabled;
+        var maximize = ProjectSettings.WindowMaximizeDisabled;
+        const string feature = "caption_buttons_test";
+        ProjectSettings.Save();
+        using (var saved = new ProjectSettingsRegistry(project, user))
+        {
+            saved.Load();
+            Check(!saved.Get(minimize) && !saved.Get(maximize), "Both caption policies default to false.");
+            saved.Set(minimize, true);
+            saved.SetFeatureOverride(maximize, feature, true);
+            saved.Save();
+        }
+        ProjectSettings.Load();
+        ProjectSettings.AddCustomFeature(feature);
+        var windows = OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy";
+        try
+        {
+            using var root = new Window { Size = new(240, 160), GUIEmbedSubwindows = !windows };
+            using var child = new Window { Size = new(160, 120), MaximizeDisabled = true, Visible = windows };
+            root.AddChild(child);
+            Verify(root, () =>
+            {
+                if (root.NativeDisplay!.IsHeadless)
+                {
+                    Check(!root.MinimizeDisabled && !root.MaximizeDisabled, "Headless startup retains ordinary caption policy.");
+                    Reject<NotSupportedException>(() => root.MinimizeDisabled = true);
+                    Check(!root.MinimizeDisabled, "Unsupported live mutation preserves scene policy.");
+                    return;
+                }
+                if (!windows)
+                    return;
+                Check(root.MinimizeDisabled && root.MaximizeDisabled, "Effective project settings reach the root before Ready.");
+                CheckButtons(root, minimizeBox: false, maximizeBox: false);
+                CheckButtons(child, minimizeBox: true, maximizeBox: false);
+                root.MinimizeDisabled = false;
+                CheckButtons(root, minimizeBox: true, maximizeBox: false);
+                DisplayServer.WindowSetFlag(WindowFlag.MaximizeDisabled, false);
+                CheckButtons(root, minimizeBox: true, maximizeBox: true);
+                root.MaximizeDisabled = true;
+                CheckButtons(root, minimizeBox: true, maximizeBox: false);
+                root.Borderless = true;
+                root.Unresizable = true;
+                root.Borderless = false;
+                root.Unresizable = false;
+                CheckButtons(root, minimizeBox: true, maximizeBox: false);
+                root.Mode = WindowMode.Fullscreen;
+                Check(!root.IsMaximizeAllowed(), "Fullscreen has no native maximize button.");
+                root.Mode = WindowMode.Windowed;
+                CheckButtons(root, minimizeBox: true, maximizeBox: false);
+                root.Unresizable = true;
+                root.MaximizeDisabled = false;
+                Check(!root.IsMaximizeAllowed(), "Clearing the caption override preserves SDL's nonresizable policy.");
+                root.Unresizable = false;
+                CheckButtons(root, minimizeBox: true, maximizeBox: true);
+                var childID = child.GetWindowID();
+                child.Hide();
+                child.Show();
+                Check(child.GetWindowID() != childID, "A recreated child has a fresh native identity.");
+                CheckButtons(child, minimizeBox: true, maximizeBox: false);
+            });
+
+            if (windows)
+            {
+                using var scene = new PackedScene();
+                using var authored = new Window { MinimizeDisabled = false, MaximizeDisabled = false };
+                scene.Pack(authored);
+                using var restored = (Window)scene.Instantiate();
+                restored.Size = new(240, 160);
+                Verify(restored, () => CheckButtons(restored, minimizeBox: true, maximizeBox: true));
+            }
+        }
+        finally
+        {
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.ClearFeatureOverride(maximize, feature);
+            ProjectSettings.Reset(minimize);
+            ProjectSettings.Reset(maximize);
+        }
+
+        static void Verify(Window window, Action check)
+        {
+            window.Ready += _ =>
+            {
+                check();
+                RenderingServer.FramePostDraw += () => window.Tree!.Quit();
+            };
+            Check(Engine.RunProject(window) == 0 && window.IsDisposed, "The caption window presents and retires.");
+        }
+
+        static void CheckButtons(Window window, bool minimizeBox, bool maximizeBox)
+        {
+            var id = window.GetWindowID();
+            var handle = DisplayServer.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle, id);
+            var style = ReadWindowsStyle(handle, -16);
+            Check(handle != 0 && style != 0 && ((style & 0x00020000) != 0) == minimizeBox &&
+                ((style & 0x00010000) != 0) == maximizeBox, $"Native caption bits match on window {id}, style 0x{style:X8}.");
+            Check(DisplayServer.WindowGetFlag(WindowFlag.MinimizeDisabled, id) == !minimizeBox &&
+                DisplayServer.WindowGetFlag(WindowFlag.MaximizeDisabled, id) == !maximizeBox &&
+                DisplayServer.WindowIsMaximizeAllowed(id) == maximizeBox && window.IsMaximizeAllowed() == maximizeBox,
+                "Caption policy and effective maximize availability agree on a resizable window.");
+        }
+    }
+
+    [DllImport("user32.dll", EntryPoint = "GetWindowLongW", ExactSpelling = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    private static extern int ReadWindowsStyle(nint window, int index);
 
     private static void VerifyProjectScreenPolicy(string project, string user)
     {

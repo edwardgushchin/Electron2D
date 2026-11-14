@@ -298575,6 +298575,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.WindowMaximizeDisabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowMaximizeDisabled",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowMaximizeDisabled { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowMinimizeDisabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowMinimizeDisabled",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowMinimizeDisabled { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.WindowNoFocus()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

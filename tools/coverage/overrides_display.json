@@ -1521,15 +1521,15 @@
     },
     {
       "state": "Partial",
-      "reason": "Windows 11 applies the selected HWND's DWM corner preference and reads the observed policy. WindowCornerTests exercises scene/root/child/popup lifetimes, independent DWM reads, external changes and rejection on dummy. Existing native border, resize, input and capture policies keep their own capabilities. Remaining triggers include macOS extend-to-title and capture sharing, native minimize/maximize policy on ordinary windows and a supported top-level Wayland stacking/focus adapter (ADRs 0040/0021).",
+      "reason": "Windows 11 applies the selected HWND's DWM corner preference and reads the observed policy. WindowCornerTests exercises scene/root/child/popup lifetimes, independent DWM reads, external changes and rejection on dummy. Existing native border, resize, input and capture policies keep their own capabilities. Remaining triggers include macOS extend-to-title and capture sharing, macOS and X11 caption controls on ordinary windows and a supported top-level Wayland stacking/focus adapter (ADRs 0040/0021).",
       "godot": [
         "DisplayServer::method:window_set_flag(int:DisplayServer.WindowFlags,bool:,int:)",
         "DisplayServer::method:window_get_flag(int:DisplayServer.WindowFlags,int:)"
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "The SDL resizable policy is checked without treating the current fullscreen mode as permanent inhibition, but the Wayland compositor can independently disallow maximization. Trigger: a native window-policy integration that observes xdg_toplevel wm_capabilities through SDL's owned listener or an SDL-exposed capability, plus MaximizeDisabled policy; include in its first compositor-tested slice (ADR 0040).",
+      "state": "Partial",
+      "reason": "Windows reads the observed maximize style including caption policy and mode. Other backends report SDL resizability. Requires macOS and X11 native maximize-policy observation and an SDL-owned listener or exposed capability for Wayland xdg_toplevel wm_capabilities (ADR 0040).",
       "godot": [
         "DisplayServer::method:window_is_maximize_allowed(int:)"
       ]

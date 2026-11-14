@@ -113,6 +113,10 @@ Viewport dimensions and scale must be positive, scale must be finite, override a
 
 `WindowResizable` defaults to true. `WindowBorderless`, `WindowAlwaysOnTop`, `WindowNoFocus` and `WindowSharpCorners` default to false. These bool descriptors register the corresponding `display/window/size/` keys. See [project startup window flags](../components/window-runtime.md#project-startup-window-flags) for native application and platform limits.
 
+### Caption buttons
+
+`WindowMinimizeDisabled` and `WindowMaximizeDisabled` are bool settings under `display/window/size/`. Both default to false. The effective settings apply to the Windows project root before scene entry. Explicit window flags, including packed false values, take precedence. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
+
 ## Project window VSync
 
 `ProjectSetting<DisplayServer.VSyncMode> WindowVSyncMode` (`display/window/vsync/vsync_mode`) defaults to Enabled and rejects undefined values. Configured project runs sample the effective feature value before renderer creation. See [startup VSync and override precedence](../components/window-runtime.md#project-startup-vsync).

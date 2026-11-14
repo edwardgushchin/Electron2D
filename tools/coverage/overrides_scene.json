@@ -5589,6 +5589,16 @@
       "reason": "Typed enum for the configured root window's startup presentation policy."
     },
     {
+      "godot": "ProjectSettings::property:display/window/size/minimize_disabled",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowMinimizeDisabled()",
+      "reason": "Typed root minimize caption policy."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/maximize_disabled",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowMaximizeDisabled()",
+      "reason": "Typed root maximize caption policy."
+    },
+    {
       "godot": "ProjectSettings::property:display/window/size/sharp_corners",
       "electron2d": "property:Electron2D.ProjectSettings.WindowSharpCorners()",
       "reason": "Typed configured-root window flag."
@@ -8916,6 +8926,11 @@
   ],
   "statusGroups": [
     {
+      "state": "Partial",
+      "reason": "Windows observes the native maximize style. Detached and embedded windows report local policy. Remaining native adapters include macOS, X11 and Wayland compositor capabilities (ADR 0040).",
+      "godot": ["Window::method:is_maximize_allowed()"]
+    },
+    {
       "godot": [
         "ProjectSettings::property:display/window/energy_saving/keep_screen_on"
       ],
@@ -8945,8 +8960,8 @@
         "ProjectSettings::property:display/window/size/minimize_disabled",
         "ProjectSettings::property:display/window/size/maximize_disabled"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: executable native top-level caption-button policy through WindowSetFlag and WindowGetFlag, including supported system styles and observable startup/live restoration. The native popup path has fixed disabled controls and cannot implement the root setting."
+      "state": "Partial",
+      "reason": "ADRs 0019/0040. Windows applies effective project caption policies before Ready, with explicit scene assignments taking precedence. Remaining adapters need native macOS standard window buttons and X11 window-manager function hints with observed restoration."
     },
     {
       "godot": [
@@ -10908,7 +10923,6 @@
       "godot": [
         "Window::method:get_position_with_decorations()",
         "Window::method:get_size_with_decorations()",
-        "Window::method:is_maximize_allowed()",
         "Window::method:move_to_center()",
         "Window::method:set_ime_active(bool:)",
         "Window::method:set_ime_position(Vector2i:)",

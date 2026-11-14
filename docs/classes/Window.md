@@ -113,7 +113,7 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | [`public void RequestAttention()`](#requestattention) | Requests a platform attention indication until this window is focused. |
 | [`public bool GetFlag(Flags flag)`](#getflag) | Gets a configured window policy. |
 | [`public void SetFlag(Flags flag, bool enabled)`](#setflag) | Configures an executable policy and requests its native application when active. |
-| [`public bool IsMaximizeAllowed()`](#ismaximizeallowed) | Reports whether the current resize policy permits native maximization. |
+| [`public bool IsMaximizeAllowed()`](#ismaximizeallowed) | Reports whether the current window policy permits user maximization. |
 | [`public Vector2i GetPositionWithDecorations()`](#getpositionwithdecorations) | Gets the outer window origin, including visible native or embedded decoration margins. |
 | [`public Vector2i GetSizeWithDecorations()`](#getsizewithdecorations) | Gets the outer window size, including visible native or embedded decoration margins. |
 | [`public void MoveToCenter()`](#movetocenter) | Requests centering of the active client area in its current screen's usable rectangle. |
@@ -465,9 +465,7 @@ An unchanged request does nothing. Failed native requests do not commit the conf
 <a id="ismaximizeallowed"></a>
 ### `public bool IsMaximizeAllowed()`
 
-Reports whether the current resize policy permits native maximization.
-
-**Returns:** Whether resizing is allowed; the compositor may impose further restrictions.
+Reports the native maximize style on Windows. Other active backends report SDL resizability and may impose compositor restrictions. Detached and embedded windows report the local resize and caption policy. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
 
 **InvalidOperationException:** An active window is accessed off-thread.
 

@@ -82,6 +82,14 @@ public sealed partial class ProjectSettings
     /// <value>False by default, using the system corner policy. An explicitly assigned window flag takes precedence.</value>
     public static ProjectSetting<bool> WindowSharpCorners { get; } = new("display/window/size/sharp_corners", false);
 
+    /// <summary>Disables the minimize button on the configured native top-level window.</summary>
+    /// <value>False by default. On Windows an explicitly assigned window flag takes precedence.</value>
+    public static ProjectSetting<bool> WindowMinimizeDisabled { get; } = new("display/window/size/minimize_disabled", false);
+
+    /// <summary>Disables the maximize button on the configured native top-level window.</summary>
+    /// <value>False by default. On Windows an explicitly assigned window flag takes precedence.</value>
+    public static ProjectSetting<bool> WindowMaximizeDisabled { get; } = new("display/window/size/maximize_disabled", false);
+
     /// <summary>Allows the configured project's native window transparency request.</summary>
     /// <value>False by default. Read before opening the root surface.</value>
     /// <remarks>Applies to the project flag. Explicit <see cref="Window.Transparent"/> assignments retain their own native contract.</remarks>

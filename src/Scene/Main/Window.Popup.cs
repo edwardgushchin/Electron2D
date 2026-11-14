@@ -61,9 +61,11 @@ public partial class Window
     public bool PopupWMHint { get => GetFlag(WindowFlag.PopupWmHint); set => SetFlag(WindowFlag.PopupWmHint, value); }
     /// <summary>Gets or sets whether user maximization is disabled.</summary>
     /// <value>False initially; Popup defaults to true.</value>
+    /// <remarks>Windows native top-level windows apply the caption policy. An explicit assignment overrides configured startup.</remarks>
     public bool MaximizeDisabled { get => GetFlag(WindowFlag.MaximizeDisabled); set => SetFlag(WindowFlag.MaximizeDisabled, value); }
     /// <summary>Gets or sets whether user minimization is disabled.</summary>
     /// <value>False initially; Popup defaults to true.</value>
+    /// <remarks>Windows native top-level windows apply the caption policy. An explicit assignment overrides configured startup.</remarks>
     public bool MinimizeDisabled { get => GetFlag(WindowFlag.MinimizeDisabled); set => SetFlag(WindowFlag.MinimizeDisabled, value); }
     /// <summary>Gets or sets transparent window composition, configured before native window creation.</summary>
     /// <value>False initially; PopupPanel defaults to true.</value>
@@ -378,8 +380,10 @@ public partial class Window
         new PropertyDescriptor<Window,bool>(nameof(WrapControls),w=>w.WrapControls,(w,v)=>w.WrapControls=v,_=>false,stored:true),
         new PropertyDescriptor<Window,bool>(nameof(PopupWindow),w=>w.PopupWindow,(w,v)=>w.PopupWindow=v,_=>false,stored:true),
         new PropertyDescriptor<Window,bool>(nameof(PopupWMHint),w=>w.PopupWMHint,(w,v)=>w.PopupWMHint=v,_=>false,stored:true),
-        new PropertyDescriptor<Window,bool>(nameof(MinimizeDisabled),w=>w.MinimizeDisabled,(w,v)=>w.MinimizeDisabled=v,_=>false,stored:true),
-        new PropertyDescriptor<Window,bool>(nameof(MaximizeDisabled),w=>w.MaximizeDisabled,(w,v)=>w.MaximizeDisabled=v,_=>false,stored:true),
+        new PropertyDescriptor<Window, bool>(nameof(MinimizeDisabled), w => w.MinimizeDisabled, (w, v) => w.MinimizeDisabled = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.MinimizeDisabled) },
+        new PropertyDescriptor<Window, bool>(nameof(MaximizeDisabled), w => w.MaximizeDisabled, (w, v) => w.MaximizeDisabled = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.MaximizeDisabled) },
         new PropertyDescriptor<Window, bool>(nameof(Transparent), w => w.Transparent, (w, v) => w.Transparent = v, _ => false, stored: true)
         { StoreCondition = w => w.IsFlagAssigned(WindowFlag.Transparent) },
     ];

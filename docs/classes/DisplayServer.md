@@ -165,7 +165,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static bool WindowIsFocused(int windowId = MainWindowId)`](#method-windowisfocused) | Gets whether the main window currently has keyboard focus. |
 | [`public static bool WindowGetFlag(WindowFlag flag, int windowId = MainWindowId)`](#method-windowgetflag) | Reads a supported native window flag. |
 | [`public static void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId)`](#method-windowsetflag) | Requests a supported native window policy. |
-| [`public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`](#method-windowismaximizeallowed) | Gets whether the current SDL resize policy permits a maximize request. |
+| [`public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`](#method-windowismaximizeallowed) | Reports whether the current window policy permits user maximization. |
 | [`public static void WindowMoveToForeground(int windowId = MainWindowId)`](#method-windowmovetoforeground) | Requests native foreground on supported drivers; does nothing on Wayland. |
 | [`public static void WindowRequestAttention(int windowId = MainWindowId)`](#method-windowrequestattention) | Requests user attention until the main window receives focus. |
 | [`public static Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)`](#method-windowgetpositionwithdecorations) | Gets the main-window position including its left and top decorations. |
@@ -878,11 +878,7 @@ An undefined flag throws `ArgumentOutOfRangeException`. An unsupported backend t
 <a id="method-windowismaximizeallowed"></a>
 #### `public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`
 
-Gets whether the current SDL resize policy permits a maximize request.
-
-**Returns:** `true` when the window is resizable, regardless of its current mode.
-
-The native window manager can independently disable maximization. This method does not query Wayland `wm_capabilities`, so the result is only the SDL resize-policy subset of the native answer. A fullscreen window can leave fullscreen before requesting maximization.
+Reports the current maximize style on Windows native top-level windows, including the active mode and caption policy. Other backends report SDL resizability. Wayland compositor `wm_capabilities` remain unavailable. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
 
 - `windowId`: The main-window ID, zero.
 

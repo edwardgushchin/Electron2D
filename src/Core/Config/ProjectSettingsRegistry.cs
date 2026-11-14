@@ -85,6 +85,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WindowAlwaysOnTop, isBasic: false);
         RegisterInternal(WindowNoFocus, isBasic: false);
         RegisterInternal(WindowSharpCorners, isBasic: false);
+        RegisterInternal(WindowMinimizeDisabled, isBasic: false);
+        RegisterInternal(WindowMaximizeDisabled, isBasic: false);
         RegisterInternal(AllowPerPixelTransparency, isBasic: false);
         _settings[AllowPerPixelTransparency.Name].RestartIfChanged = true;
         RegisterInternal(WindowTransparent, isBasic: false);
@@ -543,12 +545,14 @@ public partial class ProjectSettingsRegistry : ElectronObject
                 GetWithOverrideCore(WindowInitialPosition), GetWithOverrideCore(WindowInitialScreen));
     }
 
-    internal (bool Resizable, bool Borderless, bool AlwaysOnTop, bool NoFocus, bool SharpCorners) ReadProjectWindowChrome()
+    internal (bool Resizable, bool Borderless, bool AlwaysOnTop, bool NoFocus, bool SharpCorners,
+        bool MinimizeDisabled, bool MaximizeDisabled) ReadProjectWindowChrome()
     {
         lock (_gate)
             return (GetWithOverrideCore(WindowResizable), GetWithOverrideCore(WindowBorderless),
                 GetWithOverrideCore(WindowAlwaysOnTop), GetWithOverrideCore(WindowNoFocus),
-                GetWithOverrideCore(WindowSharpCorners));
+                GetWithOverrideCore(WindowSharpCorners), GetWithOverrideCore(WindowMinimizeDisabled),
+                GetWithOverrideCore(WindowMaximizeDisabled));
     }
 
     internal (bool Allowed, bool NativeWindow, bool Viewport) ReadProjectWindowTransparency()
@@ -1448,6 +1452,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, ApplicationIcon) ||
         ReferenceEquals(setting, WindowsNativeIcon) ||
         ReferenceEquals(setting, WindowVSyncMode) ||
+        ReferenceEquals(setting, WindowMinimizeDisabled) ||
+        ReferenceEquals(setting, WindowMaximizeDisabled) ||
         ReferenceEquals(setting, KeepScreenOn) ||
         ReferenceEquals(setting, MainScene) ||
         ReferenceEquals(setting, MainLoopType) ||

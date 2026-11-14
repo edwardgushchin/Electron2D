@@ -483,6 +483,7 @@ public sealed partial class DisplayServer
             WindowFlag.Popup when IsNativePopup => PopupInputPolicy,
             WindowFlag.PopupWmHint when IsNativePopup => true,
             WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled when IsNativePopup => true,
+            WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled => GetCaptionButtonDisabled(flag),
             WindowFlag.Transparent => (native & SDL.WindowFlags.Transparent) != 0,
             >= WindowFlag.Transparent and < WindowFlag.Max => throw new NotSupportedException($"Window flag {flag} requires a display capability that is not integrated."),
             _ => throw new ArgumentOutOfRangeException(nameof(flag), flag, "Unknown window flag."),
@@ -503,6 +504,11 @@ public sealed partial class DisplayServer
             return;
         }
         if (IsNativePopup && flag == WindowFlag.Popup) { SetPopupInputPolicy(enabled); return; }
+        if (flag is WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled)
+        {
+            SetCaptionButtonDisabled(flag, enabled);
+            return;
+        }
         if (flag == WindowFlag.Transparent)
         {
             if (WindowGetFlagCore(flag) != enabled) throw new NotSupportedException("Configure native transparency before creating the window.");
@@ -543,6 +549,8 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) return ResolveWindow(windowId).WindowIsMaximizeAllowedCore(MainWindowId);
         EnsureOwner();
         var flags = SDL.GetWindowFlags(GetWindow(windowId));
+        if (SupportsCaptionButtons)
+            return (ReadCaptionStyle(WindowGetNativeHandleCore(HandleType.WindowHandle)) & MaximizeBox) != 0;
         return (flags & SDL.WindowFlags.Resizable) != 0;
     }
 

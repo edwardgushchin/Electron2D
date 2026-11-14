@@ -1,3 +1,5 @@
+[Native caption buttons](../components/window-runtime.md#native-caption-buttons) connect Windows top-level styles with configured and live minimize/maximize controls. Three Blocked rows move to Partial pending additional native adapters. Coverage is **14,040/18,898 (74.29%)**, with 1,127 Partial, 268 Unimplemented, 3,463 Blocked, 8,395 Excluded and zero unmapped.
+
 [Project screen wakefulness](../components/window-runtime.md#project-screen-wakefulness) connects the stored project policy to SDL screen inhibition and restores the preceding policy on retirement. One Blocked row moves to Partial pending a browser wake-lock adapter. Coverage is **14,040/18,898 (74.29%)**, with 1,124 Partial, 268 Unimplemented, 3,466 Blocked, 8,395 Excluded and zero unmapped.
 
 [Project startup VSync](../components/window-runtime.md#project-startup-vsync) connects the typed main-window presentation mode with its native renderer and startup overrides. One Blocked row moves to Implemented. Coverage is **14,040/18,898 (74.29%)**, with 1,123 Partial, 268 Unimplemented, 3,467 Blocked, 8,395 Excluded and zero unmapped.
