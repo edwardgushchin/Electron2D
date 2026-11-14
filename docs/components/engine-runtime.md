@@ -118,6 +118,16 @@ The host calls `Engine.Start(loop)`. The loop is published before initialization
 
 Callback exceptions restore Engine's running state. Initialization/finalization failures return Engine to idle while preserving the loop's terminal lifecycle decision. Re-entry and concurrent lifecycle/frame transitions are rejected atomically.
 
+## Named singleton registry
+
+Engine retains one ordered registry for the process. It starts with these permanent identities, in order: `Engine`, `OS`, `TextServerManager`, `Time`, `WorkerThreadPool`, `ProjectSettings`, `IP`, `Input`, `InputMap`, `ResourceLoader`, `ResourceSaver`, `ResourceUID`, `ExtensionManager`, `NavigationServer`, `CameraServer`, `AudioServer`, `PhysicsServer` and `Performance`. The registration itself marks its permanence. Other static services and native-session services retain their owning access and lifetime.
+
+Names are non-null, nonblank ordinal strings as supplied, including dotted names. Each call is synchronized and can run off the scene owner thread. A snapshot preserves the order of successful registrations at capture, with re-registered names appended. Sequences of registry calls are independently synchronized.
+
+Registrations retain a managed reference to the exact object. The registrant owns disposal and removes any user registrations during its teardown. Registering an already disposing or disposed object fails. Later disposal leaves its name and reference visible until explicit removal. Starting or stopping a scene leaves registrations in place unless scene code changes them. See [Engine](../classes/Engine.md#m-electron2d-engine-registersingleton-system-string-electron2d-electronobject) for the overloads and managed exceptions.
+
+The [public consumer](../../tests/EngineRegistry.Consumer/EngineRegistryChecks.cs) checks all 18 reservations, duplicates, lookup errors, aliases, ordinal comparison, snapshots and concurrent mutations. It also uses Engine.Run with rendering fallback disabled, registers an alias in scene readiness, resolves the object in drawing, reads back a rendered pixel and removes the alias on exit, twice per Windows x64 renderer. Those runs cover GPU Direct3D 12 and Compatibility Direct3D 11. Other platforms and shipped packages retain their [qualification gates](../platform-verification.md#cross-platform-parity-acceptance).
+
 ## Dependencies
 
 The component depends on Core object lifecycle, MainLoop, ProjectSettings, TranslationServer startup configuration, and the permanent Input/InputMap/AudioServer service registrations plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. Manual loops are accepted through MainLoop. Engine.Run has a deliberate in-assembly dependency on SceneTree and Window for native scene orchestration; platform entry readiness and Android bootstrap use internal SDL bindings without exposing backend types to consumers.
@@ -132,7 +142,7 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, Trans
 - Timing settings and effective callback deltas are finite; callback deltas are non-negative.
 - Original frame deltas and the original process step remain finite/non-negative, are scoped to one callback, and are never reconstructed by dividing through `TimeScale`.
 - Process/physics counters are process-lifetime totals; the synchronizer, interpolation, and FPS window reset only after successful loop preparation.
-- Registry names are unique ordinal strings; built-in `Engine`, `ProjectSettings`, `Input`, and `InputMap` entries are permanent, and user registry ownership never implies object disposal.
+- [Named singleton operations](#named-singleton-registry) share one process-wide registry across loop lifecycles.
 - Warmed empty manual frame scheduling has no steady-state managed allocation. RunAsync timer/context scheduling has a separate allocation boundary.
 
 ## Current implementation status and exclusions

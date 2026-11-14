@@ -860,20 +860,17 @@
     {
       "electron2d": "method:Electron2D.Engine.GetSingleton(System.String)",
       "godot": "Engine::method:get_singleton(StringName:)",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "Maps the typed managed signature under ADR 0016."
     },
     {
       "electron2d": "method:Electron2D.Engine.GetSingletonList()",
       "godot": "Engine::method:get_singleton_list()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "Maps the typed managed signature under ADR 0016."
     },
     {
       "electron2d": "method:Electron2D.Engine.GetSingleton`1(System.String)",
       "godot": "Engine::method:get_singleton(StringName:)",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "Maps the typed managed signature under ADR 0016."
     },
     {
       "electron2d": "method:Electron2D.Input.GetActionRawStrength(System.String,System.Boolean)",
@@ -8945,6 +8942,41 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0016/0095: exact borrowed object identity; absent lookup throws KeyNotFoundException instead of logging and returning null in the pinned implementation. The registry retains names after caller disposal. The generic overload checks C# assignability while preserving the same identity and absent-name behavior.",
+      "godot": [
+        "Engine::method:get_singleton(StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0016/0095: immutable registration-order snapshot, detached from future mutations; re-registration appends. The runtime registry has no editor-only entries.",
+      "godot": [
+        "Engine::method:get_singleton_list()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0016/0095: synchronized ordinal membership. Missing valid names return false; null or blank names use managed argument exceptions. A caller-disposed entry remains present until removal.",
+      "godot": [
+        "Engine::method:has_singleton(StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0016/0095: exact borrowed identity, ordinal nonblank names, explicit managed duplicate/null/disposed errors. The pinned ASCII identifier check in [core_bind.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/core_bind.cpp#L1824-L1834) has SHA-256 e90ccae66bffe1e4aee4e319e7cf731df1202b2b262eacbded9b99b79d359e50; the accepted string boundary also allows dotted names.",
+      "godot": [
+        "Engine::method:register_singleton(StringName:,Object:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0016/0095: all 18 permanent entries reject removal, matching the pinned user-created guard. Missing and permanent names throw managed exceptions. Removing a user name leaves the object and its other registrations with their owner.",
+      "godot": [
+        "Engine::method:unregister_singleton(StringName:)"
+      ]
+    },
     {
       "godot": [
         "Control::enum:Anchor",
