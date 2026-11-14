@@ -59,6 +59,8 @@ Encoding is ordered and a saved UID is retained on subsequent writes. Binary fie
 
 ## Typed values, UID and extensions
 
+Archive value IDs identify registered field schemas. The owning property descriptor selects the codec for its declared value type, and loading validates the stored schema before restoring the property. JSON model conversion and primitive file I/O have independent contracts in [JSON documents](json.md) and [FileAccess](file-access.md).
+
 Built-in codecs cover primitive integer/floating values, strings, six vectors, Color, rectangles, Transform, selected nullable scalar/math values, byte/string/int/float/Vector2/Color arrays, int contours, resource arrays and string/int dictionaries. Enums preserve their numeric typed values. Node references are relative paths restored after topology construction. Custom codecs are explicit schema contracts and must validate input; reference-shaped custom values are snapshotted through their codec. Native pointers, RID, delegates and arbitrary ElectronObject values reject.
 
 ResourceUID uses canonical base-34 `uid://` text and a process-local catalog with explicit Add/Set/Remove. Saved file headers retain identities between processes; loading or GetResourceIDForPath imports them. CreateIDForPath hashes project name and path with SHA-256. No background import scan, catalog disk database or arbitrary relocation discovery exists. A registered UID resolves before FileAccess/DirAccess/ProjectSettings directory path policy; unknown UIDs throw. Dependency tokens retain UID, optional stable type and fallback path; RenameDependencies rewrites metadata atomically without resource construction.

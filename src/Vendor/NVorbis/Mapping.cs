@@ -11,10 +11,9 @@ namespace Electron2D.NVorbisBindings
         IMdct _mdct;
         int[] _couplingAngle;
         int[] _couplingMangitude;
-        IFloor[] _submapFloor;
         IResidue[] _submapResidue;
         IFloor[] _channelFloor;
-        IResidue[] _channelResidue;
+        int[][] _submapChannels;
 
         public void Init(IPacket packet, int channels, IFloor[] floors, IResidue[] residues, IMdct mdct)
         {
@@ -57,14 +56,14 @@ namespace Electron2D.NVorbisBindings
                 for (var c = 0; c < channels; c++)
                 {
                     mux[c] = (int)packet.ReadBits(4);
-                    if (mux[c] > submapCount)
+                    if (mux[c] >= submapCount)
                     {
                         throw new System.IO.InvalidDataException("Invalid channel mux submap index in mapping header!");
                     }
                 }
             }
 
-            _submapFloor = new IFloor[submapCount];
+            var submapFloor = new IFloor[submapCount];
             _submapResidue = new IResidue[submapCount];
             for (var j = 0; j < submapCount; j++)
             {
@@ -80,16 +79,31 @@ namespace Electron2D.NVorbisBindings
                     throw new System.IO.InvalidDataException("Invalid residue number in mapping header!");
                 }
 
-                _submapFloor[j] = floors[floorNum];
+                submapFloor[j] = floors[floorNum];
                 _submapResidue[j] = residues[residueNum];
             }
 
             _channelFloor = new IFloor[channels];
-            _channelResidue = new IResidue[channels];
             for (var c = 0; c < channels; c++)
             {
-                _channelFloor[c] = _submapFloor[mux[c]];
-                _channelResidue[c] = _submapResidue[mux[c]];
+                _channelFloor[c] = submapFloor[mux[c]];
+            }
+
+            _submapChannels = new int[submapCount][];
+            var submapSizes = new int[submapCount];
+            for (var c = 0; c < channels; c++)
+            {
+                submapSizes[mux[c]]++;
+            }
+            for (var i = 0; i < submapCount; i++)
+            {
+                _submapChannels[i] = new int[submapSizes[i]];
+            }
+            Array.Clear(submapSizes, 0, submapSizes.Length);
+            for (var c = 0; c < channels; c++)
+            {
+                var submap = mux[c];
+                _submapChannels[submap][submapSizes[submap]++] = c;
             }
 
             _mdct = mdct;
@@ -114,32 +128,41 @@ namespace Electron2D.NVorbisBindings
             // make sure we handle no-energy channels correctly given the couplings..
             for (var i = 0; i < _couplingAngle.Length; i++)
             {
-                if (floorData[_couplingAngle[i]].ExecuteChannel || floorData[_couplingMangitude[i]].ExecuteChannel)
+                var angle = _couplingAngle[i];
+                var magnitude = _couplingMangitude[i];
+                if (!noExecuteChannel[angle] || !noExecuteChannel[magnitude])
                 {
-                    floorData[_couplingAngle[i]].ForceEnergy = true;
-                    floorData[_couplingMangitude[i]].ForceEnergy = true;
+                    noExecuteChannel[angle] = false;
+                    noExecuteChannel[magnitude] = false;
                 }
             }
 
             // decode the submaps into the residue buffer
-            for (var i = 0; i < _submapFloor.Length; i++)
+            for (var i = 0; i < _submapChannels.Length; i++)
             {
-                for (var j = 0; j < _channelFloor.Length; j++)
+                var bundle = _submapChannels[i];
+                if (bundle.Length == 0) continue;
+                if (_submapChannels.Length == 1)
                 {
-                    if (_submapFloor[i] != _channelFloor[j] || _submapResidue[i] != _channelResidue[j])
-                    {
-                        // the submap doesn't match, so this floor doesn't contribute
-                        floorData[j].ForceNoEnergy = true;
-                    }
+                    _submapResidue[i].Decode(packet, noExecuteChannel, blockSize, buffer);
+                    continue;
                 }
 
-                _submapResidue[i].Decode(packet, noExecuteChannel, blockSize, buffer);
+                // Residue uses bundle-local channel indices, including for type 2 interleaving.
+                var bundleSkip = new bool[bundle.Length];
+                var bundleBuffer = new float[bundle.Length][];
+                for (var j = 0; j < bundle.Length; j++)
+                {
+                    bundleSkip[j] = noExecuteChannel[bundle[j]];
+                    bundleBuffer[j] = buffer[bundle[j]];
+                }
+                _submapResidue[i].Decode(packet, bundleSkip, blockSize, bundleBuffer);
             }
 
             // inverse coupling
             for (var i = _couplingAngle.Length - 1; i >= 0; i--)
             {
-                if (floorData[_couplingAngle[i]].ExecuteChannel || floorData[_couplingMangitude[i]].ExecuteChannel)
+                if (!noExecuteChannel[_couplingAngle[i]] || !noExecuteChannel[_couplingMangitude[i]])
                 {
                     var magnitude = buffer[_couplingMangitude[i]];
                     var angle = buffer[_couplingAngle[i]];
@@ -194,8 +217,8 @@ namespace Electron2D.NVorbisBindings
                 }
                 else
                 {
-                    // since we aren't doing the IMDCT, we have to explicitly clear the back half of the block
-                    Array.Clear(buffer[c], halfBlockSize, halfBlockSize);
+                    // Coupling can decode residue for channels with no floor of their own.
+                    Array.Clear(buffer[c], 0, blockSize);
                 }
             }
         }

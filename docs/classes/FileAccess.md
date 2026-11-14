@@ -239,6 +239,8 @@ Gets or sets Unix permission and special-mode bits for the physical file.
 
 Opens a file with the requested access mode.
 
+On Windows, physical read-only streams allow staged replacement. An open reader can finish reading the original file, and subsequent opens of the path see the replacement.
+
 **Parameters**
 
 - `path`: A nonempty ordinary, `res://`, or `user://` path.

@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Resamples an independent captured Vorbis stream cursor with typed loop control.</summary>
 /// <remarks>Created by AudioStreamOggVorbis. Packet/granule mutation invalidates this playback;
-/// sampling-rate metadata remains live. The resource and sequence are borrowed.</remarks>
+/// sampling-rate metadata remains live. Output uses the first two encoded channels, or the
+/// single channel on both sides for mono. The resource and sequence are borrowed.</remarks>
 public sealed class AudioStreamPlaybackOggVorbis : AudioStreamPlaybackResampled
 {
     private readonly AudioFileCursor _cursor;

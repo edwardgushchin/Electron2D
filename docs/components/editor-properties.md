@@ -77,6 +77,7 @@ Each `CanvasItem.Material` assignment, including an equal one, now raises the ty
 
 - Names are non-empty and unique within a resolved property list.
 - Owner and value types are fixed by generic arguments.
+- `ValueType` exposes the CLR type of the declared value for tooling. The descriptor's compiled getter and setter carry that value type through discovery, validation, reads and writes. Arbitrary named object metadata is outside this boundary under [ADR 0001](../decisions/product.md#adr-0001).
 - Read-only descriptors reject writes and cannot define revert values.
 - Stored descriptors must be writable. Unsupported reference-shaped stored values fail capture instead of retaining arbitrary object graphs.
 - Validators reject values with `ArgumentOutOfRangeException`.
@@ -107,5 +108,7 @@ Through retains its leaf metadata; synthetic component/collection projections ha
 no inferred hint. The public [graph parameter consumer](visual-shaders.md#parameters-and-graph-local-references)
 exercises provider metadata and compiled numeric range/enum/Color consumers.
 No editor controls or visual editor acceptance are implied by descriptor discovery.
+
+For `PropertyHint.TypeString`, `ArrayType` and `DictionaryType`, `ValueType` exposes the declared CLR type. Tooling can read the element type of an array or the key and value types of a closed generic dictionary, including nested declared collection types. `HintString` preserves advisory text. The current editor lacks controls that use those types to edit array elements and dictionary keys and values, including nested collections and per-value presentation hints. It also lacks the TypeString class picker for string properties. These behaviors depend on a descriptor-driven inspector in the existing workspace under [ADR 0090](../decisions/agent-native.md#adr-0090). [Coverage](../coverage/classes/@GlobalScope.md) records all three hints as Partial.
 
 Value-presentation tags, including quaternion display, describe caller-provided CLR data without introducing an engine Quaternion type or a 3D scene service. Scene-3D layer tags and deprecated hints remain excluded under ADR 0004.

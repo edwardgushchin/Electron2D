@@ -50,12 +50,15 @@ internal static class SplitContainerTests
     {
         using var skin = new Skin(); var split = new SplitContainer { Theme = skin.Theme, Size = new(100, 40) }; split.AddChild(Child("A")); split.AddChild(Child("B")); var viewport = new TestViewport(); var forwarder = new InputForwarder(); viewport.AddChild(split); viewport.AddChild(forwarder); using var tree = new SceneTree(viewport); Advance(tree);
         var handle = split.GetDragAreaControl(); forwarder.Target = handle; void Send(InputEvent e) => viewport.PushInput(e, true); var order = new List<string>(); split.DragStarted += () => order.Add("start"); split.Dragged += value => order.Add("move:" + value); split.DragEnded += () => order.Add("end");
+        Reject<InvalidOperationException>(handle.AcceptEvent);
         using var down = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Position = new(2, 3) }; using var motion = new InputEventMouseMotion { Position = new(12, 3) }; using var up = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Position = new(12, 3) };
         Send(down); Send(motion); Send(up); Advance(tree); Check(order.SequenceEqual(["start", "move:10", "end"]) && split.SplitOffset == 10, "Pointer drag commits relative delta and ordered events.");
         split.LayoutDirection = LayoutDirection.RTL; Advance(tree); Send(down); Send(motion); Send(up); Check(split.SplitOffset == 0, "RTL drag delta reverses independently of physical movement.");
         using var key = new InputEventKey { Keycode = Key.Left, Pressed = true }; Send(key); Check(split.SplitOffset == 10 && order.Count == 6, "Keyboard ten-percent stepping uses direction but no pointer drag signals.");
         split.TouchDraggerEnabled = true; Advance(tree); var touch = handle.GetChild(0, true) as TextureRect; Check(touch is { Texture: not null } && touch.Size == new Vector2(24, 24), "Touch dragging creates the real overlapping image control.");
-        touch!.DispatchGUIInput(motion); var hoverColor = touch.Modulate; split.Vertical = true; Check(touch.Modulate == hoverColor, "Geometry refresh preserves the touch hover tint."); split.Vertical = false;
+        forwarder.Target = touch; Send(motion); var hoverColor = touch!.Modulate; Check(hoverColor == split.GetThemeColor("touch_dragger_hover_color"), "Viewport input reaches the touch hover handler.");
+        split.Vertical = true; Check(touch.Modulate == hoverColor, "Geometry refresh preserves the touch hover tint."); split.Vertical = false; forwarder.Target = handle;
+        Reject<InvalidOperationException>(handle.AcceptEvent);
         Action failure = () => throw new ApplicationException("expected drag end observer"); split.DragEnded += failure; Send(down); Check(Capture(() => split.DraggingEnabled = false) is not null && !split.DraggingEnabled && handle.MouseFilter == MouseFilter.Ignore, "Failed end observer cannot prevent disabling pointer targets."); split.DragEnded -= failure;
         Check(!skin.Grabber.IsDisposed && skin.Grabber.RetainRendererCache, "Attached split retains borrowed icon renderer residency."); tree.Dispose(); Check(!skin.Grabber.RetainRendererCache && !skin.Touch.IsDisposed, "Exit/disposal releases residency without owning textures.");
     }
@@ -70,12 +73,13 @@ internal static class SplitContainerTests
         using var skin = new Skin(); var outer = new SplitContainer { Theme = skin.Theme, Size = new(200, 120), DragNestedIntersections = true };
         var left = new Control { Name = "Left", CustomMinimumSize = new(10, 10), SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
         left.AddChild(new Node { Name = "Unrelated" });
-        var nested = new SplitContainer { Name = "Nested", Theme = skin.Theme, Vertical = true, DragNestedIntersections = true }; nested.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect); nested.AddChild(Child("Top")); nested.AddChild(Child("Bottom")); left.AddChild(nested); outer.AddChild(left); outer.AddChild(Child("Right")); using var tree = new SceneTree(outer); Advance(tree, 8);
+        var nested = new SplitContainer { Name = "Nested", Theme = skin.Theme, Vertical = true, DragNestedIntersections = true }; nested.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect); nested.AddChild(Child("Top")); nested.AddChild(Child("Bottom")); left.AddChild(nested); outer.AddChild(left); outer.AddChild(Child("Right"));
+        var viewport = new TestViewport(); var forwarder = new InputForwarder(); viewport.AddChild(outer); viewport.AddChild(forwarder); using var tree = new SceneTree(viewport); Advance(tree, 8);
         var parent = outer.GetDragAreaControl(); var intersection = parent.GetChildren(true).FirstOrDefault(n => n.Name.StartsWith("_split_intersection_")) as Control;
         Check(intersection is not null && intersection.GetCursorShape() == CursorShape.Drag, "An unrelated sibling does not suppress a valid orthogonal nested intersection.");
         using var down = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Position = new(1, 1) }; using var move = new InputEventMouseMotion { Position = new(1, 11) }; using var up = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Position = new(1, 11) };
-        intersection!.DispatchGUIInput(down); intersection.DispatchGUIInput(move); intersection.DispatchGUIInput(up); Check(nested.SplitOffset == 10, "Intersection drag moves the descendant split along its orthogonal axis.");
-        nested.DragNestedIntersections = false; Advance(tree); Check(intersection.IsDisposed, "Disabling nested intersections removes borrowed joint targets.");
+        forwarder.Target = intersection; viewport.PushInput(down, true); viewport.PushInput(move, true); viewport.PushInput(up, true); Check(nested.SplitOffset == 10, "Intersection drag moves the descendant split along its orthogonal axis.");
+        nested.DragNestedIntersections = false; Advance(tree); Check(intersection!.IsDisposed, "Disabling nested intersections removes borrowed joint targets.");
     }
     private static void VerifyLayoutFailures()
     {
@@ -116,6 +120,7 @@ internal static class SplitContainerTests
     {
         internal Control? Target;
         internal InputForwarder() => InputEnabled = true;
+        // Synthetic control-local events still need the viewport's active scene input dispatch.
         protected override void OnInput(InputEvent input) => Target?.DispatchGUIInput(input);
     }
     private static Exception? Capture(Action action) { try { action(); return null; } catch (Exception error) { return error; } }
