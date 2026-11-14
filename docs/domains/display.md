@@ -14,9 +14,15 @@
 
 # Display domain
 
+[Project startup geometry](../components/window-runtime.md#project-startup-geometry) supplies the configured root's initial size and stretch policy. [Project startup placement](../components/window-runtime.md#project-startup-placement) adds the effective display selector and native mode. [Project startup window flags](../components/window-runtime.md#project-startup-window-flags) apply configurable decoration, resize, stacking and focus policies. [Project window transparency](../components/window-runtime.md#main-window-native-transparency) selects the native alpha surface and viewport clear policy.
+
+[Window content fitting](../components/window-runtime.md#fitting-child-controls) schedules a bounded layout refresh from runtime GUI changes for native and embedded windows.
+
+[Window drawability](../components/window-runtime.md#window-drawability) projects live native presentation eligibility through DisplayServer and Window.
+
 [Android system back](../components/window-runtime.md#system-back-navigation) uses actual framework callbacks and a retained display-owner request batch, including drop-input pumps and lifetime/error handling.
 
-Last updated: 2026-11-07
+Last updated: 2026-11-14
 
 Native driver identity is retained per opened display context for capability queries; device-dependent availability remains live. The [physics window allocation check](../components/physics-window-allocations.md) covers its passive-pointer hot path.
 
@@ -37,6 +43,8 @@ Own the native display connection, borrowed operating-system display/window and 
 | [Display server](../components/display-server.md) | SDL video lifetime, main window, borrowed desktop display/window identities, display, system-theme and pointer queries, event translation | Partial native host; coverage and limits documented |
 
 ## Public surface
+
+The display owns [Windows native ICO publication](../components/window-runtime.md#windows-native-icons) and its native handles. The windowed host samples the native path and the [application image path](../components/window-runtime.md#application-image-icons) before scene activation.
 
 [DisplayWindowEvents](../classes/DisplayWindowEvents.md), obtained by static `DisplayServer.GetWindowEvents`, owns typed per-native-window subscriptions and retirement. Its parsed-input phase precedes scene delivery; native notifications follow existing window callbacks. See [the connected component](../components/display-server.md#per-window-typed-events).
 
@@ -125,7 +133,9 @@ GetSwapCancelOK exposes the retained DisplayServer platform dialog-order convent
 
 ## Presentation policy
 
-The main window exposes [DisplayServer.WindowSetVSyncMode and WindowGetVSyncMode](../classes/DisplayServer.md#presentation-synchronization), with [VSyncMode](../classes/DisplayServer.VSyncMode.md) identities. Native unsupported modes fall back to Enabled and the getter reports the applied mode. Engine.MaxFPS independently caps host frames. Managed video-driver environment edits are honored at display/compute initialization with the previous native hint restored afterward. The [WaterPlayground](../../examples/WaterPlayground/README.md) consumer verifies the connected policy, including XWayland immediate presentation.
+The main window takes its initial presentation policy from [project startup VSync](../components/window-runtime.md#project-startup-vsync). [DisplayServer.WindowSetVSyncMode and WindowGetVSyncMode](../classes/DisplayServer.md#presentation-synchronization) use the [VSyncMode](../classes/DisplayServer.VSyncMode.md) identities. Native unsupported modes fall back to Enabled and the getter reports the applied mode. Engine.MaxFPS independently caps host frames. Managed video-driver environment edits are honored at display/compute initialization with the previous native hint restored afterward. The [WaterPlayground](../../examples/WaterPlayground/README.md) consumer verifies the connected policy, including XWayland immediate presentation.
+
+The configured display applies [project screen wakefulness](../components/window-runtime.md#project-screen-wakefulness) for its lifetime through the native screen-blanking service. [Native caption buttons](../components/window-runtime.md#native-caption-buttons) connect the Windows root and child frame styles to the project and live window policies.
 
 
 Containing-window notifications now reach physical Node descendants in parent-first

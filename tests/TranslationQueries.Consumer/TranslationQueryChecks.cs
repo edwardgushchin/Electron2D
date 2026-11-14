@@ -159,8 +159,10 @@ internal static class TranslationQueryChecks
     {
         var originalCulture = TranslationServer.Culture;
         var originalBackend = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        var originalFallback = ProjectSettings.Get(ProjectSettings.RenderingFallback);
         TranslationServer.Clear();
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var french = new Translation { Locale = "fr-CA" };
         using var hebrew = new Translation { Locale = "he-IL" };
         french.AddMessage("Choice", "French"); hebrew.AddMessage("Choice", "Hebrew");
@@ -172,6 +174,8 @@ internal static class TranslationQueryChecks
         var window = new Window { Size = new(220, 80) };
         window.AddChild(indicator); window.AddChild(menu);
         var frames = 0;
+        var actualMethod = "";
+        var actualDriver = "";
         void Select(int index)
         {
             menu.Select(index);
@@ -184,6 +188,11 @@ internal static class TranslationQueryChecks
         Action? capture = null;
         window.Ready += _ =>
         {
+            actualMethod = RenderingServer.GetCurrentRenderingMethod();
+            actualDriver = RenderingServer.GetCurrentRenderingDriverName();
+            Check(actualMethod == backend && !string.IsNullOrWhiteSpace(actualDriver),
+                $"The requested renderer executes without fallback: requested {backend}, observed {actualMethod}/{actualDriver}.");
+            Console.WriteLine($"Translation query renderer: {actualMethod}/{actualDriver}, fallback disabled.");
             Select(0);
             RenderingServer.SetDefaultClearColor(Colors.Black);
             capture = () =>
@@ -202,9 +211,10 @@ internal static class TranslationQueryChecks
             if (capture is not null && RenderingServer.IsAvailable) RenderingServer.FramePostDraw -= capture;
             TranslationServer.Clear(); TranslationServer.Culture = originalCulture;
             ProjectSettings.Set(ProjectSettings.RenderingMethod, originalBackend);
+            ProjectSettings.Set(ProjectSettings.RenderingFallback, originalFallback);
             if (!window.IsDisposed) window.Dispose();
         }
-        Console.WriteLine($"Translation query language menu: {backend}, French/Hebrew pixels and teardown passed.");
+        Console.WriteLine($"Translation query language menu: {actualMethod}/{actualDriver}, French/Hebrew pixels and teardown passed.");
     }
 
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }

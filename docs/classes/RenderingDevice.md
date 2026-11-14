@@ -9,7 +9,7 @@ contents retain their recorded encoding across output changes and transfer on GP
 new screen lists use the current format. Existing owner/list/window lifetime guards
 and framebuffer-format identities remain in effect.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
 
 [Copied native depth/stencil state](../components/depth-stencil-state.md) extends pipeline creation with stored-depth bounds and independent visible-face masks/reference, including derived native variants.
 
@@ -754,6 +754,12 @@ The [graphics component contract](../components/local-compute.md#color-graphics-
 | [`public System.Int64 DrawListSwitchToNextPass()`](#member-switch-next-pass) | Advances the active framebuffer to its next ordered pass and resets draw bindings. |
 | `public System.Void DrawListEnd()` | Ends the active draw list, preserving its results for subsequent device work. |
 | `public System.Void DrawListSetBlendConstants(System.Int64 drawList, Electron2D.Color color)` | Sets the finite blend constant for subsequent draws. |
+| `public void DrawListSetLineWidth(long drawList, float width)` | Sets the raster line width in pixels for subsequent draws. |
+| `public void DrawListSetDepthBias(long drawList, float constantFactor, float clamp, float slopeFactor)` | Sets the depth bias factors and signed clamp for subsequent draws. |
+| `public void DrawListSetDepthBounds(long drawList, float minimum, float maximum)` | Sets the inclusive stored-depth bounds for subsequent draws. |
+| [`public void DrawListSetStencilCompareMask(long drawList, int frontMask, int backMask)`](#member-ae082a2ff45c) | Sets independent front/back comparison masks for subsequent draws. |
+| [`public void DrawListSetStencilWriteMask(long drawList, int frontMask, int backMask)`](#member-4e63ba587e67) | Sets independent front/back write masks for subsequent draws. |
+| [`public void DrawListSetStencilReference(long drawList, int frontReference, int backReference)`](#member-04e656320a0d) | Sets independent front/back references for subsequent draws. |
 | [`public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1, System.Int32 viewCount = 1)`](#member-b1f57fe724ef) | Creates a framebuffer borrowing device-owned color and depth/stencil images. |
 | [`public Electron2D.RID FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID> textures, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes, System.Int32 validateWithFormat = -1, System.Int32 viewCount = 1)`](#member-69eb0fea8573) | Creates a framebuffer borrowing the images selected by ordered copied passes. |
 | [`public System.Int32 FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments, System.ReadOnlySpan<Electron2D.RDFramebufferPass> passes, System.Int32 viewCount = 1)`](#member-4b3991d9d1c4) | Creates a copied explicit pass layout, including per-color resolve destinations. |
@@ -979,6 +985,36 @@ Ends the active draw list, preserving its results for subsequent device work.
 
 
 <a id="member-fe1e70626f75"></a>
+<a id="member-b33fe8f7f710"></a>
+### DrawListSetLineWidth
+
+Changes the width for subsequent line draws and polygon outlines on a pipeline with `PipelineDynamicStateFlags.LineWidth`. A finite positive value is required. Nonunit widths require enabled wide lines and clamp to the native range.
+
+<a id="member-d9579c077368"></a>
+### DrawListSetDepthBias
+
+Changes finite constant and slope factors and the signed clamp on a pipeline with `PipelineDynamicStateFlags.DepthBias`. A nonzero clamp requires independent native support. Zero leaves the bias unclamped.
+
+<a id="member-29461a847e0f"></a>
+### DrawListSetDepthBounds
+
+Changes the inclusive stored-depth range on a pipeline with `PipelineDynamicStateFlags.DepthBounds`. The range must be finite, ordered and inside zero through one. Each dynamic setter requires the active draw-list identity, a matching bound pipeline and the device owner thread. See [dynamic raster state](../components/depth-stencil-state.md#dynamic-raster-state) for replay and reset behavior.
+
+<a id="member-ae082a2ff45c"></a>
+### DrawListSetStencilCompareMask
+
+Sets the front and back comparison masks on a pipeline bound with `PipelineDynamicStateFlags.StencilCompareMask`. Only the low eight bits participate in the stencil comparison.
+
+<a id="member-4e63ba587e67"></a>
+### DrawListSetStencilWriteMask
+
+Sets the front and back write masks on a pipeline bound with `PipelineDynamicStateFlags.StencilWriteMask`. Only the low eight bits select which stored bits may change.
+
+<a id="member-04e656320a0d"></a>
+### DrawListSetStencilReference
+
+Sets the front and back references on a pipeline bound with `PipelineDynamicStateFlags.StencilReference`. Both references must fit in eight bits. Each setter requires the active list identity and owner thread. Binding a pipeline restores its copied state. See [dynamic stencil state](../components/depth-stencil-state.md#dynamic-stencil-state) for native support and replay.
+
 ### DrawListSetBlendConstants(System.Int64, Electron2D.Color)
 
 ```csharp
@@ -1133,7 +1169,7 @@ A pipeline borrowing the shader identity and owning specialized native stages wh
 | `primitive` | Point, line or triangle topology. |
 | `rasterizationState` | Copied rasterization configuration. |
 | `colorBlendState` | Copied logical operation and per-slot blending configuration; enabled logic disables arithmetic blending and requires its native feature. |
-| `dynamicStateFlags` | Allows dynamic blend constants; other dynamic states require their native adapters. |
+| `dynamicStateFlags` | Selects dynamic blend constants, line width, depth bias, depth bounds, stencil masks and references. The selected depth and stencil operations require their pipeline state and native capabilities. |
 | `depthStencilState` | Copied depth/stencil configuration; null disables both tests and depth writes. |
 | `multisampleState` | Copied sample count and alpha-to-coverage state; null selects one sample. |
 | `specializationConstants` | Copied scalar overrides shared by the paired stages; omitted values retain defaults. |

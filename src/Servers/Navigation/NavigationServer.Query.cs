@@ -8,7 +8,7 @@ public sealed partial class NavigationServer
     /// <param name="callback">Optional zero-argument completion invoked on this calling thread after publication, outside gates.</param>
     /// <remarks>If the goal is disconnected or a search limit is reached, the query can rebuild a corridor to a reached polygon.
     /// Its final point projects the original target onto that polygon.
-    /// Search considers arrivals through distinct directed portals of a polygon. It scores travel along the route
+    /// Search considers distinct arrival points, including multiple entries through the same directed portal. It scores travel along the route
     /// including the final segment and charges the entered owner at a transition.
     /// If both endpoints project onto one polygon, the direct segment competes with cheaper detours and wins equal-cost ties.
     /// Search limits preserve the best complete route found in that case.

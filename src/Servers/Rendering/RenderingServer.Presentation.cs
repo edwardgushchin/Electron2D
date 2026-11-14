@@ -51,7 +51,7 @@ public sealed partial class RenderingServer
     {
         region = default;
         if (!_swapBuffers || !ScreenAttachment(view, out var rect, out var id) || !rect.HasArea() ||
-            NativeWindow(id) is not { Visible: true }) return false;
+            NativeWindow(id) is not { Visible: true, NativeDisplay.IsNativePresentationVisible: true }) return false;
         var backend = id == 0 ? _backend : _nativeWindows[id].Backend;
         var requested = new Rect2(rect.Position, rect.Size.Min(size));
         if (!requested.Intersects(new Rect2(Vector2.Zero, backend.GetPixelSize()))) return false;
@@ -101,9 +101,10 @@ public sealed partial class RenderingServer
         _presentationFrames.Clear();
         _presentationFrames.AddRange(_activeFrames);
         _presentationFrames.Sort(static (a, b) => a.Viewport.RenderActivationOrder.CompareTo(b.Viewport.RenderActivationOrder));
-        if (_window.Visible) PresentWindowViewports(_window, 0, _backend, null);
+        if (_window is { Visible: true, NativeDisplay.IsNativePresentationVisible: true })
+            PresentWindowViewports(_window, 0, _backend, null);
         foreach (var pair in _nativeWindows)
-            if (pair.Value.Window.Visible)
+            if (pair.Value.Window.Visible && pair.Value.Display.IsNativePresentationVisible)
                 PresentWindowViewports(pair.Value.Window, pair.Key, pair.Value.Backend, pair.Value.Presentation);
     }
 

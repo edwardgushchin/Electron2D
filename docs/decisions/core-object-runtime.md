@@ -1,6 +1,6 @@
 # Electron2D core object and runtime decisions
 
-Last updated: 2026-10-29
+Last updated: 2026-11-14
 
 Recording Run/RunAsync overloads and GetWriteMoviePath follow [ADR 0109](movie-writing.md#adr-0109): the existing scheduler accepts explicit fixed cadence without realtime jitter/catch-up dropping, and the same lifecycle owns real rendered capture plus synchronous audio. Ordinary and manual frame scheduling retain their contracts.
 
@@ -258,7 +258,7 @@ Managed executable checks cover state transitions, ordering preconditions, callb
 <a id="adr-0016"></a>
 ## ADR 0016: Process-wide Engine runtime and host-driven scheduling
 
-Last updated: 2026-10-29
+Last updated: 2026-11-14
 
 ### Status
 
@@ -313,7 +313,9 @@ APIs that cannot act without an absent domain are not exposed as stored-but-unus
 
 `Engine.RunAsync(Window)` is the nonblocking projection of that same owned window lifecycle. The browser's single-threaded scheduler and UIKit's native main-thread synchronization context retain window ownership while the runtime yields between frames through one reusable periodic timer. Console callers continue to use Run; non-browser asynchronous startup without a main-thread context fails before ownership. Android's internal GameActivity receives a root queued by RunAsync from Application.OnCreate and invokes the same synchronous video-thread lifecycle. The host binding remains internal; examples use platform SDK entry points and public Electron2D operations, not backend bindings. Borrowed resources stay alive until the returned task completes. This adds no separate game loop, renderer or divergent public platform type set.
 
-`RunProject(Window)` and `RunProjectAsync(Window)` project configured project startup onto the same library host under ADRs 0019, 0027 and 0090. They require a nonempty effective `ProjectSettings.MainScene` path or resource UID, sampled after host reservation. The host loads a typed packed scene through the ordinary resource pipeline, appends the instance to the detached root and assigns it as `SceneTree.CurrentScene` before entry. Root and scene then use the same readiness, ownership and failure cleanup as a caller-built hierarchy. Explicit-window and capture entry points retain caller selection. See [project main scene](../components/engine-runtime.md#project-main-scene).
+`RunProject(Window)` and `RunProjectAsync(Window)` project configured project startup onto the same library host under ADRs 0019, 0027 and 0090. After host reservation they sample the effective `ProjectSettings.MainLoopType`. Empty and `SceneTree` select the scene host, which requires a nonempty `MainScene` path or UID. It loads the packed scene, appends it to the detached root and publishes it as `SceneTree.CurrentScene` before entry.
+
+A custom selector names a registered extension class identity or an exact, unambiguous compiled C# global class. The extension factory takes precedence for a registered identity. A concrete nongeneric project MainLoop marked with GlobalClassAttribute can register its exact CLR class name and a static typed factory through Engine.RegisterMainLoop. This process-held startup registration works in trimmed and AOT hosts without source assets. It takes precedence over a file-backed registration for the same CLR type. Distinct global types sharing a name are ambiguous, and duplicate startup registrations reject. With only a file-backed registration, the project script uses its verified source and registered typed factory under ADR 0091. The result must be a concrete `MainLoop`. The window host owns it and publishes it before initialization, drives the same native event pump, clock and callback lanes, then disposes the loop before the window and the loop's owned source asset. This mode drives RenderingServer RIDs on the window and renderer-owned viewports without activating a scene tree or loading `MainScene`. Process or physics stop, accepted native window close and accepted platform back return zero. Explicit-window Run and RunMovie retain caller scene selection. The recording overloads of RunProject and RunProjectAsync use the project selector and [ADR 0109](movie-writing.md#adr-0109). See [configured project startup](../components/engine-runtime.md#project-main-scene).
 
 ### Consequences
 

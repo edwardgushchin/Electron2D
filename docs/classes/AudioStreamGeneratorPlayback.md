@@ -1,6 +1,6 @@
 # AudioStreamGeneratorPlayback
 
-Last updated: 2026-10-02
+Last updated: 2026-11-14
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class AudioStreamGeneratorPlayback : AudioStreamPlaybackResampled` · **Source:** [AudioStreamGeneratorPlayback.cs](../../src/Scene/Resources/AudioStreamGeneratorPlayback.cs).
 
@@ -125,4 +125,4 @@ Marks inactive and drops owned queue storage while holding the shared gate, then
 
 [AudioGeneratorTests](../../tests/Electron2D.Tests/AudioGeneratorTests.cs) verifies FIFO segments/copy isolation/overflow rollback, active clear rejection, finite/lifetime boundaries, independent unit/pitch/rate cubic PCM oracles, persistent silence/recovery, counter/control behavior and concurrent producer/mix/public history reset. Twenty CPU warmup cycles precede 64 active push/mix/query cycles and 64 stopped mixes, both with zero managed bytes. Native dummy FAudio checks actual distinct stereo generated PCM, persistence after underrun, replacement lifetime and 64 active/64 paused passes with zero measured managed bytes/custom allocator calls after explicit warmup. Public host scenarios run twice per Linux Wayland renderer.
 
-[Audio component](../components/audio-playback.md#procedural-generator) and [ADR 0047](../decisions/audio.md#adr-0047) record the integration and initial-history adaptation. Input capture, inherited sample/usage tagging, physical listening, unmeasured native/driver allocations, broader workloads/platforms and scene-file authoring keep their separate exact coverage limits.
+[Audio component](../components/audio-playback.md#procedural-generator) and [ADR 0047](../decisions/audio.md#adr-0047) record the integration and initial-history adaptation. Input capture, native sample support, physical listening, unmeasured native/driver allocations, broader workloads/platforms and scene-file authoring keep their separate exact coverage limits.

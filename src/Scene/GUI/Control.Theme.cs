@@ -252,5 +252,6 @@ public partial class Control
     {
         ThemeOwner.Membership(entering);
         base.OnTreeMembershipChanged(entering);
+        if (Parent is Window { IsDisposed: false, WrapControls: true } window) window.ChildControlsChanged();
     }
 }

@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
 
 ## Scope
 
@@ -21,7 +21,7 @@ Direct registration and contextual, mutable resource catalogs execute through th
 
 Public arrays are independent membership snapshots containing borrowed live references. Internal registration snapshots do not cache locale values: edits, removal, re-registration, clear and disposal remain visible. `GetLoadedLocales` returns a separate string snapshot from main-domain resources, deduplicated ordinally in first registration order. The boolean query reuses prepared locale identities and internal membership snapshots without a result array.
 
-The pinned [domain methods](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/string/translation_domain.cpp#L230-L309) establish exact string comparison, positive-score nonexact membership and distinct loaded locales. Registration-order arrays and the managed stored culture spelling retain Electron2D's accepted typed adaptation. [`TranslationQueryChecks`](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.cs) fixes expected memberships independently of the runtime helper for three domain entry points, then checks ordering, duplicates, snapshots, live locale edits, borrowed retirement, concurrent disposal and retained singular/plural message ranking. Prepared active/missing boolean queries measure zero current-thread managed bytes. Windows x64 GPU and compatibility language menus produce the expected French/Hebrew state pixels and dispose their window and rendering service.
+The pinned [domain methods](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/string/translation_domain.cpp#L230-L309) establish exact string comparison, positive-score nonexact membership and distinct loaded locales. Registration-order arrays and the managed stored culture spelling retain Electron2D's accepted typed adaptation. [`TranslationQueryChecks`](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.cs) fixes expected memberships independently of the runtime helper for three domain entry points, then checks ordering, duplicates, snapshots, live locale edits, borrowed retirement, concurrent disposal and retained singular/plural message ranking. Prepared active/missing boolean queries measure zero current-thread managed bytes. Native language menus disable renderer fallback, assert the actual rendering method, and record the nonempty driver reported by the active renderer before checking French/Hebrew state pixels and teardown. The exercised Windows x64 driver identities and dependency hashes are retained in the verification receipt.
 
 Reproduce with `dotnet run --project tests/TranslationQueries.Consumer -c Release -- managed`, then the built apphost with `gpu OUTPUT` and `compatibility OUTPUT`. Use the matching native closure required by [development preflight](../development-ci.md). The local receipt at `bin/translation-queries/validation.json` records commands, dependency hashes and actual outcomes. No foreign-host, NativeAOT, native-allocation, package-delivery or full product-platform qualification is claimed by this bounded query slice.
 

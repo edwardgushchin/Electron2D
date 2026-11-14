@@ -108,8 +108,9 @@ public sealed partial class DisplayServer
             Feature.NativeDialogFileExtra => driver == "windows" && OperatingSystem.IsWindows() || UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
             Feature.NativeDialogFileMime => UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
             Feature.Hidpi => desktop && GetScreenCountCore() > 0,
+            Feature.NativeIcon => OperatingSystem.IsWindowsVersionAtLeast(10, 0, 14393) && driver == "windows",
             Feature.Icon => driver is "windows" or "x11" or "cocoa" ||
-                driver == "wayland" && _nativeWaylandIconAvailable,
+                driver == "wayland" && (_waylandInput?.HasToplevelIcon == true || _nativeWaylandIconAvailable),
             Feature.ClipboardPrimary => driver is "x11" or "wayland",
             Feature.Ime => desktop,
             _ => false,

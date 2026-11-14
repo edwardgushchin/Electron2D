@@ -2,18 +2,36 @@
 
 [Native Windows capture exclusion](window-capture.md) preserves per-window authoring across packing, duplication and native child recreation, with independent capture verification and explicit unsupported-host behavior.
 
-Last updated: 2026-11-07
+Last updated: 2026-11-14
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 ## Scope and types
 
+Window also owns [accessible name and description](accessibility.md#window-names-and-descriptions) for native and embedded windows. These stored properties follow the automatic scene accessibility policy.
+
 [Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the neutral Node. Window owns the [WindowMode](../classes/WindowMode.md) and [Flags](../classes/WindowFlag.md) identifiers. A consumer configures a root Window and can add scene children directly or start the [configured main scene](engine-runtime.md#project-main-scene). The root window connects scene processing and retained canvas drawing through [RenderingServer](../classes/RenderingServer.md). Broader rendering and GUI APIs remain incomplete.
 
 [ADR 0028](../decisions/rendering.md#adr-0028) selects HLSL and GLSL compilation at project import/build, followed by one SPIR-V validation, reflection and GPU-program path through SDL3-CS/SDL_shadercross. Compatible SPIR-V from third-party compilers uses the same path. Direct language support also requires diagnostics, material parameters, textures, consistent bindings and backend checks. The current [shader/material integration](shader-materials.md) executes typed fragment uniforms and sampled textures on Linux Wayland/Vulkan. The SDL_Renderer fallback rejects arbitrary shaders explicitly.
 
 ## Runtime flow
+
+### Windows native icons
+
+`DisplayServer.SetNativeIcon` reads ordinary files and `res://` overlays through FileAccess. The Win32 driver on Windows 10 version 1607 or later loads the small and large images separately for the window's DPI. The display prepares replacement handles before publishing them, retains the file bytes for future windows and display-scale changes, and destroys its own handles after replacement or native window retirement. `SetIcon` can replace this default with an image. A prior successful `WindowSetIcon` keeps its precedence. Fullscreen exit restores the native icons if SDL reinstalls a prior image.
+
+`ProjectSettings.WindowsNativeIcon` loads the effective `application/config/windows_native_icon` path before scene entry on the Windows display. Empty allows the image default below. This controls the running window icons. Executable and launcher icon resources have their own packaging requirements. Cocoa ICNS remains open.
+
+On Windows x64 the `ELECTRON2D_TEST_NATIVE_ICON=windows` profile reads the actual window handles and draws them through GDI to verify the two selected pixels. It covers feature-override startup and later children, mounted resource replacement, malformed input rollback, an explicit child image, replacing the default with an image, a fullscreen round trip and a queued scale notification. The `unsupported` profile checks the capability and refusal on SDL dummy. Physical transfers between displays with different DPI, Windows x86/ARM64 and release package execution remain unverified.
+
+### Application image icons
+
+`ProjectSettings.ApplicationIcon` reads the effective `application/config/icon` path through Image before scene entry. The path may address a mounted resource. A configured native icon wins on a supported native-icon host. Empty paths and displays without image-icon capability skip image loading. An unreadable or invalid image emits a warning and startup continues. A successful load uses the same display-owned default as `DisplayServer.SetIcon`, including native children opened later and explicit window overrides. Exporter fallback requires the owning packaging integration.
+
+`ELECTRON2D_TEST_NATIVE_ICON=image` verifies root and child icon pixels through Win32 GDI on Windows x64. `x11-image` checks the X11 `_NET_WM_ICON` property under WSLg. Both load the image from a pack using a feature override and start a fresh display with a missing file. `wayland-image` and `dummy-image` verified startup on displays without icon capability. Wayland publication requires a compositor advertising `xdg_toplevel_icon_manager_v1`. Cocoa and package qualification remain open.
+
+### Window startup
 
 Engine reserves its idle state, opens the native window through DisplayServer and initializes RenderingServer before creating SceneTree. On Android, iOS, tvOS and browsers the native surface sets the observed pixel size. Default size-limit calls are omitted on these profiles; nonzero configured limits fail explicitly at startup. Browser startup fills its document. RunAsync yields between frames on the native owner thread and reserves Android startup before its internal activity enters the native video thread. It publishes the tree before ready, drives the native event pump before fixed/process frames, and submits the canvas after scene processing. Cleanup disposes the scene, rendering resources and display in that order. MaxFPS uses unscaled monotonic time; native events continue during bounded waits. SceneTree.Quit requests exit and returns its code from Run or the RunAsync task. Window.CloseRequested precedes the default AutoAcceptQuit decision.
 
@@ -62,6 +80,54 @@ CanvasTransform and GlobalCanvasTransform are runtime, non-stored Viewport descr
 [Canvas animation intervals](canvas-rendering.md#animation-intervals-and-rectangles) use captured scaled process steps and a live typed rollover setting; ordered transform state is replayed alongside retained geometry. The clock is per Engine.Run and also supplies the optional GPU fragment [TIME built-in](shader-materials.md#render-time).
 
 Embedded windows now expose KeepTitleVisible, expanding width from the actual title font and close-button allowance within MaxSize. Native roots reject this enabled policy before resource acquisition because backend title metrics remain unavailable. [Dialogs](dialogs.md) separately clamp their decorated position into the host. Viewport size/texture notifications enumerate delegates without allocating invocation arrays and continue required callbacks after failures.
+
+## Project startup geometry
+
+`Engine.RunProject` and `Engine.RunProjectAsync` sample the [typed window geometry settings](../classes/ProjectSettings.md#project-window-geometry) with active feature overrides before opening the root's native surface. This applies to scene, custom loop and recording hosts. The project viewport size supplies the reference content size and the initial client request. On desktop, each positive client override replaces its corresponding axis; zero falls back to the viewport value. Native surface sizing, authored window limits, and compositor decisions remain authoritative for the observed client size.
+
+The project stretch mode, aspect, scale and fractional/integer choice feed the same layout used for resizing, canvas recording, presentation and input localization. Explicit assignment of a Window property takes precedence for that property, including assignment to its detached default. Packed windows carry those explicit values. Ordinary `Engine.Run` and independent child windows retain their own configuration.
+
+On Windows GPU and Compatibility, the configured scene tests read back the viewport raster and the full native presentation, verify black side margins and localized input, and cover saved feature overrides, single-axis fallback and packed explicit defaults. The recording profile verifies the encoded raster independently of the initial client request. Other target hosts and release packages remain unverified for these settings.
+
+## Project startup placement
+
+Configured project runs apply the [startup placement and mode settings](../classes/ProjectSettings.md#project-window-placement) before the first scene or custom loop callback. The default project placement centers the client on the primary display using full screen bounds. Absolute placement uses signed desktop coordinates. The other-screen policy resolves its nonnegative display index at startup. Pointer and keyboard policies use the corresponding display selectors. The main-window centering value selects the primary screen when launching the root.
+
+An explicitly assigned `Window.InitialPosition`, `Window.Position` or `Window.CurrentScreen` selects the window's own placement policy. An explicit `Window.Mode` independently overrides the project mode. Packed scenes preserve explicitly assigned mode and policy, including assignments equal to the detached defaults. Older archives already containing these values restore them as authored. CurrentScreen remains runtime-only.
+
+Wayland, mobile, TV, browser and the dummy video driver use system placement for project defaults. Explicit Window placement retains its existing platform validation. An unavailable indexed screen on a desktop with global coordinates aborts startup and retires owned services. Window managers can constrain the final placement or deny a mode request.
+
+The Windows GPU and Compatibility project hosts verify signed coordinate persistence and feature overrides, native absolute and centered positions, maximization, packed explicit precedence and complete cleanup on an unavailable screen. The indexed placement check uses display zero. Physical multi-monitor transitions, foreign native backends and release packages remain unverified for these settings.
+
+## Project startup window flags
+
+Configured project runs sample [window flags](../classes/ProjectSettings.md#project-window-flags) with feature overrides before the native configuration and scene entry. The resizable setting inverts the Window.Unresizable flag. Borderless, topmost, no-focus and sharp corners reuse the existing native window operations. Each explicit Window assignment wins independently, including an explicitly stored false in a packed scene. Older archives restore their stored flag values as explicit.
+
+Wayland leaves native top-level stacking and focus under compositor control. The project resize flag is ignored on iOS. Windows 11 applies sharp corners through DWM. Other platforms use their system corner policy. The SDL dummy driver leaves project window flags at their defaults. Direct Window and DisplayServer flag requests retain their existing native capability checks.
+
+Windows GPU and Compatibility checks read back the SDL flags and the Windows 11 corner preference, then verify that explicitly stored false values override the same settings. A dummy Compatibility run exercises startup with configured flags on the headless driver. Wayland, mobile and release-package checks remain separate.
+
+### Native caption buttons
+
+Windows native top-level windows support independent MinimizeDisabled and MaximizeDisabled policies. Configured projects sample the [project caption settings](../classes/ProjectSettings.md#caption-buttons) for the root. Each explicit window flag takes precedence, including a packed false value. Live updates go through the display owner. Windows caption style writes refresh the frame and retain disabled buttons through SDL changes to borders, resizability and fullscreen. Window and DisplayServer flag getters report the accepted requests. IsMaximizeAllowed and WindowIsMaximizeAllowed read the current native maximize style.
+
+Native popups use their fixed caption policy. Other top-level backends retain their default project caption styles and reject unsupported explicit native changes. macOS needs the standard-window-button adapter. X11 needs window-manager function hints and observable restoration. Wayland still needs an observable compositor maximize capability. The Windows GPU and Compatibility project-scene checks inspect actual HWND styles for the root and child, live updates, child recreation, packed false values and frame-mode transitions. Physical caption clicks and other native hosts remain unverified.
+
+## Project startup VSync
+
+Configured project runs request [WindowVSyncMode](../classes/ProjectSettings.md#project-window-vsync) after opening the display and before constructing the renderer. The launch option `--disable-vsync` before the argument separator or a true `MovieWriterDisableVSync` during recording requests Disabled. Otherwise the effective project value applies to configured runs. Explicit scene runs use the ordinary renderer default. The renderer uses its supported-mode fallback, and DisplayServer.WindowGetVSyncMode reports the result. Use DisplayServer.WindowSetVSyncMode to change an active window. Editing the setting applies on the next configured run.
+
+The project-scene profiles exercise setting persistence and validation, startup and live readback on GPU and Compatibility, rendered frames, supported-mode fallback, command-line and recording precedence, and teardown. Physical display timing, foreign hosts and release packages require separate qualification.
+
+## Project screen wakefulness
+
+Configured windowed runs apply [KeepScreenOn](../classes/ProjectSettings.md#project-screen-wakefulness) and its feature overrides before renderer and scene entry. True requests native screen inhibition. False permits normal blanking. Fresh SDL video initialization allows normal blanking, then the caller's SDL hint is restored. The project snapshots the existing policy before its checked request and restores that policy when the display retires, including after scene-entry failure and when another SDL video owner is still active. Explicit scene runs and manual displays keep their ordinary startup policy. Use DisplayServer.ScreenSetKeepOn and ScreenIsKeptOn for live requests and readback.
+
+On native refusal startup reports a warning and retains the prior policy. A failed rollback propagates. The SDL dummy driver skips the startup request. The SDL browser driver lacks an inhibition provider. Browser coverage requires a Screen Wake Lock adapter for permitted, visible secure documents with permission refusal, release and reacquisition across visibility and display lifetimes. The system can still blank the display under its own power policy.
+
+The Windows GPU and Compatibility project-scene profiles check persisted false and feature true, native state before scene entry, and restoration with SDL video retained across successful and failing runs. The dummy Compatibility profile checks headless startup and the live refusal rollback. The direct native test checks accepted live requests. Physical idle behavior, browser, other delivered platform packages and mobile/TV execution remain separate.
+
+## Window content scaling
 
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.
 
@@ -357,7 +423,11 @@ Use SDK 32 to exercise the legacy producer. The runner verifies the emulator ide
 
 ## Main-window native transparency
 
+Configured project startup samples three [typed settings](../classes/ProjectSettings.md#project-window-transparency) with feature overrides. AllowPerPixelTransparency permits the project's WindowTransparent request to select a native alpha surface at creation. ViewportTransparentBackground separately selects transparent-black viewport clearing, including on an opaque native window. An explicit Window.Transparent or TransparentBG assignment takes precedence for that property. Packed scenes preserve explicit false values. Older archives restore stored values as explicit. On Android, turning on the native transparency permission requires an Activity/SurfaceView adapter and currently fails explicitly. Viewport alpha remains independent.
+
 Window.Transparent configured before Engine.Run is passed into native main-window creation, sharing the existing child creation-time alpha policy. Compatibility preserves native alpha, including loading-image backgrounds. Strict GPU startup rejects because the current SDL GPU presentation API cannot present transparent windows; configured RenderingFallback can select Compatibility. Equal live assignments preserve the active flag; changing alpha after native creation rejects without changing authored state.
+
+The Windows project-scene profiles verify the native SDL creation flag, actual viewport alpha and alpha in the retained presentation frame, transparent margins, feature override precedence and packed explicit false values. They also verify strict GPU refusal with cleanup and a rendered Compatibility fallback. OS desktop composition, Android, other targets and release-package qualification remain separate.
 
 BootImageTests verifies real main-window alpha pixels, the native transparency flag, strict GPU failure cleanup, permitted fallback and live-change rollback on software Linux Wayland/X11. This does not establish physical compositor appearance, native GPU alpha or other-platform support.
 
@@ -365,6 +435,33 @@ BootImageTests verifies real main-window alpha pixels, the native transparency f
 
 Window.NonclientArea and NonclientWindowInput preserve mouse reception while an exclusive child blocks ordinary input. The shared window-reception path runs this signal before native suppression or embedded WindowInput. The final blocked viewport cannot consume client input, including direct injection, and clears stale handled state. Stored rectangles, typed inheritance, synchronous borrowed events, failure continuation and retirement share ordinary Window/scene ownership. See [the complete contract and verification](../classes/Window.md#custom-decoration-input).
 
+## Fitting child controls
+
+`Window.ChildControlsChanged()` queues a single size refresh for the current visible scene membership. Calls during the pending refresh coalesce. Hiding the window before delivery skips measurement. Tree exit invalidates the pending request, and reentry and showing a wrapped window schedule a fresh one. Failed measurements preserve geometry and later requests can retry. Direct child Control entry, exit and committed minimum or maximum changes also request fitting, so container-propagated minimums reach their window.
+
+`WrapControls` uses the current child bounds or the derived window's content hook, scales and rounds the minimum, and grows each axis within the existing limits. A smaller minimum preserves the current size. Embedded windows commit through their viewport layout, and native windows use the existing size request and resize notification. On desktop the native lower bound is the greater of the authored minimum and the measured content minimum, capped by each nonzero authored maximum. Window and DisplayServer getters keep the authored bounds. Disabling WrapControls restores the authored lower bound. Scale changes recompute the content minimum. On Wayland the limits also follow the native pixel density. The display owner validates the pair before writing it, orders the SDL setters to avoid conflicting intermediate limits, and attempts to restore the preceding limits and size after a failed update. Platforms with fixed host surfaces retain their host size policy.
+
+The managed profile `ELECTRON2D_TEST_WINDOW_CONTENT_FIT=managed` exercises coalescing, bounds, hide/show, reattachment, failure recovery, owner guards and nested Control changes. The Windows x64 `gpu` and `compatibility` profiles check observed native client geometry and real resized viewport pixels on Vulkan and Direct3D 11. They also read the effective SDL minimum, lower the maximum below the former content minimum, issue a size request below the effective limits, and verify scale and wrap changes. Physical dragging and the changed limit path on other window managers remain unverified.
+
+## Window drawability
+
+`DisplayServer.WindowCanDraw(windowID)` queries a live native window on the display owner. It requires an active screen renderer, automatic rendering enabled, and a shown, non-minimized SDL window. Display-only, dummy and offscreen hosts return false. This query observes eligibility at the time of the call. The window system can still defer the next actual presentation.
+
+`Window.CanDraw()` uses that same query on native windows, including the root of a custom MainLoop. Detached windows have no destination. A visible attached embedded window can compose into its viewport and does not need a separate native identity.
+
+The normal presentation and direct-to-screen paths use the same SDL visibility check. A minimized window can still render its viewport texture and retain pending device screen output. Restoration uses the existing redraw invalidation. Explicit ForceDraw controls presentation separately from automatic rendering policy. Compositor occlusion is independent of this check.
+
+On Windows x64, `ELECTRON2D_TEST_WINDOW_DRAWABILITY=gpu` and `compatibility` exercise actual minimize/restore, child identity retirement, detached and embedded states, disabled automatic rendering, and viewport pixels. Vulkan also verifies that pending device-screen output survives minimization and is consumed after restore. The `headless` profile uses SDL dummy/software to verify false screen eligibility with working viewport readback. Other platform window managers and physical display timing remain unverified.
+
 ## Native device screens
 
 Live main/child native identities select renderer-owned [device screen graphics](local-compute.md#native-screen-drawing). Private screen attachments share GPU device ownership with canvas presentation. The existing native-window mutation guard also protects screen resources during an active command list, including early child hierarchy/disposal validation; failed child retirement preserves the live scene/window state. Tree rollback and renderer shutdown defer incomplete screen attachment cleanup to device teardown. Child hide retires the identity and its private attachments.
+
+
+## Windows system menu
+
+`ProjectSettings.EnableAltSpaceMenu` controls whether Alt+Space opens the Windows system menu. The windowed host samples its effective feature value before scene entry. Editor-hint runs enable the shortcut. The policy applies to the main window and independent native children, including children opened later in the same run. Embedded windows and native popup surfaces follow their existing input paths. The next run samples any project setting changes.
+
+The native window handles the Alt+Space system command using the Windows default menu. Mouse access and unrelated system commands follow the regular window procedure. SDL retains responsibility for modal menu events and keyboard releases. Other display drivers keep their own platform behavior.
+
+The Windows fixture sends the translated system character to real main, child and reopened child windows and observes entry into the native modal menu loop. It checks enabled and disabled sessions, feature override sampling, the editor hint and unrelated system characters. SDL dummy checks the non-Win32 startup path. Physical key input is outside this test.

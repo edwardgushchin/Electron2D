@@ -541,6 +541,18 @@
       "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
     },
     {
+      "godot": "Window::property:accessibility_name",
+      "electron2d": "property:Electron2D.Window.AccessibilityName()",
+      "state": "Implemented",
+      "reason": "ADR 0114: window scene source metadata."
+    },
+    {
+      "godot": "Window::property:accessibility_description",
+      "electron2d": "property:Electron2D.Window.AccessibilityDescription()",
+      "state": "Implemented",
+      "reason": "ADR 0114: window scene source metadata."
+    },
+    {
       "godot": "ProjectSettings::property:accessibility/general/accessibility_support",
       "electron2d": "property:Electron2D.ProjectSettings.AccessibilitySupport()",
       "state": "Implemented",

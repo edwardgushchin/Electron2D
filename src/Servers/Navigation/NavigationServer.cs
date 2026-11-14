@@ -30,7 +30,27 @@ public sealed partial class NavigationServer : ElectronObject
         try { node.EnsurePropertyInspection(); return true; }
         catch (ObjectDisposedException) { return false; }
     }
-    internal RID CreateMap(WorldRuntime? owner = null) { lock (_gate) { var rid = RID.Allocate(); _maps.Add(rid, new(rid, owner)); return rid; } }
+    internal RID CreateMap(WorldRuntime? owner = null)
+    {
+        var map = new NavigationMapState(RID.Allocate(), owner)
+        {
+            UseAsyncIterations = !OperatingSystem.IsBrowser() && ProjectSettings.GetWithOverride(ProjectSettings.NavigationMapAsyncIterations)
+        };
+        if (owner is not null)
+        {
+            var defaults = ProjectSettings.Service.ReadWorldNavigationDefaults();
+            map.CellSize = ClampCellSize(defaults.CellSize);
+            map.EdgeMargin = defaults.EdgeMargin;
+            map.LinkRadius = defaults.LinkRadius;
+            map.RasterScale = ClampRasterScale(defaults.RasterScale);
+            map.UseEdgeConnections = defaults.UseEdgeConnections;
+            map.Active = true;
+        }
+
+        lock (_gate)
+            _maps.Add(map.RID, map);
+        return map.RID;
+    }
     internal RID CreateRegion(Node? node = null) { lock (_gate) { var rid = RID.Allocate(); _regions.Add(rid, new(rid, node)); return rid; } }
     internal void ReleaseWorldMap(RID rid) { lock (_gate) { if (!_maps.TryGetValue(rid, out var released)) return; RetireIteration(released.Pending); released.Pending = null; foreach (var region in _regions.Values) if (region.Map == rid) region.Map = default; foreach (var link in _links.Values) if (link.Map == rid) { link.Map = default; link.Dirty = true; } foreach (var agent in _agents.Values) if (agent.Map == rid) agent.Map = default; foreach (var obstacle in _obstacles.Values) if (obstacle.Map == rid) obstacle.Map = default; _maps.Remove(rid); } }
     internal void ReleaseSceneRegion(RID rid) { lock (_gate) { if (_regions.Remove(rid, out var region)) { try { RetireIteration(region.Pending); } finally { region.Pending = null; Dirty(region.Map); region.Unsubscribe(); } } } }
@@ -124,7 +144,7 @@ internal sealed class NavigationMapState(RID rid, WorldRuntime? owner)
     internal readonly RID RID = rid;
     internal readonly WorldRuntime? Owner = owner;
     internal bool Active, UseEdgeConnections = true, Dirty = true;
-    internal bool UseAsyncIterations = !OperatingSystem.IsBrowser() && ProjectSettings.GetWithOverride(ProjectSettings.NavigationMapAsyncIterations);
+    internal bool UseAsyncIterations;
     internal NavigationServer.IterationWork? Pending;
     internal float EdgeMargin = 1, LinkRadius = 4, CellSize = 1, RasterScale = .1f;
     internal ulong IterationID;

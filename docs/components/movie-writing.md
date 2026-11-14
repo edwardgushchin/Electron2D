@@ -1,6 +1,6 @@
 # Movie writing
 
-Last updated: 2026-10-29
+Last updated: 2026-11-14
 
 Owns non-real-time rendered recording through [MovieWriter](../classes/MovieWriter.md), [MovieRecording](../classes/MovieRecording.md) and internal [PNGMovieWriter](../classes/PNGMovieWriter.md)/[AVIMovieWriter](../classes/AVIMovieWriter.md)/[OGVMovieWriter](../classes/OGVMovieWriter.md). [ADR 0109](../decisions/movie-writing.md#adr-0109) owns the typed protocol and host adaptations.
 
@@ -68,11 +68,19 @@ The OGV slice passes Linux public-package NativeAOT portable/GPU/Compatibility a
 
 The user waived upstream PR submission for this residue allocation fix on 2026-10-15. The local guarded adaptation and before/after sanitizer evidence remain part of this integration. Linux checks do not establish foreign native execution, physical listening, full allocator totals or owner acceptance.
 
+## Recording the configured project
+
+`Engine.RunProject(window, moviePath, fps)` and `RunProjectAsync(window, moviePath, fps)` use the effective project loop and explicit movie path and cadence. Compiled custom loops can use the [source-free startup factory](engine-runtime.md#custom-project-loop) in a NativeAOT application. The optional cadence is 60 FPS. The chosen project scene is loaded and entered with the offline audio graph ready for autoplay. A custom loop renders its root through RenderingServer and can start standalone sample playback in initialization. Window children remain detached from any scene tree in that mode. The writer captures the successful step that requests exit, then ends before loop finalization. A failing step contributes no frame or PCM block. Scene runs retain the scene quit code, and custom-loop runs return zero.
+
+The explicit path and cadence take precedence over the movie profile's file and FPS settings. The host still samples MovieWriterDisableVSync and validates blank paths, nonpositive cadence and async ownership before consuming a window. One-argument project runs remain real-time.
+
+Run `ELECTRON2D_TEST_PROJECT_RECORDING=gpu` or `compatibility` with the Windows x64 Release test host. The Vulkan and Direct3D 11 runs decode PNG pixels and inspect WAV samples for synchronous and asynchronous extension-loop startup, final-state capture, exactly sixty physics ticks and 48,000 audio frames at seven FPS, failed-step cleanup and packed-scene startup. Execution on other hosts and package/AOT qualification remain open.
+
 ## Project movie startup
 
 Engine.RunMovie(Window) and RunMovieAsync(Window) sample MovieWriterFile (empty by default) and MovieWriterFPS (60, positive) with active feature overrides, then execute the same recording lifecycle and built-in encoders. A blank profile path fails before reserving or consuming a window. Existing explicit recording Run/RunAsync path and FPS arguments retain precedence, including their 60 FPS optional default. Ordinary runs remain realtime even when a movie file is configured.
 
-MovieWriterDisableVSync defaults to false. Every movie entry point samples it before startup and propagates the value through reserved/deferred hosts. True retains the Disabled presentation request after native display creation and before renderer creation; unsupported policies use the existing fallback. False preserves the backend's ordinary default. This does not persist a presentation request into the next display lifetime, change project settings or prevent later explicit scene presentation changes. MovieProfileTests covers all codec profiles, settings persistence/overrides/snapshots, explicit precedence, ordinary/async ownership and failure cleanup. Local evidence belongs under ignored bin/movie-profile-validation/2026-10-15; foreign native execution, physical presentation and owner acceptance remain separate gates.
+MovieWriterDisableVSync defaults to false. Every movie entry point samples it before startup and propagates the value through reserved and deferred hosts. True requests Disabled after native display creation and before renderer creation. False leaves the [startup VSync policy](window-runtime.md#project-startup-vsync) in effect. Supported-mode fallback and live presentation changes use DisplayServer. Each request lasts for its display lifetime. MovieProfileTests covers all codec profiles, settings persistence, overrides and snapshots, explicit precedence, ordinary and async ownership, and failure cleanup. Local evidence belongs under ignored bin/movie-profile-validation/2026-10-15. Foreign native execution, physical presentation and owner acceptance remain separate gates.
 
 The project-profile slice passes source GPU/Compatibility and public-package NativeAOT portable/GPU/Compatibility checks, including fresh-process project load/capture; a self-contained JIT GPU consumer also passes. The managed candidate is 0.1.0-movie.20261015.6 over the unchanged native candidate 0.1.0-movie.20261015.4. The current Wayland GPU host falls back to Enabled for a Disabled request; Compatibility applies Disabled. Tests compare startup with the supported result of the same public presentation request. The initial test's unconditional Disabled expectation was corrected to preserve that native fallback contract. Independent decoding verifies exact frame/sample counts for all emitted profile codecs. Android propagation is implemented but profile execution on Android and other foreign hosts is unverified.
 

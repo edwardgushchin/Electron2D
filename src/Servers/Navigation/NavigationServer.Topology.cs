@@ -32,20 +32,23 @@ public sealed partial class NavigationServer
     /// <exception cref="ArgumentOutOfRangeException">The counter identity is unknown.</exception>
     public static int GetProcessInfo(ProcessInfo processInfo)
     { if ((uint)processInfo >= 10) throw new ArgumentOutOfRangeException(nameof(processInfo)); lock (Shared._gate) return Shared._processInfo[(int)processInfo]; }
+    private static float ClampCellSize(float size) => Math.Max(size, .0001f);
+    private static float ClampRasterScale(float scale) => Math.Clamp(scale, .0001f, .1f);
+
     /// <summary>Stages the raster cell size, clamping finite values to at least 0.0001 world units.</summary>
-    /// <param name="map">A live map RID.</param><param name="cellSize">Finite cell size; one initially.</param>
+    /// <param name="map">A live map RID.</param><param name="cellSize">Finite cell size.</param>
     /// <exception cref="ArgumentException">The RID is invalid or the value is nonfinite.</exception>
     public static void MapSetCellSize(RID map, float cellSize)
-    { if (!float.IsFinite(cellSize)) throw new ArgumentOutOfRangeException(nameof(cellSize)); cellSize = Math.Max(cellSize, .0001f); lock (Shared._gate) { var m = Shared.Map(map); if (m.CellSize == cellSize) return; m.CellSize = cellSize; Shared.RasterChanged(m); } }
-    /// <summary>Returns the staged raster cell size.</summary><param name="map">A live map RID.</param><returns>One initially.</returns>
+    { if (!float.IsFinite(cellSize)) throw new ArgumentOutOfRangeException(nameof(cellSize)); cellSize = ClampCellSize(cellSize); lock (Shared._gate) { var m = Shared.Map(map); if (m.CellSize == cellSize) return; m.CellSize = cellSize; Shared.RasterChanged(m); } }
+    /// <summary>Returns the staged raster cell size.</summary><param name="map">A live map RID.</param><returns>The cell size staged for this map.</returns>
     public static float MapGetCellSize(RID map) { lock (Shared._gate) return Shared.Map(map).CellSize; }
     /// <summary>Stages the raster scale, clamping finite values to 0.0001 through 0.1.</summary>
-    /// <param name="map">A live map RID.</param><param name="scale">Finite raster scale; 0.1 initially.</param>
+    /// <param name="map">A live map RID.</param><param name="scale">Finite raster scale.</param>
     /// <remarks>The effective square cell dimension is CellSize multiplied by this scale.</remarks>
     /// <exception cref="ArgumentException">The RID is invalid or the value is nonfinite.</exception>
     public static void MapSetMergeRasterizerCellScale(RID map, float scale)
-    { if (!float.IsFinite(scale)) throw new ArgumentOutOfRangeException(nameof(scale)); scale = Math.Clamp(scale, .0001f, .1f); lock (Shared._gate) { var m = Shared.Map(map); if (m.RasterScale == scale) return; m.RasterScale = scale; Shared.RasterChanged(m); } }
-    /// <summary>Returns the staged raster scale.</summary><param name="map">A live map RID.</param><returns>0.1 initially.</returns>
+    { if (!float.IsFinite(scale)) throw new ArgumentOutOfRangeException(nameof(scale)); scale = ClampRasterScale(scale); lock (Shared._gate) { var m = Shared.Map(map); if (m.RasterScale == scale) return; m.RasterScale = scale; Shared.RasterChanged(m); } }
+    /// <summary>Returns the staged raster scale.</summary><param name="map">A live map RID.</param><returns>The raster scale staged for this map.</returns>
     public static float MapGetMergeRasterizerCellScale(RID map) { lock (Shared._gate) return Shared.Map(map).RasterScale; }
     private void RasterChanged(NavigationMapState map) { map.Dirty = true; foreach (var region in _regions.Values) if (region.Map == map.RID) region.Dirty = true; }
     /// <summary>Returns the region's last published nonzero iteration identity, or zero before its first publication.</summary>

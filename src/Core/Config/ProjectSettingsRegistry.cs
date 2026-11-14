@@ -21,6 +21,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     private ConfigFile _document = new();
     private string _projectRoot;
     private string _userDataRoot;
+    private bool _automaticUserDataRoot;
     private ulong _version = 1;
     private bool _changeNotificationPending;
     private HashSet<string>? _deliveringChanges;
@@ -33,7 +34,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="projectRoot"/> is empty or invalid.</exception>
     /// <exception cref="DirectoryNotFoundException"><paramref name="projectRoot"/> does not exist.</exception>
     public ProjectSettingsRegistry(string projectRoot)
-        : this(projectRoot, GetDefaultUserDataRoot(projectRoot), processWide: false)
+        : this(projectRoot, GetDefaultUserDataRoot(projectRoot), processWide: false, automaticUserDataRoot: true)
     {
     }
 
@@ -48,17 +49,57 @@ public partial class ProjectSettingsRegistry : ElectronObject
     {
     }
 
-    internal ProjectSettingsRegistry(string projectRoot, string userDataRoot, bool processWide)
+    internal ProjectSettingsRegistry(string projectRoot, string userDataRoot, bool processWide, bool automaticUserDataRoot = false)
     {
         (_projectRoot, _userDataRoot) = NormalizeRoots(projectRoot, userDataRoot);
         _processWide = processWide;
+        _automaticUserDataRoot = automaticUserDataRoot;
         AddBuiltInFeatures(_builtInFeatures);
         RegisterInternal(WebPCompressionMethod, isBasic: false);
         RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
+        RegisterInternal(BootSplashBackgroundColor, isBasic: true);
+        RegisterInternal(BootSplashImage, isBasic: true);
+        RegisterInternal(BootSplashMinimumDisplayTimeMSEC, isBasic: false);
+        RegisterInternal(BootSplashShowImage, isBasic: true);
+        RegisterInternal(BootSplashStretchMode, isBasic: true);
+        RegisterInternal(BootSplashUseFilter, isBasic: true);
+        RegisterInternal(ProjectSettingsOverride, isBasic: false);
+        RegisterInternal(DisableProjectSettingsOverride, isBasic: false);
+        RegisterInternal(UseCustomUserDir, isBasic: false);
+        RegisterInternal(CustomUserDirName, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
+        RegisterInternal(ApplicationIcon, isBasic: true);
+        RegisterInternal(WindowsNativeIcon, isBasic: true);
         RegisterInternal(MainScene, isBasic: true);
+        RegisterInternal(ViewportWidth, isBasic: true);
+        RegisterInternal(ViewportHeight, isBasic: true);
+        RegisterInternal(WindowWidthOverride, isBasic: false);
+        RegisterInternal(WindowHeightOverride, isBasic: false);
+        RegisterInternal(WindowStretchMode, isBasic: false);
+        RegisterInternal(WindowInitialMode, isBasic: true);
+        RegisterInternal(WindowInitialPositionType, isBasic: false);
+        RegisterInternal(WindowInitialPosition, isBasic: false);
+        RegisterInternal(WindowInitialScreen, isBasic: false);
+        RegisterInternal(WindowResizable, isBasic: true);
+        RegisterInternal(WindowBorderless, isBasic: true);
+        RegisterInternal(WindowAlwaysOnTop, isBasic: false);
+        RegisterInternal(WindowNoFocus, isBasic: false);
+        RegisterInternal(WindowSharpCorners, isBasic: false);
+        RegisterInternal(WindowMinimizeDisabled, isBasic: false);
+        RegisterInternal(WindowMaximizeDisabled, isBasic: false);
+        RegisterInternal(AllowPerPixelTransparency, isBasic: false);
+        _settings[AllowPerPixelTransparency.Name].RestartIfChanged = true;
+        RegisterInternal(WindowTransparent, isBasic: false);
+        RegisterInternal(ViewportTransparentBackground, isBasic: false);
+        RegisterInternal(WindowVSyncMode, isBasic: true);
+        RegisterInternal(KeepScreenOn, isBasic: false);
+        RegisterInternal(WindowStretchAspect, isBasic: false);
+        RegisterInternal(WindowStretchScale, isBasic: false);
+        RegisterInternal(WindowStretchScaleMode, isBasic: false);
+        RegisterInternal(MainLoopType, isBasic: false);
         RegisterInternal(AutoAcceptQuit, isBasic: true);
         RegisterInternal(QuitOnGoBack, isBasic: true);
+        RegisterInternal(EnableAltSpaceMenu, isBasic: false);
         RegisterInternal(DeltaSmoothing, isBasic: false);
         RegisterInternal(ProjectSettings.AccessibilitySupport, isBasic: false);
         RegisterInternal(AccessibilityDriver, isBasic: false);
@@ -82,6 +123,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(ZstandardLongDistanceMatching, isBasic: false);
         RegisterInternal(ZstandardWindowLogSize, isBasic: false);
         RegisterInternal(PrintFPS, isBasic: false);
+        RegisterInternal(PrintGPUProfile, isBasic: false);
+        RegisterInternal(DebugRedrawColor, isBasic: false);
+        RegisterInternal(DebugRedrawTime, isBasic: false);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(GUIThemeCustom, isBasic: true);
         RegisterInternal(GUIThemeCustomFont, isBasic: true);
@@ -137,6 +181,11 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(UseDebanding, isBasic: false);
         RegisterInternal(LCDSubpixelLayout, isBasic: false);
         _settings[LCDSubpixelLayout.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDefaultCellSize, isBasic: true);
+        RegisterInternal(NavigationDefaultEdgeConnectionMargin, isBasic: true);
+        RegisterInternal(NavigationDefaultLinkConnectionRadius, isBasic: true);
+        RegisterInternal(NavigationMergeRasterizerCellScale, isBasic: false);
+        RegisterInternal(NavigationUseEdgeConnections, isBasic: false);
         RegisterInternal(NavigationMapAsyncIterations, isBasic: false);
         RegisterInternal(NavigationRegionAsyncIterations, isBasic: false);
         RegisterInternal(WorkerPoolMaxThreads, isBasic: false);
@@ -251,6 +300,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(UDSConnectTimeoutSeconds, isBasic: false);
         RegisterInternal(InputUITextSubmit, isBasic: false);
         RegisterInternal(TextEditUndoStackMaxSize, isBasic: false);
+        RegisterInternal(TextEditIdleDetectSeconds, isBasic: false);
         RegisterInternal(InputUITextNewline, isBasic: false);
         RegisterInternal(InputUITextCompletionQuery, isBasic: false);
         RegisterInternal(InputUITextIndent, isBasic: false);
@@ -348,7 +398,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     internal event Action<ProjectSettingsRegistry>? SettingsChangedCore { add => _publisherSettingsChangedCore.Add(value); remove => _publisherSettingsChangedCore.Remove(value); }
     private EventPublisher<Action<ProjectSettingsRegistry>> _publisherSettingsChangedCore;
 
-    internal void ConfigurePathsCore(string projectRoot, string userDataRoot)
+    internal void ConfigurePathsCore(string projectRoot, string userDataRoot, bool automaticUserDataRoot = false)
     {
         var roots = NormalizeRoots(projectRoot, userDataRoot);
         ThrowIfDisposed();
@@ -365,6 +415,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             _document = new ConfigFile();
             _projectRoot = roots.ProjectRoot;
             _userDataRoot = roots.UserDataRoot;
+            _automaticUserDataRoot = automaticUserDataRoot;
             _changedSettings.Clear();
             _dirtySettings.Clear();
             _changeNotificationPending = false;
@@ -465,6 +516,50 @@ public partial class ProjectSettingsRegistry : ElectronObject
                 })
                 .ToArray();
         }
+    }
+
+    internal (float CellSize, float EdgeMargin, float LinkRadius, float RasterScale, bool UseEdgeConnections) ReadWorldNavigationDefaults()
+    {
+        lock (_gate)
+            return (GetWithOverrideCore(NavigationDefaultCellSize),
+                GetWithOverrideCore(NavigationDefaultEdgeConnectionMargin),
+                GetWithOverrideCore(NavigationDefaultLinkConnectionRadius),
+                GetWithOverrideCore(NavigationMergeRasterizerCellScale),
+                GetWithOverrideCore(NavigationUseEdgeConnections));
+    }
+
+    internal (Vector2i ViewportSize, Vector2i ClientOverride, ContentScaleMode Mode, ContentScaleAspect Aspect,
+        float Scale, ContentScaleStretch ScaleMode) ReadProjectWindowContent()
+    {
+        lock (_gate)
+            return (new(GetWithOverrideCore(ViewportWidth), GetWithOverrideCore(ViewportHeight)),
+                new(GetWithOverrideCore(WindowWidthOverride), GetWithOverrideCore(WindowHeightOverride)),
+                GetWithOverrideCore(WindowStretchMode), GetWithOverrideCore(WindowStretchAspect),
+                GetWithOverrideCore(WindowStretchScale), GetWithOverrideCore(WindowStretchScaleMode));
+    }
+
+    internal (WindowMode Mode, Window.WindowInitialPosition Policy, Vector2i Position, int Screen) ReadProjectWindowPlacement()
+    {
+        lock (_gate)
+            return (GetWithOverrideCore(WindowInitialMode), GetWithOverrideCore(WindowInitialPositionType),
+                GetWithOverrideCore(WindowInitialPosition), GetWithOverrideCore(WindowInitialScreen));
+    }
+
+    internal (bool Resizable, bool Borderless, bool AlwaysOnTop, bool NoFocus, bool SharpCorners,
+        bool MinimizeDisabled, bool MaximizeDisabled) ReadProjectWindowChrome()
+    {
+        lock (_gate)
+            return (GetWithOverrideCore(WindowResizable), GetWithOverrideCore(WindowBorderless),
+                GetWithOverrideCore(WindowAlwaysOnTop), GetWithOverrideCore(WindowNoFocus),
+                GetWithOverrideCore(WindowSharpCorners), GetWithOverrideCore(WindowMinimizeDisabled),
+                GetWithOverrideCore(WindowMaximizeDisabled));
+    }
+
+    internal (bool Allowed, bool NativeWindow, bool Viewport) ReadProjectWindowTransparency()
+    {
+        lock (_gate)
+            return (GetWithOverrideCore(AllowPerPixelTransparency), GetWithOverrideCore(WindowTransparent),
+                GetWithOverrideCore(ViewportTransparentBackground));
     }
 
     internal T GetCore<T>(ProjectSetting<T> setting)
@@ -693,22 +788,62 @@ public partial class ProjectSettingsRegistry : ElectronObject
             try
             {
                 var projectFile = IOPath.Combine(_projectRoot, ProjectFileName);
-                var overrideFile = IOPath.Combine(_projectRoot, OverrideFileName);
                 if (!File.Exists(projectFile))
                     throw new FileNotFoundException("The project settings file does not exist.", projectFile);
 
                 using var candidate = new ConfigFile();
                 candidate.Load(projectFile);
-                if (File.Exists(overrideFile))
-                    candidate.Load(overrideFile);
+                if (!ReadLoadPolicy(candidate, DisableProjectSettingsOverride))
+                {
+                    LoadOptionalOverride(candidate, "res://" + OverrideFileName);
+                    if (!ReadLoadPolicy(candidate, DisableProjectSettingsOverride))
+                    {
+                        var path = ReadLoadPolicy(candidate, ProjectSettingsOverride);
+                        if (path.Length != 0)
+                            LoadOptionalOverride(candidate, path, SelectUserDataRoot(candidate));
+                    }
+                }
 
+                var userDataRoot = SelectUserDataRoot(candidate);
                 ReplaceDocumentLocked(candidate.EncodeToText(), clearChanges: true);
+                _userDataRoot = userDataRoot;
             }
             finally
             {
                 _loading = false;
             }
         }
+    }
+
+    private T ReadLoadPolicy<T>(ConfigFile candidate, ProjectSetting<T> setting) where T : notnull
+    {
+        var entry = GetEntry(setting);
+        foreach (var feature in entry.ValidateAndFindOverrides(candidate, EnumerateFullNames(candidate)))
+        {
+            if (_builtInFeatures.Contains(feature) || _customFeatures.Contains(feature))
+                return candidate.GetValue(entry.GetOverrideKey(feature));
+        }
+        return candidate.GetValue(entry.BaseKey, setting.Deserialize(entry.InitialSerialized));
+    }
+
+    private void LoadOptionalOverride(ConfigFile candidate, string path, string? userDataRoot = null)
+    {
+        path = ResourceUID.EnsurePath(path);
+        if (!IOPath.IsPathRooted(path) && !path.Contains("://", StringComparison.Ordinal))
+            path = "res://" + path;
+        var globalPath = userDataRoot is not null && path.StartsWith("user://", StringComparison.Ordinal)
+            ? ResolveWithinRoot(userDataRoot, path[7..])
+            : GlobalizePathCore(path);
+        if (_processWide && path.StartsWith("res://", StringComparison.Ordinal) &&
+            ResourcePacks.Runtime.TryOpen(ToVirtualPath("res://", IOPath.GetRelativePath(_projectRoot, globalPath)), out var packed))
+        {
+            using (packed) candidate.Load(packed);
+            return;
+        }
+
+        try { candidate.Load(globalPath); }
+        catch (FileNotFoundException) { }
+        catch (DirectoryNotFoundException) { }
     }
 
     internal void LoadCustomCore(string path)
@@ -1021,28 +1156,69 @@ public partial class ProjectSettingsRegistry : ElectronObject
         }
     }
 
-    internal static string GetDefaultUserDataRoot(string projectRoot)
+    private string SelectUserDataRoot(ConfigFile candidate)
+    {
+        if (!_automaticUserDataRoot) return _userDataRoot;
+        var applicationName = NormalizeUserDirectoryName(ReadLoadPolicy(candidate, ApplicationName), allowSubdirectories: false);
+        var custom = ReadLoadPolicy(candidate, UseCustomUserDir);
+        if (!custom) return GetDefaultUserDataRoot(_projectRoot, applicationName);
+
+        var directory = NormalizeUserDirectoryName(ReadLoadPolicy(candidate, CustomUserDirName), allowSubdirectories: true);
+        if (directory.Length == 0)
+            directory = applicationName.Length == 0 ? GetProjectFolderName(_projectRoot) : applicationName;
+        var localData = OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ||
+            (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid()) ? OS.GetDataDir() : GetLocalDataDirectory();
+        return AvoidProjectDirectory(_projectRoot, ResolveWithinRoot(localData, directory));
+    }
+
+    private static string NormalizeUserDirectoryName(string name, bool allowSubdirectories)
+    {
+        name = name.Trim();
+        if (allowSubdirectories)
+            return string.Join('/', name.Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
+                .Select(part => part.Trim() == ".." ? "-" : NormalizeUserDirectoryName(part, false))
+                .Where(part => part.Length != 0));
+        if (name is "." or "..") return name.Length == 1 ? "dot" : "twodots";
+        var result = new string(name.Select(character => char.IsControl(character) || ":*?\"<>|/\\".Contains(character)
+            ? '-' : character).ToArray()).TrimEnd('.', ' ');
+        var stem = result.Split('.', 2)[0].TrimEnd();
+        if (stem.Equals("CON", StringComparison.OrdinalIgnoreCase) ||
+            stem.Equals("PRN", StringComparison.OrdinalIgnoreCase) ||
+            stem.Equals("AUX", StringComparison.OrdinalIgnoreCase) ||
+            stem.Equals("NUL", StringComparison.OrdinalIgnoreCase) ||
+            (stem.Length == 4 && (stem.StartsWith("COM", StringComparison.OrdinalIgnoreCase) ||
+                stem.StartsWith("LPT", StringComparison.OrdinalIgnoreCase)) && "123456789¹²³".Contains(stem[3])))
+            result = "_" + result;
+        return result;
+    }
+
+    private static string GetProjectFolderName(string fullRoot)
+    {
+        var name = NormalizeUserDirectoryName(IOPath.GetFileName(IOPath.TrimEndingDirectorySeparator(fullRoot)), allowSubdirectories: false);
+        return name.Length == 0 ? "project" : name;
+    }
+
+    private static string GetLocalDataDirectory()
+    {
+        var localData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return localData.Length == 0 ? IOPath.GetTempPath() : localData;
+    }
+
+    private static string AvoidProjectDirectory(string projectRoot, string userDataRoot) =>
+        PathComparer.Equals(IOPath.TrimEndingDirectorySeparator(projectRoot), IOPath.TrimEndingDirectorySeparator(userDataRoot))
+            ? IOPath.Combine(userDataRoot, "user")
+            : userDataRoot;
+
+    internal static string GetDefaultUserDataRoot(string projectRoot, string applicationName = "")
     {
         ArgumentNullException.ThrowIfNull(projectRoot);
         if (projectRoot.Length == 0)
             throw new ArgumentException("A project root cannot be empty.", nameof(projectRoot));
 
         var fullRoot = IOPath.GetFullPath(projectRoot);
-        var projectName = IOPath.GetFileName(fullRoot.TrimEnd(IOPath.DirectorySeparatorChar, IOPath.AltDirectorySeparatorChar));
-        if (projectName.Length == 0)
-            projectName = "project";
-
-        foreach (var invalid in IOPath.GetInvalidFileNameChars())
-            projectName = projectName.Replace(invalid, '_');
-
-        var localData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        if (localData.Length == 0)
-            localData = IOPath.GetTempPath();
-
-        var userDataRoot = IOPath.Combine(localData, "Electron2D", projectName);
-        return PathComparer.Equals(fullRoot, IOPath.TrimEndingDirectorySeparator(IOPath.GetFullPath(userDataRoot)))
-            ? IOPath.Combine(userDataRoot, "user")
-            : userDataRoot;
+        var name = applicationName.Length == 0 ? GetProjectFolderName(fullRoot) : applicationName;
+        var userDataRoot = IOPath.GetFullPath(IOPath.Combine(GetLocalDataDirectory(), "Electron2D", name));
+        return AvoidProjectDirectory(fullRoot, userDataRoot);
     }
 
     private void MarkChangedLocked(string name)
@@ -1262,10 +1438,28 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MovieWriterOGVAudioQuality) ||
         ReferenceEquals(setting, MovieWriterOGVEncodingSpeed) ||
         ReferenceEquals(setting, MovieWriterOGVKeyframeInterval) ||
+        ReferenceEquals(setting, BootSplashBackgroundColor) ||
+        ReferenceEquals(setting, BootSplashImage) ||
+        ReferenceEquals(setting, BootSplashMinimumDisplayTimeMSEC) ||
+        ReferenceEquals(setting, BootSplashShowImage) ||
+        ReferenceEquals(setting, BootSplashStretchMode) ||
+        ReferenceEquals(setting, BootSplashUseFilter) ||
+        ReferenceEquals(setting, ProjectSettingsOverride) ||
+        ReferenceEquals(setting, DisableProjectSettingsOverride) ||
+        ReferenceEquals(setting, UseCustomUserDir) ||
+        ReferenceEquals(setting, CustomUserDirName) ||
         ReferenceEquals(setting, ApplicationName) ||
+        ReferenceEquals(setting, ApplicationIcon) ||
+        ReferenceEquals(setting, WindowsNativeIcon) ||
+        ReferenceEquals(setting, WindowVSyncMode) ||
+        ReferenceEquals(setting, WindowMinimizeDisabled) ||
+        ReferenceEquals(setting, WindowMaximizeDisabled) ||
+        ReferenceEquals(setting, KeepScreenOn) ||
         ReferenceEquals(setting, MainScene) ||
+        ReferenceEquals(setting, MainLoopType) ||
         ReferenceEquals(setting, AutoAcceptQuit) ||
         ReferenceEquals(setting, QuitOnGoBack) ||
+        ReferenceEquals(setting, EnableAltSpaceMenu) ||
         ReferenceEquals(setting, DeltaSmoothing) ||
         ReferenceEquals(setting, ProjectSettings.AccessibilitySupport) ||
         ReferenceEquals(setting, AccessibilityDriver) ||
@@ -1286,6 +1480,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, ZstandardLongDistanceMatching) ||
         ReferenceEquals(setting, ZstandardWindowLogSize) ||
         ReferenceEquals(setting, PrintFPS) ||
+        ReferenceEquals(setting, PrintGPUProfile) ||
+        ReferenceEquals(setting, DebugRedrawColor) ||
+        ReferenceEquals(setting, DebugRedrawTime) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||
         ReferenceEquals(setting, AudioGeneralTextToSpeech) ||

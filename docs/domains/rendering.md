@@ -1,3 +1,5 @@
+[Canvas redraw diagnostics](../components/canvas-rendering.md#canvas-redraw-diagnostic) highlight scene and server item bounds over the finished viewport. Accumulating canvas targets preserve their clean render history on GPU and Compatibility.
+
 [Canvas shadow atlas](../components/canvas-shadow-atlas.md) supplies real session/project resolution, point and directional GPU depth rows, shared fixed/programmed sampling and target-owned retirement.
 
 The complete [blend factor family](../components/blend-factors.md) executes constant-alpha and dual-source equations with copied pipeline state, sparse logical locations and independent optional feature negotiation.
@@ -10,7 +12,7 @@ The complete [blend factor family](../components/blend-factors.md) executes cons
 
 [Built-in rendering textures](../components/rendering-builtin-textures.md) expose lazy RGB8 test/white RID sources through the ordinary native canvas/shader/cache lifetime.
 
-[Viewport render time](../components/viewport-render-time.md) measures completed native canvas CPU/GPU durations and common CPU frame setup through RenderingServer, with independent per-viewport lifetime and explicit backend limits.
+[Viewport render time](../components/viewport-render-time.md) measures completed native canvas CPU/GPU durations and common CPU frame setup through RenderingServer, with independent per-viewport lifetime and explicit backend limits. [GPU frame profiling](../components/gpu-timestamps.md#window-frame-profiling) reports renderer-queue stage durations through the normal diagnostics stream.
 
 Windows Direct3D 12 creates canvas and device graphics pipelines with private DXIL stage linkage for sparse fragment inputs. See [Direct3D 12 stage linkage](../components/shader-materials.md#direct3d-12-stage-linkage).
 
@@ -76,7 +78,13 @@ RenderingDevice [native resource labels](../components/local-compute.md#native-r
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
+
+[Dynamic raster state](../components/depth-stencil-state.md#dynamic-raster-state) changes line width, depth bias and stored-depth bounds within a Vulkan draw list.
+
+[Dynamic stencil state](../components/depth-stencil-state.md#dynamic-stencil-state) changes front/back compare masks, write masks and references within a Vulkan draw list.
+
+[Canvas redraw diagnostics](../components/canvas-rendering.md#canvas-redraw-diagnostic) use the shared canvas submission path to fade highlights over freshly recorded command bounds.
 
 [Viewport mipmap bias](../components/viewport-mipmap-bias.md) controls next-image mip selection through scene, RenderingServer and project policies while preserving authored sampler and target identities.
 

@@ -77,7 +77,7 @@ public partial class TextEdit
     /// <summary>Gets or sets draw tabs for the multiline editor.</summary><value>false initially.</value>
     public bool DrawTabs { get { CheckTextEdit(); return _drawTabs; } set { EnsureTextMutable(); _drawTabs = value; InvalidateTextLayout(); } }
     /// <summary>Gets or sets editable for the multiline editor.</summary><value>true initially.</value>
-    public bool Editable { get { CheckTextEdit(); return _editable; } set { EnsureTextMutable(); _editable = value; if (_highlighter is { IsDisposed: false }) _highlighter.ClearHighlightingCache(); InvalidateTextLayout(); if (!value) CancelIME(); ActivateIME(value && HasFocus()); PrepareMenu(); } }
+    public bool Editable { get { CheckTextEdit(); return _editable; } set { EnsureTextMutable(); if (_editable != value) EndInteractiveAction(); _editable = value; if (_highlighter is { IsDisposed: false }) _highlighter.ClearHighlightingCache(); InvalidateTextLayout(); if (!value) CancelIME(); ActivateIME(value && HasFocus()); PrepareMenu(); } }
     /// <summary>Gets or sets empty selection clipboard enabled for the multiline editor.</summary><value>true initially.</value>
     public bool EmptySelectionClipboardEnabled { get { CheckTextEdit(); return _emptySelectionClipboardEnabled; } set { EnsureTextMutable(); _emptySelectionClipboardEnabled = value; InvalidateTextLayout(); } }
     /// <summary>Gets or sets highlight all occurrences for the multiline editor.</summary><value>false initially.</value>

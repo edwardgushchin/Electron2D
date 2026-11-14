@@ -113,9 +113,9 @@ public sealed partial class RenderingServer
         return true;
     }
 
-    private CanvasEnvironment? SelectEnvironment(Viewport viewport, SceneTree tree)
+    private CanvasEnvironment? SelectEnvironment(Viewport viewport, SceneTree? tree)
     {
-        if ((!tree.HasWorldEnvironment && _worldEnvironmentOverrides is null) || !EnvironmentEnabled(viewport) ||
+        if ((tree?.HasWorldEnvironment != true && _worldEnvironmentOverrides is null) || !EnvironmentEnabled(viewport) ||
             viewport.FindWorld() is not { } world) return null;
         var runtime = world.Runtime;
         if (_worldEnvironmentOverrides is { } bindings && bindings.TryGetValue(runtime, out var reference))
@@ -123,7 +123,7 @@ public sealed partial class RenderingServer
             if (reference.TryGetTarget(out var environment) && !environment.IsDisposed) return environment;
             bindings.Remove(runtime);
         }
-        return tree.SelectWorldEnvironment(runtime)?.LiveEnvironment;
+        return tree?.SelectWorldEnvironment(runtime)?.LiveEnvironment;
     }
 
     private CanvasPostProcess SelectPostProcess(Viewport viewport, CanvasPostProcess settings)

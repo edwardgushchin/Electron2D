@@ -1,8 +1,12 @@
 # Project settings component
 
-Last updated: 2026-10-26
+Last updated: 2026-11-14
 
 The [verbose stdout setting](diagnostics.md#verbose-stdout) uses the ordinary typed setting and feature override flow. Engine startup samples it for each lifecycle. The [frame-rate settings](engine-runtime.md#frame-rate-settings) use the same flow for window pacing and rate diagnostics.
+
+The permanent nonbasic `MainLoopType` string selects the scene host or a registered custom loop for [configured project startup](engine-runtime.md#project-main-scene). Its default is `SceneTree`, and every independent registry supports the same validation, persistence and feature overrides.
+
+The permanent nonbasic `DebugRedrawColor` and `DebugRedrawTime` keys supply the startup values of the [canvas redraw diagnostic](canvas-rendering.md#canvas-redraw-diagnostic), including in independent registries and feature overrides.
 
 ## Scope
 
@@ -32,6 +36,12 @@ The input action records are defined by the [Input runtime](input-runtime.md); t
 
 ## Runtime flow
 
+The [Windows system menu shortcut](window-runtime.md#windows-system-menu) samples its effective typed setting at window startup.
+
+The [project boot splash](boot-images.md#project-startup-splash) consumes six typed settings at native project startup.
+
+`ApplicationIcon` and `WindowsNativeIcon` follow the normal typed startup and feature-override path and accept mounted project files. [Application image icons](window-runtime.md#application-image-icons) · [Windows native icons](window-runtime.md#windows-native-icons)
+
 1. The component creates built-in application, timing, rendering, six GUI-focus input, two locale and nine pseudolocalization definitions and registers them in each registry.
 2. Domains register additional `ProjectSetting<T>` definitions. A definition immediately claims and validates compatible values that may already exist in the loaded document.
 3. Typed writes snapshot through the configuration serializer, validate, commit under the registry lock, mark the base name unsaved, increment `Version`, and queue one change notification.
@@ -39,6 +49,22 @@ The input action records are defined by the [Input runtime](input-runtime.md); t
 5. The host may call `FlushChanges`; the process Engine does this after each successful process frame.
 6. Loads build and validate a complete temporary document before replacement. Saves apply metadata order and delegate atomic file replacement to `ConfigFile`.
 7. Virtual paths resolve lexically against immutable snapshots of the current project/user roots; `DirAccess` can capture both roots under one lock for a two-path operation.
+
+## Automatic override files
+
+Call `ProjectSettings.Load()` after configuring the project and user roots and before starting the project. `ProjectSettingsRegistry.Load()` applies the same policy against that registry's roots. The loader builds a candidate from `project.e2d`, then reads `res://override.cfg`, then the file named by `ProjectSettingsOverride`. The last file has precedence for matching keys. The configured path is selected once from the first two layers, including the first active feature override. A relative name resolves beneath the project root. Absolute paths, `res://`, `user://` and registered UIDs use the existing path resolver. Automatic resource paths in the process registry see mounted files. Independent registries use their own directory roots.
+
+The effective `DisableProjectSettingsOverride` in the main document skips both layers. The conventional layer can also disable the configured layer. An empty path or missing optional file leaves earlier settings in effect. An unreadable or invalid layer fails the load and preserves the existing settings and pending changes. The typed document loader keeps the final validation and commit atomic. Explicit `LoadCustom` is available independently of the automatic policy.
+
+The registry fixture covers layer precedence, feature selection, rollback, missing files, lexical path checks and a packed override. The Windows project host fixture observes the scene and its pixels selected by a configured `user://` file.
+
+## User-data directory
+
+`ProjectSettings.ConfigurePaths(projectRoot)` and the single-path registry constructor select the automatic `user://` root. Use the two-path constructor or overload to give the host's root precedence. Before loading, the automatic root uses the project's folder name beneath the Electron2D directory in local application data. A successful `Load()` uses the effective application name there. An empty application name keeps the folder-name fallback.
+
+Set `UseCustomUserDir` to place the directory under the platform's user data location. On Windows, macOS and desktop Linux this is `OS.GetDataDir()`. Other hosts use the existing local application-data fallback. `CustomUserDirName` can name nested directories and defaults to the application name, with the same folder-name fallback. Separators, unsafe characters, parent components, trailing periods and reserved names are normalized before joining the platform root.
+
+A configured `user://` override is resolved once against the root selected from the main document and conventional override. The final merged document can choose a different root. Changes to settings are applied at the next successful project load. A failed load preserves both the previous document and root. Resolving the path creates no directories or files. `OS.GetUserDataDir()`, new `FileAccess` operations and new `DirAccess` handles see the selected root. An existing directory handle keeps its original root.
 
 ## Dependencies
 
@@ -71,7 +97,7 @@ Four typed `physics/2d/default_*` settings supply the new physics world's gravit
 
 ## Exclusions and deferred integration
 
-- Global script-class discovery requires a scripting domain.
+- [Global script-class discovery](scripting.md#global-class-discovery) uses the registered compiled C# catalog.
 - Resource pack loading and ZIP-backed `res://` use the existing file-access/resource-pack layer; locale selection shares that input route. Import/editor metadata remains separate.
 - Editor-specific hints, override layers, hidden-prefix UI, and settings dialogs require an editor.
 - Rendering registers backend selection, startup fallback, clear color and the implemented canvas mip/anisotropy defaults with its executable canvas integration. Four 2D physics world defaults are implemented; remaining settings enter with their owning input, audio, networking, physics or other domain capabilities. Three-dimensional settings will never be added.

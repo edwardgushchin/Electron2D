@@ -5,19 +5,21 @@ public sealed partial class RenderingServer
     private List<Action> _queuedFrameCallbacks = [];
     private List<Action> _completedFrameCallbacks = [];
 
-    /// <summary>Draws the active native scene immediately, including eligible offscreen viewports.</summary>
+    /// <summary>Draws the active native canvas immediately, including eligible offscreen viewports.</summary>
     /// <param name="swapBuffers">Presents the root window when true; false still renders its texture.</param>
     /// <param name="frameStep">Finite nonnegative increment of the rendering clock, independent of scene processing.</param>
     /// <remarks>Runs on the native owner thread and bypasses RenderLoopEnabled. It does not advance process or physics callbacks.
     /// Uses the same retained canvas, materials, compute/readback and visibility pipeline as an automatic frame.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The rendering step is negative, nonfinite or overflows the clock.</exception>
-    /// <exception cref="InvalidOperationException">No active native scene exists, the caller is off-owner or a frame is already executing.</exception>
+    /// <exception cref="InvalidOperationException">No active native run exists, the caller is off-owner or a frame is already executing.</exception>
     public static void ForceDraw(bool swapBuffers = true, double frameStep = 0d)
     {
         var server = RequireService();
         server.EnsureOwner();
         if (!double.IsFinite(frameStep) || frameStep < 0 || !double.IsFinite(server.CanvasTime + frameStep)) throw new ArgumentOutOfRangeException(nameof(frameStep));
-        var tree = server._window.Tree ?? throw new InvalidOperationException("The native window has no active scene tree.");
+        var tree = server._window.Tree;
+        if (tree is null && !server._window.HostsCustomMainLoop)
+            throw new InvalidOperationException("The native window has no active main loop.");
         server.Render(tree, frameStep, force: true, swapBuffers);
     }
 

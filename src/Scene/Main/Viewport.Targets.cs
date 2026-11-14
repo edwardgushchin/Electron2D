@@ -38,7 +38,7 @@ public abstract partial class Viewport
     internal RenderingServer? RenderingOwner;
     internal event Action? TextureSizeUpdated { add => _publisherTextureSizeUpdated.Add(value); remove => _publisherTextureSizeUpdated.Remove(value); }
     private EventPublisher<Action> _publisherTextureSizeUpdated;
-    private bool _transparent;
+    private bool _transparent, _transparentAssigned;
     internal virtual Transform StretchTransform => Transform.Identity;
     internal virtual Transform WindowTransform => Transform.Identity;
     internal Transform RenderFinalTransform => StretchTransform * GlobalCanvasTransform;
@@ -53,10 +53,17 @@ public abstract partial class Viewport
     public ViewportTexture GetTexture() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _texture is { IsDisposed: false } ? _texture : _texture = new(this); }
     /// <summary>Gets or sets whether this viewport clears to transparent black instead of opaque clear color.</summary>
     /// <value>False initially.</value>
-    /// <remarks>Never clear retains prior pixels; changing this policy alone does not erase them.</remarks>
+    /// <remarks>Configured project startup can supply this value for an unassigned root.
+    /// Never clear retains prior pixels; changing this policy alone does not erase them.</remarks>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     /// <exception cref="InvalidOperationException">Mutation occurs off-owner or during native submission.</exception>
-    public bool TransparentBG { get { ThrowIfDisposed(); return _transparent; } set { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); _transparent = value; } }
+    public bool TransparentBG { get { ThrowIfDisposed(); return _transparent; } set { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); _transparent = value; _transparentAssigned = true; } }
+
+    internal void ApplyProjectViewportTransparency(bool enabled)
+    {
+        if (!_transparentAssigned)
+            _transparent = enabled;
+    }
     internal void TextureSizeChanged()
     {
         List<Exception>? errors = null;
@@ -67,5 +74,8 @@ public abstract partial class Viewport
     private static void InvalidateRecording(Node node)
     { if (node is CanvasItem item) item.QueueRedraw(); for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) { var child = node.GetChild(i, includeInternal: true); if (child is not Viewport) InvalidateRecording(child); } }
     private static readonly PropertyDescriptor[] TargetProperties =
-    [new PropertyDescriptor<Viewport, bool>(nameof(TransparentBG), n => n.TransparentBG, (n, v) => n.TransparentBG = v, _ => false, stored: true)];
+    [
+        new PropertyDescriptor<Viewport, bool>(nameof(TransparentBG), n => n.TransparentBG, (n, v) => n.TransparentBG = v, _ => false, stored: true)
+        { StoreCondition = n => n._transparentAssigned }
+    ];
 }

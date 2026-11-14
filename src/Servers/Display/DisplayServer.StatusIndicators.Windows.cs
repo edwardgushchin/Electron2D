@@ -67,13 +67,13 @@ public sealed partial class DisplayServer
         var window = WindowGetNativeHandleCore(HandleType.WindowHandle); var taskbar = StatusWin.RegisterWindowMessage("TaskbarCreated");
         if (taskbar == 0) throw StatusFailure("observe notification-area recovery");
         var pin = GCHandle.Alloc(this);
-        if (StatusWin.SetWindowSubclass(window, &StatusSubclass, StatusSubclassID, (nuint)GCHandle.ToIntPtr(pin)) == 0) { pin.Free(); throw StatusFailure("observe status-indicator input"); }
+        if (WindowSubclassNative.SetWindowSubclass(window, &StatusSubclass, StatusSubclassID, (nuint)GCHandle.ToIntPtr(pin)) == 0) { pin.Free(); throw StatusFailure("observe status-indicator input"); }
         _statusPin = pin; _statusWindow = window; _taskbarCreated = taskbar;
     }
     private unsafe void ReleaseStatusHook()
     {
         if (_statusWindow == 0) return;
-        if (StatusWin.RemoveWindowSubclass(_statusWindow, &StatusSubclass, StatusSubclassID) != 0) { if (_statusPin.IsAllocated) _statusPin.Free(); _statusPin = default; _statusWindow = 0; }
+        if (WindowSubclassNative.RemoveWindowSubclass(_statusWindow, &StatusSubclass, StatusSubclassID) != 0) { if (_statusPin.IsAllocated) _statusPin.Free(); _statusPin = default; _statusWindow = 0; }
     }
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
     private static unsafe nint StatusSubclass(nint window, uint message, nuint wParam, nint lParam, nuint id, nuint data)
@@ -81,7 +81,7 @@ public sealed partial class DisplayServer
         var owner = (DisplayServer)GCHandle.FromIntPtr((nint)data).Target!;
         if (message == 0x82)
         {
-            var result = StatusWin.DefSubclassProc(window, message, wParam, lParam); GCHandle.FromIntPtr((nint)data).Free(); owner._statusPin = default; owner._statusWindow = 0; return result;
+            var result = WindowSubclassNative.DefSubclassProc(window, message, wParam, lParam); GCHandle.FromIntPtr((nint)data).Free(); owner._statusPin = default; owner._statusWindow = 0; return result;
         }
         try
         {
@@ -94,7 +94,7 @@ public sealed partial class DisplayServer
             }
         }
         catch (Exception error) { owner._statusNativeFailure ??= error; }
-        return StatusWin.DefSubclassProc(window, message, wParam, lParam);
+        return WindowSubclassNative.DefSubclassProc(window, message, wParam, lParam);
     }
     private static unsafe partial class StatusWin
     {
@@ -108,8 +108,5 @@ public sealed partial class DisplayServer
         [LibraryImport("gdi32.dll", EntryPoint = "GetObjectW")][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial int GetObject(nint value, int size, out BitmapDescription bitmap);
         [LibraryImport("gdi32.dll")][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial nint CreateBitmap(int width, int height, uint planes, uint bits, nint pixels);
         [LibraryImport("gdi32.dll")][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial int DeleteObject(nint value);
-        [LibraryImport("comctl32.dll")][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial int SetWindowSubclass(nint window, delegate* unmanaged[Stdcall]<nint, uint, nuint, nint, nuint, nuint, nint> callback, nuint id, nuint data);
-        [LibraryImport("comctl32.dll")][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial int RemoveWindowSubclass(nint window, delegate* unmanaged[Stdcall]<nint, uint, nuint, nint, nuint, nuint, nint> callback, nuint id);
-        [LibraryImport("comctl32.dll")][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial nint DefSubclassProc(nint window, uint message, nuint wParam, nint lParam);
     }
 }

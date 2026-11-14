@@ -78,7 +78,12 @@ public sealed partial class RenderingServer
     internal Rect2 DebugCanvasItemGetRectCore(RID rid) { EnsureOwner(); var item = RenderingCanvasItemRegistry.Resolve(rid); CheckCanvasItemOwner(item); return item.RenderBounds(); }
     internal void CanvasItemSetDefaultTextureFilterCore(RID item, TextureFilter filter) { if ((uint)filter >= (uint)TextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(filter)); Change(item, out _).Filter = filter; }
     internal void CanvasItemSetDefaultTextureRepeatCore(RID item, TextureRepeat repeat) { if ((uint)repeat >= (uint)TextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(repeat)); Change(item, out _).Repeat = repeat; }
-    internal void CanvasItemClearCore(RID rid) { var state = Change(rid, out var item); item.ServerCommandTarget(state).ClearServerCommands(); }
+    internal void CanvasItemClearCore(RID rid)
+    {
+        var state = Change(rid, out var item);
+        item.ServerCommandTarget(state).ClearServerCommands();
+        MarkCanvasRedraw(item);
+    }
     internal void CanvasItemAddMeshCore(RID rid, RID mesh, Transform transform, Color modulate, RID texture)
     {
         var state = Change(rid, out var item); var geometry = RenderingMeshRegistry.Resolve(mesh); var image = texture.IsValid() ? RenderingTextureRegistry.Resolve(texture) : null;
@@ -126,10 +131,11 @@ public sealed partial class RenderingServer
         foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && ReferenceEquals(item.ServerState?.Owner, this)) { item.ServerState?.VisibilityNotifier?.Cancel(); item.ServerState?.Commands?.Dispose(); item.ServerState = null; }
         _serverSceneItems.Clear(); _capturedCanvasItems.Clear(); _canvasVisibilityItems.Clear(); _canvasVisibilityChanges.Clear();
     }
-    private void CaptureCanvasScene(Node root)
+    private void CaptureCanvasScene(SceneTree? tree)
     {
-        _capturedCanvasItems.Clear(); Capture(root);
+        _capturedCanvasItems.Clear();
+        if (tree is not null) Capture(tree.Root);
         foreach (var item in _ownedCanvasItems) if (!item.IsDisposed && _capturedCanvasItems.Add(item)) _nodes.Add(item);
-        foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && !ReferenceEquals(item.Tree, root.Tree) && _capturedCanvasItems.Add(item) && item.ServerState is { ParentAssigned: true }) _nodes.Add(item);
+        foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && (tree is null || !ReferenceEquals(item.Tree, tree)) && _capturedCanvasItems.Add(item) && item.ServerState is { ParentAssigned: true }) _nodes.Add(item);
     }
 }

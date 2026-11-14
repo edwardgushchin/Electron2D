@@ -291,7 +291,9 @@ public abstract partial class CanvasItem
     /// Transform and interval state start fresh on each replay.</remarks>
     protected virtual void OnDraw() { }
 
-    internal void PrepareCanvas()
+    internal void PrepareCanvas() => PrepareCanvas(null);
+
+    internal void PrepareCanvas(RenderingServer? renderer)
     {
         ValidateNodeMutation();
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
@@ -319,6 +321,7 @@ public abstract partial class CanvasItem
             BeginEventEmission(_publisherDraw.Handlers)?.Invoke(this);
             if (!IsDisposed) OnDraw();
             if (!IsDisposed) ScriptCallbacks?.Draw?.Invoke();
+            if (!IsDisposed) renderer?.MarkCanvasRedraw(this);
         }
         catch
         {

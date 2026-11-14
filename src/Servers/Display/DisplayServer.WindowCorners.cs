@@ -8,9 +8,11 @@ public sealed partial class DisplayServer
     private const int DWMCornerDefault = 0;
     private const int DWMCornerDoNotRound = 1;
 
+    internal bool SupportsSharpCorners => _videoDriver == "windows" && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000);
+
     private nint CornerWindow()
     {
-        if (_videoDriver != "windows" || !OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+        if (!SupportsSharpCorners)
             throw new NotSupportedException("Sharp native window corners require the Windows 11 display adapter.");
         return WindowGetNativeHandleCore(HandleType.WindowHandle);
     }

@@ -3,12 +3,14 @@ namespace Electron2D;
 public partial class Window
 {
     private WindowMode _mode;
-    private uint _flags;
+    private bool _modeAssigned;
+    private uint _flags, _assignedFlags;
     private int? _currentScreen;
 
     /// <summary>Gets the observed native mode, or configures a presentation-mode request.</summary>
     /// <value>Windowed by default; the configured request while detached.</value>
-    /// <remarks>Native changes may be asynchronous or denied by the window manager. Wayland exclusive fullscreen
+    /// <remarks>A configured project supplies the startup mode when the window has no explicit mode.
+    /// Native changes may be asynchronous or denied by the window manager. Wayland exclusive fullscreen
     /// becomes ordinary fullscreen; restoring from Wayland minimization is not guaranteed.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner, a transient window requests fullscreen, or the native request fails.</exception>
@@ -23,6 +25,7 @@ public partial class Window
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown window mode.");
             _display?.WindowSetModeCore(value);
             _mode = value;
+            _modeAssigned = true;
         }
     }
 
@@ -103,7 +106,8 @@ public partial class Window
     /// <param name="flag">One individual policy identifier.</param>
     /// <param name="enabled">The desired state.</param>
     /// <remarks>An unchanged request does nothing. Failed native requests do not commit the configured policy.
-    /// Detached configuration is checked against platform capabilities during Engine.Run startup.</remarks>
+    /// Detached configuration is checked against platform capabilities during Engine.Run startup.
+    /// Explicit assignments to project-configurable flags take precedence at configured project startup.</remarks>
     /// <exception cref="IOException">Changing a native window policy fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The identifier is undefined or Max.</exception>
     /// <exception cref="NotSupportedException">The policy has no executable integration or the native platform rejects it.</exception>
@@ -112,12 +116,18 @@ public partial class Window
     public void SetFlag(WindowFlag flag, bool enabled)
     {
         EnsureMutable();
+        var bit = 1u << (int)flag;
         if (GetFlag(flag) == enabled)
+        {
+            if (flag is WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled && _display?.SupportsCaptionButtons == true)
+                _display.WindowSetFlagCore(flag, enabled);
+            _assignedFlags |= bit;
             return;
+        }
         if (flag == WindowFlag.Popup && IsInsideTree && Visible) throw new InvalidOperationException("Popup policy cannot change while visible.");
         if (flag == WindowFlag.PopupWmHint && _display is not null) throw new InvalidOperationException("Hide the window before changing its native popup role.");
         _display?.WindowSetFlagCore(flag, enabled);
-        var bit = 1u << (int)flag;
+        _assignedFlags |= bit;
         _flags = enabled ? _flags | bit : _flags & ~bit;
         if (flag == WindowFlag.Borderless && (_keepTitleVisible || ClampToEmbedder)) UpdateEmbeddedContents();
         if (flag == WindowFlag.Borderless) Tree?.CancelEmbeddedDecoration(this);
@@ -125,8 +135,8 @@ public partial class Window
         QueueEmbeddedRedraw();
     }
 
-    /// <summary>Reports whether the current resize policy permits native maximization.</summary>
-    /// <returns>Whether resizing is allowed; the compositor may impose further restrictions.</returns>
+    /// <summary>Reports whether the current native frame or detached window policy permits user maximization.</summary>
+    /// <returns>On Windows, whether the native maximize style is present. Other active backends report the resize policy.</returns>
     /// <exception cref="InvalidOperationException">An active window is accessed off-thread.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowedCore() ?? (!Unresizable && !MaximizeDisabled); }
@@ -229,6 +239,29 @@ public partial class Window
     /// callback failures and releases its resources after the queue drains.</remarks>
     public event Action<IReadOnlyList<string>>? FilesDropped { add => _publisherFilesDropped.Add(value); remove => _publisherFilesDropped.Remove(value); }
     private EventPublisher<Action<IReadOnlyList<string>>> _publisherFilesDropped;
+
+    private bool IsFlagAssigned(WindowFlag flag) => (_assignedFlags & (1u << (int)flag)) != 0;
+
+    private void ApplyProjectChrome(DisplayServer display)
+    {
+        if (display.IsHeadless)
+            return;
+
+        var settings = ProjectSettings.Service.ReadProjectWindowChrome();
+        ApplyProjectFlag(WindowFlag.ResizeDisabled, !settings.Resizable && !OperatingSystem.IsIOS());
+        ApplyProjectFlag(WindowFlag.Borderless, settings.Borderless);
+        ApplyProjectFlag(WindowFlag.AlwaysOnTop, settings.AlwaysOnTop && display.SupportsTopLevelFocusAndStacking);
+        ApplyProjectFlag(WindowFlag.NoFocus, settings.NoFocus && display.SupportsTopLevelFocusAndStacking);
+        ApplyProjectFlag(WindowFlag.SharpCorners, settings.SharpCorners && display.SupportsSharpCorners);
+        ApplyProjectFlag(WindowFlag.MinimizeDisabled, settings.MinimizeDisabled && display.SupportsCaptionButtons);
+        ApplyProjectFlag(WindowFlag.MaximizeDisabled, settings.MaximizeDisabled && display.SupportsCaptionButtons);
+    }
+
+    private void ApplyProjectFlag(WindowFlag flag, bool enabled)
+    {
+        if (enabled && !IsFlagAssigned(flag))
+            _flags |= 1u << (int)flag;
+    }
 
     private void ValidateFlag(WindowFlag flag)
     {
