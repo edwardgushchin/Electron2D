@@ -107,7 +107,7 @@ internal static partial class GraphChecks
                 if (column == 4) _firstNormal = image!;
             }
             _alternateNormal = MakeImage(new(.8f, .1f, .1f, 1));
-            var mesh = OwnFresnel(new ArrayMesh()); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+            var mesh = OwnFresnel(new ArrayMesh()); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
             { Vertices = [new(0, 0), new(12, 0), new(12, 12), new(0, 12)], UVs = [new(1, 0), new(0, 0), new(0, 1), new(1, 1)], Indices = [0, 1, 2, 0, 2, 3] });
             _painter = new FresnelNormalPainter(_channels, mesh) { Material = _normal }; AddChild(_painter);
             RenderingServer.FramePostDraw += AfterDraw;

@@ -14,7 +14,7 @@ public sealed partial class SurfaceTool
     {
         lock (_gate)
         {
-            Mutable(); if (_primitive != Mesh.PrimitiveType.Triangles || _indices.Count == 0 || _indices.Count % 3 != 0) throw new InvalidOperationException("Cache optimization requires indexed complete triangles."); ValidateIndices();
+            Mutable(); if (_primitive != MeshPrimitiveType.Triangles || _indices.Count == 0 || _indices.Count % 3 != 0) throw new InvalidOperationException("Cache optimization requires indexed complete triangles."); ValidateIndices();
             var source = CollectionsMarshal.AsSpan(_indices); var triangles = source.Length / 3;
             var offsets = new int[checked(_vertices.Count + 1)]; foreach (var vertex in source) offsets[vertex + 1]++;
             for (var i = 1; i < offsets.Length; i++) offsets[i] += offsets[i - 1];

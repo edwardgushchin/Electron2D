@@ -81,7 +81,7 @@ internal static class GPUPhysicsSmashPreview
             var clip = new Control { Name = "Playfield", Position = Field.Position, Size = Field.Size, ClipContents = true, MouseFilter = MouseFilter.Ignore };
             _visual = new Entity { Name = "Fragments" }; clip.AddChild(_visual); AddChild(clip);
             var quad = Own(new ArrayMesh());
-            quad.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+            quad.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData
             {
                 Vertices = [new(-.5f, -.5f), new(.5f, -.5f), new(.5f, .5f), new(-.5f, .5f)],
                 Indices = [0, 1, 2, 0, 2, 3]

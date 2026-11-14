@@ -22,7 +22,7 @@ Shallow copies borrow Mesh, deep and scene-local copies follow inherited resourc
 
 ```csharp
 using var mesh = new ArrayMesh();
-mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData
 { Vertices = [new(0, 0), new(12, 0), new(0, 12)] });
 using var instances = new MultiMesh { Mesh = mesh, UseColors = true, InstanceCount = 2 };
 for (int i = 0; i < 2; i++)

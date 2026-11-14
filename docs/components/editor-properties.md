@@ -109,4 +109,6 @@ no inferred hint. The public [graph parameter consumer](visual-shaders.md#parame
 exercises provider metadata and compiled numeric range/enum/Color consumers.
 No editor controls or visual editor acceptance are implied by descriptor discovery.
 
+For `PropertyHint.TypeString`, `ValueType` exposes the declared CLR type. Tooling can read the element type of an array or the key and value types of a closed generic dictionary, including nested declared collection types. `HintString` preserves advisory text. The current editor lacks a consumer that builds nested collection controls, applies presentation hints to individual elements or offers a class picker for a string property. These behaviors depend on a descriptor-driven inspector in the existing workspace under [ADR 0090](../decisions/agent-native.md#adr-0090). [Coverage](../coverage/classes/@GlobalScope.md) records the hint as Partial.
+
 Value-presentation tags, including quaternion display, describe caller-provided CLR data without introducing an engine Quaternion type or a 3D scene service. Scene-3D layer tags and deprecated hints remain excluded under ADR 0004.

@@ -16,7 +16,7 @@ internal static partial class MultiMeshGPUTests
         if (profile.StartsWith("vertex", StringComparison.Ordinal)) { CanvasVertexProgramTests.RunNative(profile, true); return; }
         Oracles(); Commands(); Commands("HLSL", true); Commands("GLSL", modern: true); Interpolation(); Sessions();
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, new(20, 0), new(20, 20), new(0, 20)], Indices = [0, 1, 2, 0, 2, 3] }, lods: new Dictionary<float, int[]> { [2] = [0, 1, 3] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, new(20, 0), new(20, 20), new(0, 20)], Indices = [0, 1, 2, 0, 2, 3] }, lods: new Dictionary<float, int[]> { [2] = [0, 1, 3] });
         using var window = new Window { Size = new(128, 80) }; var draw = new Draw(); window.AddChild(draw);
         var frame = 0; long start = 0, active = 0, idle = 0; RID instances = default, storage = default, commands = default, shader = default, pipeline = default, parameters = default, set = default, uniforms = default; RenderingDevice device = null!; var settings = new float[4];
         void Dispatch(float phase)

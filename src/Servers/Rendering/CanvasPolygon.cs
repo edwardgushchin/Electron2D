@@ -82,7 +82,7 @@ internal sealed partial class CanvasPolygon
         }
     }
 
-    internal (int Count, Mesh.PrimitiveType Primitive) Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)
+    internal (int Count, MeshPrimitiveType Primitive) Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)
     {
         if (_rawTriangles) { CanvasMesh.AppendTriangleData(output, _triangleData!, IndexCount, transform, modulation, snap, skinOwner, linear); return default; }
         if (linear) modulation = CanvasGeometry.LinearColor(modulation);
@@ -97,9 +97,9 @@ internal sealed partial class CanvasPolygon
         var b = VertexCount == 1 ? a : TransformVertex(Vertices[1], transform, modulation, snap, linear);
         if (VertexCount == 2 && a.Position == b.Position) return default;
         output.Add(a);
-        if (VertexCount == 1) return (1, Mesh.PrimitiveType.Points);
+        if (VertexCount == 1) return (1, MeshPrimitiveType.Points);
         output.Add(b);
-        return (2, Mesh.PrimitiveType.Lines);
+        return (2, MeshPrimitiveType.Lines);
     }
 
     private static CanvasVertex TransformVertex(CanvasVertex vertex, Transform transform, Color modulation, bool snap, bool linear)

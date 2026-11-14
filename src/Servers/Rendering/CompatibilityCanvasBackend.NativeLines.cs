@@ -29,7 +29,7 @@ internal sealed partial class CompatibilityCanvasBackend
         _lineCoverage = coverage; _lineComposite = composite; _lineTargetSize = capacity;
     }
 
-    private int DrawMaskedNativeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    private int DrawMaskedNativeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, MeshPrimitiveType primitive, bool snap)
     {
         Check(SDL.GetRenderViewport(renderer, out var viewport), "read native line viewport");
         Check(SDL.GetRenderClipRect(renderer, out var clip), "read native line clip");
@@ -43,7 +43,7 @@ internal sealed partial class CompatibilityCanvasBackend
         Check(SDL.GetRenderTextureAddressMode(renderer, out var addressU, out var addressV), "read native line texture addressing");
         PrepareNativeLineTargets(renderer, new(viewport.W, viewport.H));
         var coverage = _lineCoverage!.DangerousGetHandle(); var composite = _lineComposite!.DangerousGetHandle();
-        var connected = primitive == Mesh.PrimitiveType.LineStrip; var last = vertices.Length - 1; var calls = 0;
+        var connected = primitive == MeshPrimitiveType.LineStrip; var last = vertices.Length - 1; var calls = 0;
         if (connected) while (last > 0 && EqualPoint(LinePoint(vertices[last - 1].Position, snap), LinePoint(vertices[last].Position, snap))) last--;
         Span<SDL.FPoint> path = stackalloc SDL.FPoint[3]; Span<SDL.Vertex> geometry = stackalloc SDL.Vertex[36];
         var region = new SDL.FRect { W = viewport.W, H = viewport.H };

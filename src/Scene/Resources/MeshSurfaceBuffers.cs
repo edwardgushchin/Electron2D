@@ -9,7 +9,7 @@ public sealed class MeshSurfaceBuffers
     public MeshSurfaceBuffers() { }
     /// <summary>Gets or sets primitive topology.</summary>
     /// <value>Triangles initially.</value>
-    public Mesh.PrimitiveType Primitive { get; set; } = Mesh.PrimitiveType.Triangles;
+    public MeshPrimitiveType Primitive { get; set; } = MeshPrimitiveType.Triangles;
     /// <summary>Gets or sets the exact channel and packing flags.</summary>
     /// <value>Planar positions initially. UseEmptyVertexArray permits a missing position block.</value>
     public Mesh.ArrayFormat Format { get; set; } = Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Use2DVertices;

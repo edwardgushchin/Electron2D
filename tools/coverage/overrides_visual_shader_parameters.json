@@ -493,7 +493,7 @@
     {
       "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_TYPE_STRING",
       "electron2d": "enumValue:Electron2D.PropertyHint.TypeString()",
-      "reason": "ADRs 0001/0004/0005/0013/0028/0033: typed numeric graph symbols and references execute through shared material, registered global and sixteen-slot per-item storage. Offline imports preserve typed defaults and immutable advisory range/enum/color metadata; graph-local references preserve RGB/alpha and matrix roles, copies and portable archives. Matrix scene types and sampled parameter producers retain their separate ownership and integration boundaries."
+      "reason": "ADR 0005 retains the advisory identity on typed property descriptors."
     },
     {
       "godot": "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_HIDE_QUATERNION_EDIT",
@@ -502,6 +502,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Partial",
+      "godot": ["@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_TYPE_STRING"],
+      "reason": "The advisory identity and verbatim hint metadata exist. PropertyDescriptor.ValueType describes the declared CLR shape, including array element and generic dictionary key/value types. The editor does not consume that shape to create nested collection controls, apply per-element hints or offer a class picker for strings. Trigger: descriptor-driven inspector controls for those cases under ADRs 0005/0090. The legacy numeric tag syntax is excluded by ADR 0001. See [advisory hints](../../components/editor-properties.md#advisory-hints)."
+    },
     {
       "state": "Implemented",
       "godot": [
@@ -544,7 +549,6 @@
         "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_RESOURCE_TYPE",
         "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_SAVE_FILE",
         "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_TOOL_BUTTON",
-        "@GlobalScope::enum_value:PropertyHint.PROPERTY_HINT_TYPE_STRING",
         "VisualShaderNodeBooleanParameter::property:default_value",
         "VisualShaderNodeBooleanParameter::property:default_value_enabled",
         "VisualShaderNodeColorParameter::property:default_value",

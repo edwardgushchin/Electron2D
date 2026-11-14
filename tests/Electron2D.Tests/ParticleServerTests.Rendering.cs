@@ -6,7 +6,7 @@ internal static partial class ParticleServerTests
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var root = new Window { Size = new(64, 64), MSAA2D = Viewport.MSAA.Samples4X, UseHDR2D = true }; var owner = new Entity(); root.AddChild(owner);
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [new(-5, -1), new(5, -1), new(5, 1), new(-5, 1)], Indices = [0, 1, 2, 0, 2, 3] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [new(-5, -1), new(5, -1), new(5, 1), new(-5, 1)], Indices = [0, 1, 2, 0, 2, 3] });
         RID particles = default, item = default; var frame = 0;
         root.Ready += _ =>
         {
@@ -64,7 +64,7 @@ internal static partial class ParticleServerTests
         protected override MeshSurfaceData OnSurfaceGetArrays(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
         protected override int OnSurfaceGetArrayLen(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
         protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
-        protected override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
         protected override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
         protected override Material? OnSurfaceGetMaterial(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
         protected override void OnSurfaceSetMaterial(int surfaceIndex, Material? material) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));

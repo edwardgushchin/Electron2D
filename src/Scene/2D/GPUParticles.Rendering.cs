@@ -104,7 +104,7 @@ public partial class GPUParticles
         var mapping = ParticleUVMapping(_texture);
         if (mapping != new Rect2(Vector2.Zero, Vector2.One))
             for (var i = 0; i < data.UVs.Length; i++) data.UVs[i] = mapping.Position + data.UVs[i] * mapping.Size;
-        _mesh.ClearSurfaces(); _mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, data);
+        _mesh.ClearSurfaces(); _mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, data);
         RenderingServer.ParticlesSetTrailBindPoses(particles, poses); RenderingServer.ParticlesSetCollisionBaseSize(particles, radius); _meshDirty = false;
     }
     private Rect2 ParticleUVMapping(Texture? texture)

@@ -1910,6 +1910,9 @@
     }
   ],
   "statusGroups": [
+    {"state":"Blocked","godot":["EditorInspector::method:instantiate_property_editor(Object:,int:Variant.Type,String:,int:PropertyHint,String:,int:,bool:)"],"reason":"Trigger: a generalized property-control factory in the existing self-hosted editor (ADRs 0005/0090). Select a control for the owner and compiled PropertyDescriptor, using ValueType, advisory hints, usage and wide layout. Exercise provider precedence, the first valid property control, cleanup of surplus controls and the no-match result."},
+    {"state":"Blocked","godot":["EditorInspectorPlugin::method:_parse_property(Object:,int:Variant.Type,String:,int:PropertyHint,String:,int:PropertyUsageFlags,bool:)"],"reason":"Trigger: a typed inspector provider extension point connected to descriptor enumeration in the existing editor (ADRs 0005/0090). Give the provider the owner and compiled property descriptor with hints, usage and wide layout. Verify insertion before the default editor and the exclusive result that suppresses it and stops later providers."},
+    {"state":"Blocked","godot":["EditorScenePostImportPlugin::method:add_import_option_advanced(int:Variant.Type,String:,Variant:,int:PropertyHint,String:,int:)"],"reason":"Trigger: an executable 2D scene import and reimport workflow with a scoped option-registration callback (ADRs 0001/0004/0090). Register a named typed option with its typed default, advisory hint and usage; verify registration scope, presentation and persistence through reimport. The internal 3D import dialog is excluded under ADR 0004."},
     {
       "state": "Excluded",
       "reason": "Comparison opcode for dispatch on runtime operand tags. Typed comparison remains with each operand type. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
@@ -1943,7 +1946,7 @@
     },
     {
       "state": "Excluded",
-      "reason": "Exponentiation opcode selects integral or floating evaluation from runtime tags. The typed scalar function remains in Mathf coverage. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "reason": "Variant dispatch registers an Int64 result for Int64 operands, computing through double before conversion. ADR 0034 covers the pinned typed C# Mathf surface, which has only Single and Double Pow. The integral dispatch contract is outside that surface and has no implementation trigger under ADR 0001. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
       "godot": [
         "@GlobalScope::enum_value:Variant.Operator.OP_POWER"
       ]

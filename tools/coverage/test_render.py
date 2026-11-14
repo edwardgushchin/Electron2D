@@ -1022,7 +1022,9 @@ def main():
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
     hint_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines() if "PROPERTY_HINT_" in row.split(" | ")[0]]
     assert len(hint_rows) == 45
-    assert sum(" | Implemented | " in row for row in hint_rows) == 40
+    type_string_row, = [row for row in hint_rows if "PROPERTY_HINT_TYPE_STRING [" in row]
+    assert " | Partial | " in type_string_row and "PropertyDescriptor.ValueType" in type_string_row, type_string_row
+    assert sum(" | Implemented | " in row for row in hint_rows) == 39
     assert sum(" | Excluded | " in row for row in hint_rows) == 5
     base_rows = pages[CLASS_PAGES / "VisualShaderNode.md"].splitlines()
     assert " | Implemented | " in next(row for row in base_rows if "PORT_TYPE_TRANSFORM [" in row)
