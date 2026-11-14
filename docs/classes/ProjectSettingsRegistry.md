@@ -586,7 +586,7 @@ Removes an explicit base value so the setting returns its current initial value.
 
 **Exception `T:System.Collections.Generic.KeyNotFoundException`:** setting is not registered.
 
-**Exception `T:System.InvalidOperationException`:** A different definition owns the same name or a load is running.
+**Exception `T:System.InvalidOperationException`:** A different definition owns the same name or a load or registration is being validated.
 
 **Exception `T:System.ObjectDisposedException`:** The registry is disposing or disposed.
 
@@ -800,7 +800,7 @@ Unregisters a setting and removes its stored base value and feature overrides.
 
 **Exception `T:System.Collections.Generic.KeyNotFoundException`:** setting is not registered.
 
-**Exception `T:System.InvalidOperationException`:** The setting is built in, a different definition owns its name, or a load is running.
+**Exception `T:System.InvalidOperationException`:** The setting is built in, a different definition owns its name, or a load or registration is being validated.
 
 **Exception `T:System.ObjectDisposedException`:** The registry is disposing or disposed.
 

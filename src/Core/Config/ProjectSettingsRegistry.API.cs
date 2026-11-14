@@ -101,7 +101,7 @@ public partial class ProjectSettingsRegistry
     /// <remarks>Built-in settings cannot be unregistered. The removal is tracked as an unsaved change.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">The setting is built in, a different definition owns its name, or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">The setting is built in, a different definition owns its name, or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     /// <exception cref="Exception">A property-list listener throws after removal has completed.</exception>
     public void Unregister<T>(ProjectSetting<T> setting) where T : notnull => UnregisterCore<T>(setting);

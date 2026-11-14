@@ -666,7 +666,7 @@ Unregisters a setting and removes its stored base value and feature overrides.
 
 - `ArgumentNullException`: `setting` is `null`.
 - `Collections.Generic.KeyNotFoundException`: `setting` is not registered.
-- `InvalidOperationException`: The setting is built in, a different definition owns its name, or a load is running.
+- `InvalidOperationException`: The setting is built in, a different definition owns its name, or a load or registration is being validated.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 - `Exception`: A property-list listener throws after removal has completed.
 
@@ -821,7 +821,7 @@ Removes an explicit base value so the setting returns its current initial value.
 
 - `ArgumentNullException`: `setting` is `null`.
 - `Collections.Generic.KeyNotFoundException`: `setting` is not registered.
-- `InvalidOperationException`: A different definition owns the same name or a load is running.
+- `InvalidOperationException`: A different definition owns the same name or a load or registration is being validated.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 **Remarks:** Feature overrides are retained. The initial value becomes implicit and is not persisted.
