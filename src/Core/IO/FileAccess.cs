@@ -358,11 +358,11 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="compressionMode">The codec used to decode or encode the container.</param>
     /// <returns>A seekable view of the decoded bytes.</returns>
     /// <remarks><see cref="FileAccessModeFlags.Write"/> and <see cref="FileAccessModeFlags.WriteRead"/> start with an empty memory stream.
-    /// <see cref="Flush"/> or <see cref="Close"/> encodes pending data and atomically creates or replaces the destination. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
+    /// <see cref="Flush"/> or <see cref="Close"/> encodes pending data and atomically creates or replaces the destination. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard check base codec availability in every open mode. Reading an empty Zstandard container skips the block decoder, including the configured-window check. Native codecs use bounded, checksummed blocks. Compression is not authentication.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or the mode is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="compressionMode"/> is unknown.</exception>
-    /// <exception cref="PlatformNotSupportedException">The native bundle lacks the selected codec or support for the configured Zstandard window when decoding an existing container.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native bundle lacks the selected native codec in any open mode, or lacks configured-window support when decoding a nonempty Zstandard container.</exception>
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
     /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>

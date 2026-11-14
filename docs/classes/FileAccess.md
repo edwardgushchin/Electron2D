@@ -21,7 +21,7 @@ Provides binary and text access to ordinary and virtual files, transformed files
 `FileAccess` owns one seekable physical stream or decoded in-memory view. It supplies blocking binary/text I/O, virtual-path resolution, file metadata, hashing, Linux/macOS/Windows extended attributes, temporary files, whole-file compression, and authenticated whole-file encryption. The instance exclusively owns and closes its stream; it never owns `ProjectSettings`.
 
 Instances own their stream until [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close) or disposal. Individual operations are serialized, but a
-multi-call seek/read/write sequence is not atomic. FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard use the matching native file-codec bridge. The configured Zstandard window requires the updated native bundle when decoding at open. Encoding pending data with a configured level or window can raise `PlatformNotSupportedException` at [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) before the destination is created or replaced. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
+multi-call seek/read/write sequence is not atomic. FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard check base codec availability in every open mode, including `Write` and `WriteRead`. Decoding nonempty Zstandard containers with a configured window requires the updated native bundle. Reading an empty container skips the block decoder. Encoding pending data with a configured level or window can raise `PlatformNotSupportedException` at [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) before the destination is created or replaced. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
 callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
 
 ## Examples
@@ -298,7 +298,7 @@ Opens a whole-file compressed container.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or the mode is invalid.
 - `ArgumentOutOfRangeException`: `compressionMode` is unknown.
-- `PlatformNotSupportedException`: The native bundle lacks the selected codec or support for the configured Zstandard window when decoding an existing container.
+- `PlatformNotSupportedException`: The native bundle lacks the selected native codec in any open mode, or lacks configured-window support when decoding a nonempty Zstandard container.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
 - `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
