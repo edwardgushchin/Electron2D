@@ -4,7 +4,7 @@
 
 [Native FP32 atomics](float-atomics.md) execute load/store/exchange and addition over buffer, shared and R32SFLOAT image storage, including descriptor/layer/sample selection and graphics/address consumers. The linked contract owns independent feature negotiation, ordering, unsupported precision/resource gates and Linux qualification.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
@@ -167,6 +167,8 @@ RenderingDeviceGraphicsTests exercises GLSL/HLSL indexed instances, stage-shared
 Depth/stencil state and exact MSAA allocation/resolve execute in the profiles below; ordered input/preservation passes execute below; layered multiview executes through the ordered layer contract below. Attachmentless passes need native raster-discard/pass support. Push constants execute through original-layout raw-word uniform translation; specialization executes before layout/native creation as described below. [Logical color operations](logic-operations.md) and [wide lines](wide-lines.md) execute through their native feature adapters. All nineteen [blend factors](blend-factors.md), including separate constant alpha and dual-source output, execute through the copied native raster adapter with independent logical feature negotiation. Extra dynamic states retain their own backend prerequisites.
 
 ## Depth/stencil graphics and sampling
+
+[Dynamic stencil state](depth-stencil-state.md#dynamic-stencil-state) changes independent comparison masks, write masks and references between draws through the native Vulkan adapter.
 
 [RDPipelineDepthStencilState](../classes/RDPipelineDepthStencilState.md) copies depth comparisons/writes and two-sided eight-bit stencil operations. DepthBiasEnabled, DepthBiasConstantFactor, DepthBiasSlopeFactor and DepthBiasClamp execute in [RDPipelineRasterizationState](../classes/RDPipelineRasterizationState.md). Native capability errors propagate. A fragment writes depth only when the depth test is enabled and passes. Depth-only framebuffers are allowed; shaders then have no color outputs and blend attachment arrays are empty.
 

@@ -176,7 +176,7 @@ public sealed unsafe partial class RenderingDevice
         if (FramebufferLayouts(entry.Graphics!.FramebufferFormat).ViewCount != FramebufferLayouts(_drawTarget!.Format).ViewCount || !SameRasterLayout(FramebufferFormat(entry.Graphics.FramebufferFormat, entry.Graphics.ForRenderPass), DrawPassLayout)) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
         ValidateInputLayout(PipelineProgram(entry), DrawPassLayout);
         if (entry.Graphics.ForRenderPass != _drawSubpass) throw new ArgumentException("The pipeline was created for a different framebuffer pass.", nameof(renderPipeline));
-        _graphicsPipeline = entry; SelectPushPipeline(renderPipeline); _drawBlend = entry.Graphics.Constant; BindGraphicsState();
+        _graphicsPipeline = entry; SelectPushPipeline(renderPipeline); _drawBlend = entry.Graphics.Constant; _drawStencil = entry.Recipe!.Depth; BindGraphicsState();
     }
     /// <summary>Binds a live borrowed vertex array for subsequent draws.</summary>
     /// <param name="drawList">The active draw-list identity.</param>
@@ -242,6 +242,8 @@ public sealed unsafe partial class RenderingDevice
         var sampledVariant = SampledVariant(_graphicsPipeline!);
         var program = sampledVariant?.Programs[_drawView] ?? original;
         SDL.BindGPUGraphicsPipeline(_drawPass, sampledVariant is null ? GraphicsHandle(_graphicsPipeline!) : sampledVariant.Pipelines[_drawView].DangerousGetHandle());
+        if ((_drawStencil.Flags & (uint)DynamicStencilFlags) != 0 && NativeDrawStencil(Device, 1, _command, in _drawStencil, ref _stencilCommands) != 1)
+            throw new InvalidOperationException("The native stencil state could not be recorded.");
         Span<SDL.GPUTextureSamplerBinding> samplerBinding = stackalloc SDL.GPUTextureSamplerBinding[1];
         Span<nint> storageBinding = stackalloc nint[1];
         foreach (var descriptor in program.Layout)

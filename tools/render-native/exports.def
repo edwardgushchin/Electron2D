@@ -26,6 +26,7 @@ EXPORTS
     e2d_render_multisample_pipeline
     e2d_render_depth_support
     e2d_render_depth_pipeline
+    e2d_render_dynamic_stencil
     e2d_render_image_support
     e2d_render_image_release
     e2d_render_image_transition

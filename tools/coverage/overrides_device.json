@@ -1,6 +1,24 @@
 {
   "mappings": [
     {
+      "godot": "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_COMPARE_MASK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilCompareMask()",
+      "state": "Implemented",
+      "reason": "ADR 0028: records independently configured front/back values in a Vulkan draw list and replays them across native passes and pipeline variants."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_WRITE_MASK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilWriteMask()",
+      "state": "Implemented",
+      "reason": "ADR 0028: records independently configured front/back values in a Vulkan draw list and replays them across native passes and pipeline variants."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_REFERENCE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilReference()",
+      "state": "Implemented",
+      "reason": "ADR 0028: records independently configured front/back values in a Vulkan draw list and replays them across native passes and pipeline variants."
+    },
+    {
       "godot": "RenderingDevice::method:get_perf_report()",
       "electron2d": "method:Electron2D.RenderingDevice.GetPerfReport()",
       "reason": "ADR 0028. The latest submitted frame or local Submit publishes buffer uploads, direct host uniform writes and their byte count. Internal flushes and failed submissions preserve the publication boundary. Windows Vulkan and Direct3D 12 exercise real buffer transfers and renderer frames. See docs/components/local-compute.md#buffer-upload-report for the SDL adaptation and qualification limits."
@@ -4198,6 +4216,18 @@
   ],
   "extras": [
     {
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListSetStencilCompareMask(System.Int64,System.Int32,System.Int32)",
+      "reason": "ADR 0028: typed draw-list setter executes the declared dynamic stencil role independently for both visible faces."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListSetStencilWriteMask(System.Int64,System.Int32,System.Int32)",
+      "reason": "ADR 0028: typed draw-list setter executes the declared dynamic stencil role independently for both visible faces."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListSetStencilReference(System.Int64,System.Int32,System.Int32)",
+      "reason": "ADR 0028: typed draw-list setter executes the declared dynamic stencil role independently for both visible faces."
+    },
+    {
       "electron2d": "constructor:Electron2D.RDShaderSPIRV..ctor()",
       "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
       "adr": "ADRs 0004/0014/0028"
@@ -4948,12 +4978,9 @@
       "state": "Blocked",
       "godot": [
         "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BIAS",
-        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BOUNDS",
-        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_COMPARE_MASK",
-        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_REFERENCE",
-        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_WRITE_MASK"
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BOUNDS"
       ],
-      "reason": "Trigger: first native depth/stencil/raster state setters and attachment integration slice (ADR 0028)."
+      "reason": "Trigger: native command recording of depth bias and depth bounds changes, including the independently enabled bounds feature and replay across native pass restarts (ADR 0028)."
     },
     {
       "state": "Blocked",

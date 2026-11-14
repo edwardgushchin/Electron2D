@@ -1,6 +1,6 @@
 # Copied native depth and stencil state
 
-Last updated: 2026-10-28
+Last updated: 2026-11-14
 
 `RDPipelineDepthStencilState` copies depth testing/writes, stored-depth bounds and independent front/back eight-bit stencil state into each graphics pipeline. Configuration remains caller-owned; mutation or disposal after creation does not change native pipelines, ordered view/pass programs or sampled component-map variants. [Local device](local-compute.md#depthstencil-graphics-and-sampling) owns attachment formats, clears, sampling and resource lifetime.
 
@@ -10,9 +10,15 @@ Depth bounds require independently enabled Vulkan depthBounds. The factory queri
 
 Stencil compare/write masks retain the low eight bits of signed int values. References for visible faces must fit zero through 255. Front/back compare, fail, depth-fail and pass operations retain their separate selectors and original defaults. Both visible faces may now have different effective masks and references. Culling keeps the existing surviving-face projection and ignores invalid reference values on an unused face. Equal effective state continues through ordinary SDL pipeline creation.
 
-The call-local native adapter copies VkPipelineDepthStencilStateCreateInfo and supplies independent front/back masks/references. It removes only the shared dynamic stencil-reference selector when independent values are required, so SDL's common reference commands cannot replace the static copied faces. Ordinary pipeline switching still restores its dynamic reference. The same adapter composes bounds/stencil with line width, primitive discard, sample masks, sample shading and alpha-to-one. Existing locked layout caches, shader ownership, failure rollback and pending native retirement remain authoritative. Shared renderer callbacks are never changed.
+The call-local native adapter copies VkPipelineDepthStencilStateCreateInfo and supplies independent front/back masks and references. For pipelines with independent static references, it removes the shared SDL dynamic stencil-reference selector. The same adapter composes bounds/stencil with line width, primitive discard, sample masks, sample shading and alpha-to-one. Existing locked layout caches, shader ownership, failure rollback and pending native retirement remain authoritative.
+
+## Dynamic stencil state
+
+Select `StencilCompareMask`, `StencilWriteMask` and `StencilReference` when creating a pipeline with stencil testing enabled. Each flag allows the corresponding draw-list setter to change front and back independently. The masks use the low eight bits of each signed value. Both references must be in 0–255. The Vulkan pipeline declares the requested dynamic states and the adapter records their values before each native draw, including each view and any native pass restart or sampled-pipeline variant. Explicit pipeline binds restore copied defaults. Advancing to the next logical framebuffer pass clears the bindings. The API requires the current Vulkan bridge; earlier modules and other backends reject dynamic stencil during pipeline creation.
 
 ## Executable checks
+
+`ELECTRON2D_TEST_DYNAMIC_STENCIL=1` checks native color readback on Windows x64 Vulkan (RTX 3090 Ti). It covers independent front/back values, low-bit masks, mixed static and dynamic pipelines, copied defaults on rebind, two layers, two logical passes, direct and indirect draws, and invalid list, flag and reference inputs. After 32 warmups, 32 recording/readback cycles measure zero managed bytes on the owner thread. `ELECTRON2D_TEST_DYNAMIC_STENCIL=unsupported` verifies rejection using the previous Vulkan module. Driver allocation and other platform execution remain separate.
 
 Build `tests/DeviceGraphicsStorage.Consumer` with the matching render bridge. The `depth`, `depth-source` and `depth-canvas` profiles exercise binary/source GLSL/HLSL output and the retained canvas. `depth-refuse` runs with either the physical query fixture `mask-depth.c` or the device-creation fixture `test_depth_mask.c`; `depth-unavailable` and `depth-failure` use the existing raster adapter fixture. Repeat these profiles in strict trimmed NativeAOT.
 

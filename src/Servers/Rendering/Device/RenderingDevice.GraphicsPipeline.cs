@@ -20,20 +20,21 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="primitive">Point, line or triangle topology.</param>
     /// <param name="rasterizationState">Copied rasterization configuration, including primitive discard and line width.</param>
     /// <param name="colorBlendState">Copied logical operation and blending configuration covering every logical color slot; unused slots and trailing entries are ignored. Enabled logical operations disable arithmetic blending and require their native feature.</param>
-    /// <param name="dynamicStateFlags">Allows dynamic blend constants; other dynamic states require their native adapters.</param>
+    /// <param name="dynamicStateFlags">Selects dynamic blend constants and stencil masks or references. Dynamic stencil requires enabled stencil testing and the native adapter.</param>
     /// <param name="depthStencilState">Copied depth/stencil configuration; null disables both tests and depth writes.</param>
     /// <param name="multisampleState">Copied sample count, coverage/masks, alpha-to-one and sample shading; null selects one sample with ordinary shading.</param>
     /// <param name="specializationConstants">Copied scalar overrides shared by the paired stages; omitted values retain defaults.</param>
     /// <param name="forRenderPass">Zero-based framebuffer pass whose outputs and inputs this pipeline consumes.</param>
     /// <returns>A pipeline borrowing the shader identity and owning specialized native stages when needed.</returns>
     /// <exception cref="ArgumentException">Shader interfaces, layouts or configurations disagree.</exception>
+    /// <exception cref="NotSupportedException">The selected graphics backend lacks a requested native state capability.</exception>
     /// <remarks>Depth-bounds tests require their native state adapter. Sample shading and alpha-to-one require independently enabled native features. Ordered passes select forRenderPass. Typed specialization freezes constants before native creation. Without primitive discard, primary fragment outputs must exactly match active logical color slots; secondary Index=1 outputs require matching primary types and the enabled dual-source feature. Separate constant-alpha factors require the native blending adapter. Sparse slots use private native output remapping.</remarks>
     public RID RenderPipelineCreate(RID shader, int framebufferFormat, int vertexFormat, RenderPrimitive primitive,
         RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0, RDPipelineDepthStencilState? depthStencilState = null, RDPipelineMultisampleState? multisampleState = null, ReadOnlySpan<RDPipelineSpecializationConstant> specializationConstants = default, uint forRenderPass = 0)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(rasterizationState); ArgumentNullException.ThrowIfNull(colorBlendState);
         var program = Get(shader, Kind.Shader); if (program.Stage != ShaderStage.Vertex) throw new ArgumentException("A paired graphics shader is required.", nameof(shader));
-        if ((dynamicStateFlags & ~PipelineDynamicStateFlags.BlendConstants) != 0) throw new ArgumentOutOfRangeException(nameof(dynamicStateFlags));
+        if ((dynamicStateFlags & ~(PipelineDynamicStateFlags.BlendConstants | DynamicStencilFlags)) != 0) throw new ArgumentOutOfRangeException(nameof(dynamicStateFlags));
         var discard = rasterizationState.DiscardPrimitives; var lineWidth = rasterizationState.LineWidth;
         if (program.VertexOnly && !discard) throw new ArgumentException("A vertex-only shader requires primitive discard.", nameof(rasterizationState));
         var target = FramebufferFormat(framebufferFormat, forRenderPass);
@@ -41,7 +42,7 @@ public sealed unsafe partial class RenderingDevice
         if (samples != target.Samples) throw new ArgumentException("Pipeline sample count must match the framebuffer raster targets.", nameof(multisampleState));
         var sampleState = CaptureMultisample(multisampleState, samples);
         using var defaultDepth = depthStencilState is null ? new RDPipelineDepthStencilState() : null;
-        var depthState = DepthState(depthStencilState ?? defaultDepth!, rasterizationState, target, out var stencilReference, out var nativeDepth);
+        var depthState = DepthState(depthStencilState ?? defaultDepth!, rasterizationState, target, dynamicStateFlags & DynamicStencilFlags, out var stencilReference, out var nativeDepth);
         var variant = PipelineVariant(program, specializationConstants, discard ? null : target.ColorSlots);
         try
         {

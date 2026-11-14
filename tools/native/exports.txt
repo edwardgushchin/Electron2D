@@ -81,6 +81,7 @@ e2d_render_aspect_transfer
 e2d_render_bind_image
 e2d_render_d3d12_texture_import
 e2d_render_depth_pipeline
+e2d_render_dynamic_stencil
 e2d_render_depth_support
 e2d_render_empty_begin
 e2d_render_empty_create

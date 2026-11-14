@@ -1,6 +1,6 @@
 # RenderingDevice.PipelineDynamicStateFlags
 
-Last updated: 2026-10-11
+Last updated: 2026-11-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.PipelineDynamicStateFlags`. **Source:** [RenderingDevice.GraphicsEnums.cs](../../src/Servers/Rendering/Device/RenderingDevice.GraphicsEnums.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -17,6 +17,9 @@ Use this selector through the owning [RenderingDevice](RenderingDevice.md) opera
 | Declaration | Contract |
 | --- | --- |
 | `public const Electron2D.RenderingDevice.PipelineDynamicStateFlags BlendConstants = 4` | Allows DrawListSetBlendConstants to replace the copied pipeline constant. |
+| `public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilCompareMask = 16` | Enables separate draw-list comparison masks for both faces. |
+| `public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilWriteMask = 32` | Enables separate draw-list write masks for both faces. |
+| `public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilReference = 64` | Enables separate draw-list references for both faces. |
 
 ## Member descriptions
 
@@ -28,6 +31,21 @@ public const Electron2D.RenderingDevice.PipelineDynamicStateFlags BlendConstants
 ```
 
 Allows DrawListSetBlendConstants to replace the copied pipeline constant.
+
+<a id="member-c925e244308a"></a>
+### StencilCompareMask
+
+Allows [DrawListSetStencilCompareMask](RenderingDevice.md#drawlistsetstencilcomparemask) to replace the copied comparison masks.
+
+<a id="member-59d0862d10a7"></a>
+### StencilWriteMask
+
+Allows [DrawListSetStencilWriteMask](RenderingDevice.md#drawlistsetstencilwritemask) to replace the copied write masks.
+
+<a id="member-b31349d138d4"></a>
+### StencilReference
+
+Allows [DrawListSetStencilReference](RenderingDevice.md#drawlistsetstencilreference) to replace the copied references.
 
 ## Lifetime and verification
 

@@ -1,3 +1,5 @@
+[Dynamic stencil state](../components/depth-stencil-state.md#dynamic-stencil-state) records independent per-face masks and references within Vulkan draw lists. Three rows move from Blocked to Implemented. Coverage is **13,994/18,900 (74.04%)**, with 1,121 Partial, 269 Unimplemented, 3,516 Blocked, 8,393 Excluded and zero unmapped.
+
 [Stream usage tagging](../components/audio-playback.md#stream-usage-tagging) publishes active managed playback cursors from completed realtime and movie audio quanta. Two rows move from Blocked to Implemented. Coverage is **13,991/18,900 (74.03%)**, with 1,121 Partial, 269 Unimplemented, 3,519 Blocked, 8,393 Excluded and zero unmapped.
 
 [Source-free project MainLoop registration](../components/engine-runtime.md#custom-project-loop) runs compiled global classes in ordinary and recording hosts, including full-trim NativeAOT. The project selector moves to Implemented. Coverage is **13,989/18,900 (74.02%)**, with 1,121 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.

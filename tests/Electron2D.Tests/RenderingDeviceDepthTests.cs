@@ -3,7 +3,7 @@ using Electron2D;
 using static TextureArrayTests;
 using static Electron2D.RenderingDevice;
 
-internal static class RenderingDeviceDepthTests
+internal static partial class RenderingDeviceDepthTests
 {
     private static RID Image(RenderingDevice device, DataFormat format, TextureUsageBits usage, uint layers = 1, uint mips = 1)
     {

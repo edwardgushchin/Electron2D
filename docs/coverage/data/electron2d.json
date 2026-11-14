@@ -56436,6 +56436,45 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilCompareMask()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "StencilCompareMask",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilCompareMask = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilReference()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "StencilReference",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilReference = 64",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "64"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilWriteMask()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "StencilWriteMask",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilWriteMask = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "32"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.PolygonCullMode.Back()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.PolygonCullMode",
@@ -180521,6 +180560,93 @@
       {
         "name": "sizeBytes",
         "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetStencilCompareMask(System.Int64,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetStencilCompareMask",
+    "signature": "public System.Void DrawListSetStencilCompareMask(System.Int64 drawList, System.Int32 frontMask, System.Int32 backMask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "frontMask",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "backMask",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetStencilReference(System.Int64,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetStencilReference",
+    "signature": "public System.Void DrawListSetStencilReference(System.Int64 drawList, System.Int32 frontReference, System.Int32 backReference)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "frontReference",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "backReference",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetStencilWriteMask(System.Int64,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetStencilWriteMask",
+    "signature": "public System.Void DrawListSetStencilWriteMask(System.Int64 drawList, System.Int32 frontMask, System.Int32 backMask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "frontMask",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "backMask",
+        "type": "System.Int32",
         "default": null
       }
     ],

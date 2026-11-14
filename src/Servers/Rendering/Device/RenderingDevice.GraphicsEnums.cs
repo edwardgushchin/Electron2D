@@ -27,7 +27,13 @@ public sealed unsafe partial class RenderingDevice
     public enum PipelineDynamicStateFlags
     {
         /// <summary>Allows DrawListSetBlendConstants to replace the copied pipeline constant.</summary>
-        BlendConstants = 4
+        BlendConstants = 4,
+        /// <summary>Allows draw commands to replace the copied stencil comparison masks.</summary>
+        StencilCompareMask = 16,
+        /// <summary>Allows draw commands to replace the copied stencil write masks.</summary>
+        StencilWriteMask = 32,
+        /// <summary>Allows draw commands to replace the copied stencil references.</summary>
+        StencilReference = 64
     }
     /// <summary>Identifies VertexFrequency values for executable graphics operations.</summary>
     public enum VertexFrequency

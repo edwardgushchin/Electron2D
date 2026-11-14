@@ -8,6 +8,11 @@ retain SDL's notice; the platform package includes licence/SDL-LICENSE.txt.
 e2d_render_memory preserves ABI 1 and returns 1 for a coherent native snapshot, 0 for
 an unsupported core/revision/driver, and -1 for invalid arguments or inconsistent
 allocator data. Output contains three uint64 fields: textures, buffers and total.
+`e2d_render_dynamic_stencil` uses ABI 1. A null command buffer queries the pinned
+Vulkan backend and fills two device-local function pointers in caller storage.
+With an active render command buffer it records the flagged front/back masks
+and references. It returns 1 on success, 0 for unavailable capability and -1
+for invalid arguments or an invalid command scope.
 `e2d_render_driver_resource` uses ABI 1 and writes one uint64 on success. Invalid ABI, pointers, kind or native resource return -1, unavailable backends return 0, and success returns 1. Image and buffer queries hold the native defragmentation read lock. See [driver resources](../../docs/components/driver-resources.md).
 
 `e2d_render_d3d12_texture_import` uses ABI 1 for sampled imports. ABI 2 adds
