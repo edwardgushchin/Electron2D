@@ -63,9 +63,17 @@
   },
   "patches": [
     "Engine-private namespace and top-level visibility.",
-    "Disable nullable/missing XML diagnostics for preserved upstream sources; decoder algorithms unchanged.",
+    "Disable nullable/missing XML diagnostics for preserved upstream sources.",
     "Internalize top-level delegate types and the upstream reversed-modifier DataPacket declaration.",
-    "Suppress CA2265 for preserved upstream span comparison; decoder logic unchanged."
+    "Suppress CA2265 for the upstream span comparison.",
+    "Decode residue with submap-local channel bundles and coupling flags; preserve encoded PCM channel order.",
+    "Validate the identification and comment framing bits and require zero time-domain transforms in the setup header."
   ],
+  "patchedSourcesLfSha256": {
+    "StreamDecoder.cs": "3ca488806a0e6a4bcf24ea58c0a26175dbc1bd47130b1ebb85b6868a6a33a263",
+    "Mapping.cs": "ec13bd7a9cd76d00131f364a473a70405f11d5f1d58d7ca6c19ee91639ed2026",
+    "Residue0.cs": "9ff9a20e599364cefe737225f7fc9608daa92f571d470eab8f6957ed73b34c7f",
+    "Residue2.cs": "a65d2060d97b037320a0d93c1d79ffd072ca879e96151782485feebaedcbc10d"
+  },
   "archiveUrl": "https://codeload.github.com/NVorbis/NVorbis/tar.gz/refs/tags/v0.10.5"
 }
