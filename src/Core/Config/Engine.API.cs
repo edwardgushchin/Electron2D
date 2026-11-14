@@ -283,8 +283,9 @@ public sealed partial class Engine
     /// <param name="instance">The live object to expose.</param>
     /// <remarks>
     /// Registration retains a managed reference but does not transfer disposal ownership. Disposing an object does not
-    /// remove its registration; the registering component must unregister it during teardown. The name <c>Engine</c>,
-    /// <c>ProjectSettings</c>, <c>Input</c>, <c>InputMap</c>, <c>ExtensionManager</c>, <c>CameraServer</c>, and <c>AudioServer</c> are already occupied by built-in process singletons.
+    /// remove its registration. The registering component must unregister it during teardown. Names use ordinal
+    /// comparison without trimming or normalization. The same object can be registered under distinct names.
+    /// Each successful registration appends to <see cref="GetSingletonList"/> and survives loop shutdown.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> or <paramref name="instance"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
@@ -294,6 +295,7 @@ public sealed partial class Engine
 
     /// <summary>Unregisters a named engine singleton without disposing it.</summary>
     /// <param name="name">The nonblank case-sensitive registered name.</param>
+    /// <remarks>Only user registrations can be removed. Other names for the same object remain registered.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
     /// <exception cref="KeyNotFoundException">No singleton has the supplied name.</exception>
@@ -302,7 +304,7 @@ public sealed partial class Engine
 
     /// <summary>Gets a named engine singleton.</summary>
     /// <param name="name">The nonblank case-sensitive registered name.</param>
-    /// <returns>The registered object. Ownership remains with the registering component.</returns>
+    /// <returns>The same registered object, borrowed from its owner even if it has been disposed since registration.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
     /// <exception cref="KeyNotFoundException">No singleton has the supplied name.</exception>
@@ -311,7 +313,8 @@ public sealed partial class Engine
     /// <summary>Gets a named engine singleton and validates its type.</summary>
     /// <typeparam name="T">The required <see cref="ElectronObject"/> type.</typeparam>
     /// <param name="name">The nonblank case-sensitive registered name.</param>
-    /// <returns>The registered object cast to <typeparamref name="T"/>.</returns>
+    /// <returns>The same borrowed object as <typeparamref name="T"/>.</returns>
+    /// <remarks>This overload checks assignability and uses the same registration and lifetime rules as <see cref="GetSingleton(string)"/>.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
     /// <exception cref="KeyNotFoundException">No singleton has the supplied name.</exception>
@@ -320,13 +323,14 @@ public sealed partial class Engine
 
     /// <summary>Reports whether a named engine singleton is registered.</summary>
     /// <param name="name">The nonblank case-sensitive name.</param>
-    /// <returns><see langword="true"/> when the name is registered; otherwise <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> when the name is registered, including if its object has since been disposed; otherwise <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
     public static bool HasSingleton(string name) => Service.HasSingletonCore(name);
 
     /// <summary>Gets the current engine-singleton names in registration order.</summary>
-    /// <returns>An immutable snapshot using ordinal, case-sensitive names.</returns>
+    /// <returns>An immutable snapshot of the names at the time of the call.</returns>
+    /// <remarks>A name removed and then registered again appears at the end of subsequent snapshots.</remarks>
     public static IReadOnlyList<string> GetSingletonList() => Service.GetSingletonListCore();
 
 }
