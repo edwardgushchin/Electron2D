@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Electron2D;
+using SDL3;
 using Path = System.IO.Path;
 
 internal static class ProjectMainSceneTests
@@ -42,6 +43,7 @@ internal static class ProjectMainSceneTests
             VerifyProjectPlacement(project.FullName, user.FullName);
             VerifyProjectChrome(project.FullName, user.FullName);
             VerifyProjectVSync(project.FullName, user.FullName, backend);
+            VerifyProjectScreenPolicy(project.FullName, user.FullName);
             if (OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy")
                 VerifyProjectTransparency(project.FullName, user.FullName, backend);
 
@@ -441,6 +443,92 @@ internal static class ProjectMainSceneTests
             window.Ready += _ => { verify(); window.Tree!.Quit(); };
             Check(Engine.RunProject(window) == 0 && window.IsDisposed && !DisplayServer.IsAvailable,
                 "The window chrome host retires cleanly.");
+        }
+    }
+
+    private static void VerifyProjectScreenPolicy(string project, string user)
+    {
+        var setting = ProjectSettings.KeepScreenOn;
+        const string feature = "screen_wake_test";
+        ProjectSettings.Save();
+        using (var saved = new ProjectSettingsRegistry(project, user))
+        {
+            saved.Load();
+            Check(saved.Get(setting), "The project defaults to keeping the screen awake.");
+            saved.Set(setting, false);
+            saved.SetFeatureOverride(setting, feature, true);
+            saved.Save();
+        }
+
+        ProjectSettings.Load();
+        var hint = SDL.Hints.VideoAllowScreensaver;
+        var previousHint = SDL.GetHint(hint);
+        Check(SDL.SetHintWithPriority(hint, "1", SDL.HintPriority.Override), "Allow native screen blanking before opening video.");
+        try
+        {
+            var headless = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy";
+            Verify(configured: true, expected: false);
+            ProjectSettings.AddCustomFeature(feature);
+            Verify(configured: true, expected: !headless, asynchronous: true);
+            Verify(configured: false, expected: false);
+            if (headless)
+            {
+                using var display = DisplayServer.Open("Headless screen wake refusal", new(96, 72), hidden: true);
+                Reject<InvalidOperationException>(() => DisplayServer.ScreenSetKeepOn(true));
+                Check(!DisplayServer.ScreenIsKeptOn(), "SDL refusal restores the prior screen policy.");
+            }
+
+            if (!headless)
+            {
+                Check(DisplayServer.InitializeVideo(), "Keep an independent video reference alive across project shutdown.");
+                try
+                {
+                    Verify(configured: true, expected: true);
+                    Check(SDL.ScreenSaverEnabled(), "Successful shutdown releases project inhibition with SDL video still alive.");
+                    Verify(configured: true, expected: true, fail: true);
+                    Check(SDL.ScreenSaverEnabled(), "Failed scene entry releases project inhibition with SDL video still alive.");
+                    Check(SDL.DisableScreenSaver(), "Inhibit screen blanking in the existing video session.");
+                    ProjectSettings.RemoveCustomFeature(feature);
+                    Verify(configured: true, expected: false);
+                    Check(!SDL.ScreenSaverEnabled(), "Project shutdown restores the pre-existing inhibition.");
+                }
+                finally { SDL.QuitSubSystem(SDL.InitFlags.Video); }
+            }
+            Check(SDL.GetHint(hint) == "1", "Project startup restores the original SDL hint.");
+        }
+        finally
+        {
+            if (previousHint is null)
+                SDL.ResetHint(hint);
+            else
+                SDL.SetHintWithPriority(hint, previousHint, SDL.HintPriority.Override);
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.ClearFeatureOverride(setting, feature);
+            ProjectSettings.Reset(setting);
+        }
+
+        static void Verify(bool configured, bool expected, bool asynchronous = false, bool fail = false)
+        {
+            using var window = new Window { Size = new(96, 72) };
+            var ready = false;
+            window.Ready += _ =>
+            {
+                Check(DisplayServer.ScreenIsKeptOn() == expected && SDL.ScreenSaverEnabled() != expected,
+                    "The screen policy reaches the native provider before scene readiness.");
+                ready = true;
+                if (fail)
+                    throw new ArithmeticException("Screen wake fixture rejects scene entry.");
+                RenderingServer.FramePostDraw += () => window.Tree!.Quit();
+            };
+            if (fail)
+                Reject<AggregateException>(() => Engine.RunProject(window));
+            else
+            {
+                var result = configured ? (asynchronous ? RunAsync(window) : Engine.RunProject(window)) : Engine.Run(window);
+                Check(result == 0, "The window renders and exits.");
+            }
+            Check(ready && window.IsDisposed && !DisplayServer.IsAvailable && !RenderingServer.IsAvailable && Engine.MainLoop is null,
+                "The project host retires the display on success and failure.");
         }
     }
 

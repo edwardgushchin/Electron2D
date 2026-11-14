@@ -376,7 +376,7 @@ On the verified Linux Wayland host, the returned request state corresponded to `
 <a id="method-screensetkeepon"></a>
 #### `public static void ScreenSetKeepOn(bool enable)`
 
-Requests a process-wide screen-blanking policy. `enable: true` inhibits blanking; `false` permits normal power saving. The native subsystem releases the inhibition on shutdown. Call on the opening thread.
+Requests a process-wide screen-blanking policy. True inhibits blanking and false permits normal power saving. Call on the opening thread. A configured project restores the preceding policy when its display closes. See [project screen wakefulness](../components/window-runtime.md#project-screen-wakefulness).
 
 The Linux Wayland native test observed corresponding `UnInhibit`, `Inhibit`, and `UnInhibit` calls on the session bus while changing this state. Compositor power policies can still override the request.
 

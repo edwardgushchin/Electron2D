@@ -117,6 +117,10 @@ Viewport dimensions and scale must be positive, scale must be finite, override a
 
 `ProjectSetting<DisplayServer.VSyncMode> WindowVSyncMode` (`display/window/vsync/vsync_mode`) defaults to Enabled and rejects undefined values. Configured project runs sample the effective feature value before renderer creation. See [startup VSync and override precedence](../components/window-runtime.md#project-startup-vsync).
 
+## Project screen wakefulness
+
+`ProjectSetting<bool> KeepScreenOn` (`display/window/energy_saving/keep_screen_on`) defaults to true. Configured windowed startup applies its effective feature value. False permits normal system blanking. Live changes use DisplayServer.ScreenSetKeepOn. See [project screen wakefulness](../components/window-runtime.md#project-screen-wakefulness).
+
 ## Project window transparency
 
 | Descriptor | Project key |

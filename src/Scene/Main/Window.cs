@@ -393,8 +393,10 @@ public partial class Window : Viewport
             ApplyProjectViewportTransparency(alpha.Viewport);
         }
 
-        _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible, transparent: Transparent);
+        _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible, transparent: Transparent, runProject);
         _display.SceneWindow = this;
+        if (runProject)
+            _display.ApplyProjectScreenPolicy();
         _display.ConfigureSystemMenu(Engine.IsEditorHint || ProjectSettings.GetWithOverride(ProjectSettings.EnableAltSpaceMenu));
         (WindowMode Mode, WindowInitialPosition Policy, Vector2i Position, int Screen)? placement =
             runProject ? ProjectSettings.Service.ReadProjectWindowPlacement() : null;

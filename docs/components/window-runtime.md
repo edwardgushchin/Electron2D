@@ -113,6 +113,14 @@ Configured project runs request [WindowVSyncMode](../classes/ProjectSettings.md#
 
 The project-scene profiles exercise setting persistence and validation, startup and live readback on GPU and Compatibility, rendered frames, supported-mode fallback, command-line and recording precedence, and teardown. Physical display timing, foreign hosts and release packages require separate qualification.
 
+## Project screen wakefulness
+
+Configured windowed runs apply [KeepScreenOn](../classes/ProjectSettings.md#project-screen-wakefulness) and its feature overrides before renderer and scene entry. True requests native screen inhibition. False permits normal blanking. Fresh SDL video initialization allows normal blanking, then the caller's SDL hint is restored. The project snapshots the existing policy before its checked request and restores that policy when the display retires, including after scene-entry failure and when another SDL video owner is still active. Explicit scene runs and manual displays keep their ordinary startup policy. Use DisplayServer.ScreenSetKeepOn and ScreenIsKeptOn for live requests and readback.
+
+On native refusal startup reports a warning and retains the prior policy. A failed rollback propagates. The SDL dummy driver skips the startup request. The SDL browser driver lacks an inhibition provider. Browser coverage requires a Screen Wake Lock adapter for permitted, visible secure documents with permission refusal, release and reacquisition across visibility and display lifetimes. The system can still blank the display under its own power policy.
+
+The Windows GPU and Compatibility project-scene profiles check persisted false and feature true, native state before scene entry, and restoration with SDL video retained across successful and failing runs. The dummy Compatibility profile checks headless startup and the live refusal rollback. The direct native test checks accepted live requests. Physical idle behavior, browser, other delivered platform packages and mobile/TV execution remain separate.
+
 ## Window content scaling
 
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.

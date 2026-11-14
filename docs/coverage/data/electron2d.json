@@ -297041,6 +297041,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.KeepScreenOn()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "KeepScreenOn",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E KeepScreenOn { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.LCDSubpixelLayout()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

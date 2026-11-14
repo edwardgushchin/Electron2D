@@ -90,6 +90,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WindowTransparent, isBasic: false);
         RegisterInternal(ViewportTransparentBackground, isBasic: false);
         RegisterInternal(WindowVSyncMode, isBasic: true);
+        RegisterInternal(KeepScreenOn, isBasic: false);
         RegisterInternal(WindowStretchAspect, isBasic: false);
         RegisterInternal(WindowStretchScale, isBasic: false);
         RegisterInternal(WindowStretchScaleMode, isBasic: false);
@@ -1447,6 +1448,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, ApplicationIcon) ||
         ReferenceEquals(setting, WindowsNativeIcon) ||
         ReferenceEquals(setting, WindowVSyncMode) ||
+        ReferenceEquals(setting, KeepScreenOn) ||
         ReferenceEquals(setting, MainScene) ||
         ReferenceEquals(setting, MainLoopType) ||
         ReferenceEquals(setting, AutoAcceptQuit) ||

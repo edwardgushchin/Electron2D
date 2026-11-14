@@ -133,7 +133,9 @@ GetSwapCancelOK exposes the retained DisplayServer platform dialog-order convent
 
 ## Presentation policy
 
-The main window takes its initial policy from [project startup VSync](../components/window-runtime.md#project-startup-vsync). [DisplayServer.WindowSetVSyncMode and WindowGetVSyncMode](../classes/DisplayServer.md#presentation-synchronization) use the [VSyncMode](../classes/DisplayServer.VSyncMode.md) identities. Native unsupported modes fall back to Enabled and the getter reports the applied mode. Engine.MaxFPS independently caps host frames. Managed video-driver environment edits are honored at display/compute initialization with the previous native hint restored afterward. The [WaterPlayground](../../examples/WaterPlayground/README.md) consumer verifies the connected policy, including XWayland immediate presentation.
+The main window takes its initial presentation policy from [project startup VSync](../components/window-runtime.md#project-startup-vsync). [DisplayServer.WindowSetVSyncMode and WindowGetVSyncMode](../classes/DisplayServer.md#presentation-synchronization) use the [VSyncMode](../classes/DisplayServer.VSyncMode.md) identities. Native unsupported modes fall back to Enabled and the getter reports the applied mode. Engine.MaxFPS independently caps host frames. Managed video-driver environment edits are honored at display/compute initialization with the previous native hint restored afterward. The [WaterPlayground](../../examples/WaterPlayground/README.md) consumer verifies the connected policy, including XWayland immediate presentation.
+
+The configured display applies [project screen wakefulness](../components/window-runtime.md#project-screen-wakefulness) for its lifetime through the native screen-blanking service.
 
 
 Containing-window notifications now reach physical Node descendants in parent-first

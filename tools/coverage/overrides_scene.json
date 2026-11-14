@@ -5579,6 +5579,11 @@
       "reason": "Typed configured-root window flag."
     },
     {
+      "godot": "ProjectSettings::property:display/window/energy_saving/keep_screen_on",
+      "electron2d": "property:Electron2D.ProjectSettings.KeepScreenOn()",
+      "reason": "Typed configured-display wakefulness setting."
+    },
+    {
       "godot": "ProjectSettings::property:display/window/vsync/vsync_mode",
       "electron2d": "property:Electron2D.ProjectSettings.WindowVSyncMode()",
       "reason": "Typed enum for the configured root window's startup presentation policy."
@@ -8910,6 +8915,13 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/energy_saving/keep_screen_on"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0019/0040. Configured startup applies the effective native SDL blanking policy before scene entry and restores the prior state on retirement. Windows GPU and Compatibility tests cover persistence, feature precedence, readback and shutdown with a retained SDL video reference. Native refusal warns and preserves the prior policy. SDL's browser driver has no provider. Trigger: a Screen Wake Lock adapter with permission refusal, visibility-based reacquisition and session release, exercised on a delivered Web host."
+    },
     {
       "godot": [
         "ProjectSettings::property:display/window/vsync/vsync_mode"

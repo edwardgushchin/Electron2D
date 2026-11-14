@@ -48,6 +48,7 @@ public sealed partial class DisplayServer : ElectronObject
     private readonly nint _gtkTitlebarProvider;
     private (nint Connection, int ExitOnClose) _gtkSessionBus;
     private readonly string? _previousGamepadBackgroundHint;
+    private bool? _keepScreenOnBeforeProject;
     private Rect2i _windowRect;
     private string _accessibilityTitle = "";
     internal string AccessibilityTitle => IsNativePopup ? _popupTitle : _accessibilityTitle;
@@ -121,10 +122,10 @@ public sealed partial class DisplayServer : ElectronObject
     public static DisplayServer Open(string title, Vector2i size, bool hidden = false) =>
         OpenCore(title, size, hidden, presentBlank: true);
 
-    internal static DisplayServer OpenForRendering(string title, Vector2i size, bool hidden, bool transparent) =>
-        OpenCore(title, size, hidden, presentBlank: false, transparent);
+    internal static DisplayServer OpenForRendering(string title, Vector2i size, bool hidden, bool transparent, bool runProject) =>
+        OpenCore(title, size, hidden, presentBlank: false, transparent, runProject);
 
-    private static DisplayServer OpenCore(string title, Vector2i size, bool hidden, bool presentBlank, bool transparent = false)
+    private static DisplayServer OpenCore(string title, Vector2i size, bool hidden, bool presentBlank, bool transparent = false, bool runProject = false)
     {
         ArgumentNullException.ThrowIfNull(title);
         if (size.X <= 0 || size.Y <= 0)
@@ -145,7 +146,7 @@ public sealed partial class DisplayServer : ElectronObject
                 // SDLActivity runs managed Main on a worker; video initialization records it as SDL's video thread.
                 if (!OperatingSystem.IsAndroid() && !SDL.IsMainThread())
                     throw new InvalidOperationException("The display server must be opened on SDL's main thread.");
-                if (!InitializeVideo())
+                if (!(runProject ? InitializeProjectVideo() : InitializeVideo()))
                     throw SDLFailure("initialize the video subsystem");
                 videoInitialized = true;
                 if (!SDL.IsMainThread())
@@ -248,6 +249,20 @@ public sealed partial class DisplayServer : ElectronObject
                 RestoreGamepadBackgroundHint(previousGamepadBackgroundHint);
                 throw;
             }
+        }
+    }
+
+    private static bool InitializeProjectVideo()
+    {
+        // SDL's default initialization ignores failure when requesting wakefulness. Request it explicitly.
+        var previous = SDL.GetHint(SDL.Hints.VideoAllowScreensaver);
+        if (!SDL.SetHintWithPriority(SDL.Hints.VideoAllowScreensaver, "1", SDL.HintPriority.Override))
+            throw SDLFailure("allow normal screen blanking during video initialization");
+        try { return InitializeVideo(); }
+        finally
+        {
+            if (previous is null) SDL.ResetHint(SDL.Hints.VideoAllowScreensaver);
+            else SDL.SetHintWithPriority(SDL.Hints.VideoAllowScreensaver, previous, SDL.HintPriority.Override);
         }
     }
 
@@ -355,6 +370,19 @@ public sealed partial class DisplayServer : ElectronObject
     {
         EnsureOwner();
         return !SDL.ScreenSaverEnabled();
+    }
+
+    internal void ApplyProjectScreenPolicy()
+    {
+        if (IsHeadless)
+            return;
+        var keepScreenOn = ProjectSettings.GetWithOverride(ProjectSettings.KeepScreenOn);
+        _keepScreenOnBeforeProject = ScreenIsKeptOnCore();
+        try { ScreenSetKeepOnCore(keepScreenOn); }
+        catch (InvalidOperationException error)
+        {
+            RuntimeDiagnostics.Instance.Error("", "", 0, "", error.Message, LoggerErrorType.Warning);
+        }
     }
 
     internal void ScreenSetKeepOnCore(bool enable)
@@ -675,6 +703,11 @@ public sealed partial class DisplayServer : ElectronObject
             CloseGamepads();
             Input.Service.SetNativeFlush(null);
             Input.ReleasePressedEvents();
+            if (_keepScreenOnBeforeProject is { } previousScreenPolicy)
+            {
+                try { ScreenSetKeepOnCore(previousScreenPolicy); }
+                catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
+            }
             _waylandInput?.Dispose();
             _waylandInput = null;
             _window.Dispose();

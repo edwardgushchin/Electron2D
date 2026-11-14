@@ -104,4 +104,10 @@ public sealed partial class ProjectSettings
     /// Unsupported modes fall back to Enabled. Use <see cref="DisplayServer.WindowSetVSyncMode"/> to change a live window.</remarks>
     public static ProjectSetting<DisplayServer.VSyncMode> WindowVSyncMode { get; } =
         new("display/window/vsync/vsync_mode", DisplayServer.VSyncMode.Enabled, Enum.IsDefined);
+
+    /// <summary>Controls whether the configured project requests that the system keep the screen awake.</summary>
+    /// <value>True by default. The effective feature value applies at startup.</value>
+    /// <remarks>Requires a native screen-inhibition provider. Use <see cref="DisplayServer.ScreenSetKeepOn"/> to change a live request.</remarks>
+    public static ProjectSetting<bool> KeepScreenOn { get; } =
+        new("display/window/energy_saving/keep_screen_on", true);
 }
