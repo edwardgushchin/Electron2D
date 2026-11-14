@@ -1,6 +1,41 @@
 {
   "mappings": [
     {
+      "godot": "Window::method:child_controls_changed()",
+      "electron2d": "method:Electron2D.Window.ChildControlsChanged()",
+      "reason": "Coalesced scene refresh and desktop native content minimum under ADRs 0008/0028/0040."
+    },
+    {
+      "godot": "Window::method:can_draw()",
+      "electron2d": "method:Electron2D.Window.CanDraw()",
+      "reason": "ADRs 0028/0040: uses current native eligibility or attached embedded visibility under the scene owner guard."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_loop_type",
+      "electron2d": "property:Electron2D.ProjectSettings.MainLoopType()",
+      "reason": "ADRs 0015/0016/0019/0027: typed selection of the owned scene or custom application loop."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_loop_type",
+      "electron2d": "method:Electron2D.Engine.RunProject(Electron2D.Window)",
+      "reason": "The owned synchronous project host constructs and runs the selected main loop."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_loop_type",
+      "electron2d": "method:Electron2D.Engine.RunProject(Electron2D.Window,System.String,System.Int32)",
+      "reason": "ADRs 0016/0109: the synchronous recording overload uses the same project loop selector."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_loop_type",
+      "electron2d": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window,System.String,System.Int32)",
+      "reason": "ADRs 0016/0109: the asynchronous recording overload uses the same project loop selector and application owner."
+    },
+    {
+      "godot": "ProjectSettings::property:application/run/main_loop_type",
+      "electron2d": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window)",
+      "reason": "The owned asynchronous project host constructs and runs the selected main loop."
+    },
+    {
       "godot": "ProjectSettings::property:application/run/main_scene",
       "electron2d": "property:Electron2D.ProjectSettings.MainScene()",
       "reason": "ADRs 0016/0019/0027/0090: typed packed startup scene selection."
@@ -2173,6 +2208,11 @@
       "electron2d": "property:Electron2D.Viewport.GlobalCanvasTransform()",
       "godot": "Viewport::property:global_canvas_transform",
       "reason": "Pinned canvas_item.cpp, viewport.cpp, window.cpp and control.cpp coordinate formulas are audited as one family. Canvas/final/canvas-layer/global composition, visible bounds, defaults/runtime descriptors, positional-event copies and inverse/owner/lifetime guards retain their existing executable contracts. Item screen projection now uses popup-base semantics: an embedding viewport stops before its own final transform; other windows prepend their local/native position and final transform through the embedder; offscreen containers prepend the container item screen transform, StretchShrink and child final transform. Standalone offscreen items need no desktop lookup. Control.GetScreenPosition is the same origin. Viewport.GetScreenTransform and warp retain the complete client chain; native desktop lookup and physical warp reject explicitly on Wayland under ADR 0040. Public CPU/software-Vulkan/registered serial/separate JIT and strict NativeAOT fixtures verify nonuniform bases, root/nearest/standalone/container boundaries, live point-derived popup placement, physical click/shape ownership and two 128-step complete-frame intervals at strict 0/0 owner/all-thread managed bytes. Native software Wayland/dummy checks independent red body and blue popup pixels, native-client pointer projection and conditional desktop capability. Popup UI uses an independent CanvasLayer within the deliberately shared World. Evidence: bin/physics-popup-coordinates/2026-10-18/validation.json. Physical pointer movement, other platform execution and whole-goal GPU/FPS acceptance are separate gates; this does not certify manual widget popup producers."
+    },
+    {
+      "electron2d": "method:Electron2D.Viewport.GetStretchTransform()",
+      "godot": "Viewport::method:get_stretch_transform()",
+      "reason": "ADRs 0008/0028: GetStretchTransform returns the raster scale used in canvas composition. Window CanvasItems and Disabled include the content factor; Viewport-mode enlargement belongs to presentation. SubViewport uses its own per-axis override with no inherited window factor. Live resize, zero and negative overrides, owner/lifetime guards and native Window/SubViewport readback verify the contract."
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetFinalTransform()",
@@ -5499,6 +5539,126 @@
       "reason": "Executable content rasterization/fitting policy preserves numeric identity."
     },
     {
+      "godot": "ProjectSettings::property:display/window/size/mode",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowInitialMode()",
+      "reason": "Typed startup placement or presentation mode for the configured project window."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/initial_position_type",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowInitialPositionType()",
+      "reason": "Typed startup placement or presentation mode for the configured project window."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/initial_position",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowInitialPosition()",
+      "reason": "Typed startup placement or presentation mode for the configured project window."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/initial_screen",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowInitialScreen()",
+      "reason": "Typed startup placement or presentation mode for the configured project window."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/resizable",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowResizable()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/borderless",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowBorderless()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/always_on_top",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowAlwaysOnTop()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/no_focus",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowNoFocus()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/energy_saving/keep_screen_on",
+      "electron2d": "property:Electron2D.ProjectSettings.KeepScreenOn()",
+      "reason": "Typed configured-display wakefulness setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/vsync/vsync_mode",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowVSyncMode()",
+      "reason": "Typed enum for the configured root window's startup presentation policy."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/minimize_disabled",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowMinimizeDisabled()",
+      "reason": "Typed root minimize caption policy."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/maximize_disabled",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowMaximizeDisabled()",
+      "reason": "Typed root maximize caption policy."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/sharp_corners",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowSharpCorners()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/per_pixel_transparency/allowed",
+      "electron2d": "property:Electron2D.ProjectSettings.AllowPerPixelTransparency()",
+      "reason": "Typed project setting for the configured root transparency policy."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/transparent",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowTransparent()",
+      "reason": "Typed project setting for the configured root transparency policy."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/viewport/transparent_background",
+      "electron2d": "property:Electron2D.ProjectSettings.ViewportTransparentBackground()",
+      "reason": "Typed project setting for the configured root transparency policy."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/viewport_width",
+      "electron2d": "property:Electron2D.ProjectSettings.ViewportWidth()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/viewport_height",
+      "electron2d": "property:Electron2D.ProjectSettings.ViewportHeight()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/window_width_override",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowWidthOverride()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/window_height_override",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowHeightOverride()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/stretch/mode",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowStretchMode()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/stretch/aspect",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowStretchAspect()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/stretch/scale",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowStretchScale()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/stretch/scale_mode",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowStretchScaleMode()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
       "godot": "Window::property:content_scale_size",
       "electron2d": "property:Electron2D.Window.ContentScaleSize()",
       "reason": "Executable content policy is stored by typed scene descriptors and shared by rendering, texture dimensions, layout, input and text rasterization."
@@ -6212,6 +6372,11 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "method:Electron2D.Engine.RegisterMainLoop`1(Func<TLoop>)",
+      "adr": "adr-0016",
+      "reason": "Typed host registration roots a fresh exact compiled MainLoop factory for trimmed and NativeAOT startup without a runtime assembly scan or Script source asset."
+    },
     {
       "electron2d": "method:Electron2D.Node.SetPropertyPinned(Electron2D.PropertyDescriptor,System.Boolean)",
       "adr": "adr-0023",
@@ -8761,6 +8926,106 @@
   ],
   "statusGroups": [
     {
+      "state": "Partial",
+      "reason": "Windows observes the native maximize style. Detached and embedded windows report local policy. Remaining native adapters include macOS, X11 and Wayland compositor capabilities (ADR 0040).",
+      "godot": ["Window::method:is_maximize_allowed()"]
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/energy_saving/keep_screen_on"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0019/0040. Configured startup applies the effective native SDL blanking policy before scene entry and restores the prior state on retirement. Windows GPU and Compatibility tests cover persistence, feature precedence, readback and shutdown with a retained SDL video reference. Native refusal warns and preserves the prior policy. SDL's browser driver has no provider. Trigger: a Screen Wake Lock adapter with permission refusal, visibility-based reacquisition and session release, exercised on a delivered Web host."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/vsync/vsync_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0040/0109. Configured startup passes the feature-resolved enum to the display before renderer creation. The --disable-vsync launch option and movie override request Disabled. Both renderers use their native supported-mode fallback and the live getter reports the effective policy. The Windows project-scene profiles cover startup, persistence, fallback, precedence and rendered pixels."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/resizable",
+        "ProjectSettings::property:display/window/size/borderless",
+        "ProjectSettings::property:display/window/size/always_on_top",
+        "ProjectSettings::property:display/window/size/no_focus",
+        "ProjectSettings::property:display/window/size/sharp_corners"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0040. The configured root samples effective project flags before native configuration and scene entry. Existing SDL window requests implement resizing, borders, stacking and focus, with DWM corner preference on Windows 11. Explicit Window flags take precedence, including saved false values. Wayland keeps compositor-controlled top-level stacking and focus. The SDL dummy driver has no startup chrome."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/minimize_disabled",
+        "ProjectSettings::property:display/window/size/maximize_disabled"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0019/0040. Windows applies effective project caption policies before Ready, with explicit scene assignments taking precedence. Remaining adapters need native macOS standard window buttons and X11 window-manager function hints with observed restoration."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/extend_to_title"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: native extended-client decoration and hit testing with observed title-safe margins and coherent input and resize geometry. Existing embedded decorations and native size/placement flags do not supply that top-level contract."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/per_pixel_transparency/allowed"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0040. Gates the project's creation-time native transparency flag. Explicit Window configuration keeps its existing contract. Android still requires a transparent Activity/SurfaceView creation and composition path controlled by this setting, with device verification; the current host rejects that request explicitly."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/transparent"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0040. On configured startup the permitted request creates an alpha-capable native root before renderer selection. Strict GPU refuses this surface and permitted fallback selects Compatibility. Android uses the separate platform permission policy. Explicit Window assignments take precedence."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:rendering/viewport/transparent_background"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0028. Configured startup selects the root viewport's transparent-black clear independently of native window alpha. Explicit Window viewport values take precedence. Both ordinary renderers use the existing per-viewport clear path."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/mode",
+        "ProjectSettings::property:display/window/size/initial_position_type",
+        "ProjectSettings::property:display/window/size/initial_position",
+        "ProjectSettings::property:display/window/size/initial_screen"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0040. Configured root startup applies feature-aware mode and placement through the native Window path. Absolute uses signed desktop coordinates, centering uses the effective display selector, and an unavailable indexed screen fails before scene entry. Authored placement or mode takes precedence. Window managers without global top-level placement retain system placement for project defaults."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/viewport_width",
+        "ProjectSettings::property:display/window/size/viewport_height",
+        "ProjectSettings::property:display/window/size/window_width_override",
+        "ProjectSettings::property:display/window/size/window_height_override",
+        "ProjectSettings::property:display/window/stretch/mode",
+        "ProjectSettings::property:display/window/stretch/aspect",
+        "ProjectSettings::property:display/window/stretch/scale",
+        "ProjectSettings::property:display/window/stretch/scale_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0028/0040. Project startup samples typed settings and feature overrides before native window creation. Positive desktop override axes replace viewport axes independently. Existing Window fitting computes logical/raster/presentation sizes and input transforms. Enum descriptors replace text choices; explicit Window assignments retain per-property precedence."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028/0040: deferred fitting grows visible embedded and native windows. On desktop SDL also applies the effective content minimum to native resizing, preserves authored bounds, and orders and rolls back changes to the native limit pair. Windows Vulkan/Direct3D 11 and embedded execution are verified; foreign platform qualification remains separate.",
+      "godot": ["Window::method:child_controls_changed()"]
+    },
+    {
+      "godot": ["ProjectSettings::property:application/run/main_loop_type"],
+      "state": "Implemented",
+      "reason": "ADRs 0015/0016/0019/0027: SceneTree, registered extension identities and exact global C# class names select actual owned loops. Typed startup factories run on Windows x64 JIT and full-trim NativeAOT with Vulkan and Direct3D 11, through both ordinary and fixed-cadence project runs. File-backed Script registration remains available for source-aware hosts. Other platform qualification is separate under ADR 0021. See docs/components/engine-runtime.md#project-main-scene."
+    },
+    {
       "godot": ["ProjectSettings::property:application/run/main_scene"],
       "state": "Implemented",
       "reason": "The effective scene path or UID selects a packed scene. The owned window host installs it as CurrentScene before tree entry and renders and retires it on the usual lifecycle. Sync and async Windows GPU and Compatibility tests exercise feature selection, startup failures and real pixels. See docs/components/engine-runtime.md#project-main-scene."
@@ -10495,7 +10760,6 @@
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_MAX",
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_ONCE",
         "Viewport::method:get_positional_shadow_atlas_quadrant_subdiv(int:)",
-        "Viewport::method:get_stretch_transform()",
         "Viewport::method:set_positional_shadow_atlas_quadrant_subdiv(int:,int:Viewport.PositionalShadowAtlasQuadrantSubdiv)",
         "Viewport::property:debug_draw",
         "Viewport::property:disable_3d",
@@ -10563,14 +10827,19 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "First typed GUI, text and theme integration with Window after the renderer (ADRs 0008 and 0028).",
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned ed1daf0b scene/main/window.cpp guards both definitions and bindings with DISABLE_DEPRECATED. They forward to Viewport oversampling, exposed as the inherited Viewport.Oversampling property.",
       "godot": [
-        "Window::method:child_controls_changed()",
         "Window::method:is_using_font_oversampling()",
-        "Window::method:set_use_font_oversampling(bool:)",
-        "Window::property:accessibility_description",
-        "Window::property:accessibility_name"
+        "Window::method:set_use_font_oversampling(bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: stored authored names and descriptions feed native root and embedded semantic elements via prepared translated source metadata. Empty name restores the title and empty description clears its native property. Managed duplication and fresh-process archive checks and the independent AT-SPI window metadata client cover both declarations. Foreign platform adapters retain their owning integration and acceptance gates.",
+      "godot": [
+        "Window::property:accessibility_name",
+        "Window::property:accessibility_description"
       ]
     },
     {
@@ -10581,8 +10850,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "First rendered Window viewport, presentation and content-scaling slice; HDR requires a separate capability audit (ADR 0028).",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0040: detached and hidden windows return false, attached embedded windows use viewport composition, and live native windows query the shared presentation state. The owned custom-loop root uses its native host. See docs/components/window-runtime.md#window-drawability.",
       "godot": [
         "Window::method:can_draw()"
       ]
@@ -10654,7 +10923,6 @@
       "godot": [
         "Window::method:get_position_with_decorations()",
         "Window::method:get_size_with_decorations()",
-        "Window::method:is_maximize_allowed()",
         "Window::method:move_to_center()",
         "Window::method:set_ime_active(bool:)",
         "Window::method:set_ime_position(Vector2i:)",
@@ -12175,6 +12443,13 @@
       ],
       "state": "Implemented",
       "reason": "Pinned section-root mouse queries execute through the root native pointer, headless/emulated global Input fallback or the disconnected viewport's own last localized hover point. Section resolution follows embedded Windows and SubViewportContainers. Hover publishes before Node input and propagates to hovered container/window descendants even when input is consumed; direct attached PushInput cannot replace the section pointer. Touch/key/disabled input preserve it. Later singular screen transforms do not re-transform disconnected cached points; CanvasItem queries still remove their current canvas/node matrices. Runtime state follows reattachment/cross-tree identity, is absent from reconstructed scenes and survives observer failure. Public CPU/software-Vulkan/registered serial/separate JIT and strict NativeAOT fixture checks Node/GUI/physical callbacks, owned queued input, guards and two 128-step full-frame intervals at strict 0/0 owner/all-thread managed bytes per headless profile. Native software Wayland/dummy verifies root polling/projection and isolated-section selection. Evidence: bin/physics-offscreen-pointer/2026-10-18/validation.json. Physical warp and broader screen/platform APIs keep their separate gates."
+    },
+    {
+      "godot": [
+        "Viewport::method:get_stretch_transform()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028: GetStretchTransform returns the raster scale used in canvas composition. Window CanvasItems and Disabled include the content factor; Viewport-mode enlargement belongs to presentation. SubViewport uses its own per-axis override with no inherited window factor. Live resize, zero and negative overrides, owner/lifetime guards and native Window/SubViewport readback verify the contract."
     },
     {
       "godot": [

@@ -4,7 +4,16 @@ public sealed partial class NavigationServer
 {
     private NavigationLinkState Link(RID rid) => _links.TryGetValue(rid, out var link) && (link.Scene is null || link.Scene.TryGetTarget(out var node) && SceneIdentityAvailable(node)) ? link : throw new ArgumentException("The RID does not identify a live navigation link.", nameof(rid));
     internal RID CreateLink(NavigationLink? node = null) { lock (_gate) { var rid = RID.Allocate(); _links.Add(rid, new(rid, node)); return rid; } }
-    internal void ReleaseSceneLink(RID rid) { lock (_gate) { if (_links.Remove(rid, out var link)) Dirty(link.Map); } }
+    internal void ReleaseSceneLink(RID rid) { lock (_gate) { if (_links.Remove(rid, out var link)) { RemoveLinkOrder(link); Dirty(link.Map); } } }
+    private void RemoveLinkOrder(NavigationLinkState removed)
+    {
+        if (!removed.Map.IsValid()) return;
+        NavigationLinkState? last = null;
+        foreach (var link in _links.Values)
+            if (link.Map == removed.Map && link.MapOrder > removed.MapOrder && (last is null || link.MapOrder > last.MapOrder))
+                last = link;
+        if (last is not null) last.MapOrder = removed.MapOrder;
+    }
     private void DirtyLink(NavigationLinkState link) { link.Dirty = true; Dirty(link.Map); }
     internal void StageSceneLinkEndpoints(RID rid, Vector2 start, Vector2 end)
     { Finite(start); Finite(end); lock (_gate) { var link = Link(rid); if (link.Start == start && link.End == end) return; link.Start = start; link.End = end; DirtyLink(link); } }
@@ -15,8 +24,9 @@ public sealed partial class NavigationServer
     /// <param name="map">Live navigation map RID.</param>
     /// <returns>Independent link identity array, including disabled links.</returns>
     /// <exception cref="ArgumentException">The map RID is absent, stale or of another kind.</exception>
-    public static RID[] MapGetLinks(RID map) { lock (Shared._gate) { Shared.Map(map); return Shared._links.Values.Where(l => l.Map == map).Select(l => l.RID).ToArray(); } }
-    /// <summary>Stages the finite nonnegative endpoint attachment radius, initially four world units.</summary>
+    /// <remarks>Membership appends on attachment. Removing a member fills its slot with the last member.</remarks>
+    public static RID[] MapGetLinks(RID map) { lock (Shared._gate) { Shared.Map(map); return Shared._links.Values.Where(l => l.Map == map).OrderBy(l => l.MapOrder).Select(l => l.RID).ToArray(); } }
+    /// <summary>Stages the finite nonnegative endpoint attachment radius for this map.</summary>
     /// <param name="map">Live navigation map RID.</param><param name="radius">World distance; attachment is strictly inside this radius. Zero prevents attachment.</param>
     /// <exception cref="ArgumentOutOfRangeException">Radius is nonfinite or negative.</exception>
     /// <exception cref="ArgumentException">The map RID is absent, stale or of another kind.</exception>
@@ -32,7 +42,22 @@ public sealed partial class NavigationServer
     /// <summary>Stages a link map assignment; empty detaches it.</summary>
     /// <param name="link">Live navigation link RID.</param><param name="map">Live map RID, or empty to detach.</param>
     /// <exception cref="ArgumentException">A required RID is absent, stale or of another kind.</exception>
-    public static void LinkSetMap(RID link, RID map) { lock (Shared._gate) { var value = Shared.Link(link); if (map.IsValid()) Shared.Map(map); if (value.Map == map) return; Shared.Dirty(value.Map); value.Map = map; Shared.DirtyLink(value); } }
+    public static void LinkSetMap(RID link, RID map)
+    {
+        lock (Shared._gate)
+        {
+            var value = Shared.Link(link);
+            if (map.IsValid()) Shared.Map(map);
+            if (value.Map == map) return;
+            var order = map.IsValid() ? checked(Shared._membershipOrder + 1) : 0;
+            Shared.RemoveLinkOrder(value);
+            value.MapOrder = order;
+            if (map.IsValid()) Shared._membershipOrder = order;
+            Shared.Dirty(value.Map);
+            value.Map = map;
+            Shared.DirtyLink(value);
+        }
+    }
     /// <summary>Returns the link's staged map assignment.</summary>
     /// <param name="link">Live navigation link RID.</param><returns>Assigned map, or empty when detached.</returns>
     /// <exception cref="ArgumentException">The link RID is absent, stale or of another kind.</exception>
@@ -109,6 +134,7 @@ internal sealed class NavigationLinkState(RID rid, NavigationLink? scene)
     internal readonly RID RID = rid;
     internal readonly WeakReference<NavigationLink>? Scene = scene is null ? null : new(scene);
     internal RID Map;
+    internal long MapOrder;
     internal bool Enabled = true, Bidirectional = true, Dirty = true;
     internal Vector2 Start, End;
     internal uint Layers = 1, IterationID;

@@ -40,6 +40,8 @@ public partial class Window
     private ContentScaleAspect _contentScaleAspect;
     private ContentScaleStretch _contentScaleStretch;
     private float _contentScaleFactor = 1;
+    private bool _contentScaleSizeAssigned, _contentScaleModeAssigned, _contentScaleAspectAssigned,
+        _contentScaleStretchAssigned, _contentScaleFactorAssigned;
     private WindowContentLayout _contentLayout;
     private volatile bool _contentLayoutValid;
     private readonly object _contentLayoutGate = new();
@@ -50,44 +52,74 @@ public partial class Window
     /// <exception cref="ArgumentOutOfRangeException">An axis is negative or calculated dimensions are unrepresentable.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during native submission.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2i ContentScaleSize { get { ThrowIfDisposed(); return _contentScaleSize; } set { if (value.X < 0 || value.Y < 0) throw new ArgumentOutOfRangeException(nameof(value)); SetContent(ref _contentScaleSize, value); } }
+    public Vector2i ContentScaleSize { get { ThrowIfDisposed(); return _contentScaleSize; } set { if (value.X < 0 || value.Y < 0) throw new ArgumentOutOfRangeException(nameof(value)); SetContent(ref _contentScaleSize, value, ref _contentScaleSizeAssigned); } }
     /// <summary>Gets or sets whether content uses client rasterization or a separate logical-resolution image.</summary>
     /// <value>Disabled initially. All three modes execute through the existing canvas renderer.</value>
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined or calculated dimensions are unrepresentable.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during native submission.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public ContentScaleMode ContentScaleMode { get { ThrowIfDisposed(); return _contentScaleMode; } set { Animation.Valid(value); SetContent(ref _contentScaleMode, value); } }
+    public ContentScaleMode ContentScaleMode { get { ThrowIfDisposed(); return _contentScaleMode; } set { Animation.Valid(value); SetContent(ref _contentScaleMode, value, ref _contentScaleModeAssigned); } }
     /// <summary>Gets or sets the fitting policy for the content aspect ratio.</summary>
     /// <value>Ignore initially; Keep, KeepWidth, KeepHeight and Expand retain their distinct fitting rules.</value>
     /// <exception cref="ArgumentOutOfRangeException">The policy is undefined or calculated dimensions are unrepresentable.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during native submission.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public ContentScaleAspect ContentScaleAspect { get { ThrowIfDisposed(); return _contentScaleAspect; } set { Animation.Valid(value); SetContent(ref _contentScaleAspect, value); } }
+    public ContentScaleAspect ContentScaleAspect { get { ThrowIfDisposed(); return _contentScaleAspect; } set { Animation.Valid(value); SetContent(ref _contentScaleAspect, value, ref _contentScaleAspectAssigned); } }
     /// <summary>Gets or sets fractional or whole-number resolution fitting.</summary>
     /// <value>Fractional initially. Integer floors ContentScaleFactor and clamps it to at least one.</value>
     /// <exception cref="ArgumentOutOfRangeException">The policy is undefined or calculated dimensions are unrepresentable.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during native submission.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public ContentScaleStretch ContentScaleStretch { get { ThrowIfDisposed(); return _contentScaleStretch; } set { Animation.Valid(value); SetContent(ref _contentScaleStretch, value); } }
+    public ContentScaleStretch ContentScaleStretch { get { ThrowIfDisposed(); return _contentScaleStretch; } set { Animation.Valid(value); SetContent(ref _contentScaleStretch, value, ref _contentScaleStretchAssigned); } }
     /// <summary>Gets or sets the positive finite content scale factor.</summary>
     /// <value>One initially. Integer stretching stores its floored value, clamped to one.</value>
     /// <remarks>Disabled/CanvasItems scale geometry; Viewport changes the raster image resolution. Equal assignments are silent.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The factor is nonpositive, nonfinite or calculated dimensions are unrepresentable.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during native submission.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public float ContentScaleFactor { get { ThrowIfDisposed(); return _contentScaleFactor; } set { if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); SetContent(ref _contentScaleFactor, value); } }
+    public float ContentScaleFactor { get { ThrowIfDisposed(); return _contentScaleFactor; } set { if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); SetContent(ref _contentScaleFactor, value, ref _contentScaleFactorAssigned); } }
 
-    private void SetContent<T>(ref T field, T value)
+    private void SetContent<T>(ref T field, T value, ref bool assigned)
     {
         EnsureMutable(); RenderingOwner?.EnsureViewportMutation();
-        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        if (EqualityComparer<T>.Default.Equals(field, value)) { assigned = true; return; }
+        var previousScale = _contentScaleFactor;
         var previous = field; field = value;
         WindowContentLayout layout;
         try { layout = CalculateContentLayout(); } catch { field = previous; throw; }
+        assigned = true;
         _contentScaleFactor = layout.Factor; _contentLayout = layout; _contentLayoutValid = true;
         InvalidateViewportRecording(); _embeddedCanvas?.QueueRedraw();
+        if (_wrapControls && previousScale != _contentScaleFactor) ChildControlsChanged();
         NotifyContentSizeChanged();
     }
+    internal void ApplyProjectContent()
+    {
+        var settings = ProjectSettings.Service.ReadProjectWindowContent();
+        _projectContentApplied = true;
+        if (!_contentScaleSizeAssigned) _contentScaleSize = settings.ViewportSize;
+        if (!_contentScaleModeAssigned) _contentScaleMode = settings.Mode;
+        if (!_contentScaleAspectAssigned) _contentScaleAspect = settings.Aspect;
+        if (!_contentScaleStretchAssigned) _contentScaleStretch = settings.ScaleMode;
+        if (!_contentScaleFactorAssigned) _contentScaleFactor = settings.Scale;
+        _contentScaleFactor = EffectiveContentScaleFactor;
+        _contentLayoutValid = false;
+
+        if (!_sizeAssigned)
+        {
+            var requested = settings.ViewportSize;
+            if (SupportsNativeSizeLimits)
+            {
+                if (settings.ClientOverride.X != 0) requested.X = settings.ClientOverride.X;
+                if (settings.ClientOverride.Y != 0) requested.Y = settings.ClientOverride.Y;
+            }
+            _size = ConstrainRequestedSize(requested);
+        }
+
+        _contentLayout = CalculateContentLayout();
+        _contentLayoutValid = true;
+    }
+
     private void NotifyContentSizeChanged()
     {
         List<Exception>? errors = null;
@@ -129,9 +161,12 @@ public partial class Window
     internal override Transform StretchTransform => ContentLayout.Stretch;
     internal override Transform WindowTransform => ContentLayout.Presentation;
 
+    private float EffectiveContentScaleFactor => _contentScaleStretch == ContentScaleStretch.Integer
+        ? MathF.Max(1, MathF.Floor(_contentScaleFactor)) : _contentScaleFactor;
+
     private WindowContentLayout CalculateContentLayout()
     {
-        var factor = _contentScaleStretch == ContentScaleStretch.Integer ? MathF.Max(1, MathF.Floor(_contentScaleFactor)) : _contentScaleFactor;
+        var factor = EffectiveContentScaleFactor;
         float vw = _size.X, vh = _size.Y, sw = vw, sh = vh;
         var fitted = _contentScaleMode != ContentScaleMode.Disabled && _contentScaleSize.X > 0 && _contentScaleSize.Y > 0;
         if (fitted)
@@ -172,11 +207,16 @@ public partial class Window
     private static float Scalar(double value) => double.IsFinite(value) && value <= float.MaxValue ? (float)value : throw new ArgumentOutOfRangeException(nameof(ContentScaleFactor), "Calculated content dimensions exceed finite coordinates.");
     private static readonly PropertyDescriptor[] ContentProperties =
     [
-        new PropertyDescriptor<Window, Vector2i>(nameof(ContentScaleSize), w => w.ContentScaleSize, (w, v) => w.ContentScaleSize = v, _ => Vector2i.Zero, stored: true),
-        new PropertyDescriptor<Window, ContentScaleMode>(nameof(ContentScaleMode), w => w.ContentScaleMode, (w, v) => w.ContentScaleMode = v, _ => ContentScaleMode.Disabled, stored: true),
-        new PropertyDescriptor<Window, ContentScaleAspect>(nameof(ContentScaleAspect), w => w.ContentScaleAspect, (w, v) => w.ContentScaleAspect = v, _ => ContentScaleAspect.Ignore, stored: true),
-        new PropertyDescriptor<Window, ContentScaleStretch>(nameof(ContentScaleStretch), w => w.ContentScaleStretch, (w, v) => w.ContentScaleStretch = v, _ => ContentScaleStretch.Fractional, stored: true),
+        new PropertyDescriptor<Window, Vector2i>(nameof(ContentScaleSize), w => w.ContentScaleSize, (w, v) => w.ContentScaleSize = v, _ => Vector2i.Zero, stored: true)
+        { StoreCondition = w => w._contentScaleSizeAssigned },
+        new PropertyDescriptor<Window, ContentScaleMode>(nameof(ContentScaleMode), w => w.ContentScaleMode, (w, v) => w.ContentScaleMode = v, _ => ContentScaleMode.Disabled, stored: true)
+        { StoreCondition = w => w._contentScaleModeAssigned },
+        new PropertyDescriptor<Window, ContentScaleAspect>(nameof(ContentScaleAspect), w => w.ContentScaleAspect, (w, v) => w.ContentScaleAspect = v, _ => ContentScaleAspect.Ignore, stored: true)
+        { StoreCondition = w => w._contentScaleAspectAssigned },
+        new PropertyDescriptor<Window, ContentScaleStretch>(nameof(ContentScaleStretch), w => w.ContentScaleStretch, (w, v) => w.ContentScaleStretch = v, _ => ContentScaleStretch.Fractional, stored: true)
+        { StoreCondition = w => w._contentScaleStretchAssigned },
         new PropertyDescriptor<Window, float>(nameof(ContentScaleFactor), w => w.ContentScaleFactor, (w, v) => w.ContentScaleFactor = v, _ => 1, stored: true)
+        { StoreCondition = w => w._contentScaleFactorAssigned }
     ];
 }
 

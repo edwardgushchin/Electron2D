@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-11-07
+Last updated: 2026-11-14
 
 [Native HDR output](../components/native-hdr-output.md) now provides stored
 HDROutputRequested, GetOutputMaxLinearValue() and the typed
@@ -62,6 +62,8 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public Vector2i Position { get; set; }`](#position) | Gets or requests the client origin in native desktop or embedded-host coordinates. |
 | [`public Vector2i Size { get; set; }`](#size) | Gets the observed client size or requests a positive client size. |
 | [`public string Title { get; set; }`](#title) | Gets or sets the native window title. |
+| [`public string AccessibilityName { get; set; }`](#accessibility-metadata) | Stores the name reported to assistive technology. Empty uses the window title. |
+| [`public string AccessibilityDescription { get; set; }`](#accessibility-metadata) | Stores the description reported to assistive technology. Empty clears it. |
 | [`public bool Visible { get; set; }`](#visible) | Gets or sets native or embedded visibility; hiding a native child retires its host. |
 | [`public WindowMode Mode { get; set; }`](#mode) | Gets the observed native mode, or configures a presentation-mode request. |
 | [`public int CurrentScreen { get; set; }`](#currentscreen) | Gets the observed display index, or requests placement on a zero-based display index. |
@@ -75,6 +77,10 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public bool ExcludeFromCapture { get; set; }`](#exclude-from-capture) | Excludes the native window from ordinary OS capture where supported. |
 | [`public bool ForceNative { get; set; }`](#forcenative) | Overrides a containing embedding viewport while hidden. |
 | [`public bool TransientToFocused { get; set; }`](#transienttofocused) | Chooses the focused native transient owner on the next show. |
+
+## Accessibility metadata
+
+Both properties default to an empty string and return authored text. Assignment rejects null. Scenes and duplicates retain the strings. Automatic scene publication resolves them using the window's translation context and updates the native accessibility tree when the effective text changes. The ordinary window title and its decoration are independent of this metadata. See [Native accessibility](../components/accessibility.md#window-names-and-descriptions) for native and embedded window behavior.
 
 ## Native mouse input
 
@@ -102,11 +108,12 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | [`public void GrabFocus()`](#grabfocus) | Requests keyboard focus and foreground placement from the native system. |
 | [`public void StartDrag()`](#interactive-window-gestures) | Starts a move from a client-area left-button press. |
 | [`public void StartResize(DisplayServer.WindowResizeEdge edge)`](#interactive-window-gestures) | Starts resizing from a client-area press and a chosen edge. |
+| [`public bool CanDraw()`](#candraw) | Reports native or embedded drawing eligibility. |
 | [`public bool HasFocus()`](#hasfocus) | Reports whether the active native window has keyboard focus. |
 | [`public void RequestAttention()`](#requestattention) | Requests a platform attention indication until this window is focused. |
 | [`public bool GetFlag(Flags flag)`](#getflag) | Gets a configured window policy. |
 | [`public void SetFlag(Flags flag, bool enabled)`](#setflag) | Configures an executable policy and requests its native application when active. |
-| [`public bool IsMaximizeAllowed()`](#ismaximizeallowed) | Reports whether the current resize policy permits native maximization. |
+| [`public bool IsMaximizeAllowed()`](#ismaximizeallowed) | Reports whether the current window policy permits user maximization. |
 | [`public Vector2i GetPositionWithDecorations()`](#getpositionwithdecorations) | Gets the outer window origin, including visible native or embedded decoration margins. |
 | [`public Vector2i GetSizeWithDecorations()`](#getsizewithdecorations) | Gets the outer window size, including visible native or embedded decoration margins. |
 | [`public void MoveToCenter()`](#movetocenter) | Requests centering of the active client area in its current screen's usable rectangle. |
@@ -396,6 +403,11 @@ The operating system may deny focus. Wayland submits no foreground activation re
 
 **ObjectDisposedException:** The window is disposed.
 
+<a id="candraw"></a>
+### `public bool CanDraw()`
+
+Queries the live native host when present, including the root of an owned custom MainLoop. An attached embedded window uses its current visibility. Detached and hidden windows return false. Disposed and off-owner access reject. See [window drawability](../components/window-runtime.md#window-drawability).
+
 <a id="hasfocus"></a>
 ### `public bool HasFocus()`
 
@@ -453,9 +465,7 @@ An unchanged request does nothing. Failed native requests do not commit the conf
 <a id="ismaximizeallowed"></a>
 ### `public bool IsMaximizeAllowed()`
 
-Reports whether the current resize policy permits native maximization.
-
-**Returns:** Whether resizing is allowed; the compositor may impose further restrictions.
+Reports the native maximize style on Windows. Other active backends report SDL resizability and may impose compositor restrictions. Detached and embedded windows report the local resize and caption policy. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
 
 **InvalidOperationException:** An active window is accessed off-thread.
 
@@ -729,6 +739,7 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 | Complete declaration | Contract |
 | --- | --- |
 | `public event System.Action AboutToPopup` | Occurs before popup positioning, sizing and visibility changes. |
+| `public void ChildControlsChanged()` | Queues a deferred refresh of wrapped content dimensions. |
 | `public Electron2D.Vector2 GetContentsMinimumSize()` | Returns the maximum extent of direct child controls and their minimum sizes. |
 | `public Electron2D.StyleBox GetThemeStyleBox(System.String name, System.String themeType = "")` | Gets a typed theme style box using local override, branch themes, native defaults and universal fallback. |
 | `public System.Boolean IsEmbedded()` | Reports whether this window uses an attached viewport's embedded host. |
@@ -780,9 +791,11 @@ Layout-direction and translation notifications reflow geometry and invalidate te
 
 ## Content scale
 
+A configured project run supplies [project geometry defaults](../components/window-runtime.md#project-startup-geometry) for each unassigned root-window size or content scale property. An explicit value has precedence even if it equals the detached default.
+
 The stored `ContentScaleSize`, `ContentScaleMode`, `ContentScaleAspect`, `ContentScaleStretch` and `ContentScaleFactor` configure real canvas rasterization and presentation. Size defaults to zero; either zero axis disables resolution fitting. Mode defaults to Disabled, aspect to Ignore, stretch to Fractional and factor to one. Desired axes must be nonnegative; factor must be positive and finite; undefined enum values and unrepresentable calculated dimensions reject before committing. Equal writes are silent. Successful changes invalidate retained commands and notify viewport texture/SizeChanged observers; callback failure preserves the committed state.
 
-Disabled retains client-resolution pixels while dividing the logical visible area by factor. CanvasItems fits the desired resolution, rasterizes geometry at the fitted client resolution and scales coordinates. Viewport rasterizes at the floored fitted logical resolution divided by factor, then enlarges that image. `GetVisibleRect()` reports logical coordinates; `GetTexture()` reports the actual raster resolution. `Size` remains the client size. `GetFinalTransform()` and `GetScreenTransform()` include presentation margins and scale for input, pointer and IME consumers; the renderer uses its separate raster transform.
+Disabled retains client-resolution pixels while dividing the logical visible area by factor. CanvasItems fits the desired resolution, rasterizes geometry at the fitted client resolution and scales coordinates. Viewport rasterizes at the floored fitted logical resolution divided by factor, then enlarges that image. `GetVisibleRect()` reports logical coordinates; `GetTexture()` reports the actual raster resolution. `Size` remains the client size. `GetFinalTransform()` and `GetScreenTransform()` include presentation margins and scale for input, pointer and IME consumers; the renderer uses its separate raster transform. [GetStretchTransform](Viewport.md#getstretchtransform) exposes the content scale applied to the raster before presentation.
 
 Ignore fits both axes independently. Keep preserves the authored aspect with black margins. KeepWidth expands logical height for a taller client and otherwise uses margins; KeepHeight performs the corresponding horizontal policy. Expand grows the logical area to fill the client. Screen and logical fitting dimensions floor before margins are computed; half margins round away from zero. Integer stretch floors and stores factor, clamps it to at least one, and chooses a whole client-to-content ratio of at least one. Small clients clip the image instead of downscaling. A floored zero raster has a zero texture size and no image/device view; presentation remains a cleared client surface. Existing native target limits remain explicit backend errors.
 
@@ -862,6 +875,8 @@ combined failures retain both errors. See [the current popup contract](../compon
 
 ## Initial placement and minimum-size reset
 
+Configured project runs can supply [startup placement and mode](../components/window-runtime.md#project-startup-placement) to an unassigned root. Detached windows retain the Absolute and Windowed defaults. [Project transparency](../components/window-runtime.md#main-window-native-transparency) independently supplies unassigned native and viewport alpha policies. [Project window flags](../components/window-runtime.md#project-startup-window-flags) supply unassigned resize, border, stacking, focus and corner policies on supported hosts.
+
 `Window.WindowInitialPosition` retains these six values:
 
 | Value | Native root selection |
@@ -876,6 +891,8 @@ combined failures retain both errors. See [the current popup contract](../compon
 `InitialPosition` defaults to Absolute and is stored by PackedScene and typed archives separately from Position. Undefined enum values fail before commitment. Every valid assignment emits PropertyListChanged after commitment, including equal values; observer failure leaves the new policy stored. Native roots request placement before scene entry, using full screen bounds. These are requests subject to native constraints and focus-selector capability limits. Wayland rejects explicit root positioning and releases the failed host; the default unset Absolute policy works normally. CurrentScreen retains its existing non-stored native configuration role.
 
 Embedded windows center in their actual containing viewport for every non-absolute policy. Entry/show applies the policy, including showing through Popup; changing it while visible or resizing its parent does not move the window, and hide/show applies it again. Absolute keeps the authored local position. Independent native children apply the same native placement policies on creation and recreation.
+
+`ChildControlsChanged()` queues one measurement of the latest contents for a visible attached window. With `WrapControls`, the client grows within the current bounds and the desktop native host enforces the resulting content minimum during resizing. `MinSize` and `MaxSize` retain their authored values. Direct child minimum and maximum changes already request the refresh. See [fitting child controls](../components/window-runtime.md#fitting-child-controls).
 
 `ResetSize()` requests the smallest constrained client extent. It combines MinSize, the title minimum when required, and `ceil(GetContentsMinimumSize() * ContentScaleFactor)` when WrapControls is enabled, then honors each nonzero MaxSize axis. The portable viewport retains at least one pixel per axis. Measurement failures and unrepresentable scaled dimensions leave the old size intact. Source content is sampled once by a reset. Actual native geometry and SizeChanged retain the normal asynchronous resize contract.
 

@@ -42,7 +42,7 @@ public abstract partial class CanvasItem
         }
         throw new InvalidOperationException("Canvas parent depth exceeds 1024.");
     }
-    internal bool RenderLive(SceneTree tree) => !IsDisposed && (ServerState is { Owned: true } || ReferenceEquals(Tree, tree) && IsInsideTree || ServerState is { ParentAssigned: true }) && RenderVisible;
+    internal bool RenderLive(SceneTree? tree) => !IsDisposed && (ServerState is { Owned: true } || tree is not null && ReferenceEquals(Tree, tree) && IsInsideTree || ServerState is { ParentAssigned: true }) && RenderVisible;
     internal Rect2? RenderClip => ServerState?.Clip == true ? RenderBounds() : ServerState?.Clip == false ? null : CanvasClipRect ?? (this is Control { ClipContents: true } control ? new(Vector2.Zero, control.Size) : null);
     internal Rect2 RenderBounds()
     {
@@ -50,7 +50,11 @@ public abstract partial class CanvasItem
         return ServerState?.VisibilityNotifier is { Enabled: true } notifier && notifier.Area.Size != Vector2.Zero
             ? bounds.Merge(notifier.Area.Abs()) : bounds;
     }
-    private Rect2 RenderCommandBounds()
+    internal ulong DebugRedrawRenderer;
+    internal ulong DebugRedrawEpoch;
+    internal double DebugRedrawTime;
+
+    internal Rect2 RenderCommandBounds()
     {
         if (ServerState?.CustomRect is { } rect) return rect;
         var commands = ServerState?.Commands ?? this; var found = false; var bounds = default(Rect2); var drawing = Transform.Identity;

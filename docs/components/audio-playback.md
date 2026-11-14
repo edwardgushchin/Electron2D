@@ -1,6 +1,6 @@
 # Audio playback and routed buses
 
-Last updated: 2026-10-27
+Last updated: 2026-11-14
 
 [Movie recording](movie-writing.md) drives this same prepared FAudio graph synchronously through a no-output-device master. Existing buses/effects, native sample voices and stream sources feed the recording PCM. Prepared quantum storage survives frame boundaries; source/effect failures abort capture. Live playback/input remain separate capabilities.
 
@@ -48,7 +48,7 @@ Engine.Run(window);
 
 ## Dependencies and limits
 
-[ADR 0047](../decisions/audio.md#adr-0047) selects FAudio/SDL3 and internal managed decoders. WAV plus PCM/IMA/QOA and mono/stereo Ogg Vorbis/MP3 now execute through pinned internal NVorbis 0.10.5/NLayer 3.0.0. Concrete effects, saved bus layouts, live output switching/latency and composite/music streams now execute. Complete composite parameter surfaces and usage tagging retain precise coverage dependencies. Static WAV file load/save executes; generic ResourceLoader WAV/MP3/Ogg registration executes; typed resource archives and fresh-process authoring execute under ADR 0013.
+[ADR 0047](../decisions/audio.md#adr-0047) selects FAudio/SDL3 and internal managed decoders. WAV plus PCM/IMA/QOA and mono/stereo Ogg Vorbis/MP3 now execute through pinned internal NVorbis 0.10.5/NLayer 3.0.0. Concrete effects, saved bus layouts, live output switching/latency and composite/music streams now execute. Complete composite parameter surfaces retain precise coverage dependencies. Static WAV file load/save executes; generic ResourceLoader WAV/MP3/Ogg registration executes; typed resource archives and fresh-process authoring execute under ADR 0013.
 
 Player transitions now execute with 64 stereo lookahead frames, full initial attack and linear frame/native-quantum gain interpolation. Stop and pause synchronously prepare one final block on the scene owner before their source callback/cursor freeze; ordinary mixing runs on the native output thread, serialized by the existing context gate. This keeps Stop callback failures synchronous and permits pooled replacement to dispose its old playback while retaining copied outgoing PCM. Resume starts at zero gain; Seek and oldest replacement overlap the copied fade and fresh attack. Repeated transitions before a native pass accumulate finite copied tails in one prepared block, and their finite-sum validation precedes publication. A paused query is immediately true and its cursor stays fixed after preparation. Explicit teardown discards transient output. Solo gating remains immediate, including LFE; stored gain whose linear value cannot fit finite float rejects before mutation. Source mixing callbacks reject graph configuration/Lock/Unlock reentrancy on either thread and owner preparation rejects player mutation/disposal. Native source buffers have the actual output channel count so independent per-channel gains, spatial pan and the unity-gain LFE path interpolate before an identity FAudio send. Prepared blocks, native PCM and public spatial hosts are checked by [AudioTransitionTests](../../tests/Electron2D.Tests/AudioTransitionTests.cs); physical listening and other targets remain unverified.
 
@@ -66,6 +66,14 @@ Apple native app checks now select static FAudio/SDL imports and require capture
 - Fresh self-contained linux-x64 former host-example publish passes native architecture/SONAME/shared SDL3 checks and the license inventory: 67 ELF files and 52 matching notices. Other target architectures/execution remain unverified.
 
 The shared Node.EnsureMutable path now calls the virtual ValidateMutation hook after its existing guards. Detached registered audio nodes retain their native configuration owner; mutation and disposal reject on foreign threads before state changes. Worker-first CPU mixing leaves that owner unclaimed until an actual owner-bound operation.
+
+## Stream usage tagging
+
+`AudioServer.SetEnableTaggingUsedAudioStreams(true)` enables position tracking for managed playback in realtime and offline FAudio output. `AudioStream.GetTaggedPlaybackOffsets()` copies up to eight positions in seconds from the latest completed quantum. Each active playback contributes its most recent valid cursor in that quantum. Multiple voices of a resource occupy separate slots in mix order. Nested playbacks participate when mixed, including child chunks within a single quantum. A delegated factory records the same position for the requested and concrete resources. An idle quantum, disabling collection, or closing output clears the published positions. Snapshots can be read from a worker outside audio callbacks.
+
+Custom playbacks can report additional resources through `OnTagUsedStreams` and `TagUsedStream`. The hook runs once per quantum for each mixed playback that is still active and follows the same allocation, threading and failure constraints as `OnMix`. Native sample transport, caller-driven mixing and owner-prepared pause/stop tails are outside this collection. Positions can include decoder prefetch and describe mix cursors.
+
+[AudioStreamUsageTests](../../tests/Electron2D.Tests/AudioStreamUsageTests.cs) checks the Windows x64 offline and SDL dummy realtime FAudio paths, including nested/shared resources, snapshot ownership, lifecycle and 64 warmed realtime quanta with zero measured managed and FAudio allocations. SDL driver allocations and physical audio output were outside the measurement. An editor can consume the snapshots through the typed API.
 
 ## Compressed files and typed parameters
 

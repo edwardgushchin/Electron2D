@@ -63,8 +63,12 @@ internal sealed class SceneAccessibility(SceneTree tree)
             var id = GetElement(node); if (!id.IsValid()) continue;
             var e = AccessibilityServer.SourceElement(node)!;
             if (node is Control relationControl && (e.SourceRelationRevision != relationControl.AccessibilityRelationRevision || e.SourceRelationGroup != (node as BaseButton)?.MembershipGroup || e.SourceRelationToggle != (node is BaseButton { ToggleMode: true }))) _relationsDirty = true;
-            var name = node switch { Control c => c.AccessibleCaption, Window w => w.AccessibilityTitle, _ => "" };
-            var description = node is Control c2 ? c2.AccessibleDescription : "";
+            var (name, description) = node switch
+            {
+                Control c => (c.AccessibleCaption, c.AccessibleDescription),
+                Window w => (w.AccessibleCaption, w.AccessibleDescription),
+                _ => ("", ""),
+            };
             var role = RoleFor(node); var flags = 0UL;
             var contextChanged = node is Control contextSource && AccessibilityServer.UpdateSourceContext(e, contextSource);
             if (e.Retired || node.IsDisposed || node.IsDepartingTree || !ReferenceEquals(node.Tree, tree)) continue;

@@ -85,7 +85,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             }
             var submitted = command;
             command = 0;
-            SubmitPresentation(submitted);
+            SubmitFencedFrameWork(submitted);
             presentation.Commit(); return acquired;
         }
         finally

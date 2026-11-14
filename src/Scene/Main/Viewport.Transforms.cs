@@ -52,6 +52,19 @@ public abstract partial class Viewport
         set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Global canvas transform must be finite.", nameof(value)); _globalCanvasTransform = value; RenderingOwner?.PublishGlobalCanvasTransform(this); }
     }
 
+    /// <summary>Returns the automatically computed stretch from logical viewport units to its raster target.</summary>
+    /// <returns>A per-axis scale with zero origin, or identity when the viewport does not stretch its canvas.</returns>
+    /// <remarks>Window canvas scaling includes the content scale factor. Viewport-mode enlargement and fitting margins
+    /// are part of window presentation. A SubViewport uses its own logical size override and raster size.
+    /// Canvas transforms, embedding and device pixel density are outside this scale.</remarks>
+    /// <exception cref="InvalidOperationException">An attached viewport is queried outside the owner/active processing groups.</exception>
+    /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
+    public Transform GetStretchTransform()
+    {
+        CheckCoordinateRead();
+        return StretchTransform;
+    }
+
     /// <summary>Returns the transform from viewport coordinates to the containing client area.</summary>
     /// <returns>Window presentation followed by content stretch and GlobalCanvasTransform.</returns>
     /// <remarks>Does not include CanvasTransform, native desktop placement or framebuffer pixel density.</remarks>

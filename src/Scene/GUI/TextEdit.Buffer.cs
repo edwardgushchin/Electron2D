@@ -37,14 +37,79 @@ public partial class TextEdit
         InvalidateTextLayout();
     }
     private Line NewLine(string text) { var line = new Line { Text = text, Scalars = CountScalars(text.AsSpan()) }; for (var i = 0; i < _gutters.Count; i++) line.Gutters.Add(new()); return line; }
-    private void StartEdit() { if (_operationBefore == null) _operationBefore = Snapshot(); }
+    private void StartEdit()
+    {
+        EndInteractiveAction();
+        _operationBefore ??= Snapshot();
+    }
+
+    internal void EditFromInput(EditAction action, Action edit)
+    {
+        if (_editingInput || _complex != 0 || _multiEdit != 0 ||
+            (_action != EditAction.None && !_interactiveAction) || !IsInsideTree || _historyLimit == 0)
+        {
+            edit();
+            return;
+        }
+
+        if (_action != action)
+            EndInteractiveAction();
+
+        _action = action;
+        _interactiveAction = _editingInput = true;
+        var version = _version;
+        try { edit(); }
+        finally
+        {
+            _editingInput = false;
+            if (!IsDisposed && _interactiveAction)
+            {
+                if (_version != version)
+                    _undoIdleRemaining = _undoIdleSeconds;
+                else if (_undoIdleRemaining <= 0)
+                    EndInteractiveAction();
+            }
+        }
+    }
+
+    private void EndInteractiveAction()
+    {
+        if (_interactiveAction && !_editingInput)
+            CommitAction();
+    }
+
+    private void CommitAction()
+    {
+        _interactiveAction = false;
+        _undoIdleRemaining = 0;
+        _action = EditAction.None;
+        FinishEdit();
+    }
+
+    private void DiscardRedo()
+    {
+        var next = _historyPosition + 1;
+        if (next < _history.Count)
+            _history.RemoveRange(next, _history.Count - next);
+    }
     private void FinishEdit()
     {
-        if (_complex > 0 || _multiEdit > 0 || _action != EditAction.None || _operationBefore == null) return;
+        if (_complex > 0 || _multiEdit > 0 || _operationBefore == null) return;
+        if (_action != EditAction.None)
+        {
+            if (_interactiveAction)
+                QueueChanges();
+            return;
+        }
         var before = _operationBefore; _operationBefore = null;
         if (before.Lines.SequenceEqual(_lines.Select(l => l.Text))) { QueueChanges(); return; }
-        if (_historyPosition + 1 < _history.Count) _history.RemoveRange(_historyPosition + 1, _history.Count - _historyPosition - 1);
-        _history[_historyPosition] = before; _history.Add(Snapshot()); if (_history.Count > _historyLimit + 1) _history.RemoveRange(0, _history.Count - _historyLimit - 1); _historyPosition = _history.Count - 1; QueueChanges();
+        _history[_historyPosition] = before;
+        _history.Add(Snapshot());
+        var excess = _history.Count - 1 - _historyLimit;
+        if (excess > 0)
+            _history.RemoveRange(0, excess);
+        _historyPosition = _history.Count - 1;
+        QueueChanges();
     }
     private void Replace(Vector2i from, Vector2i to, string value, int excludedCaret = -1, bool beforeBegin = true, bool beforeEnd = false)
     {
@@ -66,6 +131,7 @@ public partial class TextEdit
             var caret = _carets[i]; caret.Position = PositionAt(Shift(caretOffsets[i].Position, beforeEnd)); caret.Origin = PositionAt(Shift(caretOffsets[i].Origin, beforeBegin)); if (caret.Position == caret.Origin) caret.Selected = false;
         }
         _version = ++_nextVersion;
+        DiscardRedo();
         try { Changed(from.Y, Math.Max(to.Y, from.Y + pieces.Length - 1), true); FinishEdit(); } catch (Exception error) { CollectException(ref retirementErrors, error); }
         ThrowCollected("Edited line cleanup failed.", retirementErrors);
     }
@@ -93,7 +159,7 @@ public partial class TextEdit
     }
     /// <summary>Exchanges complete logical lines and their gutter/background state.</summary><param name="fromLine">Existing index.</param><param name="toLine">Existing index.</param>
     public void SwapLines(int fromLine, int toLine)
-    { EnsureTextMutable(); AtLine(fromLine); AtLine(toLine); if (fromLine == toLine) return; StartEdit(); (_lines[fromLine], _lines[toLine]) = (_lines[toLine], _lines[fromLine]); foreach (var caret in _carets) { if (caret.Position.Y == fromLine) caret.Position.Y = toLine; else if (caret.Position.Y == toLine) caret.Position.Y = fromLine; if (caret.Origin.Y == fromLine) caret.Origin.Y = toLine; else if (caret.Origin.Y == toLine) caret.Origin.Y = fromLine; } _version = ++_nextVersion; Changed(Math.Min(fromLine, toLine), Math.Max(fromLine, toLine), true); FinishEdit(); }
+    { EnsureTextMutable(); AtLine(fromLine); AtLine(toLine); if (fromLine == toLine) return; StartEdit(); (_lines[fromLine], _lines[toLine]) = (_lines[toLine], _lines[fromLine]); foreach (var caret in _carets) { if (caret.Position.Y == fromLine) caret.Position.Y = toLine; else if (caret.Position.Y == toLine) caret.Position.Y = fromLine; if (caret.Origin.Y == fromLine) caret.Origin.Y = toLine; else if (caret.Origin.Y == toLine) caret.Origin.Y = fromLine; } _version = ++_nextVersion; DiscardRedo(); Changed(Math.Min(fromLine, toLine), Math.Max(fromLine, toLine), true); FinishEdit(); }
     /// <summary>Inserts text at an explicit logical position and adjusts all carets.</summary><param name="text">Nonnull text.</param><param name="line">Existing line.</param><param name="column">Scalar column.</param><param name="beforeSelectionBegin">Keeps origins before insertion at equal positions.</param><param name="beforeSelectionEnd">Keeps caret ends before insertion at equal positions.</param>
     public void InsertText(string text, int line, int column, bool beforeSelectionBegin = true, bool beforeSelectionEnd = false)
     { EnsureTextMutable(); ArgumentNullException.ThrowIfNull(text); Replace(new(column, line), new(column, line), text, beforeBegin: beforeSelectionBegin, beforeEnd: beforeSelectionEnd); }
@@ -120,15 +186,23 @@ public partial class TextEdit
     /// <remarks>Read-only documents clear their history. TextSet is synchronous; TextChanged is suppressed.</remarks>
     public void Clear() => ReplaceDocument("", clearHistory: !_editable);
     /// <summary>Starts a nested group of edits represented by one undo step.</summary>
-    public void BeginComplexOperation() { EnsureTextMutable(); if (_complex++ == 0) StartEdit(); }
+    public void BeginComplexOperation() { EnsureTextMutable(); if (_complex == 0) StartEdit(); _complex++; }
     /// <summary>Ends one nested undo group.</summary>
     public void EndComplexOperation() { EnsureTextMutable(); if (_complex == 0) throw new InvalidOperationException("No complex edit is active."); _complex--; FinishEdit(); }
-    /// <summary>Starts grouping consecutive edits of a named interaction.</summary><param name="action">Typed edit action.</param>
-    public void StartAction(EditAction action) { EnsureTextMutable(); if (!Enum.IsDefined(action)) throw new ArgumentOutOfRangeException(nameof(action)); if (_action == action) return; EndAction(); _action = action; if (action != EditAction.None) StartEdit(); }
+    /// <summary>Starts grouping edits of a named interaction until the caller ends or changes the action.</summary><param name="action">Typed edit action.</param>
+    public void StartAction(EditAction action)
+    {
+        EnsureTextMutable();
+        if (!Enum.IsDefined(action)) throw new ArgumentOutOfRangeException(nameof(action));
+        if (_action == action && !_interactiveAction) return;
+        CommitAction();
+        _action = action;
+        if (action != EditAction.None) StartEdit();
+    }
     /// <summary>Ends a consecutive edit action and commits its undo step.</summary>
-    public void EndAction() { EnsureTextMutable(); _action = EditAction.None; FinishEdit(); }
+    public void EndAction() { EnsureTextMutable(); CommitAction(); }
     /// <summary>Returns whether a prior state is available.</summary><returns>Whether Undo can change content.</returns>
-    public bool HasUndo() { CheckTextEdit(); return _historyPosition > 0 || _operationBefore != null && !_operationBefore.Lines.SequenceEqual(_lines.Select(l => l.Text)); }
+    public bool HasUndo() { CheckTextEdit(); return _historyLimit > 0 && (_historyPosition > 0 || _operationBefore != null && !_operationBefore.Lines.SequenceEqual(_lines.Select(l => l.Text))); }
     /// <summary>Returns whether an undone state is available.</summary><returns>Whether Redo can change content.</returns>
     public bool HasRedo() { CheckTextEdit(); return _historyPosition + 1 < _history.Count; }
     /// <summary>Restores the previous committed content/caret state.</summary>
@@ -143,7 +217,7 @@ public partial class TextEdit
         ThrowCollected("Restored line cleanup failed.", errors);
     }
     /// <summary>Clears undo/redo history while retaining current text.</summary>
-    public void ClearUndoHistory() { EnsureTextMutable(); _savedVersion = 0; _history.Clear(); _historyPosition = 0; _operationBefore = null; _complex = _multiEdit = 0; _action = EditAction.None; _history.Add(Snapshot()); }
+    public void ClearUndoHistory() { EnsureTextMutable(); _savedVersion = 0; _history.Clear(); _historyPosition = 0; _operationBefore = null; _complex = _multiEdit = 0; _action = EditAction.None; _interactiveAction = false; _undoIdleRemaining = 0; _history.Add(Snapshot()); QueueChanges(); }
     /// <summary>Returns the current content version.</summary><returns>The undo-restorable edit version.</returns>
     public int GetVersion() { CheckTextEdit(); return _version; }
     /// <summary>Marks the current edit version as saved.</summary>

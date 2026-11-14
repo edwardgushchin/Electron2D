@@ -149,9 +149,80 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <summary>Gets the project-local directory name reserved for generated engine data.</summary>
     public const string ProjectDataDirectoryName = ".electron2d";
 
+    /// <summary>Defines the color behind the project boot splash.</summary>
+    /// <value>application/boot_splash/bg_color; opaque dark gray initially.</value>
+    public static ProjectSetting<Color> BootSplashBackgroundColor { get; } =
+        new("application/boot_splash/bg_color", new Color(0.14f, 0.14f, 0.14f), color => color.IsFinite());
+
+    /// <summary>Defines the custom project boot image path.</summary>
+    /// <value>application/boot_splash/image; empty initially, selecting the built-in image.</value>
+    /// <remarks>Accepts PNG files, including mounted resources and registered resource UIDs. An unreadable image
+    /// selects the built-in image. The windowed project host reads the effective value at startup.</remarks>
+    public static ProjectSetting<string> BootSplashImage { get; } = new("application/boot_splash/image", string.Empty);
+
+    /// <summary>Defines the minimum number of milliseconds to display the project boot splash.</summary>
+    /// <value>application/boot_splash/minimum_display_time; zero initially.</value>
+    /// <remarks>Time already spent preparing the application after presentation counts toward the minimum.</remarks>
+    public static ProjectSetting<int> BootSplashMinimumDisplayTimeMSEC { get; } =
+        new("application/boot_splash/minimum_display_time", 0, value => value >= 0);
+
+    /// <summary>Defines whether the project boot splash draws an image over its background.</summary>
+    /// <value>application/boot_splash/show_image; true initially.</value>
+    public static ProjectSetting<bool> BootSplashShowImage { get; } = new("application/boot_splash/show_image", true);
+
+    /// <summary>Defines how a custom boot image fits the native main-window client.</summary>
+    /// <value>application/boot_splash/stretch_mode; Keep initially.</value>
+    public static ProjectSetting<RenderingServer.SplashStretchMode> BootSplashStretchMode { get; } =
+        new("application/boot_splash/stretch_mode", RenderingServer.SplashStretchMode.Keep,
+            value => value is >= RenderingServer.SplashStretchMode.Disabled and <= RenderingServer.SplashStretchMode.Ignore);
+
+    /// <summary>Defines whether the custom project boot image uses linear filtering when scaled.</summary>
+    /// <value>application/boot_splash/use_filter; true initially.</value>
+    /// <remarks>False selects nearest sampling. The software compatibility driver uses nearest sampling.</remarks>
+    public static ProjectSetting<bool> BootSplashUseFilter { get; } = new("application/boot_splash/use_filter", true);
+
+    /// <summary>Defines an optional configuration file loaded after the conventional project override.</summary>
+    /// <value>application/config/project_settings_override; empty initially.</value>
+    /// <remarks><see cref="Load"/> reads this setting from the candidate project with feature overrides.
+    /// Relative paths are project-relative. Absolute paths, res://, user:// and registered resource UIDs are supported.
+    /// Missing files are ignored. <see cref="DisableProjectSettingsOverride"/> controls automatic loading.</remarks>
+    public static ProjectSetting<string> ProjectSettingsOverride { get; } =
+        new("application/config/project_settings_override", string.Empty);
+
+    /// <summary>Defines whether project loading skips automatic override files.</summary>
+    /// <value>application/config/disable_project_settings_override; false initially.</value>
+    /// <remarks>A true value in the project file suppresses both automatic layers.
+    /// The conventional layer can disable the later configured layer. Explicit <see cref="LoadCustom(string)"/> remains available.</remarks>
+    public static ProjectSetting<bool> DisableProjectSettingsOverride { get; } =
+        new("application/config/disable_project_settings_override", false);
+
+    /// <summary>Defines whether automatic user data uses an application-owned directory.</summary>
+    /// <value>application/config/use_custom_user_dir; false initially.</value>
+    /// <remarks>The effective value is read when loading the project with an automatically selected user-data root.</remarks>
+    public static ProjectSetting<bool> UseCustomUserDir { get; } = new("application/config/use_custom_user_dir", false);
+
+    /// <summary>Defines the directory name or relative subpath for automatic custom user data.</summary>
+    /// <value>application/config/custom_user_dir_name; empty initially, selecting the application name.</value>
+    /// <remarks>Applies when <see cref="UseCustomUserDir"/> is true. Unsafe path characters are normalized.</remarks>
+    public static ProjectSetting<string> CustomUserDirName { get; } = new("application/config/custom_user_dir_name", string.Empty);
+
     /// <summary>Defines the human-readable application name.</summary>
+    /// <remarks>Used for automatic user-data directory selection at project load.</remarks>
     public static ProjectSetting<string> ApplicationName { get; } =
         new("application/config/name", string.Empty);
+
+    /// <summary>Defines the image file used for the application's default window icon.</summary>
+    /// <value>application/config/icon; empty initially.</value>
+    /// <remarks>The windowed host reads the effective path before scene entry on displays that support image icons.
+    /// Paths may refer to mounted resources. A configured native icon takes priority on its supported display.</remarks>
+    public static ProjectSetting<string> ApplicationIcon { get; } =
+        new("application/config/icon", string.Empty);
+
+    /// <summary>Defines the native ICO file loaded when opening a Windows application window.</summary>
+    /// <value>application/config/windows_native_icon; empty initially.</value>
+    /// <remarks>The effective project path is read at startup and can refer to a mounted resource pack.</remarks>
+    public static ProjectSetting<string> WindowsNativeIcon { get; } =
+        new("application/config/windows_native_icon", string.Empty);
 
     /// <summary>Defines the initial SceneTree policy for root window close requests.</summary>
     /// <value>application/config/auto_accept_quit; true initially. Sampled before scene activation.</value>
@@ -161,6 +232,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>application/config/quit_on_go_back; true initially, independently of AutoAcceptQuit.</value>
     /// <remarks>Feature overrides apply at tree construction; later setting edits affect subsequent trees.</remarks>
     public static ProjectSetting<bool> QuitOnGoBack { get; } = new("application/config/quit_on_go_back", true);
+
+    /// <summary>Defines whether Alt+Space opens the native Windows system menu.</summary>
+    /// <value>application/run/enable_alt_space_menu; false initially.</value>
+    /// <remarks>Sampled at startup for the main window and its independent native child windows on the Windows display driver.
+    /// Editor-hint sessions enable the shortcut. Changes take effect on the next windowed run.</remarks>
+    public static ProjectSetting<bool> EnableAltSpaceMenu { get; } = new("application/run/enable_alt_space_menu", false);
 
     /// <summary>Defines whether each owned window session starts with measured frame-delta smoothing enabled.</summary>
     /// <value>application/run/delta_smoothing; true initially.</value>
@@ -195,12 +272,20 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>True by default. The --no-header host switch can suppress it.</value>
     public static ProjectSetting<bool> PrintHeader { get; } = new("application/run/print_header", true);
 
-    /// <summary>Gets the startup scene path or resource UID used by <see cref="Engine.RunProject"/> and <see cref="Engine.RunProjectAsync"/>.</summary>
+    /// <summary>Gets the startup scene path or resource UID used by <see cref="Engine.RunProject(Window)"/> and <see cref="Engine.RunProjectAsync(Window)"/>.</summary>
     /// <value>An empty string until a main scene is configured.</value>
-    /// <remarks>The owned host samples the effective feature override once at startup. The selected file must load as a
+    /// <remarks>The owned host samples the effective feature override when <see cref="MainLoopType"/> selects SceneTree. The selected file must load as a
     /// <see cref="PackedScene"/>. A whitespace-only value or a value containing a null character is invalid.</remarks>
     public static ProjectSetting<string> MainScene { get; } = new("application/run/main_scene", "",
         value => value is not null && (value.Length == 0 || !string.IsNullOrWhiteSpace(value) && !value.Contains('\0')));
+
+    /// <summary>Gets the main-loop class selector for configured project runs.</summary>
+    /// <value>SceneTree by default. An empty value also selects SceneTree.</value>
+    /// <remarks>Custom names select a registered extension class identity or a compiled C# global class
+    /// with an exact ordinal name and a default factory. Use <see cref="Engine.RegisterMainLoop{TLoop}"/> for compiled
+    /// startup without source files. The owned host samples the effective feature override once at startup.</remarks>
+    public static ProjectSetting<string> MainLoopType { get; } = new("application/run/main_loop_type", nameof(SceneTree),
+        value => value is not null && (value.Length == 0 || !string.IsNullOrWhiteSpace(value) && !value.Any(char.IsControl)));
 
     /// <summary>Gets the process cadence cap sampled when a windowed engine run starts.</summary>
     /// <value>Zero initially, meaning unlimited. Negative values are invalid.</value>
@@ -241,6 +326,10 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <summary>Gets the setting for periodic process-frame rate diagnostics.</summary>
     /// <value>False initially. A host --print-fps switch can enable reporting.</value>
     public static ProjectSetting<bool> PrintFPS { get; } = new("debug/settings/stdout/print_fps", false);
+
+    /// <summary>Enables periodic GPU frame timing diagnostics on supported windowed renderers.</summary>
+    /// <value>False initially. The host --gpu-profile switch can enable reporting.</value>
+    public static ProjectSetting<bool> PrintGPUProfile { get; } = new("debug/settings/stdout/print_gpu_profile", false);
 
     /// <summary>Defines the initial low-processor wait between owned frames, in microseconds.</summary>
     /// <value>application/run/low_processor_mode_sleep_usec; 6900 initially. Negative values are rejected.</value>
@@ -558,6 +647,20 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// construction; existing trees retain their color. Diagnostics draw through the ordinary canvas backends.</remarks>
     public static ProjectSetting<Color> DebugPathsColor { get; } =
         new("debug/shapes/paths/geometry_color", new Color(0.1f, 1f, 0.7f, 0.4f), value => value.IsFinite());
+
+    /// <summary>Gets the initial highlight color used by the canvas redraw diagnostic.</summary>
+    /// <value>A finite color, initially (1, 0.2, 0.2, 0.5).</value>
+    /// <remarks>The renderer samples the active feature override at startup. Enable the diagnostic with
+    /// the --debug-canvas-item-redraw host switch. Highlights appear over the rendered canvas without
+    /// entering the viewport's retained color history.</remarks>
+    public static ProjectSetting<Color> DebugRedrawColor { get; } =
+        new("debug/canvas_items/debug_redraw_color", new Color(1f, 0.2f, 0.2f, 0.5f), value => value.IsFinite());
+
+    /// <summary>Gets the duration in seconds of the canvas redraw highlight.</summary>
+    /// <value>One second by default. Zero suppresses highlights. Negative or nonfinite durations are invalid.</value>
+    /// <remarks>The renderer samples the active feature override at startup. The highlight fades linearly.</remarks>
+    public static ProjectSetting<double> DebugRedrawTime { get; } =
+        new("debug/canvas_items/debug_redraw_time", 1d, value => double.IsFinite(value) && value >= 0d);
 
     /// <summary>Defines the default native line-breaking strictness for text without explicit locale options.</summary>
     /// <value>internationalization/locale/line_breaking_strictness; 0 Auto, 1 Loose, 2 Normal or 3 Strict. Default 0.</value>
@@ -913,6 +1016,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
 
     /// <summary>Defines the maximum committed multiline undo steps sampled when an editor is constructed.</summary><value>The nonnegative gui/common/text_edit_undo_stack_max_size setting; 1024 initially, zero disables committed history.</value>
     public static ProjectSetting<int> TextEditUndoStackMaxSize { get; } = new("gui/common/text_edit_undo_stack_max_size", 1024, value => value >= 0);
+
+    /// <summary>Sets the idle interval after which interactive multiline edits form a separate undo step.</summary>
+    /// <value>Three seconds by default. Must be positive and finite. Each new editor samples the active feature override.</value>
+    public static ProjectSetting<double> TextEditIdleDetectSeconds { get; } =
+        new("gui/timers/text_edit_idle_detect_sec", 3d, value => double.IsFinite(value) && value > 0);
     /// <summary>Defines Enter and keypad Enter for multiline newline insertion.</summary><value>The typed input/ui_text_newline definition.</value>
     public static ProjectSetting<InputActionSettings> InputUITextNewline { get; } = new("input/ui_text_newline", new InputActionSettings { Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.KeypadEnter }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter, Modifiers = KeyModifierMask.Shift }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.KeypadEnter, Modifiers = KeyModifierMask.Shift }] });
     /// <summary>Defines Command/Control-Home for document start.</summary><value>The typed input/ui_text_caret_document_start definition.</value>
@@ -969,8 +1077,8 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     private static ProjectSettings CreateSharedInstance()
     {
         var projectRoot = Directory.GetCurrentDirectory();
-        return new ProjectSettings(projectRoot, GetDefaultUserDataRoot(projectRoot), processWide: true);
+        return new ProjectSettings(projectRoot);
     }
 
-    private ProjectSettings(string projectRoot, string userDataRoot, bool processWide) : base(projectRoot, userDataRoot, processWide) { }
+    private ProjectSettings(string projectRoot) : base(projectRoot, GetDefaultUserDataRoot(projectRoot), processWide: true, automaticUserDataRoot: true) { }
 }

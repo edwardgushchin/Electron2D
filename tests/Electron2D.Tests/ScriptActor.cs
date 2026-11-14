@@ -1,5 +1,5 @@
 using Electron2D;
-[GlobalClass]
+[GlobalClass, Icon("../../docs/design/assets/sprite/app-icon.svg")]
 internal sealed class ScriptActor : ScriptBaseActor
 {
     internal static new readonly string SourcePath = Source();

@@ -1,17 +1,15 @@
 # NavigationAgent
 
-Last updated: 2026-11-13
+Last updated: 2026-10-26
 
 - Source: [NavigationAgent.cs](../../src/Navigation/2D/NavigationAgent.cs), [NavigationAgent.Debug.cs](../../src/Navigation/2D/NavigationAgent.Debug.cs)
 - Component: [Navigation maps and agents](../components/navigation-maps.md#agent-path-following)
 
 ## Description
 
-Route selection shares the [entry-position state and deterministic ties](../components/navigation-maps.md#search-state-and-ties) of both server path APIs.
-
 A getter-driven path follower for its direct Entity parent, with retained query/result versions, optional typed waypoint/link metadata, target progression, real map membership and node-owned RID.
 
-The agent can follow [weighted shortcuts within one polygon](../components/navigation-maps.md#weighted-routes-within-one-polygon), including consecutive link transitions.
+The agent can follow [weighted shortcuts within one polygon](../components/navigation-maps.md#weighted-routes-within-one-polygon), including consecutive link transitions, and repaths through [competing points on one portal](../components/navigation-maps.md#arrivals-through-the-same-portal) when committed route costs change.
 
 Inherits [Node](Node.md), not Entity: the parent supplies spatial movement. Set TargetPosition, call GetNextPathPosition from parent physics processing, and move the parent yourself. Path following, link actions and retained path diagnostics execute through their owning services. Avoidance controls execute through the shared ORCA kernel.
 

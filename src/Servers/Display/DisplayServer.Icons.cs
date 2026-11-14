@@ -10,6 +10,32 @@ public sealed partial class DisplayServer
     private Image? _defaultWindowIcon;
     private bool _nativeWaylandIconAvailable;
 
+    internal void ApplyProjectWindowIcon()
+    {
+        if (HasFeatureCore(Feature.NativeIcon) &&
+            ProjectSettings.GetWithOverride(ProjectSettings.WindowsNativeIcon) is { Length: > 0 } nativeIcon)
+        {
+            SetNativeIconCore(nativeIcon);
+            return;
+        }
+        if (ProjectSettings.GetWithOverride(ProjectSettings.ApplicationIcon) is not { Length: > 0 } path ||
+            !HasFeatureCore(Feature.Icon))
+            return;
+
+        using var icon = new Image();
+        try
+        {
+            icon.Load(path);
+            ValidateIcon(icon);
+        }
+        catch (Exception error) when (error is IOException or InvalidDataException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            RuntimeDiagnostics.Instance.Error("", "", 0, "", $"Cannot load application icon '{path}': {error.Message}", LoggerErrorType.Warning);
+            return;
+        }
+        SetIconCore(icon);
+    }
+
     internal void WindowSetIconCore(Image image, int windowId = MainWindowId)
     {
         if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetIconCore(image, MainWindowId); return; }
@@ -22,6 +48,7 @@ public sealed partial class DisplayServer
             if (!SDL.SetWindowIcon(window, surface))
                 throw SDLFailure("set window icon");
         });
+        ReleaseNativeWindowIcon();
         (_rootDisplay ?? this)._nativeWaylandIconAvailable = true;
         _windowIconOverridden = true;
     }
@@ -37,19 +64,31 @@ public sealed partial class DisplayServer
             {
                 if (!_windowIconOverridden && !SDL.SetWindowIcon(_window.DangerousGetHandle(), surface))
                     throw SDLFailure("set default window icon");
+                if (!_windowIconOverridden) ReleaseNativeWindowIcon();
                 foreach (var child in _childWindows.Values)
-                    if (!child._windowIconOverridden && !SDL.SetWindowIcon(child._window.DangerousGetHandle(), surface))
+                {
+                    if (child._windowIconOverridden) continue;
+                    if (!SDL.SetWindowIcon(child._window.DangerousGetHandle(), surface))
                         throw SDLFailure("set child default window icon");
+                    child.ReleaseNativeWindowIcon();
+                }
             });
         }
         catch { copy.Dispose(); throw; }
+        _defaultNativeIcon = null;
         var previous = _defaultWindowIcon; _defaultWindowIcon = copy; previous?.Dispose();
         _nativeWaylandIconAvailable = true;
     }
 
     private void ApplyDefaultWindowIcon()
     {
-        if ((_rootDisplay ?? this)._defaultWindowIcon is not { } icon) return;
+        var root = _rootDisplay ?? this;
+        if (root._defaultNativeIcon is { } native)
+        {
+            SetWindowsIcon(WindowGetNativeHandleCore(HandleType.WindowHandle), PrepareWindowsIcon(native));
+            return;
+        }
+        if (root._defaultWindowIcon is not { } icon) return;
         WithImageSurface(icon, surface =>
         {
             if (!SDL.SetWindowIcon(_window.DangerousGetHandle(), surface)) throw SDLFailure("apply default window icon");

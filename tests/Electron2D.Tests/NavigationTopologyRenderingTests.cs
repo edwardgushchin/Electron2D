@@ -79,12 +79,18 @@ internal static class NavigationTopologyRenderingTests
     internal static void RunHost()
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_BACKEND") ?? "gpu"; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); Engine.MaxFPS = 60;
+        ProjectSettings.Set(ProjectSettings.NavigationDefaultCellSize, 2f);
+        ProjectSettings.Set(ProjectSettings.NavigationMergeRasterizerCellScale, .075f);
+        ProjectSettings.Set(ProjectSettings.NavigationUseEdgeConnections, false);
         using var a = Rectangle(); using var b = Rectangle();
         var root = new Window { Size = new(64, 64) }; var left = new NavigationRegion { Name = "Left", Position = new(4, 4), NavigationPolygon = a }; var right = new NavigationRegion { Name = "Right", Position = new(28.04f, 4), NavigationPolygon = b };
         var walker = new Walker { Position = new(12, 28), PhysicsProcessEnabled = true }; root.AddChild(left); root.AddChild(right); root.AddChild(new Surface { Name = "LeftSurface", Position = left.Position }); root.AddChild(new Surface { Name = "RightSurface", Position = right.Position }); root.AddChild(walker); var frames = 0; RID map = default;
         root.Ready += _ =>
         {
-            map = root.World!.NavigationMap; NavigationServer.MapSetCellSize(map, 1); NavigationServer.MapSetMergeRasterizerCellScale(map, .1f); NavigationServer.MapSetUseEdgeConnections(map, false); RenderingServer.SetDefaultClearColor(Colors.Black);
+            map = root.World!.NavigationMap;
+            Check(NavigationServer.MapGetCellSize(map) == 2f && NavigationServer.MapGetMergeRasterizerCellScale(map) == .075f &&
+                !NavigationServer.MapGetUseEdgeConnections(map), "Root world uses project raster settings.");
+            RenderingServer.SetDefaultClearColor(Colors.Black);
             RenderingServer.FramePostDraw += () =>
             {
                 frames++; if (!walker.Done) { Check(frames < 120, "Raster-connected walker completes."); return; }

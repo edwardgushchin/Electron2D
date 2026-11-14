@@ -127,15 +127,20 @@ public sealed partial class Engine
         OS.SetMainThreadOwner(Environment.CurrentManagedThreadId);
         Volatile.Write(ref _writeMoviePath, moviePath ?? "");
         SceneTree? tree = null;
+        MainLoop? customLoop = null;
+        Script? loopSource = null;
         MovieRecording? movie = null;
         List<Exception> failures = [];
         try
         {
             if (reserved) ValidateRunWindow(window);
-            var frameDelay = ConfigureFrameRateSettings(windowed: true) / 1000d;
+            var (frameDelayMsec, printGPUProfile, disableVSync) = ConfigureFrameRateSettings(windowed: true);
+            var frameDelay = frameDelayMsec / 1000d;
             if (moviePath is not null) frameDelay = 0;
             RuntimeDiagnostics.Instance.BeginRun(windowed: true);
-            var mainScenePath = runProject ? ProjectSettings.GetWithOverride(ProjectSettings.MainScene) : null;
+            var loopType = runProject ? ProjectSettings.GetWithOverride(ProjectSettings.MainLoopType) : nameof(SceneTree);
+            var useSceneTree = loopType is "" or nameof(SceneTree);
+            var mainScenePath = runProject && useSceneTree ? ProjectSettings.GetWithOverride(ProjectSettings.MainScene) : null;
             if (mainScenePath is { Length: 0 })
                 throw new InvalidOperationException("Configure a project main scene before running the project.");
             if (OperatingSystem.IsBrowser() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS())
@@ -147,8 +152,15 @@ public sealed partial class Engine
             OS.DeltaSmoothing = ProjectSettings.GetWithOverride(ProjectSettings.DeltaSmoothing);
             OS.LowProcessorUsageMode = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorMode);
             OS.LowProcessorUsageModeSleepUsec = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorModeSleepUsec);
+            if (runProject)
+                window.ApplyProjectContent();
             window.ApplyProjectHDROutput();
-            window.OpenNative(movieDisableVSync);
+            window.OpenNative(movieDisableVSync || disableVSync, printGPUProfile, runProject);
+            var splashStarted = runProject && window.Visible && !OperatingSystem.IsBrowser() &&
+                RenderingServer.Service!.PresentProjectBootSplash() ? Stopwatch.GetTimestamp() : (long?)null;
+            var splashMinimum = splashStarted.HasValue && !IsEditorHint
+                ? ProjectSettings.GetWithOverride(ProjectSettings.BootSplashMinimumDisplayTimeMSEC) : 0;
+            DisplayServer.Service!.ApplyProjectWindowIcon();
             window.ApplyProjectMSAA();
             window.ApplyProjectScreenSpaceAA();
             window.ApplyProjectMIPMapBias();
@@ -159,22 +171,54 @@ public sealed partial class Engine
             {
                 movie = new MovieRecording(window.TextureDimensions, movieFPS, moviePath);
             }
-            var mainScene = mainScenePath is null ? null : AttachProjectScene(window, mainScenePath);
-            tree = new SceneTree(window, attachToEngine: true, initialScene: mainScene);
-            Volatile.Write(ref _mainLoop, tree);
-            tree.StartForEngine();
+            if (useSceneTree)
+            {
+                var mainScene = mainScenePath is null ? null : AttachProjectScene(window, mainScenePath);
+                tree = new SceneTree(window, attachToEngine: true, initialScene: mainScene);
+            }
+            else
+            {
+                window.ConfigureCustomMainLoop();
+                if (ResourceFileTypes.Find(loopType) is { ExtensionClass: not null } extension)
+                {
+                    if (!typeof(MainLoop).IsAssignableFrom(extension.Type))
+                        throw new InvalidOperationException($"The extension class '{loopType}' is not a MainLoop.");
+                    customLoop = (MainLoop)extension.Factory();
+                }
+                else
+                {
+                    customLoop = Script.CreateGlobalMainLoop(loopType, out loopSource);
+                }
+            }
+            var loop = (MainLoop?)tree ?? customLoop!;
+            Volatile.Write(ref _mainLoop, loop);
+            loop.StartForEngine();
+            if (splashStarted is { } splashStart && splashMinimum > 0)
+            {
+                while (!(tree?.QuitRequested ?? window.HostQuitRequested))
+                {
+                    var remaining = (int)Math.Ceiling(splashMinimum - Stopwatch.GetElapsedTime(splashStart).TotalMilliseconds);
+                    if (remaining <= 0) break;
+                    var delay = Math.Min(remaining, 10);
+                    if (asynchronous) await Task.Delay(delay);
+                    else Thread.Sleep(delay);
+                    if (Environment.CurrentManagedThreadId != Volatile.Read(ref _runtimeOwnerThreadId))
+                        throw new InvalidOperationException("The application synchronization context must retain the native window thread.");
+                    window.PumpEvents();
+                }
+            }
             ResetRunState();
             Volatile.Write(ref _runtimeState, RuntimeRunning);
             using var frameTimer = asynchronous ? new PeriodicTimer(TimeSpan.FromMilliseconds(1)) : null;
             var lastFrame = Stopwatch.GetTimestamp();
             ulong nextFrame = 0;
-            while (!tree.QuitRequested)
+            while (!(tree?.QuitRequested ?? window.HostQuitRequested))
             {
                 window.PumpEvents();
-                if (tree.QuitRequested)
+                if (tree?.QuitRequested ?? window.HostQuitRequested)
                     break;
                 beforeFrame?.Invoke(window, checked(++nextFrame));
-                if (tree.QuitRequested) break;
+                if (tree?.QuitRequested ?? window.HostQuitRequested) break;
                 var now = Stopwatch.GetTimestamp();
                 var elapsed = movie is null ? Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds : 1d / movieFPS;
                 lastFrame = now;
@@ -195,7 +239,7 @@ public sealed partial class Engine
                 movie?.Write(window);
                 if (stopRequested) break;
                 var waitStart = Stopwatch.GetTimestamp();
-                while (!tree.QuitRequested)
+                while (!(tree?.QuitRequested ?? window.HostQuitRequested))
                 {
                     var limit = movie is null ? MaxFPSCore : 0;
                     var lowProcessorDelay = movie is null && OS.LowProcessorUsageMode ? OS.LowProcessorUsageModeSleepUsec / 1_000_000d : 0d;
@@ -228,7 +272,10 @@ public sealed partial class Engine
             Volatile.Write(ref _runtimeState, RuntimeStopping);
             try { movie?.Dispose(); }
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
+            RetireProjectLoop(customLoop, failures);
             try { if (tree is not null) tree.Dispose(); else window.Dispose(); }
+            catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
+            try { if (customLoop is null or { IsDisposed: true }) loopSource?.Dispose(); }
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { OS.CloseMIDIInputs(); }
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
@@ -246,5 +293,19 @@ public sealed partial class Engine
         if (failures.Count > 1)
             throw new AggregateException("Window run or cleanup failed.", failures);
         return tree?.ExitCode ?? 0;
+    }
+
+    private static void RetireProjectLoop(MainLoop? loop, List<Exception> failures)
+    {
+        if (loop is null) return;
+        try { loop.FinishOwnedRun(); }
+        catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
+        try
+        {
+            loop.Dispose();
+            if (!loop.IsDisposed)
+                throw new InvalidOperationException("The owned MainLoop did not complete disposal.");
+        }
+        catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
     }
 }

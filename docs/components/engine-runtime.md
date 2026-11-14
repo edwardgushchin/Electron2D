@@ -2,7 +2,7 @@
 
 The Android activity retains actual framework back callbacks and transfers accepted requests to the existing owner pump without invoking scene code from the UI thread. [System back navigation](window-runtime.md#system-back-navigation) uses the ordinary Engine.RunAsync result, failure and owned teardown paths. Callback unregistration and SDL onCreate/onDestroy dispatch belong to the same activity lifetime.
 
-Last updated: 2026-10-27
+Last updated: 2026-11-14
 
 [Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 
@@ -59,9 +59,28 @@ Managed scheduling, lifecycle integration, timing properties, metrics, architect
 
 ## Project main scene
 
-Configure `ProjectSettings.MainScene` with a packed-scene path or a registered resource UID. The key is `application/run/main_scene` and defaults to an empty string. A game calls `Engine.RunProject(window)` or `Engine.RunProjectAsync(window)` with its configured detached root. Startup samples active feature overrides after reserving the host and loads the scene through the ordinary resource loader. Relative and virtual paths, UID resolution, localization remaps and template retention follow the loader's rules. An empty setting, missing file, wrong type or failed startup aborts the run and releases the owned window.
+The visible native project host presents the [configured boot splash](boot-images.md#project-startup-splash) before activating the scene or custom loop.
+
+Call `Engine.RunProject(window)` or `Engine.RunProjectAsync(window)` with a configured detached window. The host samples the effective `ProjectSettings.MainLoopType` after reservation and applies [project geometry defaults](window-runtime.md#project-startup-geometry) to unassigned root properties. Its default and empty value select `SceneTree`. This mode requires `ProjectSettings.MainScene` to name a packed-scene path or resource UID. Relative and virtual paths, UID resolution, localization remaps and template retention follow the resource loader's rules. An empty scene setting, missing file, wrong type or failed startup aborts the run and releases the owned window.
 
 The instance is appended after existing ordinary window children and becomes `SceneTree.CurrentScene` before tree entry. The tree is published before readiness. Existing children become ready in the normal order, then the main scene and then the window. Initial selection uses ordinary tree entry. Subsequent scene transitions use the deferred scene-change API and its signal. Explicit `Run`, `RunAsync` and recording calls use the caller's hierarchy.
+
+### Custom project loop
+
+Mark a concrete compiled MainLoop with GlobalClassAttribute, call Engine.RegisterMainLoop with a static default factory, and set MainLoopType to the exact class name. The registration is process-held and provides typed startup on JIT, trimmed and NativeAOT hosts. Each invocation must construct a fresh instance of the exact class. The startup path does not require source files, PDB or a Script asset. A file-backed Script.RegisterObject registration continues to supply a verified source asset when it is the only registration for that class. When both exist for the same type, the startup factory is selected. Distinct global types sharing a name are ambiguous. Registered extension identities take precedence over global names. Unknown, ambiguous, abstract, wrong-role and missing-factory selections fail startup.
+
+For example, with a compiled GameLoop class marked with GlobalClassAttribute:
+
+```csharp
+Engine.RegisterMainLoop(CreateGameLoop);
+ProjectSettings.Set(ProjectSettings.MainLoopType, nameof(GameLoop));
+
+static GameLoop CreateGameLoop() => new();
+```
+
+The native window opens before construction. The host publishes the loop as `Engine.MainLoop` before initialization and uses the same owner thread, event pump, frame timing and fixed/process callback lanes. A custom loop drives the window and offscreen viewports through RenderingServer RIDs. It skips packed-scene loading, node entry and node callbacks. A callback stop request, an accepted native close or an accepted platform back returns zero. The runtime finalizes the loop while its window and any extension bindings or file-backed script asset are live, then disposes the loop and retires its dependencies. A pre-delete veto reports a disposal failure after finalization and keeps the source associated with the surviving loop. Scene-only policies and behavior are supplied by the default `SceneTree` path. The [recording overloads](movie-writing.md#recording-the-configured-project) use either project loop with the fixed-cadence writer and offline mixer.
+
+[ProjectMainLoopTests](../../tests/Electron2D.Tests/ProjectMainLoopTests.cs) exercises the registered C# and extension factories, sync and async runs, invalid selection, native quit, window and offscreen pixels, and retirement after callback failures on Windows x64 Vulkan GPU and Direct3D 11 Compatibility. On both backends, 64 warmed canvas redraws with command changes and 64 warmed retained redraws allocate zero managed bytes on the window owner. The public ProjectMainLoop.Consumer also passes on Windows x64 Vulkan and Direct3D 11 using JIT, a self-contained full-trim managed publish and NativeAOT. The published NativeAOT executable has dynamic code disabled and runs without project source or managed application assemblies. Both synchronous and asynchronous ordinary and recording hosts execute, with live viewport pixels, decoded PNG and finalized WAV output, exact-factory refusal and lifecycle failure cleanup. Native allocation accounting, release package qualification and other target hosts remain separate.
 
 The [project startup test](../../tests/Electron2D.Tests/ProjectMainSceneTests.cs) exercises typed persistence, path and UID resolution, sync and async ownership, window readiness order, startup failure and restart, and real pixels on Windows GPU and Compatibility. Packaged macOS, Linux, Android, Apple mobile/TV and Web hosts remain unverified for this workflow.
 
@@ -71,7 +90,7 @@ The [project startup test](../../tests/Electron2D.Tests/ProjectMainSceneTests.cs
 
 `ProjectSettings.FrameDelayMsec` defines `application/run/frame_delay_msec`, a nonnegative integer in milliseconds with zero meaning no added wait. At startup the owned host samples the active feature override. A positive `--frame-delay N` before `--` or `++` overrides the stored value. Zero uses the project default selection, and editor-hint runs use only the switch. Missing, negative, noninteger and out-of-range arguments reject startup. The real-time host waits at least this long after completing each continuing frame, subject to quit, using the longer applicable deadline when MaxFPS or low-processor pacing also applies. Native events continue during the wait. Manual stepping and fixed-rate movie recording skip this delay.
 
-`ProjectSettings.PrintFPS` defines `debug/settings/stdout/print_fps` and defaults to false. `--print-fps` before `--` or `++` also enables reporting. Manual and windowed lifecycles sample the setting on startup. Editor-hint runs require the switch. After three warmup windows, each completed FPS measurement reports frames per unscaled second and milliseconds per frame through the ordinary Logger and stdout policy. Formatting occurs at report time and a failed writer cannot abort a frame. The current cadence and its rolling window are the same as `Engine.FramesPerSecond`.
+`ProjectSettings.PrintFPS` defines `debug/settings/stdout/print_fps` and defaults to false. `--print-fps` before `--` or `++` also enables reporting. Manual and windowed lifecycles sample the setting on startup. Editor-hint runs require the switch. After three warmup windows, each completed FPS measurement reports frames per unscaled second and milliseconds per frame through the ordinary Logger and stdout policy. Formatting occurs at report time and a failed writer cannot abort a frame. The current cadence and its rolling window are the same as `Engine.FramesPerSecond`. The owned window host also samples [GPU profiling](gpu-timestamps.md#window-frame-profiling) at startup.
 
 Windows GPU and Compatibility runs verify the selected cap before Ready, real frame intervals and rendered pixels, live runtime precedence, the explicit zero override and startup cleanup after malformed arguments. Windows and Arch Linux under WSL exercise deterministic manual deltas, three warmup windows and periodic delivery. Windows additionally verifies editor-hint and switch behavior.
 

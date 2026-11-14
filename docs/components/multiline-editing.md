@@ -16,6 +16,16 @@ Cold undo stores complete document/caret/gutter/background snapshots, limited by
 
 The [hierarchical cells component](hierarchical-cells.md) now consumes TextEdit as its executable multiline cell host alongside existing LineEdit, HSlider and PopupMenu. TreeItem owns the hierarchy/cell model and Tree supplies column layout, selection and embedded editing. CodeEdit retains its separate code-editor workflows. Native virtual keyboard and native symbol picker require concrete DisplayServer request/session services, so their inert flags are absent and coverage records the target integration trigger.
 
+## Undo for interactive edits
+
+Each new TextEdit and CodeEdit reads the active feature value of `ProjectSettings.TextEditIdleDetectSeconds` (`gui/timers/text_edit_idle_detect_sec`, three seconds by default). It must be positive and finite. While attached, consecutive committed text, backward deletion or forward deletion form one undo step per action. Each edit resets the timeout. Idle process time advances it under the control's scene processing policy. Changing the action or caret, losing focus, detaching, undoing or starting an independent edit closes the pending step. Text and change notifications are available before the step closes. Editing immediately discards redo states on the previous branch.
+
+Programmatic `StartAction`/`EndAction` and nested complex operations retain caller-controlled boundaries. Undo restores the whole document and its caret state from before the group. `TextEditUndoStackMaxSize` bounds committed history. Zero disables undo even while a group is pending.
+
+The Release text suites exercise feature precedence and constructor capture, timer restart and expiry, directional deletion, focus and detachment, explicit history, zero history and redo invalidation. Windows GPU and Compatibility runs also passed native SDL text/IME event injection, pixel assertions and the existing 64-frame prepared selection/render checks at zero managed bytes. Physical IME and packaged or foreign-platform qualification remain separate.
+
+## Input and editing integrations
+
 IME preedit is projected at every active caret, including multiple carets on one logical line. Source/display scalar mapping keeps hit testing and caret layout in the document coordinate space; apply commits one grouped edit. History version identities remain distinct when an undone branch is replaced.
 
 [Code authoring](code-authoring.md) now consumes the same document/highlighter/history/input/storage pipeline through CodeEdit. The shared GetLineRangesFromCarets correctly uses an unselected caret position and excludes a selected final line at column zero; duplication and line commands exercise that correction.

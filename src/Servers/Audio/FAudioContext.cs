@@ -17,6 +17,8 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     private float _disableThreshold;
     private static long _allocations, _reallocations;
     internal readonly object Gate;
+    private readonly AudioServer? _server;
+    internal ulong StreamUsageMix { get; private set; }
     private GCHandle _self;
     private bool _closing;
     private float[]? _capture;
@@ -45,7 +47,13 @@ internal sealed unsafe partial class FAudioContext : IDisposable
                 foreach (var bus in context._busEffects.Values) bus.Activity.Begin(context.QuantumFrames);
                 foreach (var source in context._sources) if (context._busInputs.TryGetValue(source.ActiveSend, out var bus)) source.MarkActivity(bus.Activity);
                 foreach (var sample in context._samples) { sample.CheckSource(); if (context._busInputs.TryGetValue(sample.ActiveSend, out var bus)) sample.MarkActivity(bus.Activity); }
-                ((delegate* unmanaged[Cdecl]<nint, float*, void>)original)(engine, output);
+                context.StreamUsageMix = context._server?.BeginStreamUsageMix() ?? 0;
+                try { ((delegate* unmanaged[Cdecl]<nint, float*, void>)original)(engine, output); }
+                finally
+                {
+                    context._server?.EndStreamUsageMix(context.StreamUsageMix);
+                    context.StreamUsageMix = 0;
+                }
                 if (context._capture is { } capture)
                 {
                     var count = Math.Min(capture.Length - context._captureOffset, context.QuantumFrames * context.Channels);
@@ -89,9 +97,10 @@ internal sealed unsafe partial class FAudioContext : IDisposable
             Check(F.FAudioVoice_GetEffectParameters(voice, (uint)_busEffects[voice].MeterIndex, (nint)(&levels), (uint)sizeof(Levels)), "read bus meter"); return peaks[channel];
         }
     }
-    internal FAudioContext(uint deviceIndex = 0, object? gate = null, int movieRate = 0, int movieChannels = 2)
+    internal FAudioContext(uint deviceIndex = 0, AudioServer? server = null, int movieRate = 0, int movieChannels = 2)
     {
-        Gate = gate ?? new();
+        _server = server;
+        Gate = server?.StreamGate ?? new();
         if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() && !OperatingSystem.IsBrowser()) throw new NotSupportedException("Native audio output requires a packaged desktop, mobile or browser FAudio backend.");
         try
         {

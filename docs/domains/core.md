@@ -36,6 +36,8 @@ Direct `ElectronObject` construction provides the concrete root role through the
 
 # Core domain
 
+[Configured project recording](../components/movie-writing.md#recording-the-configured-project) joins the owned scene or custom loop with fixed-cadence window capture and the offline mixer.
+
 [Prepared publisher membership](../components/event-connections.md#current-prepared-publisher-membership) now lets EventConnection observe exact wrapper removal/clear and release publisher references on token retirement. Captured/deferred delivery and ordinary field-like fallback retain their contracts.
 
 [Object lifetime monitors](../components/object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
@@ -46,7 +48,7 @@ The Android application host supplies [system back navigation](../components/win
 
 [Native permission results](../components/main-loop.md#native-permission-results) now enter the exact Android window's loop through an owner-thread FIFO before its next frame hook. Terminal lifetime discards pending results; listener errors preserve unread results and the original exception. Platform request/query APIs remain separate.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -57,6 +59,12 @@ Scene archives use the [stored node-name contract](../components/packed-scenes.m
 The [typed connection boundary](../components/event-connections.md#exclusions) excludes the complete dynamic method/event registry and connection-flags family under the existing ADRs 0001/0002/0010. This does not remove typed event, lifecycle, property, script-binding or deferred-operation obligations from their owning audits.
 
 [Typed node-name separator settings](../components/scene-hierarchy.md#child-name-collisions) now feed runtime authoring with live feature overrides and independently persisted defaults/validation.
+
+[Project user-data selection](../components/project-settings.md#user-data-directory) routes saves and user configuration through the loaded project policy or an explicit host path.
+
+[Automatic project overrides](../components/project-settings.md#automatic-override-files) let the project choose a user or packaged configuration before startup.
+
+[Project boot splash](../components/boot-images.md#project-startup-splash) presents project-configured startup pixels before scene entry.
 
 [Movie writing](../components/movie-writing.md) adds typed recording hooks and fixed-cadence Engine entry points over the ordinary window lifecycle. Built-in outputs are a real PNG sequence with synchronous WAV and indexed AVI/MJPEG with PCM16/32 and OGV/Theora/Vorbis with native muxing.
 
@@ -102,7 +110,7 @@ The domain contains the following active components:
 | [XML parsing](../components/xml-parsing.md) | Permissive UTF-8 token reading, byte offsets, attributes and section navigation | Applicable own API Implemented and verified under ADR 0049 |
 | [Project settings](../components/project-settings.md) | Typed global/default values, feature overrides, dirty events, project persistence, and virtual paths | Implemented and verified |
 | [Main loop](../components/main-loop.md) | Owner-thread application lifecycle, frame hooks, stop requests, and platform-notification endpoints | Implemented and verified |
-| [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |
+| [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, [compiled project loop registration](../components/engine-runtime.md#custom-project-loop), fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |
 | [Scalar math](../components/scalar-math.md) | Stateless constants, transcendental functions, angles, interpolation, approximation, rounding, wrapping, and audio conversion | Implemented and verified |
 | [Random generation](../components/random-generation.md) | Independent PCG32 streams, seed/state restoration, bounded, weighted and normal sampling | Implemented and managed-verified |
 | [Text patterns](../components/text-patterns.md) | Managed expression compilation, capture results, bounded searches and replacement | Applicable PCRE2 interpreter API implemented; source-native Linux and public consumers verified |
@@ -199,7 +207,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - No 3D rectangle, transform, node, renderer, or physics type. Three- and four-component vectors are numeric values, not scene types.
 - User C# Node subclasses execute ordinary callbacks and registered source assets reconstruct actual project classes through typed scene files. [ADR 0091](../decisions/scripting.md#adr-0091) uses one concrete Script resource for C# source/type/schema metadata and typed factories. Live script attachment/replacement, editor application and implementation reload remain absent; ScriptChanged reports trusted file/remapping source changes while live assignment/detachment remains open.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
-- Engine.Run now owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. Root-window canvas rendering runs after scene processing. Configured game startup loads a [project main scene](../components/engine-runtime.md#project-main-scene) through the same host. Permission requests and remaining mobile/browser integrations are absent.
+- Engine.Run owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. [Configured game startup](../components/engine-runtime.md#project-main-scene) uses the same host for a packed scene or a registered custom MainLoop, with native canvas rendering after process callbacks.
 - The repository has an 18-RID automated build/package/test matrix and RID-selected CharacterMovement desktop, Android/Android TV, UIKit and browser hosts. CharacterMovement was executed on Linux Wayland, one Android phone, one Android TV and Chrome; Windows/macOS/iOS/tvOS execution and store signing remain unverified for this example. Browser storage and complete production lifecycle acceptance remain separate work. See the platform report for exact scope.
 - Sparse/delta pack exporters, native executable section discovery and import remapping remain dependencies. PCK/ZIP mounting now provides read-only resource overlays; remaining exported virtual filesystem, platform-pipe backend exists. ResourceUID supplies registered identity resolution. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` resolves registered file identities and unknown identities fail; `pipe://` still fails explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard execute with the matching native bridge; native file-codec verification covers Linux x64. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
 - [Editor authoring mode](../classes/Engine.md#editor-authoring-mode) supplies the transient host role and executable startup/preview policy. The Engine coverage inventory records remaining API obligations and their dependency triggers.

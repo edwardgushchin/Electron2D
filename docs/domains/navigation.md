@@ -1,6 +1,6 @@
 # Navigation domain
 
-Last updated: 2026-11-13
+Last updated: 2026-10-18
 
 [Frame timing monitors](../components/frame-monitors.md) observe synchronization/map publication and avoidance inside Engine physics steps, including owner-side waits and callbacks. They report elapsed owner time rather than summed background-worker CPU time.
 
@@ -13,7 +13,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 | Component | Responsibility | State |
 | --- | --- | --- |
 | [A-star point graph](../components/astar-graph.md) | Directed weighted points, nearest-segment queries and full/partial path search | Implemented and verified in managed execution |
-| [Authored maps](../components/navigation-maps.md) | World map ownership, scene regions, convex portal routes and deferred publication | Implemented profile; further capabilities retain coverage dependencies |
+| [Authored maps](../components/navigation-maps.md) | World map ownership, scene regions, [weighted portal routes](../components/navigation-maps.md#arrivals-through-the-same-portal) and deferred publication | Implemented profile; further capabilities retain coverage dependencies |
 | [A-star grid](../components/astar-grid.md) | Rectangular cells, obstacles, weights, diagonal and jump-point search | Implemented and verified in managed execution |
 
 ## Public surface
@@ -29,7 +29,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 - Links are directional for travel and undirected for segment existence. A path pays the destination point's weight on each edge. Disabled points are excluded from path expansion and closest-segment queries unless a point query explicitly includes them.
 - A path callback may inspect graph state, but search re-entry, mutation and disposal are rejected. Concurrent callers coordinate access externally.
 - Grid region and cell geometry are finite and bounded to managed arrays. Jumping intentionally ignores individual cell weights, matching its separate search mode. Both graph types reject search re-entry, mutation and disposal from callbacks.
-- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. [Projection ownership](../components/navigation-maps.md#projection-ownership) uses the published region geometry and membership. Both server path APIs and NavigationAgent share [entry-position search states and deterministic cost ties](../components/navigation-maps.md#search-state-and-ties). World/scene integration uses the same storage; [global diagnostics](../components/navigation-diagnostics.md) use retained scene canvases.
+- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. [Projection ownership](../components/navigation-maps.md#projection-ownership) uses the published region geometry and membership. World/scene integration uses the same storage; [global diagnostics](../components/navigation-diagnostics.md) use retained scene canvases.
 
 ## Verification and limits
 
@@ -39,6 +39,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 
 ## Decisions
 
+- [Project topology defaults](../components/navigation-maps.md#project-topology-defaults) configure rasterization, margin connections and links for newly allocated world maps.
 - [0097: Typed planar navigation maps](../decisions/navigation.md#adr-0097)
 - [0052: Standalone typed AStar](../decisions/navigation.md#adr-0052)
 - [0053: Standalone typed 2D grid search](../decisions/navigation.md#adr-0053)

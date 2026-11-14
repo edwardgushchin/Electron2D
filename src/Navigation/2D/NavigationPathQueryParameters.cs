@@ -85,7 +85,7 @@ public sealed class NavigationPathQueryParameters : ElectronObject
     public float PathReturnMaxRadius { get { lock (_gate) { ThrowIfDisposed(); return _settings.PathReturnMaxRadius; } } set { Number(value); value = Math.Max(0, value); lock (_gate) { ThrowIfDisposed(); _settings = _settings with { PathReturnMaxRadius = value }; } } }
     /// <summary>Gets or changes the maximum processed polygon count; zero or negative is unlimited.</summary>
     /// <value>Default 4096; captured as one immutable query setting snapshot.</value>
-    /// <remarks>Arrivals through different portals or at different entry positions of the same polygon count once.
+    /// <remarks>Arrivals through different portals of the same polygon count once.
     /// After the limit stops the search, a second pass can finish the corridor to a reached polygon.</remarks>
     /// <exception cref="ObjectDisposedException">This object is disposed.</exception>
     public int PathSearchMaxPolygons { get { lock (_gate) { ThrowIfDisposed(); return _settings.PathSearchMaxPolygons; } } set { lock (_gate) { ThrowIfDisposed(); _settings = _settings with { PathSearchMaxPolygons = value }; } } }

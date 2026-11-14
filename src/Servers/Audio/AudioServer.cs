@@ -131,7 +131,7 @@ public sealed partial class AudioServer : ElectronObject
     internal void UnlockCore() { CheckAudioReentrancy(); Monitor.Exit(_gate); }
     internal void EnsureNative()
     {
-        Check(); if (_native is not null) return; Volatile.Write(ref _native, new FAudioContext(gate: _gate, movieRate: _movieRate, movieChannels: _movieChannels));
+        Check(); if (_native is not null) return; Volatile.Write(ref _native, new FAudioContext(server: this, movieRate: _movieRate, movieChannels: _movieChannels));
         try { if (_movieRate == 0 && _outputDevice != "Default") _native.SetOutput(_outputDevice); RebuildGraph(); } catch { _native?.Dispose(); Volatile.Write(ref _native, null); _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0; throw; }
     }
     internal FAudioContext Native { get { EnsureNative(); return _native!; } }
@@ -223,6 +223,7 @@ public sealed partial class AudioServer : ElectronObject
         Check(); List<Exception>? errors = null;
         foreach (var player in _players.ToArray()) try { player.ReleaseVoices(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { _native?.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        lock (_gate) _completedStreamUsageMix = 0;
         Volatile.Write(ref _native, null); _samples.Clear(); _sidechainBuffers.Clear(); foreach (var bus in _buses) { bus.Voice = 0; bus.InputVoice = 0; bus.Buffer = null; }
         foreach (var bus in _buses) { var effects = bus.RuntimeEffects; bus.RuntimeEffects = null; bus.Activity = null; try { ReleaseEffects(effects); } catch (Exception error) { Node.CollectException(ref errors, error); } }
         if (closeInput) try { CloseInput(); } catch (Exception error) { Node.CollectException(ref errors, error); }

@@ -16,6 +16,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_FONTS") is { } f
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_MANAGER") is { } shellObserver) { FileManagerChecks.Run(shellObserver, args[0]); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CAPTURE") is { } captureBackend) { if (captureBackend == "unavailable") WindowCaptureChecks.Unavailable(); else WindowCaptureChecks.Run(captureBackend, args[0]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT_FIT") is { } contentFitProfile) { WindowContentFitTests.Run(contentFitProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_DRAWABILITY") is { } drawabilityProfile) { WindowDrawabilityTests.Run(drawabilityProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_MENU") is { } systemMenuProfile) { WindowsSystemMenuTests.Run(systemMenuProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CORNERS") is { } windowCornerProfile) { WindowCornerTests.Run(windowCornerProfile); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_MENU") is { } menuOracle) { if (menuOracle == "unavailable") NativeMenuChecks.Unavailable(); else NativeMenuChecks.Run(menuOracle, args[0]); return; }
@@ -48,6 +51,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BYTE_BUFFERS") == "1") {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUILTIN_TEXTURES") is { } builtinTextureProfile) { RenderingRuntimeTests.RunBuiltinTextures(builtinTextureProfile); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TIMING") is { } viewportTimingProfile) { RenderingRuntimeTests.RunViewportTiming(viewportTimingProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_FRAME_PROFILE") is { } frameProfile) { RenderingRuntimeTests.RunGPUFrameProfile(frameProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TIMESTAMPS") is { } timestampProfile) { GPUTimestampTests.Run(timestampProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_GESTURES") is { } windowGestureProfile) { WindowGestureTests.Run(windowGestureProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FOREGROUND_GRANT") is { } foregroundGrantProfile) { ForegroundGrantTests.Run(foregroundGrantProfile, args); return; }
@@ -86,6 +90,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_MEMORY") == "1"
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER_MEMORY") is { } memoryMode) { if (memoryMode == "managed") RenderMemoryContract.RunManaged(); else if (memoryMode == "local") RenderMemoryLifetimeTests.Run(); else RenderMemoryContract.Run(memoryMode, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MEMORY_PHYSICS") == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_PIPELINES") is { } pipelineProfile) { if (pipelineProfile == "managed") CanvasPipelineContract.RunManaged(); else CanvasPipelineFaultTests.Run(pipelineProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_MONITORS") == "1") { AudioOutputTests.Run(); AudioOutputTests.RunOfflineMonitor(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_STREAM_USAGE") == "1") { AudioStreamUsageTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GUIDES") is { } guideProfile) { CanvasGuideContracts.Run(guideProfile); if (guideProfile == "managed") { ScreenVisibilityTests.Run(); EditorHintTests.Managed(); } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_FOCUS") is { } focusProfile) { ControlFocusContracts.Run(focusProfile); if (focusProfile == "managed") { ControlFocusNavigationTests.Run(); ControlInputTests.Run(); ControlRecursiveBehaviorTests.Run(); SubViewportContainerTests.Run(); ScrollContainerTests.Run(); } return; }
@@ -195,6 +200,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ITEMLIST_INPUT") is { } 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ITEMLIST_LAYOUT") is { } itemLayoutProfile) { if (itemLayoutProfile == "managed") ItemListTests.Run(); else if (itemLayoutProfile == "runtime") RenderingRuntimeTests.Run(); else ItemListLayoutRenderingTests.Run(itemLayoutProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINE_GEOMETRY") is { } lineGeometryProfile) { if (lineGeometryProfile == "managed") LineGeometryTests.Run(); else if (lineGeometryProfile == "runtime") RenderingRuntimeTests.Run(); else if (lineGeometryProfile is "gpu" or "compatibility") LineGeometryRenderingTests.Run(lineGeometryProfile); else LineGeometryTests.Dump(lineGeometryProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POLYGON_AA") is { } polygonAAProfile) { if (polygonAAProfile == "managed") PolygonAntialiasTests.Managed(); else if (polygonAAProfile == "runtime") RenderingRuntimeTests.Run(); else PolygonAntialiasTests.Native(polygonAAProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_BOOT_SPLASH") is { } splashBackend) { ProjectBootSplashTests.Run(splashBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BOOT_IMAGE") is { } bootImageProfile) { if (bootImageProfile == "managed") BootImageTests.Managed(); else BootImageTests.Native(bootImageProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_REDRAW") is { } textureRedrawProfile) { if (textureRedrawProfile == "managed") TextureRedrawTests.Managed(); else TextureRedrawTests.Native(textureRedrawProfile); return; }
 
@@ -225,6 +231,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TEXT") is { } v
 if (args.Length == 2 && args[0] == "--native-window-archive") { try { NativeChildWindowTests.RunArchive(args[1]); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_WINDOWS") == "managed") { try { NativeChildWindowTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_WINDOWS") == "display") { try { NativeChildWindowTests.Display(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_ICON") is { } nativeIconProfile) { NativeWindowIconTests.Run(nativeIconProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_WINDOWS") is { } nativeWindowProfile) { try { NativeChildWindowTests.RunNative(nativeWindowProfile); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (args.Length == 2 && args[0] == "--gui-snap-archive") { try { GUISnapControlTests.RunArchive(args[1]); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_SNAP") == "managed") { try { GUISnapControlTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
@@ -279,6 +286,16 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOY_MOTION") is { } joyM
     if (joyMotionMode == "managed") { JoyMotionContract.Run(); JoyMotionTests.Run(); }
     else if (joyMotionMode == "native") JoyMotionNativeTests.Run();
     else throw new ArgumentException("Unknown controller-motion profile.");
+    return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_RECORDING") is { } projectRecordingBackend)
+{
+    ProjectRecordingTests.Run(projectRecordingBackend);
+    return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_MAIN_LOOP") is { } mainLoopBackend)
+{
+    ProjectMainLoopTests.Run(mainLoopBackend);
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_MAIN_SCENE") is { } mainSceneBackend)
@@ -337,6 +354,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_RELATIONS"
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_VALUES") is { } valueBackend) { AccessibilityValueTests.Run(valueBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") == "lifetimes") { AccessibilityFoundationTests.RunLifetimes(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") == "managed") { AccessibilityFoundationTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_ACCESSIBILITY") is { } windowAccessibility) { WindowAccessibilityTests.Run(windowAccessibility); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") is { } accessibilityBackend) { AccessibilityFoundationTests.RunNative(accessibilityBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") == "prototype") { AccessibilityFoundationTests.RunPrototype(); return; }
 if (args.Length == 3 && args[0] == "--material-placeholder") { MaterialPlaceholderTests.RunChild(args[1], args[2]); return; }
@@ -413,6 +431,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCAL_RESOURCE_CONSUMERS
     AnimatedSpriteTests.Run(); RenderingRuntimeTests.VerifyAtlasResources(); AnimatedTextureTests.Run(); StyleBoxTests.Run();
     ThemeResourceTests.Run(); ShortcutTests.Run(); AudioSynchronizedTests.Run(); return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_USER_DATA") == "1") { ProjectUserDataTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_OVERRIDES") == "1") { VerifyProjectSettings(); ProjectOverrideTests.Run(packed: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
@@ -804,6 +824,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_DIRECT") is { }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_PRESENTATION") is { } presentationProfile) { ViewportPresentationTests.Run(presentationProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS_NATIVE") == "1") { ServerViewportTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_VIEWPORTS") == "1") { ServerViewportTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_REDRAW") is { } redrawProfile) { CanvasRedrawTests.Run(redrawProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MANUAL_FRAMES_NATIVE") == "1") { ManualRenderFrameTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MANUAL_FRAMES") == "1") { ManualRenderFrameTests.RunManaged(); ManualRenderFrameTests.RunHeadless(); return; }
 if (args.Length == 2 && args[0] == "--os-stdio-child") { OSStandardInputTests.Child(args); return; }
@@ -812,7 +833,7 @@ if (args.Length == 3 && args[0] == "--os-environment-child") { OSEnvironmentTest
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_ENVIRONMENT") == "1") { OSEnvironmentTests.Run(); return; }
 if (OSOpenWithProgramTests.TryRunChild(args)) return;
 if (args.Length > 1 && args[0] == "--os-process-child") { OSProcessTests.Child(args); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT_NATIVE") == "1") { WindowContentScaleNativeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT_NATIVE") is ("1" or "stretch") and { } contentNative) { WindowContentScaleNativeTests.Run(contentNative == "stretch"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT") == "1") { WindowContentScaleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_LAYOUT_NATIVE") == "1") { ProjectLayoutDirectionNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_LAYOUT") == "1") { ProjectLayoutDirectionTests.Run(); return; }
@@ -880,6 +901,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SPECIALIZATION") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_PUSH") == "1") { RenderingDevicePushTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_MSAA") == "1") { RenderingDeviceMultisampleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_DEPTH") == "1") { RenderingDeviceDepthTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DYNAMIC_STENCIL") is { } dynamicStencilProfile) { RenderingDeviceDepthTests.RunDynamicStencil(dynamicStencilProfile == "unsupported"); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DYNAMIC_RASTER") is { } dynamicRasterProfile) { RenderingDeviceDepthTests.RunDynamicRaster(dynamicRasterProfile == "unsupported"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_STAGE_LINK") == "1") { RenderingDeviceGraphicsTests.StageLink(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_GRAPHICS") == "1") { RenderingDeviceGraphicsTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INSTANCE_UNIFORMS") == "1") { InstanceUniformTests.Run(); return; }
@@ -1197,6 +1220,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_OBJECTS") is { } 
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_CHILD") is { } scriptPath) { ScriptTests.RunChild(scriptPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GLOBAL_CLASSES") == "1") { ScriptTests.VerifyGlobalClasses(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_HOST") == "1") { ScriptTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_INITIALIZATION") is { } initializationBackend)
 {
@@ -2408,6 +2432,7 @@ ByteBufferTests.Run();
 VerifyFileAccess();
 VerifyDirAccess();
 VerifyProjectSettings();
+ProjectOverrideTests.Run();
 VerifyResources();
 VerifyPackedScenes();
 VerifyInputMapConfiguration();

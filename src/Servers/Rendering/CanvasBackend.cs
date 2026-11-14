@@ -4,7 +4,7 @@ using SDL3;
 
 namespace Electron2D;
 
-internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, MaskEnd, MaskFinish, EnvironmentBoundary }
+internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, MaskEnd, MaskFinish, EnvironmentBoundary, RedrawOverlay }
 
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,

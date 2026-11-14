@@ -30,6 +30,7 @@ internal static class NavigationRouteSelectionTests
             }
         }
         if (mode == "all" || mode == "query") TiesAndCycles();
+        if (mode == "all" || mode == "equivalence") NavigationSearchEquivalenceTests.Run();
         Console.WriteLine($"Navigation route selection passed: {mode}.");
     }
 

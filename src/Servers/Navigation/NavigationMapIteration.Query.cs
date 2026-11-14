@@ -31,7 +31,8 @@ internal sealed partial class NavigationMapIteration
         var bestArrivals = new Dictionary<(int Source, int PortalIndex, Vector2 Entry), int>();
         var processedPolygons = new bool[Cells.Length];
         var arrivals = new List<CorridorArrival>();
-        var queue = new PriorityQueue<int, (double Total, double NegativeCost, int Polygon, int Sequence)>();
+        var queue = new List<(int Arrival, double Total, double Remaining)>();
+        var queuePositions = new List<int>();
         var target = settings.TargetPosition;
         var nearestReached = -1;
         var nearestEntryDistance = double.PositiveInfinity;
@@ -96,19 +97,21 @@ internal sealed partial class NavigationMapIteration
             arrivals.Clear();
             arrivals.Add(new(start, from, default, -1, 0, startKey));
             queue.Clear();
-            queue.Enqueue(0, (Math.Sqrt(DistanceSquared(from, destination)) * minimumTravelCost, 0, start, 0));
+            queuePositions.Clear();
+            var initialEstimate = Math.Sqrt(DistanceSquared(from, destination)) * minimumTravelCost;
+            Enqueue(0, initialEstimate, initialEstimate, -1);
             var startsInGoal = start == goal;
             var completed = startsInGoal ? 0 : -1;
             var completedCost = startsInGoal
                 ? Math.Sqrt(DistanceSquared(from, destination)) * Cells[start].TravelCost
                 : double.PositiveInfinity;
-            while (queue.TryDequeue(out var arrivalIndex, out var priority))
+            while (Dequeue(out var arrivalIndex, out var total))
             {
                 var current = arrivals[arrivalIndex];
                 var index = current.Cell;
                 if (bestArrivals[current.Key] != arrivalIndex)
                     continue;
-                if (priority.Total >= completedCost)
+                if (total >= completedCost)
                     break;
 
                 var cell = Cells[index];
@@ -163,20 +166,72 @@ internal sealed partial class NavigationMapIteration
                     var final = next == goal && !startsInGoal;
                     if (final)
                         cost += remaining * Cells[goal].TravelCost;
-                    // Continuation depends on the exact entry point, even through the same portal.
-                    // Completed arrivals can merge because their cost includes the final segment.
+                    // A higher cost at a different entry point can still lead to a cheaper exit.
                     var key = final ? (goal, -1, destination) : (index, portalIndex, point);
-                    if (bestArrivals.TryGetValue(key, out var previous) && cost >= arrivals[previous].Cost)
+                    var previous = bestArrivals.GetValueOrDefault(key, -1);
+                    if (previous >= 0 && cost >= arrivals[previous].Cost)
                         continue;
                     var sequence = arrivals.Count;
                     bestArrivals[key] = sequence;
                     var estimate = final ? 0 : remaining * minimumTravelCost;
-                    queue.Enqueue(sequence, (cost + estimate, -cost, next, sequence));
+                    Enqueue(sequence, cost + estimate, estimate, previous);
                     arrivals.Add(new(next, point, portal, arrivalIndex, cost, key));
                 }
             }
             return completed;
         }
+
+        // Equal priorities follow binary-heap position, without an extra polygon or sequence tie-breaker.
+        void Enqueue(int arrival, double total, double remaining, int previous)
+        {
+            var at = previous >= 0 ? queuePositions[previous] : -1;
+            queuePositions.Add(-1);
+            if (at < 0) { at = queue.Count; queue.Add(default); }
+            else queuePositions[previous] = -1;
+            var value = (Arrival: arrival, Total: total, Remaining: remaining);
+            var original = at;
+            while (at > 0)
+            {
+                var parent = (at - 1) / 2;
+                if (Compare(queue[parent], value) <= 0) break;
+                Set(at, queue[parent]);
+                at = parent;
+            }
+            Set(at, value);
+            if (at == original) ShiftDown(at);
+        }
+
+        bool Dequeue(out int arrival, out double total)
+        {
+            arrival = -1; total = 0;
+            if (queue.Count == 0) return false;
+            var first = queue[0];
+            arrival = first.Arrival; total = first.Total;
+            queuePositions[arrival] = -1;
+            var last = queue[^1];
+            queue.RemoveAt(queue.Count - 1);
+            if (queue.Count > 0) { Set(0, last); ShiftDown(0); }
+            return true;
+        }
+
+        void ShiftDown(int at)
+        {
+            var value = queue[at];
+            for (var child = at * 2 + 1; child < queue.Count; child = at * 2 + 1)
+            {
+                if (child + 1 < queue.Count && Compare(queue[child], queue[child + 1]) > 0) child++;
+                if (Compare(queue[child], value) > 0) break;
+                Set(at, queue[child]);
+                at = child;
+            }
+            Set(at, value);
+        }
+
+        void Set(int at, (int Arrival, double Total, double Remaining) value)
+        { queue[at] = value; queuePositions[value.Arrival] = at; }
+
+        static int Compare((int Arrival, double Total, double Remaining) a, (int Arrival, double Total, double Remaining) b)
+        { var total = a.Total.CompareTo(b.Total); return total != 0 ? total : a.Remaining.CompareTo(b.Remaining); }
 
         bool Allowed(RID region) => !settings.ExcludedRegions.AsSpan().Contains(region) && (settings.IncludedRegions.Length == 0 || settings.IncludedRegions.AsSpan().Contains(region));
         int Project(Vector2 point, out Vector2 projected)

@@ -55,9 +55,10 @@ public sealed unsafe partial class RenderingDevice
     private static bool StencilFormat(DataFormat format) => format is DataFormat.S8UINT or DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
     [StructLayout(LayoutKind.Sequential)]
     private readonly record struct NativeDepthStencilState(uint Flags, uint FrontMask, uint FrontWrite, uint FrontReference, uint BackMask, uint BackWrite, uint BackReference, float Minimum, float Maximum);
-    private SDL.GPUDepthStencilState DepthState(RDPipelineDepthStencilState state, RDPipelineRasterizationState raster, FramebufferPassLayout target, out byte reference, out NativeDepthStencilState native)
+    private SDL.GPUDepthStencilState DepthState(RDPipelineDepthStencilState state, RDPipelineRasterizationState raster, FramebufferPassLayout target, PipelineDynamicStateFlags dynamicStencil, out byte reference, out NativeDepthStencilState native)
     {
         var enabled = state.EnableDepthTest || state.EnableDepthWrite || state.EnableStencil || state.EnableDepthRange;
+        if (dynamicStencil != 0 && !state.EnableStencil) throw new ArgumentException("Dynamic stencil state requires enabled stencil testing.", nameof(state));
         if (enabled && target.DepthIndex < 0) throw new ArgumentException("Depth/stencil state requires a depth attachment.", nameof(state));
         var stencilOnly = target.DepthIndex >= 0 && target.Formats[target.DepthIndex] == DataFormat.S8UINT;
         if (stencilOnly && (state.EnableDepthTest || state.EnableDepthWrite || state.EnableDepthRange)) throw new ArgumentException("Stencil-only attachments have no depth aspect.", nameof(state));
@@ -69,7 +70,8 @@ public sealed unsafe partial class RenderingDevice
         var frontMask = unchecked((byte)state.FrontOpCompareMask); var backMask = unchecked((byte)state.BackOpCompareMask);
         var frontWrite = unchecked((byte)state.FrontOpWriteMask); var backWrite = unchecked((byte)state.BackOpWriteMask);
         var separate = state.EnableStencil && raster.CullMode == PolygonCullMode.Disabled && (frontReference != backReference || frontMask != backMask || frontWrite != backWrite);
-        native = new((state.EnableDepthRange ? 1u : 0u) | (separate ? 2u : 0u) | (stencilOnly ? 4u : 0u), frontMask, frontWrite, unchecked((byte)frontReference), backMask, backWrite, unchecked((byte)backReference), state.DepthRangeMin, state.DepthRangeMax);
+        native = new((state.EnableDepthRange ? 1u : 0u) | (separate ? 2u : 0u) | (stencilOnly ? 4u : 0u) | (uint)dynamicStencil, frontMask, frontWrite, unchecked((byte)frontReference), backMask, backWrite, unchecked((byte)backReference), state.DepthRangeMin, state.DepthRangeMax);
+        if (dynamicStencil != 0) RequireDynamicStencil(in native);
         var back = raster.CullMode == PolygonCullMode.Front;
         reference = (byte)(back ? backReference : frontReference);
         return new()

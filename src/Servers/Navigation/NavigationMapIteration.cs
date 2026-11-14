@@ -24,13 +24,13 @@ internal sealed partial class NavigationMapIteration
     {
         if (!map.Active) return Empty;
         var cells = new List<Cell>();
-        foreach (var region in regions)
-            if (region.Map == map.RID) cells.AddRange(pending.GetValueOrDefault(region.RID, region.Iteration).Cells);
+        foreach (var region in regions.Where(r => r.Map == map.RID).OrderBy(r => r.MapOrder))
+            cells.AddRange(pending.GetValueOrDefault(region.RID, region.Iteration).Cells);
         var topology = BuildTopology(map, cells);
         var edges = topology.Edges;
         var allEdges = edges.ToList();
         var regionCount = cells.Count;
-        foreach (var link in links)
+        foreach (var link in links.OrderBy(l => l.MapOrder))
         {
             if (!link.Enabled || link.Map != map.RID) continue;
             var start = Attach(link.Start, out var from); var end = Attach(link.End, out var to);

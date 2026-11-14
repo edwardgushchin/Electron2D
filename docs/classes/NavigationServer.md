@@ -1,6 +1,6 @@
 # NavigationServer
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
 
 [Frame timing monitors](../components/frame-monitors.md) observe owner-side synchronization and avoidance inside Engine physics steps. Queries and independent direct hosts do not publish Engine timing windows; no native device timestamps or summed worker CPU time are implied.
 
@@ -9,6 +9,8 @@ Last updated: 2026-11-13
 - Component: [Authored navigation maps](../components/navigation-maps.md)
 
 ## Description
+
+`MapCreate()` starts an inactive caller-owned map with built-in topology defaults. [World maps](../components/navigation-maps.md#project-topology-defaults) start active and capture project topology settings on first access.
 
 Permanent retained navigation service with static map/region/link/agent lifecycle, staged settings, committed queries and MapChanged publication.
 
@@ -143,7 +145,7 @@ Configuration setters stage the next iteration; configuration getters report sta
 <a id="mapgetpath"></a>
 ### `public static Vector2[] MapGetPath(RID map, Vector2 origin, Vector2 destination, bool optimize, uint navigationLayers = 1)`
 
-Returns a copied path across the committed polygon map. The search compares weighted routes through to the projected target, retaining distinct entry positions on each directed portal under the shared [search state and tie rules](../components/navigation-maps.md#search-state-and-ties), and considers [cheaper detours within the same polygon](../components/navigation-maps.md#weighted-routes-within-one-polygon). For an unreachable target, the nearest reached portal entry selects a walkable polygon. The search rebuilds the corridor to the original target projected onto that polygon. If the start polygon offers a closer projection, the path stays there.
+Returns a copied path across the committed polygon map. The search compares weighted routes through to the projected target, including distinct arrival points on the same directed portal and [cheaper detours within the same polygon](../components/navigation-maps.md#weighted-routes-within-one-polygon). For an unreachable target, the nearest reached portal entry selects a walkable polygon. The search rebuilds the corridor to the original target projected onto that polygon. If the start polygon offers a closer projection, the path stays there.
 
 `map` is the live navigation map RID. `origin` and `destination` are finite world-space points. With `optimize`, the route uses portal funnel corners. The default route keeps portal midpoints. `navigationLayers` defaults to layer one, and zero selects no cells.
 
@@ -734,7 +736,7 @@ Queries capture settings and one map iteration, then publish selected arrays and
 <a id="querypath"></a>
 ### `public static void QueryPath(NavigationPathQueryParameters parameters, NavigationPathQueryResult result, Action? callback = null)`
 
-Queries one committed map using a captured parameter snapshot and atomically replaces the supplied result. Route selection retains distinct exact entry positions on each directed portal, charges the entered owner and includes the final segment to the projected target. Equal-cost entries at different positions remain alternatives. Identical states require a strictly cheaper replacement, including with zero-cost cycles. Queue ties prefer greater traveled cost, then published polygon order and discovery order; equal complete costs retain the first accepted route. When the projected endpoints share one polygon, the direct segment competes with cheaper detours and wins ties. The result's path length measures the processed world-space points. Disconnection or a search limit can yield a rebuilt corridor to a reached polygon. Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication. Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.
+Queries one committed map using a captured parameter snapshot and atomically replaces the supplied result. Route selection considers distinct arrival points on each directed portal, charges the entered owner and includes the final segment to the projected target. When the projected endpoints share one polygon, the direct segment competes with cheaper detours and wins ties. The result's path length measures the processed world-space points. Disconnection or a search limit can yield a rebuilt corridor to a reached polygon. Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication. Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.
 
 `parameters`: Caller-owned typed settings; copied filter arrays remain stable during the query.
 
@@ -1846,3 +1848,5 @@ Works in every build configuration. Changes coalesce until the next navigation s
 Parameters:
 
 - `enabled`: New process-wide drawing request, independent of simulation activity.
+
+The shared query kernel uses an indexed binary heap ordered by estimated total and remaining cost, without polygon/discovery priorities. See [same-portal arrivals and tied corridors](../components/navigation-maps.md#arrivals-through-the-same-portal) for the pinned comparisons and unlimited slanted-cycle checks.
