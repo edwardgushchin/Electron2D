@@ -25,11 +25,16 @@ public partial class Window : Viewport
         new PropertyDescriptor<Window, Vector2i>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, WindowMode>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => WindowMode.Windowed, stored: true)
         { StoreCondition = w => w._modeAssigned || w._mode != WindowMode.Windowed },
-        new PropertyDescriptor<Window, bool>(nameof(Unresizable), w => w.Unresizable, (w, v) => w.Unresizable = v, _ => false, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(AlwaysOnTop), w => w.AlwaysOnTop, (w, v) => w.AlwaysOnTop = v, _ => false, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(Unfocusable), w => w.Unfocusable, (w, v) => w.Unfocusable = v, _ => false, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(SharpCorners), w => w.SharpCorners, (w, v) => w.SharpCorners = v, _ => false, stored: true),
+        new PropertyDescriptor<Window, bool>(nameof(Unresizable), w => w.Unresizable, (w, v) => w.Unresizable = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.ResizeDisabled) },
+        new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.Borderless) },
+        new PropertyDescriptor<Window, bool>(nameof(AlwaysOnTop), w => w.AlwaysOnTop, (w, v) => w.AlwaysOnTop = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.AlwaysOnTop) },
+        new PropertyDescriptor<Window, bool>(nameof(Unfocusable), w => w.Unfocusable, (w, v) => w.Unfocusable = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.NoFocus) },
+        new PropertyDescriptor<Window, bool>(nameof(SharpCorners), w => w.SharpCorners, (w, v) => w.SharpCorners = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.SharpCorners) },
         new PropertyDescriptor<Window, bool>(nameof(ExcludeFromCapture), w => w.ExcludeFromCapture, (w, v) => w.ExcludeFromCapture = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(MousePassthrough), w => w.MousePassthrough, (w, v) => w.MousePassthrough = v, _ => false, stored: true),
         new PropertyDescriptor<Window, Vector2[]>(nameof(MousePassthroughPolygon), w => w.MousePassthroughPolygon, (w, v) => w.MousePassthroughPolygon = v, _ => [], stored: true),
@@ -384,6 +389,8 @@ public partial class Window : Viewport
         _display.ConfigureSystemMenu(Engine.IsEditorHint || ProjectSettings.GetWithOverride(ProjectSettings.EnableAltSpaceMenu));
         (WindowMode Mode, WindowInitialPosition Policy, Vector2i Position, int Screen)? placement =
             runProject ? ProjectSettings.Service.ReadProjectWindowPlacement() : null;
+        if (runProject)
+            ApplyProjectChrome(_display);
         ConfigureNative(placement);
         if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
         _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow(), printGPUProfile);

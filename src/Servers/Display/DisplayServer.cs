@@ -51,7 +51,10 @@ public sealed partial class DisplayServer : ElectronObject
     private Rect2i _windowRect;
     private string _accessibilityTitle = "";
     internal string AccessibilityTitle => IsNativePopup ? _popupTitle : _accessibilityTitle;
-    internal bool SupportsProjectWindowPlacement => !_waylandWindowPosition && _videoDriver != "dummy";
+    internal bool IsHeadless => _videoDriver == "dummy";
+    internal bool SupportsTopLevelFocusAndStacking => !_waylandWindowPosition;
+
+    internal bool SupportsProjectWindowPlacement => !_waylandWindowPosition && !IsHeadless;
 
     internal Vector2i ObservedWindowPosition => _windowRect.Position;
     private Vector2i? _requestedMinimumSize, _requestedMaximumSize;

@@ -80,6 +80,11 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WindowInitialPositionType, isBasic: false);
         RegisterInternal(WindowInitialPosition, isBasic: false);
         RegisterInternal(WindowInitialScreen, isBasic: false);
+        RegisterInternal(WindowResizable, isBasic: true);
+        RegisterInternal(WindowBorderless, isBasic: true);
+        RegisterInternal(WindowAlwaysOnTop, isBasic: false);
+        RegisterInternal(WindowNoFocus, isBasic: false);
+        RegisterInternal(WindowSharpCorners, isBasic: false);
         RegisterInternal(WindowStretchAspect, isBasic: false);
         RegisterInternal(WindowStretchScale, isBasic: false);
         RegisterInternal(WindowStretchScaleMode, isBasic: false);
@@ -530,6 +535,14 @@ public partial class ProjectSettingsRegistry : ElectronObject
         lock (_gate)
             return (GetWithOverrideCore(WindowInitialMode), GetWithOverrideCore(WindowInitialPositionType),
                 GetWithOverrideCore(WindowInitialPosition), GetWithOverrideCore(WindowInitialScreen));
+    }
+
+    internal (bool Resizable, bool Borderless, bool AlwaysOnTop, bool NoFocus, bool SharpCorners) ReadProjectWindowChrome()
+    {
+        lock (_gate)
+            return (GetWithOverrideCore(WindowResizable), GetWithOverrideCore(WindowBorderless),
+                GetWithOverrideCore(WindowAlwaysOnTop), GetWithOverrideCore(WindowNoFocus),
+                GetWithOverrideCore(WindowSharpCorners));
     }
 
     internal T GetCore<T>(ProjectSetting<T> setting)

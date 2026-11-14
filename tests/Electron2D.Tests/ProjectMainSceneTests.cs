@@ -40,6 +40,7 @@ internal static class ProjectMainSceneTests
             SaveScene(alternate, "Alternate", Colors.Blue);
             VerifyProjectWindow(project.FullName, user.FullName, main, backend);
             VerifyProjectPlacement(project.FullName, user.FullName);
+            VerifyProjectChrome(project.FullName, user.FullName);
 
             ProjectSettings.Reset(ProjectSettings.MainScene);
             CheckFailed<InvalidOperationException>();
@@ -330,6 +331,113 @@ internal static class ProjectMainSceneTests
         {
             window.Ready += _ => { verify(); window.Tree!.Quit(); };
             Check(Engine.RunProject(window) == 0 && window.IsDisposed, "The placement host retires after verification.");
+        }
+    }
+
+    private static void VerifyProjectChrome(string project, string user)
+    {
+        var resizable = ProjectSettings.WindowResizable;
+        var borderless = ProjectSettings.WindowBorderless;
+        var top = ProjectSettings.WindowAlwaysOnTop;
+        var focus = ProjectSettings.WindowNoFocus;
+        var corners = ProjectSettings.WindowSharpCorners;
+        const string feature = "root_chrome_test";
+
+        ProjectSettings.Save();
+        using (var saved = new ProjectSettingsRegistry(project, user))
+        {
+            saved.Load();
+            Check(saved.Get(resizable) && !saved.Get(borderless) && !saved.Get(top) &&
+                !saved.Get(focus) && !saved.Get(corners), "Built-in window chrome defaults.");
+            saved.Set(resizable, false);
+            saved.SetFeatureOverride(borderless, feature, true);
+            saved.Set(top, true);
+            saved.Set(focus, true);
+            saved.Set(corners, true);
+            saved.Save();
+        }
+        ProjectSettings.Load();
+        ProjectSettings.AddCustomFeature(feature);
+
+        try
+        {
+            using var window = new Window { Size = new(240, 160) };
+            RunChrome(window, () =>
+            {
+                if (DisplayServer.GetName() == "headless")
+                {
+                    Check(!window.Unresizable && !window.Borderless && !window.AlwaysOnTop &&
+                        !window.Unfocusable && !window.SharpCorners, "The headless host has no window chrome.");
+                    return;
+                }
+
+                Check(window.Unresizable && window.Borderless, "Saved resize and border settings reach the root before readiness.");
+                if (OperatingSystem.IsWindows())
+                {
+                    Check(window.AlwaysOnTop && window.Unfocusable, "Configured stacking and focus flags reach the root.");
+                    Check(DisplayServer.WindowGetFlag(WindowFlag.ResizeDisabled) &&
+                        DisplayServer.WindowGetFlag(WindowFlag.Borderless) &&
+                        DisplayServer.WindowGetFlag(WindowFlag.AlwaysOnTop) &&
+                        DisplayServer.WindowGetFlag(WindowFlag.NoFocus), "The live native window has the four requested SDL flags.");
+                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+                        Check(window.SharpCorners && DisplayServer.WindowGetFlag(WindowFlag.SharpCorners), "The live Windows corner preference is sharp.");
+                }
+                else if (DisplayServer.GetName() == "Wayland")
+                {
+                    Check(!window.AlwaysOnTop && !window.Unfocusable, "Wayland startup keeps compositor-owned stacking and focus.");
+                }
+                if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000) || DisplayServer.GetName() == "headless")
+                    Check(!window.SharpCorners, "Startup uses the host default when Windows 11 corner control is absent.");
+            });
+
+            using var authored = new Window
+            {
+                Size = new(240, 160), Unresizable = false, Borderless = false, AlwaysOnTop = false,
+                Unfocusable = false, SharpCorners = false,
+            };
+            using var packed = new PackedScene();
+            packed.Pack(authored);
+            using var restored = (Window)packed.Instantiate();
+            RunChrome(restored, () =>
+            {
+                Check(!restored.Unresizable && !restored.Borderless && !restored.AlwaysOnTop &&
+                    !restored.Unfocusable && !restored.SharpCorners, "Packed explicit false flags override their project defaults.");
+                if (OperatingSystem.IsWindows() && DisplayServer.GetName() != "headless")
+                {
+                    Check(!DisplayServer.WindowGetFlag(WindowFlag.ResizeDisabled) &&
+                        !DisplayServer.WindowGetFlag(WindowFlag.Borderless) &&
+                        !DisplayServer.WindowGetFlag(WindowFlag.AlwaysOnTop) &&
+                        !DisplayServer.WindowGetFlag(WindowFlag.NoFocus), "Explicit packed values reach the native window.");
+                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+                        Check(!DisplayServer.WindowGetFlag(WindowFlag.SharpCorners), "Explicit false preserves the default DWM corner policy.");
+                }
+            });
+
+            using var ordinary = new Window { Size = new(240, 160) };
+            ordinary.Ready += _ =>
+            {
+                Check(!ordinary.Unresizable && !ordinary.Borderless && !ordinary.AlwaysOnTop &&
+                    !ordinary.Unfocusable && !ordinary.SharpCorners, "Ordinary Engine.Run uses the caller's flags.");
+                ordinary.Tree!.Quit();
+            };
+            Check(Engine.Run(ordinary) == 0, "Ordinary window retires cleanly.");
+        }
+        finally
+        {
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.ClearFeatureOverride(borderless, feature);
+            ProjectSettings.Reset(resizable);
+            ProjectSettings.Reset(borderless);
+            ProjectSettings.Reset(top);
+            ProjectSettings.Reset(focus);
+            ProjectSettings.Reset(corners);
+        }
+
+        static void RunChrome(Window window, Action verify)
+        {
+            window.Ready += _ => { verify(); window.Tree!.Quit(); };
+            Check(Engine.RunProject(window) == 0 && window.IsDisposed && !DisplayServer.IsAvailable,
+                "The window chrome host retires cleanly.");
         }
     }
 

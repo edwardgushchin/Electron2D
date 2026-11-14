@@ -71,7 +71,7 @@ public sealed partial class Engine
     /// <remarks>The default <see cref="ProjectSettings.MainLoopType"/> loads <see cref="ProjectSettings.MainScene"/>
     /// as the tree's current scene from initial entry, after existing window children. Project size and stretch settings supply
     /// defaults for window properties the caller has not assigned. The project also supplies unassigned
-    /// startup placement and presentation mode. The project boot splash is presented
+    /// startup placement, presentation mode and window flags. The project boot splash is presented
     /// before scene entry on visible native windows. A custom loop is published
     /// before initialization and can request exit through either frame callback. The host pumps events,
     /// renders the window's server canvas, and disposes the custom loop and window. Custom loops do not activate window children.</remarks>

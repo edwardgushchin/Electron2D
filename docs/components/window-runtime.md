@@ -99,6 +99,14 @@ Wayland, mobile, TV, browser and the dummy video driver use system placement for
 
 The Windows GPU and Compatibility project hosts verify signed coordinate persistence and feature overrides, native absolute and centered positions, maximization, packed explicit precedence and complete cleanup on an unavailable screen. The indexed placement check uses display zero. Physical multi-monitor transitions, foreign native backends and release packages remain unverified for these settings.
 
+## Project startup window flags
+
+Configured project runs sample [window flags](../classes/ProjectSettings.md#project-window-flags) with feature overrides before the native configuration and scene entry. The resizable setting inverts the Window.Unresizable flag. Borderless, topmost, no-focus and sharp corners reuse the existing native window operations. Each explicit Window assignment wins independently, including an explicitly stored false in a packed scene. Older archives restore their stored flag values as explicit.
+
+Wayland leaves native top-level stacking and focus under compositor control. The project resize flag is ignored on iOS. Windows 11 applies sharp corners through DWM. Other platforms use their system corner policy. The SDL dummy driver leaves project window flags at their defaults. Direct Window and DisplayServer flag requests retain their existing native capability checks.
+
+Windows GPU and Compatibility checks read back the SDL flags and the Windows 11 corner preference, then verify that explicitly stored false values override the same settings. A dummy Compatibility run exercises startup with configured flags on the headless driver. Wayland, mobile and release-package checks remain separate.
+
 ## Window content scaling
 
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.

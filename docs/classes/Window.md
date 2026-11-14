@@ -877,7 +877,7 @@ combined failures retain both errors. See [the current popup contract](../compon
 
 ## Initial placement and minimum-size reset
 
-Configured project runs can supply [startup placement and mode](../components/window-runtime.md#project-startup-placement) to an unassigned root. Detached windows retain the Absolute and Windowed defaults.
+Configured project runs can supply [startup placement and mode](../components/window-runtime.md#project-startup-placement) to an unassigned root. Detached windows retain the Absolute and Windowed defaults. [Project window flags](../components/window-runtime.md#project-startup-window-flags) supply unassigned resize, border, stacking, focus and corner policies on supported hosts.
 
 `Window.WindowInitialPosition` retains these six values:
 

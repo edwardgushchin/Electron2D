@@ -298445,6 +298445,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.WindowAlwaysOnTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowAlwaysOnTop",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowAlwaysOnTop { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowBorderless()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowBorderless",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowBorderless { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.WindowHeightOverride()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -298507,6 +298533,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowNoFocus()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowNoFocus",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowNoFocus { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowResizable()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowResizable",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowResizable { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowSharpCorners()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowSharpCorners",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowSharpCorners { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {

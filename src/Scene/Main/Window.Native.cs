@@ -4,7 +4,7 @@ public partial class Window
 {
     private WindowMode _mode;
     private bool _modeAssigned;
-    private uint _flags;
+    private uint _flags, _assignedFlags;
     private int? _currentScreen;
 
     /// <summary>Gets the observed native mode, or configures a presentation-mode request.</summary>
@@ -106,7 +106,8 @@ public partial class Window
     /// <param name="flag">One individual policy identifier.</param>
     /// <param name="enabled">The desired state.</param>
     /// <remarks>An unchanged request does nothing. Failed native requests do not commit the configured policy.
-    /// Detached configuration is checked against platform capabilities during Engine.Run startup.</remarks>
+    /// Detached configuration is checked against platform capabilities during Engine.Run startup.
+    /// Explicit assignments to project-configurable flags take precedence at configured project startup.</remarks>
     /// <exception cref="IOException">Changing a native window policy fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The identifier is undefined or Max.</exception>
     /// <exception cref="NotSupportedException">The policy has no executable integration or the native platform rejects it.</exception>
@@ -115,12 +116,16 @@ public partial class Window
     public void SetFlag(WindowFlag flag, bool enabled)
     {
         EnsureMutable();
+        var bit = 1u << (int)flag;
         if (GetFlag(flag) == enabled)
+        {
+            _assignedFlags |= bit;
             return;
+        }
         if (flag == WindowFlag.Popup && IsInsideTree && Visible) throw new InvalidOperationException("Popup policy cannot change while visible.");
         if (flag == WindowFlag.PopupWmHint && _display is not null) throw new InvalidOperationException("Hide the window before changing its native popup role.");
         _display?.WindowSetFlagCore(flag, enabled);
-        var bit = 1u << (int)flag;
+        _assignedFlags |= bit;
         _flags = enabled ? _flags | bit : _flags & ~bit;
         if (flag == WindowFlag.Borderless && (_keepTitleVisible || ClampToEmbedder)) UpdateEmbeddedContents();
         if (flag == WindowFlag.Borderless) Tree?.CancelEmbeddedDecoration(this);
@@ -232,6 +237,27 @@ public partial class Window
     /// callback failures and releases its resources after the queue drains.</remarks>
     public event Action<IReadOnlyList<string>>? FilesDropped { add => _publisherFilesDropped.Add(value); remove => _publisherFilesDropped.Remove(value); }
     private EventPublisher<Action<IReadOnlyList<string>>> _publisherFilesDropped;
+
+    private bool IsFlagAssigned(WindowFlag flag) => (_assignedFlags & (1u << (int)flag)) != 0;
+
+    private void ApplyProjectChrome(DisplayServer display)
+    {
+        if (display.IsHeadless)
+            return;
+
+        var settings = ProjectSettings.Service.ReadProjectWindowChrome();
+        Apply(WindowFlag.ResizeDisabled, !settings.Resizable && !OperatingSystem.IsIOS());
+        Apply(WindowFlag.Borderless, settings.Borderless);
+        Apply(WindowFlag.AlwaysOnTop, settings.AlwaysOnTop && display.SupportsTopLevelFocusAndStacking);
+        Apply(WindowFlag.NoFocus, settings.NoFocus && display.SupportsTopLevelFocusAndStacking);
+        Apply(WindowFlag.SharpCorners, settings.SharpCorners && display.SupportsSharpCorners);
+
+        void Apply(WindowFlag flag, bool enabled)
+        {
+            if (enabled && !IsFlagAssigned(flag))
+                _flags |= 1u << (int)flag;
+        }
+    }
 
     private void ValidateFlag(WindowFlag flag)
     {

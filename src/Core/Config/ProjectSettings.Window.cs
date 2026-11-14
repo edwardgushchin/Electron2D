@@ -61,4 +61,24 @@ public sealed partial class ProjectSettings
     /// <value>Zero by default. Must be nonnegative. Display availability is checked when the window opens.</value>
     public static ProjectSetting<int> WindowInitialScreen { get; } =
         new("display/window/size/initial_screen", 0, value => value >= 0);
+
+    /// <summary>Allows user resizing of the configured project window.</summary>
+    /// <value>True by default. An explicitly assigned window flag takes precedence.</value>
+    public static ProjectSetting<bool> WindowResizable { get; } = new("display/window/size/resizable", true);
+
+    /// <summary>Requests a borderless configured project window.</summary>
+    /// <value>False by default. An explicitly assigned window flag takes precedence.</value>
+    public static ProjectSetting<bool> WindowBorderless { get; } = new("display/window/size/borderless", false);
+
+    /// <summary>Requests that the configured project window stay above ordinary windows.</summary>
+    /// <value>False by default. Wayland leaves stacking to the compositor. An explicitly assigned window flag takes precedence.</value>
+    public static ProjectSetting<bool> WindowAlwaysOnTop { get; } = new("display/window/size/always_on_top", false);
+
+    /// <summary>Requests that the configured project window accept no keyboard focus.</summary>
+    /// <value>False by default. Wayland retains its ordinary top-level focus policy. An explicitly assigned window flag takes precedence.</value>
+    public static ProjectSetting<bool> WindowNoFocus { get; } = new("display/window/size/no_focus", false);
+
+    /// <summary>Requests sharp native corners for the configured project window on Windows 11.</summary>
+    /// <value>False by default, using the system corner policy. An explicitly assigned window flag takes precedence.</value>
+    public static ProjectSetting<bool> WindowSharpCorners { get; } = new("display/window/size/sharp_corners", false);
 }

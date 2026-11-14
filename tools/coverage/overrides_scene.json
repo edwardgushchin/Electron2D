@@ -5559,6 +5559,31 @@
       "reason": "Typed startup placement or presentation mode for the configured project window."
     },
     {
+      "godot": "ProjectSettings::property:display/window/size/resizable",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowResizable()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/borderless",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowBorderless()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/always_on_top",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowAlwaysOnTop()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/no_focus",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowNoFocus()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/sharp_corners",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowSharpCorners()",
+      "reason": "Typed configured-root window flag."
+    },
+    {
       "godot": "ProjectSettings::property:display/window/size/viewport_width",
       "electron2d": "property:Electron2D.ProjectSettings.ViewportWidth()",
       "reason": "Typed configured root-window startup setting."
@@ -8865,6 +8890,39 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/resizable",
+        "ProjectSettings::property:display/window/size/borderless",
+        "ProjectSettings::property:display/window/size/always_on_top",
+        "ProjectSettings::property:display/window/size/no_focus",
+        "ProjectSettings::property:display/window/size/sharp_corners"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0040. The configured root samples effective project flags before native configuration and scene entry. Existing SDL window requests implement resizing, borders, stacking and focus, with DWM corner preference on Windows 11. Explicit Window flags take precedence, including saved false values. Wayland keeps compositor-controlled top-level stacking and focus. The SDL dummy driver has no startup chrome."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/minimize_disabled",
+        "ProjectSettings::property:display/window/size/maximize_disabled"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: executable native top-level caption-button policy through WindowSetFlag and WindowGetFlag, including supported system styles and observable startup/live restoration. The native popup path has fixed disabled controls and cannot implement the root setting."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/extend_to_title"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: native extended-client decoration and hit testing with observed title-safe margins and coherent input and resize geometry. Existing embedded decorations and native size/placement flags do not supply that top-level contract."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/transparent"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: connect the project per-pixel transparency permission, native root creation flag and separate viewport clear-alpha setting through the existing compatibility presentation, with explicit strict GPU/fallback behavior under ADR 0040."
+    },
     {
       "godot": [
         "ProjectSettings::property:display/window/size/mode",
