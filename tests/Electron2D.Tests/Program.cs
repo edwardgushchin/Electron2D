@@ -467,6 +467,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_THEME") is { } p
 if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_PIXELS") is { } pixelProfile) { if (pixelProfile == "managed") ImagePixelTests.RunManaged(); else ImagePixelTests.RunNative(pixelProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); VerifyImageResize(); VerifyImageRegions(); VerifyImageConversion(); RenderingRuntimeTests.VerifyAtlasResources(); Console.WriteLine("Image storage, processing and archive snapshots passed."); return; }
 if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
@@ -2429,6 +2430,7 @@ SpriteTests.Run();
 VerifyImages();
 VerifyImageStorage();
 VerifyImageMIPChains();
+ImagePixelTests.RunManaged();
 VerifyImageResize();
 VerifyImageRegions();
 VerifyImageConversion();

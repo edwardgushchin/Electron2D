@@ -72,6 +72,18 @@ Resource and scene archives use the same snapshot when writing images. Saving du
 
 Run `ELECTRON2D_TEST_IMAGE_STORAGE=1` to check all raw format sizes, odd compressed mip layouts, copied ownership, empty and disposed state, and 64 archive round trips while a background writer alternates between two incompatible image layouts. The same profile checks an embedded image texture round trip.
 
+## Pixel edits and orientation
+
+`GetPixel` and `SetPixel` use zero-based base-level coordinates. Scalar and vector overloads share the same bounds checks. `SetPixel` leaves the authored mip bytes intact. `Fill` writes the same encoded color to every stored pixel, including all lower levels.
+
+Unsigned channels clamp before truncating. Byte luminance stores the maximum of RGB. Half-float writes truncate the significand, flush half subnormals and signed zero to zero, and retain the sign of overflow and canonical NaN. Raw half buffers can still contain subnormals and signed zeros. Full floats retain their component bits. RGB9E5 uses a shared exponent and ignores alpha.
+
+Flips and rotations permute the stored base pixels byte for byte. Quarter turns swap width and height. Every orientation change regenerates an existing mip chain from the result, including when a one-pixel axis makes the base permutation an identity. Images with only a base level stay base-only.
+
+Empty or compressed images raise `InvalidOperationException`. Coordinates outside the base level and undefined directions raise `ArgumentOutOfRangeException`. Failed validation preserves the whole state. Each successful edit emits one synchronous `Resource.Changed` after publication. A callback exception propagates after commit. Textures keep their copied pixels until replaced explicitly.
+
+Run `ELECTRON2D_TEST_IMAGE_PIXELS` with `managed`, `gpu`, and `compatibility` in separate processes. The managed profile compares 25 format vectors and exact mip buffers. The two windowed profiles sample an ordinary Sprite's ImageTexture before and after replacing it with a rotated image, then read the rendered pixels.
+
 ## Mip chain editing
 
 `ShrinkX2` promotes the first stored mip and keeps the remaining bytes in order. It works on uncompressed pixels and complete block-compressed chains. When the promoted base is 1×1, the image reports no lower levels. Base-only uncompressed images halve through the generation filter and stay base-only.

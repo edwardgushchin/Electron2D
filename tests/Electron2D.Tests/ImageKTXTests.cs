@@ -81,9 +81,24 @@ internal static partial class ImageKTXTests
         using var source = Source(Image.Format.Rgba8);
         foreach (var x in new[] { false, true }) foreach (var y in new[] { false, true })
             {
-                using var expected = (Image)source.Duplicate(); if (x) expected.FlipX(); if (y) expected.FlipY();
+                var input = source.GetData();
+                var expected = new byte[input.Length];
+                var width = source.Width;
+                var height = source.Height;
+                for (var mip = 0; mip <= source.MIPMapCount; mip++)
+                {
+                    var offset = source.GetMIPMapOffset(mip);
+                    for (var row = 0; row < height; row++)
+                        for (var column = 0; column < width; column++)
+                        {
+                            var sourceIndex = (y ? height - 1 - row : row) * width + (x ? width - 1 - column : column);
+                            input.AsSpan(offset + sourceIndex * 4, 4).CopyTo(expected.AsSpan(offset + (row * width + column) * 4));
+                        }
+                    width = Math.Max(1, width / 2);
+                    height = Math.Max(1, height / 2);
+                }
                 using var image = new Image(); image.LoadKTXFromBuffer(KTX1(source, "KTXorientation", $"S={(x ? 'l' : 'r')},T={(y ? 'u' : 'd')}"));
-                Check(image.GetData().AsSpan().SequenceEqual(expected.GetData()), "KTX logical orientation applies to every mip.");
+                Check(image.GetData().AsSpan().SequenceEqual(expected), "KTX logical orientation applies to every mip.");
             }
         using var swizzled = new Image(); swizzled.LoadKTXFromBuffer(KTX1(source, "KTXswizzle", "bg01"));
         var color = swizzled.GetPixel(0, 0); var original = source.GetPixel(0, 0);

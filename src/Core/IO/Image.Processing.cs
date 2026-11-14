@@ -144,10 +144,16 @@ public sealed partial class Image
         {
             RequireReadablePixels(state);
             var bytes = GetBytesPerPixel(state.Format);
-            for (var offset = 0; offset < state.Data.Length; offset += bytes)
-                WriteColor(state.Data, offset, state.Format, color);
-            return state;
-        });
+            var data = new byte[state.Data.Length];
+            WriteColor(data, 0, state.Format, color);
+            for (var written = bytes; written < data.Length;)
+            {
+                var count = Math.Min(written, data.Length - written);
+                data.AsSpan(0, count).CopyTo(data.AsSpan(written));
+                written += count;
+            }
+            return state with { Data = data };
+        }, copyData: false);
 
     /// <summary>Fills the base-level intersection of a rectangle and the image bounds.</summary>
     /// <param name="rectangle">The half-open pixel rectangle. Reversed axes are normalized before clipping.</param>
@@ -261,17 +267,17 @@ public sealed partial class Image
         return result;
     }
 
-    /// <summary>Flips every stored level horizontally.</summary>
+    /// <summary>Flips the base image horizontally and regenerates an existing mip chain.</summary>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the flip commits.</exception>
-    public void FlipX() => Mutate(state => FlipState(RequireReadablePixels(state), horizontal: true));
+    public void FlipX() => Mutate(state => ReflectState(RequireReadablePixels(state), flipX: true, flipY: false), copyData: false);
 
-    /// <summary>Flips every stored level vertically.</summary>
+    /// <summary>Flips the base image vertically and regenerates an existing mip chain.</summary>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the flip commits.</exception>
-    public void FlipY() => Mutate(state => FlipState(RequireReadablePixels(state), horizontal: false));
+    public void FlipY() => Mutate(state => ReflectState(RequireReadablePixels(state), flipX: false, flipY: true), copyData: false);
 
     /// <summary>Rotates the base image by 90 degrees and regenerates an existing mip chain.</summary>
     /// <param name="direction">The rotation direction.</param>
@@ -283,15 +289,14 @@ public sealed partial class Image
     {
         if (!Enum.IsDefined(direction))
             throw new ArgumentOutOfRangeException(nameof(direction));
-        Mutate(state => Rotate90State(RequireReadablePixels(state), direction));
+        Mutate(state => Rotate90State(RequireReadablePixels(state), direction), copyData: false);
     }
 
-    /// <summary>Rotates every stored level by 180 degrees.</summary>
+    /// <summary>Rotates the base image by 180 degrees and regenerates an existing mip chain.</summary>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the rotation commits.</exception>
-    public void Rotate180() => Mutate(
-        state => FlipState(FlipState(RequireReadablePixels(state), horizontal: true), horizontal: false));
+    public void Rotate180() => Mutate(state => ReflectState(RequireReadablePixels(state), flipX: true, flipY: true), copyData: false);
 
     /// <summary>Halves both dimensions, clamping each to one pixel.</summary>
     /// <remarks>Promotes the first stored mip level and preserves every remaining level, including compressed blocks.
@@ -1036,31 +1041,43 @@ public sealed partial class Image
         return state.HasMIPMaps ? BuildMIPMaps(result, false) : result;
     }
 
+    private static State ReflectState(State state, bool flipX, bool flipY)
+    {
+        var bytes = GetBytesPerPixel(state.Format);
+        var data = new byte[state.Width * state.Height * bytes];
+        CopyReflectedLevel(state.Data, data, GetLevel(state, 0), bytes, flipX, flipY);
+        var result = state with { HasMIPMaps = false, Data = data };
+        return state.HasMIPMaps ? BuildMIPMaps(result, false) : result;
+    }
+
+    // Authored KTX levels each need the stored orientation correction.
     private static State FlipState(State state, bool horizontal)
     {
         var data = new byte[state.Data.Length];
         var bytes = GetBytesPerPixel(state.Format);
         var levelCount = GetRequiredMIPMapCount(state.Width, state.Height, state.HasMIPMaps) + 1;
-        for (var levelIndex = 0; levelIndex < levelCount; levelIndex++)
-        {
-            var level = GetLevel(state, levelIndex);
-            for (var y = 0; y < level.Height; y++)
-            {
-                for (var x = 0; x < level.Width; x++)
-                {
-                    var sourceX = horizontal ? level.Width - 1 - x : x;
-                    var sourceY = horizontal ? y : level.Height - 1 - y;
-                    Buffer.BlockCopy(
-                        state.Data,
-                        level.Offset + (((sourceY * level.Width) + sourceX) * bytes),
-                        data,
-                        level.Offset + (((y * level.Width) + x) * bytes),
-                        bytes);
-                }
-            }
-        }
-
+        for (var i = 0; i < levelCount; i++)
+            CopyReflectedLevel(state.Data, data, GetLevel(state, i), bytes, horizontal, !horizontal);
         return state with { Data = data };
+    }
+
+    private static void CopyReflectedLevel(byte[] source, byte[] destination, Level level, int bytes, bool flipX, bool flipY)
+    {
+        var rowBytes = level.Width * bytes;
+        for (var y = 0; y < level.Height; y++)
+        {
+            var sourceRow = level.Offset + (flipY ? level.Height - 1 - y : y) * rowBytes;
+            var destinationRow = level.Offset + y * rowBytes;
+            if (!flipX)
+            {
+                Buffer.BlockCopy(source, sourceRow, destination, destinationRow, rowBytes);
+                continue;
+            }
+
+            for (var x = 0; x < level.Width; x++)
+                Buffer.BlockCopy(source, sourceRow + (level.Width - 1 - x) * bytes,
+                    destination, destinationRow + x * bytes, bytes);
+        }
     }
 
     private static State Rotate90State(State state, ClockDirection direction)
