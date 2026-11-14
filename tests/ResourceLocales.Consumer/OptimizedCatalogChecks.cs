@@ -43,7 +43,8 @@ internal static partial class OptimizedCatalogChecks
         Reject<EncoderFallbackException>(() => optimized.Generate(noKeys));
         Check(changes == 1, "Failed generation emits no change.");
         source.Dispose();
-        optimized.AddMessage("hidden-base-key", "hidden-base-value");
+        VerifyInheritedBehavior(optimized);
+        VerifyGenerationBudget();
         Verify(optimized, "fr-CA", "MMMMM");
 
         ResourceSaver.Save(optimized, "res://fr.e2dres");
@@ -88,6 +89,8 @@ internal static partial class OptimizedCatalogChecks
         copiedState.CopyFromResource(catalog);
 
         RejectMalformedArchive(path, catalog);
+        VerifyArchiveBoundaries(path, catalog);
+        VerifyInheritedBehavior(catalog);
         TranslationServer.Culture = CultureInfo.GetCultureInfo("fr-CA");
         TranslationServer.AddTranslation(catalog);
         try
@@ -111,8 +114,6 @@ internal static partial class OptimizedCatalogChecks
         Check(catalog.Locale == locale && catalog.GetMessage(Caption) == caption && catalog.GetMessage(KeyText, "ignored") == Long, "Locale and compressed lookup.");
         Check(catalog.GetMessage("raw") == Short && catalog.GetMessage("empty") == "" && catalog.GetMessage("context", "menu") == ""
             && catalog.GetMessage("hidden-base-key") == "", "Raw Unicode, empty, skipped contextual and inherited mutation behavior.");
-        Check(catalog.GetPluralMessage("plural", "plural-other", 1) == "primary"
-            && catalog.GetPluralMessage("plural", "plural-other", long.MaxValue, "ignored") == "primary", "First plural form for all counts and contexts.");
         Check(catalog.GetMessageCount() == 0 && catalog.GetMessageList().Length == 0, "Source keys remain hidden.");
         var values = catalog.GetTranslatedMessageList();
         Check(values.Order().SequenceEqual(new[] { "", caption, Long, Short, "primary" }.Order()), "All and only retained values are enumerable.");
@@ -171,11 +172,11 @@ internal static partial class OptimizedCatalogChecks
             && changes == 1, "Valid retry replaces the staged data once in the same identity.");
     }
 
-    private static void Reject<T>(Action action) where T : Exception
+    private static T Reject<T>(Action action) where T : Exception
     {
         try { action(); }
-        catch (T) { return; }
-        catch (AggregateException errors) when (errors.Flatten().InnerExceptions.Any(error => error is T)) { return; }
+        catch (T error) { return error; }
+        catch (AggregateException errors) when (errors.Flatten().InnerExceptions.OfType<T>().FirstOrDefault() is { } error) { return error; }
         throw new InvalidOperationException("Expected " + typeof(T).Name);
     }
 

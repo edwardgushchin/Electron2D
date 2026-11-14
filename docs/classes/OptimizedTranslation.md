@@ -91,6 +91,8 @@ Clears the lookup map. Inherited `Translation` and `Resource` cleanup and borrow
 
 ## Verification and limits
 
+The public consumer encodes two archive boundary cases independently. It removes the required payload entirely and tests the 32 MiB expanded UTF-8 ceiling with valid individual entries, including exactly 32 MiB and one byte over. Failed replacement retains the original cached identity, locale and lookup. The generation check exercises the same byte boundary from a source catalog. Calls through the base `Translation` API verify hidden source enumeration after mutation and first-form plural lookup across negative, zero and positive counts with and without context.
+
 `VerifyTranslations` in [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) covers in-memory lookup and registration. The public [resource locale consumer](../../tests/ResourceLocales.Consumer/OptimizedCatalogChecks.cs) exercises archive authoring and fresh-process loading with raw, compressed, Unicode and empty values, endian/compression flags, copying, cache replacement and registration. Its rendering profile switches the locale through an `OptionButton` and compares the resulting `Label` pixels with literal controls. This passed on Windows x64 with GPU/Direct3D 12 and Compatibility/Direct3D 11 on an RTX 3090 Ti. Other hosts and release packages still need qualification under ADR 0021. See [coverage](../coverage/classes/OptimizedTranslation.md) for the accepted format and authoring adaptations.
 
 ## Decisions
