@@ -24,7 +24,7 @@ Public operations and events use static access to the retained object under [ADR
 
 Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.
 
-`Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine`, `ProjectSettings`, [`Input`](Input.md), [`InputMap`](InputMap.md), [`CameraServer`](CameraServer.md), and [`AudioServer`](AudioServer.md) entries.
+`Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The [registry contract](../components/engine-runtime.md#named-singleton-registry) lists all 18 permanent entries. Registry operations are available before, during and between runs, and synchronizing the registry grants no permission to operate on a returned object from another thread.
 
 Engine.Run(Window) owns the elapsed-time source, native event pump, [frame pacing](../components/engine-runtime.md#frame-rate-settings) and final disposal for ordinary windowed scenes. Manual embedding retains caller ownership. `Engine.Stop()` finalizes and detaches the loop, closes native audio output and clears player slots, but deliberately does not dispose the loop. Finalization and native cleanup failures are collected after both stages. The registry retains references but never acquires disposal ownership.
 
@@ -352,8 +352,9 @@ Registers a named, non-owned engine singleton.
 - `ObjectDisposedException`: `instance` is disposing or disposed.
 - `InvalidOperationException`: The name is already registered.
 
-**Remarks:** Registration retains a managed reference but does not transfer disposal ownership. Disposing an object does not
-remove its registration; the registering component must unregister it during teardown. The name `Engine`, `ProjectSettings`, `Input`, `InputMap`, and `AudioServer` are already occupied by built-in process singletons.
+**Remarks**
+
+Names are compared ordinally without trimming or normalization. Distinct names can identify the same object. Each registration appends its name and retains a managed reference across loop shutdown. The registrant owns disposal and explicitly removes its entries during teardown. A caller-disposed object remains registered until removal. The [permanent names](../components/engine-runtime.md#named-singleton-registry) are reserved.
 
 <a id="m-electron2d-engine-unregistersingleton-system-string"></a>
 ### `public static void UnregisterSingleton(string name)`
@@ -380,7 +381,9 @@ Gets a named engine singleton.
 
 - `name`: The nonblank case-sensitive registered name.
 
-**Returns:** The registered object. Ownership remains with the registering component.
+**Returns**
+
+The same borrowed object, including if its owner has disposed it since registration.
 
 **Exceptions**
 
@@ -401,7 +404,9 @@ Gets a named engine singleton and validates its type.
 
 - `name`: The nonblank case-sensitive registered name.
 
-**Returns:** The registered object cast to `T`.
+**Returns**
+
+The same borrowed object as `T`, which can be a base type of the registered object.
 
 **Exceptions**
 
@@ -419,7 +424,9 @@ Reports whether a named engine singleton is registered.
 
 - `name`: The nonblank case-sensitive name.
 
-**Returns:** `true` when the name is registered; otherwise `false`.
+**Returns**
+
+`true` when the name is registered, including after caller disposal. An absent name returns `false`.
 
 **Exceptions**
 
