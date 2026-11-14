@@ -28,6 +28,18 @@ internal static partial class OSProcessTests
             case "exit-native": Environment.ExitCode = unchecked((int)0xc0000005); break;
             case "exit-still-active": Environment.ExitCode = 259; break;
             case "utf8-bytes": Console.OpenStandardOutput().Write([0xef, 0xbb, 0xbf, 65, 0xff, 0xce, 0xbb]); break;
+            case "file-binary":
+                using (var stdout = Console.OpenStandardOutput())
+                {
+                    stdout.Write([0x12, 0x34]);
+                    stdout.Flush();
+                    Console.Error.Write('R');
+                    Console.Error.Flush();
+                    Span<byte> input = stackalloc byte[5];
+                    Console.OpenStandardInput().ReadExactly(input);
+                    stdout.Write(input);
+                }
+                break;
             case "file-text":
                 using (var stdout = Console.OpenStandardOutput())
                 {
@@ -102,8 +114,61 @@ internal static partial class OSProcessTests
         }
         var forgotten = Forgotten(hold.Path, hold.Arguments); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); Check(OS.IsProcessRunning(forgotten), "Finalized pipe handles release streams without killing the independent child."); OS.Kill(forgotten); Wait(forgotten);
         VerifyFileTextPipes();
+        VerifyFileBinaryPipe();
         if (OperatingSystem.IsWindows()) RunWindows();
         Console.WriteLine("OS processes: literal argv, independent/current instances, actual exit/kill, 4MiB capture, blocking/nonblocking native stdin/stdout/stderr, EOF, partial-write state and cleanup passed.");
+    }
+
+    private static void VerifyFileBinaryPipe()
+    {
+        var (path, arguments) = Launch("file-binary");
+        using var pipes = OS.ExecuteWithPipe(path, arguments, false);
+        try
+        {
+            var pipe = pipes.StandardIO;
+            var timer = Stopwatch.StartNew();
+            byte[] ready;
+            do
+            {
+                ready = pipes.StandardError.ReadBytes(1);
+                if (ready.Length != 0)
+                    break;
+                Thread.Sleep(1);
+            } while (timer.Elapsed < TimeSpan.FromSeconds(5));
+            Check(ready.SequenceEqual(new byte[] { (byte)'R' }), "The child published an incomplete binary frame.");
+            Reject<NotSupportedException>(() => _ = pipe.Position);
+            Reject<NotSupportedException>(() => _ = pipe.Length);
+            Reject<NotSupportedException>(() => pipe.Seek(0));
+            Reject<NotSupportedException>(() => pipe.SeekEnd());
+            Reject<NotSupportedException>(() => pipe.Resize(0));
+            Reject<InvalidOperationException>(() => pipes.StandardError.WriteByte(0));
+            try
+            {
+                pipe.ReadUInt32();
+                throw new InvalidOperationException("The nonblocking pipe unexpectedly returned a complete scalar.");
+            }
+            catch (IOException error) when (error is not EndOfStreamException)
+            {
+                Check(pipe.ReadBytes(1).Length == 0 && !pipe.EOFReached, "A short scalar consumes its prefix without publishing EOF while the writer is open.");
+            }
+            pipe.BigEndian = true;
+            pipe.WriteUInt32(0x89abcdef);
+            pipe.WriteByte(0x5a);
+            Wait(pipes.PID);
+            Check(pipe.ReadBytes(4).SequenceEqual(new byte[] { 0x89, 0xab, 0xcd, 0xef }) &&
+                  pipe.ReadByte() == 0x5a && !pipe.EOFReached, "A fresh exact frame follows the consumed prefix with preserved wire order.");
+            Reject<EndOfStreamException>(() => pipe.ReadUInt16());
+            Check(pipe.EOFReached, "The native pipe reports EOF once its closed writer is drained.");
+            pipe.Close();
+            pipe.Close();
+            Reject<InvalidOperationException>(() => pipe.WriteBytes([]));
+        }
+        finally
+        {
+            if (OS.IsProcessRunning(pipes.PID))
+                OS.Kill(pipes.PID);
+        }
+        Console.WriteLine("Process-pipe FileAccess binary: exact/short reads, EOF, byte order and capability errors passed.");
     }
 
     private static void VerifyFileTextPipes()

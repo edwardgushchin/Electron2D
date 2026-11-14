@@ -33,7 +33,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 - Catalogs compete against the selected locale using default-aware scores, then the configured fallback is tried. Direct selected/parent entries share those scores and win ties; only explicit invariant direct entries form a universal fallback.
 - Domains, contexts, and messages are ordinal and case-sensitive.
 - Missing singular translations return the source message.
-- Missing plural translations use singular only when count equals one; registered selectors own language-specific plural rules. Resource catalogs use an imported Plural-Forms definition, then a known automatic locale rule, and fail explicitly for unknown multi-form rules.
+- Missing plural translations use singular only when count equals one; registered selectors own language-specific plural rules. Resource overrides run before local selection. Local selection uses a caller selector, then a valid stored Plural-Forms definition, then a known automatic locale rule, and fails explicitly for unknown multi-form rules.
 - Catalog lookup semantics are platform-independent; platform locale discovery, when added, remains an external host input.
 
 ## Not implemented

@@ -1921,6 +1921,108 @@
     {"godot": ["ProjectSettings::method:set_setting(String:,Variant:)"], "state": "Implemented", "reason": "ADR 0019: Exact typed definition writes validate serialized snapshots before publication and coalesce equal or repeated writes."},
     {"godot": ["ProjectSettings::method:clear(String:)"], "state": "Implemented", "reason": "ADR 0019: Reset removes explicit base storage and exposes the registry initial value while retaining overrides. ADR 0019: Unregister removes a custom definition and its base and override storage. Built-in definitions remain registered."},
     {"godot": ["ProjectSettings::method:set_initial_value(String:,Variant:)"], "state": "Implemented", "reason": "ADR 0019: Registration establishes typed identity and validates preloaded base and override values before publication. ADR 0019: The validated per-registry initial value preserves the observable current value and does not queue a change."},
+    {
+      "godot": ["DirAccess::method:get_open_error()"],
+      "state": "Excluded",
+      "reason": "ADR 0022 excludes the thread-local last-open error slot. The non-null Open factory reports failures by standard exception."
+    },
+    {
+      "godot": [
+        "DirAccess::method:list_dir_begin()",
+        "DirAccess::method:list_dir_end()",
+        "DirAccess::method:get_next()",
+        "DirAccess::method:current_is_dir()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0022: a replaceable in-memory cursor over captured entries, live filters, explicit current-entry reset on EOF/end/restart, and standard exceptions. Windows public cursor and failure regressions."
+    },
+    {
+      "godot": [
+        "DirAccess::method:get_files()",
+        "DirAccess::method:get_directories()",
+        "DirAccess::method:get_files_at(String:)",
+        "DirAccess::method:get_directories_at(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: independent ordinal read-only snapshots, instance filters, default-filter absolute/virtual helpers, and standard exceptions. Windows physical, user data and merged PCK/ZIP checks."
+    },
+    {
+      "godot": [
+        "DirAccess::method:change_dir(String:)",
+        "DirAccess::method:open(String:)",
+        "DirAccess::method:get_current_dir(bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: non-null scoped owner, captured physical roots and live resource overlays, native or virtual current paths, drive included by default, and transactional directory changes. Windows public regressions."
+    },
+    {
+      "godot": [
+        "DirAccess::property:include_hidden",
+        "DirAccess::property:include_navigational"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0022: both flags start false, apply at read time and affect independent snapshots. Windows checks cover native Hidden attributes, mounted dot names and navigation candidates."
+    },
+    {
+      "godot": ["FileAccess::method:get_8()", "FileAccess::method:get_16()", "FileAccess::method:get_32()", "FileAccess::method:get_64()"],
+      "state": "Implemented",
+      "reason": "ADR 0020 projects the pinned unsigned field widths as byte and UInt16/32/64. FileBinaryTests checks minimum, maximum and exact endian vectors, plus prefix consumption and typed failure on truncation."
+    },
+    {
+      "godot": ["FileAccess::method:store_8(int:)", "FileAccess::method:store_16(int:)", "FileAccess::method:store_32(int:)", "FileAccess::method:store_64(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 uses width-matched unsigned inputs and exceptions in place of a success flag. FileBinaryTests verifies the physical bytes for boundaries and both byte orders."
+    },
+    {
+      "godot": ["FileAccess::method:get_half()", "FileAccess::method:get_float()", "FileAccess::method:get_double()", "FileAccess::method:store_half(float:)", "FileAccess::method:store_float(float:)", "FileAccess::method:store_double(float:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 maps binary16/32/64 to Half/Single/Double. Independent endian vectors check subnormal, infinity and NaN payload bits. Half takes an explicit Half value; write failures are exceptions."
+    },
+    {
+      "godot": ["FileAccess::method:get_real()", "FileAccess::method:store_real(float:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 fixes Real to binary32, the pinned single-precision form. FileBinaryTests checks its width and signed-zero representation in both orders. Double has its own explicit methods."
+    },
+    {
+      "godot": ["FileAccess::method:get_buffer(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 uses a managed count and a caller-owned byte array. Exact reads and available prefixes advance by bytes consumed. FileBinaryTests checks zero, short and exact reads; OSProcessTests distinguishes NotReady from EOF."
+    },
+    {
+      "godot": ["FileAccess::method:store_buffer(PackedByteArray:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 accepts a synchronous read-only span and uses typed exceptions. FileBinaryTests checks copied bytes and untouched endian order. OSProcessTests retries a partial write from BytesWritten and verifies the exact SHA-256."
+    },
+    {
+      "godot": ["FileAccess::method:get_file_as_bytes(String:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 projects the full-file snapshot to a managed byte array through the shared resource path resolver. FileBinaryTests compares the ordinary-path result independently with the expected wire bytes; resource pack checks cover mounted files."
+    },
+    {
+      "godot": ["FileAccess::method:eof_reached()"],
+      "state": "Implemented",
+      "reason": "ADR 0020 uses a bool property. Exact end and empty requests preserve EOF; short file reads set it and successful seeks, writes and resize clear it. OSProcessTests checks nonblocking readiness and true writer closure."
+    },
+    {
+      "godot": ["FileAccess::method:get_length()", "FileAccess::method:get_position()"],
+      "state": "Implemented",
+      "reason": "ADR 0020 uses 64-bit byte-count properties. FileBinaryTests checks independent cursor and length observations, including after truncation and beyond end. OSProcessTests checks capability errors on pipes."
+    },
+    {
+      "godot": ["FileAccess::method:seek(int:)", "FileAccess::method:seek_end(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 supports absolute and signed end-relative byte offsets with default zero for SeekEnd. FileBinaryTests checks past-end, invalid seeks and EOF reset; OSProcessTests checks unsupported pipes."
+    },
+    {
+      "godot": ["FileAccess::method:resize(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 replaces the numeric result with typed errors. FileBinaryTests checks zero-fill, truncation, preserved cursor and EOF reset on raw and decoded files. Read-only files and native process pipes reject resize."
+    },
+    {
+      "godot": ["FileAccess::property:big_endian"],
+      "state": "Implemented",
+      "reason": "ADR 0020 defaults to little endian for each open and selects multi-byte scalar order and Pascal length prefixes. FileBinaryTests and FileTextTests exercise both orders and unchanged raw buffers."
+    },
     {"state":"Blocked","godot":["EditorInspector::method:instantiate_property_editor(Object:,int:Variant.Type,String:,int:PropertyHint,String:,int:,bool:)"],"reason":"Trigger: a generalized property-control factory in the existing self-hosted editor (ADRs 0005/0090). Pass the owner and compiled PropertyDescriptor with ValueType, advisory hints, usage and wide layout. Visit eligible providers in reverse registration order. For each provider, dispose every result after the first. Return the first result if it is a property control. If the first result has another type, dispose it and continue to the next provider. Continue also when a provider yields no results, and return null if none supplies a property control. [Pinned selection](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/editor/inspector/editor_inspector.cpp#L3829-L3851)."},
     {"state":"Blocked","godot":["EditorInspectorPlugin::method:_parse_property(Object:,int:Variant.Type,String:,int:PropertyHint,String:,int:PropertyUsageFlags,bool:)"],"reason":"Trigger: a typed inspector provider extension point connected to descriptor enumeration in the existing editor (ADRs 0005/0090). Give the provider the owner and compiled property descriptor with hints, usage and wide layout. Verify insertion before the default editor and the exclusive result that suppresses it and stops later providers."},
     {"state":"Blocked","godot":["EditorScenePostImportPlugin::method:add_import_option_advanced(int:Variant.Type,String:,Variant:,int:PropertyHint,String:,int:)"],"reason":"Trigger: an executable 2D scene import and reimport workflow with a scoped option-registration callback (ADRs 0001/0004/0090). Register a named typed option with its typed default, advisory hint and usage; verify registration scope, presentation and persistence through reimport. The internal 3D import dialog is excluded under ADR 0004."},
@@ -2255,6 +2357,15 @@
       "state": "Implemented",
       "reason": "ADR 0013: the concrete Resource own-type contract is audited across construction, lifecycle, paths and IDs, reset/setup/RID callbacks, copy/duplicate graphs, archives, caches and physical consumers. See docs/components/resource-contract-audit.md for current-source qualification. This class row follows the same own-type boundary as Node; inherited Object fixed CLR SetScript/ScriptChanged and Object class acceptance remain open on their declaring rows."
     },
+    {"godot": ["class:Translation"], "state": "Implemented", "reason": "Concrete Resource with independent duplication and typed archive state. Public catalog checks cover the default, live edits and both exact and optimized archive types. Audited against ADR 0007 and the pinned implementation, core/string/translation.cpp."},
+    {"godot": ["Translation::method:_get_message(StringName:,StringName:)"], "state": "Implemented", "reason": "Runs outside the catalog lock before local lookup. A typed null falls through and empty resolves locally. Optimized lookup ignores context and resolves against its generated keys."},
+    {"godot": ["Translation::method:_get_plural_message(StringName:,StringName:,int:,StringName:)"], "state": "Implemented", "reason": "Receives the original signed 64-bit count and plural text, before the local negative-count check and outside the lock. Null falls through and empty resolves locally. The optimized override uses the first generated form."},
+    {"godot": ["Translation::method:add_message(StringName:,StringName:,StringName:)"], "state": "Implemented", "reason": "Replaces all forms at the ordinal context/source key with one value. Empty strings and literal EOT remain valid in-memory. Null inputs throw and observers run after publication."},
+    {"godot": ["Translation::method:add_plural_message(StringName:,PackedStringArray:,StringName:)"], "state": "Implemented", "reason": "Copies nonempty forms in index order before replacing the ordinal key. Null arguments and invalid forms throw without publishing or notifying."},
+    {"godot": ["Translation::method:erase_message(StringName:,StringName:)"], "state": "Implemented", "reason": "Removes the exact key and all its forms. Erasing a missing key is a no-op; a successful erase publishes before notifying."},
+    {"godot": ["Translation::method:get_message(StringName:,StringName:)"], "state": "Implemented", "reason": "Resolves the override or first stored form; a missing entry returns empty. Empty resource results fall through in the server, including explicit empty overrides."},
+    {"godot": ["Translation::method:get_plural_message(StringName:,StringName:,int:,StringName:)"], "state": "Implemented", "reason": "Resolves the override first, then a snapshot of forms and rule. Missing or negative local lookup returns empty. ADR 0007 retains typed selection errors and the caller/definition/locale priority."},
+    {"godot": ["Translation::property:locale"], "state": "Implemented", "reason": "Defaults to English and normalizes through managed CultureInfo, including the invariant empty name. A locale edit atomically publishes its automatic plural rule and immediately changes live server eligibility."},
     {"godot": ["Translation::property:plural_rules_override"], "state": "Implemented", "reason": "Bounded prepared gettext integer expressions, precedence and short circuit execute; invalid definitions retain automatic locale fallback, duplication and archives preserve definitions, and imported PO/MO catalogs reach native pixels. TranslationCatalogTests covers trust boundaries and zero-byte warm lookup on Linux x64."},
     {"godot": ["TranslationServer::method:compare_locales(String:,String:)"], "state": "Implemented", "reason": "ADR0007: same fixed default-aware locale identity parser as StandardizeLocale; score retains exact/language/script/region/variant semantics. Original C++ constructor agrees on 2600 cases and LocalizationProjectSettingsTests retains scalar score checks; actual catalogs consume the provider."},
     {"godot": ["TranslationServer::method:get_all_languages()", "TranslationServer::method:get_all_scripts()", "TranslationServer::method:get_all_countries()", "TranslationServer::method:get_language_name(String:)", "TranslationServer::method:get_script_name(String:)", "TranslationServer::method:get_country_name(String:)", "TranslationServer::method:get_locale_name(String:)", "TranslationServer::method:standardize_locale(String:,bool:)", "TranslationServer::method:get_plural_rules(String:)"], "state": "Implemented", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},

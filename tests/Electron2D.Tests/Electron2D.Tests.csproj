@@ -36,6 +36,7 @@
     <Compile Include="../HostPlatform.Consumer/HostPlatformChecks.cs" Link="Consumers/HostPlatformChecks.cs" />
     <Compile Include="../ResourceLocales.Consumer/ResourceLocaleChecks*.cs" Link="Consumers/%(Filename)%(Extension)" />
     <Compile Include="../TranslationQueries.Consumer/TranslationQueryChecks.cs" Link="Consumers/TranslationQueryChecks.cs" />
+    <Compile Include="../TranslationQueries.Consumer/TranslationQueryChecks.Catalog.cs" Link="Consumers/TranslationQueryChecks.Catalog.cs" />
     <EmbeddedResource Include="../../editor/Assets/IBMPlexSans-Regular.ttf" LogicalName="Locale.Regular.ttf" />
     <EmbeddedResource Include="../../editor/Assets/IBMPlexSans-SemiBold.ttf" LogicalName="Locale.SemiBold.ttf" />
     <Compile Include="../Portability/FrameMonitorContract.cs" Link="FrameMonitorContract.cs" />

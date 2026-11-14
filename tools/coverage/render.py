@@ -271,7 +271,7 @@ def reason_for_type(item, lookup):
          "first scene path/follower slice using the implemented Curve2D and Entity; include progress, rotation, looping, change subscriptions and packing (ADRs 0008 and 0013); navigation is not a prerequisite"),
         ({"AStarGrid2D"},
          "standalone 2D grid pathfinding slice with cell shape, diagonals, weights and jump-point behavior (ADR 0052); no navigation-server backend is required"),
-        ({"Line2D", "Marker2D", "Parallax2D", "ParallaxBackground", "ParallaxLayer", "Polygon2D", "RemoteTransform2D"},
+        ({"Line2D", "Marker2D", "Parallax2D", "Polygon2D", "RemoteTransform2D"},
          "next 2D scene-node slice using the existing Entity, CanvasItem, canvas layers and polygon renderer (ADRs 0008 and 0028)"),
         ({"CurveTexture", "CurveXYZTexture"},
          "first curve-texture slice using implemented Curve and Texture; integrate curve-change rebaking, float channel formats and verified backend sampling (ADRs 0013 and 0028); GUI is not a prerequisite"),
@@ -742,7 +742,7 @@ def render():
             updated = "2026-10-28"
         if name in {"NativeMenu", "PopupMenu"}:
             updated = "2026-11-06"
-        if name in {"@GlobalScope", "ProjectSettings", "RenderingServer", "TranslationDomain", "TranslationServer"}:
+        if name in {"@GlobalScope", "ParallaxBackground", "ParallaxLayer", "ProjectSettings", "RenderingServer", "TranslationDomain", "TranslationServer"}:
             updated = "2026-11-14"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
@@ -802,6 +802,8 @@ def render():
             matches = ([engine_by_id[row["electron2d"]] for row in override] if override else
                        [] if special and special[0] == "Excluded" else exact_enum or choose(godot_type, member, candidates, used_local))
             adapted = None
+            if not matches and member["id"] == "@GlobalScope::method:fmod(float:,float:)":
+                adapted = "C# Single % Single / Double % Double"
             if not matches and member["kind"] == "constructor" and owners and " struct " in class_engine["signature"]:
                 parameters = member["attributes"].get("params", [])
                 if not parameters:

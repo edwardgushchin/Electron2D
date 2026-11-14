@@ -1,6 +1,6 @@
 # DirAccess
 
-Last updated: 2026-10-29
+Last updated: 2026-11-14
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -47,7 +47,7 @@ foreach (string fileName in directory.GetFiles())
 
 | Member | Description |
 | --- | --- |
-| [`public static DirAccess Open(string path)`](#m-electron2d-diraccess-open-system-string) | Opens an existing ordinary or directory-backed virtual directory. |
+| [`public static DirAccess Open(string path)`](#m-electron2d-diraccess-open-system-string) | Opens an existing filesystem, user-data, or mounted or directory-backed resource directory. |
 | [`public static DirAccess CreateTemp(string prefix = "", bool keep = false)`](#m-electron2d-diraccess-createtemp-system-string-system-boolean) | Creates and opens a uniquely named temporary directory. |
 | [`public void ListDirBegin()`](#m-electron2d-diraccess-listdirbegin) | Starts a new unsorted directory listing and closes any previous listing. |
 | [`public string GetNext()`](#m-electron2d-diraccess-getnext) | Returns the next visible name from the active directory listing. |
@@ -94,7 +94,7 @@ foreach (string fileName in directory.GetFiles())
 Gets or sets whether hidden entries are returned by directory enumeration.
 
 **Value:** `false` by default. Dot-prefixed names are hidden on Unix-family platforms; the hidden
-filesystem attribute is honored on every platform.
+filesystem attribute is honored on every platform. Dot-prefixed mounted resource names are hidden.
 
 **Exceptions**
 
@@ -120,7 +120,7 @@ Gets or sets whether the navigational entries `.` and `..` are enumerated.
 <a id="m-electron2d-diraccess-open-system-string"></a>
 ### `public static DirAccess Open(string path)`
 
-Opens an existing ordinary or directory-backed virtual directory.
+Opens an existing filesystem, user-data, or mounted or directory-backed resource directory.
 
 **Parameters**
 
@@ -170,8 +170,7 @@ Starts a new unsorted directory listing and closes any previous listing.
 - `UnauthorizedAccessException`: The caller lacks directory-listing access.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** The visible entry metadata is captured when this method returns. Entries can subsequently disappear or change;
-use [`DirAccess.GetFiles`](DirAccess.md#m-electron2d-diraccess-getfiles) or [`DirAccess.GetDirectories`](DirAccess.md#m-electron2d-diraccess-getdirectories) for sorted snapshots.
+**Remarks:** Entry names and kinds are captured at begin. Filters apply as entries are read. If capture fails, the previous listing and current entry remain available. Use [`DirAccess.GetFiles`](DirAccess.md#m-electron2d-diraccess-getfiles) or [`DirAccess.GetDirectories`](DirAccess.md#m-electron2d-diraccess-getdirectories) for sorted snapshots that leave the cursor intact.
 
 <a id="m-electron2d-diraccess-getnext"></a>
 ### `public string GetNext()`
@@ -363,7 +362,7 @@ Changes the current directory within this instance's access scope.
 - `NotSupportedException`: `path` uses an unsupported virtual scheme.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** A successful change closes an active listing.
+**Remarks:** Success closes the listing. Failure preserves the current directory and listing.
 
 <a id="m-electron2d-diraccess-getcurrentdir-system-boolean"></a>
 ### `public string GetCurrentDir(bool includeDrive = true)`
@@ -380,7 +379,7 @@ Gets the current directory in this instance's original access scope.
 
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** `includeDrive` affects only native Windows-style roots.
+**Remarks:** `includeDrive` affects only physical Windows paths with a drive letter.
 
 <a id="m-electron2d-diraccess-makedir-system-string"></a>
 ### `public void MakeDir(string path)`
