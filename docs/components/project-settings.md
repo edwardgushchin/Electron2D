@@ -56,6 +56,14 @@ The effective `DisableProjectSettingsOverride` in the main document skips both l
 
 The registry fixture covers layer precedence, feature selection, rollback, missing files, lexical path checks and a packed override. The Windows project host fixture observes the scene and its pixels selected by a configured `user://` file.
 
+## User-data directory
+
+`ProjectSettings.ConfigurePaths(projectRoot)` and the single-path registry constructor select the automatic `user://` root. Use the two-path constructor or overload to give the host's root precedence. Before loading, the automatic root uses the project's folder name beneath the Electron2D directory in local application data. A successful `Load()` uses the effective application name there. An empty application name keeps the folder-name fallback.
+
+Set `UseCustomUserDir` to place the directory under the platform's user data location. On Windows, macOS and desktop Linux this is `OS.GetDataDir()`. Other hosts use the existing local application-data fallback. `CustomUserDirName` can name nested directories and defaults to the application name, with the same folder-name fallback. Separators, unsafe characters, parent components, trailing periods and reserved names are normalized before joining the platform root.
+
+A configured `user://` override is resolved once against the root selected from the main document and conventional override. The final merged document can choose a different root. Changes to settings are applied at the next successful project load. A failed load preserves both the previous document and root. Resolving the path creates no directories or files. `OS.GetUserDataDir()`, new `FileAccess` operations and new `DirAccess` handles see the selected root. An existing directory handle keeps its original root.
+
 ## Dependencies
 
 The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultClearColor` from the process registry during Engine.Run startup. Their feature overrides use the same typed lookup as other settings. They do not switch an active backend or continuously update its clear color. GPU canvas sampler creation uses `UseNearestMIPMapFilter` sampled at backend startup; newly constructed viewports read `AnisotropicFilteringLevel` (default 4×). New Windows also read SnapTransformsToPixel and SnapVerticesToPixel at construction; explicit window configuration then takes precedence. These reads apply active feature overrides and do not reconfigure existing consumers when the project setting changes. [ProjectSettings](../classes/ProjectSettings.md) documents keys, defaults and validation; [canvas rendering](canvas-rendering.md) documents startup fallback and runtime controls.

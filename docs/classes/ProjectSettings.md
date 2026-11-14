@@ -139,6 +139,8 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | `public static ProjectSetting<bool> BootSplashUseFilter { get; }` | Selects linear sampling where available. Defaults to true. |
 | `public static ProjectSetting<string> ProjectSettingsOverride { get; }` | Selects an optional file after the conventional project override. Empty by default. |
 | `public static ProjectSetting<bool> DisableProjectSettingsOverride { get; }` | Skips automatic override loading when true. False by default. |
+| `public static ProjectSetting<bool> UseCustomUserDir { get; }` | Selects application-owned automatic user storage. Defaults to false. |
+| `public static ProjectSetting<string> CustomUserDirName { get; }` | Selects the custom user directory or relative subpath. Empty uses the application name. |
 | [`public static ProjectSetting<string> ApplicationIcon { get; }`](../components/window-runtime.md#application-image-icons) | Defines the image path used for the default window icon. Defaults to empty. |
 | [`public static ProjectSetting<string> WindowsNativeIcon { get; }`](../components/window-runtime.md#windows-native-icons) | Defines the Windows ICO path loaded before scene entry. Defaults to empty. |
 | [`public static ProjectSetting<bool> AutoAcceptQuit { get; }`](#autoacceptquit) | application/config/auto_accept_quit; true. |
@@ -203,6 +205,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 
 | Member | Description |
 | --- | --- |
+| `public static void ConfigurePaths(string projectRoot)` | Resets the project and selects [automatic user-data resolution](../components/project-settings.md#user-data-directory). |
 | [`public static void ConfigurePaths(string projectRoot, string userDataRoot)`](#m-electron2d-projectsettings-configurepaths-system-string-system-string) | Changes the project and user-data roots and clears all loaded or explicitly stored values. |
 | [`public static void Register<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-register-1-electron2d-projectsetting-0) | Registers a setting definition for typed access and tooling discovery. |
 | [`public static void Unregister<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-unregister-1-electron2d-projectsetting-0) | Unregisters a setting and removes its stored base value and feature overrides. |

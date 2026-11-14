@@ -60,6 +60,8 @@ The [typed connection boundary](../components/event-connections.md#exclusions) e
 
 [Typed node-name separator settings](../components/scene-hierarchy.md#child-name-collisions) now feed runtime authoring with live feature overrides and independently persisted defaults/validation.
 
+[Project user-data selection](../components/project-settings.md#user-data-directory) routes saves and user configuration through the loaded project policy or an explicit host path.
+
 [Automatic project overrides](../components/project-settings.md#automatic-override-files) let the project choose a user or packaged configuration before startup.
 
 [Project boot splash](../components/boot-images.md#project-startup-splash) presents project-configured startup pixels before scene entry.

@@ -56,6 +56,17 @@ public partial class ProjectSettingsRegistry
         remove => SettingsChangedCore -= value;
     }
 
+    /// <summary>Changes the project root and selects automatic user-data directory resolution.</summary>
+    /// <param name="projectRoot">An existing project directory.</param>
+    /// <remarks>Clears stored values like the two-path overload. The next successful Load applies the project's directory settings.</remarks>
+    /// <exception cref="ArgumentNullException">The path is null.</exception>
+    /// <exception cref="ArgumentException">The path is empty or invalid.</exception>
+    /// <exception cref="DirectoryNotFoundException">The project directory does not exist.</exception>
+    /// <exception cref="InvalidOperationException">Unsaved setting changes exist or a load is already running.</exception>
+    /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
+    public void ConfigurePaths(string projectRoot) =>
+        ConfigurePathsCore(projectRoot, GetDefaultUserDataRoot(projectRoot), automaticUserDataRoot: true);
+
     /// <summary>Changes the project and user-data roots and clears all loaded or explicitly stored values.</summary>
     /// <param name="projectRoot">An existing project directory.</param>
     /// <param name="userDataRoot">The user-writable data directory; it is not created automatically.</param>

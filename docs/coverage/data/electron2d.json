@@ -174996,6 +174996,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ProjectSettings.ConfigurePaths(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ConfigurePaths",
+    "signature": "public static System.Void ConfigurePaths(System.String projectRoot)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "projectRoot",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ProjectSettings.ConfigurePaths(System.String,System.String)",
     "kind": "method",
     "declaringType": "Electron2D.ProjectSettings",
@@ -175765,6 +175784,25 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProjectSettingsRegistry.ConfigurePaths(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ProjectSettingsRegistry",
+    "name": "ConfigurePaths",
+    "signature": "public System.Void ConfigurePaths(System.String projectRoot)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "projectRoot",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -295671,6 +295709,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.CustomUserDirName()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "CustomUserDirName",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E CustomUserDirName { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DebugCollisionContactColor()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -298008,6 +298059,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.UseCustomUserDir()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "UseCustomUserDir",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E UseCustomUserDir { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {

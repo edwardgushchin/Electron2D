@@ -196,7 +196,18 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<bool> DisableProjectSettingsOverride { get; } =
         new("application/config/disable_project_settings_override", false);
 
+    /// <summary>Defines whether automatic user data uses an application-owned directory.</summary>
+    /// <value>application/config/use_custom_user_dir; false initially.</value>
+    /// <remarks>The effective value is read when loading the project with an automatically selected user-data root.</remarks>
+    public static ProjectSetting<bool> UseCustomUserDir { get; } = new("application/config/use_custom_user_dir", false);
+
+    /// <summary>Defines the directory name or relative subpath for automatic custom user data.</summary>
+    /// <value>application/config/custom_user_dir_name; empty initially, selecting the application name.</value>
+    /// <remarks>Applies when <see cref="UseCustomUserDir"/> is true. Unsafe path characters are normalized.</remarks>
+    public static ProjectSetting<string> CustomUserDirName { get; } = new("application/config/custom_user_dir_name", string.Empty);
+
     /// <summary>Defines the human-readable application name.</summary>
+    /// <remarks>Used for automatic user-data directory selection at project load.</remarks>
     public static ProjectSetting<string> ApplicationName { get; } =
         new("application/config/name", string.Empty);
 
@@ -1055,8 +1066,8 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     private static ProjectSettings CreateSharedInstance()
     {
         var projectRoot = Directory.GetCurrentDirectory();
-        return new ProjectSettings(projectRoot, GetDefaultUserDataRoot(projectRoot), processWide: true);
+        return new ProjectSettings(projectRoot);
     }
 
-    private ProjectSettings(string projectRoot, string userDataRoot, bool processWide) : base(projectRoot, userDataRoot, processWide) { }
+    private ProjectSettings(string projectRoot) : base(projectRoot, GetDefaultUserDataRoot(projectRoot), processWide: true, automaticUserDataRoot: true) { }
 }

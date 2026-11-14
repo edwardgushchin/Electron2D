@@ -54,6 +54,7 @@ The two directory variables are supplied by the caller. Creating or editing this
 | [`public System.Boolean AddCustomFeature(System.String feature)`](#member-8435da80d470) | Adds a custom feature to the process feature set. |
 | [`public System.Boolean CheckChangedSettingsInGroup(System.String prefix)`](#member-de0eb049ab4c) | Checks whether any changed setting starts with a category prefix. |
 | [`public System.Boolean ClearFeatureOverride<T>(ProjectSetting<T> setting, System.String feature)`](#member-5300f11cf467) | Removes one stored feature override. |
+| `public void ConfigurePaths(string projectRoot)` | Resets the project and selects [automatic user-data resolution](../components/project-settings.md#user-data-directory). |
 | [`public System.Void ConfigurePaths(System.String projectRoot, System.String userDataRoot)`](#member-546bcd7d6507) | Changes the project and user-data roots and clears all loaded or explicitly stored values. |
 | [`public System.Boolean FlushChanges()`](#member-ff8b56cbe2b0) | Raises one coalesced Electron2D.ProjectSettingsRegistry.SettingsChanged notification when changes are pending. |
 | [`public System.Collections.Generic.IReadOnlyList<System.String> GetActiveFeatures()`](#member-5a2878d0c135) | Gets all active platform, build, architecture, and custom features. |

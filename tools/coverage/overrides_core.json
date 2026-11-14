@@ -623,6 +623,16 @@
       "reason": "ADR 0019: Load applies the effective candidate policy to conventional then configured overrides. The path may name a project, user, absolute or registered UID file. Process resource paths include mounts. Missing optional files are skipped, failures preserve the published registry, and explicit LoadCustom remains caller-driven."
     },
     {
+      "electron2d": "property:Electron2D.ProjectSettings.UseCustomUserDir()",
+      "godot": "ProjectSettings::property:application/config/use_custom_user_dir",
+      "reason": "ADR 0019: automatic project Load samples effective application name and custom user-directory settings, resolves the preliminary user override, and publishes the final root with the validated document. Explicit host roots win. OS, FileAccess and DirAccess use the selected root."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.CustomUserDirName()",
+      "godot": "ProjectSettings::property:application/config/custom_user_dir_name",
+      "reason": "ADR 0019: automatic project Load samples effective application name and custom user-directory settings, resolves the preliminary user override, and publishes the final root with the validated document. Explicit host roots win. OS, FileAccess and DirAccess use the selected root."
+    },
+    {
       "electron2d": "property:Electron2D.ProjectSettings.ApplicationIcon()",
       "godot": "ProjectSettings::property:application/config/icon",
       "reason": "ADRs 0015/0019/0040: effective startup image file path for the application default window icon."
@@ -1459,6 +1469,16 @@
       "adr": "adr-0019"
     },
     {
+      "electron2d": "method:Electron2D.ProjectSettings.ConfigurePaths(System.String)",
+      "reason": "Selects automatic user-data directory resolution during typed host setup.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.ConfigurePaths(System.String)",
+      "reason": "Selects automatic user-data directory resolution during typed host setup.",
+      "adr": "adr-0019"
+    },
+    {
       "electron2d": "method:Electron2D.ProjectSettings.ConfigurePaths(System.String,System.String)",
       "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
       "adr": "adr-0019"
@@ -1857,6 +1877,14 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0019: automatic project Load samples effective application name and custom user-directory settings, resolves the preliminary user override, and publishes the final root with the validated document. Explicit host roots win. OS, FileAccess and DirAccess use the selected root.",
+      "godot": [
+        "ProjectSettings::property:application/config/use_custom_user_dir",
+        "ProjectSettings::property:application/config/custom_user_dir_name"
+      ]
+    },
     {
       "state": "Implemented",
       "reason": "ADR 0019: Load applies the effective candidate policy to conventional then configured overrides. The path may name a project, user, absolute or registered UID file. Process resource paths include mounts. Missing optional files are skipped, failures preserve the published registry, and explicit LoadCustom remains caller-driven.",

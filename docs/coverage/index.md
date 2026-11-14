@@ -1,3 +1,5 @@
+[Project user-data selection](../components/project-settings.md#user-data-directory) applies two typed settings to the automatic user directory and configured override lookup. Two Blocked rows move to Implemented. Coverage is **14,012/18,898 (74.15%)**, with 1,122 Partial, 269 Unimplemented, 3,495 Blocked, 8,395 Excluded and zero unmapped.
+
 [Automatic project overrides](../components/project-settings.md#automatic-override-files) connect two typed settings to the project load sequence. Two Blocked rows move to Implemented. Coverage is **14,010/18,898 (74.13%)**, with 1,122 Partial, 269 Unimplemented, 3,497 Blocked, 8,395 Excluded and zero unmapped.
 
 [Project boot splash](../components/boot-images.md#project-startup-splash) connects six typed settings to native startup before the first game frame. Six Blocked rows move to Implemented. Coverage is **14,008/18,898 (74.12%)**, with 1,122 Partial, 269 Unimplemented, 3,499 Blocked, 8,395 Excluded and zero unmapped.

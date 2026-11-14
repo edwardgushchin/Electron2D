@@ -21,6 +21,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     private ConfigFile _document = new();
     private string _projectRoot;
     private string _userDataRoot;
+    private bool _automaticUserDataRoot;
     private ulong _version = 1;
     private bool _changeNotificationPending;
     private HashSet<string>? _deliveringChanges;
@@ -33,7 +34,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="projectRoot"/> is empty or invalid.</exception>
     /// <exception cref="DirectoryNotFoundException"><paramref name="projectRoot"/> does not exist.</exception>
     public ProjectSettingsRegistry(string projectRoot)
-        : this(projectRoot, GetDefaultUserDataRoot(projectRoot), processWide: false)
+        : this(projectRoot, GetDefaultUserDataRoot(projectRoot), processWide: false, automaticUserDataRoot: true)
     {
     }
 
@@ -48,10 +49,11 @@ public partial class ProjectSettingsRegistry : ElectronObject
     {
     }
 
-    internal ProjectSettingsRegistry(string projectRoot, string userDataRoot, bool processWide)
+    internal ProjectSettingsRegistry(string projectRoot, string userDataRoot, bool processWide, bool automaticUserDataRoot = false)
     {
         (_projectRoot, _userDataRoot) = NormalizeRoots(projectRoot, userDataRoot);
         _processWide = processWide;
+        _automaticUserDataRoot = automaticUserDataRoot;
         AddBuiltInFeatures(_builtInFeatures);
         RegisterInternal(WebPCompressionMethod, isBasic: false);
         RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
@@ -63,6 +65,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(BootSplashUseFilter, isBasic: true);
         RegisterInternal(ProjectSettingsOverride, isBasic: false);
         RegisterInternal(DisableProjectSettingsOverride, isBasic: false);
+        RegisterInternal(UseCustomUserDir, isBasic: false);
+        RegisterInternal(CustomUserDirName, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationIcon, isBasic: true);
         RegisterInternal(WindowsNativeIcon, isBasic: true);
@@ -362,7 +366,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     internal event Action<ProjectSettingsRegistry>? SettingsChangedCore { add => _publisherSettingsChangedCore.Add(value); remove => _publisherSettingsChangedCore.Remove(value); }
     private EventPublisher<Action<ProjectSettingsRegistry>> _publisherSettingsChangedCore;
 
-    internal void ConfigurePathsCore(string projectRoot, string userDataRoot)
+    internal void ConfigurePathsCore(string projectRoot, string userDataRoot, bool automaticUserDataRoot = false)
     {
         var roots = NormalizeRoots(projectRoot, userDataRoot);
         ThrowIfDisposed();
@@ -379,6 +383,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             _document = new ConfigFile();
             _projectRoot = roots.ProjectRoot;
             _userDataRoot = roots.UserDataRoot;
+            _automaticUserDataRoot = automaticUserDataRoot;
             _changedSettings.Clear();
             _dirtySettings.Clear();
             _changeNotificationPending = false;
@@ -719,11 +724,13 @@ public partial class ProjectSettingsRegistry : ElectronObject
                     {
                         var path = ReadLoadPolicy(candidate, ProjectSettingsOverride);
                         if (path.Length != 0)
-                            LoadOptionalOverride(candidate, path);
+                            LoadOptionalOverride(candidate, path, SelectUserDataRoot(candidate));
                     }
                 }
 
+                var userDataRoot = SelectUserDataRoot(candidate);
                 ReplaceDocumentLocked(candidate.EncodeToText(), clearChanges: true);
+                _userDataRoot = userDataRoot;
             }
             finally
             {
@@ -743,12 +750,14 @@ public partial class ProjectSettingsRegistry : ElectronObject
         return candidate.GetValue(entry.BaseKey, setting.Deserialize(entry.InitialSerialized));
     }
 
-    private void LoadOptionalOverride(ConfigFile candidate, string path)
+    private void LoadOptionalOverride(ConfigFile candidate, string path, string? userDataRoot = null)
     {
         path = ResourceUID.EnsurePath(path);
         if (!IOPath.IsPathRooted(path) && !path.Contains("://", StringComparison.Ordinal))
             path = "res://" + path;
-        var globalPath = GlobalizePathCore(path);
+        var globalPath = userDataRoot is not null && path.StartsWith("user://", StringComparison.Ordinal)
+            ? ResolveWithinRoot(userDataRoot, path[7..])
+            : GlobalizePathCore(path);
         if (_processWide && path.StartsWith("res://", StringComparison.Ordinal) &&
             ResourcePacks.Runtime.TryOpen(ToVirtualPath("res://", IOPath.GetRelativePath(_projectRoot, globalPath)), out var packed))
         {
@@ -1071,28 +1080,69 @@ public partial class ProjectSettingsRegistry : ElectronObject
         }
     }
 
-    internal static string GetDefaultUserDataRoot(string projectRoot)
+    private string SelectUserDataRoot(ConfigFile candidate)
+    {
+        if (!_automaticUserDataRoot) return _userDataRoot;
+        var applicationName = NormalizeUserDirectoryName(ReadLoadPolicy(candidate, ApplicationName), allowSubdirectories: false);
+        var custom = ReadLoadPolicy(candidate, UseCustomUserDir);
+        if (!custom) return GetDefaultUserDataRoot(_projectRoot, applicationName);
+
+        var directory = NormalizeUserDirectoryName(ReadLoadPolicy(candidate, CustomUserDirName), allowSubdirectories: true);
+        if (directory.Length == 0)
+            directory = applicationName.Length == 0 ? GetProjectFolderName(_projectRoot) : applicationName;
+        var localData = OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ||
+            (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid()) ? OS.GetDataDir() : GetLocalDataDirectory();
+        return AvoidProjectDirectory(_projectRoot, ResolveWithinRoot(localData, directory));
+    }
+
+    private static string NormalizeUserDirectoryName(string name, bool allowSubdirectories)
+    {
+        name = name.Trim();
+        if (allowSubdirectories)
+            return string.Join('/', name.Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
+                .Select(part => part.Trim() == ".." ? "-" : NormalizeUserDirectoryName(part, false))
+                .Where(part => part.Length != 0));
+        if (name is "." or "..") return name.Length == 1 ? "dot" : "twodots";
+        var result = new string(name.Select(character => char.IsControl(character) || ":*?\"<>|/\\".Contains(character)
+            ? '-' : character).ToArray()).TrimEnd('.', ' ');
+        var stem = result.Split('.', 2)[0].TrimEnd();
+        if (stem.Equals("CON", StringComparison.OrdinalIgnoreCase) ||
+            stem.Equals("PRN", StringComparison.OrdinalIgnoreCase) ||
+            stem.Equals("AUX", StringComparison.OrdinalIgnoreCase) ||
+            stem.Equals("NUL", StringComparison.OrdinalIgnoreCase) ||
+            (stem.Length == 4 && (stem.StartsWith("COM", StringComparison.OrdinalIgnoreCase) ||
+                stem.StartsWith("LPT", StringComparison.OrdinalIgnoreCase)) && "123456789¹²³".Contains(stem[3])))
+            result = "_" + result;
+        return result;
+    }
+
+    private static string GetProjectFolderName(string fullRoot)
+    {
+        var name = NormalizeUserDirectoryName(IOPath.GetFileName(IOPath.TrimEndingDirectorySeparator(fullRoot)), allowSubdirectories: false);
+        return name.Length == 0 ? "project" : name;
+    }
+
+    private static string GetLocalDataDirectory()
+    {
+        var localData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        return localData.Length == 0 ? IOPath.GetTempPath() : localData;
+    }
+
+    private static string AvoidProjectDirectory(string projectRoot, string userDataRoot) =>
+        PathComparer.Equals(IOPath.TrimEndingDirectorySeparator(projectRoot), IOPath.TrimEndingDirectorySeparator(userDataRoot))
+            ? IOPath.Combine(userDataRoot, "user")
+            : userDataRoot;
+
+    internal static string GetDefaultUserDataRoot(string projectRoot, string applicationName = "")
     {
         ArgumentNullException.ThrowIfNull(projectRoot);
         if (projectRoot.Length == 0)
             throw new ArgumentException("A project root cannot be empty.", nameof(projectRoot));
 
         var fullRoot = IOPath.GetFullPath(projectRoot);
-        var projectName = IOPath.GetFileName(fullRoot.TrimEnd(IOPath.DirectorySeparatorChar, IOPath.AltDirectorySeparatorChar));
-        if (projectName.Length == 0)
-            projectName = "project";
-
-        foreach (var invalid in IOPath.GetInvalidFileNameChars())
-            projectName = projectName.Replace(invalid, '_');
-
-        var localData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        if (localData.Length == 0)
-            localData = IOPath.GetTempPath();
-
-        var userDataRoot = IOPath.Combine(localData, "Electron2D", projectName);
-        return PathComparer.Equals(fullRoot, IOPath.TrimEndingDirectorySeparator(IOPath.GetFullPath(userDataRoot)))
-            ? IOPath.Combine(userDataRoot, "user")
-            : userDataRoot;
+        var name = applicationName.Length == 0 ? GetProjectFolderName(fullRoot) : applicationName;
+        var userDataRoot = IOPath.GetFullPath(IOPath.Combine(GetLocalDataDirectory(), "Electron2D", name));
+        return AvoidProjectDirectory(fullRoot, userDataRoot);
     }
 
     private void MarkChangedLocked(string name)
@@ -1320,6 +1370,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, BootSplashUseFilter) ||
         ReferenceEquals(setting, ProjectSettingsOverride) ||
         ReferenceEquals(setting, DisableProjectSettingsOverride) ||
+        ReferenceEquals(setting, UseCustomUserDir) ||
+        ReferenceEquals(setting, CustomUserDirName) ||
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationIcon) ||
         ReferenceEquals(setting, WindowsNativeIcon) ||
