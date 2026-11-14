@@ -23,12 +23,13 @@ public class Container : Control
     ];
     /// <summary>Gets or sets whether native accessibility publishes this container as a named landmark region.</summary>
     /// <value>False by default. Use <see cref="Control.AccessibilityName"/> to provide a descriptive name.</value>
-    /// <remarks>Stored in scenes and inherited by all container types. Changes queue semantic output without changing layout.</remarks>
+    /// <remarks>Stored in scenes and inherited by all container types. Reads of attached containers permit the scene owner
+    /// or the container's current processing group. Changes queue semantic output without changing layout.</remarks>
     /// <exception cref="ObjectDisposedException">This container is disposed.</exception>
-    /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
+    /// <exception cref="InvalidOperationException">An attached read is outside the owner/current processing group, or a write is off-owner or during capture.</exception>
     public bool AccessibilityRegion
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _accessibilityRegion; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return _accessibilityRegion; }
         set { EnsureMutable(); if (_accessibilityRegion == value) return; _accessibilityRegion = value; QueueAccessibilityUpdate(); UpdateConfigurationWarnings(); }
     }
     /// <summary>Creates a container with pass-through pointer input and maximum-size propagation enabled.</summary>

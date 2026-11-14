@@ -21,7 +21,7 @@ Provides binary and text access to ordinary and virtual files, transformed files
 `FileAccess` owns one seekable physical stream or decoded in-memory view. It supplies blocking binary/text I/O, virtual-path resolution, file metadata, hashing, Linux/macOS/Windows extended attributes, temporary files, whole-file compression, and authenticated whole-file encryption. The instance exclusively owns and closes its stream; it never owns `ProjectSettings`.
 
 Instances own their stream until [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close) or disposal. Individual operations are serialized, but a
-multi-call seek/read/write sequence is not atomic. FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard use the matching native file-codec bridge. Configured Zstandard options use its updated exports; an older bundle fails before file effects. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
+multi-call seek/read/write sequence is not atomic. FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard use the matching native file-codec bridge. The configured Zstandard window requires the updated native bundle when decoding at open. Encoding pending data with a configured level or window can raise `PlatformNotSupportedException` at [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) before the destination is created or replaced. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
 callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
 
 ## Examples
@@ -298,7 +298,7 @@ Opens a whole-file compressed container.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or the mode is invalid.
 - `ArgumentOutOfRangeException`: `compressionMode` is unknown.
-- `PlatformNotSupportedException`: The selected native codec is unavailable in the packaged bridge.
+- `PlatformNotSupportedException`: The native bundle lacks the selected codec or support for the configured Zstandard window when decoding an existing container.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
 - `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
@@ -363,6 +363,7 @@ Closes the file, committing transformed data or completed save-and-swap output w
 **Exceptions**
 
 - `IO.DirectoryNotFoundException`: Pending transformed data cannot be committed because the destination parent directory is missing.
+- `PlatformNotSupportedException`: The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.
 - `IO.IOException`: A pending write cannot be committed or a temporary file cannot be deleted.
 - `UnauthorizedAccessException`: The caller cannot replace or delete the physical file.
 - `AggregateException`: Both a primary close operation and cleanup fail.
@@ -379,6 +380,7 @@ Flushes pending data to the physical file.
 
 - `InvalidOperationException`: The file is closed or was opened read-only.
 - `IO.DirectoryNotFoundException`: Pending transformed data cannot be committed because the destination parent directory is missing.
+- `PlatformNotSupportedException`: The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.
 - `IO.IOException`: The data cannot be persisted.
 - `UnauthorizedAccessException`: The caller lacks access to persist the data.
 - `ObjectDisposedException`: The instance is disposing or disposed.

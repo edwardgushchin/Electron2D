@@ -362,7 +362,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or the mode is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="compressionMode"/> is unknown.</exception>
-    /// <exception cref="PlatformNotSupportedException">The selected native codec is unavailable in the packaged bridge.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native bundle lacks the selected codec or support for the configured Zstandard window when decoding an existing container.</exception>
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
     /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
@@ -494,6 +494,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <summary>Closes the file, committing transformed data or completed save-and-swap output when necessary.</summary>
     /// <remarks>The method is idempotent. Owned buffers and key material are released even when commit or deletion fails.</remarks>
     /// <exception cref="DirectoryNotFoundException">Pending transformed data cannot be committed because the destination parent directory is missing.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.</exception>
     /// <exception cref="IOException">A pending write cannot be committed or a temporary file cannot be deleted.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller cannot replace or delete the physical file.</exception>
     /// <exception cref="AggregateException">Both a primary close operation and cleanup fail.</exception>
@@ -512,6 +513,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <remarks>Transformed data atomically replaces the destination. Save-and-swap streams flush staging without publishing it; ordinary streams flush to disk.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed or was opened read-only.</exception>
     /// <exception cref="DirectoryNotFoundException">Pending transformed data cannot be committed because the destination parent directory is missing.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.</exception>
     /// <exception cref="IOException">The data cannot be persisted.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks access to persist the data.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
