@@ -379,6 +379,7 @@ public partial class Window : Viewport
     {
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible, transparent: Transparent);
         _display.SceneWindow = this;
+        _display.ConfigureSystemMenu(Engine.IsEditorHint || ProjectSettings.GetWithOverride(ProjectSettings.EnableAltSpaceMenu));
         ConfigureNative();
         if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
         _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow(), printGPUProfile);

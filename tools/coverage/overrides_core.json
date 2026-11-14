@@ -633,6 +633,11 @@
       "reason": "ADR 0019: automatic project Load samples effective application name and custom user-directory settings, resolves the preliminary user override, and publishes the final root with the validated document. Explicit host roots win. OS, FileAccess and DirAccess use the selected root."
     },
     {
+      "electron2d": "property:Electron2D.ProjectSettings.EnableAltSpaceMenu()",
+      "godot": "ProjectSettings::property:application/run/enable_alt_space_menu",
+      "reason": "ADRs 0015/0019/0040: Windows window startup samples the typed feature policy. Root and independent child windows dispatch the Alt+Space system command to the native menu when enabled. Editor-hint runs enable it. The callback is bound to the native window lifetime; other drivers keep their own behavior."
+    },
+    {
       "electron2d": "property:Electron2D.ProjectSettings.ApplicationIcon()",
       "godot": "ProjectSettings::property:application/config/icon",
       "reason": "ADRs 0015/0019/0040: effective startup image file path for the application default window icon."
@@ -1877,6 +1882,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0015/0019/0040: Windows window startup samples the typed feature policy. Root and independent child windows dispatch the Alt+Space system command to the native menu when enabled. Editor-hint runs enable it. The callback is bound to the native window lifetime; other drivers keep their own behavior.",
+      "godot": ["ProjectSettings::property:application/run/enable_alt_space_menu"]
+    },
     {
       "state": "Implemented",
       "reason": "ADR 0019: automatic project Load samples effective application name and custom user-directory settings, resolves the preliminary user override, and publishes the final root with the validated document. Explicit host roots win. OS, FileAccess and DirAccess use the selected root.",

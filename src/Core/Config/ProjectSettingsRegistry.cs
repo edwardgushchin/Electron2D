@@ -74,6 +74,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(MainLoopType, isBasic: false);
         RegisterInternal(AutoAcceptQuit, isBasic: true);
         RegisterInternal(QuitOnGoBack, isBasic: true);
+        RegisterInternal(EnableAltSpaceMenu, isBasic: false);
         RegisterInternal(DeltaSmoothing, isBasic: false);
         RegisterInternal(ProjectSettings.AccessibilitySupport, isBasic: false);
         RegisterInternal(AccessibilityDriver, isBasic: false);
@@ -1379,6 +1380,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MainLoopType) ||
         ReferenceEquals(setting, AutoAcceptQuit) ||
         ReferenceEquals(setting, QuitOnGoBack) ||
+        ReferenceEquals(setting, EnableAltSpaceMenu) ||
         ReferenceEquals(setting, DeltaSmoothing) ||
         ReferenceEquals(setting, ProjectSettings.AccessibilitySupport) ||
         ReferenceEquals(setting, AccessibilityDriver) ||

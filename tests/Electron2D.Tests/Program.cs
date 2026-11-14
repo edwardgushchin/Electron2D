@@ -18,6 +18,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_MANAGER") is { } sh
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CAPTURE") is { } captureBackend) { if (captureBackend == "unavailable") WindowCaptureChecks.Unavailable(); else WindowCaptureChecks.Run(captureBackend, args[0]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT_FIT") is { } contentFitProfile) { WindowContentFitTests.Run(contentFitProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_DRAWABILITY") is { } drawabilityProfile) { WindowDrawabilityTests.Run(drawabilityProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_MENU") is { } systemMenuProfile) { WindowsSystemMenuTests.Run(systemMenuProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CORNERS") is { } windowCornerProfile) { WindowCornerTests.Run(windowCornerProfile); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_MENU") is { } menuOracle) { if (menuOracle == "unavailable") NativeMenuChecks.Unavailable(); else NativeMenuChecks.Run(menuOracle, args[0]); return; }

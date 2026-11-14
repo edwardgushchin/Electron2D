@@ -230,6 +230,8 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 
 ## Windowed lifecycle
 
+The windowed host applies the project [Alt+Space system menu policy](../components/window-runtime.md#windows-system-menu) to native Windows windows.
+
 Window's authored [native mouse input policy](../components/window-input-region.md)
 survives scene copying and native reopening; embedded GUI routing stays unchanged.
 

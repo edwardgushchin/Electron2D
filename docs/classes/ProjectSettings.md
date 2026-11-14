@@ -142,6 +142,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | `public static ProjectSetting<bool> UseCustomUserDir { get; }` | Selects application-owned automatic user storage. Defaults to false. |
 | `public static ProjectSetting<string> CustomUserDirName { get; }` | Selects the custom user directory or relative subpath. Empty uses the application name. |
 | [`public static ProjectSetting<string> ApplicationIcon { get; }`](../components/window-runtime.md#application-image-icons) | Defines the image path used for the default window icon. Defaults to empty. |
+| `public static ProjectSetting<bool> EnableAltSpaceMenu { get; }` | Enables the [Windows system menu shortcut](../components/window-runtime.md#windows-system-menu) at startup. Defaults to false. |
 | [`public static ProjectSetting<string> WindowsNativeIcon { get; }`](../components/window-runtime.md#windows-native-icons) | Defines the Windows ICO path loaded before scene entry. Defaults to empty. |
 | [`public static ProjectSetting<bool> AutoAcceptQuit { get; }`](#autoacceptquit) | application/config/auto_accept_quit; true. |
 | [`public static ProjectSetting<bool> QuitOnGoBack { get; }`](#quitongoback) | application/config/quit_on_go_back; true. |

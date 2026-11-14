@@ -36,6 +36,8 @@ The input action records are defined by the [Input runtime](input-runtime.md); t
 
 ## Runtime flow
 
+The [Windows system menu shortcut](window-runtime.md#windows-system-menu) samples its effective typed setting at window startup.
+
 The [project boot splash](boot-images.md#project-startup-splash) consumes six typed settings at native project startup.
 
 `ApplicationIcon` and `WindowsNativeIcon` follow the normal typed startup and feature-override path and accept mounted project files. [Application image icons](window-runtime.md#application-image-icons) · [Windows native icons](window-runtime.md#windows-native-icons)

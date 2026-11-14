@@ -295904,6 +295904,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.EnableAltSpaceMenu()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "EnableAltSpaceMenu",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E EnableAltSpaceMenu { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.FlushSTDOUTOnPrint()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

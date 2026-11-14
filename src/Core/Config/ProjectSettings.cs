@@ -233,6 +233,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <remarks>Feature overrides apply at tree construction; later setting edits affect subsequent trees.</remarks>
     public static ProjectSetting<bool> QuitOnGoBack { get; } = new("application/config/quit_on_go_back", true);
 
+    /// <summary>Defines whether Alt+Space opens the native Windows system menu.</summary>
+    /// <value>application/run/enable_alt_space_menu; false initially.</value>
+    /// <remarks>Sampled at startup for the main window and its independent native child windows on the Windows display driver.
+    /// Editor-hint sessions enable the shortcut. Changes take effect on the next windowed run.</remarks>
+    public static ProjectSetting<bool> EnableAltSpaceMenu { get; } = new("application/run/enable_alt_space_menu", false);
+
     /// <summary>Defines whether each owned window session starts with measured frame-delta smoothing enabled.</summary>
     /// <value>application/run/delta_smoothing; true initially.</value>
     /// <remarks>Active feature overrides initialize OS.DeltaSmoothing before readiness. Later project edits apply to the next owned run.</remarks>

@@ -210,6 +210,8 @@ public sealed partial class DisplayServer
             child._popupTitle = title;
             child.SceneWindow = sceneWindow;
             child.PopupInputPolicy = popupParent is not null && (sceneWindow?.PopupWindow ?? true);
+            if (popupParent is null && root._enableAltSpaceMenu is { } enableAltSpaceMenu)
+                child.ConfigureSystemMenu(enableAltSpaceMenu);
             child.ApplyDefaultWindowIcon();
             child._requestedVSync = WindowGetVSyncMode();
             child._vSyncConfigured = true;

@@ -404,3 +404,12 @@ On Windows x64, `ELECTRON2D_TEST_WINDOW_DRAWABILITY=gpu` and `compatibility` exe
 ## Native device screens
 
 Live main/child native identities select renderer-owned [device screen graphics](local-compute.md#native-screen-drawing). Private screen attachments share GPU device ownership with canvas presentation. The existing native-window mutation guard also protects screen resources during an active command list, including early child hierarchy/disposal validation; failed child retirement preserves the live scene/window state. Tree rollback and renderer shutdown defer incomplete screen attachment cleanup to device teardown. Child hide retires the identity and its private attachments.
+
+
+## Windows system menu
+
+`ProjectSettings.EnableAltSpaceMenu` controls whether Alt+Space opens the Windows system menu. The windowed host samples its effective feature value before scene entry. Editor-hint runs enable the shortcut. The policy applies to the main window and independent native children, including children opened later in the same run. Embedded windows and native popup surfaces follow their existing input paths. The next run samples any project setting changes.
+
+The native window handles the Alt+Space system command using the Windows default menu. Mouse access and unrelated system commands follow the regular window procedure. SDL retains responsibility for modal menu events and keyboard releases. Other display drivers keep their own platform behavior.
+
+The Windows fixture sends the translated system character to real main, child and reopened child windows and observes entry into the native modal menu loop. It checks enabled and disabled sessions, feature override sampling, the editor hint and unrelated system characters. SDL dummy checks the non-Win32 startup path. Physical key input is outside this test.
