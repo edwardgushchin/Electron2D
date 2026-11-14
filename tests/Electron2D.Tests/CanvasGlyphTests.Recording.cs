@@ -19,7 +19,7 @@ internal static partial class CanvasGlyphTests
     private static void Recording()
     {
         using var texture = new HookTexture(); using var atlas = new AtlasTexture { Atlas = texture, Region = new(1, 0, 1, 1), Margin = new(0, 0, 8, 0) };
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var node = new Probe();
         node.Drawing = () =>
         {

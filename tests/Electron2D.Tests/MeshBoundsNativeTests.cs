@@ -16,9 +16,9 @@ internal static partial class MeshBoundsTests
             if (skin) { data.Bones = new int[16]; data.Weights = new float[16]; for (var i = 0; i < 4; i++) data.Weights[i * 4] = 1; }
             return data;
         }
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data());
-        using var expanded = new ArrayMesh(); expanded.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data(), lods: new Dictionary<float, int[]> { [.25f] = [0, 1, 2] });
-        using var morph = new ArrayMesh(); morph.AddBlendShape("shift"); morph.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data(), [new() { Vertices = Enumerable.Repeat(new Vector2(2, 0), 4).ToArray() }]);
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data());
+        using var expanded = new ArrayMesh(); expanded.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data(), lods: new Dictionary<float, int[]> { [.25f] = [0, 1, 2] });
+        using var morph = new ArrayMesh(); morph.AddBlendShape("shift"); morph.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data(), [new() { Vertices = Enumerable.Repeat(new Vector2(2, 0), 4).ToArray() }]);
         using var hardware = new MultiMesh { Mesh = mesh, InstanceCount = 2 }; hardware.SetInstanceTransform2D(0, Transform.Identity); hardware.SetInstanceTransform2D(1, new(0, new(32, 0)));
         using var fallback = new MultiMesh { Mesh = expanded, InstanceCount = 2 }; fallback.SetInstanceTransform2D(0, Transform.Identity); fallback.SetInstanceTransform2D(1, new(0, new(32, 0)));
         using var window = new Window { Size = new(128, 128) }; var frame = 0; RID owned = default, skeleton = default;
@@ -37,7 +37,7 @@ internal static partial class MeshBoundsTests
                 var backend = typeof(RenderingServer).GetField("_backend", flags)!.GetValue(RenderingServer.Service)!;
                 pipelines = (System.Collections.IDictionary)typeof(GPUCanvasBackend).GetField("_pipelines", flags)!.GetValue(backend)!;
             }
-            owned = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, Data(skin: true)); direct.MeshRID = owned;
+            owned = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(owned, MeshPrimitiveType.Triangles, Data(skin: true)); direct.MeshRID = owned;
             skeleton = RenderingServer.SkeletonCreate(); RenderingServer.SkeletonAllocateData(skeleton, 1); RenderingServer.SkeletonBoneSetTransform2D(skeleton, 0, new(0, new(4, 0))); RenderingServer.CanvasItemAttachSkeleton(direct.GetCanvasItem(), skeleton);
             Check(RenderingServer.MeshGetCustomAABB(owned) == default && RenderingServer.MeshGetCustomAABB(mesh.GetRID()) == default, "Owned/borrowed defaults.");
             mesh.CustomAABB = inside; Check(RenderingServer.MeshGetCustomAABB(mesh.GetRID()) == inside, "Borrowed resource query sees the authored value."); mesh.CustomAABB = default;

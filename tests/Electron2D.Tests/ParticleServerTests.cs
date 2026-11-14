@@ -59,7 +59,7 @@ internal static partial class ParticleServerTests
         using var root = new Window { Size = new(64, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var surface = new Entity(); root.AddChild(surface); root.AddChild(new Control());
         using var mesh = new ArrayMesh();
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [new(-2, -2), new(2, -2), new(2, 2), new(-2, 2)], Indices = [0, 1, 2, 0, 2, 3] });
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [new(-2, -2), new(2, -2), new(2, 2), new(-2, 2)], Indices = [0, 1, 2, 0, 2, 3] });
         using var input = typeof(ParticleServerTests).Assembly.GetManifestResourceStream("TestShaders.ParticleHLSL.comp.spv")!;
         using var bytes = new MemoryStream(); input.CopyTo(bytes);
         var code = bytes.ToArray();

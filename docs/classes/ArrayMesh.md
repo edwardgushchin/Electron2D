@@ -14,7 +14,7 @@ Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Nor
 
 ```csharp
 using var mesh = new ArrayMesh();
-mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData
 { Vertices = [new(0, 0), new(20, 0), new(0, 20)] }, flags: Mesh.ArrayFormat.UseDynamicUpdate);
 var node = new MeshInstance { Mesh = mesh };
 // Attach node to a Window; retain mesh until the scene is disposed.
@@ -30,7 +30,7 @@ Shape count/name accessors are inherited from [Mesh](Mesh.md). Named targets, tw
 | `public ArrayMesh()` | Creates an empty mesh. |
 | `public Electron2D.Rect2 CustomAABB { get; set; }` | Stored mesh-local visibility override; zero restores automatic bounds. |
 | `public System.Void AddBlendShape(System.String name)` | Adds a named shape definition before any surfaces exist. |
-| `public System.Void AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Mesh.ArrayFormat flags = None)` | Adds one copied two-dimensional surface. |
+| `public System.Void AddSurfaceFromArrays(Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Mesh.ArrayFormat flags = None)` | Adds one copied two-dimensional surface. |
 | `public System.Void ClearBlendShapes()` | Clears shape definitions before any surfaces exist. |
 | `public System.Void ClearSurfaces()` | Removes every surface without disposing borrowed materials. |
 | `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)` |  |
@@ -48,7 +48,7 @@ Shape count/name accessors are inherited from [Mesh](Mesh.md). Named targets, tw
 | `protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` |  |
 | `protected override System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> OnSurfaceGetLODs(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` |  |
-| `protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` |  |
 | `protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` |  |
 | `public System.Void RegenNormalMaps()` | Regenerates each surface's tangent channel from its existing normals and primary UVs. |
 | `public System.Int32 SurfaceFindByName(System.String name)` | Finds the first exact ordinal surface name. |
@@ -80,7 +80,7 @@ remarks: All subsequently added surfaces require one shape payload per definitio
 
 ### AddSurfaceFromArrays
 
-`public System.Void AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Mesh.ArrayFormat flags = None)`
+`public System.Void AddSurfaceFromArrays(Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Mesh.ArrayFormat flags = None)`
 
 summary: Adds one copied two-dimensional surface.
 
@@ -184,7 +184,7 @@ System.ObjectDisposedException: The mesh is disposed.
 
 ### OnSurfaceGetPrimitiveType
 
-`protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
+`protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
 
 ### OnSurfaceSetMaterial
 

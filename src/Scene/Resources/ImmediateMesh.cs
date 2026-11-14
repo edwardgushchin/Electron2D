@@ -15,7 +15,7 @@ public sealed class ImmediateMesh : Mesh
     private Vector3 _normal;
     private Vector4 _tangent;
     private bool _usesNormals, _usesTangents;
-    private PrimitiveType _primitive;
+    private MeshPrimitiveType _primitive;
     private Material? _material;
     private Color _color;
     private Vector2 _uv, _uv2;
@@ -30,13 +30,13 @@ public sealed class ImmediateMesh : Mesh
     /// <exception cref="InvalidOperationException">A surface is already being built.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The topology is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The mesh or material is disposed.</exception>
-    public void SurfaceBegin(PrimitiveType primitive, Material? material = null)
+    public void SurfaceBegin(MeshPrimitiveType primitive, Material? material = null)
     {
         lock (Surfaces.Gate)
         {
             ThrowIfDisposed();
             if (_active) throw new InvalidOperationException("A surface is already being built.");
-            if (primitive is < PrimitiveType.Points or > PrimitiveType.TriangleStrip) throw new ArgumentOutOfRangeException(nameof(primitive));
+            if (primitive is < MeshPrimitiveType.Points or > MeshPrimitiveType.TriangleStrip) throw new ArgumentOutOfRangeException(nameof(primitive));
             if (material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(material));
             _primitive = primitive; _material = material; _active = true;
         }
@@ -168,7 +168,7 @@ public sealed class ImmediateMesh : Mesh
     /// <inheritdoc />
     protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => Surfaces.SurfaceGetArrayIndexLen(surfaceIndex);
     /// <inheritdoc />
-    protected override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => Surfaces.SurfaceGetPrimitiveType(surfaceIndex);
+    protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => Surfaces.SurfaceGetPrimitiveType(surfaceIndex);
     /// <inheritdoc />
     protected override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => Surfaces.SurfaceGetFormat(surfaceIndex);
     /// <inheritdoc />
@@ -201,10 +201,10 @@ public sealed class ImmediateMesh : Mesh
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        (MeshSurfaceData Data, PrimitiveType Primitive, Material? Material)[] copies;
+        (MeshSurfaceData Data, MeshPrimitiveType Primitive, Material? Material)[] copies;
         lock (Surfaces.Gate)
         {
-            ThrowIfDisposed(); copies = new (MeshSurfaceData, PrimitiveType, Material?)[Surfaces.SurfaceCount];
+            ThrowIfDisposed(); copies = new (MeshSurfaceData, MeshPrimitiveType, Material?)[Surfaces.SurfaceCount];
             for (var i = 0; i < copies.Length; i++) { var surface = Surfaces.Get(i); copies[i] = (surface.Data.Copy(), surface.Primitive, surface.Material); }
         }
         var other = (ImmediateMesh)target;

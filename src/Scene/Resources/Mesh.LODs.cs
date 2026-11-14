@@ -22,7 +22,7 @@ public abstract partial class Mesh
 
 internal readonly record struct MeshLOD(float Error, MeshSurfaceData Data)
 {
-    internal static MeshLOD[] Capture(IReadOnlyDictionary<float, int[]>? source, MeshSurfaceData basis, Mesh.PrimitiveType primitive)
+    internal static MeshLOD[] Capture(IReadOnlyDictionary<float, int[]>? source, MeshSurfaceData basis, MeshPrimitiveType primitive)
     {
         if (source is null || source.Count == 0) return [];
         if (source.Count > 4096) throw new ArgumentException("LOD count exceeds the surface budget.", nameof(source));

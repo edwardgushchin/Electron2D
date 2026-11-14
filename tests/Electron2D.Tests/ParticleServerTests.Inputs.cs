@@ -49,7 +49,7 @@ internal static partial class ParticleServerTests
         using var material = new CanvasItemMaterial { ParticlesAnimation = true, ParticlesAnimHFrames = 2, ParticlesAnimLoop = false }; var owner = new Entity { Material = material }; root.AddChild(owner);
         using var pixels = Image.CreateEmpty(8, 4, false, Image.Format.Rgba8); pixels.Fill(Colors.Red); for (var y = 0; y < 4; y++) for (var x = 4; x < 8; x++) pixels.SetPixel(x, y, Colors.Blue);
         using var texture = ImageTexture.CreateFromImage(pixels); using var mesh = new ArrayMesh();
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [new(-4, -4), new(4, -4), new(4, 4), new(-4, 4)], UVs = [Vector2.Zero, new(1, 0), Vector2.One, new(0, 1)], Indices = [0, 1, 2, 0, 2, 3] });
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [new(-4, -4), new(4, -4), new(4, 4), new(-4, 4)], UVs = [Vector2.Zero, new(1, 0), Vector2.One, new(0, 1)], Indices = [0, 1, 2, 0, 2, 3] });
         RID particles = default, item = default; var frame = 0;
         root.Ready += _ =>
         {

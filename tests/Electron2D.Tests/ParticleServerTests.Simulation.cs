@@ -9,7 +9,7 @@ internal static partial class ParticleServerTests
     }
     private static ArrayMesh Quad()
     {
-        var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [new(-2, -2), new(2, -2), new(2, 2), new(-2, 2)], Indices = [0, 1, 2, 0, 2, 3] }); return mesh;
+        var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [new(-2, -2), new(2, -2), new(2, 2), new(-2, 2)], Indices = [0, 1, 2, 0, 2, 3] }); return mesh;
     }
     private static RID Attach(Entity owner, RID particles, Mesh mesh)
     {

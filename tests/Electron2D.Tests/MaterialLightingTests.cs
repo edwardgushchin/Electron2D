@@ -101,7 +101,7 @@ internal static class MaterialLightingTests
         var rejected = new Window { Size = new(256, 128) }; rejected.AddChild(new Patch(texture) { Material = many }); rejected.AddChild(new PointLight { Texture = texture, TextureScale = 32 });
         Reject<NotSupportedException>(() => Engine.Run(rejected)); Check(rejected.IsDisposed && RenderingServer.Service is null, "Combined sampler capacity rejects before submission and tears down.");
         Export(manyShader, "many", all: false);
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var instances = new MultiMesh { Mesh = mesh, UseColors = true, InstanceCount = 2 }; instances.SetInstanceTransform2D(0, new(0, new(8, 8))); instances.SetInstanceTransform2D(1, new(0, new(40, 8))); instances.SetInstanceColor(0, Colors.Red); instances.SetInstanceColor(1, Colors.Blue);
         using var instanceShader = Load("CanvasGLSL"); using var instanceMaterial = new ShaderMaterial { Shader = instanceShader };
         var host = new Window { Size = new(256, 128) }; host.AddChild(new MultiMeshInstance { MultiMesh = instances, Material = instanceMaterial, Texture = texture }); host.AddChild(new DirectionalLight { Energy = .25f });

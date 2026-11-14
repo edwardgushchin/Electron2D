@@ -18,7 +18,7 @@ Entity scene consumer borrowing Mesh and optional Texture. Setters use scene own
 
 ```csharp
 using var mesh = new ArrayMesh();
-mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData
 { Vertices = [new(0, 0), new(20, 0), new(0, 20)] });
 var node = new MeshInstance { Mesh = mesh, Position = new(10, 10) };
 // window.AddChild(node); Engine.Run(window);

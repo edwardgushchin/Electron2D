@@ -311,12 +311,12 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                     if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
                     _vertices[vertex].Color = new() { R = color.R, G = color.G, B = color.B, A = color.A };
                 }
-                if (batch.Primitive == Mesh.PrimitiveType.Points)
+                if (batch.Primitive == MeshPrimitiveType.Points)
                 {
                     RecordCanvasDraw(batch, DrawPoints(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), Driver == "software" && texture != 0));
                     continue;
                 }
-                if (batch.Primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip)
+                if (batch.Primitive is MeshPrimitiveType.Lines or MeshPrimitiveType.LineStrip)
                 {
                     RecordCanvasDraw(batch, DrawThinLines(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), batch.Primitive, batch.SnapNativeLines));
                     continue;
@@ -413,9 +413,9 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         return calls;
     }
 
-    private int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    private int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, MeshPrimitiveType primitive, bool snap)
     {
-        if (texture == 0 && primitive == Mesh.PrimitiveType.LineStrip && vertices.Length > 1)
+        if (texture == 0 && primitive == MeshPrimitiveType.LineStrip && vertices.Length > 1)
         {
             var flat = true;
             foreach (var vertex in vertices) flat &= SameColor(vertex.Color, vertices[0].Color);
@@ -434,7 +434,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                 return 1;
             }
         }
-        var attributes = texture != 0 || primitive == Mesh.PrimitiveType.LineStrip;
+        var attributes = texture != 0 || primitive == MeshPrimitiveType.LineStrip;
         for (var i = 1; !attributes && i < vertices.Length; i += 2) attributes = !SameColor(vertices[i - 1].Color, vertices[i].Color);
         if (_nativeLineMethod == 3 && Driver != "software" && attributes) return DrawGeometryAttributeLines(renderer, texture, vertices, primitive, snap);
         if (_rasterAttributeLines && attributes) return DrawAttributeLines(renderer, texture, vertices, primitive, snap);
@@ -452,7 +452,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     }
 
     // Attribute coverage follows the SDL point-line/software queues; adapted selection, see licence/SDL-LICENSE.txt.
-    private int DrawAttributeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    private int DrawAttributeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, MeshPrimitiveType primitive, bool snap)
     {
         Check(SDL.GetRenderViewport(renderer, out var viewport), "read attribute line bounds");
         viewport.X = viewport.Y = 0;
@@ -462,7 +462,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             Check(SDL.GetRenderClipRect(renderer, out var current), "read attribute line clipping");
             if (!SDL.GetRectIntersection(viewport, current, out clip)) return 0;
         }
-        var connected = primitive == Mesh.PrimitiveType.LineStrip; var last = vertices.Length - 1;
+        var connected = primitive == MeshPrimitiveType.LineStrip; var last = vertices.Length - 1;
         if (connected) while (last > 0 && EqualPoint(LinePoint(vertices[last - 1].Position, snap), LinePoint(vertices[last].Position, snap))) last--;
         var count = 0;
         for (var i = 1; i <= last; i += connected ? 1 : 2)

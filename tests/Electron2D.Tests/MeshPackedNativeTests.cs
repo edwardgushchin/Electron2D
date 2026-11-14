@@ -12,7 +12,7 @@ internal static partial class MeshPackedTests
         if (color is { } tint) data.Colors = Enumerable.Repeat(tint, 4).ToArray();
         if (skin) { data.Bones = new int[32]; data.Weights = new float[32]; for (var i = 0; i < 4; i++) { data.Bones[i * 8 + 7] = 7; data.Weights[i * 8 + 7] = 1; } }
         var targets = Enumerable.Range(0, shapes).Select(_ => new MeshSurfaceData { Vertices = (Vector2[])data.Vertices.Clone(), Normals = (Vector3[])data.Normals.Clone(), Tangents = (Vector4[])data.Tangents.Clone() }).ToArray();
-        source.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, data, targets, lod ? new Dictionary<float, int[]> { [.5f] = [0, 1, 2] } : null, (compressed ? Mesh.ArrayFormat.CompressAttributes : 0) | (skin ? Mesh.ArrayFormat.Use8BoneWeights : 0));
+        source.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, data, targets, lod ? new Dictionary<float, int[]> { [.5f] = [0, 1, 2] } : null, (compressed ? Mesh.ArrayFormat.CompressAttributes : 0) | (skin ? Mesh.ArrayFormat.Use8BoneWeights : 0));
         return source.ExportPacked(0);
     }
     internal static void Native(string profile)
@@ -39,7 +39,7 @@ internal static partial class MeshPackedTests
             RenderingServer.MeshAddSurface(rids[0], a); rids[1] = RenderingServer.MeshCreateFromSurfaces([b], 2); rids[2] = RenderingServer.MeshCreateFromSurfaces([plain]); rids[3] = RenderingServer.MeshCreateFromSurfaces([levelData]); rids[4] = RenderingServer.MeshCreateFromSurfaces([skinData]);
             Same(a, RenderingServer.MeshGetSurface(rids[0], 0)); Same(b, RenderingServer.MeshGetSurface(rids[1], 0));
             Check(RenderingServer.MeshSurfaceGetBlendShapeArrays(rids[0], 0).Length == 2, "Both packed shape blocks reach the existing typed query.");
-            using var borrowed = new ArrayMesh(); borrowed.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshFrameTests.Data());
+            using var borrowed = new ArrayMesh(); borrowed.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshFrameTests.Data());
             Check(RenderingServer.MeshGetSurface(borrowed.GetRID(), 0).VertexCount == 4, "Borrowed resource identities export complete packed data.");
             Reject<InvalidOperationException>(() => RenderingServer.MeshAddSurface(borrowed.GetRID(), a)); Reject<ArgumentException>(() => RenderingServer.MeshAddSurface(rids[0], Minimal())); Check(RenderingServer.MeshGetSurfaceCount(rids[0]) == 1, "Failed append preserves count and geometry.");
             Reject<ArgumentOutOfRangeException>(() => RenderingServer.MeshGetSurface(rids[0], 1));
@@ -121,7 +121,7 @@ internal static partial class MeshPackedTests
         protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => 6;
         protected override Material? OnSurfaceGetMaterial(int surfaceIndex) => null;
         protected override void OnSurfaceSetMaterial(int surfaceIndex, Material? material) => throw new NotSupportedException();
-        protected override Mesh.PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => Mesh.PrimitiveType.Triangles;
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => MeshPrimitiveType.Triangles;
         protected override Mesh.ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.Normal | Mesh.ArrayFormat.Tangent | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.Index;
         protected override MeshSurfaceData OnSurfaceGetArrays(int surfaceIndex) { Callback?.Invoke(); return MeshFrameTests.Data(); }
     }

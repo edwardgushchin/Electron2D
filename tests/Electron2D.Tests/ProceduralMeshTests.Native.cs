@@ -3,10 +3,10 @@ using static TextureArrayTests;
 
 internal static partial class ProceduralMeshTests
 {
-    private static Vector2[] Generated(Mesh.PrimitiveType primitive) => primitive switch
+    private static Vector2[] Generated(MeshPrimitiveType primitive) => primitive switch
     {
-        Mesh.PrimitiveType.Points => [new(12.5f, 12.5f), new(24, 0), new(0, 24), new(24.5f, 24.5f)],
-        Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip => [new(0, 12.5f), new(24, 12.5f), new(0, 24), new(24, 24)],
+        MeshPrimitiveType.Points => [new(12.5f, 12.5f), new(24, 0), new(0, 24), new(24.5f, 24.5f)],
+        MeshPrimitiveType.Lines or MeshPrimitiveType.LineStrip => [new(0, 12.5f), new(24, 12.5f), new(0, 24), new(24, 24)],
         _ => [Vector2.Zero, new(24, 0), new(0, 24), new(24, 24)]
     };
     private sealed class RIDDraw : Entity
@@ -23,33 +23,33 @@ internal static partial class ProceduralMeshTests
         using var controlShader = Shader.CreateFromSPIRV(Module("DeviceVertexIDGLSL.frag.spv")); using var controlMaterial = new ShaderMaterial { Shader = controlShader };
         using var window = new Window { Size = new(1152, 480), UseHDR2D = profile.Contains("hdr"), MSAA2D = profile.Contains("msaa") ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
         var gpuInstances = new List<MultiMesh>(); var resources = new List<Resource>(); var materials = new List<ShaderMaterial>(); var comparisons = new List<(Vector2 Origin, Vector2 Delta, bool Area, string Name)>(); var samples = new List<(Vector2 Point, Color Color, string Name)>();
-        ShaderMaterial Material(Mesh.PrimitiveType primitive)
+        ShaderMaterial Material(MeshPrimitiveType primitive)
         {
             var material = new ShaderMaterial { Shader = shader }; material.SetShaderParameter<Vector2>("generated", Generated(primitive).AsSpan()); material.SetShaderParameter("homogeneous_w", profile.Contains("homogeneous") ? 1f : 0f); materials.Add(material); return material;
         }
-        ArrayMesh Control(ArrayMesh source, Mesh.PrimitiveType primitive)
+        ArrayMesh Control(ArrayMesh source, MeshPrimitiveType primitive)
         {
             var data = source.SurfaceGetArrays(0); var n = data.VertexCount == 0 ? data.Indices.Max() + 1 : data.VertexCount; var points = Generated(primitive); data.Vertices = Enumerable.Range(0, n).Select(i => points[i % 4]).ToArray(); data.VertexCount = 0;
             if (data.Custom0 is { } custom) data.Colors = Enumerable.Range(0, n).Select(i => new Color(1 - MeshCustomCodec.Read(custom.Format, custom.Data.AsSpan(i * MeshCustomCodec.Stride(custom.Format))).X, 1, 1, 1)).ToArray();
             var result = new ArrayMesh(); result.AddSurfaceFromArrays(primitive, data, lods: source.SurfaceGetLODs(0), flags: data.SkinSlots == 8 ? Mesh.ArrayFormat.Use8BoneWeights : 0); resources.Add(result); return result;
         }
-        (MeshInstance Proc, MeshInstance Control) Pair(string name, Mesh.PrimitiveType primitive, ArrayMesh source, int column, int row, Transform? basis = null, Node? parent = null)
+        (MeshInstance Proc, MeshInstance Control) Pair(string name, MeshPrimitiveType primitive, ArrayMesh source, int column, int row, Transform? basis = null, Node? parent = null)
         {
             resources.Add(source); var origin = new Vector2(column * 192 + 40, row * 88 + 32); var delta = new Vector2(80, 0); var pose = basis ?? Transform.Identity; pose.Origin = origin;
             var node = new MeshInstance { Mesh = source, Material = Material(primitive), Transform = pose }; var reference = new MeshInstance { Mesh = Control(source, primitive), Material = controlMaterial, Transform = new(pose.X, pose.Y, origin + delta) };
-            (parent ?? window).AddChild(node); (parent ?? window).AddChild(reference); comparisons.Add((origin, delta, primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip, name));
-            var sample = primitive == Mesh.PrimitiveType.Points ? new Vector2(12.5f, 12.5f) : primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip ? new Vector2(6, 12.5f) : new Vector2(8, 8);
+            (parent ?? window).AddChild(node); (parent ?? window).AddChild(reference); comparisons.Add((origin, delta, primitive is MeshPrimitiveType.Triangles or MeshPrimitiveType.TriangleStrip, name));
+            var sample = primitive == MeshPrimitiveType.Points ? new Vector2(12.5f, 12.5f) : primitive is MeshPrimitiveType.Lines or MeshPrimitiveType.LineStrip ? new Vector2(6, 12.5f) : new Vector2(8, 8);
             samples.Add((pose * sample, Colors.White, name)); return (node, reference);
         }
-        var primitives = Enum.GetValues<Mesh.PrimitiveType>(); for (var i = 0; i < primitives.Length; i++) Pair(primitives[i].ToString(), primitives[i], CreateMesh(primitives[i]), i, 0);
-        Pair("index only", Mesh.PrimitiveType.Triangles, CreateMesh(data: new() { Indices = [0, 1, 2] }), 5, 0);
-        Pair("sequential", Mesh.PrimitiveType.Triangles, CreateMesh(data: new() { VertexCount = 6 }), 0, 1);
-        Pair("32-bit source IDs", Mesh.PrimitiveType.Triangles, CreateMesh(data: new() { VertexCount = 65539, Indices = [65536, 65537, 65538] }), 1, 1);
-        Pair("reflected affine", Mesh.PrimitiveType.Triangles, CreateMesh(), 2, 1, new(new(-.8f, .25f), new(.2f, 1.1f), Vector2.Zero));
+        var primitives = Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max).ToArray(); for (var i = 0; i < primitives.Length; i++) Pair(primitives[i].ToString(), primitives[i], CreateMesh(primitives[i]), i, 0);
+        Pair("index only", MeshPrimitiveType.Triangles, CreateMesh(data: new() { Indices = [0, 1, 2] }), 5, 0);
+        Pair("sequential", MeshPrimitiveType.Triangles, CreateMesh(data: new() { VertexCount = 6 }), 0, 1);
+        Pair("32-bit source IDs", MeshPrimitiveType.Triangles, CreateMesh(data: new() { VertexCount = 65539, Indices = [65536, 65537, 65538] }), 1, 1);
+        Pair("reflected affine", MeshPrimitiveType.Triangles, CreateMesh(), 2, 1, new(new(-.8f, .25f), new(.2f, 1.1f), Vector2.Zero));
         var packedSource = CreateMesh(); var packedData = packedSource.ExportPacked(0); packedData.AABB = packedSource.CustomAABB; packedSource.Dispose(); var packed = new ArrayMesh(); packed.AppendPacked(ArrayMesh.PreparePacked(packedData, 0));
-        var group = new CanvasGroup { FitMargin = 0, ClearMargin = 0 }; window.AddChild(group); Pair("packed bounds in fitted group", Mesh.PrimitiveType.Triangles, packed, 3, 1, parent: group);
+        var group = new CanvasGroup { FitMargin = 0, ClearMargin = 0 }; window.AddChild(group); Pair("packed bounds in fitted group", MeshPrimitiveType.Triangles, packed, 3, 1, parent: group);
         var skinnedData = Data(); skinnedData.Bones = new int[32]; skinnedData.Weights = new float[32]; for (var i = 0; i < 4; i++) skinnedData.Weights[i * 8 + 7] = 1;
-        var skin = Pair("eighth-slot affine skin", Mesh.PrimitiveType.Triangles, CreateMesh(data: skinnedData, flags: Empty | Mesh.ArrayFormat.Use8BoneWeights), 4, 1);
+        var skin = Pair("eighth-slot affine skin", MeshPrimitiveType.Triangles, CreateMesh(data: skinnedData, flags: Empty | Mesh.ArrayFormat.Use8BoneWeights), 4, 1);
         var rigs = new List<(Skeleton Rig, MeshInstance Node)>(); var bones = new List<Bone>();
         foreach (var node in new[] { skin.Proc, skin.Control })
         { var rig = new Skeleton { Position = node.Position }; var bone = new Bone { Rest = Transform.Identity }; bone.SetAutocalculateLengthAndAngle(false); bone.SetLength(24); rig.AddChild(bone); window.AddChild(rig); rigs.Add((rig, node)); bones.Add(bone); bone.Transform = new(.2f, new(2, 1)); }
@@ -61,17 +61,17 @@ internal static partial class ProceduralMeshTests
             for (var n = 0; n < 2; n++) { var transform = new Transform(0, new(n * 40, 0)); procInstances.SetInstanceTransform2D(n, transform); referenceInstances.SetInstanceTransform2D(n, transform); procInstances.SetInstanceColor(n, Colors.White); referenceInstances.SetInstanceColor(n, Colors.White); }
             var proc = new MultiMeshInstance { MultiMesh = procInstances, Material = Material(primitive), Position = origin }; var reference = new MultiMeshInstance { MultiMesh = referenceInstances, Material = controlMaterial, Position = origin + delta };
             // Force the strip fallback through a fitted group; other primitives retain hardware instances.
-            if (primitive is Mesh.PrimitiveType.LineStrip or Mesh.PrimitiveType.TriangleStrip) { var fitted = new CanvasGroup { FitMargin = 0, ClearMargin = 0 }; fitted.AddChild(proc); fitted.AddChild(reference); window.AddChild(fitted); } else { window.AddChild(proc); window.AddChild(reference); }
-            comparisons.Add((origin, delta, false, "instances " + primitive)); var point = primitive == Mesh.PrimitiveType.Points ? new Vector2(12.5f, 12.5f) : primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip ? new Vector2(6, 12.5f) : new Vector2(8, 8); samples.Add((origin + point, Colors.White, "instances " + primitive));
+            if (primitive is MeshPrimitiveType.LineStrip or MeshPrimitiveType.TriangleStrip) { var fitted = new CanvasGroup { FitMargin = 0, ClearMargin = 0 }; fitted.AddChild(proc); fitted.AddChild(reference); window.AddChild(fitted); } else { window.AddChild(proc); window.AddChild(reference); }
+            comparisons.Add((origin, delta, false, "instances " + primitive)); var point = primitive == MeshPrimitiveType.Points ? new Vector2(12.5f, 12.5f) : primitive is MeshPrimitiveType.Lines or MeshPrimitiveType.LineStrip ? new Vector2(6, 12.5f) : new Vector2(8, 8); samples.Add((origin + point, Colors.White, "instances " + primitive));
         }
-        var owner = new RIDDraw { Position = new(40, 3 * 88 + 32), Material = Material(Mesh.PrimitiveType.Triangles), Command = new(new(.9f, .15f), new(-.2f, 1.1f), new(3, 2)) }; window.AddChild(owner);
-        using var ownedSource = CreateMesh(); var controlOwned = Control(ownedSource, Mesh.PrimitiveType.Triangles); var ownedPose = owner.Transform * owner.Command; window.AddChild(new MeshInstance { Mesh = controlOwned, Material = controlMaterial, Transform = new(ownedPose.X, ownedPose.Y, ownedPose.Origin + new Vector2(80, 0)) }); comparisons.Add((owner.Position, new(80, 0), true, "owned RID and command transform")); samples.Add((ownedPose * new Vector2(8, 8), Colors.White, "owned RID"));
-        var maskSource = CreateMesh(); resources.Add(maskSource); var maskControl = Control(maskSource, Mesh.PrimitiveType.Triangles); var maskOrigin = new Vector2(192 + 40, 3 * 88 + 32);
-        var mask = new MeshInstance { Mesh = maskSource, Material = Material(Mesh.PrimitiveType.Triangles), Position = maskOrigin, ClipChildren = ClipChildrenMode.AndDraw }; mask.AddChild(new Box()); window.AddChild(mask);
+        var owner = new RIDDraw { Position = new(40, 3 * 88 + 32), Material = Material(MeshPrimitiveType.Triangles), Command = new(new(.9f, .15f), new(-.2f, 1.1f), new(3, 2)) }; window.AddChild(owner);
+        using var ownedSource = CreateMesh(); var controlOwned = Control(ownedSource, MeshPrimitiveType.Triangles); var ownedPose = owner.Transform * owner.Command; window.AddChild(new MeshInstance { Mesh = controlOwned, Material = controlMaterial, Transform = new(ownedPose.X, ownedPose.Y, ownedPose.Origin + new Vector2(80, 0)) }); comparisons.Add((owner.Position, new(80, 0), true, "owned RID and command transform")); samples.Add((ownedPose * new Vector2(8, 8), Colors.White, "owned RID"));
+        var maskSource = CreateMesh(); resources.Add(maskSource); var maskControl = Control(maskSource, MeshPrimitiveType.Triangles); var maskOrigin = new Vector2(192 + 40, 3 * 88 + 32);
+        var mask = new MeshInstance { Mesh = maskSource, Material = Material(MeshPrimitiveType.Triangles), Position = maskOrigin, ClipChildren = ClipChildrenMode.AndDraw }; mask.AddChild(new Box()); window.AddChild(mask);
         var referenceMask = new MeshInstance { Mesh = maskControl, Material = controlMaterial, Position = maskOrigin + new Vector2(80, 0), ClipChildren = ClipChildrenMode.AndDraw }; referenceMask.AddChild(new Box()); window.AddChild(referenceMask); comparisons.Add((maskOrigin, new(80, 0), true, "generated owner mask")); samples.Add((maskOrigin + new Vector2(8, 8), Colors.White, "generated mask"));
-        var fittedSource = CreateMesh(); resources.Add(fittedSource); fittedSource.SurfaceSetMaterial(0, Material(Mesh.PrimitiveType.Triangles)); var fittedControl = Control(fittedSource, Mesh.PrimitiveType.Triangles); var fitOrigin = new Vector2(2 * 192 + 40, 3 * 88 + 32);
+        var fittedSource = CreateMesh(); resources.Add(fittedSource); fittedSource.SurfaceSetMaterial(0, Material(MeshPrimitiveType.Triangles)); var fittedControl = Control(fittedSource, MeshPrimitiveType.Triangles); var fitOrigin = new Vector2(2 * 192 + 40, 3 * 88 + 32);
         var ownGroup = new MeshGroup { Resource = fittedSource, Position = fitOrigin, FitMargin = 0, ClearMargin = 0 }; ownGroup.AddChild(new Box()); window.AddChild(ownGroup); var referenceGroup = new MeshGroup { Resource = fittedControl, Position = fitOrigin + new Vector2(80, 0), FitMargin = 0, ClearMargin = 0 }; referenceGroup.AddChild(new Box()); window.AddChild(referenceGroup); comparisons.Add((fitOrigin, new(80, 0), true, "generated group owner")); samples.Add((fitOrigin + new Vector2(8, 8), Colors.White, "generated group"));
-        var attributeData = Data(); attributeData.Custom0 = MeshCustomTests.Channel(MeshCustomFormat.RFloat, new(1, 0, 0, 1), 4); attributeData.UVs = [Vector2.Zero, Vector2.Right, Vector2.Down, Vector2.One]; var attributeSource = CreateMesh(data: attributeData); var attributes = Pair("non-position attributes", Mesh.PrimitiveType.Triangles, attributeSource, 3, 3); samples[^1] = (samples[^1].Point, Colors.Cyan, samples[^1].Name);
+        var attributeData = Data(); attributeData.Custom0 = MeshCustomTests.Channel(MeshCustomFormat.RFloat, new(1, 0, 0, 1), 4); attributeData.UVs = [Vector2.Zero, Vector2.Right, Vector2.Down, Vector2.One]; var attributeSource = CreateMesh(data: attributeData); var attributes = Pair("non-position attributes", MeshPrimitiveType.Triangles, attributeSource, 3, 3); samples[^1] = (samples[^1].Point, Colors.Cyan, samples[^1].Name);
         var attributePatch = new byte[48]; for (var i = 0; i < 4; i++) System.Buffers.Binary.BinaryPrimitives.WriteSingleLittleEndian(attributePatch.AsSpan(i * 12 + 8), .5f);
         if (profile.EndsWith("-lit", StringComparison.Ordinal)) { window.AddChild(new CanvasModulate { Color = new(.5f, .5f, .5f, 1) }); window.AddChild(new DirectionalLight { Energy = .5f }); }
         RID owned = default; var frame = 0; long before = 0, active = 0, idle = 0;
@@ -80,7 +80,7 @@ internal static partial class ProceduralMeshTests
             if (gpuBuffers) foreach (var instances in gpuInstances) RenderingServer.MultiMeshGetBufferRDRID(instances.GetRID());
             RenderingServer.SetDefaultClearColor(Colors.Black); foreach (var (rig, node) in rigs) node.AttachSkeleton(rig.GetSkeleton());
             var description = ownedSource.ExportPacked(0); description.AABB = ownedSource.CustomAABB; owned = RenderingServer.MeshCreateFromSurfaces([description]); Check(RenderingServer.MeshGetSurface(owned, 0).VertexData.Length == 0, "Owned packed positions remain absent."); owner.Resource = owned; owner.QueueRedraw();
-            var appended = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(appended, Mesh.PrimitiveType.Triangles, Data(), Empty); RenderingServer.MeshAddSurface(appended, description); Check(RenderingServer.MeshGetSurfaceCount(appended) == 2 && RenderingServer.MeshGetSurface(appended, 1).VertexCount == 4, "Typed and packed owned append retain independent invocation counts."); RenderingServer.FreeRID(appended);
+            var appended = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(appended, MeshPrimitiveType.Triangles, Data(), Empty); RenderingServer.MeshAddSurface(appended, description); Check(RenderingServer.MeshGetSurfaceCount(appended) == 2 && RenderingServer.MeshGetSurface(appended, 1).VertexCount == 4, "Typed and packed owned append retain independent invocation counts."); RenderingServer.FreeRID(appended);
             Task.Run(() => Reject<InvalidOperationException>(() => RenderingServer.MeshAddSurface(owned, description))).GetAwaiter().GetResult(); Reject<InvalidOperationException>(() => RenderingServer.MeshAddSurface(ownedSource.GetRID(), description));
             using (var custom = new GeneratedMesh { Manual = new(-2, -3, 40, 50) }) { Check(RenderingServer.MeshGetSurface(custom.GetRID(), 0).AABB == custom.Manual, "Custom procedural packed export retains authored bounds."); custom.Callback = custom.EmitChanged; Reject<InvalidOperationException>(() => RenderingServer.MeshGetSurface(custom.GetRID(), 0)); custom.Callback = null; Check(RenderingServer.MeshGetSurface(custom.GetRID(), 0).VertexCount == 4, "Custom procedural export recovers after a revision-changing bounds callback."); }
             window.Tree!.ProcessFrameStarted += _ => { before = GC.GetAllocatedBytesForCurrentThread(); if (frame is >= 16 and < 80) { foreach (var material in materials) material.SetShaderParameter("offset", new Vector2((frame & 1), 0)); foreach (var bone in bones) bone.Position = new(2 + (frame & 1), 1); } };

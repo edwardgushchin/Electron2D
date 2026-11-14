@@ -21,7 +21,7 @@ internal static partial class TextureRedrawTests
     private static void Geometry(Window root, Patch patch, ImageTexture texture)
     {
         patch.Visible = false;
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var instances = new MultiMesh { Mesh = mesh, InstanceCount = 1 }; instances.SetInstanceTransform2D(0, Transform.Identity);
         var a = RenderingServer.TextureProxyCreate(texture.GetRID()); var b = RenderingServer.TextureProxyCreate(texture.GetRID()); var outer = RenderingServer.TextureProxyCreate(b);
         var node = new GeometryPatch(mesh, instances, a, outer) { Position = new(8, 8) }; root.AddChild(node);

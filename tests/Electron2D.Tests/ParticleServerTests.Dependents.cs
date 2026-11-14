@@ -35,7 +35,7 @@ internal static partial class ParticleServerTests
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var root = new Window { Size = new(64, 64) }; var owner = new Entity(); root.AddChild(owner);
         using var mesh = new ArrayMesh();
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
         {
             Vertices = [new(0, -1), new(0, 1), new(0, -1), new(0, 1)],
             Indices = [0, 1, 2, 1, 3, 2],

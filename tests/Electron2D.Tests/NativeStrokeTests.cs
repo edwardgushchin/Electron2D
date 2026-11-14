@@ -26,7 +26,7 @@ internal static partial class NativeStrokeTests
     {
         CanvasStrokeTests.Run();
         CanvasPolygonTests.Run();
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(1, 1), new(5, 1), new(1, 5)] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(1, 1), new(5, 1), new(1, 5)] });
         using var painter = new Painter
         {
             Paint = n =>
@@ -42,14 +42,14 @@ internal static partial class NativeStrokeTests
         using var viewport = new SubViewport { SnapVerticesToPixel = true };
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>(); painter.PrepareCanvas();
         painter.AppendCanvas(vertices, batches, Transform.Identity, renderViewport: viewport);
-        Check(batches[0].Primitive == Mesh.PrimitiveType.Lines && batches[0].Count == 4 && batches[0].SnapNativeLines, "Native lists merge without expanding or prematurely snapping endpoints");
+        Check(batches[0].Primitive == MeshPrimitiveType.Lines && batches[0].Count == 4 && batches[0].SnapNativeLines, "Native lists merge without expanding or prematurely snapping endpoints");
         Check(batches[0].RasterMargin == 1 && (batches[0] with { SnapNativeLines = false }).RasterMargin == .5f && batches[1].RasterMargin == 0, "Native bounds retain half-pixel coverage plus endpoint snapping margin");
-        Check(vertices[0].Position == new Vector2(.25f, .5f) && batches[1].Primitive == Mesh.PrimitiveType.Triangles && batches[1].Count == 3, "Mesh triangles cannot merge into native line batches");
-        Check(batches.Count(b => b.Primitive == Mesh.PrimitiveType.LineStrip) == 2 && batches.Where(b => b.Primitive == Mesh.PrimitiveType.LineStrip).All(b => b.Count == 3), "Independent strips never acquire a connecting segment");
-        Check(batches[^2].Primitive == Mesh.PrimitiveType.Lines && batches[^2].Count == 2 && batches[^1].Primitive == Mesh.PrimitiveType.Triangles && batches[^1].Count > 0, "The native single-line core precedes its local antialias triangles");
+        Check(vertices[0].Position == new Vector2(.25f, .5f) && batches[1].Primitive == MeshPrimitiveType.Triangles && batches[1].Count == 3, "Mesh triangles cannot merge into native line batches");
+        Check(batches.Count(b => b.Primitive == MeshPrimitiveType.LineStrip) == 2 && batches.Where(b => b.Primitive == MeshPrimitiveType.LineStrip).All(b => b.Count == 3), "Independent strips never acquire a connecting segment");
+        Check(batches[^2].Primitive == MeshPrimitiveType.Lines && batches[^2].Count == 2 && batches[^1].Primitive == MeshPrimitiveType.Triangles && batches[^1].Count > 0, "The native single-line core precedes its local antialias triangles");
         painter.Paint = n => n.DrawLine(Vector2.Zero, new(10, 5), Colors.White, -1, true); painter.InvalidateCanvas(); painter.PrepareCanvas();
         vertices.Clear(); batches.Clear(); painter.AppendCanvas(vertices, batches, new Transform(Vector2.Zero, Vector2.Zero, Vector2.Zero));
-        Check(batches.All(b => b.Primitive == Mesh.PrimitiveType.Triangles && b.Count % 3 == 0), "Collapsed native cores cannot consume antialias triangle vertices");
+        Check(batches.All(b => b.Primitive == MeshPrimitiveType.Triangles && b.Count % 3 == 0), "Collapsed native cores cannot consume antialias triangle vertices");
         painter.Paint = n =>
         {
             n.DrawPrimitive([new(.25f, .5f)], [Colors.Cyan], [new(.2f, .3f)]);
@@ -58,8 +58,8 @@ internal static partial class NativeStrokeTests
         };
         painter.InvalidateCanvas(); painter.PrepareCanvas(); vertices.Clear(); batches.Clear();
         painter.AppendCanvas(vertices, batches, Transform.Identity, renderViewport: viewport);
-        Check(batches.Count == 3 && batches[0].Primitive == Mesh.PrimitiveType.Points && batches[0].Count == 1 &&
-              batches[1].Primitive == Mesh.PrimitiveType.Lines && batches[1].Count == 2 && batches[2].Primitive == Mesh.PrimitiveType.Triangles && batches[2].Count == 3,
+        Check(batches.Count == 3 && batches[0].Primitive == MeshPrimitiveType.Points && batches[0].Count == 1 &&
+              batches[1].Primitive == MeshPrimitiveType.Lines && batches[1].Count == 2 && batches[2].Primitive == MeshPrimitiveType.Triangles && batches[2].Count == 3,
             "Point and line primitives retain native topology independently of adjacent triangles");
         Check(vertices.Count == 6 && vertices[0].Position == new Vector2(0, 1) && vertices[0].UV == new Vector2(.2f, .3f) &&
               vertices[1].Color == Colors.Red && vertices[2].Color == Colors.Blue && !batches[0].SnapNativeLines && batches[0].RasterMargin == .5f,
