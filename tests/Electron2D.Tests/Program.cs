@@ -10211,15 +10211,35 @@ static void VerifyMainLoop()
         Expect<ArgumentOutOfRangeException>(() => loop.Process(double.NaN), "Process delta must reject NaN before execution.");
 
         loop.Initialize();
-        Require(loop.Log.SequenceEqual(["initialize"]), "Initialize must invoke its hook exactly once.");
+        Require(loop.Log.SequenceEqual([("initialize", null)]), "Initialize must invoke its hook exactly once.");
         Expect<InvalidOperationException>(loop.Initialize, "Initialize must reject a second call.");
 
         loop.ProcessResult = true;
         loop.PhysicsResult = false;
-        Require(loop.Process(0.25d), "Process must return the stop request from its callback.");
-        Require(!loop.PhysicsProcess(0.5d), "PhysicsProcess must return its callback result.");
-        Require(loop.Log.TakeLast(2).SequenceEqual(["process:0.25", "physics:0.5"]),
-            "Frame callbacks must receive their supplied deltas.");
+        var previousCulture = CultureInfo.CurrentCulture;
+        try
+        {
+            CultureInfo[] cultures =
+            [
+                CultureInfo.InvariantCulture,
+                CultureInfo.GetCultureInfo("en-US"),
+                CultureInfo.GetCultureInfo("fr-FR"),
+                CultureInfo.GetCultureInfo("ru-RU"),
+            ];
+            foreach (var culture in cultures)
+            {
+                CultureInfo.CurrentCulture = culture;
+                var logStart = loop.Log.Count;
+                Require(loop.Process(0.25d), "Process must return the stop request from its callback.");
+                Require(!loop.PhysicsProcess(0.5d), "PhysicsProcess must return its callback result.");
+                Require(loop.Log.Skip(logStart).SequenceEqual([("process", 0.25d), ("physics", 0.5d)]),
+                    "Frame callbacks must receive their supplied deltas.");
+            }
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = previousCulture;
+        }
         Expect<ArgumentOutOfRangeException>(() => loop.Process(-double.Epsilon), "Process delta must reject negatives.");
         Expect<ArgumentOutOfRangeException>(() => loop.PhysicsProcess(double.PositiveInfinity),
             "PhysicsProcess delta must reject infinity.");
@@ -10263,7 +10283,7 @@ static void VerifyMainLoop()
             "MainLoop must retain inherited numeric notification dispatch.");
 
         loop.FinalizeLoop();
-        Require(loop.Log.Last() == "finalize" && loop.FinalizeCount == 1,
+        Require(loop.Log.Last() == ("finalize", null) && loop.FinalizeCount == 1,
             "FinalizeLoop must invoke its hook once.");
         Expect<InvalidOperationException>(loop.FinalizeLoop, "FinalizeLoop must reject a second call.");
         Expect<InvalidOperationException>(() => loop.Process(0d), "A finalized loop must reject later frames.");
@@ -15652,7 +15672,7 @@ sealed class TestMainLoop : MainLoop
 
     public Exception? InitializeReentryError { get; private set; }
 
-    public List<string> Log { get; } = [];
+    public List<(string Callback, double? Delta)> Log { get; } = [];
 
     public List<int> Notifications { get; } = [];
 
@@ -15676,7 +15696,7 @@ sealed class TestMainLoop : MainLoop
 
     protected override void OnInitialize()
     {
-        Log.Add("initialize");
+        Log.Add(("initialize", null));
 
         if (ReenterInitialize)
             InitializeReentryError = Capture(Initialize);
@@ -15690,7 +15710,7 @@ sealed class TestMainLoop : MainLoop
 
     protected override bool OnProcess(double delta)
     {
-        Log.Add($"process:{delta}");
+        Log.Add(("process", delta));
 
         if (ReenterProcess)
             ReentryError = Capture(() => Process(delta));
@@ -15709,14 +15729,14 @@ sealed class TestMainLoop : MainLoop
 
     protected override bool OnPhysicsProcess(double delta)
     {
-        Log.Add($"physics:{delta}");
+        Log.Add(("physics", delta));
         return PhysicsResult;
     }
 
     protected override void OnFinalize()
     {
         FinalizeCount++;
-        Log.Add("finalize");
+        Log.Add(("finalize", null));
 
         if (DisposeDuringFinalize)
             FinalizeDisposeError = Capture(Dispose);
