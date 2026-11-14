@@ -3082,7 +3082,7 @@
       "godot": "RenderingDevice::method:draw_list_begin(RID:,int:RenderingDevice.DrawFlags,PackedColorArray:,float:,int:,Rect2:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.DrawListBegin(Electron2D.RID,Electron2D.RenderingDevice.DrawFlags,System.ReadOnlySpan<Electron2D.Color>,Electron2D.Rect2,System.Single,System.Int32)",
       "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil clear values require depth/stencil attachments and state. Breadcrumb diagnostics need the native capture-marker adapter; no ignored arguments are exposed."
+      "reason": "ADR 0028: typed DrawFlags preserve the current clear/load/ignore selectors for color, depth and stencil. Typed clear-depth/stencil arguments follow the optional region argument. Breadcrumb recording requires a native GPU diagnostics adapter that carries markers into the backend crash report."
     },
     {
       "godot": "RenderingDevice::method:draw_list_bind_index_array(int:,RID:)",
@@ -4986,17 +4986,19 @@
     {
       "state": "Excluded",
       "godot": [
+        "RenderingDevice::enum:FinalAction",
         "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_CONTINUE",
         "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_DISCARD",
         "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_MAX",
         "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_READ",
         "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_STORE"
       ],
-      "reason": "ADR 0004: pinned deprecated=\"Final actions are solved automatically by RenderingDevice.\"; no public mirror or implementation trigger."
+      "reason": "ADR 0004: pinned deprecated=\"Final actions are solved automatically by RenderingDevice.\" on all 5 values. The enum row is synthesized from those values, and its bindings and only XML consumer (deprecated draw_list_begin_split) are guarded by DISABLE_DEPRECATED. Compatibility draw_list_begin forwards without final actions; current attachment stores are handled by the device. No implementation trigger."
     },
     {
       "state": "Excluded",
       "godot": [
+        "RenderingDevice::enum:InitialAction",
         "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_CLEAR",
         "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_CLEAR_REGION",
         "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_CLEAR_REGION_CONTINUE",
@@ -5007,7 +5009,7 @@
         "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_LOAD",
         "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_MAX"
       ],
-      "reason": "ADR 0004: pinned deprecated=\"Initial actions are solved automatically by RenderingDevice.\"; no public mirror or implementation trigger."
+      "reason": "ADR 0004: pinned deprecated=\"Initial actions are solved automatically by RenderingDevice.\" on all 9 values. The enum row is synthesized from those values, and its bindings and only XML consumer (deprecated draw_list_begin_split) are guarded by DISABLE_DEPRECATED. Compatibility draw_list_begin converts initial load/clear/discard to the current DrawFlags. No implementation trigger."
     },
     {
       "state": "Blocked",
@@ -5050,10 +5052,24 @@
     {
       "state": "Excluded",
       "godot": [
+        "RenderingDevice::enum:BarrierMask",
+        "RenderingDevice::enum_value:BarrierMask.BARRIER_MASK_ALL_BARRIERS",
+        "RenderingDevice::enum_value:BarrierMask.BARRIER_MASK_COMPUTE",
+        "RenderingDevice::enum_value:BarrierMask.BARRIER_MASK_FRAGMENT",
+        "RenderingDevice::enum_value:BarrierMask.BARRIER_MASK_NO_BARRIER",
+        "RenderingDevice::enum_value:BarrierMask.BARRIER_MASK_RASTER",
+        "RenderingDevice::enum_value:BarrierMask.BARRIER_MASK_TRANSFER",
+        "RenderingDevice::enum_value:BarrierMask.BARRIER_MASK_VERTEX"
+      ],
+      "reason": "ADR 0004: pinned XML has no deprecated attribute on the seven bitfield constants. The enum and all flags are compatibility-only: rendering_device.h and _bind_methods guard them with DISABLE_DEPRECATED; the only XML use is barrier(from, to), deprecated and warning-only. Compatibility post_barrier arguments are ignored by the forwarding overloads. No implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
         "RenderingDevice::method:barrier(int:RenderingDevice.BarrierMask,int:RenderingDevice.BarrierMask)",
         "RenderingDevice::method:full_barrier()"
       ],
-      "reason": "ADR 0004: pinned deprecated=\"Barriers are automatically inserted by RenderingDevice.\"; no public mirror or implementation trigger."
+      "reason": "ADR 0004: pinned deprecated=\"Barriers are automatically inserted by RenderingDevice.\"; both methods only warn. Automatic GPU ordering and the current ComputeListAddBarrier, Submit and Sync remain applicable under ADR 0028. No implementation trigger for these retired methods."
     },
     {
       "state": "Excluded",
@@ -5068,7 +5084,7 @@
         "RenderingDevice::method:draw_list_begin_split(RID:,int:,int:RenderingDevice.InitialAction,int:RenderingDevice.FinalAction,int:RenderingDevice.InitialAction,int:RenderingDevice.FinalAction,PackedColorArray:,float:,int:,Rect2:,RID[]:)",
         "RenderingDevice::method:draw_list_switch_to_next_pass_split(int:)"
       ],
-      "reason": "ADR 0004: pinned deprecated=\"Split draw lists are used automatically by RenderingDevice.\"; no public mirror or implementation trigger."
+      "reason": "ADR 0004: pinned deprecated=\"Split draw lists are used automatically by RenderingDevice.\"; both split methods report unavailable. Current DrawListBegin with DrawFlags and DrawListSwitchToNextPass retain their ADR 0028 obligations. No implementation trigger for these retired methods."
     },
     {
       "state": "Excluded",
@@ -5345,7 +5361,7 @@
       "godot": [
         "RenderingDevice::method:draw_list_begin(RID:,int:RenderingDevice.DrawFlags,PackedColorArray:,float:,int:,Rect2:,int:)"
       ],
-      "reason": "ADR 0028: native color/depth/stencil clear/load/store, color-slot ordering and viewport/scissor execute with default depth one and stencil zero. Typed clear-depth/stencil arguments follow the established optional region argument. GPU crash breadcrumb recording requires a backend diagnostics adapter; no inert breadcrumb argument is exposed. MSAA targets require the separate resolve attachment lifetime slice. Linux/Vulkan GLSL/HLSL pixels and prepared zero managed bytes are checked; foreign backends/native allocations remain unverified."
+      "reason": "ADR 0028: native color/depth/stencil clear/load/store, color-slot ordering and viewport/scissor execute with default depth one and stencil zero. RenderingDeviceMultisampleTests also exercises DrawListBegin with multisample targets and resolve attachments. GPU crash breadcrumb recording remains Partial pending a native diagnostics adapter that records the marker for the submitted GPU work. Platform and native allocation qualification are separate."
     },
     {
       "state": "Implemented",
