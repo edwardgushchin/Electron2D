@@ -84,14 +84,16 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         raise ValueError(f"No self-contained desktop host for {rid}")
 
     assert (publish / host).is_file() and (publish / "Electron2D.dll").is_file(), "Missing application host or engine"
-    packages = json.loads((publish / (app_name + ".deps.json")).read_text())["libraries"]
+    dependencies = json.loads((publish / (app_name + ".deps.json")).read_text())
+    packages = dependencies["libraries"]
     expected = {
         f"SDL3-CS.{platform}/3.4.18",
         f"SDL3-CS.{platform}.Image/3.4.6.12",
         f"SDL3-CS.{platform}.Shadercross/3.0.0.13",
     }
     actual = {name for name in packages if name.startswith("SDL3-CS.")}
-    assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Shaping must use the selected source-built native payload"
+    if platform != "Windows":
+        assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Shaping must use the selected source-built native payload"
     assert actual == expected, f"Wrong SDL packages: {actual}"
     assert f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/10.0.1" in packages, "Missing self-contained runtime pack"
     native = publish / "runtimes" / rid / "native"
@@ -105,7 +107,15 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     if platform == "Windows":
         receipt = json.loads((publish / "Electron2D.native-manifest.json").read_text())[rid]
         assert set(receipt["files"]) == set(native_package.LIBRARIES["Windows"]), "Wrong Windows native manifest"
-        assert not any((directory / name).exists() for directory in (publish, native)
+        selected_shaping = set()
+        for target in dependencies["targets"].values():
+            for owner, assets in target.items():
+                if owner.startswith("HarfBuzzSharp.NativeAssets."):
+                    selected_shaping.update(native / Path(path).name for path in assets.get("native", {}))
+                    selected_shaping.update(native / Path(path).name for path, metadata in assets.get("runtimeTargets", {}).items()
+                                            if metadata.get("assetType") == "native" and metadata.get("rid") == rid)
+        selected_shaping.intersection_update({native / "libHarfBuzzSharp.dll", native / "libHarfBuzzSharp.pdb"})
+        assert not any((directory / name).exists() and (directory / name) not in selected_shaping for directory in (publish, native)
                        for name in native_package.retired_windows_files()), "Retired Windows payload leaked into publish"
         for name, checksum in receipt["files"].items():
             library = native / name

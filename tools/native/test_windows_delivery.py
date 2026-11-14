@@ -13,6 +13,36 @@ import package
 
 
 class WindowsDeliveryTests(unittest.TestCase):
+    def test_current_application_harfbuzz_assets_are_preserved(self):
+        for item in ("NativeCopyLocalItems", "RuntimeTargetsCopyLocalItems"):
+            for relative in ("", "runtimes/win-x64/native/"):
+                with self.subTest(item=item, relative=relative), tempfile.TemporaryDirectory() as temporary:
+                    root = Path(temporary)
+                    selected = {"libHarfBuzzSharp.dll", "libHarfBuzzSharp.pdb"}
+                    for output in ("build", "publish"):
+                        for directory in (root / output, root / output / "runtimes/win-x64/native"):
+                            directory.mkdir(parents=True, exist_ok=True)
+                            for name in package.retired_windows_files():
+                                (directory / name).write_bytes(b"retired")
+                        for name in selected:
+                            (root / output / relative / name).write_bytes(b"application dependency")
+                    assets = ''.join(f'<{item} Include="package/{name}" NuGetPackageId="HarfBuzzSharp.NativeAssets.Win32" DestinationSubDirectory="{relative}" />'
+                        f'<ResolvedFileToPublish Include="package/{name}" RelativePath="{relative}{name}" />' for name in selected)
+                    project = root / "Consumer.proj"
+                    project.write_text('<Project><PropertyGroup><RuntimeIdentifier>win-x64</RuntimeIdentifier>'
+                        f'<TargetDir>{escape(str(root / "build"))}/</TargetDir>'
+                        f'<PublishDir>{escape(str(root / "publish"))}/</PublishDir></PropertyGroup>'
+                        f'<ItemGroup>{assets}</ItemGroup>'
+                        f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" />'
+                        '<Target Name="CopyFilesToOutputDirectory" /><Target Name="Publish" /></Project>')
+                    result = subprocess.run(["dotnet", "msbuild", str(project), "-nologo",
+                        "-target:CopyFilesToOutputDirectory;Publish"], capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    for output in ("build", "publish"):
+                        files = {path.relative_to(root / output).as_posix(): path.read_bytes()
+                                 for path in (root / output).rglob("*") if path.is_file()}
+                        self.assertEqual(files, {relative + name: b"application dependency" for name in selected})
+
     def test_build_replaces_future_dated_manifest(self):
         with tempfile.TemporaryDirectory(prefix="native manifest ") as temporary:
             root = Path(temporary)

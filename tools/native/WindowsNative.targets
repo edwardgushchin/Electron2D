@@ -15,9 +15,17 @@
     <Error Condition="'@(_Electron2DLegacyWindowsAsset)' != ''" Text="Electron2D.Windows contains retired native modules. Restore a qualified package with libElectron2D.dll, freetype.dll, harfbuzz.dll and the OpenSSL 4 pair; deleting output files cannot upgrade this package." />
   </Target>
   <Target Name="CleanElectron2DLegacyWindowsBuild" AfterTargets="CopyFilesToOutputDirectory" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(TargetDir)' != ''">
-    <Delete Files="@(_Electron2DLegacyWindowsFile->'$(TargetDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(TargetDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
+    <ItemGroup>
+      <_Electron2DLegacyWindowsBuildFile Include="@(_Electron2DLegacyWindowsFile->'$(TargetDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(TargetDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
+      <_Electron2DLegacyWindowsBuildFile Remove="@(NativeCopyLocalItems->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)');@(RuntimeTargetsCopyLocalItems->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Delete Files="@(_Electron2DLegacyWindowsBuildFile)" />
   </Target>
   <Target Name="CleanElectron2DLegacyWindowsPublish" AfterTargets="Publish" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(PublishDir)' != ''">
-    <Delete Files="@(_Electron2DLegacyWindowsFile->'$(PublishDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(PublishDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
+    <ItemGroup>
+      <_Electron2DLegacyWindowsPublishFile Include="@(_Electron2DLegacyWindowsFile->'$(PublishDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(PublishDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
+      <_Electron2DLegacyWindowsPublishFile Remove="@(ResolvedFileToPublish->'$(PublishDir)%(RelativePath)')" />
+    </ItemGroup>
+    <Delete Files="@(_Electron2DLegacyWindowsPublishFile)" />
   </Target>
 </Project>
