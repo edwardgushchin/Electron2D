@@ -1,6 +1,6 @@
 # Copied graphics line width
 
-Last updated: 2026-10-28
+Last updated: 2026-11-14
 
 `RDPipelineRasterizationState.LineWidth` defaults to one pixel and accepts finite positive values. Graphics pipeline creation copies it independently of the caller-owned description. Line lists, line strips and wireframe polygon edges use the copied width; filled triangle interiors and points keep their ordinary raster roles. Each ordered framebuffer view/pass and sampled component-map variant retains the same state. Primitive discard still prevents raster and fragment execution, including when the width is nonunit.
 
@@ -8,10 +8,14 @@ Nonunit widths require the pinned Vulkan adapter and an enabled `wideLines` logi
 
 The [call-local raster pipeline adapter](raster-discard.md) now carries width and discard together in a thread-local native call. Ordinary SDL graphics pipeline creation remains the one-pixel filled nondiscard path. Vulkan polygon outlines also use the adapter at width one: unsupported native non-solid rasterization fails explicitly, instead of silently becoming filled triangles. The line entry validates logical feature ownership and clamps to the physical range before using the shared layout cache and retained pipeline creator; normal native ownership/failure rollback remains in force. Original renderer function pointers are never replaced. The private line query/pipeline exports belong to the render bridge, not the public engine API.
 
+## Dynamic line width
+
+Create a pipeline with `PipelineDynamicStateFlags.LineWidth`, then call `DrawListSetLineWidth` on its bound draw list. One-pixel draws work without the optional wide-lines feature on the supported Vulkan adapter. Nonunit widths follow the same feature check, range clamping and hardware quantization as copied widths. The width replays across native views and pass restarts, and rebinding restores the copied default. See [dynamic raster state](depth-stencil-state.md#dynamic-raster-state).
+
 ## Executable consumer
 
 Build `tests/DeviceGraphicsStorage.Consumer` with the matching render bridge and run `wide`, `wide-source` and `wide-canvas`, repeating with strict trimmed NativeAOT. GLSL/HLSL produce real one/four/eight-pixel horizontal lines, fractional widths, polygon outlines, copied state after mutation, unchanged primitive discard, four-sample resolve and pending-work retirement, ordered two-view/two-pass output and sampled component-map variants. Prepared ordinary/sampled draw/readback cycles require zero owner-thread managed bytes. Invalid setters, positive subminimum/oversized clamping, disposal and pending-work retirement retain ordinary device rules.
 
 `mask-wide.c` with LD_PRELOAD removes the physical wide-line feature for `wide-unavailable`. `test_wide_mask.c` through SDL3_DYNAMIC_API refuses the requested feature at device creation for `wide-create-refusal`; the consumer also executes storage-writing graphics to check sibling features survive. The raster procedure mask with ELECTRON2D_TEST_RASTER_FAILURE=1 supplies `wide-failure`: three failed attempts must leave ordinary graphics usable. The native check validates private ABI arguments and queries the physical range/precision, independently of logical opt-in. It also masks native non-solid support and requires both line and discard factories to refuse polygon outlines before creation.
 
-Linux/Vulkan on the exercised device is the verification boundary. Other backends require their native line-state adapters. Native/driver heap allocation, throughput, Vulkan validation-layer and foreign-platform qualification remain separate. Dynamic line-width command state and patch/tessellation configuration retain their own coverage dependencies.
+Linux/Vulkan on the exercised device is the verification boundary for these static line-width checks. Other backends require their native line-state adapters. Native/driver heap allocation, throughput, Vulkan validation-layer and foreign-platform qualification remain separate. Patch and tessellation configuration retain their own coverage dependencies.

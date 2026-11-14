@@ -1,6 +1,24 @@
 {
   "mappings": [
     {
+      "godot": "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_LINE_WIDTH",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.LineWidth()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executes as native Vulkan draw-list state with pipeline defaults, view/pass replay and capability validation."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BIAS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.DepthBias()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executes as native Vulkan draw-list state with pipeline defaults, view/pass replay and capability validation."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BOUNDS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.DepthBounds()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executes as native Vulkan draw-list state with pipeline defaults, view/pass replay and capability validation."
+    },
+    {
       "godot": "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_COMPARE_MASK",
       "electron2d": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilCompareMask()",
       "state": "Implemented",
@@ -2643,8 +2661,8 @@
     {
       "godot": "RenderingDevice::enum:PipelineDynamicStateFlags",
       "electron2d": "T:Electron2D.RenderingDevice.PipelineDynamicStateFlags",
-      "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+      "state": "Implemented",
+      "reason": "ADR 0028: all seven dynamic graphics roles execute through the blend, stencil and raster draw-list paths on Vulkan. Other backend qualification remains separate."
     },
     {
       "godot": "RenderingDevice::enum:PolygonCullMode",
@@ -4216,6 +4234,18 @@
   ],
   "extras": [
     {
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListSetLineWidth(System.Int64,System.Single)",
+      "reason": "ADR 0028: typed draw-list operation executes the declared dynamic raster state."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListSetDepthBias(System.Int64,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0028: typed draw-list operation executes the declared dynamic raster state."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListSetDepthBounds(System.Int64,System.Single,System.Single)",
+      "reason": "ADR 0028: typed draw-list operation executes the declared dynamic raster state."
+    },
+    {
       "electron2d": "method:Electron2D.RenderingDevice.DrawListSetStencilCompareMask(System.Int64,System.Int32,System.Int32)",
       "reason": "ADR 0028: typed draw-list setter executes the declared dynamic stencil role independently for both visible faces."
     },
@@ -4569,6 +4599,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": ["RenderingDevice::enum:PipelineDynamicStateFlags"],
+      "reason": "ADR 0028: all seven dynamic graphics roles execute on Vulkan through the blend, stencil and raster draw-list paths."
+    },
     {
       "godot": [
         "RenderingDevice::method:get_perf_report()"
@@ -4977,14 +5012,6 @@
     {
       "state": "Blocked",
       "godot": [
-        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BIAS",
-        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BOUNDS"
-      ],
-      "reason": "Trigger: native command recording of depth bias and depth bounds changes, including the independently enabled bounds feature and replay across native pass restarts (ADR 0028)."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
         "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_LINESTRIPS_WITH_ADJACENCY",
         "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_LINES_WITH_ADJACENCY",
         "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TESSELATION_PATCH",
@@ -5075,7 +5102,6 @@
     {
       "state": "Partial",
       "godot": [
-        "RenderingDevice::enum:PipelineDynamicStateFlags",
         "RenderingDevice::enum:RenderPrimitive",
         "RenderingDevice::enum:ShaderStage",
         "RenderingDevice::enum:TextureSamples"
@@ -5608,13 +5634,6 @@
         "RenderingDevice::enum:SamplerBorderColor"
       ],
       "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
-    },
-    {
-      "godot": [
-        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_LINE_WIDTH"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: native command-recorded dynamic line-width state and its consuming operation under ADR 0028; copied static RDPipelineRasterizationState.LineWidth executes separately."
     },
     {
       "godot": [

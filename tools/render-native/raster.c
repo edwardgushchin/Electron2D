@@ -44,7 +44,10 @@ static RasterCache *raster_cache(SDL_GPUDevice *device)
 typedef struct MultisampleState { uint32_t mask, flags; float minimum; } MultisampleState;
 typedef struct DepthStencilState { uint32_t flags, front_mask, front_write, front_reference, back_mask, back_write, back_reference; float minimum, maximum; } DepthStencilState;
 enum { STENCIL_COMPARE_MASK = 16, STENCIL_WRITE_MASK = 32, STENCIL_REFERENCE = 64, DYNAMIC_STENCIL = 112 };
+enum { LINE_WIDTH = 1, DEPTH_BIAS = 2, DEPTH_BOUNDS = 8, DYNAMIC_RASTER = 11, RASTER_SHIFT = 8 };
 typedef struct StencilCommands { PFN_vkCmdSetStencilCompareMask compare_mask; PFN_vkCmdSetStencilWriteMask write_mask; } StencilCommands;
+typedef struct RasterCommands { PFN_vkCmdSetLineWidth line_width; PFN_vkCmdSetDepthBias depth_bias; PFN_vkCmdSetDepthBounds depth_bounds; } RasterCommands;
+typedef struct RasterValues { float width, constant, clamp, slope, minimum, maximum; } RasterValues;
 typedef struct BlendState { uint32_t count, factors[8][4]; } BlendState;
 extern VulkanGraphicsPipelineResourceLayout *e2d_images_layout(SDL_GPUDevice *, const uint32_t *, uint32_t);
 extern int e2d_render_image_support(SDL_GPUDevice *, uint32_t);
@@ -86,9 +89,9 @@ static VkResult VKAPI_CALL raster_pipeline(VkDevice device, VkPipelineCache cach
             depth.front.compareMask = state.depth.front_mask; depth.front.writeMask = state.depth.front_write; depth.front.reference = state.depth.front_reference;
             depth.back.compareMask = state.depth.back_mask; depth.back.writeMask = state.depth.back_write; depth.back.reference = state.depth.back_reference;
         }
-        if (info.pDynamicState && (state.depth.flags & (2 | DYNAMIC_STENCIL))) {
+        if (info.pDynamicState && (state.depth.flags & (2 | DYNAMIC_STENCIL | (DYNAMIC_RASTER << RASTER_SHIFT)))) {
             dynamic = *info.pDynamicState;
-            if (dynamic.dynamicStateCount > SDL_arraysize(dynamic_states) - 2) return VK_ERROR_INITIALIZATION_FAILED;
+            if (dynamic.dynamicStateCount > SDL_arraysize(dynamic_states) - 5) return VK_ERROR_INITIALIZATION_FAILED;
             // Keep independent static references unless the draw list explicitly owns them.
             bool static_reference = (state.depth.flags & (2 | STENCIL_REFERENCE)) == 2;
             uint32_t n = 0;
@@ -96,6 +99,10 @@ static VkResult VKAPI_CALL raster_pipeline(VkDevice device, VkPipelineCache cach
                 if (!static_reference || dynamic.pDynamicStates[i] != VK_DYNAMIC_STATE_STENCIL_REFERENCE) dynamic_states[n++] = dynamic.pDynamicStates[i];
             if (state.depth.flags & STENCIL_COMPARE_MASK) dynamic_states[n++] = VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK;
             if (state.depth.flags & STENCIL_WRITE_MASK) dynamic_states[n++] = VK_DYNAMIC_STATE_STENCIL_WRITE_MASK;
+            uint32_t raster_flags = state.depth.flags >> RASTER_SHIFT;
+            if (raster_flags & LINE_WIDTH) dynamic_states[n++] = VK_DYNAMIC_STATE_LINE_WIDTH;
+            if (raster_flags & DEPTH_BIAS) dynamic_states[n++] = VK_DYNAMIC_STATE_DEPTH_BIAS;
+            if (raster_flags & DEPTH_BOUNDS) dynamic_states[n++] = VK_DYNAMIC_STATE_DEPTH_BOUNDS;
             dynamic.dynamicStateCount = n; dynamic.pDynamicStates = dynamic_states; info.pDynamicState = &dynamic;
         }
         info.pDepthStencilState = &depth;
@@ -154,16 +161,17 @@ E2D_EXPORT int e2d_render_multisample_support(SDL_GPUDevice *device, uint32_t ab
 }
 
 _Static_assert(offsetof(VkPhysicalDeviceFeatures, depthBounds) == 14 * sizeof(VkBool32), "depth bounds feature word");
+_Static_assert(offsetof(VkPhysicalDeviceFeatures, depthBiasClamp) == 12 * sizeof(VkBool32), "depth bias clamp feature word");
 E2D_EXPORT int e2d_render_depth_support(SDL_GPUDevice *device, uint32_t abi)
 {
-    if (!device || abi != 1) return -1;
+    if (!device || (abi != 1 && abi != 2)) return -1;
     if (e2d_render_raster_support(device, 1) != 1) return 0;
     const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
     PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
     PFN_vkGetPhysicalDeviceFeatures query = proc ? (PFN_vkGetPhysicalDeviceFeatures)proc(renderer->instance, "vkGetPhysicalDeviceFeatures") : NULL;
     if (!query) return 1;
     VkPhysicalDeviceFeatures features; query(renderer->physicalDevice, &features);
-    return 1 | (features.depthBounds ? 2 : 0);
+    return 1 | (features.depthBounds ? 2 : 0) | (abi == 2 && features.depthBiasClamp ? 4 : 0);
 }
 
 typedef struct LineLimits { float minimum, maximum, granularity; } LineLimits;
@@ -293,10 +301,12 @@ static SDL_GPUGraphicsPipeline *create_state_pipeline(SDL_GPUDevice *device, uin
         if ((images >> 18) || ((images >> 16) & ~required)) return NULL;
         required = images >> 16; images &= 65535; abi = 1;
     }
-    if (!depth || (depth->flags & ~((stencil ? 7u : 3u) | DYNAMIC_STENCIL)) || !isfinite(depth->minimum) || !isfinite(depth->maximum) || depth->minimum < 0 || depth->maximum > 1 || depth->minimum > 1 || depth->maximum < 0 ||
+    if (!depth || (depth->flags & ~((stencil ? 7u : 3u) | DYNAMIC_STENCIL | (DYNAMIC_RASTER << RASTER_SHIFT))) || !isfinite(depth->minimum) || !isfinite(depth->maximum) || depth->minimum < 0 || depth->maximum > 1 || depth->minimum > 1 || depth->maximum < 0 ||
         (depth->front_mask | depth->front_write | depth->front_reference | depth->back_mask | depth->back_write | depth->back_reference) > 255 || images > 65535 || logic > 16) return NULL;
     if (!valid_multisample(device, abi, info, samples)) return NULL;
-    if (depth->flags && !info->target_info.has_depth_stencil_target) return NULL;
+    if ((depth->flags & ~(LINE_WIDTH << RASTER_SHIFT)) && !info->target_info.has_depth_stencil_target) return NULL;
+    if ((depth->flags & (DEPTH_BIAS << RASTER_SHIFT)) && (stencil || !info->rasterizer_state.enable_depth_bias)) return NULL;
+    if ((depth->flags & (DEPTH_BOUNDS << RASTER_SHIFT)) && !(depth->flags & 1)) return NULL;
     if ((depth->flags & 1) && (depth->minimum > depth->maximum || !SDL_GetBooleanProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.depth_bounds", false))) return NULL;
     if ((depth->flags & (2 | DYNAMIC_STENCIL)) && !info->depth_stencil_state.enable_stencil_test) return NULL;
     if (images) {
@@ -345,6 +355,31 @@ E2D_EXPORT int e2d_render_dynamic_stencil(SDL_GPUDevice *device, uint32_t abi, S
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_images_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images)
 {
     return images ? create_state_pipeline(device, abi, info, width, discard, samples, depth, images, 0, NULL) : NULL;
+}
+
+E2D_EXPORT int e2d_render_dynamic_raster(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, uint32_t flags, const RasterValues *values, RasterCommands *functions)
+{
+    if (abi != 1 || !device || !values || !functions || (flags & ~DYNAMIC_RASTER)) return -1;
+    if (!commands) {
+        if (e2d_render_raster_support(device, 1) != 1) return 0;
+        const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
+        PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+        PFN_vkGetDeviceProcAddr get = proc ? (PFN_vkGetDeviceProcAddr)proc(renderer->instance, "vkGetDeviceProcAddr") : NULL;
+        if (!get) return 0;
+        functions->line_width = (PFN_vkCmdSetLineWidth)get(renderer->logicalDevice, "vkCmdSetLineWidth");
+        functions->depth_bias = (PFN_vkCmdSetDepthBias)get(renderer->logicalDevice, "vkCmdSetDepthBias");
+        functions->depth_bounds = (PFN_vkCmdSetDepthBounds)get(renderer->logicalDevice, "vkCmdSetDepthBounds");
+        return functions->line_width && functions->depth_bias && functions->depth_bounds ? 1 : 0;
+    }
+    VulkanCommandBuffer *command = (VulkanCommandBuffer *)commands;
+    const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
+    if (!flags || !functions->line_width || !functions->depth_bias || !functions->depth_bounds ||
+        command->common.device != device || command->renderer != renderer ||
+        (device->debug_mode && (command->common.submitted || !command->common.render_pass.in_progress))) return -1;
+    if (flags & LINE_WIDTH) functions->line_width(command->commandBuffer, values->width);
+    if (flags & DEPTH_BIAS) functions->depth_bias(command->commandBuffer, values->constant, values->clamp, values->slope);
+    if (flags & DEPTH_BOUNDS) functions->depth_bounds(command->commandBuffer, values->minimum, values->maximum);
+    return 1;
 }
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_logic_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic)
 {

@@ -13,6 +13,11 @@ Vulkan backend and fills two device-local function pointers in caller storage.
 With an active render command buffer it records the flagged front/back masks
 and references. It returns 1 on success, 0 for unavailable capability and -1
 for invalid arguments or an invalid command scope.
+`e2d_render_dynamic_raster` uses ABI 1 with the same query and recording lifecycle.
+The query fills three device-local line width, depth bias and depth bounds command
+pointers. The command applies the selected copied values to an active render pass.
+The depth-support query keeps its ABI 1 result and reports physical bias-clamp
+support as bit 4 in ABI 2.
 `e2d_render_driver_resource` uses ABI 1 and writes one uint64 on success. Invalid ABI, pointers, kind or native resource return -1, unavailable backends return 0, and success returns 1. Image and buffer queries hold the native defragmentation read lock. See [driver resources](../../docs/components/driver-resources.md).
 
 `e2d_render_d3d12_texture_import` uses ABI 1 for sampled imports. ABI 2 adds

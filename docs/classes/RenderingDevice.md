@@ -754,6 +754,9 @@ The [graphics component contract](../components/local-compute.md#color-graphics-
 | [`public System.Int64 DrawListSwitchToNextPass()`](#member-switch-next-pass) | Advances the active framebuffer to its next ordered pass and resets draw bindings. |
 | `public System.Void DrawListEnd()` | Ends the active draw list, preserving its results for subsequent device work. |
 | `public System.Void DrawListSetBlendConstants(System.Int64 drawList, Electron2D.Color color)` | Sets the finite blend constant for subsequent draws. |
+| `public void DrawListSetLineWidth(long drawList, float width)` | Sets the raster line width in pixels for subsequent draws. |
+| `public void DrawListSetDepthBias(long drawList, float constantFactor, float clamp, float slopeFactor)` | Sets the depth bias factors and signed clamp for subsequent draws. |
+| `public void DrawListSetDepthBounds(long drawList, float minimum, float maximum)` | Sets the inclusive stored-depth bounds for subsequent draws. |
 | [`public void DrawListSetStencilCompareMask(long drawList, int frontMask, int backMask)`](#member-ae082a2ff45c) | Sets independent front/back comparison masks for subsequent draws. |
 | [`public void DrawListSetStencilWriteMask(long drawList, int frontMask, int backMask)`](#member-4e63ba587e67) | Sets independent front/back write masks for subsequent draws. |
 | [`public void DrawListSetStencilReference(long drawList, int frontReference, int backReference)`](#member-04e656320a0d) | Sets independent front/back references for subsequent draws. |
@@ -982,6 +985,21 @@ Ends the active draw list, preserving its results for subsequent device work.
 
 
 <a id="member-fe1e70626f75"></a>
+<a id="member-b33fe8f7f710"></a>
+### DrawListSetLineWidth
+
+Changes the width for subsequent line draws and polygon outlines on a pipeline with `PipelineDynamicStateFlags.LineWidth`. A finite positive value is required. Nonunit widths require enabled wide lines and clamp to the native range.
+
+<a id="member-d9579c077368"></a>
+### DrawListSetDepthBias
+
+Changes finite constant and slope factors and the signed clamp on a pipeline with `PipelineDynamicStateFlags.DepthBias`. A nonzero clamp requires independent native support. Zero leaves the bias unclamped.
+
+<a id="member-29461a847e0f"></a>
+### DrawListSetDepthBounds
+
+Changes the inclusive stored-depth range on a pipeline with `PipelineDynamicStateFlags.DepthBounds`. The range must be finite, ordered and inside zero through one. Each dynamic setter requires the active draw-list identity, a matching bound pipeline and the device owner thread. See [dynamic raster state](../components/depth-stencil-state.md#dynamic-raster-state) for replay and reset behavior.
+
 <a id="member-ae082a2ff45c"></a>
 ### DrawListSetStencilCompareMask
 
@@ -1151,7 +1169,7 @@ A pipeline borrowing the shader identity and owning specialized native stages wh
 | `primitive` | Point, line or triangle topology. |
 | `rasterizationState` | Copied rasterization configuration. |
 | `colorBlendState` | Copied logical operation and per-slot blending configuration; enabled logic disables arithmetic blending and requires its native feature. |
-| `dynamicStateFlags` | Selects dynamic blend constants, stencil comparison masks, stencil write masks and stencil references. Dynamic stencil requires enabled stencil testing and the native adapter. |
+| `dynamicStateFlags` | Selects dynamic blend constants, line width, depth bias, depth bounds, stencil masks and references. The selected depth and stencil operations require their pipeline state and native capabilities. |
 | `depthStencilState` | Copied depth/stencil configuration; null disables both tests and depth writes. |
 | `multisampleState` | Copied sample count and alpha-to-coverage state; null selects one sample. |
 | `specializationConstants` | Copied scalar overrides shared by the paired stages; omitted values retain defaults. |

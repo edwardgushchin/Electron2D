@@ -14,6 +14,7 @@ internal static unsafe partial class GPUDeviceFactory
     internal const string GraphicsStorageProperty = "Electron2D.gpu.graphics_storage";
     internal const string MultisampleProperty = "Electron2D.gpu.multisample_features";
     internal const string DepthBoundsProperty = "Electron2D.gpu.depth_bounds";
+    internal const string DepthBiasClampProperty = "Electron2D.gpu.depth_bias_clamp";
     internal const string LogicOpProperty = "Electron2D.gpu.logic_op";
     internal const string WideLinesProperty = "Electron2D.gpu.wide_lines";
     internal const string NarrowProperty = "Electron2D.gpu.narrow_features";
@@ -163,8 +164,9 @@ internal static unsafe partial class GPUDeviceFactory
             if (wide is < 0 or > 1) throw new InvalidOperationException("Native line rasterization could not be queried.");
             var multisample = ReadMultisampleSupport(device, 2);
             if (multisample is < 0 or > 7) throw new InvalidOperationException("Native multisample features could not be queried.");
-            var depth = ReadDepthSupport(device, 1);
-            if (depth is < 0 or > 3) throw new InvalidOperationException("Native depth/stencil features could not be queried.");
+            var depth = ReadDepthSupport(device, 2);
+            if (depth == -1) depth = ReadDepthSupport(device, 1);
+            if (depth is < 0 or > 7) throw new InvalidOperationException("Native depth/stencil features could not be queried.");
             var logic = ReadLogicSupport(device, 1);
             if (logic is < 0 or > 1) throw new InvalidOperationException("Native logical color operations could not be queried.");
             var depthResolve = 0;
@@ -180,7 +182,7 @@ internal static unsafe partial class GPUDeviceFactory
             try { floating = ReadFloatAtomicSupport(device, 2); if (floating == -1) floating = ReadFloatAtomicSupport(device, 1); } catch (EntryPointNotFoundException) { }
             if (floating is < 0 or > 1023) throw new InvalidOperationException("Native floating atomic features could not be queried.");
             available |= addresses << 12;
-            var raster = wide | ((multisample & 3) << 1) | ((multisample & 4) << 3) | ((depth & 2) << 2) | (logic << 4) | (depthResolve << 6) | ((blend & 2) << 7); available |= graphics << 10;
+            var raster = wide | ((multisample & 3) << 1) | ((multisample & 4) << 3) | ((depth & 2) << 2) | (logic << 4) | (depthResolve << 6) | ((blend & 2) << 7) | ((depth & 4) << 7); available |= graphics << 10;
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             if (!fp64) floating &= 63;
@@ -296,11 +298,14 @@ internal static unsafe partial class GPUDeviceFactory
                 if (!SDL.SetPointerProperty(props, SDL.Props.GPUDeviceCreateVulkanOptionsPointer, (nint)(&options)))
                     throw new InvalidOperationException("GPU capabilities could not be requested: " + SDL.GetError());
                 nint device = 0; var mirror = false; var depthResolve = 0;
-                for (var selected = raster; ; selected = (selected - 1) & raster)
+                // Drop optional bias clamping before reducing the other raster capabilities.
+                var rasterProfiles = ((raster & 511) << 1) | (raster >> 9);
+                for (var profile = rasterProfiles; ; profile = (profile - 1) & rasterProfiles)
                 {
+                    var selected = (profile >> 1) | ((profile & 1) << 9);
                     options.VulkanApiVersion = (1u << 22) | ((atomics | precision | addresses | floating | (selected & 192)) == 0 ? 0u : 2u << 12);
                     features[15] = (uint)selected & 1; features[6] = ((uint)selected >> 1) & 1; features[17] = ((uint)selected >> 2) & 1; features[14] = ((uint)selected >> 3) & 1;
-                    features[8] = ((uint)selected >> 4) & 1; features[30] = ((uint)selected >> 5) & 1; features[7] = ((uint)selected >> 8) & 1;
+                    features[8] = ((uint)selected >> 4) & 1; features[30] = ((uint)selected >> 5) & 1; features[7] = ((uint)selected >> 8) & 1; features[12] = ((uint)selected >> 9) & 1;
                     options.DeviceExtensionCount = floating == 0 ? 1u : 2u; options.DeviceExtensionNames = (nint)extensions; advanced.Flags[0] = 1;
                     device = SDL.CreateGPUDeviceWithProperties(props); mirror = device != 0;
                     if (device == 0)
@@ -310,7 +315,7 @@ internal static unsafe partial class GPUDeviceFactory
                     }
                     if (device != 0) { depthResolve = (selected >> 6) & 3; break; }
                     // Optional raster features cannot displace the current precision/storage profile.
-                    if (selected == 0) return 0;
+                    if (profile == 0) return 0;
                 }
                 if (SDL.GetGPUDeviceDriver(device) == "vulkan" &&
                     (!SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), VulkanAPIVersionProperty, options.VulkanApiVersion) ||
@@ -327,6 +332,7 @@ internal static unsafe partial class GPUDeviceFactory
                      ((narrow >> 10) & 3) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), GraphicsStorageProperty, (narrow >> 10) & 3) ||
                      features[15] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), WideLinesProperty, true) ||
                      features[14] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), DepthBoundsProperty, true) ||
+                     features[12] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), DepthBiasClampProperty, true) ||
                      features[8] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), LogicOpProperty, true) ||
                      features[7] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), DualSourceProperty, true) ||
                      (features[6] | features[17] | features[30]) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), MultisampleProperty, features[6] | features[17] << 1 | features[30] << 2)))

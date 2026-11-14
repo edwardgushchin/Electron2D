@@ -1,6 +1,6 @@
 # RDPipelineRasterizationState
 
-Last updated: 2026-10-28
+Last updated: 2026-11-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDPipelineRasterizationState`. **Component:** [Local device](../components/local-compute.md#depthstencil-graphics-and-sampling). **Source:** [RDPipelineRasterizationState.cs](../../src/Servers/Rendering/Device/RDPipelineRasterizationState.cs).
 
@@ -79,7 +79,7 @@ Initially RenderingDevice.PolygonCullMode.Disabled; validated and copied by its 
 public System.Single DepthBiasClamp { get; set; }
 ```
 
-Bounds depth bias: positive values cap it, negative values floor it, and zero disables clamping.
+Positive values cap depth bias, negative values floor it, and zero disables clamping. When depth bias is enabled, Vulkan requires independently negotiated native support for a nonzero clamp.
 
 Initially 0; copied at resource creation.
 

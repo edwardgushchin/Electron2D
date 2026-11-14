@@ -20,7 +20,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="primitive">Point, line or triangle topology.</param>
     /// <param name="rasterizationState">Copied rasterization configuration, including primitive discard and line width.</param>
     /// <param name="colorBlendState">Copied logical operation and blending configuration covering every logical color slot; unused slots and trailing entries are ignored. Enabled logical operations disable arithmetic blending and require their native feature.</param>
-    /// <param name="dynamicStateFlags">Selects dynamic blend constants and stencil masks or references. Dynamic stencil requires enabled stencil testing and the native adapter.</param>
+    /// <param name="dynamicStateFlags">Selects dynamic blend constants, raster line width, depth bias, depth bounds, or stencil masks and references. Dynamic raster and stencil roles require their native adapters.</param>
     /// <param name="depthStencilState">Copied depth/stencil configuration; null disables both tests and depth writes.</param>
     /// <param name="multisampleState">Copied sample count, coverage/masks, alpha-to-one and sample shading; null selects one sample with ordinary shading.</param>
     /// <param name="specializationConstants">Copied scalar overrides shared by the paired stages; omitted values retain defaults.</param>
@@ -34,7 +34,7 @@ public sealed unsafe partial class RenderingDevice
     {
         IdleList(); ArgumentNullException.ThrowIfNull(rasterizationState); ArgumentNullException.ThrowIfNull(colorBlendState);
         var program = Get(shader, Kind.Shader); if (program.Stage != ShaderStage.Vertex) throw new ArgumentException("A paired graphics shader is required.", nameof(shader));
-        if ((dynamicStateFlags & ~(PipelineDynamicStateFlags.BlendConstants | DynamicStencilFlags)) != 0) throw new ArgumentOutOfRangeException(nameof(dynamicStateFlags));
+        if ((dynamicStateFlags & ~(PipelineDynamicStateFlags.BlendConstants | DynamicStencilFlags | DynamicRasterFlags)) != 0) throw new ArgumentOutOfRangeException(nameof(dynamicStateFlags));
         var discard = rasterizationState.DiscardPrimitives; var lineWidth = rasterizationState.LineWidth;
         if (program.VertexOnly && !discard) throw new ArgumentException("A vertex-only shader requires primitive discard.", nameof(rasterizationState));
         var target = FramebufferFormat(framebufferFormat, forRenderPass);
@@ -43,6 +43,13 @@ public sealed unsafe partial class RenderingDevice
         var sampleState = CaptureMultisample(multisampleState, samples);
         using var defaultDepth = depthStencilState is null ? new RDPipelineDepthStencilState() : null;
         var depthState = DepthState(depthStencilState ?? defaultDepth!, rasterizationState, target, dynamicStateFlags & DynamicStencilFlags, out var stencilReference, out var nativeDepth);
+        var dynamicRaster = dynamicStateFlags & DynamicRasterFlags;
+        if (dynamicRaster != 0)
+        {
+            ValidateDynamicRasterPipeline(dynamicRaster, rasterizationState, nativeDepth, target);
+            nativeDepth = nativeDepth with { Flags = nativeDepth.Flags | ((uint)dynamicRaster << 8) };
+        }
+        if (rasterizationState.DepthBiasEnabled) ValidateDepthBiasClamp(rasterizationState.DepthBiasClamp);
         var variant = PipelineVariant(program, specializationConstants, discard ? null : target.ColorSlots);
         try
         {
@@ -105,7 +112,7 @@ public sealed unsafe partial class RenderingDevice
                         EnableDepthClip = !rasterizationState.EnableDepthClamp,
                         EnableDepthBias = rasterizationState.DepthBiasEnabled,
                         DepthBiasConstantFactor = rasterizationState.DepthBiasConstantFactor,
-                        DepthBiasClamp = rasterizationState.DepthBiasClamp,
+                        DepthBiasClamp = rasterizationState.DepthBiasEnabled ? rasterizationState.DepthBiasClamp : 0,
                         DepthBiasSlopeFactor = rasterizationState.DepthBiasSlopeFactor
                     },
                     VertexInputState = new() { VertexAttributes = (nint)attributes, NumVertexAttributes = (uint)vertex.Attributes.Length, VertexBufferDescriptions = (nint)buffers, NumVertexBuffers = (uint)vertex.Buffers.Length },

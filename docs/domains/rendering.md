@@ -80,6 +80,8 @@ RenderingDevice [native resource labels](../components/local-compute.md#native-r
 
 Last updated: 2026-11-14
 
+[Dynamic raster state](../components/depth-stencil-state.md#dynamic-raster-state) changes line width, depth bias and stored-depth bounds within a Vulkan draw list.
+
 [Dynamic stencil state](../components/depth-stencil-state.md#dynamic-stencil-state) changes front/back compare masks, write masks and references within a Vulkan draw list.
 
 [Canvas redraw diagnostics](../components/canvas-rendering.md#canvas-redraw-diagnostic) use the shared canvas submission path to fade highlights over freshly recorded command bounds.

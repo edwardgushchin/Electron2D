@@ -56436,6 +56436,45 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.DepthBias()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "DepthBias",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags DepthBias = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.DepthBounds()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "DepthBounds",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags DepthBounds = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.LineWidth()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "LineWidth",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags LineWidth = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilCompareMask()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
@@ -180531,6 +180570,93 @@
       {
         "name": "color",
         "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetDepthBias(System.Int64,System.Single,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetDepthBias",
+    "signature": "public System.Void DrawListSetDepthBias(System.Int64 drawList, System.Single constantFactor, System.Single clamp, System.Single slopeFactor)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "constantFactor",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "clamp",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "slopeFactor",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetDepthBounds(System.Int64,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetDepthBounds",
+    "signature": "public System.Void DrawListSetDepthBounds(System.Int64 drawList, System.Single minimum, System.Single maximum)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "minimum",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "maximum",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetLineWidth(System.Int64,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetLineWidth",
+    "signature": "public System.Void DrawListSetLineWidth(System.Int64 drawList, System.Single width)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
         "default": null
       }
     ],

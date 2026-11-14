@@ -40,7 +40,8 @@ public sealed class RDPipelineRasterizationState : ElectronObject
     /// <value>Initially 0; copied at resource creation.</value>
     public float DepthBiasConstantFactor { get { ThrowIfDisposed(); return _depthBiasConstantFactor; } set { ThrowIfDisposed(); _depthBiasConstantFactor = RDTextureConfiguration.Finite(value); } }
     private float _depthBiasClamp = 0;
-    /// <summary>Bounds depth bias: positive values cap it, negative values floor it, and zero disables clamping.</summary>
+    /// <summary>Bounds depth bias. Positive values cap it, negative values floor it, and zero disables clamping.</summary>
+    /// <remarks>With depth bias enabled, Vulkan requires the independently negotiated native feature for nonzero clamp.</remarks>
     /// <value>Initially 0; copied at resource creation.</value>
     public float DepthBiasClamp { get { ThrowIfDisposed(); return _depthBiasClamp; } set { ThrowIfDisposed(); _depthBiasClamp = RDTextureConfiguration.Finite(value); } }
     private float _depthBiasSlopeFactor = 0;
