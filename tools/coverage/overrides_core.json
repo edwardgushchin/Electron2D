@@ -1910,6 +1910,197 @@
     }
   ],
   "statusGroups": [
+    {"state":"Blocked","godot":["EditorInspector::method:instantiate_property_editor(Object:,int:Variant.Type,String:,int:PropertyHint,String:,int:,bool:)"],"reason":"Trigger: a generalized property-control factory in the existing self-hosted editor (ADRs 0005/0090). Pass the owner and compiled PropertyDescriptor with ValueType, advisory hints, usage and wide layout. Visit eligible providers in reverse registration order. For each provider, dispose every result after the first. Return the first result if it is a property control. If the first result has another type, dispose it and continue to the next provider. Continue also when a provider yields no results, and return null if none supplies a property control. [Pinned selection](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/editor/inspector/editor_inspector.cpp#L3829-L3851)."},
+    {"state":"Blocked","godot":["EditorInspectorPlugin::method:_parse_property(Object:,int:Variant.Type,String:,int:PropertyHint,String:,int:PropertyUsageFlags,bool:)"],"reason":"Trigger: a typed inspector provider extension point connected to descriptor enumeration in the existing editor (ADRs 0005/0090). Give the provider the owner and compiled property descriptor with hints, usage and wide layout. Verify insertion before the default editor and the exclusive result that suppresses it and stops later providers."},
+    {"state":"Blocked","godot":["EditorScenePostImportPlugin::method:add_import_option_advanced(int:Variant.Type,String:,Variant:,int:PropertyHint,String:,int:)"],"reason":"Trigger: an executable 2D scene import and reimport workflow with a scoped option-registration callback (ADRs 0001/0004/0090). Register a named typed option with its typed default, advisory hint and usage; verify registration scope, presentation and persistence through reimport. The internal 3D import dialog is excluded under ADR 0004."},
+    {
+      "state": "Excluded",
+      "reason": "Comparison opcode for dispatch on runtime operand tags. Typed comparison remains with each operand type. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Operator.OP_EQUAL",
+        "@GlobalScope::enum_value:Variant.Operator.OP_NOT_EQUAL",
+        "@GlobalScope::enum_value:Variant.Operator.OP_LESS",
+        "@GlobalScope::enum_value:Variant.Operator.OP_LESS_EQUAL",
+        "@GlobalScope::enum_value:Variant.Operator.OP_GREATER",
+        "@GlobalScope::enum_value:Variant.Operator.OP_GREATER_EQUAL"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Arithmetic opcode for dispatch on runtime operand tags. The typed arithmetic operators remain with their declaring types. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Operator.OP_ADD",
+        "@GlobalScope::enum_value:Variant.Operator.OP_SUBTRACT",
+        "@GlobalScope::enum_value:Variant.Operator.OP_MULTIPLY",
+        "@GlobalScope::enum_value:Variant.Operator.OP_DIVIDE",
+        "@GlobalScope::enum_value:Variant.Operator.OP_NEGATE",
+        "@GlobalScope::enum_value:Variant.Operator.OP_POSITIVE"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Dispatch opcode for integral remainder and string formatting. C# remainder and formatting have separate typed contracts. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Operator.OP_MODULE"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Variant dispatch registers an Int64 result for Int64 operands, computing through double before conversion. ADR 0034 covers the pinned typed C# Mathf surface, which has only Single and Double Pow. The integral dispatch contract is outside that surface and has no implementation trigger under ADR 0001. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Operator.OP_POWER"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Integral shift or bitwise opcode for runtime dispatch. Typed integral operators are C# language operations. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Operator.OP_SHIFT_LEFT",
+        "@GlobalScope::enum_value:Variant.Operator.OP_SHIFT_RIGHT",
+        "@GlobalScope::enum_value:Variant.Operator.OP_BIT_AND",
+        "@GlobalScope::enum_value:Variant.Operator.OP_BIT_OR",
+        "@GlobalScope::enum_value:Variant.Operator.OP_BIT_XOR",
+        "@GlobalScope::enum_value:Variant.Operator.OP_BIT_NEGATE"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Boolean opcode for runtime truth conversion of Variant operands. C# boolean expressions use typed operands. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Operator.OP_AND",
+        "@GlobalScope::enum_value:Variant.Operator.OP_OR",
+        "@GlobalScope::enum_value:Variant.Operator.OP_XOR",
+        "@GlobalScope::enum_value:Variant.Operator.OP_NOT"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Membership opcode dispatches across strings, collections and object properties. Typed membership and property discovery have their own owners. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Operator.OP_IN"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Exclusive bound of the Variant evaluator's opcode table. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Operator.OP_MAX"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Enumeration indexes a runtime evaluator by opcode and operand tags. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum:Variant.Operator"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Null tag of the universal value container. C# nullability belongs to the declared type. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_NIL"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Scalar runtime tag of the universal value container. Scalar types and numeric precision belong to each typed API. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_BOOL",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_INT",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_FLOAT",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_STRING"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Value tag of the universal container. The concrete math type retains its own members and operators. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_VECTOR2",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_VECTOR2I",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_VECTOR3",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_VECTOR3I",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_RECT2",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_RECT2I",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_TRANSFORM2D",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_VECTOR4",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_VECTOR4I",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_COLOR"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Universal value tag for a 3D-only math type, also outside the product scope under ADR 0004. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PLANE",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_QUATERNION",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_AABB",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_BASIS",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_TRANSFORM3D",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PROJECTION"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Universal value tag for a name or path wrapper. Typed consumers define their string contracts. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_STRING_NAME",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_NODE_PATH"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Universal value tag for a handle or engine object. Handle and object identity belong to their typed owners. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_RID",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_OBJECT"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Universal value tag for a dynamic call or signal. Typed delegates and events use the boundary in ADR 0002. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_CALLABLE",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_SIGNAL"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Runtime tag for the universal container's collection values. Collection element and key types belong to each C# API. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_DICTIONARY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_ARRAY"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Runtime tag for a packed collection. Applicable C# array and span consumers retain their element types and ownership contracts. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_BYTE_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_INT32_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_INT64_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_FLOAT32_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_FLOAT64_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_STRING_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_VECTOR2_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_VECTOR3_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_COLOR_ARRAY",
+        "@GlobalScope::enum_value:Variant.Type.TYPE_PACKED_VECTOR4_ARRAY"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Exclusive bound of the Variant type-tag domain. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum_value:Variant.Type.TYPE_MAX"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Enumeration discriminates the universal value container, including property metadata and wire formats. [ADR 0001](../../decisions/product.md#adr-0001) excludes the Variant boundary. See [pinned declarations and typed owners](../index.md#variant-type-and-operator).",
+      "godot": [
+        "@GlobalScope::enum:Variant.Type"
+      ]
+    },
     {"godot":["Engine::method:get_architecture_name()"],"state":"Implemented","reason":"ADR 0016: portable managed code reports the architecture selected by its process, including emulation and Wasm width. The native pin selects the compiled binary architecture (core/config/engine.cpp at ed1daf0bf001b61586d9930840f2f1394092c079). Known names match where .NET exposes the architecture; other values use invariant lowercase. See engine-runtime.md#build-metadata."},
     {"godot":["Engine::method:get_version_info()"],"state":"Implemented","reason":"ADR 0016/0096: typed immutable snapshot maps the pinned major/minor/patch/hex/status/build/hash/timestamp/string results to actual product version, configuration, SDK revision, optional source timestamp and the existing informational string. Missing provenance yields unknown/zero. Win-x64 execution is checked by the public metadata consumer; full platform qualification follows ADR 0021. See engine-runtime.md#build-metadata."},
     {"godot": ["FileAccess::method:get_as_text()"], "state": "Implemented", "reason": "ADR 0020: a strict seekable snapshot restores cursor and preserves EOF, BOM and NUL in managed strings. Optional CR removal follows UTF-8 validation. FileTextTests exercises bytes, state and failed decoding."},
