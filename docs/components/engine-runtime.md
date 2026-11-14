@@ -106,9 +106,13 @@ The accepted [agent-native contract](../decisions/agent-native.md#adr-0090) uses
 | --- | --- |
 | [`Engine`](../classes/Engine.md) | Process-wide coordinator, scheduler, metrics owner, and registry |
 | [`FrameDeltaSmoother`](../classes/FrameDeltaSmoother.md) | Internal scalar host-cadence estimator and carried-period filter |
-| [`EngineVersionInfo`](../classes/EngineVersionInfo.md) | Immutable typed assembly-version descriptor |
+| [`EngineVersionInfo`](../classes/EngineVersionInfo.md) | Immutable typed descriptor for the loaded engine's product version, assembly version and source provenance |
 
 [`MainLoop`](../classes/MainLoop.md) is owned by the separate [Main loop](main-loop.md) component and attached non-destructively by this component.
+
+## Build metadata
+
+[`Engine.ArchitectureName`](../classes/Engine.md#p-electron2d-engine-architecturename) identifies the process architecture selected for the loaded engine. [`Engine.VersionInfo`](../classes/EngineVersionInfo.md) gives the embedded product and assembly versions, build configuration and available source provenance. Both properties can be read before starting a loop and from any thread. The public metadata consumer accepts an independent expectation document for ordinary, trimmed and NativeAOT runs.
 
 ## Runtime flow
 
@@ -117,6 +121,16 @@ The accepted [agent-native contract](../decisions/agent-native.md#adr-0090) uses
 The host calls `Engine.Start(loop)`. The loop is published before initialization, initialized only if still created, and the successful caller becomes the runtime owner. Startup samples typed locale, fallback and pseudolocalization settings before this initialization; a manually constructed SceneTree has already completed its ready callbacks. Each `AdvanceFrame(elapsed)` samples active project-setting overrides, bounds catch-up, synchronizes fixed-step distribution, publishes interpolation, invokes fixed callbacks before process, updates process-lifetime counters/current-run FPS, and flushes one pending project-settings event. Every callback receives its scaled delta publicly while MainLoop carries the original lane delta and the original process step internally. [`Timer.IgnoreTimeScale`](../classes/Timer.md) subtracts the process step in either lane; the value is captured before the physics catch-up cap adjusts the process callback delta. A stop request is returned to the host. The host calls `Stop()`, which attempts loop finalization and native audio closure, detaches the loop and returns to idle without disposing the loop or borrowed streams. A single failure retains its original exception; multiple failures are reported together.
 
 Callback exceptions restore Engine's running state. Initialization/finalization failures return Engine to idle while preserving the loop's terminal lifecycle decision. Re-entry and concurrent lifecycle/frame transitions are rejected atomically.
+
+## Named singleton registry
+
+Engine retains one ordered registry for the process. It starts with these permanent identities, in order: `Engine`, `OS`, `TextServerManager`, `Time`, `WorkerThreadPool`, `ProjectSettings`, `IP`, `Input`, `InputMap`, `ResourceLoader`, `ResourceSaver`, `ResourceUID`, `ExtensionManager`, `NavigationServer`, `CameraServer`, `AudioServer`, `PhysicsServer` and `Performance`. The registration itself marks its permanence. Other static services and native-session services retain their owning access and lifetime.
+
+Names are non-null, nonblank ordinal strings as supplied, including dotted names. Each call is synchronized and can run off the scene owner thread. A snapshot preserves the order of successful registrations at capture, with re-registered names appended. Sequences of registry calls are independently synchronized.
+
+Registrations retain a managed reference to the exact object. The registrant owns disposal and removes any user registrations during its teardown. Registering an already disposing or disposed object fails. Later disposal leaves its name and reference visible until explicit removal. Starting or stopping a scene leaves registrations in place unless scene code changes them. See [Engine](../classes/Engine.md#m-electron2d-engine-registersingleton-system-string-electron2d-electronobject) for the overloads and managed exceptions.
+
+The [public consumer](../../tests/EngineRegistry.Consumer/EngineRegistryChecks.cs) checks all 18 reservations, duplicates, lookup errors, aliases, ordinal comparison, snapshots and concurrent mutations. It also uses Engine.Run with rendering fallback disabled, registers an alias in scene readiness, resolves the object in drawing, reads back a rendered pixel and removes the alias on exit, twice per Windows x64 renderer. Those runs cover GPU Direct3D 12 and Compatibility Direct3D 11. Other platforms and shipped packages retain their [qualification gates](../platform-verification.md#cross-platform-parity-acceptance).
 
 ## Dependencies
 
@@ -132,7 +146,7 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, Trans
 - Timing settings and effective callback deltas are finite; callback deltas are non-negative.
 - Original frame deltas and the original process step remain finite/non-negative, are scoped to one callback, and are never reconstructed by dividing through `TimeScale`.
 - Process/physics counters are process-lifetime totals; the synchronizer, interpolation, and FPS window reset only after successful loop preparation.
-- Registry names are unique ordinal strings; built-in `Engine`, `ProjectSettings`, `Input`, and `InputMap` entries are permanent, and user registry ownership never implies object disposal.
+- [Named singleton operations](#named-singleton-registry) share one process-wide registry across loop lifecycles.
 - Warmed empty manual frame scheduling has no steady-state managed allocation. RunAsync timer/context scheduling has a separate allocation boundary.
 
 ## Current implementation status and exclusions

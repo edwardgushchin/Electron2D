@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -26,7 +25,7 @@ public sealed partial class Engine : ElectronObject
     private const int RuntimeStopping = 4;
 
     private static readonly Engine SharedInstance = new();
-    private static readonly EngineVersionInfo SharedVersionInfo = CreateVersionInfo();
+    private static readonly EngineVersionInfo SharedVersionInfo = EngineVersionInfo.FromAssembly(typeof(Engine).Assembly);
     private static readonly IReadOnlyList<PropertyDescriptor> EngineProperties =
         Array.AsReadOnly<PropertyDescriptor>(
         [
@@ -66,7 +65,7 @@ public sealed partial class Engine : ElectronObject
         ]);
 
     private readonly object _singletonsGate = new();
-    private readonly Dictionary<string, ElectronObject> _singletons = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, (ElectronObject Instance, bool Permanent)> _singletons = new(StringComparer.Ordinal);
     private readonly List<string> _singletonNames = [];
     private readonly FrameSynchronizer _frameSynchronizer = new();
     private readonly FrameDeltaSmoother _frameDeltaSmoother = new();
@@ -88,42 +87,30 @@ public sealed partial class Engine : ElectronObject
 
     private Engine()
     {
-        _singletons.Add(nameof(Engine), this);
-        _singletonNames.Add(nameof(Engine));
-        _singletons.Add(nameof(OS), OS.Service);
-        _singletonNames.Add(nameof(OS));
-        _singletons.Add(nameof(TextServerManager), TextServerManager.Service);
-        _singletonNames.Add(nameof(TextServerManager));
-        _singletons.Add(nameof(Time), Time.Service);
-        _singletonNames.Add(nameof(Time));
-        _singletons.Add(nameof(WorkerThreadPool), WorkerThreadPool.Service);
-        _singletonNames.Add(nameof(WorkerThreadPool));
-        _singletons.Add(nameof(ProjectSettings), ProjectSettings.Service);
-        _singletonNames.Add(nameof(ProjectSettings));
-        _singletons.Add(nameof(IP), IP.Service);
-        _singletonNames.Add(nameof(IP));
-        _singletons.Add(nameof(Input), Input.Service);
-        _singletonNames.Add(nameof(Input));
-        _singletons.Add(nameof(InputMap), InputMap.Service);
-        _singletonNames.Add(nameof(InputMap));
-        _singletons.Add(nameof(ResourceLoader), ResourceLoader.Runtime);
-        _singletonNames.Add(nameof(ResourceLoader));
-        _singletons.Add(nameof(ResourceSaver), ResourceSaver.Runtime);
-        _singletonNames.Add(nameof(ResourceSaver));
-        _singletons.Add(nameof(ResourceUID), ResourceUID.Runtime);
-        _singletonNames.Add(nameof(ResourceUID));
-        _singletons.Add(nameof(ExtensionManager), ExtensionManager.Service);
-        _singletonNames.Add(nameof(ExtensionManager));
-        _singletons.Add(nameof(NavigationServer), NavigationServer.Service);
-        _singletonNames.Add(nameof(NavigationServer));
-        _singletons.Add(nameof(CameraServer), CameraServer.Service);
-        _singletonNames.Add(nameof(CameraServer));
-        _singletons.Add(nameof(AudioServer), AudioServer.Service);
-        _singletonNames.Add(nameof(AudioServer));
-        _singletons.Add(nameof(PhysicsServer), PhysicsServer.Service);
-        _singletonNames.Add(nameof(PhysicsServer));
-        _singletons.Add(nameof(Performance), Performance.Service);
-        _singletonNames.Add(nameof(Performance));
+        AddPermanentSingleton(nameof(Engine), this);
+        AddPermanentSingleton(nameof(OS), OS.Service);
+        AddPermanentSingleton(nameof(TextServerManager), TextServerManager.Service);
+        AddPermanentSingleton(nameof(Time), Time.Service);
+        AddPermanentSingleton(nameof(WorkerThreadPool), WorkerThreadPool.Service);
+        AddPermanentSingleton(nameof(ProjectSettings), ProjectSettings.Service);
+        AddPermanentSingleton(nameof(IP), IP.Service);
+        AddPermanentSingleton(nameof(Input), Input.Service);
+        AddPermanentSingleton(nameof(InputMap), InputMap.Service);
+        AddPermanentSingleton(nameof(ResourceLoader), ResourceLoader.Runtime);
+        AddPermanentSingleton(nameof(ResourceSaver), ResourceSaver.Runtime);
+        AddPermanentSingleton(nameof(ResourceUID), ResourceUID.Runtime);
+        AddPermanentSingleton(nameof(ExtensionManager), ExtensionManager.Service);
+        AddPermanentSingleton(nameof(NavigationServer), NavigationServer.Service);
+        AddPermanentSingleton(nameof(CameraServer), CameraServer.Service);
+        AddPermanentSingleton(nameof(AudioServer), AudioServer.Service);
+        AddPermanentSingleton(nameof(PhysicsServer), PhysicsServer.Service);
+        AddPermanentSingleton(nameof(Performance), Performance.Service);
+    }
+
+    private void AddPermanentSingleton(string name, ElectronObject instance)
+    {
+        _singletons.Add(name, (instance, Permanent: true));
+        _singletonNames.Add(name);
     }
 
     internal static Engine Service => SharedInstance;
@@ -363,7 +350,7 @@ public sealed partial class Engine : ElectronObject
 
         lock (_singletonsGate)
         {
-            if (!_singletons.TryAdd(name, instance))
+            if (!_singletons.TryAdd(name, (instance, Permanent: false)))
                 throw new InvalidOperationException($"An engine singleton named '{name}' is already registered.");
 
             _singletonNames.Add(name);
@@ -374,32 +361,14 @@ public sealed partial class Engine : ElectronObject
     {
         ValidateSingletonName(name);
 
-        if (string.Equals(name, nameof(OS), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(Time), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(NavigationServer), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(WorkerThreadPool), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(Engine), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(ProjectSettings), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(IP), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(Input), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(InputMap), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(ResourceLoader), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(ResourceSaver), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(ExtensionManager), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(ResourceUID), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(CameraServer), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(AudioServer), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(PhysicsServer), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(Performance), StringComparison.Ordinal))
-        {
-            throw new InvalidOperationException($"The built-in {name} singleton cannot be unregistered.");
-        }
-
         lock (_singletonsGate)
         {
-            if (!_singletons.Remove(name))
+            if (!_singletons.TryGetValue(name, out var entry))
                 throw new KeyNotFoundException($"No engine singleton named '{name}' is registered.");
+            if (entry.Permanent)
+                throw new InvalidOperationException($"The built-in {name} singleton cannot be unregistered.");
 
+            _singletons.Remove(name);
             _singletonNames.Remove(name);
         }
     }
@@ -410,8 +379,8 @@ public sealed partial class Engine : ElectronObject
 
         lock (_singletonsGate)
         {
-            return _singletons.TryGetValue(name, out var instance)
-                ? instance
+            return _singletons.TryGetValue(name, out var entry)
+                ? entry.Instance
                 : throw new KeyNotFoundException($"No engine singleton named '{name}' is registered.");
         }
     }
@@ -454,20 +423,16 @@ public sealed partial class Engine : ElectronObject
     protected override void ValidateDisposal() =>
         throw new InvalidOperationException("The process-wide Engine instance cannot be disposed.");
 
-    private static EngineVersionInfo CreateVersionInfo()
-    {
-        var assembly = typeof(Engine).Assembly;
-        var assemblyVersion = assembly.GetName().Version ?? new Version(0, 0);
-        var informationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-        return new EngineVersionInfo(assemblyVersion, informationalVersion ?? assemblyVersion.ToString());
-    }
-
     private static string GetArchitectureName() => RuntimeInformation.ProcessArchitecture switch
     {
         Architecture.X64 => "x86_64",
         Architecture.X86 => "x86_32",
         Architecture.Arm64 => "arm64",
-        Architecture.Arm => "arm32",
+        Architecture.Arm or Architecture.Armv6 => "arm32",
+        Architecture.Wasm => Environment.Is64BitProcess ? "wasm64" : "wasm32",
+        Architecture.RiscV64 => "rv64",
+        Architecture.Ppc64le => "ppc64",
+        Architecture.LoongArch64 => "loongarch64",
         _ => RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant()
     };
 

@@ -89,6 +89,13 @@
   </Target>
   <Import Project="tools/shaders/RuntimeShaders.targets" />
   <Import Project="tools/licenses/EngineMetadata.targets" />
+  <Target Name="AddElectron2DVersionMetadata" BeforeTargets="GetAssemblyAttributes" DependsOnTargets="InitializeSourceControlInformation">
+    <ItemGroup>
+      <AssemblyMetadata Include="Electron2D.ProductVersion" Value="$(Version)" />
+      <AssemblyMetadata Include="Electron2D.SourceRevision" Value="$(SourceRevisionId)" Condition="'$(SourceRevisionId)' != ''" />
+      <AssemblyMetadata Include="Electron2D.SourceTimestamp" Value="$(Electron2DSourceTimestamp)" Condition="'$(SourceRevisionId)' != '' and '$(Electron2DSourceTimestamp)' != ''" />
+    </ItemGroup>
+  </Target>
   <Import Project="tools/audio-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/engine-native.targets" />
   <Import Project="tools/tls-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
