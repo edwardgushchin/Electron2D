@@ -13,6 +13,67 @@ import package
 
 
 class WindowsDeliveryTests(unittest.TestCase):
+    def test_project_copy_items_are_preserved(self):
+        for item, mode, relative in (("None", "PreserveNewest", ""),
+                                     ("Content", "Always", "runtimes/win-x64/native/"),
+                                     ("None", "IfDifferent", "")):
+            with self.subTest(item=item, mode=mode), tempfile.TemporaryDirectory(prefix="project native ") as temporary:
+                root = Path(temporary)
+                source = root / "application-harfbuzz.bin"
+                source.write_bytes(b"application-owned native file")
+                project = root / "Consumer.csproj"
+                project.write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
+                    '<TargetFramework>net10.0</TargetFramework><RuntimeIdentifier>win-x64</RuntimeIdentifier>'
+                    '</PropertyGroup><ItemGroup>'
+                    f'<{item} Include="{source.name}" Link="{relative}libHarfBuzzSharp.dll" '
+                    f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="Always" />'
+                    '</ItemGroup>'
+                    f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" /></Project>')
+                command = ["dotnet", "publish", str(project), "-c", "Release", "--nologo", "-o", str(root / "publish")]
+                result = subprocess.run(command, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                for output in (root / "bin/Release/net10.0/win-x64", root / "publish"):
+                    self.assertEqual((output / relative / "libHarfBuzzSharp.dll").read_bytes(), source.read_bytes())
+
+    def test_publish_replaces_future_dated_package_native_files(self):
+        with tempfile.TemporaryDirectory(prefix="native publish ") as temporary:
+            root = Path(temporary)
+            targets = root / "package/buildTransitive"
+            targets.mkdir(parents=True)
+            shutil.copyfile(package.ROOT / "tools/native/Electron2D.targets", targets / "Electron2D.Windows.targets")
+            shutil.copyfile(package.ROOT / "tools/native/WindowsNative.targets", targets / "WindowsNative.targets")
+            selected = {name: ("selected " + name).encode() for name in package.LIBRARIES["Windows"]}
+            (targets.parent / "native-manifest.json").write_text("selected manifest")
+            for name, content in selected.items():
+                (targets.parent / name).write_bytes(content)
+            assets = ''.join(f'<_ResolvedCopyLocalPublishAssets Include="{escape(str(targets.parent / name))}" '
+                'NuGetPackageId="Electron2D.Windows" AssetType="native" DestinationSubDirectory="runtimes/win-x64/native/" />'
+                for name in selected)
+            project = root / "Consumer.csproj"
+            project.write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
+                '<TargetFramework>net10.0</TargetFramework><RuntimeIdentifier>win-x64</RuntimeIdentifier>'
+                '</PropertyGroup>'
+                f'<Import Project="{escape(str(targets / "Electron2D.Windows.targets"))}" />'
+                '<Target Name="SelectFixtureNativeFiles" BeforeTargets="ComputeResolvedFilesToPublishList">'
+                f'<ItemGroup>{assets}</ItemGroup></Target></Project>')
+            command = ["dotnet", "publish", str(project), "-c", "Release", "--nologo", "-o", str(root / "publish")]
+            result = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            native = root / "publish/runtimes/win-x64/native"
+            future = time.time() + 864000
+            for name, content in selected.items():
+                output = native / name
+                self.assertEqual(output.read_bytes(), content)
+                output.write_bytes(b"x" * len(content))
+                os.utime(output, (future, future))
+            manifest = root / "publish/Electron2D.native-manifest.json"
+            manifest.write_text("stale manifest")
+            os.utime(manifest, (future, future))
+            result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(manifest.read_text(), "selected manifest")
+            self.assertEqual({name: (native / name).read_bytes() for name in selected}, selected)
+
     def test_current_application_harfbuzz_assets_are_preserved(self):
         for item in ("NativeCopyLocalItems", "RuntimeTargetsCopyLocalItems"):
             for relative in ("", "runtimes/win-x64/native/"):

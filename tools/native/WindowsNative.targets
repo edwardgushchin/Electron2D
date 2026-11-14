@@ -14,10 +14,18 @@
     </ItemGroup>
     <Error Condition="'@(_Electron2DLegacyWindowsAsset)' != ''" Text="Electron2D.Windows contains retired native modules. Restore a qualified package with libElectron2D.dll, freetype.dll, harfbuzz.dll and the OpenSSL 4 pair; deleting output files cannot upgrade this package." />
   </Target>
+  <Target Name="Electron2DWindowsNativePublishCopy" BeforeTargets="_ComputeResolvedFilesToPublishTypes" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-'))">
+    <ItemGroup>
+      <ResolvedFileToPublish Update="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.NuGetPackageId)' == 'Electron2D.Windows' and '%(ResolvedFileToPublish.AssetType)' == 'native'">
+        <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
   <Target Name="CleanElectron2DLegacyWindowsBuild" AfterTargets="CopyFilesToOutputDirectory" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(TargetDir)' != ''">
     <ItemGroup>
       <_Electron2DLegacyWindowsBuildFile Include="@(_Electron2DLegacyWindowsFile->'$(TargetDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(TargetDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
       <_Electron2DLegacyWindowsBuildFile Remove="@(NativeCopyLocalItems->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)');@(RuntimeTargetsCopyLocalItems->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />
+      <_Electron2DLegacyWindowsBuildFile Remove="@(AllItemsFullPathWithTargetPath->'$(TargetDir)%(TargetPath)')" />
     </ItemGroup>
     <Delete Files="@(_Electron2DLegacyWindowsBuildFile)" />
   </Target>

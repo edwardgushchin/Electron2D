@@ -25,6 +25,10 @@ src/Vendor/MSDFGen/** -text
 src/Vendor/ENet/** -text
 src/Vendor/FastLZ/** -text
 src/Vendor/meshoptimizer/** -text
+src/Vendor/BCn/** text=auto eol=lf
+src/Vendor/Toolkit/** text=auto eol=lf
+licence/BCnEncoder-LICENSE.txt text eol=lf
+licence/BufferTools-LICENSE.txt text eol=lf
 tools/native/** text=auto eol=lf
 tools/*-native/** text=auto eol=lf
 tools/*-native.targets text eol=lf
