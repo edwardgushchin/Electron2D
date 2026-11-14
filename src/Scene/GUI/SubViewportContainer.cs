@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>Displays direct offscreen viewports and forwards their scene and GUI input.</summary>
 /// <remarks>Child viewports draw in sibling order at the local origin. Stretch owns their native sizes;
 /// StretchShrink reduces resolution while preserving the displayed rectangle. Connected viewports share
-/// handled input and drag state, but retain independent focus, hover and pointer capture.</remarks>
+/// handled input and drag state, but retain independent focus, hover and pointer capture.
+/// Forwarded positions remove the container transform, stretch-shrink scale and child viewport final transform.
+/// Relative movement and velocity use the same inverse bases. Screen-space movement is preserved.</remarks>
 public class SubViewportContainer : Container
 {
     private bool _stretch, _mouseTarget;

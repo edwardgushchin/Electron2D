@@ -685,7 +685,12 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
                 try { for (var layer = 0; layer < layerCount; layer++) { layers[layer] = new Image(); ReadImage(value, layers[layer]); } if (layerCount != 0) array.CreateFromImages(layers); }
                 finally { foreach (var layer in layers) layer?.Dispose(); }
             }
-            else _ = ReadProperties(value, resource);
+            else
+            {
+                var properties = ReadProperties(value, resource);
+                if (resource is OptimizedTranslation && !properties.Any(property => property.Descriptor.Name == OptimizedTranslation.CatalogPropertyName))
+                    throw new InvalidDataException("Missing optimized catalog payload.");
+            }
             if (value.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing resource bytes.");
         }
     }

@@ -10109,7 +10109,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Managed drag storage, indexed accumulation with floating overflow, transforms, source copying and localized text execute with the shared numeric-format audit. Focused Wayland synthetic input verifies drag position, physical relative/screen vectors and timestamp velocity after malformed events. Native pen eraser/tilt and independently owned nested viewport scaling/routing remain absent; ADR 0014 input dispatch allocation remains an inherited obligation.",
+      "reason": "Managed drag storage, indexed accumulation with floating overflow, transforms, source copying and localized text execute with the shared numeric-format audit. Focused Wayland synthetic input verifies drag position, physical relative/screen vectors and timestamp velocity after malformed events. ViewportMotionTests checks nested push and native touch routing. Native pen eraser/tilt remains absent; ADR 0014 input dispatch allocation remains an inherited obligation.",
       "godot": [
         "class:InputEventScreenDrag"
       ]
@@ -10124,8 +10124,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Pinned setters retain arbitrary local source vectors, and VerifyInput checks non-finite copies plus accumulation overflow. Focused Wayland input verifies root contact position, relative pixel travel and timed velocity. Exact stretch scaling and nested viewport delivery require the first independently owned viewport input slice under ADRs 0008/0038.",
+      "state": "Implemented",
+      "reason": "Arbitrary caller vectors remain stored. ViewportMotionTests checks direct and native drag through root stretch, transformed nested containers and capture, with local position and basis-scaled motion and unchanged screen vectors. VerifyInput checks source storage and overflow.",
       "godot": [
         "InputEventScreenDrag::property:position",
         "InputEventScreenDrag::property:relative",
@@ -10184,7 +10184,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Managed motion storage, copying, accumulation, transforms and localized text execute with the shared numeric-format audit. Wayland mouse path checks finite native input rejection, physical deltas, timed velocity and captured-mode zero velocity. Native pen eraser/pressure/tilt integration and independently owned viewport scale/routing remain absent. Inherited GUI hot-path allocation remains on InputEventMouse.",
+      "reason": "Managed motion storage, copying, accumulation, transforms and localized text execute with the shared numeric-format audit. Wayland mouse path checks finite native input rejection, physical deltas, timed velocity and captured-mode zero velocity. ViewportMotionTests checks nested push and native mouse motion. Native pen eraser/pressure/tilt integration remains absent. Inherited GUI hot-path allocation remains on InputEventMouse.",
       "godot": [
         "class:InputEventMouseMotion"
       ]
@@ -10199,8 +10199,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "The pinned setters retain arbitrary local relative and velocity vectors; VerifyInput checks non-finite copies, accumulation overflow and XformedBy guards. Wayland root input checks pixel density and timed velocity, with zero velocity in captured mode. Exact stretch scaling and routing through an independently owned nested viewport require the first nested viewport input slice under ADRs 0008/0038.",
+      "state": "Implemented",
+      "reason": "Arbitrary caller vectors remain stored. ViewportMotionTests checks basis-scaled motion across root stretch, nested containers and child Control transforms through PushInput and native motion. Screen vectors are preserved. VerifyInput checks accumulation and transform guards, and Wayland checks captured-mode velocity.",
       "godot": [
         "InputEventMouseMotion::property:relative",
         "InputEventMouseMotion::property:velocity"
@@ -10222,7 +10222,7 @@
     },
     {
       "state": "Partial",
-      "reason": "The base mouse payload, source-value storage, root viewport localization and CanvasLayer GUI coordinates are executable and tested. Explicit single-layer SubViewport PushInput is isolated and localized; native container forwarding and non-root GUI context remain absent (ADRs 0008/0038). Warmed GUI delivery still allocates 134144 managed bytes for 128 events in a one-control/one-layer Linux .NET 8 probe, violating ADR 0014; reconcile its zero-allocation rule with disposable caller-visible event copies, then verify active and idle dispatch. Inherited and concrete button/motion gaps retain their own rows.",
+      "reason": "The base mouse payload, source-value storage, root viewport localization and CanvasLayer GUI coordinates are executable and tested. ViewportMotionTests verifies direct PushInput and native forwarding through transformed nested containers and a child canvas (ADRs 0008/0038/0040). Warmed GUI delivery still allocates 134144 managed bytes for 128 events in a one-control/one-layer Linux .NET 8 probe, violating ADR 0014; reconcile its zero-allocation rule with disposable caller-visible event copies, then verify active and idle dispatch. Inherited and concrete button/motion gaps retain their own rows.",
       "godot": [
         "class:InputEventMouse"
       ]
@@ -10242,15 +10242,15 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "The source setter directly retains arbitrary Vector2 values. VerifyInput checks defaults, non-finite storage, notification and duplication; CanvasCoordinateTests and ControlInputTests check root viewport and CanvasLayer conversion. Exact delivery in an independently owned nested viewport requires the first nested viewport input lifecycle slice under ADRs 0008/0038.",
+      "state": "Implemented",
+      "reason": "VerifyInput checks arbitrary stored values and copies. ViewportMotionTests verifies scene and GUI positions through root stretch, nested transformed containers and leaf CanvasLayer with both PushInput and native mouse motion.",
       "godot": [
         "InputEventMouse::property:position"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "The source setter retains arbitrary Vector2 values. VerifyInput checks copy/transform preservation; ControlInputTests checks default canvas, transformed CanvasLayer GUI coordinates, overflow rejection and source ownership. Independently owned nested viewport GUI routing and coordinate semantics require the first nested viewport input lifecycle slice under ADRs 0008/0038.",
+      "state": "Implemented",
+      "reason": "VerifyInput checks storage and XformedBy preservation. ViewportMotionTests checks child viewport coordinates in scene dispatch, receiving canvas coordinates in Control GUI and the caller value in local PushInput.",
       "godot": [
         "InputEventMouse::property:global_position"
       ]

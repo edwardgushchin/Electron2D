@@ -163,6 +163,8 @@ public sealed class InputEventScreenDrag : InputEventFromWindow
 
     /// <summary>Gets or sets the drag position in the current local coordinate space.</summary>
     /// <value>The source position in pixels, retained without normalization.</value>
+    /// <remarks>Native input starts in window-client coordinates. Scene callbacks receive the position in the
+    /// receiving viewport, and GUI callbacks receive it in control-local coordinates, including during capture.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Position
@@ -183,6 +185,8 @@ public sealed class InputEventScreenDrag : InputEventFromWindow
 
     /// <summary>Gets or sets local drag movement since the previous event.</summary>
     /// <value>The source content-scaled delta in pixels.</value>
+    /// <remarks>Viewport and Control delivery apply the same linear coordinate transforms as for Position.
+    /// Translation is excluded and ScreenRelative retains the source value.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Relative
@@ -203,6 +207,7 @@ public sealed class InputEventScreenDrag : InputEventFromWindow
 
     /// <summary>Gets or sets local drag velocity.</summary>
     /// <value>The source content-scaled velocity in pixels per second.</value>
+    /// <remarks>Velocity changes coordinate space with Relative. ScreenVelocity retains the source value.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Velocity
