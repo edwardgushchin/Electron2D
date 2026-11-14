@@ -53,7 +53,9 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 
 ## Operation failures and EOF
 
-`FileAccess.Open` and `DirAccess.Open` return owned instances on success and throw from the failing call. A missing file requested for reading raises `FileNotFoundException`. A missing parent on file creation or a missing directory on directory open raises `DirectoryNotFoundException`. Invalid modes or paths and denied access are reported through their corresponding exceptions. This also applies to transformed file factories, which report validation, decode or authentication failures before returning an instance.
+`FileAccess.Open` acquires an ordinary or virtual file stream, and `DirAccess.Open` resolves and checks the directory before returning an owner. A missing file requested for reading raises `FileNotFoundException`. A missing parent when creating a physical file or a missing directory on directory open raises `DirectoryNotFoundException`. Invalid modes or paths and denied access raise exceptions from the open call.
+
+`OpenCompressed`, `OpenEncrypted`, and `OpenEncryptedWithPassword` validate their inputs before returning. Modes that preserve existing contents also read and decode or authenticate the existing container during open. With a truncating mode (`Write` or `WriteRead`), the factory starts with an empty memory stream and can return before creating the physical file. A dirty transformed stream encodes and publishes its contents on `Flush` or `Close`. Encoding or publication failures surface from that call, including `DirectoryNotFoundException` if the destination's parent is missing.
 
 On a seekable file, `ReadBytes` returns the available prefix. A nonzero request that runs out of bytes sets `EOFReached`. A fixed-width read that runs out consumes any available prefix, sets EOF and throws `EndOfStreamException`. Reading exactly through the last byte leaves a clear EOF flag unchanged. Seek, resize and successful writes clear it. Mode violations throw `InvalidOperationException`, and I/O failures propagate exceptions from the operation.
 

@@ -66,6 +66,8 @@ The same types batch [late callback numerical demand](components/gpu-resident-re
 
 # Engine inventory
 
+The existing [Engine registry](components/engine-runtime.md#named-singleton-registry) protects all 18 permanent service identities and retains user entries across scene runs. The registry adds no exported types or members.
+
 [Camera pixel feeds](components/camera-feeds.md) in the [rendering domain](domains/rendering.md) add [CameraServer](classes/CameraServer.md), [FeedImage](classes/CameraServer.FeedImage.md), [CameraFeed](classes/CameraFeed.md), [FeedDataType](classes/CameraFeed.FeedDataType.md), [FeedPosition](classes/CameraFeed.FeedPosition.md), [CameraFeedFormat](classes/CameraFeedFormat.md), [CameraFeedOutput](classes/CameraFeedOutput.md), [CameraTexture](classes/CameraTexture.md) and the private [NativeCameraFeed](classes/NativeCameraFeed.md). Existing Image/TexturePixels, Engine teardown, the display pump and resource-file factories deliver the executable pixel path. External native-image import retains its separate dependency.
 Existing ElectronObject notification handlers retain the [compiled construction boundary](components/object-lifecycle.md#compiled-construction-notification-boundary): constructors initialize engine state without automatically invoking project overrides with identity 0. No runtime type or public signature is added.
 
