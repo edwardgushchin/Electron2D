@@ -23,9 +23,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
     private string _userDataRoot;
     private bool _automaticUserDataRoot;
     private ulong _version = 1;
-    private bool _changeNotificationPending;
     private HashSet<string>? _deliveringChanges;
-    private bool _loading;
+    private bool _validatingDocument;
     private int _nextOrder;
 
     /// <summary>Initializes an isolated registry using a platform-appropriate user-data directory.</summary>
@@ -395,7 +394,18 @@ public partial class ProjectSettingsRegistry : ElectronObject
         }
     }
 
-    internal event Action<ProjectSettingsRegistry>? SettingsChangedCore { add => _publisherSettingsChangedCore.Add(value); remove => _publisherSettingsChangedCore.Remove(value); }
+    internal event Action<ProjectSettingsRegistry>? SettingsChangedCore
+    {
+        add
+        {
+            lock (_gate)
+            {
+                ThrowIfDisposed();
+                _publisherSettingsChangedCore.Add(value);
+            }
+        }
+        remove => _publisherSettingsChangedCore.Remove(value);
+    }
     private EventPublisher<Action<ProjectSettingsRegistry>> _publisherSettingsChangedCore;
 
     internal void ConfigurePathsCore(string projectRoot, string userDataRoot, bool automaticUserDataRoot = false)
@@ -418,7 +428,6 @@ public partial class ProjectSettingsRegistry : ElectronObject
             _automaticUserDataRoot = automaticUserDataRoot;
             _changedSettings.Clear();
             _dirtySettings.Clear();
-            _changeNotificationPending = false;
             foreach (var entry in _settings.Values)
                 entry.OverrideFeatures.Clear();
             _version++;
@@ -440,8 +449,16 @@ public partial class ProjectSettingsRegistry : ElectronObject
             if (_settings.ContainsKey(setting.Name))
                 throw new InvalidOperationException($"Project setting '{setting.Name}' is already registered.");
 
-            RegisterInternal(setting, isBasic: false);
-            _version++;
+            _validatingDocument = true;
+            try
+            {
+                RegisterInternal(setting, isBasic: false);
+                _version++;
+            }
+            finally
+            {
+                _validatingDocument = false;
+            }
         }
 
         NotifyPropertyListChanged();
@@ -591,7 +608,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     internal void SetCore<T>(ProjectSetting<T> setting, T value)
     where T : notnull
     {
-        ArgumentNullException.ThrowIfNull(setting);
+        EnsureWritableSetting(setting);
         var serialized = setting.SerializeAndValidate(value);
         SetSerialized(setting, feature: null, serialized);
     }
@@ -619,7 +636,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
     internal void SetInitialValueCore<T>(ProjectSetting<T> setting, T value)
     where T : notnull
     {
-        ArgumentNullException.ThrowIfNull(setting);
+        EnsureWritableSetting(setting);
         var serialized = setting.SerializeAndValidate(value);
         ThrowIfDisposed();
 
@@ -634,10 +651,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
             var current = _document.TryGetSerializedValue(entry.BaseKey, out var stored)
                 ? stored
                 : entry.InitialSerialized;
-            entry.InitialSerialized = serialized;
             _document.SetSerializedValue(
                 entry.BaseKey,
                 StringComparer.Ordinal.Equals(current, serialized) ? null : current);
+            entry.InitialSerialized = serialized;
         }
 
         NotifyPropertyListChanged();
@@ -784,7 +801,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         {
             ThrowIfDisposed();
             EnsureNotLoading();
-            _loading = true;
+            _validatingDocument = true;
             try
             {
                 var projectFile = IOPath.Combine(_projectRoot, ProjectFileName);
@@ -810,7 +827,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             }
             finally
             {
-                _loading = false;
+                _validatingDocument = false;
             }
         }
     }
@@ -858,7 +875,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             ThrowIfDisposed();
             EnsureNotLoading();
             var globalPath = GlobalizePathCore(path);
-            _loading = true;
+            _validatingDocument = true;
             try
             {
                 using var candidate = new ConfigFile();
@@ -868,7 +885,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             }
             finally
             {
-                _loading = false;
+                _validatingDocument = false;
             }
         }
     }
@@ -890,10 +907,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            if (_deliveringChanges is not null || !_changeNotificationPending)
+            if (_deliveringChanges is not null || _changedSettings.Count == 0)
                 return false;
 
-            _changeNotificationPending = false;
+            EnsureNotLoading();
             _deliveringChanges = new HashSet<string>(_changedSettings, StringComparer.Ordinal);
             _changedSettings.Clear();
             handler = BeginEventEmission(_publisherSettingsChangedCore.Handlers);
@@ -1008,8 +1025,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
 
         lock (_gate)
         {
-            if (_loading)
-                throw new InvalidOperationException("ProjectSettingsRegistry cannot be disposed during a load callback.");
+            EnsureNotLoading();
         }
     }
 
@@ -1095,8 +1111,20 @@ public partial class ProjectSettingsRegistry : ElectronObject
 
     private void EnsureNotLoading()
     {
-        if (_loading)
-            throw new InvalidOperationException("Project settings cannot be mutated re-entrantly while a document is loading.");
+        if (_validatingDocument)
+            throw new InvalidOperationException("Project settings cannot be mutated re-entrantly while validating a load or registration.");
+    }
+
+    private void EnsureWritableSetting<T>(ProjectSetting<T> setting) where T : notnull
+    {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(setting);
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            EnsureNotLoading();
+            GetEntry(setting);
+        }
     }
 
     private SettingEntry<T> GetEntry<T>(ProjectSetting<T> setting)
@@ -1232,7 +1260,6 @@ public partial class ProjectSettingsRegistry : ElectronObject
     {
         if (_processWide) RenderingServer.NotifyRenderMutation();
         _changedSettings.Add(name);
-        _changeNotificationPending = true;
     }
 
     private static string NormalizeFeature(string feature)
@@ -1284,9 +1311,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
     private void RegisterInternal<T>(ProjectSetting<T> setting, bool isBasic)
         where T : notnull
     {
-        var entry = new SettingEntry<T>(setting, _nextOrder++, isBasic, isBuiltIn: IsBuiltIn(setting));
+        var entry = new SettingEntry<T>(setting, _nextOrder, isBasic, isBuiltIn: IsBuiltIn(setting));
         entry.ReloadOverrides(_document, EnumerateFullNames(_document));
         _settings.Add(setting.Name, entry);
+        _nextOrder++;
     }
 
     private void ReplaceDocumentLocked(string encodedDocument, bool clearChanges)
@@ -1313,7 +1341,6 @@ public partial class ProjectSettingsRegistry : ElectronObject
             {
                 _changedSettings.Clear();
                 _dirtySettings.Clear();
-                _changeNotificationPending = false;
             }
             _version++;
             old.Dispose();
@@ -1333,19 +1360,32 @@ public partial class ProjectSettingsRegistry : ElectronObject
             EnsureNotLoading();
             var destination = path is null ? IOPath.Combine(_projectRoot, ProjectFileName) : GlobalizePathCore(path);
             var preferredOrder = new List<(string Section, string Name)>();
-            foreach (var entry in _settings.Values
-                         .OrderBy(entry => entry.Order)
-                         .ThenBy(entry => entry.Name, StringComparer.Ordinal))
+            var candidate = new ConfigFile();
+            try
             {
-                entry.RemoveRedundantBaseValue(_document);
-                preferredOrder.Add(SplitFullName(entry.Name));
-                foreach (var feature in entry.OverrideFeatures)
-                    preferredOrder.Add(SplitFullName($"{entry.Name}.{feature}"));
-            }
+                candidate.Parse(_document.EncodeToText());
+                foreach (var entry in _settings.Values
+                             .OrderBy(entry => entry.Order)
+                             .ThenBy(entry => entry.Name, StringComparer.Ordinal))
+                {
+                    entry.RemoveRedundantBaseValue(candidate);
+                    preferredOrder.Add(SplitFullName(entry.Name));
+                    foreach (var feature in entry.OverrideFeatures)
+                        preferredOrder.Add(SplitFullName($"{entry.Name}.{feature}"));
+                }
 
-            _document.ReorderEntries(preferredOrder);
-            _document.Save(destination);
-            _dirtySettings.Clear();
+                candidate.ReorderEntries(preferredOrder);
+                candidate.Save(destination);
+                var old = _document;
+                _document = candidate;
+                candidate = null!;
+                _dirtySettings.Clear();
+                old.Dispose();
+            }
+            finally
+            {
+                candidate?.Dispose();
+            }
         }
     }
 

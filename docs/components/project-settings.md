@@ -46,9 +46,17 @@ The [project boot splash](boot-images.md#project-startup-splash) consumes six ty
 2. Domains register additional `ProjectSetting<T>` definitions. A definition immediately claims and validates compatible values that may already exist in the loaded document.
 3. Typed writes snapshot through the configuration serializer, validate, commit under the registry lock, mark the base name unsaved, increment `Version`, and queue one change notification.
 4. Typed reads choose base/default or the first active feature override, then return a scalar cache or independent mutable snapshot.
-5. The host may call `FlushChanges`; the process Engine does this after each successful process frame.
-6. Loads build and validate a complete temporary document before replacement. Saves apply metadata order and delegate atomic file replacement to `ConfigFile`.
+5. Engine flushes the process registry after a successful process callback. Independent registries flush explicitly.
+6. Loads build and validate a complete temporary document before replacement. Saves omit redundant base values and apply metadata order to a candidate document. A failed write leaves the live document and its tracking intact.
 7. Virtual paths resolve lexically against immutable snapshots of the current project/user roots; `DirAccess` can capture both roots under one lock for a two-path operation.
+
+## Base values and notification batches
+
+A definition claims its exact ordinal name and uses its immutable default as the first initial value. Registration validates preloaded base and feature values before assigning order or publishing the definition. A validator may inspect the registry. The registry rejects reentrant mutations during registration. Changing the initial value preserves the observable base, making the previous value explicit when needed. Reset removes explicit base storage and retains overrides. Unregister removes a custom definition and both forms of storage.
+
+Both changed-name queries inspect pending and in-flight names under the same lock. The list is an immutable ordinally sorted snapshot with duplicates removed. Prefix matching is ordinal. An empty prefix checks for any changed name. Flush delivers one batch outside the lock. Edits made during delivery remain queued, including another edit to a name in flight. Callback exceptions consume the in-flight batch and propagate. A flush during delivery returns false. Saves and notification delivery track separate state.
+
+Run the public registry and Engine frame checks with `ELECTRON2D_TEST_PROJECT_SETTINGS=1` in the Release test runner.
 
 ## Automatic override files
 

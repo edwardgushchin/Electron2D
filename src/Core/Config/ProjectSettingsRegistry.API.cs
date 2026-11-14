@@ -44,12 +44,13 @@ public partial class ProjectSettingsRegistry
         get => VersionCore;
     }
 
-    /// <summary>Occurs after one or more settings change and <see cref="FlushChanges"/> is called.</summary>
+    /// <summary>Occurs when this registry flushes a batch of setting changes.</summary>
     /// <remarks>
-    /// Delivery is synchronous on the flushing thread and is coalesced to one invocation per flush. A change made by
-    /// a handler is retained for the next flush. The process-wide <see cref="Engine"/> flushes at the end of each
-    /// successfully processed frame. Handler exceptions propagate after the pending invocation has been consumed.
+    /// Delivery is synchronous on the flushing thread and is coalesced to one invocation per flush. Changes queued during
+    /// delivery are retained for the next flush. The process-wide <see cref="Engine"/> flushes after a successful
+    /// process callback. Handler exceptions propagate and consume only the batch being delivered.
     /// </remarks>
+    /// <exception cref="ObjectDisposedException">A handler is added while another thread is disposing the registry or after disposal.</exception>
     public event Action<ProjectSettingsRegistry>? SettingsChanged
     {
         add => SettingsChangedCore += value;
@@ -83,10 +84,11 @@ public partial class ProjectSettingsRegistry
     /// <param name="setting">The definition to register.</param>
     /// <remarks>
     /// If a matching value was loaded before registration, it and all matching feature overrides are validated before
-    /// the registry changes. Registration does not mark the setting as modified.
+    /// the registry changes. Validators may inspect the registry but must not mutate it during registration.
+    /// Registration does not mark the setting as modified.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">The name is already registered or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">The name is already registered or a load or registration is being validated.</exception>
     /// <exception cref="InvalidDataException">A loaded value cannot be decoded as <typeparamref name="T"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The setting validator rejects a loaded value.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
@@ -160,7 +162,7 @@ public partial class ProjectSettingsRegistry
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> or <paramref name="value"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The setting validator rejects <paramref name="value"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="System.Text.Json.JsonException"><paramref name="value"/> cannot be serialized.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public void Set<T>(ProjectSetting<T> setting, T value) where T : notnull => SetCore<T>(setting, value);
@@ -171,7 +173,7 @@ public partial class ProjectSettingsRegistry
     /// <remarks>Feature overrides are retained. The initial value becomes implicit and is not persisted.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public void Reset<T>(ProjectSetting<T> setting) where T : notnull => ResetCore<T>(setting);
 
@@ -186,7 +188,7 @@ public partial class ProjectSettingsRegistry
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> or <paramref name="value"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The setting validator rejects <paramref name="value"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public void SetInitialValue<T>(ProjectSetting<T> setting, T value) where T : notnull => SetInitialValueCore<T>(setting, value);
 
@@ -200,7 +202,7 @@ public partial class ProjectSettingsRegistry
     /// <exception cref="ArgumentException"><paramref name="feature"/> is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The setting validator rejects <paramref name="value"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public void SetFeatureOverride<T>(ProjectSetting<T> setting, string feature, T value) where T : notnull => SetFeatureOverrideCore<T>(setting, feature, value);
 
@@ -212,7 +214,7 @@ public partial class ProjectSettingsRegistry
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> or <paramref name="feature"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="feature"/> is invalid.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public bool ClearFeatureOverride<T>(ProjectSetting<T> setting, string feature) where T : notnull => ClearFeatureOverrideCore<T>(setting, feature);
 
@@ -273,7 +275,7 @@ public partial class ProjectSettingsRegistry
     /// <param name="order">The signed ordering value.</param>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     /// <exception cref="Exception">A property-list listener throws after the order has changed.</exception>
     public void SetOrder<T>(ProjectSetting<T> setting, int order) where T : notnull => SetOrderCore<T>(setting, order);
@@ -294,7 +296,7 @@ public partial class ProjectSettingsRegistry
     /// <param name="basic">The new basic-view flag.</param>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     /// <exception cref="Exception">A property-list listener throws after the flag has changed.</exception>
     public void SetAsBasic<T>(ProjectSetting<T> setting, bool basic) where T : notnull => SetAsBasicCore<T>(setting, basic);
@@ -315,7 +317,7 @@ public partial class ProjectSettingsRegistry
     /// <param name="internalSetting">The new internal flag.</param>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     /// <exception cref="Exception">A property-list listener throws after the flag has changed.</exception>
     public void SetAsInternal<T>(ProjectSetting<T> setting, bool internalSetting) where T : notnull => SetAsInternalCore<T>(setting, internalSetting);
@@ -336,18 +338,19 @@ public partial class ProjectSettingsRegistry
     /// <param name="restart">The new restart-required flag.</param>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
-    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load is running.</exception>
+    /// <exception cref="InvalidOperationException">A different definition owns the same name or a load or registration is being validated.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     /// <exception cref="Exception">A property-list listener throws after the flag has changed.</exception>
     public void SetRestartIfChanged<T>(ProjectSetting<T> setting, bool restart) where T : notnull => SetRestartIfChangedCore<T>(setting, restart);
 
     /// <summary>Gets setting names included in the pending or currently delivered change notification.</summary>
-    /// <returns>An immutable ordinally sorted snapshot, cleared after the notification finishes.</returns>
+    /// <returns>An immutable, distinct, ordinally sorted snapshot of pending and in-flight names. Delivered names
+    /// that have no new edit disappear from later queries when the flush finishes.</returns>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public IReadOnlyList<string> GetChangedSettings() => GetChangedSettingsCore();
 
     /// <summary>Checks whether any changed setting starts with a category prefix.</summary>
-    /// <param name="prefix">The case-sensitive prefix to inspect.</param>
+    /// <param name="prefix">The ordinal, case-sensitive prefix to inspect. An empty prefix matches any changed name.</param>
     /// <returns><see langword="true"/> when at least one changed setting starts with <paramref name="prefix"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="prefix"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
@@ -387,7 +390,7 @@ public partial class ProjectSettingsRegistry
 
     /// <summary>Saves the current document to <see cref="ProjectFilePath"/> using atomic replacement.</summary>
     /// <remarks>
-    /// A successful save clears internal unsaved-value tracking. Change-notification names remain until
+    /// A successful save applies the saved document and clears internal unsaved-value tracking. Change-notification names remain until
     /// <see cref="FlushChanges"/> completes; a failed save preserves both states.
     /// </remarks>
     /// <exception cref="IOException">The file cannot be written or replaced.</exception>
@@ -399,7 +402,7 @@ public partial class ProjectSettingsRegistry
     /// <summary>Saves the current document to an explicit file using atomic replacement.</summary>
     /// <param name="path">An operating-system, <c>res://</c>, or <c>user://</c> file path.</param>
     /// <remarks>
-    /// A successful save clears internal unsaved-value tracking. Change-notification names remain until
+    /// A successful save applies the saved document and clears internal unsaved-value tracking. Change-notification names remain until
     /// <see cref="FlushChanges"/> completes; a failed save preserves both states.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -411,8 +414,9 @@ public partial class ProjectSettingsRegistry
     public void SaveCustom(string path) => SaveCustomCore(path);
 
     /// <summary>Raises one coalesced <see cref="SettingsChanged"/> notification when changes are pending.</summary>
-    /// <returns><see langword="true"/> when an event invocation was consumed; otherwise <see langword="false"/>.</returns>
-    /// <remarks>The callback runs without the registry lock, so handlers may read or modify settings.</remarks>
+    /// <returns><see langword="true"/> when a pending batch was consumed, even without listeners; otherwise <see langword="false"/>.</returns>
+    /// <remarks>Callbacks run outside the registry lock. A flush during delivery returns false and leaves new edits queued.</remarks>
+    /// <exception cref="InvalidOperationException">A flush with pending changes was attempted from a load or registration validator.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     /// <exception cref="Exception">An event handler throws.</exception>
     public bool FlushChanges() => FlushChangesCore();

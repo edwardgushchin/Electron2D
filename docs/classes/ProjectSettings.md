@@ -640,14 +640,14 @@ Registers a setting definition for typed access and tooling discovery.
 **Exceptions**
 
 - `ArgumentNullException`: `setting` is `null`.
-- `InvalidOperationException`: The name is already registered or a load is running.
+- `InvalidOperationException`: The name is already registered or a load or registration is being validated.
 - `IO.InvalidDataException`: A loaded value cannot be decoded as `T`.
 - `ArgumentOutOfRangeException`: The setting validator rejects a loaded value.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 - `Exception`: A property-list listener throws after registration has completed.
 
 **Remarks:** If a matching value was loaded before registration, it and all matching feature overrides are validated before
-the registry changes. Registration does not mark the setting as modified.
+the registry changes. Validators may inspect the registry during registration. The registry rejects reentrant mutations. Registration does not mark a setting as modified.
 
 <a id="m-electron2d-projectsettings-unregister-1-electron2d-projectsetting-0"></a>
 ### `public static void Unregister<T>(ProjectSetting<T> setting)`
@@ -1168,7 +1168,7 @@ Sets whether changing a setting requires the host application to restart.
 
 Gets setting names included in the pending or currently delivered change notification.
 
-**Returns:** An immutable ordinally sorted snapshot, cleared after the notification finishes.
+**Returns:** An immutable, distinct, ordinally sorted snapshot of pending and in-flight names. Delivered names without a new edit disappear from later queries when the flush finishes.
 
 **Exceptions**
 
@@ -1181,7 +1181,7 @@ Checks whether any changed setting starts with a category prefix.
 
 **Parameters**
 
-- `prefix`: The case-sensitive prefix to inspect.
+- `prefix`: The ordinal, case-sensitive prefix to inspect. An empty prefix matches any changed name.
 
 **Returns:** `true` when at least one changed setting starts with `prefix`.
 
@@ -1245,7 +1245,7 @@ Saves the current document to [`ProjectSettings.ProjectFilePath`](ProjectSetting
 - `IO.DirectoryNotFoundException`: The project directory no longer exists.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
-**Remarks:** A successful save clears internal unsaved-value tracking. Change-notification names remain until
+**Remarks:** A successful save applies the saved document and clears internal unsaved-value tracking. Change-notification names remain until
 [`ProjectSettings.FlushChanges`](ProjectSettings.md#m-electron2d-projectsettings-flushchanges) completes; a failed save preserves both states.
 
 <a id="m-electron2d-projectsettings-savecustom-system-string"></a>
@@ -1266,7 +1266,7 @@ Saves the current document to an explicit file using atomic replacement.
 - `IO.DirectoryNotFoundException`: The destination directory does not exist.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
-**Remarks:** A successful save clears internal unsaved-value tracking. Change-notification names remain until
+**Remarks:** A successful save applies the saved document and clears internal unsaved-value tracking. Change-notification names remain until
 [`ProjectSettings.FlushChanges`](ProjectSettings.md#m-electron2d-projectsettings-flushchanges) completes; a failed save preserves both states.
 
 <a id="m-electron2d-projectsettings-flushchanges"></a>
@@ -1274,14 +1274,14 @@ Saves the current document to an explicit file using atomic replacement.
 
 Raises one coalesced [`ProjectSettings.SettingsChanged`](ProjectSettings.md#e-electron2d-projectsettings-settingschanged) notification when changes are pending.
 
-**Returns:** `true` when an event invocation was consumed; otherwise `false`.
+**Returns:** `true` when a pending batch was consumed, even without listeners; otherwise `false`.
 
 **Exceptions**
 
 - `ObjectDisposedException`: The registry is disposing or disposed.
 - `Exception`: An event handler throws.
 
-**Remarks:** The callback runs without the registry lock, so handlers may read or modify settings.
+**Remarks:** Callbacks run outside the registry lock. A flush during delivery returns false and leaves new edits queued. A validator cannot consume a pending batch while validating a load or registration.
 
 <a id="m-electron2d-projectsettings-globalizepath-system-string"></a>
 ### `public static string GlobalizePath(string path)`
@@ -1374,11 +1374,9 @@ Releases resources owned by a derived class.
 <a id="e-electron2d-projectsettings-settingschanged"></a>
 ### `public static event Action<ProjectSettingsRegistry> SettingsChanged`
 
-Occurs after one or more settings change and [`ProjectSettings.FlushChanges`](ProjectSettings.md#m-electron2d-projectsettings-flushchanges) is called.
+Occurs when this registry flushes a batch of setting changes.
 
-**Remarks:** Delivery is synchronous on the flushing thread and is coalesced to one invocation per flush. A change made by
-a handler is retained for the next flush. The process-wide [`Engine`](Engine.md) flushes at the end of each
-successfully processed frame. Handler exceptions propagate after the pending invocation has been consumed.
+**Remarks:** Delivery is synchronous on the flushing thread. Changes queued during delivery are retained for the next flush. Engine flushes the process-wide registry after a successful process callback. Handler exceptions propagate and consume only the batch being delivered.
 
 ## Constant Descriptions
 
