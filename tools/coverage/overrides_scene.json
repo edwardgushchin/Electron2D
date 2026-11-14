@@ -8965,7 +8965,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0016/0095: exact borrowed identity, ordinal nonblank names, explicit managed duplicate/null/disposed errors. The pinned ASCII identifier check in [core_bind.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/core_bind.cpp#L1824-L1834) has SHA-256 e90ccae66bffe1e4aee4e319e7cf731df1202b2b262eacbded9b99b79d359e50; the accepted string boundary also allows dotted names.",
+      "reason": "ADR 0016/0095: exact borrowed identity, ordinal nonblank names, explicit managed duplicate/null/disposed errors. The pinned ASCII identifier check in [core_bind.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/core_bind.cpp#L1999-L2009) has SHA-256 e90ccae66bffe1e4aee4e319e7cf731df1202b2b262eacbded9b99b79d359e50; the accepted string boundary also allows dotted names.",
       "godot": [
         "Engine::method:register_singleton(StringName:,Object:)"
       ]
