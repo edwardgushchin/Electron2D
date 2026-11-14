@@ -686,8 +686,10 @@ def render():
             updated = "2026-10-04"
         if name in {"PacketPeerDTLS", "DTLSServer", "UPNP", "UPNPDevice", "Crypto", "CryptoKey", "X509Certificate", "HashingContext", "HMACContext", "AESContext", "HTTPClient", "HTTPRequest", "StreamPeerGZIP", "StreamPeerTCP", "WebSocketPeer", "WebSocketMultiplayerPeer", "MultiplayerPeer", "MultiplayerPeerExtension", "OfflineMultiplayerPeer", "MultiplayerAPI", "MultiplayerAPIExtension", "SceneMultiplayer", "MultiplayerSpawner", "MultiplayerSynchronizer", "SceneReplicationConfig", "ENetConnection", "ENetPacketPeer", "ENetMultiplayerPeer", "WebRTCMultiplayerPeer"}:
             updated = "2026-10-04"
-        if name in {"Engine", "ProjectSettings", "Input", "InputMap", "ThemeDB", "AudioServer", "PhysicsServer2D", "DisplayServer", "RenderingServer"}:
+        if name in {"ProjectSettings", "Input", "InputMap", "ThemeDB", "AudioServer", "PhysicsServer2D", "DisplayServer", "RenderingServer"}:
             updated = "2026-10-04"
+        if name == "Engine":
+            updated = "2026-11-14"
         if name in {"RichTextLabel", "RichTextEffect", "CharFXTransform", "GraphElement", "GraphNode", "GraphFrame", "GraphEdit", "@GlobalScope", "TextServer"}:
             updated = "2026-10-15" if name in {"PCKPacker", "ProjectSettings", "Logger", "ScriptBacktrace", "Engine", "OS"} else "2026-10-07"
         if name in {"StaticBody2D", "AnimatableBody2D", "PhysicsDirectBodyState2D", "PhysicsServer2D", "RigidBody2D", "Area2D", "Joint2D", "PinJoint2D", "Shape2D", "WorldBoundaryShape2D", "PhysicsDirectBodyState2DExtension", "PhysicsDirectSpaceState2D", "PhysicsDirectSpaceState2DExtension", "PhysicsPointQueryParameters2D", "PhysicsServer2DExtension", "PhysicsServer2DManager", "Viewport", "CollisionObject2D", "PhysicsBody2D"}:

@@ -50,7 +50,12 @@ internal static partial class ResourceArchiveTests
         internal Actor? Partner;
         internal int Number;
         internal int ReadyNumber;
-        protected override void OnReady() => ReadyNumber = Number;
+        internal int? ReadyDataNumber;
+        protected override void OnReady()
+        {
+            ReadyNumber = Number;
+            ReadyDataNumber = Data?.Number;
+        }
         protected override Func<Node> CreateSceneInstanceFactory() => CreateActor;
         protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
         {
@@ -356,16 +361,105 @@ internal static partial class ResourceArchiveTests
     }
     private static void FileReplication(string folder)
     {
-        var path = System.IO.Path.Combine(folder, "level.e2dscene"); var remotePath = System.IO.Path.Combine(folder, "remote.e2dscene"); using (var source = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore)) ResourceSaver.Save(source, remotePath, SaverFlags.BundleResources);
-        using var host = new ENetMultiplayerPeer(); host.SetBindIP("127.0.0.1"); host.CreateServer(0); using var client = new ENetMultiplayerPeer(); client.CreateClient("127.0.0.1", host.Host!.GetLocalPort());
-        using var serverAPI = new SceneMultiplayer { MultiplayerPeer = host }; using var clientAPI = new SceneMultiplayer { MultiplayerPeer = client };
-        Node Branch(string file, out MultiplayerSpawner spawner) { var root = new Node { Name = "Root" }; root.AddChild(new Node { Name = "Actors" }); spawner = new MultiplayerSpawner { Name = "Spawner", SpawnPath = "../Actors" }; root.AddChild(spawner); spawner.AddSpawnableScene(file); return root; }
-        var serverRoot = Branch(path, out var serverSpawner); var clientRoot = Branch(remotePath, out var clientSpawner); using var serverTree = new SceneTree(serverRoot); using var clientTree = new SceneTree(clientRoot); serverTree.SetMultiplayer(serverAPI); clientTree.SetMultiplayer(clientAPI);
-        void Wait(Func<bool> ready) { var end = Environment.TickCount64 + 10000; while (!ready()) { serverTree.ProcessFrame(0); clientTree.ProcessFrame(0); if (Environment.TickCount64 > end) throw new TimeoutException("File scene replication."); Thread.Yield(); } }
-        Wait(() => serverAPI.GetPeers().Length == 1 && clientAPI.GetPeers().Length == 1);
-        var local = (Actor)serverSpawner.GetSpawnableScene(0).Instantiate(); local.Name = "Spawned"; serverRoot.GetNode("Actors").AddChild(local); Wait(() => clientRoot.GetNodeOrNull("Actors/Spawned") is not null);
-        var remote = clientRoot.GetNode<Actor>("Actors/Spawned"); Check(remote.Number == 31 && remote.ReadyNumber == 31 && remote.Data!.Number == 7, "Native ENet replicates independent file-backed scene state before Ready."); serverSpawner.ClearSpawnableScenes(); clientSpawner.ClearSpawnableScenes(); Check(local.Data!.Number == 7 && remote.Data!.Number == 7, "Cleared file registrations preserve live instance graphs."); local.Dispose(); Wait(() => clientRoot.GetNodeOrNull("Actors/Spawned") is null);
-        serverTree.SetMultiplayer(null); clientTree.SetMultiplayer(null);
+        var path = System.IO.Path.Combine(folder, "replication-source.e2dscene");
+        var remotePath = System.IO.Path.Combine(folder, "replication-remote.e2dscene");
+        using (var data = new Data { Number = 7, ResourceLocalToScene = false })
+        using (var root = new Actor { Name = "Actor", Number = 31, Data = data })
+            ResourceSaver.SaveScene(root, path, SaverFlags.BundleResources);
+        using (var source = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore))
+            ResourceSaver.Save(source, remotePath, SaverFlags.BundleResources);
+
+        using var host = new ENetMultiplayerPeer();
+        host.SetBindIP("127.0.0.1");
+        host.CreateServer(0);
+        var port = host.Host!.GetLocalPort();
+        using var client = new ENetMultiplayerPeer();
+        Reject<ArgumentOutOfRangeException>(() => client.CreateClient("127.0.0.1", 0));
+        Check(client.Host is null && client.GetConnectionStatus() == MultiplayerConnectionStatus.Disconnected,
+            "Rejected client setup leaves the endpoint idle for retry.");
+        client.CreateClient("127.0.0.1", port);
+
+        using var serverAPI = new SceneMultiplayer { MultiplayerPeer = host };
+        using var clientAPI = new SceneMultiplayer { MultiplayerPeer = client };
+        static Node Branch(out MultiplayerSpawner spawner)
+        {
+            var root = new Node { Name = "Root" };
+            root.AddChild(new Node { Name = "Actors" });
+            spawner = new MultiplayerSpawner { Name = "Spawner", SpawnPath = "../Actors" };
+            root.AddChild(spawner);
+            return root;
+        }
+
+        using var serverTree = new SceneTree(Branch(out var serverSpawner));
+        using var clientTree = new SceneTree(Branch(out var clientSpawner));
+        serverTree.SetMultiplayer(serverAPI);
+        clientTree.SetMultiplayer(clientAPI);
+        void Wait(string phase, Func<bool> ready)
+        {
+            var end = Environment.TickCount64 + 10000;
+            while (!ready())
+            {
+                serverTree.ProcessFrame(0);
+                clientTree.ProcessFrame(0);
+                if (Environment.TickCount64 > end)
+                    throw new TimeoutException($"File scene replication timed out during {phase} on UDP loopback port {port}. "
+                        + $"ENet server={host.GetConnectionStatus()}, client={client.GetConnectionStatus()}, "
+                        + $"client peer={client.GetPeer(1)?.GetState()}; admitted peers server={serverAPI.GetPeers().Length}, client={clientAPI.GetPeers().Length}.");
+                Thread.Yield();
+            }
+        }
+
+        Wait("connection", () => serverAPI.GetPeers().Length == 1 && clientAPI.GetPeers().Length == 1);
+        Check(host.GetPeer(client.GetUniqueID())?.GetChannels() == 255 && client.GetPeer(1)?.GetChannels() == 255,
+            "Default ENet endpoints negotiate the full channel limit.");
+        serverSpawner.AddSpawnableScene(path);
+        clientSpawner.AddSpawnableScene(remotePath);
+        var localTemplate = serverSpawner.GetSpawnableScene(0);
+        var remoteTemplate = clientSpawner.GetSpawnableScene(0);
+        static Data ReadStoredData(PackedScene template)
+        {
+            // Release the metadata view before spawning so its lease cannot keep the graph alive.
+            using var state = template.GetState();
+            var index = Enumerable.Range(0, state.GetNodePropertyCount(0))
+                .Single(i => state.GetNodePropertyName(0, i) == "Data");
+            return state.GetNodePropertyValue<Data>(0, index);
+        }
+        var localData = ReadStoredData(localTemplate);
+        var remoteData = ReadStoredData(remoteTemplate);
+        Check(!localData.ResourceLocalToScene && !remoteData.ResourceLocalToScene
+            && !ReferenceEquals(localData, remoteData),
+            "The two file templates hold independent, non-local resources.");
+        var local = (Actor)localTemplate.Instantiate();
+        local.Name = "Spawned";
+        serverTree.Root.GetNode("Actors").AddChild(local);
+
+        Wait("spawn", () => clientTree.Root.GetNodeOrNull("Actors/Spawned") is not null);
+        var remote = clientTree.Root.GetNode<Actor>("Actors/Spawned");
+        Check(remote.Number == 31 && remote.ReadyNumber == 31 && remote.ReadyDataNumber == 7,
+            "The remote file template restores node and resource state before Ready.");
+        Check(ReferenceEquals(local.Data, localData) && ReferenceEquals(remote.Data, remoteData),
+            "Each instance borrows its own template's stored resource.");
+
+        serverSpawner.ClearSpawnableScenes();
+        clientSpawner.ClearSpawnableScenes();
+        Check(localTemplate.IsDisposed && remoteTemplate.IsDisposed, "Clearing registrations releases both file templates.");
+        Check(ReferenceEquals(local.Data, localData) && !localData.IsDisposed && localData.Number == 7
+            && ReferenceEquals(remote.Data, remoteData) && !remoteData.IsDisposed && remoteData.Number == 7,
+            "Both instances retain the same live file resources after clearing their registrations.");
+        var despawned = false;
+        clientSpawner.Despawned += node =>
+        {
+            Check(ReferenceEquals(node, remote) && !node.IsDisposed
+                && ReferenceEquals(remote.Data, remoteData) && !remoteData.IsDisposed && remoteData.Number == 7,
+                "Despawned observes the original live resource borrowed from the remote file.");
+            despawned = true;
+        };
+        local.Dispose();
+        Check(localData.IsDisposed && !remoteData.IsDisposed, "Local disposal releases only its own file graph.");
+        Wait("despawn", () => clientTree.Root.GetNodeOrNull("Actors/Spawned") is null);
+        Check(despawned && remote.IsDisposed && remoteData.IsDisposed,
+            "Replicated despawn releases the remote instance and its file graph.");
+        Console.WriteLine("File scene replication passed: 255 channels, pre-Ready state, and borrowed file resource identity and lifetime through despawn.");
     }
     private static void CopyOwnership(string folder)
     {
