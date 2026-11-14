@@ -239,7 +239,7 @@ internal sealed class ResourcePacks
     {
         Runtime.EnsureReadablePath(path);
         packed = Runtime.TryOpen(path, out var stream);
-        return packed ? stream : File.OpenRead(ProjectSettings.GlobalizePath(ResourceUID.EnsurePath(path)));
+        return packed ? stream : FileAccess.OpenPhysicalRead(ProjectSettings.GlobalizePath(ResourceUID.EnsurePath(path)));
     }
     internal static string CombineRelative(string path, string relative)
     {

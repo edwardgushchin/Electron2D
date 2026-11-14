@@ -16,9 +16,18 @@ internal static class FileSaveAndSwapTests
         var folder = System.IO.Directory.CreateTempSubdirectory("electron2d-save-swap-");
         try
         {
-            if (profile == "managed")
+            if (profile is "managed" or "sharing")
             {
-                Lifecycle(folder.FullName); PathsAndConcurrency(folder.FullName); Modes(folder.FullName); Links(folder.FullName); Faults(folder.FullName); Temporary(); Packs(folder.FullName); Warm(folder.FullName); Crash(folder.FullName); EncoderFailure(folder.FullName);
+                Lifecycle(folder.FullName);
+                PathsAndConcurrency(folder.FullName);
+                Modes(folder.FullName);
+                Faults(folder.FullName);
+                Temporary();
+                Packs(folder.FullName);
+                Warm(folder.FullName);
+                Crash(folder.FullName);
+                EncoderFailure(folder.FullName);
+                if (profile == "managed") Links(folder.FullName);
             }
             else
             {
@@ -44,9 +53,31 @@ internal static class FileSaveAndSwapTests
         Check(NativeFile.ReadAllText(absent) == "created", "New target creation");
         using (var empty = EFile.Open(path, FileAccessModeFlags.Write)) { }
         Check(new FileInfo(path).Length == 0, "Closing an unwritten staged file intentionally saves empty output");
-        NativeFile.WriteAllText(path, "before"); using var oldReader = EFile.Open(path, FileAccessModeFlags.Read);
-        using (var replacement = EFile.Open(path, FileAccessModeFlags.Write)) replacement.WriteString("after");
-        Check(oldReader.ReadAllText() == "before" && NativeFile.ReadAllText(path) == "after", "An existing reader retains the old inode while new readers see the replacement");
+        NativeFile.WriteAllText(path, "before");
+        OS.SetUseFileAccessSaveAndSwap(false);
+        using var oldReader = EFile.Open(path, FileAccessModeFlags.Read);
+        Check(oldReader.ReadBytes(1).AsSpan().SequenceEqual("b"u8), "The original reader starts before replacement");
+        OS.SetUseFileAccessSaveAndSwap(true);
+        using (var replacement = EFile.Open(path, FileAccessModeFlags.Write))
+        {
+            var replacementPath = replacement.AbsolutePath;
+            replacement.WriteString("after");
+            replacement.Flush();
+            Check(NativeFile.ReadAllText(path) == "before", "Flush with an open reader leaves the old name visible");
+            replacement.Close();
+            Check(!replacement.IsOpen && !NativeFile.Exists(replacementPath), "Successful close retires staging");
+        }
+        using var newReader = EFile.Open(path, FileAccessModeFlags.Read);
+        Check(newReader.ReadAllText() == "after", "A new reader sees the replacement");
+        using (var replacement = EFile.Open(path, FileAccessModeFlags.Write))
+            replacement.WriteString("again");
+        Check(oldReader.ReadBytes(5).AsSpan().SequenceEqual("efore"u8) && newReader.ReadAllText() == "after",
+            "Both open readers retain their original contents and cursor after repeated saves");
+        using (var latestReader = EFile.Open(path, FileAccessModeFlags.Read))
+            Check(latestReader.ReadAllText() == "again", "A subsequent reader sees the second replacement");
+        oldReader.Close();
+        newReader.Close();
+        Check(!oldReader.IsOpen && !newReader.IsOpen, "Readers close after replacement");
     }
     private static void PathsAndConcurrency(string root)
     {
@@ -85,9 +116,36 @@ internal static class FileSaveAndSwapTests
         }
         var path2 = PathIn(root, "compressed.bin"); NativeFile.WriteAllText(path2, "old");
         using (var compressed = EFile.OpenCompressed(path2, FileAccessModeFlags.Write, FileCompressionMode.Gzip))
-        { Check(compressed.AbsolutePath == path2, "Transformed stream has independent atomic envelope ownership"); compressed.WriteString("compressed"); compressed.Flush(); using var read = EFile.OpenCompressed(path2, FileAccessModeFlags.Read, FileCompressionMode.Gzip); Check(read.ReadAllText() == "compressed", "Transformed Flush still publishes its envelope"); }
+        {
+            Check(compressed.AbsolutePath == path2, "Transformed stream has independent atomic envelope ownership");
+            compressed.WriteString("compressed");
+            compressed.Flush();
+            using var old = EFile.OpenCompressed(path2, FileAccessModeFlags.Read, FileCompressionMode.Gzip);
+            compressed.WriteString(" update");
+            compressed.Flush();
+            using var current = EFile.OpenCompressed(path2, FileAccessModeFlags.Read, FileCompressionMode.Gzip);
+            Check(old.ReadAllText() == "compressed" && current.ReadAllText() == "compressed update", "Transformed readers retain decoded snapshots across Flush");
+        }
         using var settings = new ProjectSettingsRegistry(root, PathIn(root, "user")); var definition = new ProjectSetting<int>("save/test", 7); settings.Register(definition); settings.Set(definition, 11); settings.SaveCustom(PathIn(root, "project.e2d"));
         using var loaded = new ProjectSettingsRegistry(root, PathIn(root, "user")); loaded.Register(definition); loaded.LoadCustom(PathIn(root, "project.e2d")); Check(loaded.Get(definition) == 11, "Independent configuration persistence remains atomic");
+        if (OperatingSystem.IsWindows())
+        {
+            var path = PathIn(root, "direct-sharing.bin");
+            NativeFile.WriteAllText(path, "original");
+            OS.SetUseFileAccessSaveAndSwap(false);
+            try
+            {
+                using (var reader = EFile.Open(path, FileAccessModeFlags.Read))
+                {
+                    foreach (var mode in new[] { FileAccessModeFlags.Write, FileAccessModeFlags.ReadWrite, FileAccessModeFlags.WriteRead })
+                        Check(Error(() => { using var writer = EFile.Open(path, mode); }) is IOException, "In-place writer still requires exclusive access");
+                    Check(reader.ReadAllText() == "original", "Rejected writes leave the contents intact");
+                }
+                using var direct = EFile.Open(path, FileAccessModeFlags.Write);
+                direct.WriteString("direct");
+            }
+            finally { OS.SetUseFileAccessSaveAndSwap(true); }
+        }
     }
     private static void Links(string root)
     {
@@ -133,6 +191,23 @@ internal static class FileSaveAndSwapTests
             _ = Error(file.Close); Check(!file.IsOpen && NativeFile.ReadAllText(recovery) == "recover me" && System.IO.Directory.Exists(blocked), "Failed replacement retains completed output and external destination"); file.Close();
         }
         NativeFile.Delete(recovery); System.IO.Directory.Delete(blocked);
+        if (OperatingSystem.IsWindows())
+        {
+            using (var reader = new FileStream(path, FileMode.Open, System.IO.FileAccess.Read, FileShare.Read))
+            using (var replacement = EFile.Open(path, FileAccessModeFlags.Write))
+            {
+                recovery = replacement.AbsolutePath;
+                replacement.WriteString("retry");
+                Check(Error(replacement.Close) is IOException && !replacement.IsOpen, "Incompatible sharing rejects the final replacement");
+                Check(NativeFile.ReadAllText(path) == "retained" && NativeFile.ReadAllText(recovery) == "retry",
+                    "A sharing failure retains the original and completed staging");
+                replacement.Close();
+            }
+            NativeFile.Delete(recovery);
+            using (var replacement = EFile.Open(path, FileAccessModeFlags.Write))
+                replacement.WriteString("retry");
+            Check(NativeFile.ReadAllText(path) == "retry", "A new save succeeds after the incompatible handle closes");
+        }
     }
     private static void Temporary()
     {
@@ -145,7 +220,15 @@ internal static class FileSaveAndSwapTests
     private static void Packs(string root)
     {
         var path = PathIn(root, "data.pck"); NativeFile.WriteAllText(path, "old pack");
-        using (var pack = new PCKPacker()) { pack.PCKStart(path); pack.AddFileFromBuffer("save.txt", "saved"u8); Check(NativeFile.ReadAllText(path) == "old pack", "Package index authoring remains staged"); pack.Flush(); }
+        using (var old = EFile.Open(path, FileAccessModeFlags.Read))
+        {
+            using var pack = new PCKPacker();
+            pack.PCKStart(path);
+            pack.AddFileFromBuffer("save.txt", "saved"u8);
+            Check(NativeFile.ReadAllText(path) == "old pack", "Package index authoring remains staged");
+            pack.Flush();
+            Check(old.ReadAllText() == "old pack", "Finalizing a package preserves an open physical reader");
+        }
         Check(NativeFile.ReadAllBytes(path).AsSpan(0, 4).SequenceEqual("GDPC"u8), "Finalized package publishes complete output");
         NativeFile.WriteAllText(path, "keep pack");
         using (var pack = new PCKPacker())
