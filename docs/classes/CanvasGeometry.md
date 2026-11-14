@@ -16,22 +16,23 @@ Prepares retained lines and textured regions and dispatches polygons/strokes, in
 This fragment belongs inside the runtime and requires the surrounding owner state.
 
 ```csharp
-CanvasGeometry.Append(vertices, command, viewportTransform * drawingTransform, inheritedColor);
+var (count, primitive, textureRegion) = CanvasGeometry.Append(
+    vertices, command, viewportTransform * drawingTransform, inheritedColor);
 ```
 
 ## Member summary
 
 | Declaration | Contract |
 | --- | --- |
-| `internal static (int Count, MeshPrimitiveType Primitive) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)` | [Append](#append) |
+| `internal static (int Count, MeshPrimitiveType Primitive, Rect2? TextureRegion) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)` | [Append](#append) |
 
 ## Member descriptions
 
 ### Append
 
-`internal static (int Count, MeshPrimitiveType Primitive) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)`
+`internal static (int Count, MeshPrimitiveType Primitive, Rect2? TextureRegion) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)`
 
-Appends geometry without clearing prior output. Returns the native prefix count/topology; trailing vertices remain triangles for optional line feathers. Zero count means there is no native prefix. Applies color multiplication, local line feathering through CanvasStroke and texture UV transforms. Retained strokes provide rectangle fills/outlines and their local feathers. Texture clipping subdivides half-texel borders to preserve interior interpolation. Texture quads below the 0.000001 cross-product threshold contribute nothing; degenerate retained stroke triangles are left to the backend. CanvasStroke shares straight-line geometry with independent segments; pooled curves replay their cached local triangles. Nonfinite transformed coordinates, modulation or UVs throw InvalidOperationException. Missing/disposed texture pixels fail explicitly. A command without geometry throws InvalidOperationException; interval/transform state must be consumed by CanvasItem. On failure the caller must discard the incomplete frame; this helper is not a transactional list append.
+Appends geometry without clearing prior output. Returns the native prefix vertex count and topology. Trailing vertices remain triangles for optional line feathers. A zero count means there is no native prefix. TextureRegion contains normalized source bounds for textured rectangles and nine-patches when available, or null for lines, strokes and polygons. Applies color multiplication, local line feathering through CanvasStroke and texture UV transforms. Retained strokes provide rectangle fills/outlines and their local feathers. Texture clipping subdivides half-texel borders to preserve interior interpolation. Texture quads below the 0.000001 cross-product threshold contribute nothing; degenerate retained stroke triangles are left to the backend. CanvasStroke shares straight-line geometry with independent segments; pooled curves replay their cached local triangles. Nonfinite transformed coordinates, modulation or UVs throw InvalidOperationException. Missing/disposed texture pixels fail explicitly. A command without geometry throws InvalidOperationException; interval/transform state must be consumed by CanvasItem. On failure the caller must discard the incomplete frame; this helper is not a transactional list append.
 
 ## Verification and limits
 
@@ -47,4 +48,4 @@ Offscreen canvases now use independently owned completed/write target pairs. Nat
 
 Polygon replay forwards the selected blend policy to its optional boundary producer. PremultAlpha fringe vertices fade RGBA together; source-alpha modes fade alpha while preserving RGB/UV. Multiply blending ignores coverage alpha and explicitly rejects antialiased polygon submission. Ordinary polygon/primitive/stroke replay is unchanged. See [boundary geometry](CanvasPolygon.md#polygon-boundary-coverage).
 
-Append returns the complete normalized source region for textured rectangle commands, with source/destination size signs and transpose preserved independently of expanded vertices. Attribute/stroke geometry returns no rectangle metadata. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.
+TextureRegion keeps the complete source rectangle separate from tessellated vertices. For textured rectangles, source and destination flips affect the size signs. Transposition changes sampling without reordering the returned fields. See [canvas command metadata](../components/canvas-command-metadata.md) for nine-patch handling and verification.
