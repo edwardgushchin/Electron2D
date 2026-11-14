@@ -608,6 +608,26 @@
   ],
   "statusGroups": [
     {
+      "godot": ["Image::method:fill(Color:)"],
+      "state": "Implemented",
+      "reason": "ADR 0039: one encoded pixel fills every stored level in all 25 uncompressed formats. Typed exceptions cover unreadable storage. ImagePixelTests checks exact bytes and synchronous Changed."
+    },
+    {
+      "godot": ["Image::method:get_pixel(int:,int:)", "Image::method:get_pixelv(Vector2i:)", "Image::method:set_pixel(int:,int:,Color:)", "Image::method:set_pixelv(Vector2i:,Color:)"],
+      "state": "Implemented",
+      "reason": "ADR 0039: base-level scalar and vector access, exact format lanes and quantization, preserved authored mips, checked coordinates and typed state errors. ImagePixelTests covers all 25 layouts."
+    },
+    {
+      "godot": ["Image::method:flip_x()", "Image::method:flip_y()", "Image::method:rotate_180()", "Image::method:rotate_90(int:ClockDirection)"],
+      "state": "Implemented",
+      "reason": "ADR 0039: permute exact base pixels, regenerate an existing mip chain, and publish one complete state. Independent ImagePixelTests vectors cover odd rectangles, narrow axes, both quarter-turn directions and typed errors."
+    },
+    {
+      "godot": ["@GlobalScope::enum:ClockDirection"],
+      "state": "Implemented",
+      "reason": "Both direction identities and their y-down quarter-turn behavior execute through Image.Rotate90. Undefined direction values fail with a typed exception."
+    },
+    {
       "godot": ["Image::method:rgbe_to_srgb()"],
       "state": "Implemented",
       "reason": "ADR 0039: decode RGBE9995 base pixels with linear-to-sRGB transfer and RGB8 quantization. Regenerate a requested mip chain from the converted base, matching the pinned image.cpp method. The typed operation throws for empty/invalid formats. ImageRGBETests verifies exact output bytes, the source snapshot and ImageTexture retention."

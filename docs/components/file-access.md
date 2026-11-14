@@ -25,7 +25,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 ## Runtime flow
 
 1. A file open resolves the path through `ProjectSettings`, validates the exact mode and transformation inputs, and acquires/decodes the content before returning an instance.
-2. Raw files use a `FileStream`; opt-in exact Write access uses a streaming sibling with close-time replacement through [file save and swap](file-save-and-swap.md). Transformed files use an owned expandable memory stream.
+2. Raw files use a `FileStream`. Read-only physical streams share read and delete access so [file save and swap](file-save-and-swap.md) can replace the name while existing readers finish reading the original file. Physical reads through the resource resolver use the same policy, including the initial reads of transformed files. Transformed views retain decoded data in memory and release the physical handle before returning.
 3. A directory open captures physical/resource/user scope and its current directory. Listing begin captures an unsorted entry snapshot; sorted helpers create independent immutable snapshots.
 4. Every instance operation locks its stream/cursor or directory/listing state boundary.
 5. Dirty compressed/encrypted content is encoded to a complete snapshot and atomically replaces its target on flush/close.

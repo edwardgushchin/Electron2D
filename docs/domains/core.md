@@ -393,7 +393,7 @@ Factory construction provenance is shared by resource, script, file and scene cr
 
 [Project line-breaking strictness](../components/line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.
 
-[File save and swap](../components/file-save-and-swap.md) adds opt-in streaming write-only saves with close-time replacement, physical staging metadata and producer failure cancellation through the retained static OS service.
+[File save and swap](../components/file-save-and-swap.md) adds opt-in streaming write-only saves with close-time replacement, physical staging metadata and producer failure cancellation through the retained static OS service. Physical read-only streams on Windows can finish reading the original file after a staged replacement.
 
 ## Localized resource files
 

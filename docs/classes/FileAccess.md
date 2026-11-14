@@ -87,7 +87,7 @@ file.WriteString("ready");
 | [`public void WritePascalString(string value)`](#m-electron2d-fileaccess-writepascalstring-system-string) | Writes a UTF-8 string preceded by its unsigned 32-bit byte count. |
 | [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical or directory-backed virtual file exists. |
 | [`public static byte[] GetFileAsBytes(string path)`](#m-electron2d-fileaccess-getfileasbytes-system-string) | Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
-| [`public static string GetFileAsString(string path)`](#m-electron2d-fileaccess-getfileasstring-system-string) | Reads a complete physical or directory-backed virtual file as strict UTF-8. |
+| [`public static string GetFileAsString(string path)`](#m-electron2d-fileaccess-getfileasstring-system-string) | Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
 | [`public static long GetAccessTime(string path)`](#m-electron2d-fileaccess-getaccesstime-system-string) | Gets the last-access time as Unix seconds. |
 | [`public static long GetModifiedTime(string path)`](#m-electron2d-fileaccess-getmodifiedtime-system-string) | Gets the last-modification time as Unix seconds. |
 | [`public static long GetSize(string path)`](#m-electron2d-fileaccess-getsize-system-string) | Gets a file's length without opening a persistent instance. |
@@ -239,6 +239,8 @@ Gets or sets Unix permission and special-mode bits for the physical file.
 ### `public static FileAccess Open(string path, FileAccessModeFlags mode)`
 
 Opens a file with the requested access mode.
+
+On Windows, physical read-only streams allow staged replacement. An open reader can finish reading the original file, and subsequent opens of the path see the replacement.
 
 **Parameters**
 
@@ -882,7 +884,7 @@ Reads a complete file from a physical path, a directory-backed virtual path, or 
 <a id="m-electron2d-fileaccess-getfileasstring-system-string"></a>
 ### `public static string GetFileAsString(string path)`
 
-Reads a complete physical or directory-backed virtual file as strict UTF-8.
+Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. Mounted entries resolve through [the `res://` overlay](../components/resource-packs.md).
 
 **Parameters**
 

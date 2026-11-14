@@ -14,7 +14,7 @@ Last updated: 2026-09-21
 
 ## Description
 
-The direction follows screen-style 2D coordinates used by images: positive X points right and positive Y points down. It is currently consumed by [`Image.Rotate90`](Image.md#rotate90) and is reusable by later 2D APIs without introducing a separate direction type.
+The direction follows screen-style 2D coordinates used by images: positive X points right and positive Y points down. [`Image.Rotate90`](Image.md#rotate90) swaps the width and height and uses this direction to determine the new position of each pixel.
 
 ## Examples
 

@@ -8,7 +8,7 @@ Last updated: 2026-10-02
 
 ## Description
 
-Factory-created caller-owned playback borrowing its AudioStreamOggVorbis and captured sequence. It supplies concrete resampling, active/loop/position/seek hooks and consumes inherited nullable LoopingOverride. Packet/granule writes invalidate the capture, including equal writes. Sampling-rate-only changes remain live; stored metadata can be literal but actual mixing requires a positive finite rate. Stop remains available after source disposal; all consuming operations reject disposed source/sequence. Use separate playback instances for concurrent cursors and coordinate access to each cursor. Player-provided instances remain player-owned.
+Factory-created caller-owned playback borrowing its AudioStreamOggVorbis and captured sequence. It supplies concrete resampling, active/loop/position/seek hooks and consumes inherited nullable LoopingOverride. Packet/granule writes invalidate the capture, including equal writes. Sampling-rate-only changes remain live; stored metadata can be literal but actual mixing requires a positive finite rate. Stop remains available after source disposal; all consuming operations reject disposed source/sequence. Use separate playback instances for concurrent cursors and coordinate access to each cursor. Player-provided instances remain player-owned. Playback selects encoded channels 0 and 1, or repeats channel 0 for mono.
 
 ## Example
 
@@ -95,4 +95,4 @@ Concrete implementation of [AudioStreamPlaybackResampled](AudioStreamPlaybackRes
 
 [ADR 0047](../decisions/audio.md#adr-0047), [Resource lifetime](../decisions/resources.md#adr-0014) and [audio component](../components/audio-playback.md) own the boundaries. [AudioCompressedTests](../../tests/Electron2D.Tests/AudioCompressedTests.cs) verifies copied state, independent PCM, seek/loops, lifetime, mutation, corruption, typed parameters, cache replacement and warmed active/idle CPU mixing. Actual FAudio PCM is a separate native test.
 
-[Coverage](../coverage/classes/AudioStreamPlaybackOggVorbis.md) records inherited dependencies and multichannel/platform limits; physical listening and native allocation totals are unverified.
+[Coverage](../coverage/classes/AudioStreamPlaybackOggVorbis.md) records inherited dependencies and platform limits; physical listening and native allocation totals are unverified.

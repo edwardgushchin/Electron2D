@@ -269,7 +269,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <returns>A new owner of the opened file stream.</returns>
     /// <remarks>OS.SetUseFileAccessSaveAndSwap selects staging for the exact Write mode at open. Path retains the
     /// supplied name and AbsolutePath identifies staging. Close/disposal publishes completed output; Flush alone does not.
-    /// I/O write failure aborts staging. A failed final replacement retains completed staging for recovery.</remarks>
+    /// An open physical read-only stream can finish reading its original file after a staged replacement.
+    /// Subsequent opens of the path see the replacement. I/O write failure aborts staging. A failed final
+    /// replacement retains completed staging for recovery.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
@@ -1036,7 +1038,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static byte[] GetFileAsBytes(string path) => ResourcePacks.ReadBytes(path);
 
-    /// <summary>Reads a complete physical or directory-backed virtual file as strict UTF-8.</summary>
+    /// <summary>Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack.</summary>
     /// <param name="path">The file path.</param>
     /// <returns>The decoded text.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -1598,9 +1600,11 @@ public sealed partial class FileAccess : ElectronObject
         }
     }
 
+    internal static FileStream OpenPhysicalRead(string path) => new(path, FileMode.Open, IoFileAccess.Read, FileShare.Read | FileShare.Delete);
+
     private static Stream OpenPhysical(string path, FileAccessModeFlags mode) => mode switch
     {
-        FileAccessModeFlags.Read => new FileStream(path, FileMode.Open, IoFileAccess.Read, FileShare.Read),
+        FileAccessModeFlags.Read => OpenPhysicalRead(path),
         FileAccessModeFlags.Write => OS.UseFileAccessSaveAndSwap ? SaveAndSwapStream.Open(path) : new FileStream(path, FileMode.Create, IoFileAccess.Write, FileShare.None),
         FileAccessModeFlags.ReadWrite => new FileStream(path, FileMode.Open, IoFileAccess.ReadWrite, FileShare.None),
         FileAccessModeFlags.WriteRead => new FileStream(path, FileMode.Create, IoFileAccess.ReadWrite, FileShare.None),
