@@ -3,12 +3,14 @@ namespace Electron2D;
 public partial class Window
 {
     private WindowMode _mode;
+    private bool _modeAssigned;
     private uint _flags;
     private int? _currentScreen;
 
     /// <summary>Gets the observed native mode, or configures a presentation-mode request.</summary>
     /// <value>Windowed by default; the configured request while detached.</value>
-    /// <remarks>Native changes may be asynchronous or denied by the window manager. Wayland exclusive fullscreen
+    /// <remarks>A configured project supplies the startup mode when the window has no explicit mode.
+    /// Native changes may be asynchronous or denied by the window manager. Wayland exclusive fullscreen
     /// becomes ordinary fullscreen; restoring from Wayland minimization is not guaranteed.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner, a transient window requests fullscreen, or the native request fails.</exception>
@@ -23,6 +25,7 @@ public partial class Window
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown window mode.");
             _display?.WindowSetModeCore(value);
             _mode = value;
+            _modeAssigned = true;
         }
     }
 

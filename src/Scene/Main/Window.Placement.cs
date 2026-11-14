@@ -19,10 +19,12 @@ public partial class Window
         CenterScreenWithKeyboardFocus = 5
     }
     private WindowInitialPosition _initialPosition;
+    private bool _initialPositionAssigned;
 
     /// <summary>Gets or sets the stored initial window-placement policy.</summary>
     /// <value>Absolute initially. Every centered mode uses the containing viewport for embedded windows.</value>
-    /// <remarks>Changing this value does not move an already visible window. Native root placement runs before
+    /// <remarks>A configured project can supply the initial policy when no window placement is authored.
+    /// Changing this value does not move an already visible window. Native root placement runs before
     /// scene entry and centers in full screen bounds. Wayland rejects explicit native positioning; embedded
     /// centering is available there. Native children apply the same policies when their host is created.
     /// Every valid assignment notifies PropertyListChanged after commitment, including an equal value.</remarks>
@@ -33,7 +35,7 @@ public partial class Window
     public WindowInitialPosition InitialPosition
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _initialPosition; }
-        set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); _initialPosition = value; NotifyPropertyListChanged(); }
+        set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); _initialPosition = value; _initialPositionAssigned = true; NotifyPropertyListChanged(); }
     }
 
     /// <summary>Requests the smallest client size permitted by the current window and content constraints.</summary>
@@ -74,26 +76,42 @@ public partial class Window
         }
         finally { _measuringWindowMinimum = false; }
     }
-    private void ApplyInitialNativePosition()
+    private void ApplyInitialNativePosition(DisplayServer display,
+        (WindowMode Mode, WindowInitialPosition Policy, Vector2i Position, int Screen)? project)
     {
-        if (_initialPosition == WindowInitialPosition.Absolute)
+        var policy = _initialPosition;
+        var position = _screenPosition;
+        var selectedScreen = _currentScreen ?? 0;
+        var projectPolicy = !_initialPositionAssigned && position is null && _currentScreen is null;
+        if (projectPolicy && project is { } settings && SupportsNativeSizeLimits && display.SupportsProjectWindowPlacement)
         {
-            if (_screenPosition is { } position) _display!.WindowSetPositionCore(position);
+            _initialPosition = settings.Policy;
+            policy = settings.Policy == WindowInitialPosition.CenterMainWindowScreen
+                ? WindowInitialPosition.CenterPrimaryScreen : settings.Policy;
+            position = settings.Position;
+            selectedScreen = settings.Screen;
+        }
+
+        if (policy == WindowInitialPosition.Absolute)
+        {
+            if (position is { } coordinates) display.WindowSetPositionCore(coordinates);
             return;
         }
-        var screen = _initialPosition switch
+        var screen = policy switch
         {
             WindowInitialPosition.CenterPrimaryScreen => DisplayServer.ScreenPrimary,
             WindowInitialPosition.CenterMainWindowScreen => DisplayServer.ScreenOfMainWindow,
-            WindowInitialPosition.CenterOtherScreen => _currentScreen ?? 0,
+            WindowInitialPosition.CenterOtherScreen => selectedScreen,
             WindowInitialPosition.CenterScreenWithMouseFocus => DisplayServer.ScreenWithMouseFocus,
             WindowInitialPosition.CenterScreenWithKeyboardFocus => DisplayServer.ScreenWithKeyboardFocus,
             _ => throw new InvalidOperationException("The stored placement policy is invalid.")
         };
-        var positionOnScreen = _display!.ScreenGetPositionCore(screen);
-        var screenSize = _display.ScreenGetSizeCore(screen);
-        var size = _display.WindowGetSizeCore();
-        _display.WindowSetPositionCore(new(checked((int)((long)positionOnScreen.X + ((long)screenSize.X - size.X) / 2)),
+        var screenSize = display.ScreenGetSizeCore(screen);
+        if (screenSize.X <= 0 || screenSize.Y <= 0)
+            throw new ArgumentOutOfRangeException(nameof(screen), screen, "The selected display has no usable dimensions.");
+        var positionOnScreen = display.ScreenGetPositionCore(screen);
+        var size = display.WindowGetSizeCore();
+        display.WindowSetPositionCore(new(checked((int)((long)positionOnScreen.X + ((long)screenSize.X - size.X) / 2)),
             checked((int)((long)positionOnScreen.Y + ((long)screenSize.Y - size.Y) / 2))));
     }
     private void ApplyInitialEmbeddedPosition()

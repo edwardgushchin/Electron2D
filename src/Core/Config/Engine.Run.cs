@@ -155,7 +155,7 @@ public sealed partial class Engine
             if (runProject)
                 window.ApplyProjectContent();
             window.ApplyProjectHDROutput();
-            window.OpenNative(movieDisableVSync, printGPUProfile);
+            window.OpenNative(movieDisableVSync, printGPUProfile, runProject);
             var splashStarted = runProject && window.Visible && !OperatingSystem.IsBrowser() &&
                 RenderingServer.Service!.PresentProjectBootSplash() ? Stopwatch.GetTimestamp() : (long?)null;
             var splashMinimum = splashStarted.HasValue && !IsEditorHint

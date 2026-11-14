@@ -105,6 +105,10 @@ These built-in descriptors support project files and feature overrides. A world 
 
 Viewport dimensions and scale must be positive, scale must be finite, override axes must be nonnegative, and the typed modes reject undefined values. See [project startup geometry](../components/window-runtime.md#project-startup-geometry) for feature precedence and observed client sizing.
 
+## Project window placement
+
+`WindowInitialMode` (`display/window/size/mode`) defaults to Windowed. `WindowInitialPositionType` (`display/window/size/initial_position_type`) defaults to CenterPrimaryScreen. Both use the existing window enums and reject undefined values. `WindowInitialPosition` (`display/window/size/initial_position`) defaults to zero and allows signed desktop coordinates. `WindowInitialScreen` (`display/window/size/initial_screen`) defaults to zero and requires a nonnegative index. See [project startup placement](../components/window-runtime.md#project-startup-placement).
+
 ## Project theme startup
 
 `GUIThemeCustom` and `GUIThemeCustomFont` are permanent typed `ProjectSetting<string>` definitions for `gui/theme/custom` and `gui/theme/custom_font`, both empty by default, basic and restart-required. Feature overrides and ordinary project path resolution apply. Engine.Start and windowed Engine.Run load the selected Theme/font before activating the main loop. Invalid files fail preparation and retain the previous selection. See [ThemeDB](ThemeDB.md#project-startup-theme) for ownership and lookup order.

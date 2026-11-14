@@ -1,3 +1,5 @@
+[Project window placement](../components/window-runtime.md#project-startup-placement) connects four typed placement and mode settings to configured root startup. Four Blocked rows move to Implemented. Coverage is **14,032/18,898 (74.25%)**, with 1,122 Partial, 268 Unimplemented, 3,476 Blocked, 8,395 Excluded and zero unmapped.
+
 [Project window geometry](../components/window-runtime.md#project-startup-geometry) applies eight size and stretch settings to configured project startup. Eight Blocked rows move to Implemented. Coverage is **14,028/18,898 (74.23%)**, with 1,122 Partial, 268 Unimplemented, 3,480 Blocked, 8,395 Excluded and zero unmapped.
 
 [Timed multiline undo](../components/multiline-editing.md#undo-for-interactive-edits) groups committed input and deletions in TextEdit and CodeEdit. One Blocked setting moves to Implemented. Coverage is **14,020/18,898 (74.19%)**, with 1,122 Partial, 268 Unimplemented, 3,488 Blocked, 8,395 Excluded and zero unmapped.

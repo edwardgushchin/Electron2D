@@ -106,6 +106,8 @@ public sealed partial class ConfigFile
     [JsonSerializable(typeof(ContentScaleMode))]
     [JsonSerializable(typeof(ContentScaleAspect))]
     [JsonSerializable(typeof(ContentScaleStretch))]
+    [JsonSerializable(typeof(WindowMode))]
+    [JsonSerializable(typeof(Window.WindowInitialPosition))]
     [JsonSerializable(typeof(RenderingServer.SplashStretchMode))]
     [JsonSerializable(typeof(FontLCDSubpixelLayout))]
     [JsonSerializable(typeof(InputActionSettings))]

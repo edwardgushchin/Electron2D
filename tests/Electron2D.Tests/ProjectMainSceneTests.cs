@@ -39,6 +39,7 @@ internal static class ProjectMainSceneTests
             SaveScene(main, "Primary", Colors.Red);
             SaveScene(alternate, "Alternate", Colors.Blue);
             VerifyProjectWindow(project.FullName, user.FullName, main, backend);
+            VerifyProjectPlacement(project.FullName, user.FullName);
 
             ProjectSettings.Reset(ProjectSettings.MainScene);
             CheckFailed<InvalidOperationException>();
@@ -227,6 +228,109 @@ internal static class ProjectMainSceneTests
         ProjectSettings.Reset(aspect);
         ProjectSettings.Reset(scale);
         ProjectSettings.Reset(scaleMode);
+    }
+
+    private static void VerifyProjectPlacement(string project, string user)
+    {
+        if (!OperatingSystem.IsWindows() || Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy")
+            return;
+
+        var policy = ProjectSettings.WindowInitialPositionType;
+        var position = ProjectSettings.WindowInitialPosition;
+        var screen = ProjectSettings.WindowInitialScreen;
+        var mode = ProjectSettings.WindowInitialMode;
+        var feature = "root_placement_test";
+        var origin = new Vector2i(130, 120);
+        ProjectSettings.Save();
+        using (var saved = new ProjectSettingsRegistry(project, user))
+        {
+            saved.Load();
+            Check(saved.Get(policy) == Window.WindowInitialPosition.CenterPrimaryScreen && saved.Get(position) == Vector2i.Zero &&
+                saved.Get(screen) == 0 && saved.Get(mode) == WindowMode.Windowed, "Built-in startup placement and mode defaults.");
+            Reject<ArgumentOutOfRangeException>(() => saved.Set(policy, (Window.WindowInitialPosition)6));
+            Reject<ArgumentOutOfRangeException>(() => saved.Set(mode, (WindowMode)5));
+            Reject<ArgumentOutOfRangeException>(() => saved.Set(screen, -1));
+            saved.Set(policy, Window.WindowInitialPosition.Absolute);
+            saved.Set(position, new(-10, -20));
+            saved.SetFeatureOverride(position, feature, origin);
+            saved.Set(screen, int.MaxValue);
+            saved.Set(mode, WindowMode.Windowed);
+            saved.SetFeatureOverride(mode, feature, WindowMode.Maximized);
+            saved.Save();
+        }
+        ProjectSettings.Load();
+        ProjectSettings.AddCustomFeature(feature);
+        try
+        {
+            Check(ProjectSettings.Get(position) == new Vector2i(-10, -20) &&
+                ProjectSettings.GetWithOverride(position) == origin && ProjectSettings.GetWithOverride(mode) == WindowMode.Maximized,
+                "Signed coordinates and placement/mode feature overrides round-trip through a project file.");
+
+            using var absolute = new Window { Size = new(192, 144), Mode = WindowMode.Windowed, Borderless = true };
+            RunPlacement(absolute, () =>
+            {
+                Check(absolute.InitialPosition == Window.WindowInitialPosition.Absolute && absolute.Position == origin &&
+                    absolute.Mode == WindowMode.Windowed, "Absolute position uses the active feature; explicit Windowed overrides the project mode.");
+            });
+
+            using var maximized = new Window { Size = new(192, 144), Borderless = true };
+            RunPlacement(maximized, () =>
+            {
+                Check(maximized.Mode == WindowMode.Maximized && DisplayServer.WindowGetMode() == WindowMode.Maximized,
+                    "The project mode reaches the native window.");
+            });
+
+            ProjectSettings.Set(mode, WindowMode.Windowed);
+            ProjectSettings.ClearFeatureOverride(mode, feature);
+            ProjectSettings.Reset(policy);
+            using var centered = new Window { Size = new(192, 144), Borderless = true };
+            RunPlacement(centered, () => Check(centered.InitialPosition == Window.WindowInitialPosition.CenterPrimaryScreen &&
+                centered.Position == Center(centered, DisplayServer.ScreenPrimary), "The default project policy centers on the primary display."));
+
+            ProjectSettings.Set(policy, Window.WindowInitialPosition.CenterOtherScreen);
+            using (var invalid = new Window { Size = new(192, 144) })
+            {
+                Reject<ArgumentOutOfRangeException>(() => Engine.RunProject(invalid));
+                Check(invalid.IsDisposed && !DisplayServer.IsAvailable && !RenderingServer.IsAvailable && Engine.MainLoop is null,
+                    "An unavailable startup screen fails before scene entry and retires the host.");
+            }
+            ProjectSettings.Set(screen, 0);
+            using var indexed = new Window { Size = new(192, 144), Borderless = true };
+            RunPlacement(indexed, () => Check(indexed.Position == Center(indexed, 0) && indexed.CurrentScreen == 0,
+                "Other-screen placement uses the configured display index."));
+
+            ProjectSettings.Set(mode, WindowMode.Maximized);
+            using var authored = new Window
+            {
+                Size = new(192, 144), Borderless = true, Position = new(180, 170),
+                InitialPosition = Window.WindowInitialPosition.Absolute, Mode = WindowMode.Windowed
+            };
+            using var packed = new PackedScene();
+            packed.Pack(authored);
+            using var restored = (Window)packed.Instantiate();
+            RunPlacement(restored, () => Check(restored.Position == new Vector2i(180, 170) &&
+                restored.InitialPosition == Window.WindowInitialPosition.Absolute && restored.Mode == WindowMode.Windowed,
+                "Packed explicit defaults retain precedence over startup placement and mode settings."));
+        }
+        finally
+        {
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.ClearFeatureOverride(position, feature);
+            ProjectSettings.ClearFeatureOverride(mode, feature);
+            ProjectSettings.Reset(policy);
+            ProjectSettings.Reset(position);
+            ProjectSettings.Reset(screen);
+            ProjectSettings.Reset(mode);
+        }
+
+        static Vector2i Center(Window window, int display) =>
+            DisplayServer.ScreenGetPosition(display) + (DisplayServer.ScreenGetSize(display) - window.Size) / 2;
+
+        static void RunPlacement(Window window, Action verify)
+        {
+            window.Ready += _ => { verify(); window.Tree!.Quit(); };
+            Check(Engine.RunProject(window) == 0 && window.IsDisposed, "The placement host retires after verification.");
+        }
     }
 
     private static void SaveScene(string path, string name, Color color)

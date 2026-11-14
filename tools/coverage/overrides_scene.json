@@ -5539,6 +5539,26 @@
       "reason": "Executable content rasterization/fitting policy preserves numeric identity."
     },
     {
+      "godot": "ProjectSettings::property:display/window/size/mode",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowInitialMode()",
+      "reason": "Typed startup placement or presentation mode for the configured project window."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/initial_position_type",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowInitialPositionType()",
+      "reason": "Typed startup placement or presentation mode for the configured project window."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/initial_position",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowInitialPosition()",
+      "reason": "Typed startup placement or presentation mode for the configured project window."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/initial_screen",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowInitialScreen()",
+      "reason": "Typed startup placement or presentation mode for the configured project window."
+    },
+    {
       "godot": "ProjectSettings::property:display/window/size/viewport_width",
       "electron2d": "property:Electron2D.ProjectSettings.ViewportWidth()",
       "reason": "Typed configured root-window startup setting."
@@ -8845,6 +8865,16 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/mode",
+        "ProjectSettings::property:display/window/size/initial_position_type",
+        "ProjectSettings::property:display/window/size/initial_position",
+        "ProjectSettings::property:display/window/size/initial_screen"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0040. Configured root startup applies feature-aware mode and placement through the native Window path. Absolute uses signed desktop coordinates, centering uses the effective display selector, and an unavailable indexed screen fails before scene entry. Authored placement or mode takes precedence. Window managers without global top-level placement retain system placement for project defaults."
+    },
     {
       "godot": [
         "ProjectSettings::property:display/window/size/viewport_width",

@@ -14,7 +14,7 @@
 
 # Display domain
 
-[Project startup geometry](../components/window-runtime.md#project-startup-geometry) supplies the configured root's initial size and stretch policy from typed project settings.
+[Project startup geometry](../components/window-runtime.md#project-startup-geometry) supplies the configured root's initial size and stretch policy. [Project startup placement](../components/window-runtime.md#project-startup-placement) adds the effective display selector and native mode.
 
 [Window content fitting](../components/window-runtime.md#fitting-child-controls) schedules a bounded layout refresh from runtime GUI changes for native and embedded windows.
 

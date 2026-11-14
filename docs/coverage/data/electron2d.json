@@ -298458,6 +298458,58 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.WindowInitialMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowInitialMode",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.WindowMode\u003E WindowInitialMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.WindowMode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowInitialPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowInitialPosition",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Vector2i\u003E WindowInitialPosition { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Vector2i\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowInitialPositionType()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowInitialPositionType",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Window.WindowInitialPosition\u003E WindowInitialPositionType { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Window.WindowInitialPosition\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowInitialScreen()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowInitialScreen",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E WindowInitialScreen { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.WindowStretchAspect()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

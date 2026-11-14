@@ -89,6 +89,16 @@ The project stretch mode, aspect, scale and fractional/integer choice feed the s
 
 On Windows GPU and Compatibility, the configured scene tests read back the viewport raster and the full native presentation, verify black side margins and localized input, and cover saved feature overrides, single-axis fallback and packed explicit defaults. The recording profile verifies the encoded raster independently of the initial client request. Other target hosts and release packages remain unverified for these settings.
 
+## Project startup placement
+
+Configured project runs apply the [startup placement and mode settings](../classes/ProjectSettings.md#project-window-placement) before the first scene or custom loop callback. The default project placement centers the client on the primary display using full screen bounds. Absolute placement uses signed desktop coordinates. The other-screen policy resolves its nonnegative display index at startup. Pointer and keyboard policies use the corresponding display selectors. The main-window centering value selects the primary screen when launching the root.
+
+An explicitly assigned `Window.InitialPosition`, `Window.Position` or `Window.CurrentScreen` selects the window's own placement policy. An explicit `Window.Mode` independently overrides the project mode. Packed scenes preserve explicitly assigned mode and policy, including assignments equal to the detached defaults. Older archives already containing these values restore them as authored. CurrentScreen remains runtime-only.
+
+Wayland, mobile, TV, browser and the dummy video driver use system placement for project defaults. Explicit Window placement retains its existing platform validation. An unavailable indexed screen on a desktop with global coordinates aborts startup and retires owned services. Window managers can constrain the final placement or deny a mode request.
+
+The Windows GPU and Compatibility project hosts verify signed coordinate persistence and feature overrides, native absolute and centered positions, maximization, packed explicit precedence and complete cleanup on an unavailable screen. The indexed placement check uses display zero. Physical multi-monitor transitions, foreign native backends and release packages remain unverified for these settings.
+
 ## Window content scaling
 
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.

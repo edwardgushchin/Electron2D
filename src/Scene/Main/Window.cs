@@ -14,7 +14,8 @@ public partial class Window : Viewport
     [
         new PropertyDescriptor<Window, bool>(nameof(Visible), w => w.Visible, (w, v) => w.Visible = v, _ => true, stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(Position), w => w.Position, (w, v) => w.Position = v, _ => Vector2i.Zero, stored: true),
-        new PropertyDescriptor<Window, WindowInitialPosition>(nameof(InitialPosition), w => w.InitialPosition, (w, v) => w.InitialPosition = v, _ => WindowInitialPosition.Absolute, stored: true),
+        new PropertyDescriptor<Window, WindowInitialPosition>(nameof(InitialPosition), w => w.InitialPosition, (w, v) => w.InitialPosition = v, _ => WindowInitialPosition.Absolute, stored: true)
+        { StoreCondition = w => w._initialPositionAssigned },
         new PropertyDescriptor<Window, string>(nameof(Title), w => w.Title, (w, v) => w.Title = v, _ => "", stored: true),
         new PropertyDescriptor<Window, string>(nameof(AccessibilityName), w => w.AccessibilityName, (w, v) => w.AccessibilityName = v, _ => "", stored: true),
         new PropertyDescriptor<Window, string>(nameof(AccessibilityDescription), w => w.AccessibilityDescription, (w, v) => w.AccessibilityDescription = v, _ => "", stored: true),
@@ -22,7 +23,8 @@ public partial class Window : Viewport
         { StoreCondition = w => w._sizeAssigned || (!w._projectContentApplied && w._size != new Vector2i(100, 100)) },
         new PropertyDescriptor<Window, Vector2i>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2i.Zero, stored: true),
-        new PropertyDescriptor<Window, WindowMode>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => WindowMode.Windowed, stored: true),
+        new PropertyDescriptor<Window, WindowMode>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => WindowMode.Windowed, stored: true)
+        { StoreCondition = w => w._modeAssigned || w._mode != WindowMode.Windowed },
         new PropertyDescriptor<Window, bool>(nameof(Unresizable), w => w.Unresizable, (w, v) => w.Unresizable = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(AlwaysOnTop), w => w.AlwaysOnTop, (w, v) => w.AlwaysOnTop = v, _ => false, stored: true),
@@ -375,12 +377,14 @@ public partial class Window : Viewport
 
     internal DisplayServer? NativeDisplay => _display;
 
-    internal void OpenNative(bool disableVSync = false, bool printGPUProfile = false)
+    internal void OpenNative(bool disableVSync = false, bool printGPUProfile = false, bool runProject = false)
     {
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible, transparent: Transparent);
         _display.SceneWindow = this;
         _display.ConfigureSystemMenu(Engine.IsEditorHint || ProjectSettings.GetWithOverride(ProjectSettings.EnableAltSpaceMenu));
-        ConfigureNative();
+        (WindowMode Mode, WindowInitialPosition Policy, Vector2i Position, int Screen)? placement =
+            runProject ? ProjectSettings.Service.ReadProjectWindowPlacement() : null;
+        ConfigureNative(placement);
         if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
         _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow(), printGPUProfile);
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
@@ -389,7 +393,8 @@ public partial class Window : Viewport
     private static bool SupportsNativeSizeLimits =>
         !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() && !OperatingSystem.IsBrowser();
 
-    private void ConfigureNative()
+    private void ConfigureNative(
+        (WindowMode Mode, WindowInitialPosition Policy, Vector2i Position, int Screen)? projectPlacement = null)
     {
         if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         var display = _display ?? throw new InvalidOperationException("The native window is absent.");
@@ -412,9 +417,11 @@ public partial class Window : Viewport
         display.WindowSetMousePassthroughCore(_mousePassthroughPolygon);
         if (_currentScreen is { } screen)
             display.WindowSetCurrentScreenCore(screen);
-        if (!display.IsNativePopup || _popupClientPosition is null) ApplyInitialNativePosition();
-        if (_mode != WindowMode.Windowed)
-            display.WindowSetModeCore(_mode);
+        if (!display.IsNativePopup || _popupClientPosition is null)
+            ApplyInitialNativePosition(display, projectPlacement);
+        var mode = _modeAssigned ? _mode : projectPlacement?.Mode ?? _mode;
+        if (mode != WindowMode.Windowed)
+            display.WindowSetModeCore(mode);
         _size = display.WindowGetSizeCore(); _contentLayoutValid = false;
         display.CloseRequestedCore += HandleClose;
         display.QuitRequestedCore += HandleClose;

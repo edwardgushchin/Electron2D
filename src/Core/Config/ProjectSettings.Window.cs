@@ -41,4 +41,24 @@ public sealed partial class ProjectSettings
     /// <value>Fractional by default. Active feature overrides are read at startup.</value>
     public static ProjectSetting<ContentScaleStretch> WindowStretchScaleMode { get; } =
         new("display/window/stretch/scale_mode", ContentScaleStretch.Fractional, Enum.IsDefined);
+
+    /// <summary>Sets the initial presentation mode of the configured project's root window.</summary>
+    /// <value>Windowed by default. The active feature override applies when the window mode is unassigned.</value>
+    public static ProjectSetting<WindowMode> WindowInitialMode { get; } =
+        new("display/window/size/mode", WindowMode.Windowed, Enum.IsDefined);
+
+    /// <summary>Sets the initial desktop placement policy of the configured project's root window.</summary>
+    /// <value>Primary-screen centering by default. The active feature override is read at startup.</value>
+    public static ProjectSetting<Window.WindowInitialPosition> WindowInitialPositionType { get; } =
+        new("display/window/size/initial_position_type", Window.WindowInitialPosition.CenterPrimaryScreen, Enum.IsDefined);
+
+    /// <summary>Sets the desktop coordinates used by the project's absolute placement policy.</summary>
+    /// <value>Zero by default. Signed coordinates support monitors on either side of the desktop origin.</value>
+    public static ProjectSetting<Vector2i> WindowInitialPosition { get; } =
+        new("display/window/size/initial_position", Vector2i.Zero);
+
+    /// <summary>Sets the desktop screen index used by the project's other-screen centering policy.</summary>
+    /// <value>Zero by default. Must be nonnegative. Display availability is checked when the window opens.</value>
+    public static ProjectSetting<int> WindowInitialScreen { get; } =
+        new("display/window/size/initial_screen", 0, value => value >= 0);
 }

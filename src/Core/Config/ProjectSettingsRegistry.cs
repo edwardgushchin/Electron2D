@@ -76,6 +76,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WindowWidthOverride, isBasic: false);
         RegisterInternal(WindowHeightOverride, isBasic: false);
         RegisterInternal(WindowStretchMode, isBasic: false);
+        RegisterInternal(WindowInitialMode, isBasic: true);
+        RegisterInternal(WindowInitialPositionType, isBasic: false);
+        RegisterInternal(WindowInitialPosition, isBasic: false);
+        RegisterInternal(WindowInitialScreen, isBasic: false);
         RegisterInternal(WindowStretchAspect, isBasic: false);
         RegisterInternal(WindowStretchScale, isBasic: false);
         RegisterInternal(WindowStretchScaleMode, isBasic: false);
@@ -519,6 +523,13 @@ public partial class ProjectSettingsRegistry : ElectronObject
                 new(GetWithOverrideCore(WindowWidthOverride), GetWithOverrideCore(WindowHeightOverride)),
                 GetWithOverrideCore(WindowStretchMode), GetWithOverrideCore(WindowStretchAspect),
                 GetWithOverrideCore(WindowStretchScale), GetWithOverrideCore(WindowStretchScaleMode));
+    }
+
+    internal (WindowMode Mode, Window.WindowInitialPosition Policy, Vector2i Position, int Screen) ReadProjectWindowPlacement()
+    {
+        lock (_gate)
+            return (GetWithOverrideCore(WindowInitialMode), GetWithOverrideCore(WindowInitialPositionType),
+                GetWithOverrideCore(WindowInitialPosition), GetWithOverrideCore(WindowInitialScreen));
     }
 
     internal T GetCore<T>(ProjectSetting<T> setting)
