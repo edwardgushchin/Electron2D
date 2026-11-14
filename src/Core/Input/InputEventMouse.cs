@@ -35,6 +35,8 @@ public abstract class InputEventMouse : InputEventWithModifiers
 
     /// <summary>Gets or sets the pointer position in the current local coordinate space.</summary>
     /// <value>The source local position in pixels, retained without normalization.</value>
+    /// <remarks>Native input starts in window-client coordinates. Scene callbacks receive coordinates in the
+    /// receiving viewport, and GUI callbacks receive coordinates local to the receiving control.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Position
@@ -45,9 +47,10 @@ public abstract class InputEventMouse : InputEventWithModifiers
 
     /// <summary>Gets or sets the pointer position in the containing window or viewport coordinate space.</summary>
     /// <value>The source viewport or canvas position in pixels, preserved by <see cref="InputEvent.XformedBy"/>.</value>
-    /// <remarks>Raw host events use client coordinates. Viewport localization sets this to the localized Position;
-    /// CanvasItem.MakeInputLocal preserves that viewport position. Control GUI delivery sets its temporary copy to
-    /// the receiving canvas layer's coordinates.</remarks>
+    /// <remarks>Raw host events use client coordinates. Window and embedded viewport localization set this to the
+    /// receiving viewport's Position. A local Viewport.PushInput keeps the value supplied by the caller.
+    /// CanvasItem.MakeInputLocal preserves it. Control GUI delivery sets its temporary copy to the coordinates
+    /// of the receiving canvas.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 GlobalPosition
@@ -269,6 +272,8 @@ public sealed class InputEventMouseMotion : InputEventMouse
 
     /// <summary>Gets or sets local movement since the previous event.</summary>
     /// <value>The source content-scaled delta in pixels.</value>
+    /// <remarks>Viewport and Control delivery apply the same linear coordinate transforms as for Position.
+    /// Translation is excluded and ScreenRelative retains the source value.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Relative
@@ -289,6 +294,7 @@ public sealed class InputEventMouseMotion : InputEventMouse
 
     /// <summary>Gets or sets local pointer velocity.</summary>
     /// <value>The source content-scaled velocity in pixels per second.</value>
+    /// <remarks>Velocity changes coordinate space with Relative. ScreenVelocity retains the source value.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Velocity

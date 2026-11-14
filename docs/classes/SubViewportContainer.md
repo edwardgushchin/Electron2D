@@ -1,6 +1,6 @@
 # SubViewportContainer
 
-Last updated: 2026-10-25
+Last updated: 2026-11-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public class SubViewportContainer : Container`.
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-25
 
 Displays direct [SubViewport](SubViewport.md) textures at the local origin in sibling order. Nonstretched minimum size is the componentwise maximum of child native sizes. Stretch removes that intrinsic minimum, fills the control rectangle and owns child resolution, divided by positive StretchShrink and clamped to two pixels per axis. Manual child Size writes reject before changing native state while stretched. Visibility sets direct child update mode to Always/Disabled; attachment and visibility configuration set HandleInputLocally=false. Removed viewports retain their committed policies. Size changes notify the container's minimum/redraw; native resize is cold. Control transforms also transform the displayed image and pointer localization.
 
-Positional input forwards from GUIInput after control-local conversion, optional shrink division and the child final-transform inverse. Nonpositional input forwards before root GUI when this container has focus, otherwise at unhandled input. PropagateInputEvent runs once on the borrowed pre-shrink event; false suppresses delivery without accepting it. Callback failures aggregate after later child dispatch. Public reentrant PushInput remains rejected; only the internal direct-child forwarding path nests dispatch and restores its parent context.
+Positional input forwards from GUI delivery after control-local conversion, division by StretchShrink when stretching, and removal of the child viewport’s final transform. Each nested container repeats these steps. Pointer deltas and velocities follow the inverse bases. Mouse GlobalPosition is set to the child viewport position and then projected into the receiving canvas for GUI callbacks. Screen vectors retain their source values, and synchronous dispatch disposes temporary event copies. Nonpositional input forwards before root GUI when this container has focus, otherwise at unhandled input. PropagateInputEvent runs once on the borrowed pre-shrink event; false suppresses delivery without accepting it. Callback failures aggregate after later child dispatch. Public reentrant PushInput remains rejected; only the internal direct-child forwarding path nests dispatch and restores its parent context.
 
 Each viewport owns independent focus, hover, mouse/touch capture and tooltip state. Focusing an embedded control also focuses its containing containers for keyboard routing. Native committed text/IME finds the deepest focused embedded control. Connected viewport sections share drag payload, target, preview and result; drag travel/attempt state stays local. MouseTarget chooses this container instead of embedded controls for cursor/drop targeting, without suppressing forwarding or hover. Root/child and child/root drops convert positions between their actual viewport coordinate spaces. Cursor selection ignores this container's default cursor and warns when it is not Arrow. Missing direct viewports produce a configuration warning. Other container/Control inherited contracts remain documented on their owning pages.
 
@@ -262,3 +262,5 @@ Remarks: Called once before coordinate scaling. Overrides must not dispose the b
 ## Verification and limits
 
 [SubViewportContainerTests](../../tests/Electron2D.Tests/SubViewportContainerTests.cs) checks managed authoring, packing, nested input/focus/hover, failure recovery and cross-viewport drag. Linux Wayland GPU/hardware compatibility run eight composition phases, native cursor/click/keyboard focus pixels and stable-size rendering/mutation intervals; GPU repeats composition through HLSL/GLSL. Input copies, native allocations, other platforms, large scenes, editor/file authoring, multiview, independent native subwindows and human acceptance are not established by the rendering measurements. See [embedded viewport integration](../components/canvas-rendering.md#embedded-viewport-containers-and-gui).
+
+[ViewportMotionTests](../../tests/Electron2D.Tests/ViewportMotionTests.cs) checks mouse and touch movement through two transformed containers and root stretch. On Windows x64, SDL-queued movement draws the expected marker in both the leaf and root targets on GPU Direct3D 12 and Compatibility Direct3D 11. The fixture checks scene and target retirement after leaving the native loop.
