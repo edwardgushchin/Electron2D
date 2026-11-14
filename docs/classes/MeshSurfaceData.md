@@ -166,7 +166,7 @@ Zero infers `Vertices.Length`. A positive value must match supplied positions; w
 
 ```csharp
 using var generated = new ArrayMesh { CustomAABB = new(0, 0, 64, 64) };
-generated.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles,
+generated.AddSurfaceFromArrays(MeshPrimitiveType.Triangles,
     new MeshSurfaceData { VertexCount = 3 }, flags: Mesh.ArrayFormat.UseEmptyVertexArray);
 // Assign an authored vertex ShaderMaterial before drawing this mesh.
 ```

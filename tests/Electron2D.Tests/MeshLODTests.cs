@@ -18,7 +18,7 @@ internal static class MeshLODTests
     internal static ArrayMesh Mesh(bool morph = false)
     {
         var mesh = new ArrayMesh(); var data = Data(); if (morph) mesh.AddBlendShape("move");
-        mesh.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType.Triangles, data, morph ? [MeshMorphTests.Pose(data, new(4, 0))] : null, Levels()); return mesh;
+        mesh.AddSurfaceFromArrays(Electron2D.MeshPrimitiveType.Triangles, data, morph ? [MeshMorphTests.Pose(data, new(4, 0))] : null, Levels()); return mesh;
     }
     internal static List<CanvasVertex> Draw(Electron2D.Mesh mesh, Transform transform, MultiMesh? instances = null, float lodThreshold = 1)
     {
@@ -32,14 +32,14 @@ internal static class MeshLODTests
     private static void Authoring()
     {
         using var mesh = Mesh(); var levels = mesh.SurfaceGetLODs(0); Check(levels.Keys.SequenceEqual(new[] { 2f, 4f }), "LOD keys are ascending."); levels[2][0] = 7; Check(mesh.SurfaceGetLODs(0)[2][0] == 0, "Queries copy every index set."); Reject<ArgumentOutOfRangeException>(() => mesh.SurfaceGetLODs(-1));
-        using var target = new ArrayMesh(); var source = Levels(); target.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType.Triangles, Data(), lods: source); source[2][0] = 7; Check(target.SurfaceGetLODs(0)[2][0] == 0, "Import copies arrays.");
-        foreach (var key in new[] { 0, -1, float.NaN, float.PositiveInfinity }) Reject<ArgumentException>(() => target.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType.Triangles, Data(), lods: new Dictionary<float, int[]> { [key] = [0, 1, 2] }));
-        foreach (var order in new int[][] { [], [0, 1], Data().Indices }) Reject<ArgumentException>(() => target.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType.Triangles, Data(), lods: new Dictionary<float, int[]> { [2] = order }));
-        Reject<ArgumentOutOfRangeException>(() => target.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType.Triangles, Data(), lods: new Dictionary<float, int[]> { [2] = [0, 1, 8] })); var sequential = Data(); sequential.Indices = []; Reject<ArgumentException>(() => target.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType.Triangles, sequential, lods: Levels())); Check(target.GetSurfaceCount() == 1, "Invalid levels leave prior surfaces intact.");
+        using var target = new ArrayMesh(); var source = Levels(); target.AddSurfaceFromArrays(Electron2D.MeshPrimitiveType.Triangles, Data(), lods: source); source[2][0] = 7; Check(target.SurfaceGetLODs(0)[2][0] == 0, "Import copies arrays.");
+        foreach (var key in new[] { 0, -1, float.NaN, float.PositiveInfinity }) Reject<ArgumentException>(() => target.AddSurfaceFromArrays(Electron2D.MeshPrimitiveType.Triangles, Data(), lods: new Dictionary<float, int[]> { [key] = [0, 1, 2] }));
+        foreach (var order in new int[][] { [], [0, 1], Data().Indices }) Reject<ArgumentException>(() => target.AddSurfaceFromArrays(Electron2D.MeshPrimitiveType.Triangles, Data(), lods: new Dictionary<float, int[]> { [2] = order }));
+        Reject<ArgumentOutOfRangeException>(() => target.AddSurfaceFromArrays(Electron2D.MeshPrimitiveType.Triangles, Data(), lods: new Dictionary<float, int[]> { [2] = [0, 1, 8] })); var sequential = Data(); sequential.Indices = []; Reject<ArgumentException>(() => target.AddSurfaceFromArrays(Electron2D.MeshPrimitiveType.Triangles, sequential, lods: Levels())); Check(target.GetSurfaceCount() == 1, "Invalid levels leave prior surfaces intact.");
         for (var primitive = 0; primitive < 5; primitive++)
         {
             var data = Data(); data.Indices = primitive == 1 ? [0, 1, 2, 3] : [0, 1, 2, 3, 4, 5]; var indices = primitive switch { 1 => new[] { 0, 1 }, 3 => new[] { 0, 1, 2 }, 4 => new[] { 0, 1, 2 }, _ => new[] { 0, 1 } };
-            using var topology = new ArrayMesh(); topology.AddSurfaceFromArrays((Electron2D.Mesh.PrimitiveType)primitive, data, lods: new Dictionary<float, int[]> { [1] = indices }); Check(Draw(topology, Transform.Identity).Count > 0, "All five LOD topologies draw.");
+            using var topology = new ArrayMesh(); topology.AddSurfaceFromArrays((Electron2D.MeshPrimitiveType)primitive, data, lods: new Dictionary<float, int[]> { [1] = indices }); Check(Draw(topology, Transform.Identity).Count > 0, "All five LOD topologies draw.");
         }
         mesh.RegenNormalMaps(); Check(mesh.SurfaceGetLODs(0)[2].Length == 6, "Tangent regeneration retains levels."); using var copy = (ArrayMesh)mesh.Duplicate(); Check(copy.SurfaceGetLODs(0)[4].Length == 3, "Duplication retains independent levels.");
     }
@@ -60,7 +60,7 @@ internal static class MeshLODTests
         protected override MeshSurfaceData OnSurfaceGetArrays(int index) => Data();
         protected override int OnSurfaceGetArrayLen(int index) => 8;
         protected override int OnSurfaceGetArrayIndexLen(int index) => 12;
-        protected override PrimitiveType OnSurfaceGetPrimitiveType(int index) => PrimitiveType.Triangles;
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int index) => MeshPrimitiveType.Triangles;
         protected override ArrayFormat OnSurfaceGetFormat(int index) => ArrayFormat.Vertex | ArrayFormat.Index;
         protected override Material? OnSurfaceGetMaterial(int index) => null;
         protected override void OnSurfaceSetMaterial(int index, Material? material) { }

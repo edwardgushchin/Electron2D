@@ -118,7 +118,7 @@ public abstract class PrimitiveMesh : Mesh
         try
         {
             var supplied = OnCreateMeshArray(); ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(supplied);
-            var data = supplied.Copy(); data.Validate(PrimitiveType.Triangles);
+            var data = supplied.Copy(); data.Validate(MeshPrimitiveType.Triangles);
             if (data.Vertices.Length == 0) throw new ArgumentException("Primitive generators must supply positions.");
             if (flip)
             {
@@ -131,10 +131,10 @@ public abstract class PrimitiveMesh : Mesh
                 var scale = 1 - padding / 1024; data.UV2s = new Vector2[data.UVs.Length];
                 for (var i = 0; i < data.UV2s.Length; i++) data.UV2s[i] = data.UVs[i] * scale;
             }
-            data.Validate(PrimitiveType.Triangles); data.QuantizeSkin();
+            data.Validate(MeshPrimitiveType.Triangles); data.QuantizeSkin();
             var bounds = new Rect2(data.Vertices[0], Vector2.Zero); foreach (var vertex in data.Vertices) bounds = bounds.Expand(vertex);
             if (!bounds.IsFinite() || !bounds.End.IsFinite()) throw new ArgumentException("Primitive bounds exceed the finite coordinate range.");
-            var surface = new ArrayMesh.Surface(data, PrimitiveType.Triangles, data.SkinSlots == 8 ? ArrayFormat.Use8BoneWeights : ArrayFormat.None) { Material = material };
+            var surface = new ArrayMesh.Surface(data, MeshPrimitiveType.Triangles, data.SkinSlots == 8 ? ArrayFormat.Use8BoneWeights : ArrayFormat.None) { Material = material };
             lock (_gate) { ThrowIfDisposed(); _surface = surface; _bounds = bounds; }
         }
         finally { lock (_gate) _building = false; }
@@ -152,7 +152,7 @@ public abstract class PrimitiveMesh : Mesh
     /// <inheritdoc />
     protected sealed override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => Get(surfaceIndex).Data.Indices.Length;
     /// <inheritdoc />
-    protected sealed override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) { Get(surfaceIndex); return PrimitiveType.Triangles; }
+    protected sealed override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) { Get(surfaceIndex); return MeshPrimitiveType.Triangles; }
     /// <inheritdoc />
     protected sealed override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => Get(surfaceIndex).Format;
     /// <inheritdoc />

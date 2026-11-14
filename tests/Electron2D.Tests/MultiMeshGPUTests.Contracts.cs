@@ -6,7 +6,7 @@ internal static partial class MultiMeshGPUTests
 {
     private static void Contracts(RenderingDevice device)
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad()); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, Vector2.Right, Vector2.Down] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad()); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, Vector2.Right, Vector2.Down] });
         for (var schema = 0; schema < 4; schema++)
         {
             var colors = (schema & 1) != 0; var custom = (schema & 2) != 0; var stride = 8 + (colors ? 4 : 0) + (custom ? 4 : 0);
@@ -60,7 +60,7 @@ internal static partial class MultiMeshGPUTests
     private static void Compatibility()
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "compatibility"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var borrowed = new MultiMesh { Mesh = mesh, InstanceCount = 1 }; borrowed.SetInstanceTransform2D(0, Transform.Identity);
         using var window = new Window { Size = new(96, 64) }; var draw = new Draw(); window.AddChild(draw); var frames = 0; RID owned = default;
         window.Ready += _ =>
@@ -82,7 +82,7 @@ internal static partial class MultiMeshGPUTests
         protected override MeshSurfaceData OnSurfaceGetArrays(int index) => MeshTests.Quad(Colors.White);
         protected override int OnSurfaceGetArrayLen(int index) { Callback?.Invoke(); return 4; }
         protected override int OnSurfaceGetArrayIndexLen(int index) => 6;
-        protected override PrimitiveType OnSurfaceGetPrimitiveType(int index) => PrimitiveType.Triangles;
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int index) => MeshPrimitiveType.Triangles;
         protected override ArrayFormat OnSurfaceGetFormat(int index) => ArrayFormat.Vertex | ArrayFormat.Index;
         protected override Material? OnSurfaceGetMaterial(int index) => null;
         protected override void OnSurfaceSetMaterial(int index, Material? material) { }

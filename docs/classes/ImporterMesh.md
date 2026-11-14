@@ -36,7 +36,7 @@ The snippet requires a live `existingArrayMesh` with complete typed geometry and
 | --- | --- |
 | `public ImporterMesh()` | Creates an empty normalized-mode producer. |
 | `public System.Void AddBlendShape(System.String name)` | Adds a raw target name before surfaces exist; duplicate names retain their authored order. |
-| `public System.Void AddSurface(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Material material = null, System.String name = "", Electron2D.Mesh.ArrayFormat flags = None)` | Copies one complete raw surface without rendering quantization. |
+| `public System.Void AddSurface(Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Material material = null, System.String name = "", Electron2D.Mesh.ArrayFormat flags = None)` | Copies one complete raw surface without rendering quantization. |
 | `public System.Void Clear()` | Removes all raw surfaces, definitions and compiled cache; mode is retained. |
 | `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)` | Inherited Resource lifecycle implementation. |
 | `protected override Electron2D.Resource CreateDuplicateInstance()` | Inherited Resource lifecycle implementation. |
@@ -56,7 +56,7 @@ The snippet requires a live `existingArrayMesh` with complete typed geometry and
 | `public System.Single GetSurfaceLODSize(System.Int32 surface, System.Int32 lod)` | Gets one level's local edge-error threshold. |
 | `public Electron2D.Material GetSurfaceMaterial(System.Int32 surface)` | Gets the borrowed surface material. |
 | `public System.String GetSurfaceName(System.Int32 surface)` | Gets a stored surface name. |
-| `public Electron2D.Mesh.PrimitiveType GetSurfacePrimitiveType(System.Int32 surface)` | Gets a surface topology. |
+| `public Electron2D.MeshPrimitiveType GetSurfacePrimitiveType(System.Int32 surface)` | Gets a surface topology. |
 | `public static Electron2D.ImporterMesh MergeImporterMeshes(System.Collections.Generic.IReadOnlyList<Electron2D.ImporterMesh> importerMeshes, System.Collections.Generic.IReadOnlyList<Electron2D.Transform> relativeTransforms, System.Boolean deduplicateSurfaces = true)` | Creates transformed raw surfaces, optionally joining compatible unskinned names. |
 | `protected override System.Void OnResetState()` | Inherited Resource lifecycle implementation. |
 | `public System.Void SetSurfaceMaterial(System.Int32 surface, Electron2D.Material material)` | Sets a borrowed material and invalidates the compiled snapshot. |
@@ -81,7 +81,7 @@ param name: Non-null name; colons become underscores and compilation applies ord
 
 ### AddSurface
 
-`public System.Void AddSurface(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Material material = null, System.String name = "", Electron2D.Mesh.ArrayFormat flags = None)`
+`public System.Void AddSurface(Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null, Electron2D.Material material = null, System.String name = "", Electron2D.Mesh.ArrayFormat flags = None)`
 
 summary: Copies one complete raw surface without rendering quantization.
 
@@ -273,7 +273,7 @@ returns: Exact ordinal name, possibly empty.
 
 ### GetSurfacePrimitiveType
 
-`public Electron2D.Mesh.PrimitiveType GetSurfacePrimitiveType(System.Int32 surface)`
+`public Electron2D.MeshPrimitiveType GetSurfacePrimitiveType(System.Int32 surface)`
 
 summary: Gets a surface topology.
 

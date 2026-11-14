@@ -27,12 +27,12 @@ Normal/tangent numerical data, generation and fan arguments execute through the 
 | `public System.Void AddTriangleFan(System.ReadOnlySpan<Electron2D.Vector2> vertices, System.ReadOnlySpan<Electron2D.Vector2> uvs = default, System.ReadOnlySpan<Electron2D.Color> colors = default, System.ReadOnlySpan<Electron2D.Vector2> uv2s = default, System.ReadOnlySpan<Electron2D.Vector3> normals = default, System.ReadOnlySpan<Electron2D.Vector4> tangents = default)` | Appends sequential triangles for a fan using the current supported attributes. |
 | `public System.Void AddVertex(Electron2D.Vector2 vertex)` | Captures a finite local vertex with the current enabled attributes. |
 | `public System.Void AppendFrom(Electron2D.Mesh existing, System.Int32 surface, Electron2D.Transform transform)` | Appends copied transformed geometry while preserving existing draw order and attributes. |
-| `public System.Void Begin(Electron2D.Mesh.PrimitiveType primitive)` | Clears prior authoring and starts a surface. |
+| `public System.Void Begin(Electron2D.MeshPrimitiveType primitive)` | Clears prior authoring and starts a surface. |
 | `public System.Void Clear()` | Clears geometry, attributes and borrowed material and restores four-slot line defaults. |
 | `public Electron2D.ArrayMesh Commit(Electron2D.ArrayMesh existing = null, Electron2D.Mesh.ArrayFormat flags = None)` | Publishes one validated copied surface with its borrowed material and preserves the builder. |
 | `public Electron2D.MeshSurfaceData CommitToArrays()` | Returns independent typed arrays for the current authoring state. |
 | `public System.Void CreateFrom(Electron2D.Mesh existing, System.Int32 surface)` | Replaces geometry with a validated copied surface and its borrowed material. |
-| `public System.Void CreateFromArrays(Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.PrimitiveType primitiveType = Triangles)` | Replaces geometry with validated copied typed arrays. |
+| `public System.Void CreateFromArrays(Electron2D.MeshSurfaceData arrays, Electron2D.MeshPrimitiveType primitiveType = Triangles)` | Replaces geometry with validated copied typed arrays. |
 | `public System.Void CreateFromBlendShape(Electron2D.Mesh existing, System.Int32 surface, System.String blendShape)` | Replaces geometry with the named raw target pose and the base surface's remaining channels. |
 | `public System.Void Deindex()` | Expands current indices into ordered complete vertex records and removes the index channel. |
 | `protected override System.Void Dispose(System.Boolean disposing)` |  |
@@ -40,7 +40,7 @@ Normal/tangent numerical data, generation and fan arguments execute through the 
 | `public System.Void GenerateTangents()` | Generates tangent directions from normal/UV channels using MikkTSpace. |
 | `public Electron2D.Rect2 GetAABB()` | Gets the local rectangle enclosing every stored vertex, including unreferenced vertices. |
 | `public Electron2D.MeshCustomFormat GetCustomFormat(System.Int32 channelIndex)` | Returns the selected packed custom format. |
-| `public Electron2D.Mesh.PrimitiveType GetPrimitiveType()` | Gets the selected primitive topology, including while empty. |
+| `public Electron2D.MeshPrimitiveType GetPrimitiveType()` | Gets the selected primitive topology, including while empty. |
 | `public Electron2D.SurfaceTool.SkinWeightCount GetSkinWeightCount()` | Gets the selected influence-width mode. |
 | `public System.Void Index()` | Replaces sequential vertices with exact unique records and their original ordered indices. |
 | `public System.Void OptimizeIndicesForCache()` | Reorders indexed triangles for vertex-cache locality without changing their winding or attributes. |
@@ -130,7 +130,7 @@ System.ArgumentException: Topology, skin width, indices or transformed positions
 
 ### Begin
 
-`public System.Void Begin(Electron2D.Mesh.PrimitiveType primitive)`
+`public System.Void Begin(Electron2D.MeshPrimitiveType primitive)`
 
 summary: Clears prior authoring and starts a surface.
 
@@ -188,7 +188,7 @@ System.InvalidOperationException: Source callbacks mutate their mesh or the rece
 
 ### CreateFromArrays
 
-`public System.Void CreateFromArrays(Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.PrimitiveType primitiveType = Triangles)`
+`public System.Void CreateFromArrays(Electron2D.MeshSurfaceData arrays, Electron2D.MeshPrimitiveType primitiveType = Triangles)`
 
 summary: Replaces geometry with validated copied typed arrays.
 
@@ -270,7 +270,7 @@ returns: The layout, or Max before selection/after Clear.
 
 ### GetPrimitiveType
 
-`public Electron2D.Mesh.PrimitiveType GetPrimitiveType()`
+`public Electron2D.MeshPrimitiveType GetPrimitiveType()`
 
 summary: Gets the selected primitive topology, including while empty.
 

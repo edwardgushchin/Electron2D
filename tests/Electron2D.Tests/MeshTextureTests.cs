@@ -7,7 +7,7 @@ internal static partial class MeshTextureTests
     private static ArrayMesh Triangle()
     {
         var mesh = new ArrayMesh();
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [new(0, 0), new(16, 0), new(0, 8)], UVs = [new(0, 0), new(1, 0), new(0, 1)] }, flags: Mesh.ArrayFormat.UseDynamicUpdate);
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [new(0, 0), new(16, 0), new(0, 8)], UVs = [new(0, 0), new(1, 0), new(0, 1)] }, flags: Mesh.ArrayFormat.UseDynamicUpdate);
         return mesh;
     }
     private static ImageTexture Solid(Color color)
@@ -45,7 +45,7 @@ internal static partial class MeshTextureTests
         Reject<ArgumentException>(() => view.BaseTexture = view); Reject<ArgumentException>(() => view.BaseTexture = atlas); Reject<ArgumentException>(() => view.BaseTexture = canvas);
         Check(ReferenceEquals(view.BaseTexture, image), "Direct and mixed texture cycles preserve the source.");
         using var other = Triangle(); var before = changes; view.Mesh = other; mesh.ClearSurfaces(); Check(changes == before + 1, "Replaced mesh subscription is detached.");
-        other.ClearSurfaces(); Check(changes == before + 2, "Current mesh edits notify the view."); view.Mesh = mesh; mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [new(0, 0), new(16, 0), new(0, 8)], UVs = [new(0, 0), new(1, 0), new(0, 1)] });
+        other.ClearSurfaces(); Check(changes == before + 2, "Current mesh edits notify the view."); view.Mesh = mesh; mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [new(0, 0), new(16, 0), new(0, 8)], UVs = [new(0, 0), new(1, 0), new(0, 1)] });
         using var second = Solid(Colors.Blue); view.BaseTexture = second; before = changes;
         using (var pixels = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8)) { pixels.Fill(Colors.Green); image.Update(pixels); Check(changes == before, "Replaced image subscription is detached."); second.Update(pixels); Check(changes == before + 1, "Current image edits notify the view."); }
         view.BaseTexture = image;

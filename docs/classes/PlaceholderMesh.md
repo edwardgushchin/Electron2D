@@ -27,7 +27,7 @@ Mesh.CreatePlaceholder returns a new caller-owned placeholder with source bounds
 | `protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)` | Implements the inherited typed resource/mesh lifecycle or surface callback contract. |
 | `protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` | Implements the inherited typed resource/mesh lifecycle or surface callback contract. |
 | `protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` | Implements the inherited typed resource/mesh lifecycle or surface callback contract. |
-| `protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Implements the inherited typed resource/mesh lifecycle or surface callback contract. |
+| `protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Implements the inherited typed resource/mesh lifecycle or surface callback contract. |
 | `protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` | Implements the inherited typed resource/mesh lifecycle or surface callback contract. |
 | `protected override System.Void RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource> remap)` | Implements the inherited typed resource/mesh lifecycle or surface callback contract. |
 | `public Electron2D.Rect2 AABB { get; set; }` | Gets or sets the mesh-local visibility rectangle. |
@@ -114,7 +114,7 @@ Implements the inherited typed resource/mesh lifecycle or surface callback contr
 
 ### OnSurfaceGetPrimitiveType
 
-`protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
+`protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
 
 Implements the inherited typed resource/mesh lifecycle or surface callback contract.
 

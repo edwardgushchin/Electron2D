@@ -21,7 +21,7 @@ internal sealed partial class CanvasMesh
             for (var surface = 0; surface < _customCount; surface++)
             { var data = _custom[surface]; Append(data.Data, data.Primitive, data.Material, surface); }
         }
-        void Append(MeshSurfaceData data, Mesh.PrimitiveType primitive, Material? material, int surface)
+        void Append(MeshSurfaceData data, MeshPrimitiveType primitive, Material? material, int surface)
         {
             var count = data.Indices.Length == 0 ? data.VertexCount : data.Indices.Length;
             var vertexCount = data.VertexCount;
@@ -31,10 +31,10 @@ internal sealed partial class CanvasMesh
             while (_particleGeometry.Count <= surface) _particleGeometry.Add(new());
             var geometry = _particleGeometry[surface]; geometry.Set(data, Mesh.ChangeRevision, vertexCount);
             var first = vertices.Count;
-            if (primitive == Mesh.PrimitiveType.TriangleStrip)
+            if (primitive == MeshPrimitiveType.TriangleStrip)
             {
                 for (var i = 0; i + 2 < count; i++) { Add(i + i % 2); Add(i + 1 - i % 2); Add(i + 2); }
-                primitive = Mesh.PrimitiveType.Triangles;
+                primitive = MeshPrimitiveType.Triangles;
             }
             else for (var i = 0; i < count; i++) Add(i);
             if (vertices.Count == first) return;

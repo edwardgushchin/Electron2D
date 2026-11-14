@@ -23,7 +23,7 @@ Internal retained vertex/index storage owned by CanvasItem. It is not a public r
 | `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive, int[][]? contours = null)` | Copies validated attributes; triangulates a contour through shared Geometry logic or creates fixed triangle/quad indices. |
 | `void SetTriangles(ReadOnlySpan<CanvasVertex> triangles, ReadOnlySpan<int> indices = default)` | Copies validated internal triangle vertices and optional indices; indexed vertices retain their source IDs without contour triangulation. |
 | `void RemapUV(Rect2 mapping)` | Applies normalized atlas origin/scale to stored UVs, rejecting nonfinite output. |
-| `(int Count, Mesh.PrimitiveType Primitive) Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)` | Appends transformed/modulated geometry and returns the native point/line prefix count/topology; filled triangles return the default prefix. |
+| `(int Count, MeshPrimitiveType Primitive) Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)` | Appends transformed/modulated geometry and returns the native point/line prefix count/topology; filled triangles return the default prefix. |
 
 ## Runtime behavior
 

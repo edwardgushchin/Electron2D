@@ -763,12 +763,12 @@
     {
       "electron2d": "method:Electron2D.Mathf.Pow(System.Double,System.Double)",
       "godot": "@GlobalScope::method:pow(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Double-precision floating power under ADR 0034; exact numeric behavior remains for semantic audit."
     },
     {
       "electron2d": "method:Electron2D.Mathf.Pow(System.Single,System.Single)",
       "godot": "@GlobalScope::method:pow(float:,float:)",
-      "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
+      "reason": "Single-precision floating power under ADR 0034; exact numeric behavior remains for semantic audit."
     },
     {
       "electron2d": "method:Electron2D.Mathf.RadToDeg(System.Double)",

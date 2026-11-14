@@ -5,20 +5,6 @@ namespace Electron2D;
 /// surface callbacks; geometry, naming and storage changes publish Resource.Changed after committing.</remarks>
 public abstract partial class Mesh : Resource
 {
-    /// <summary>Defines the ordering of a surface's indexed or sequential vertices.</summary>
-    public enum PrimitiveType
-    {
-        /// <summary>Independent points, one framebuffer pixel unless an authored vertex output changes their diameter.</summary>
-        Points = 0,
-        /// <summary>Independent pairs of one-framebuffer-pixel line vertices.</summary>
-        Lines = 1,
-        /// <summary>Connected one-framebuffer-pixel line segments.</summary>
-        LineStrip = 2,
-        /// <summary>Independent triangles.</summary>
-        Triangles = 3,
-        /// <summary>Connected triangles with alternating winding.</summary>
-        TriangleStrip = 4
-    }
     /// <summary>Reports the channels and policy flags present in a mesh surface.</summary>
     [Flags]
     public enum ArrayFormat : ulong
@@ -131,10 +117,10 @@ public abstract partial class Mesh : Resource
         for (var surface = 0; surface < count; surface++)
         {
             var primitive = SurfaceGetPrimitiveType(surface);
-            if (primitive is not (PrimitiveType.Triangles or PrimitiveType.TriangleStrip) || (SurfaceGetFormat(surface) & ArrayFormat.UseEmptyVertexArray) != 0) continue;
+            if (primitive is not (MeshPrimitiveType.Triangles or MeshPrimitiveType.TriangleStrip) || (SurfaceGetFormat(surface) & ArrayFormat.UseEmptyVertexArray) != 0) continue;
             var data = SurfaceGetArrays(surface); data.Validate(primitive); if (data.IsProcedural) throw new ArgumentException("Face geometry requires positions or an explicit empty-vertex flag.");
             var length = data.Indices.Length == 0 ? data.Vertices.Length : data.Indices.Length;
-            if (primitive == PrimitiveType.Triangles)
+            if (primitive == MeshPrimitiveType.Triangles)
                 for (var i = 0; i < length; i++) faces.Add(data.Vertices[data.Indices.Length == 0 ? i : data.Indices[i]]);
             else
                 for (var i = 0; i + 2 < length; i++)
@@ -179,11 +165,11 @@ public abstract partial class Mesh : Resource
     /// <summary>Gets one surface's primitive topology.</summary>
     /// <param name="surfaceIndex">Existing zero-based surface index.</param>
     /// <returns>The primitive ordering policy.</returns>
-    public PrimitiveType SurfaceGetPrimitiveType(int surfaceIndex) { ThrowIfDisposed(); return OnSurfaceGetPrimitiveType(surfaceIndex); }
+    public MeshPrimitiveType SurfaceGetPrimitiveType(int surfaceIndex) { ThrowIfDisposed(); return OnSurfaceGetPrimitiveType(surfaceIndex); }
     /// <summary>Supplies the primitive ordering policy.</summary>
     /// <param name="surfaceIndex">Existing zero-based index.</param>
     /// <returns>The topology.</returns>
-    protected abstract PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex);
+    protected abstract MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex);
     /// <summary>Gets one surface's typed channel and policy mask.</summary>
     /// <param name="surfaceIndex">Existing zero-based surface index.</param>
     /// <returns>The format mask.</returns>

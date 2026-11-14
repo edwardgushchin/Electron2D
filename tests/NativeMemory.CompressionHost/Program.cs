@@ -118,8 +118,8 @@ internal static unsafe class Program
                 foreach (var index in new[] { a, a + 1, a + cells + 2, a, a + cells + 2, a + cells + 1 }) data.Indices[at++] = index;
             }
         using var importer = new ImporterMesh();
-        importer.AddSurface(Electron2D.Mesh.PrimitiveType.Triangles, data);
-        importer.AddSurface(Electron2D.Mesh.PrimitiveType.Triangles, data);
+        importer.AddSurface(Electron2D.MeshPrimitiveType.Triangles, data);
+        importer.AddSurface(Electron2D.MeshPrimitiveType.Triangles, data);
         importer.GenerateLODs(60);
         Check(importer.GetSurfaceLODCount(0) > 0 && Read().NativePeak > baseline.NativePeak && Read().NativeCurrent == baseline.NativeCurrent, "Public LOD generation lost native ownership or output.");
         if (faultLibrary == 0) return;
