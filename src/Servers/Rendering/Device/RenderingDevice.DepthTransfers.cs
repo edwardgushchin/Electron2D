@@ -69,6 +69,16 @@ public sealed unsafe partial class RenderingDevice
         for (var mip = 0; mip < info.Mips; mip++)
         {
             var target = destination.Slice((int)info.PackedOffsets[mip], (int)info.Sizes[mip]);
+            if (info.DownloadOffsets is { } downloads)
+            {
+                var width = Math.Max(1, info.Width >> mip);
+                var pitch = (int)BC3DownloadPitch(width);
+                var rowBytes = (int)BC3Blocks(width) * 16;
+                var start = pointer + (nint)downloads[mip];
+                for (var row = 0; row < target.Length / rowBytes; row++)
+                    new ReadOnlySpan<byte>((void*)(start + row * pitch), rowBytes).CopyTo(target.Slice(row * rowBytes, rowBytes));
+                continue;
+            }
             if (!DepthFormat(info.Format)) { new ReadOnlySpan<byte>((void*)(pointer + (nint)info.Offsets[mip]), target.Length).CopyTo(target); continue; }
             var stride = (int)DepthPackedBytes(info.Format); var bytes = (int)DepthBytes(info.Format); var pixels = target.Length / stride;
             var source = new ReadOnlySpan<byte>((void*)(pointer + (nint)info.Offsets[mip]), pixels * bytes);
@@ -83,12 +93,23 @@ public sealed unsafe partial class RenderingDevice
             }
         }
     }
+    private static uint BC3Blocks(uint texels) => (texels + 3) / 4;
+    private static uint BC3DownloadPitch(uint width) => (BC3Blocks(width) * 16 + 255) & ~255u;
+
     private void TransferTextureMip(Entry entry, uint layer, int mip, nint transfer, bool upload, nint pass)
     {
         var info = entry.Texture!; var region = Region(entry, layer, mip);
         if (!DepthFormat(info.Format))
         {
             var buffer = new SDL.GPUTextureTransferInfo { TransferBuffer = transfer, Offset = info.Offsets[mip] };
+            if (!upload && info.DownloadOffsets is { } downloads)
+            {
+                // SDL's D3D12 download realignment copies texel rows. Supply a native footprint directly.
+                buffer.Offset = downloads[mip];
+                buffer.PixelsPerRow = BC3DownloadPitch(region.W) / 16 * 4;
+                region.W = BC3Blocks(region.W) * 4;
+                region.H = BC3Blocks(region.H) * 4;
+            }
             if (upload) SDL.UploadToGPUTexture(pass, buffer, region, false); else SDL.DownloadFromGPUTexture(pass, region, buffer);
             return;
         }

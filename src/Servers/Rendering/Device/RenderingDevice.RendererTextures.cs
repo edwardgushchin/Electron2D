@@ -40,10 +40,10 @@ public sealed unsafe partial class RenderingDevice
         };
         var usage = pixels?.DeviceUsage ?? TextureUsageBits.Sampling | TextureUsageBits.ColorAttachment | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CanUpdate;
         if (target is not null && TextureIsFormatSupportedForUsage(format, usage | TextureUsageBits.Storage)) usage |= TextureUsageBits.Storage;
-        var native = NativeFormat(format); var offsets = new uint[mips]; var packed = new uint[mips]; var sizes = new uint[mips]; uint total = 0, transferSize = 0; var alignment = Math.Max(4u, SDL.GPUTextureFormatTexelBlockSize(native));
-        for (var mip = 0; mip < mips; mip++) { packed[mip] = total; offsets[mip] = checked((transferSize + alignment - 1) / alignment * alignment); sizes[mip] = TextureBytes(native, Math.Max(1, width >> mip), Math.Max(1, height >> mip)); total = checked(total + sizes[mip]); transferSize = checked(offsets[mip] + sizes[mip]); }
+        var info = CaptureTextureInfo(format, layers > 1 || source is TextureLayered ? TextureType.TextureArray : TextureType.Texture,
+            width, height, layers, mips, usage, [format], TextureSamples.Samples1, false, 0, DataFormat.Max);
         var borrow = target is not null ? new RendererTextureBorrow((ViewportTexture)source, target) : new RendererTextureBorrow(source, pixels!);
-        var entry = new Entry { Kind = Kind.Texture, Borrowed = borrow, Size = total, Texture = new(format, layers > 1 || source is TextureLayered ? TextureType.TextureArray : TextureType.Texture, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, [format]) };
+        var entry = new Entry { Kind = Kind.Texture, Borrowed = borrow, Size = info.Total, Texture = info };
         try { PrepareRendererTexture(entry); var rid = Add(entry); _rendererTextures[source] = rid; return rid; }
         catch { borrow.Dispose(); throw; }
     }

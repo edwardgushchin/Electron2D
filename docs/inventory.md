@@ -20,6 +20,8 @@ RenderingServer delegates [owned shader mode selection](components/shader-materi
 
 Existing RenderingDevice, ShaderCompiler and copied blend resources own the complete [native blend factor family](components/blend-factors.md); six enum values complete the public selector without adding a production type.
 
+Existing RenderingDevice texture transfers also own [Direct3D 12 BC3 readback](components/local-compute.md#device-images-and-samplers) for owned and renderer-borrowed textures.
+
 Existing GPUPhysicsBodyStore now [shares intermediate solver and spatial completion](components/gpu-contact-solver.md#shared-solver-and-spatial-completion-2026-11-06). The continuation is internal state of the existing type; no production type or public declaration is added.
 
 Existing directory/xattr, OS process/MIDI/trash and DBus owners now share [UTF8 input ownership](coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29). The GIO delegate borrows a scoped raw pointer; generated xattr calls pin real data arrays/spans. No new production type or public declaration is added.

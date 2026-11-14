@@ -10,6 +10,8 @@ Source bytes and conservative expanded RGBA-float codec pixels are each limited 
 
 TexturePixels preserves original compressed source snapshots and prepares decoded pixels for CPU opacity and Compatibility. GPUTexture selects native BC storage through actual device capability queries, retaining compressed transfer/VRAM storage and full mip/layer offsets; unsupported native BC roles use decoded upload. RA-as-RG uses decoded upload to preserve its semantic channels. RenderingDevice exports report the actual native format and lease the existing allocation. ImageTexture/TextureArray Update and ordinary source lifetime rules are unchanged.
 
+[Device readback](local-compute.md#device-images-and-samplers) on Direct3D 12 preserves BC3 blocks from both ordinary textures and array layers across the full mip chain, including partial edge blocks.
+
 Compatibility draws BC1–BC5/BC7 from prepared RGBA8. BC6 requires an HDR-capable Compatibility driver; the current Linux driver rejects it and releases the host. GPU supports both BC6 roles on the exercised device. [Unsigned image sampling](integer-textures.md) now executes through prepared RGBA16 integer storage. [ETC/EAC/ASTC decoding](image-block-decoding.md) now supplies shared prepared texture pixels. Foreign platforms and native allocation acceptance are unverified.
 
 ## Private source dependency

@@ -164,7 +164,7 @@ public sealed unsafe partial class RenderingDevice
         }
         catch { entry.InputShadow?.Dispose(); entry.SecondTextureView?.Dispose(); entry.Handle?.Dispose(); throw; }
     }
-    private static TextureInfo CaptureTextureInfo(DataFormat format, TextureType type, uint width, uint height, uint layers, uint mips, TextureUsageBits usage, DataFormat[] shareable, TextureSamples samples, bool resolve, uint swizzle, DataFormat stored)
+    private TextureInfo CaptureTextureInfo(DataFormat format, TextureType type, uint width, uint height, uint layers, uint mips, TextureUsageBits usage, DataFormat[] shareable, TextureSamples samples, bool resolve, uint swizzle, DataFormat stored)
     {
         if (samples == TextureSamples.Samples1 && DepthFormat(format)) return CaptureDepthInfo(format, type, width, height, layers, mips, usage, shareable, swizzle, stored) with { Resolve = resolve };
         if (samples != TextureSamples.Samples1) return new(format, type, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, resolve, swizzle, stored);
@@ -177,7 +177,20 @@ public sealed unsafe partial class RenderingDevice
             total += sizes[mip]; transferSize = offsets[mip] + sizes[mip];
         }
         if (total == 0 || total > int.MaxValue || transferSize > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(format));
-        return new(format, type, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, shareable, samples, resolve, swizzle, stored);
+        var info = new TextureInfo(format, type, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, shareable, samples, resolve, swizzle, stored);
+        if (format is not (DataFormat.BC3UNORMBLOCK or DataFormat.BC3SRGBBLOCK) ||
+            (usage & (TextureUsageBits.CPURead | TextureUsageBits.CanCopyFrom)) == 0 || TextureDriver != "direct3d12") return info;
+
+        var downloads = new uint[mips];
+        ulong downloadSize = 0;
+        for (var mip = 0; mip < mips; mip++)
+        {
+            downloads[mip] = (uint)((downloadSize + 511) & ~511ul);
+            var rows = BC3Blocks(Math.Max(1, height >> mip));
+            downloadSize = downloads[mip] + (ulong)BC3DownloadPitch(Math.Max(1, width >> mip)) * rows;
+            if (downloadSize > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(format), "The aligned BC3 readback exceeds managed transfer capacity.");
+        }
+        return info with { DownloadOffsets = downloads, DownloadSize = (uint)downloadSize };
     }
     // Storage-only multisample and input-only depth images retain private targets for zero initialization.
     private static SDL.GPUTextureCreateInfo NativeTextureInfo(TextureInfo info) => new()
