@@ -67,9 +67,11 @@ internal static partial class ImageBlockTests
     {
         using var raw = new Image(); raw.LoadKTXFromBuffer(ImageKTXTests.KTX1(source));
         Check(raw.PixelFormat == source.PixelFormat && raw.GetData().AsSpan().SequenceEqual(source.GetData()), "KTX keeps identity-oriented blocks.");
-        using var flipped = (Image)expected.Duplicate(); flipped.FlipX(); flipped.FlipY();
+        var flipped = ImageKTXTests.ReflectStoredLevels(expected, flipX: true, flipY: true);
         using var decoded = new Image(); decoded.LoadKTXFromBuffer(ImageKTXTests.KTX1(source, "KTXorientation", "S=l,T=u"));
-        Check(decoded.GetData().AsSpan().SequenceEqual(flipped.GetData()), "KTX decodes and flips all block mip levels.");
+        Check(decoded.Size == expected.Size && decoded.PixelFormat == expected.PixelFormat &&
+              decoded.MIPMapCount == expected.MIPMapCount && decoded.GetData().AsSpan().SequenceEqual(flipped),
+            "KTX decodes and flips all block mip levels: " + source.PixelFormat);
         using var swizzled = new Image(); swizzled.LoadKTXFromBuffer(ImageKTXTests.KTX1(source, "KTXswizzle", "bg01"));
         Check(swizzled.GetPixel(0, 0) == new Color(expected.GetPixel(0, 0).B, expected.GetPixel(0, 0).G, 0, 1), "KTX block channel swizzle.");
     }

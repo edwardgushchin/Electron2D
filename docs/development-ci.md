@@ -82,6 +82,38 @@ ordinary relevant profile. Retain untraced execution alongside diagnostic
 profilers; do not substitute relaxed allocation budgets or compiler-only shader
 checks for the native contract.
 
+### Windows checkout line endings
+
+Git attributes keep shell entry points, shader bootstrap inputs and coverage
+snapshots in LF form even with `core.autocrlf=true`. Existing trees also accept
+CRLF in the host-tool recipe inputs and extracted-source stamp. Only CRLF pairs
+are normalized; content edits still invalidate the tool recipe, missing tools
+still trigger preparation, and downloaded archives retain their SHA-256 check.
+Changing the bootstrap code itself changes the recipe and requires a matching
+cache or one tool rebuild. Copying a cache must preserve its original receipt.
+
+Run the ordinary Release build and `tools/coverage/check.sh` from Git Bash with
+Python 3.12 or later available as `python3`. The snapshot comparison ignores only
+CRLF versus LF; whitespace, missing final newlines, damaged bytes and API changes
+still fail. The coverage command runs the checkout regression automatically:
+
+```sh
+python3 -B tools/coverage/test_line_endings.py
+dotnet build Electron2D.csproj -c Release
+tools/coverage/check.sh
+```
+
+For a fresh local reproduction, clone the candidate revision with checkout
+conversion enabled, then run those same commands. The first build needs either
+the matching host-tool cache at `tools/shaders/obj/toolchain/<host>/` or the native
+bootstrap prerequisites in the [shader guide](../tools/shaders/README.md#build-and-publish).
+
+```sh
+git -c core.autocrlf=true clone --no-local <repository> windows-checkout
+cd windows-checkout
+git config core.autocrlf true
+```
+
 ## Complete qualification
 
 The reusable native workflow produces the final managed package alongside all
