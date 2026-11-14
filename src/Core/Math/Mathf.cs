@@ -779,10 +779,10 @@ public static class Mathf
             : remainder;
     }
 
-    /// <summary>Returns a canonical single-precision remainder with the divisor's sign.</summary>
+    /// <summary>Returns a single-precision remainder and adjusts a nonzero remainder to the divisor's sign.</summary>
     /// <param name="value">The dividend.</param>
     /// <param name="divisor">The divisor.</param>
-    /// <returns>A remainder in the divisor's direction; a zero divisor produces NaN.</returns>
+    /// <returns>The adjusted remainder. An exact zero retains the dividend's sign. A zero divisor produces NaN.</returns>
     public static float PosMod(float value, float divisor)
     {
         var remainder = value % divisor;
@@ -791,10 +791,10 @@ public static class Mathf
             : remainder;
     }
 
-    /// <summary>Returns a canonical double-precision remainder with the divisor's sign.</summary>
+    /// <summary>Returns a double-precision remainder and adjusts a nonzero remainder to the divisor's sign.</summary>
     /// <param name="value">The dividend.</param>
     /// <param name="divisor">The divisor.</param>
-    /// <returns>A remainder in the divisor's direction; a zero divisor produces NaN.</returns>
+    /// <returns>The adjusted remainder. An exact zero retains the dividend's sign. A zero divisor produces NaN.</returns>
     public static double PosMod(double value, double divisor)
     {
         var remainder = value % divisor;

@@ -49,7 +49,7 @@ Implemented and verified. The complete audited 4.7.2 stable typed scalar surface
 
 The Release runner's scalar profile executes the same VerifyMathF and geometry checks as the default runner. It checks the 127 overloads and seven constants, independent interpolation polynomials and timed knots, integer boundaries, non-finite inputs, signed zero, rounding and strict epsilon. The warmed workload compares results and counts current-thread managed allocations across four concurrent threads.
 
-The Windows x64 .NET 10 scalar audit compares all overloads and constants with the pinned typed C# implementation. The [global coverage table](../coverage/classes/@GlobalScope.md) records each typed mapping, including float/integer spellings that share an overload. DecimalCount reads decimal scale and SinCos returns a value tuple. Both are managed conveniences. Variadic dynamic extrema and mixed scalar-to-integral snapping are outside the accepted typed family.
+The Windows x64 .NET 10 scalar audit compares all overloads and constants with the pinned typed C# implementation. The Release profile also checks the C# floating remainder operator for signed zero, non-finite operands, zero divisors, and extreme finite values. The [global coverage table](../coverage/classes/@GlobalScope.md) records each typed mapping, including float/integer spellings that share an overload. DecimalCount reads decimal scale and SinCos returns a value tuple. Both are managed conveniences. Variadic dynamic extrema and mixed scalar-to-integral snapping are outside the accepted typed family.
 
 ## Decisions
 

@@ -3425,6 +3425,36 @@ static void VerifyMathF()
     Expect<OverflowException>(() => _ = Mathf.Wrap(int.MinValue, 0, -1),
         "Integer wrapping must expose the extreme managed remainder overflow.");
 
+    // The floating remainder operator supplies the language-level fmod operation.
+    foreach (var sign in new[] { 1, -1 })
+    {
+        var single = sign * 5.5f;
+        var wide = sign * 5.5d;
+        var divisor = -sign * 2;
+        var zeroBits = sign < 0 ? int.MinValue : 0;
+        var wideZeroBits = sign < 0 ? long.MinValue : 0L;
+        Require(single % divisor == sign * 1.5f &&
+                BitConverter.SingleToInt32Bits((sign * 6f) % divisor) == zeroBits &&
+                BitConverter.SingleToInt32Bits((sign * 0f) % divisor) == zeroBits &&
+                (sign * float.MaxValue) % (2f * float.Epsilon) == 0f &&
+                (sign * float.Epsilon) % divisor == sign * float.Epsilon &&
+                single % (sign * float.PositiveInfinity) == single &&
+                float.IsNaN((sign * float.PositiveInfinity) % divisor) &&
+                float.IsNaN(single % (sign * 0f)) &&
+                float.IsNaN(float.NaN % divisor) && float.IsNaN(single % float.NaN),
+            "Single remainder must preserve the dividend's sign and follow the floating domain limits.");
+        Require(wide % divisor == sign * 1.5d &&
+                BitConverter.DoubleToInt64Bits((sign * 6d) % divisor) == wideZeroBits &&
+                BitConverter.DoubleToInt64Bits((sign * 0d) % divisor) == wideZeroBits &&
+                (sign * double.MaxValue) % (2d * double.Epsilon) == 0d &&
+                (sign * double.Epsilon) % divisor == sign * double.Epsilon &&
+                wide % (sign * double.PositiveInfinity) == wide &&
+                double.IsNaN((sign * double.PositiveInfinity) % divisor) &&
+                double.IsNaN(wide % (sign * 0d)) &&
+                double.IsNaN(double.NaN % divisor) && double.IsNaN(wide % double.NaN),
+            "Double remainder must preserve the dividend's sign and follow the floating domain limits.");
+    }
+
     Require(Mathf.Inf == float.PositiveInfinity &&
             BitConverter.SingleToInt32Bits(Mathf.Round(-0.5f)) == int.MinValue &&
             BitConverter.DoubleToInt64Bits(Mathf.Round(-0.5d)) == long.MinValue &&

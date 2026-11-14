@@ -3118,6 +3118,13 @@
     },
     {
       "state": "Implemented",
+      "reason": "ADR 0034 projects the pinned std::fmod operation to the C# floating remainder operator. A finite result carries the dividend's sign, including signed zero. Zero divisors, infinite dividends and NaN operands produce NaN. A finite dividend modulo infinity returns the dividend. See [scalar verification](../../components/scalar-math.md#verification).",
+      "godot": [
+        "@GlobalScope::method:fmod(float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
       "reason": "Adjusts a nonzero remainder to the divisor's sign. Exact negative multiples preserve negative zero. A zero divisor yields NaN. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
       "godot": [
         "@GlobalScope::method:fposmod(float:,float:)"

@@ -18,7 +18,7 @@ Provides scalar constants and common mathematical operations for engine code and
 
 `Mathf` is the engine's stateless scalar-math surface. It centralizes single- and double-precision transcendental functions, angle conversion and shortest-path arithmetic, interpolation, approximation, rounding, wrapping, audio-scale conversion, and integer helpers. It owns no mutable state, resource, handle, callback, or lifecycle.
 
-Scalar overloads select their numeric types at compile time. Use C# operators for ordinary arithmetic and remainder. `Pow` evaluates floating-point powers, and `PosMod` computes modulus with the sign of its divisor. Geometry and color overloads are documented on their declaring types. See [ADR 0034](../decisions/core-math.md#adr-0034).
+Scalar overloads select their numeric types at compile time. Use the C# `%` operator for ordinary remainder. Its floating-point result carries the dividend's sign, including an exact zero. `Pow` evaluates floating-point powers. `PosMod` adjusts a nonzero remainder to the divisor's sign and preserves the sign of an exact floating-point zero. Geometry and color overloads are documented on their declaring types. See [ADR 0034](../decisions/core-math.md#adr-0034).
 
 Single precision is the primary engine scalar contract. Double overloads exist where the audited typed API provides them. `Pi`, `Tau`, `E`, `Sqrt2`, `Inf`, `NaN`, and `Epsilon` are single-precision constants; `Epsilon` is exactly `1e-6f`. Double approximate comparisons use an internal `1e-14` threshold.
 
@@ -132,8 +132,8 @@ float value = Mathf.Lerp(0f, 10f, 0.25f);
 | [`public static double MoveToward(double from, double to, double delta)`](#m-electron2d-mathf-movetoward-system-double-system-double-system-double) | Moves a double-precision value toward a destination by a maximum delta. |
 | [`public static int NearestPo2(int value)`](#m-electron2d-mathf-nearestpo2-system-int32) | Returns the smallest representable power of two not less than a positive integer. |
 | [`public static int PosMod(int value, int divisor)`](#m-electron2d-mathf-posmod-system-int32-system-int32) | Returns a canonical integer remainder with the divisor's sign. |
-| [`public static float PosMod(float value, float divisor)`](#m-electron2d-mathf-posmod-system-single-system-single) | Returns a canonical single-precision remainder with the divisor's sign. |
-| [`public static double PosMod(double value, double divisor)`](#m-electron2d-mathf-posmod-system-double-system-double) | Returns a canonical double-precision remainder with the divisor's sign. |
+| [`public static float PosMod(float value, float divisor)`](#m-electron2d-mathf-posmod-system-single-system-single) | Returns a single-precision remainder and adjusts a nonzero remainder to the divisor's sign. |
+| [`public static double PosMod(double value, double divisor)`](#m-electron2d-mathf-posmod-system-double-system-double) | Returns a double-precision remainder and adjusts a nonzero remainder to the divisor's sign. |
 | [`public static float Pow(float value, float power)`](#m-electron2d-mathf-pow-system-single-system-single) | Raises a value to a power. |
 | [`public static double Pow(double value, double power)`](#m-electron2d-mathf-pow-system-double-system-double) | Raises a double-precision value to a power. |
 | [`public static float RadToDeg(float radians)`](#m-electron2d-mathf-radtodeg-system-single) | Converts radians to degrees. |
@@ -1309,26 +1309,26 @@ Returns a canonical integer remainder with the divisor's sign.
 <a id="m-electron2d-mathf-posmod-system-single-system-single"></a>
 ### `public static float PosMod(float value, float divisor)`
 
-Returns a canonical single-precision remainder with the divisor's sign.
+Returns a single-precision remainder and adjusts a nonzero remainder to the divisor's sign.
 
 **Parameters**
 
 - `value`: The dividend.
 - `divisor`: The divisor.
 
-**Returns:** A remainder in the divisor's direction; a zero divisor produces NaN.
+**Returns:** The adjusted remainder. An exact zero retains the dividend's sign. A zero divisor produces NaN.
 
 <a id="m-electron2d-mathf-posmod-system-double-system-double"></a>
 ### `public static double PosMod(double value, double divisor)`
 
-Returns a canonical double-precision remainder with the divisor's sign.
+Returns a double-precision remainder and adjusts a nonzero remainder to the divisor's sign.
 
 **Parameters**
 
 - `value`: The dividend.
 - `divisor`: The divisor.
 
-**Returns:** A remainder in the divisor's direction; a zero divisor produces NaN.
+**Returns:** The adjusted remainder. An exact zero retains the dividend's sign. A zero divisor produces NaN.
 
 <a id="m-electron2d-mathf-pow-system-single-system-single"></a>
 ### `public static float Pow(float value, float power)`
