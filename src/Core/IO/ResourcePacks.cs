@@ -30,6 +30,7 @@ internal sealed class ResourcePacks
 
     private readonly object _gate = new();
     private Dictionary<string, Entry> _entries = new(StringComparer.Ordinal);
+    private HashSet<string> _explicitDirectories = new(StringComparer.Ordinal);
     private HashSet<string> _directories = new(StringComparer.Ordinal);
     internal static ResourcePacks Runtime { get; } = new();
 
@@ -41,7 +42,8 @@ internal sealed class ResourcePacks
         try
         {
             using var stream = File.OpenRead(absolute);
-            var records = Read(stream, absolute, offset, key.ToArray());
+            var explicitDirectories = new HashSet<string>(StringComparer.Ordinal);
+            var records = Read(stream, absolute, offset, key.ToArray(), explicitDirectories);
             lock (_gate)
             {
                 var next = new Dictionary<string, Entry>(_entries, StringComparer.Ordinal);
@@ -50,8 +52,11 @@ internal sealed class ResourcePacks
                     if (entry is null) next.Remove(name);
                     else if (replace || !next.ContainsKey(name)) next[name] = entry;
                 }
-                var directories = new HashSet<string>(StringComparer.Ordinal) { "" };
-                foreach (var name in next.Keys)
+                explicitDirectories.UnionWith(_explicitDirectories);
+                var directories = new HashSet<string>(explicitDirectories, StringComparer.Ordinal) { "" };
+                if (next.Keys.Any(directories.Contains))
+                    throw new InvalidDataException("A pack file collides with a directory.");
+                foreach (var name in next.Keys.Concat(explicitDirectories))
                 {
                     var slash = name.IndexOf('/');
                     while (slash >= 0)
@@ -61,7 +66,9 @@ internal sealed class ResourcePacks
                         directories.Add(parent); slash = name.IndexOf('/', slash + 1);
                     }
                 }
-                _entries = next; _directories = directories;
+                _entries = next;
+                _explicitDirectories = explicitDirectories;
+                _directories = directories;
             }
             return true;
         }
@@ -69,7 +76,7 @@ internal sealed class ResourcePacks
         { return false; }
     }
 
-    private static List<(string Name, Entry? Entry)> Read(FileStream stream, string pack, long offset, byte[] key)
+    private static List<(string Name, Entry? Entry)> Read(FileStream stream, string pack, long offset, byte[] key, HashSet<string> explicitDirectories)
     {
         using var reader = new BinaryReader(stream, PCKFormat.UTF8, leaveOpen: true);
         if (offset > stream.Length - 4) throw new InvalidDataException("Missing PCK header.");
@@ -86,7 +93,7 @@ internal sealed class ResourcePacks
                 stream.Position = offset;
                 if (reader.ReadUInt32() != PCKFormat.Magic) throw new InvalidDataException("Missing appended PCK header.");
             }
-            else return ReadZIP(stream, pack);
+            else return ReadZIP(stream, pack, explicitDirectories);
         }
         var version = reader.ReadUInt32();
         if (version is < 2 or > 4) throw new InvalidDataException("Unsupported PCK version.");
@@ -134,7 +141,7 @@ internal sealed class ResourcePacks
         return records;
     }
 
-    private static List<(string, Entry?)> ReadZIP(Stream stream, string pack)
+    private static List<(string, Entry?)> ReadZIP(Stream stream, string pack, HashSet<string> explicitDirectories)
     {
         var directory = ZIPDirectory.Read(stream);
         if (directory.Length > PCKFormat.DirectoryLimit || directory.Count > PCKFormat.DirectoryLimit / 46) throw new InvalidDataException("ZIP directory exceeds its size budget.");
@@ -148,8 +155,19 @@ internal sealed class ResourcePacks
             var entry = archive.Entries[i];
             size += 44 + PCKFormat.UTF8.GetByteCount(entry.FullName);
             if (size > PCKFormat.DirectoryLimit) throw new InvalidDataException("ZIP directory exceeds its size budget.");
-            if (entry.FullName.EndsWith('/')) continue;
+            if (entry.FullName.EndsWith('/'))
+            {
+                explicitDirectories.Add(PCKFormat.Normalize(entry.FullName, directory: true));
+                continue;
+            }
             records.Add((PCKFormat.Normalize(entry.FullName), new(pack, 0, entry.Length, null, i)));
+        }
+
+        // ZIP writers can emit parent records for files. Those directories follow the lifetime of their file entries.
+        foreach (var (name, _) in records)
+        {
+            for (var slash = name.IndexOf('/'); slash >= 0; slash = name.IndexOf('/', slash + 1))
+                explicitDirectories.Remove(name[..slash]);
         }
         return records;
     }
@@ -181,36 +199,66 @@ internal sealed class ResourcePacks
         var name = Name(path); lock (_gate) return name is not null && _directories.Contains(name);
     }
 
-    internal (string Name, bool Directory)[] List(string path)
+    // DirAccess provides a normalized resource path relative to the root it captured.
+    internal (string Name, bool Directory)[]? GetDirectoryEntries(string path, bool includeEntries)
     {
-        var name = Name(path); if (name is null) return [];
-        var prefix = name.Length == 0 ? "" : name + "/";
+        var name = PCKFormat.Normalize(path, directory: true);
         lock (_gate)
         {
-            var result = new Dictionary<string, bool>(StringComparer.Ordinal);
+            if (_entries.ContainsKey(name) || HasFileAncestorLocked(name))
+                throw new DirectoryNotFoundException($"A mounted file blocks directory '{path}'.");
+            if (!_directories.Contains(name))
+                return null;
+            if (!includeEntries)
+                return [];
+
+            var prefix = name.Length == 0 ? "" : name + "/";
+            var result = new List<(string Name, bool Directory)>();
+            foreach (var directory in _directories)
+            {
+                if (directory.Length > prefix.Length && directory.StartsWith(prefix, StringComparison.Ordinal) &&
+                    directory.AsSpan(prefix.Length).IndexOf('/') < 0)
+                    result.Add((directory[prefix.Length..], true));
+            }
             foreach (var file in _entries.Keys)
             {
-                if (!file.StartsWith(prefix, StringComparison.Ordinal)) continue;
-                var relative = file[prefix.Length..]; var slash = relative.IndexOf('/');
-                result[slash < 0 ? relative : relative[..slash]] = slash >= 0;
+                if (file.StartsWith(prefix, StringComparison.Ordinal) && file.AsSpan(prefix.Length).IndexOf('/') < 0)
+                    result.Add((file[prefix.Length..], false));
             }
-            return result.Select(e => (e.Key, e.Value)).ToArray();
+            return result.ToArray();
         }
     }
 
     internal bool HasFileAncestor(string path)
     {
         var name = Name(path); if (name is null) return false;
-        lock (_gate)
-        {
-            var slash = name.IndexOf('/');
-            while (slash >= 0) { if (_entries.ContainsKey(name[..slash])) return true; slash = name.IndexOf('/', slash + 1); }
-            return false;
-        }
+        lock (_gate) return HasFileAncestorLocked(name);
     }
-    internal void EnsureReadablePath(string path)
+
+    private bool HasFileAncestorLocked(string name)
     {
-        if (HasFileAncestor(path)) throw new FileNotFoundException("A mounted file occupies a parent directory.", path);
+        var slash = name.IndexOf('/');
+        while (slash >= 0)
+        {
+            if (_entries.ContainsKey(name[..slash]))
+                return true;
+            slash = name.IndexOf('/', slash + 1);
+        }
+        return false;
+    }
+    internal bool BlocksPhysicalFile(string path)
+    {
+        var name = Name(path);
+        if (name is null)
+            return false;
+        lock (_gate)
+            return _directories.Contains(name) || HasFileAncestorLocked(name);
+    }
+
+    internal void EnsureFilePath(string path)
+    {
+        if (BlocksPhysicalFile(path))
+            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
     }
 
     internal bool IsSameFile(string first, string second, out bool packed)
@@ -237,7 +285,7 @@ internal sealed class ResourcePacks
     internal static Stream OpenRead(string path) => OpenRead(path, out _);
     private static Stream OpenRead(string path, out bool packed)
     {
-        Runtime.EnsureReadablePath(path);
+        Runtime.EnsureFilePath(path);
         packed = Runtime.TryOpen(path, out var stream);
         return packed ? stream : FileAccess.OpenPhysicalRead(ProjectSettings.GlobalizePath(ResourceUID.EnsurePath(path)));
     }

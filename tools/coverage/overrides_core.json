@@ -1911,6 +1911,48 @@
   ],
   "statusGroups": [
     {
+      "godot": ["DirAccess::method:get_open_error()"],
+      "state": "Excluded",
+      "reason": "ADR 0022 excludes the thread-local last-open error slot. The non-null Open factory reports failures by standard exception."
+    },
+    {
+      "godot": [
+        "DirAccess::method:list_dir_begin()",
+        "DirAccess::method:list_dir_end()",
+        "DirAccess::method:get_next()",
+        "DirAccess::method:current_is_dir()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0022: a replaceable in-memory cursor over captured entries, live filters, explicit current-entry reset on EOF/end/restart, and standard exceptions. Windows public cursor and failure regressions."
+    },
+    {
+      "godot": [
+        "DirAccess::method:get_files()",
+        "DirAccess::method:get_directories()",
+        "DirAccess::method:get_files_at(String:)",
+        "DirAccess::method:get_directories_at(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: independent ordinal read-only snapshots, instance filters, default-filter absolute/virtual helpers, and standard exceptions. Windows physical, user data and merged PCK/ZIP checks."
+    },
+    {
+      "godot": [
+        "DirAccess::method:change_dir(String:)",
+        "DirAccess::method:open(String:)",
+        "DirAccess::method:get_current_dir(bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: non-null scoped owner, captured physical roots and live resource overlays, native or virtual current paths, drive included by default, and transactional directory changes. Windows public regressions."
+    },
+    {
+      "godot": [
+        "DirAccess::property:include_hidden",
+        "DirAccess::property:include_navigational"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0022: both flags start false, apply at read time and affect independent snapshots. Windows checks cover native Hidden attributes, mounted dot names and navigation candidates."
+    },
+    {
       "godot": ["FileAccess::method:get_8()", "FileAccess::method:get_16()", "FileAccess::method:get_32()", "FileAccess::method:get_64()"],
       "state": "Implemented",
       "reason": "ADR 0020 projects the pinned unsigned field widths as byte and UInt16/32/64. FileBinaryTests checks minimum, maximum and exact endian vectors, plus prefix consumption and typed failure on truncation."

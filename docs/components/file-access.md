@@ -52,6 +52,18 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Callers synchronize compound operations such as seek followed by read, or a write followed by a retry on the same pipe.
 - The component is blocking and allocating, never a real-time hot-path service.
 
+## Directory enumeration
+
+An open [DirAccess](../classes/DirAccess.md) holds its captured physical root. Resource accessors also see the live PCK/ZIP overlay while that root is the configured project root. Mounted entries take precedence at an exact-name collision. A mounted file masks a physical directory and its descendants. A mounted directory masks a physical file. Explicit ZIP directories appear even when empty. Physical absolute paths and `user://` use the filesystem.
+
+`ListDirBegin` captures immediate names and kinds. Both include flags default to false and apply when `GetNext` advances. Windows physical hidden entries carry the Hidden attribute. Unix-family hosts also hide dot names. Mounted dot names are hidden. The navigational names `.` and `..` are governed by `IncludeNavigational`, including at virtual roots, where changing to an escaping path still fails.
+
+`CurrentIsDir` describes the last returned entry and is false before the first entry and after EOF, end, restart, or a successful directory change. A failed begin or directory change preserves the current path and cursor. Disposal closes the listing. Calls on one owner are serialized, so concurrent advances consume distinct entries. Use caller synchronization to read a name and its kind as a pair.
+
+`GetFiles` and `GetDirectories` return independent, ordinally sorted, read-only snapshots and leave any active cursor intact. The static `At` methods accept fully qualified native or virtual paths and use the default filters. A missing directory, a mounted file masking the directory, or denied physical enumeration raises a standard exception.
+
+See the [coverage audit](../coverage/dir-access-listing.md) for the pinned source comparison and verification limits.
+
 ## Binary I/O
 
 Fresh sessions default to little endian. `BigEndian` selects the byte order for multi-byte unsigned values, IEEE 754 binary16/32/64 and Pascal length prefixes. `Real` uses binary32. Binary buffers move unchanged across the stream boundary. `ReadBytes` returns a caller-owned prefix up to the requested count, and `WriteBytes` consumes its input before returning.
@@ -82,7 +94,7 @@ FastLZ and Zstandard reuse the unchanged, accepted native dependencies via two p
 
 [`FileTextTests`](../../tests/Electron2D.Tests/FileTextTests.cs) compares exact wire bytes and cursor/EOF transitions, including a fresh reader process and directory-backed and Gzip-backed files. [`OSProcessTests`](../../tests/Electron2D.Tests/OSProcessTests.cs) checks live pipe framing and verifies the SHA-256 of a Pascal frame delivered by partial-write retries.
 
-The hidden-entry fixtures use the actual filesystem policy: dot-prefixed file and directory names on Unix, explicit `FileAttributes.Hidden` on Windows. Both fixture attributes are asserted before testing default/opt-in snapshots and streaming/concurrent filters. The Windows full suite in [run 37407321875](https://github.com/edwardgushchin/Electron2D/actions/runs/37407321875) passed configuration/file checks and exposed the previous dot-name-only fixture assumption on all three architectures. Runtime hidden-entry policy is unchanged; corrected target execution remains required.
+The hidden-entry fixtures use the actual filesystem policy: dot-prefixed file and directory names on Unix, explicit `FileAttributes.Hidden` on Windows. Both fixture attributes are asserted before testing default/opt-in snapshots and streaming/concurrent filters. The Windows full suite in [run 37407321875](https://github.com/edwardgushchin/Electron2D/actions/runs/37407321875) passed configuration/file checks and exposed the previous dot-name-only fixture assumption on all three architectures. The focused Windows x64 CLR directory-listing profile verifies the corrected hidden-entry fixtures and concurrent cursor reads. The resource-pack profile verifies ZIP directories, shared file and directory lookup, and lexical virtual-root escape. Other Windows architectures and full directory backend qualification remain open.
 
 The Linux executable harness covers file and directory success, invalid input, malformed/truncated data, wrong credentials/modes, tampering, scope/traversal rejection, listing state/filtering/concurrency, directory creation/copy/rename/removal, link target safety, filesystem identity/case/capacity/type, temporary ownership, close/disposal, concurrent independent operations, and commit failure. On Windows x64 CLR with a matching native bundle, the focused profiles verify text and binary file operations, ordinary and directory-backed virtual paths, Gzip-backed text and a fresh reader process. They also exercise blocking and nonblocking process pipes, including exact partial-write retry, 110 round trips across all five codecs, image-texture loading and cache/failure behavior, and 119 resource-pack assertions. NativeAOT, release packages and other runtime targets are outside this Windows verification. Transformed files are whole-file and have no stress-test results near managed array limits.
 
