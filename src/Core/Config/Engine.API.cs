@@ -220,15 +220,16 @@ public sealed partial class Engine
         get => Service.MainLoopCore;
     }
 
-    /// <summary>Gets the architecture targeted by the current Electron2D process.</summary>
-    /// <value>A stable lowercase architecture name such as <c>x86_64</c>, <c>x86_32</c>, <c>arm64</c>, or <c>arm32</c>.</value>
+    /// <summary>Gets the architecture on which the loaded engine code executes.</summary>
+    /// <value>A lowercase process architecture name such as <c>x86_64</c>, <c>x86_32</c>, <c>arm64</c>, <c>arm32</c>, or <c>wasm32</c>.</value>
+    /// <remarks>For portable assemblies this is the architecture selected by the running .NET host, including under emulation.</remarks>
     public static string ArchitectureName
     {
         get => Service.ArchitectureNameCore;
     }
 
     /// <summary>Gets immutable version information for the loaded Electron2D assembly.</summary>
-    /// <value>The process-wide version descriptor.</value>
+    /// <value>The same immutable descriptor on every read, including reads from different threads.</value>
     public static EngineVersionInfo VersionInfo
     {
         get => Service.VersionInfoCore;

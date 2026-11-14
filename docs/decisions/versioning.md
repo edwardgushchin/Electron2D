@@ -55,7 +55,7 @@ Use matching product/platform release versions by default. The minimum dependenc
 
 ### Current implementation and verification boundary
 
-The shared source [`tools/native-package.props`](../../tools/native-package.props) assigns `Electron2DVersion` `0.2.0-alpha`. The managed runtime and first-party consumers use this value; platform packages use it as their version and minimum-engine dependency. Numeric assembly/file versions are `0.2.0.0`, and informational metadata includes the prerelease label and supplied source revision. [`EngineVersionInfo`](../classes/EngineVersionInfo.md) reports the loaded assembly's actual metadata.
+The shared source [`tools/native-package.props`](../../tools/native-package.props) assigns `Electron2DVersion` `0.2.0-alpha`. The managed runtime and first-party consumers use this value. Platform packages use it as their version and minimum-engine dependency. Numeric assembly/file versions are `0.2.0.0`, and informational metadata includes the prerelease label and SDK-supplied source revision when present. [`EngineVersionInfo`](../classes/EngineVersionInfo.md) reports values embedded in the loaded engine, including the product version, configuration and source revision. A build can supply `Electron2DSourceTimestamp` with the source revision's Unix timestamp in seconds. The value is an explicit provenance input and defaults to unknown, represented by zero. The current clock contributes no metadata.
 
 Local package/consumer checks verify this delivery boundary. Publication, complete RID CI and target-native execution remain separate gates under ADR 0021. Product metadata does not establish a stable runtime or delivered editor.
 
