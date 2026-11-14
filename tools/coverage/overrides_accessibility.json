@@ -1298,7 +1298,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0081/0114: inherited stored false-by-default Container.AccessibilityRegion publishes a named native landmark and restores the normal role on change without changing layout. CLR/fresh-process scenes and an independent AT-SPI client check real role transitions; unnamed regions/actions expose authoring warnings. Complete existing deferred layout remains independently checked.",
+      "reason": "ADR 0081/0114: inherited stored false-by-default Container.AccessibilityRegion publishes a named native landmark and restores the normal role on change without changing layout. CLR/fresh-process scenes and an independent AT-SPI client check real role transitions; unnamed regions/actions expose authoring warnings. The scene owner and the container’s current processing group can read the flag and query warnings, including authored labels across groups. Writes and deferred layout retain owner and capture guards.",
       "godot": [
         "class:Container"
       ]
@@ -1419,7 +1419,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0081/0114: inherited stored false-by-default Container.AccessibilityRegion publishes a named native landmark and restores the normal role on change without changing layout. CLR/fresh-process scenes and an independent AT-SPI client check real role transitions; unnamed regions/actions expose authoring warnings. Complete existing deferred layout remains independently checked.",
+      "reason": "ADR 0081/0114: inherited stored false-by-default Container.AccessibilityRegion publishes a named native landmark and restores the normal role on change without changing layout. CLR/fresh-process scenes and an independent AT-SPI client check real role transitions; unnamed regions/actions expose authoring warnings. The scene owner and the container’s current processing group can read the flag and query warnings, including authored labels across groups. Writes and deferred layout retain owner and capture guards.",
       "godot": [
         "Container::property:accessibility_region"
       ]
