@@ -28,7 +28,7 @@ AudioServer.RegisterStreamAsSample(stream);
 | `public AudioSample(AudioStream stream, ReadOnlySpan<float> data, int numChannels, int sampleRate, AudioLoopMode loopMode = AudioLoopMode.Disabled, int loopBegin = 0, int loopEnd = 0)` | Validates and copies complete mono/stereo finite PCM. |
 | `public AudioStream Stream { get; }` | Borrowed original resource. |
 | `public float[] Data { get; }` | Copied interleaved PCM. |
-| `public int NumChannels { get; }` | One or two channels. |
+| `public int NumChannels { get; }` | One or two channels in the stored PCM. |
 | `public int SampleRate { get; }` | Positive source Hz. |
 | `public AudioLoopMode LoopMode { get; }` | Copied traversal policy. |
 | `public int LoopBegin { get; }` | Inclusive first loop frame. |
@@ -53,7 +53,7 @@ Returns a new caller-owned interleaved copy; writes cannot modify prepared playb
 
 ### NumChannels
 
-Returns source channel count. The driver projects mono/stereo to the selected output matrix.
+Returns the number of channels in Data. For example, a sample generated from 5.1 Vorbis contains two channels. The driver projects the stored mono or stereo PCM to the selected output matrix.
 
 ### SampleRate
 
