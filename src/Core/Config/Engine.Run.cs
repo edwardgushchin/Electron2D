@@ -152,6 +152,8 @@ public sealed partial class Engine
             OS.DeltaSmoothing = ProjectSettings.GetWithOverride(ProjectSettings.DeltaSmoothing);
             OS.LowProcessorUsageMode = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorMode);
             OS.LowProcessorUsageModeSleepUsec = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorModeSleepUsec);
+            if (runProject)
+                window.ApplyProjectContent();
             window.ApplyProjectHDROutput();
             window.OpenNative(movieDisableVSync, printGPUProfile);
             var splashStarted = runProject && window.Visible && !OperatingSystem.IsBrowser() &&

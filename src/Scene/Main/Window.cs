@@ -18,7 +18,8 @@ public partial class Window : Viewport
         new PropertyDescriptor<Window, string>(nameof(Title), w => w.Title, (w, v) => w.Title = v, _ => "", stored: true),
         new PropertyDescriptor<Window, string>(nameof(AccessibilityName), w => w.AccessibilityName, (w, v) => w.AccessibilityName = v, _ => "", stored: true),
         new PropertyDescriptor<Window, string>(nameof(AccessibilityDescription), w => w.AccessibilityDescription, (w, v) => w.AccessibilityDescription = v, _ => "", stored: true),
-        new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
+        new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true)
+        { StoreCondition = w => w._sizeAssigned || (!w._projectContentApplied && w._size != new Vector2i(100, 100)) },
         new PropertyDescriptor<Window, Vector2i>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, WindowMode>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => WindowMode.Windowed, stored: true),
@@ -39,6 +40,7 @@ public partial class Window : Viewport
     private string _accessibilityName = "", _accessibilityDescription = "";
     private string _resolvedAccessibilityName = "", _resolvedAccessibilityDescription = "";
     private Vector2i _size = new(100, 100);
+    private bool _sizeAssigned, _projectContentApplied;
     private Vector2i _minSize;
     private Vector2i _maxSize;
     private Vector2i? _screenPosition;
@@ -137,6 +139,7 @@ public partial class Window : Viewport
     /// <value>100 by 100 before configuration or native activation.</value>
     /// <remarks>Native changes may be asynchronous or constrained by the compositor and size limits.
     /// SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size.
+    /// Configured project runs supply a startup request when size has not been assigned.
     /// On Android, iOS, tvOS and browsers the native surface determines the initial observed size,
     /// regardless of the requested size. These profiles and Wayland expose physical client pixels.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Either component is nonpositive.</exception>
@@ -151,11 +154,8 @@ public partial class Window : Viewport
             if (value.X <= 0 || value.Y <= 0)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Client dimensions must be positive.");
             RenderingOwner?.EnsureViewportMutation();
-            value = value.Max(GetWindowMinimumSize());
+            value = ConstrainRequestedSize(value);
             EnsureMutable();
-            var maximum = MaxSize;
-            if (maximum.X > 0) value.X = Math.Min(value.X, maximum.X);
-            if (maximum.Y > 0) value.Y = Math.Min(value.Y, maximum.Y);
             RequestMeasuredWindowSize(value);
         }
     }
@@ -628,6 +628,15 @@ public partial class Window : Viewport
         _size = size; _contentLayoutValid = false;
         InvalidateViewportRecording(); _embeddedCanvas?.QueueRedraw();
         NotifyContentSizeChanged();
+    }
+
+    private Vector2i ConstrainRequestedSize(Vector2i size)
+    {
+        size = size.Max(GetWindowMinimumSize());
+        var maximum = MaxSize;
+        if (maximum.X > 0) size.X = Math.Min(size.X, maximum.X);
+        if (maximum.Y > 0) size.Y = Math.Min(size.Y, maximum.Y);
+        return size;
     }
 
     private static void ValidateLimits(Vector2i minimum, Vector2i maximum)

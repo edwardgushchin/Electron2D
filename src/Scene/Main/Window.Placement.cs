@@ -48,8 +48,16 @@ public partial class Window
     private void RequestMeasuredWindowSize(Vector2i size)
     {
         EnsureMutable(); RenderingOwner?.EnsureViewportMutation();
-        if (_display is not null) _display.WindowSetSizeCore(size);
-        else CommitSize(size);
+        if (_display is not null)
+        {
+            _display.WindowSetSizeCore(size);
+            _sizeAssigned = true;
+        }
+        else
+        {
+            _sizeAssigned = true;
+            CommitSize(size);
+        }
     }
     private bool _measuringWindowMinimum;
     private Vector2i GetWindowMinimumSize() => MinSize.Max(TitleMinimum()).Max(MeasureContentMinimum());

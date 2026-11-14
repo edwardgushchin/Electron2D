@@ -38,6 +38,7 @@ internal static class ProjectMainSceneTests
             ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
             SaveScene(main, "Primary", Colors.Red);
             SaveScene(alternate, "Alternate", Colors.Blue);
+            VerifyProjectWindow(project.FullName, user.FullName, main, backend);
 
             ProjectSettings.Reset(ProjectSettings.MainScene);
             CheckFailed<InvalidOperationException>();
@@ -98,7 +99,134 @@ internal static class ProjectMainSceneTests
             ProjectSettings.ConfigurePaths(previousProject, previousUser);
             project.Delete(recursive: true);
         }
-        Console.WriteLine($"Project main scene {backend}: persistence, path and UID, sync/async startup, pixels, failure cleanup and restart passed.");
+        Console.WriteLine($"Project main scene {backend}: persistence, path and UID, sync/async startup, window geometry, pixels, failure cleanup and restart passed.");
+    }
+
+    private static void VerifyProjectWindow(string project, string user, string scenePath, string backend)
+    {
+        var width = ProjectSettings.ViewportWidth;
+        var height = ProjectSettings.ViewportHeight;
+        var clientWidth = ProjectSettings.WindowWidthOverride;
+        var clientHeight = ProjectSettings.WindowHeightOverride;
+        var mode = ProjectSettings.WindowStretchMode;
+        var aspect = ProjectSettings.WindowStretchAspect;
+        var scale = ProjectSettings.WindowStretchScale;
+        var scaleMode = ProjectSettings.WindowStretchScaleMode;
+        using (var saved = new ProjectSettingsRegistry(project, user))
+        {
+            Check((saved.Get(width), saved.Get(height), saved.Get(clientWidth), saved.Get(clientHeight)) == (1152, 648, 0, 0),
+                "Viewport and desktop client defaults are registered.");
+            Check((saved.Get(mode), saved.Get(aspect), saved.Get(scale), saved.Get(scaleMode)) ==
+                (ContentScaleMode.Disabled, ContentScaleAspect.Keep, 1f, ContentScaleStretch.Fractional), "Stretch defaults are registered.");
+            Reject<ArgumentOutOfRangeException>(() => saved.Set(width, 0));
+            Reject<ArgumentOutOfRangeException>(() => saved.Set(clientHeight, -1));
+            Reject<ArgumentOutOfRangeException>(() => saved.Set(mode, (ContentScaleMode)3));
+            Reject<ArgumentException>(() => saved.Set(scale, float.NaN));
+            saved.Set(ProjectSettings.MainScene, scenePath);
+            saved.SetFeatureOverride(ProjectSettings.MainScene, Feature, "res://alternate.e2dscene");
+            saved.Set(ProjectSettings.RenderingMethod, backend);
+            saved.Set(ProjectSettings.RenderingFallback, false);
+            saved.Set(ProjectSettings.BootSplashShowImage, false);
+            saved.Set(width, 80);
+            saved.Set(height, 80);
+            saved.Set(clientWidth, 240);
+            saved.Set(clientHeight, 160);
+            saved.Set(mode, ContentScaleMode.Viewport);
+            saved.Set(aspect, ContentScaleAspect.Expand);
+            saved.SetFeatureOverride(aspect, Feature, ContentScaleAspect.Keep);
+            saved.Set(scale, 2.75f);
+            saved.Set(scaleMode, ContentScaleStretch.Integer);
+            saved.Save();
+        }
+        ProjectSettings.Load();
+        Check(ProjectSettings.Get(mode) == ContentScaleMode.Viewport && ProjectSettings.Get(aspect) == ContentScaleAspect.Expand &&
+            ProjectSettings.GetWithOverride(aspect, [Feature]) == ContentScaleAspect.Keep, "Typed enum settings and feature values survive a project-file round trip.");
+
+        using var untouched = new Window();
+        using var untouchedScene = new PackedScene();
+        untouchedScene.Pack(untouched);
+        using var fitted = (Window)untouchedScene.Instantiate();
+        ProjectSettings.AddCustomFeature(Feature);
+        ProjectSettings.ClearFeatureOverride(ProjectSettings.MainScene, Feature);
+        var frames = 0;
+        fitted.Ready += _ =>
+        {
+            Check(fitted.Size == new Vector2i(240, 160) && DisplayServer.WindowGetSize() == fitted.Size, "The native client uses both desktop overrides.");
+            Check(fitted.ContentScaleSize == new Vector2i(80, 80) && fitted.ContentScaleMode == ContentScaleMode.Viewport &&
+                fitted.ContentScaleAspect == ContentScaleAspect.Keep && fitted.ContentScaleFactor == 2 &&
+                fitted.ContentScaleStretch == ContentScaleStretch.Integer && fitted.GetVisibleRect().Size == new Vector2(40, 40),
+                "Project settings are effective before readiness and choose the logical raster.");
+            using var input = new InputEventMouseMotion { Position = new(60, 20) };
+            using var local = (InputEventMouseMotion)fitted.MakeViewportInputLocal(input);
+            Check(local.Position == new Vector2(5, 5), "Input uses the fitted project's client-to-logical transform.");
+            RenderingServer.FramePostDraw += () =>
+            {
+                using var viewport = fitted.GetTexture().GetImage()!;
+                using var presented = RenderingServer.Service!.Readback();
+                Check(viewport.Size == new Vector2i(40, 40) && presented.Size == new Vector2i(240, 160) &&
+                    presented.GetPixel(60, 20).IsEqualApprox(Colors.Red) && presented.GetPixel(10, 20).IsEqualApprox(Colors.Black),
+                    "The project scene fills the fitted raster and the native presentation has black side margins.");
+                frames++;
+                fitted.Tree!.Quit();
+            };
+        };
+        Check(RunAsync(fitted) == 0 && frames == 1, "The configured asynchronous host renders the fitted project.");
+        ProjectSettings.RemoveCustomFeature(Feature);
+        ProjectSettings.SetFeatureOverride(ProjectSettings.MainScene, Feature, "res://alternate.e2dscene");
+
+        using var authored = new Window
+        {
+            Size = new(100, 100),
+            ContentScaleSize = Vector2i.Zero,
+            ContentScaleMode = ContentScaleMode.Disabled,
+            ContentScaleAspect = ContentScaleAspect.Ignore,
+            ContentScaleFactor = 1,
+            ContentScaleStretch = ContentScaleStretch.Fractional
+        };
+        using var authoredScene = new PackedScene();
+        authoredScene.Pack(authored);
+        using var restored = (Window)authoredScene.Instantiate();
+        restored.Ready += _ =>
+        {
+            Check(restored.Size == new Vector2i(100, 100) && restored.ContentScaleSize == Vector2i.Zero &&
+                restored.ContentScaleMode == ContentScaleMode.Disabled && restored.ContentScaleAspect == ContentScaleAspect.Ignore &&
+                restored.ContentScaleFactor == 1 && restored.ContentScaleStretch == ContentScaleStretch.Fractional,
+                "Explicit values equal to detached defaults retain precedence through packing.");
+            restored.Tree!.Quit();
+        };
+        Check(Engine.RunProject(restored) == 0, "An explicitly configured root keeps its startup policy.");
+
+        ProjectSettings.Set(clientHeight, 0);
+        ProjectSettings.Set(mode, ContentScaleMode.CanvasItems);
+        ProjectSettings.Set(aspect, ContentScaleAspect.Ignore);
+        ProjectSettings.Set(scale, 1f);
+        ProjectSettings.Set(scaleMode, ContentScaleStretch.Fractional);
+        using var singleAxis = new Window();
+        singleAxis.Ready += _ =>
+        {
+            Check(singleAxis.Size == new Vector2i(240, 80) && singleAxis.GetVisibleRect().Size == new Vector2(80, 80) &&
+                singleAxis.GetStretchTransform().Scale == new Vector2(3, 1), "A zero client override falls back only on that axis.");
+            singleAxis.Tree!.Quit();
+        };
+        Check(Engine.RunProject(singleAxis) == 0, "The configured host applies a single client-axis override.");
+
+        using var ordinary = new Window();
+        ordinary.Ready += _ =>
+        {
+            Check(ordinary.Size == new Vector2i(100, 100) && ordinary.ContentScaleMode == ContentScaleMode.Disabled &&
+                ordinary.ContentScaleSize == Vector2i.Zero, "Engine.Run retains the detached window's defaults.");
+            ordinary.Tree!.Quit();
+        };
+        Check(Engine.Run(ordinary) == 0, "Explicit run retains its own geometry.");
+
+        ProjectSettings.Reset(width);
+        ProjectSettings.Reset(height);
+        ProjectSettings.Reset(clientWidth);
+        ProjectSettings.Reset(clientHeight);
+        ProjectSettings.Reset(mode);
+        ProjectSettings.Reset(aspect);
+        ProjectSettings.Reset(scale);
+        ProjectSettings.Reset(scaleMode);
     }
 
     private static void SaveScene(string path, string name, Color color)

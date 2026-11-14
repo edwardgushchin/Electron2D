@@ -793,6 +793,8 @@ Layout-direction and translation notifications reflow geometry and invalidate te
 
 ## Content scale
 
+A configured project run supplies [project geometry defaults](../components/window-runtime.md#project-startup-geometry) for each unassigned root-window size or content scale property. An explicit value has precedence even if it equals the detached default.
+
 The stored `ContentScaleSize`, `ContentScaleMode`, `ContentScaleAspect`, `ContentScaleStretch` and `ContentScaleFactor` configure real canvas rasterization and presentation. Size defaults to zero; either zero axis disables resolution fitting. Mode defaults to Disabled, aspect to Ignore, stretch to Fractional and factor to one. Desired axes must be nonnegative; factor must be positive and finite; undefined enum values and unrepresentable calculated dimensions reject before committing. Equal writes are silent. Successful changes invalidate retained commands and notify viewport texture/SizeChanged observers; callback failure preserves the committed state.
 
 Disabled retains client-resolution pixels while dividing the logical visible area by factor. CanvasItems fits the desired resolution, rasterizes geometry at the fitted client resolution and scales coordinates. Viewport rasterizes at the floored fitted logical resolution divided by factor, then enlarges that image. `GetVisibleRect()` reports logical coordinates; `GetTexture()` reports the actual raster resolution. `Size` remains the client size. `GetFinalTransform()` and `GetScreenTransform()` include presentation margins and scale for input, pointer and IME consumers; the renderer uses its separate raster transform. [GetStretchTransform](Viewport.md#getstretchtransform) exposes the content scale applied to the raster before presentation.

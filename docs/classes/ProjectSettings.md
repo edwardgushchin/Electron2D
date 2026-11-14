@@ -90,6 +90,21 @@ require GPU rendering. FXAA also uses the canvas mipmap-bias adapter. See [scree
 
 These built-in descriptors support project files and feature overrides. A world captures the effective values when its map is first allocated. See [map initialization and effective bounds](../components/navigation-maps.md#project-topology-defaults).
 
+## Project window geometry
+
+| Descriptor | Key under `display/window/` | Default |
+| --- | --- | --- |
+| `ProjectSetting<int> ViewportWidth` | `size/viewport_width` | 1152 |
+| `ProjectSetting<int> ViewportHeight` | `size/viewport_height` | 648 |
+| `ProjectSetting<int> WindowWidthOverride` | `size/window_width_override` | 0 |
+| `ProjectSetting<int> WindowHeightOverride` | `size/window_height_override` | 0 |
+| `ProjectSetting<ContentScaleMode> WindowStretchMode` | `stretch/mode` | Disabled |
+| `ProjectSetting<ContentScaleAspect> WindowStretchAspect` | `stretch/aspect` | Keep |
+| `ProjectSetting<float> WindowStretchScale` | `stretch/scale` | 1 |
+| `ProjectSetting<ContentScaleStretch> WindowStretchScaleMode` | `stretch/scale_mode` | Fractional |
+
+Viewport dimensions and scale must be positive, scale must be finite, override axes must be nonnegative, and the typed modes reject undefined values. See [project startup geometry](../components/window-runtime.md#project-startup-geometry) for feature precedence and observed client sizing.
+
 ## Project theme startup
 
 `GUIThemeCustom` and `GUIThemeCustomFont` are permanent typed `ProjectSetting<string>` definitions for `gui/theme/custom` and `gui/theme/custom_font`, both empty by default, basic and restart-required. Feature overrides and ordinary project path resolution apply. Engine.Start and windowed Engine.Run load the selected Theme/font before activating the main loop. Invalid files fail preparation and retain the previous selection. See [ThemeDB](ThemeDB.md#project-startup-theme) for ownership and lookup order.

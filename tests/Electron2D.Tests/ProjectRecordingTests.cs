@@ -53,13 +53,21 @@ internal static class ProjectRecordingTests
         ResourceSaver.SaveScene(scene, scenePath);
         ProjectSettings.Set(ProjectSettings.MainScene, scenePath);
         var path = Path.Combine(root, "scene.png");
-        using (var window = NewWindow())
+        ProjectSettings.Set(ProjectSettings.ViewportWidth, 128);
+        ProjectSettings.Set(ProjectSettings.ViewportHeight, 96);
+        ProjectSettings.Set(ProjectSettings.WindowWidthOverride, 192);
+        ProjectSettings.Set(ProjectSettings.WindowHeightOverride, 144);
+        ProjectSettings.Set(ProjectSettings.WindowStretchMode, ContentScaleMode.Viewport);
+        ProjectSettings.Set(ProjectSettings.WindowStretchScale, 2f);
+        using (var window = new Window { Borderless = true })
         {
             window.AddChild(new AudioStreamPlayer { Stream = source, Autoplay = true });
             window.Ready += _ =>
             {
                 var tree = window.Tree!;
                 Check(tree.CurrentScene?.Name == scene.Name && Engine.GetWriteMoviePath() == path, "The configured scene and explicit path are visible during Ready.");
+                Check(window.Size == new Vector2i(192, 144) && window.GetTexture().GetSize() == new Vector2(64, 48),
+                    "The project settings choose the native client and the movie's viewport raster independently.");
                 tree.ProcessFrameStarted += static current => current.Quit(31);
             };
             Check(Engine.RunProject(window, path, FPS) == 31, "SceneTree quit code is retained.");

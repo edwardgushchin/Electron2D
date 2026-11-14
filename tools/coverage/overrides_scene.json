@@ -5539,6 +5539,46 @@
       "reason": "Executable content rasterization/fitting policy preserves numeric identity."
     },
     {
+      "godot": "ProjectSettings::property:display/window/size/viewport_width",
+      "electron2d": "property:Electron2D.ProjectSettings.ViewportWidth()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/viewport_height",
+      "electron2d": "property:Electron2D.ProjectSettings.ViewportHeight()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/window_width_override",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowWidthOverride()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/window_height_override",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowHeightOverride()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/stretch/mode",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowStretchMode()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/stretch/aspect",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowStretchAspect()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/stretch/scale",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowStretchScale()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/stretch/scale_mode",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowStretchScaleMode()",
+      "reason": "Typed configured root-window startup setting."
+    },
+    {
       "godot": "Window::property:content_scale_size",
       "electron2d": "property:Electron2D.Window.ContentScaleSize()",
       "reason": "Executable content policy is stored by typed scene descriptors and shared by rendering, texture dimensions, layout, input and text rasterization."
@@ -8805,6 +8845,20 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "ProjectSettings::property:display/window/size/viewport_width",
+        "ProjectSettings::property:display/window/size/viewport_height",
+        "ProjectSettings::property:display/window/size/window_width_override",
+        "ProjectSettings::property:display/window/size/window_height_override",
+        "ProjectSettings::property:display/window/stretch/mode",
+        "ProjectSettings::property:display/window/stretch/aspect",
+        "ProjectSettings::property:display/window/stretch/scale",
+        "ProjectSettings::property:display/window/stretch/scale_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0028/0040. Project startup samples typed settings and feature overrides before native window creation. Positive desktop override axes replace viewport axes independently. Existing Window fitting computes logical/raster/presentation sizes and input transforms. Enum descriptors replace text choices; explicit Window assignments retain per-property precedence."
+    },
     {
       "state": "Implemented",
       "reason": "ADRs 0008/0028/0040: deferred fitting grows visible embedded and native windows. On desktop SDL also applies the effective content minimum to native resizing, preserves authored bounds, and orders and rolls back changes to the native limit pair. Windows Vulkan/Direct3D 11 and embedded execution are verified; foreign platform qualification remains separate.",

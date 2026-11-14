@@ -71,6 +71,14 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(ApplicationIcon, isBasic: true);
         RegisterInternal(WindowsNativeIcon, isBasic: true);
         RegisterInternal(MainScene, isBasic: true);
+        RegisterInternal(ViewportWidth, isBasic: true);
+        RegisterInternal(ViewportHeight, isBasic: true);
+        RegisterInternal(WindowWidthOverride, isBasic: false);
+        RegisterInternal(WindowHeightOverride, isBasic: false);
+        RegisterInternal(WindowStretchMode, isBasic: false);
+        RegisterInternal(WindowStretchAspect, isBasic: false);
+        RegisterInternal(WindowStretchScale, isBasic: false);
+        RegisterInternal(WindowStretchScaleMode, isBasic: false);
         RegisterInternal(MainLoopType, isBasic: false);
         RegisterInternal(AutoAcceptQuit, isBasic: true);
         RegisterInternal(QuitOnGoBack, isBasic: true);
@@ -501,6 +509,16 @@ public partial class ProjectSettingsRegistry : ElectronObject
                 GetWithOverrideCore(NavigationDefaultLinkConnectionRadius),
                 GetWithOverrideCore(NavigationMergeRasterizerCellScale),
                 GetWithOverrideCore(NavigationUseEdgeConnections));
+    }
+
+    internal (Vector2i ViewportSize, Vector2i ClientOverride, ContentScaleMode Mode, ContentScaleAspect Aspect,
+        float Scale, ContentScaleStretch ScaleMode) ReadProjectWindowContent()
+    {
+        lock (_gate)
+            return (new(GetWithOverrideCore(ViewportWidth), GetWithOverrideCore(ViewportHeight)),
+                new(GetWithOverrideCore(WindowWidthOverride), GetWithOverrideCore(WindowHeightOverride)),
+                GetWithOverrideCore(WindowStretchMode), GetWithOverrideCore(WindowStretchAspect),
+                GetWithOverrideCore(WindowStretchScale), GetWithOverrideCore(WindowStretchScaleMode));
     }
 
     internal T GetCore<T>(ProjectSetting<T> setting)

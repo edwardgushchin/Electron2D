@@ -81,6 +81,16 @@ CanvasTransform and GlobalCanvasTransform are runtime, non-stored Viewport descr
 
 Embedded windows now expose KeepTitleVisible, expanding width from the actual title font and close-button allowance within MaxSize. Native roots reject this enabled policy before resource acquisition because backend title metrics remain unavailable. [Dialogs](dialogs.md) separately clamp their decorated position into the host. Viewport size/texture notifications enumerate delegates without allocating invocation arrays and continue required callbacks after failures.
 
+## Project startup geometry
+
+`Engine.RunProject` and `Engine.RunProjectAsync` sample the [typed window geometry settings](../classes/ProjectSettings.md#project-window-geometry) with active feature overrides before opening the root's native surface. This applies to scene, custom loop and recording hosts. The project viewport size supplies the reference content size and the initial client request. On desktop, each positive client override replaces its corresponding axis; zero falls back to the viewport value. Native surface sizing, authored window limits, and compositor decisions remain authoritative for the observed client size.
+
+The project stretch mode, aspect, scale and fractional/integer choice feed the same layout used for resizing, canvas recording, presentation and input localization. Explicit assignment of a Window property takes precedence for that property, including assignment to its detached default. Packed windows carry those explicit values. Ordinary `Engine.Run` and independent child windows retain their own configuration.
+
+On Windows GPU and Compatibility, the configured scene tests read back the viewport raster and the full native presentation, verify black side margins and localized input, and cover saved feature overrides, single-axis fallback and packed explicit defaults. The recording profile verifies the encoded raster independently of the initial client request. Other target hosts and release packages remain unverified for these settings.
+
+## Window content scaling
+
 Window content scaling now separates logical visible coordinates, raster target dimensions and client presentation. Both native renderers fit the completed content into a client-sized presentation surface with black margins; the borrowed viewport texture keeps its own raster resolution. Window/embedded input removes the complete presentation transform, while rendering excludes that transform and uses raster scale/density. Automatic text raster scale follows the viewport; explicit oversampling remains authoritative. See [Window content scale](../classes/Window.md#content-scale) and the dedicated unit/native checks for the exact policies and platform limits.
 
 ## Containing-window notifications
