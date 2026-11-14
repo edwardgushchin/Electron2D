@@ -1,3 +1,5 @@
+[FileAccess text framing](../components/file-access.md#text-framing) moves eight operations to Implemented after pinned byte and stream-state comparisons and Windows x64 regression checks. Coverage is **14,075/18,791 (74.90%)**, with 1,100 Partial, 183 Unimplemented, 3,433 Blocked, 8,502 Excluded and zero unmapped Electron2D declarations.
+
 [Control anchors and offsets](classes/Control.md) implement four side methods, eight side properties and three named endpoint declarations. The register contains **14,067/18,791 (74.86%)** implemented applicable rows, with 1,108 Partial, 183 Unimplemented, 3,433 Blocked, 8,502 Excluded and zero unmapped. The snapshot contains 18,338 exported declarations. Platform qualification is tracked separately under [the state vocabulary](#state-vocabulary).
 
 [RenderingServer environment scope](#renderingserver-environment-scope) removes 107 declarations from the applicable count. The implemented numerator stays at **14,052** and the applicable denominator falls from **18,898** to **18,791** (74.36% to 74.78%). The register has 1,120 Partial, 186 Unimplemented, 3,433 Blocked, 8,502 Excluded and zero unmapped declarations.
