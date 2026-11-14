@@ -1,6 +1,6 @@
 # NavigationMapIteration
 
-Last updated: 2026-10-10
+Last updated: 2026-11-14
 
 - Visibility: internal
 - Source: [NavigationMapIteration.cs](../../src/Servers/Navigation/NavigationMapIteration.cs)
@@ -19,3 +19,5 @@ Synthetic link cells and point portals participate in weighted corridors; surfac
 The shared [Query kernel](../../src/Servers/Navigation/NavigationMapIteration.Query.cs) consumes filters/search budgets and produces primitive provenance, three output modes, RDP and length/radius clips. MapGetPath delegates to the same kernel with metadata disabled. A fallback search uses the reached portal entry to select a walkable polygon and rebuilds a corridor to the original target projected onto it.
 
 The [topology builder](../../src/Servers/Navigation/NavigationMapIteration.Topology.cs) groups region and map raster edges, retains the first two owners and publishes directed margin arrays plus five complete geometry counters. Disabled cells remain authored data but query traversal excludes them. The [sampling cache](../../src/Servers/Navigation/NavigationMapIteration.Sampling.cs) prepares contiguous region groups and surface areas once per snapshot; random reads allocate no managed scratch. Raw paths preserve physical target-edge midpoint data separately from funnel pathways.
+
+The shared query kernel uses an indexed binary heap ordered by estimated total and remaining cost, without polygon/discovery priorities. See [same-portal arrivals and tied corridors](../components/navigation-maps.md#arrivals-through-the-same-portal) for the pinned comparisons and unlimited slanted-cycle checks.

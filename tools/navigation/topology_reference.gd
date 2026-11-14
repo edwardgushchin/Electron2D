@@ -50,6 +50,15 @@ func run():
    NavigationServer2D.region_set_enabled(region,source.get("enabled",true))
    NavigationServer2D.region_set_use_edge_connections(region,source.get("connect",true))
    NavigationServer2D.region_set_navigation_layers(region,source.get("layers",1))
+  var links=[]
+  for source in test.get("links",[]):
+   var link=NavigationServer2D.link_create()
+   links.append(link)
+   NavigationServer2D.link_set_map(link,map)
+   NavigationServer2D.link_set_start_position(link,vector(source.start))
+   NavigationServer2D.link_set_end_position(link,vector(source.end))
+   NavigationServer2D.link_set_bidirectional(link,false)
+   NavigationServer2D.link_set_travel_cost(link,source.get("travel_cost",1.0))
   for i in range(4): await physics_frame
   var output={"name":test.name,"counts":counts(),"pathways":[],"raw_path":[],"optimized_path":[]}
   for i in range(10): output.counts[i]-=baseline[i]
@@ -76,8 +85,9 @@ func run():
     NavigationServer2D.query_path(query,result)
     output.limited_paths.append({"points":[],"regions":[]})
     for point in result.path: output.limited_paths[-1].points.append(pair(point))
-    for rid in result.path_rids: output.limited_paths[-1].regions.append(regions.find(rid))
+    for rid in result.path_rids: output.limited_paths[-1].regions.append((regions+links).find(rid))
   results.append(output)
+  for link in links: NavigationServer2D.free_rid(link)
   for region in regions: NavigationServer2D.free_rid(region)
   NavigationServer2D.free_rid(map)
   for i in range(3): await physics_frame

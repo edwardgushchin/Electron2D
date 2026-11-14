@@ -1,6 +1,6 @@
 # NavigationLinkState
 
-Last updated: 2026-10-07
+Last updated: 2026-11-14
 
 - Visibility: internal
 - Source: [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs)
@@ -13,3 +13,5 @@ One caller- or node-owned link RID, weak scene owner, staged map membership, dir
 ## Verification
 
 [NavigationLinkTests](../../tests/Electron2D.Tests/NavigationLinkTests.cs) exercises consumers, version rollback/wrap, copying, ownership and lifecycle.
+
+MapOrder preserves map-local append and swap-removal ordering independently of recycled service dictionary slots. Async captures retain and validate this value.

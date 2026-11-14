@@ -32,7 +32,8 @@ public sealed partial class NavigationServer
     /// <param name="map">Live navigation map RID; empty is accepted only when detaching a region.</param>
     /// <returns>Returns copied staged region memberships of a map.</returns>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
-    public static RID[] MapGetRegions(RID map) { lock (Shared._gate) { Shared.Map(map); return Shared._regions.Values.Where(r => r.Map == map).Select(r => r.RID).ToArray(); } }
+    /// <remarks>Membership appends on attachment. Removing a member fills its slot with the last member.</remarks>
+    public static RID[] MapGetRegions(RID map) { lock (Shared._gate) { Shared.Map(map); return Shared._regions.Values.Where(r => r.Map == map).OrderBy(r => r.MapOrder).Select(r => r.RID).ToArray(); } }
     /// <summary>Stages map activity; inactive committed maps have no query topology.</summary>
     /// <param name="map">Live navigation map RID; empty is accepted only when detaching a region.</param>
     /// <param name="active">True enables map participation; the published change follows synchronization.</param>
