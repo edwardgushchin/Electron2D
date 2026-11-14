@@ -70,7 +70,7 @@ The two directory variables are supplied by the caller. Creating or editing this
 | [`public System.Boolean IsBasic<T>(ProjectSetting<T> setting)`](#member-20a5eed91650) | Gets whether a setting should appear in a reduced basic-settings view. |
 | [`public System.Boolean IsInternal<T>(ProjectSetting<T> setting)`](#member-7182589ee896) | Gets whether a setting is hidden from ordinary tooling discovery. |
 | [`public System.Boolean IsRestartRequired<T>(ProjectSetting<T> setting)`](#member-4133ec9dc7e8) | Gets whether changing a setting requires the host application to restart. |
-| [`public System.Void Load()`](#member-187f2776bf73) | Loads the project file and then merges the conventional override file when it exists. |
+| [`public System.Void Load()`](#member-187f2776bf73) | Loads the project file and applies the enabled conventional and configured overrides. |
 | [`public System.Void LoadCustom(System.String path)`](#member-3353d7b63db9) | Merges a custom configuration file into the current settings after full validation. |
 | [`public System.String LocalizePath(System.String path)`](#member-b1e3d1602a7b) | Converts an ordinary path inside a configured root to a virtual project or user path. |
 | [`public System.Void Register<T>(ProjectSetting<T> setting)`](#member-e6ef918b72db) | Registers a setting definition for typed access and tooling discovery. |
@@ -466,7 +466,7 @@ Gets whether changing a setting requires the host application to restart.
 <a id="member-187f2776bf73"></a>
 ### `public System.Void Load()`
 
-Loads the project file and then merges the conventional override file when it exists.
+Loads the project file and applies the enabled conventional and configured overrides. The registry uses its own roots and active features. See [automatic overrides](../components/project-settings.md#automatic-override-files).
 
 **Remarks:** The complete candidate document and every registered typed value are validated before current state is replaced. Successful loading clears unsaved-value tracking and any pending change notification.
 

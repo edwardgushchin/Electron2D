@@ -342,7 +342,7 @@ public partial class ProjectSettingsRegistry
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public bool CheckChangedSettingsInGroup(string prefix) => CheckChangedSettingsInGroupCore(prefix);
 
-    /// <summary>Loads the project file and then merges the conventional override file when it exists.</summary>
+    /// <summary>Loads the project file and applies the enabled conventional and configured overrides.</summary>
     /// <remarks>
     /// The complete candidate document and every registered typed value are validated before current state is replaced.
     /// Successful loading clears unsaved-value tracking and any pending change notification.

@@ -72,6 +72,17 @@ internal static class ProjectMainSceneTests
             ProjectSettings.Set(ProjectSettings.MainScene, ResourceUID.IDToText(uid));
             VerifyRendered("Primary", Colors.Red, asynchronous: false);
 
+            ProjectSettings.Set(ProjectSettings.MainScene, main);
+            ProjectSettings.Set(ProjectSettings.ProjectSettingsOverride, "user://profile.cfg");
+            ProjectSettings.Save();
+            using (var config = new ConfigFile())
+            {
+                config.SetValue(new ConfigKey<string>("application", "run/main_scene"), alternate);
+                config.Save(Path.Combine(user.FullName, "profile.cfg"));
+            }
+            ProjectSettings.Load();
+            VerifyRendered("Alternate", Colors.Blue, asynchronous: false);
+
             using var explicitWindow = new Window { Size = new(96, 72) };
             explicitWindow.Ready += _ =>
             {

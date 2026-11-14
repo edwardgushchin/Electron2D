@@ -295814,6 +295814,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.DisableProjectSettingsOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DisableProjectSettingsOverride",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E DisableProjectSettingsOverride { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DisableSTDERR()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -297644,6 +297657,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.ProjectSettingsOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ProjectSettingsOverride",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E ProjectSettingsOverride { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {

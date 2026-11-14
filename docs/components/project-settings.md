@@ -48,6 +48,14 @@ The [project boot splash](boot-images.md#project-startup-splash) consumes six ty
 6. Loads build and validate a complete temporary document before replacement. Saves apply metadata order and delegate atomic file replacement to `ConfigFile`.
 7. Virtual paths resolve lexically against immutable snapshots of the current project/user roots; `DirAccess` can capture both roots under one lock for a two-path operation.
 
+## Automatic override files
+
+Call `ProjectSettings.Load()` after configuring the project and user roots and before starting the project. `ProjectSettingsRegistry.Load()` applies the same policy against that registry's roots. The loader builds a candidate from `project.e2d`, then reads `res://override.cfg`, then the file named by `ProjectSettingsOverride`. The last file has precedence for matching keys. The configured path is selected once from the first two layers, including the first active feature override. A relative name resolves beneath the project root. Absolute paths, `res://`, `user://` and registered UIDs use the existing path resolver. Automatic resource paths in the process registry see mounted files. Independent registries use their own directory roots.
+
+The effective `DisableProjectSettingsOverride` in the main document skips both layers. The conventional layer can also disable the configured layer. An empty path or missing optional file leaves earlier settings in effect. An unreadable or invalid layer fails the load and preserves the existing settings and pending changes. The typed document loader keeps the final validation and commit atomic. Explicit `LoadCustom` is available independently of the automatic policy.
+
+The registry fixture covers layer precedence, feature selection, rollback, missing files, lexical path checks and a packed override. The Windows project host fixture observes the scene and its pixels selected by a configured `user://` file.
+
 ## Dependencies
 
 The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultClearColor` from the process registry during Engine.Run startup. Their feature overrides use the same typed lookup as other settings. They do not switch an active backend or continuously update its clear color. GPU canvas sampler creation uses `UseNearestMIPMapFilter` sampled at backend startup; newly constructed viewports read `AnisotropicFilteringLevel` (default 4×). New Windows also read SnapTransformsToPixel and SnapVerticesToPixel at construction; explicit window configuration then takes precedence. These reads apply active feature overrides and do not reconfigure existing consumers when the project setting changes. [ProjectSettings](../classes/ProjectSettings.md) documents keys, defaults and validation; [canvas rendering](canvas-rendering.md) documents startup fallback and runtime controls.

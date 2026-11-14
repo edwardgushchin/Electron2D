@@ -60,6 +60,8 @@ The [typed connection boundary](../components/event-connections.md#exclusions) e
 
 [Typed node-name separator settings](../components/scene-hierarchy.md#child-name-collisions) now feed runtime authoring with live feature overrides and independently persisted defaults/validation.
 
+[Automatic project overrides](../components/project-settings.md#automatic-override-files) let the project choose a user or packaged configuration before startup.
+
 [Project boot splash](../components/boot-images.md#project-startup-splash) presents project-configured startup pixels before scene entry.
 
 [Movie writing](../components/movie-writing.md) adds typed recording hooks and fixed-cadence Engine entry points over the ordinary window lifecycle. Built-in outputs are a real PNG sequence with synchronous WAV and indexed AVI/MJPEG with PCM16/32 and OGV/Theora/Vorbis with native muxing.

@@ -181,6 +181,21 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <remarks>False selects nearest sampling. The software compatibility driver uses nearest sampling.</remarks>
     public static ProjectSetting<bool> BootSplashUseFilter { get; } = new("application/boot_splash/use_filter", true);
 
+    /// <summary>Defines an optional configuration file loaded after the conventional project override.</summary>
+    /// <value>application/config/project_settings_override; empty initially.</value>
+    /// <remarks><see cref="Load"/> reads this setting from the candidate project with feature overrides.
+    /// Relative paths are project-relative. Absolute paths, res://, user:// and registered resource UIDs are supported.
+    /// Missing files are ignored. <see cref="DisableProjectSettingsOverride"/> controls automatic loading.</remarks>
+    public static ProjectSetting<string> ProjectSettingsOverride { get; } =
+        new("application/config/project_settings_override", string.Empty);
+
+    /// <summary>Defines whether project loading skips automatic override files.</summary>
+    /// <value>application/config/disable_project_settings_override; false initially.</value>
+    /// <remarks>A true value in the project file suppresses both automatic layers.
+    /// The conventional layer can disable the later configured layer. Explicit <see cref="LoadCustom(string)"/> remains available.</remarks>
+    public static ProjectSetting<bool> DisableProjectSettingsOverride { get; } =
+        new("application/config/disable_project_settings_override", false);
+
     /// <summary>Defines the human-readable application name.</summary>
     public static ProjectSetting<string> ApplicationName { get; } =
         new("application/config/name", string.Empty);

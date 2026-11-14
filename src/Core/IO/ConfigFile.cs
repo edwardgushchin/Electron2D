@@ -314,6 +314,13 @@ public sealed partial class ConfigFile : ElectronObject
         MergeParsed(ParseDocument(data));
     }
 
+    internal void Load(Stream stream)
+    {
+        ThrowIfDisposed();
+        using var reader = new StreamReader(stream, StrictUtf8, leaveOpen: true);
+        MergeParsed(ParseDocument(reader.ReadToEnd()));
+    }
+
     /// <summary>Loads and merges a configuration document encrypted with a 256-bit key.</summary>
     /// <param name="path">The nonempty encrypted file path.</param>
     /// <param name="key">Exactly 32 key bytes.</param>

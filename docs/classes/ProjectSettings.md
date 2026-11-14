@@ -137,6 +137,8 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | `public static ProjectSetting<bool> BootSplashShowImage { get; }` | Selects an image over the background. Defaults to true. |
 | `public static ProjectSetting<RenderingServer.SplashStretchMode> BootSplashStretchMode { get; }` | Fits the custom image in the native client. Defaults to Keep. |
 | `public static ProjectSetting<bool> BootSplashUseFilter { get; }` | Selects linear sampling where available. Defaults to true. |
+| `public static ProjectSetting<string> ProjectSettingsOverride { get; }` | Selects an optional file after the conventional project override. Empty by default. |
+| `public static ProjectSetting<bool> DisableProjectSettingsOverride { get; }` | Skips automatic override loading when true. False by default. |
 | [`public static ProjectSetting<string> ApplicationIcon { get; }`](../components/window-runtime.md#application-image-icons) | Defines the image path used for the default window icon. Defaults to empty. |
 | [`public static ProjectSetting<string> WindowsNativeIcon { get; }`](../components/window-runtime.md#windows-native-icons) | Defines the Windows ICO path loaded before scene entry. Defaults to empty. |
 | [`public static ProjectSetting<bool> AutoAcceptQuit { get; }`](#autoacceptquit) | application/config/auto_accept_quit; true. |
@@ -229,7 +231,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static void SetRestartIfChanged<T>(ProjectSetting<T> setting, bool restart)`](#m-electron2d-projectsettings-setrestartifchanged-1-electron2d-projectsetting-0-system-boolean) | Sets whether changing a setting requires the host application to restart. |
 | [`public static IReadOnlyList<string> GetChangedSettings()`](#m-electron2d-projectsettings-getchangedsettings) | Gets setting names included in the pending or currently delivered change notification. |
 | [`public static bool CheckChangedSettingsInGroup(string prefix)`](#m-electron2d-projectsettings-checkchangedsettingsingroup-system-string) | Checks whether any changed setting starts with a category prefix. |
-| [`public static void Load()`](#m-electron2d-projectsettings-load) | Loads the project file and then merges the conventional override file when it exists. |
+| [`public static void Load()`](#m-electron2d-projectsettings-load) | Loads the project file and applies the enabled conventional and configured overrides. |
 | [`public static void LoadCustom(string path)`](#m-electron2d-projectsettings-loadcustom-system-string) | Merges a custom configuration file into the current settings after full validation. |
 | [`public static void Save()`](#m-electron2d-projectsettings-save) | Saves the current document to [`ProjectSettings.ProjectFilePath`](ProjectSettings.md#p-electron2d-projectsettings-projectfilepath) using atomic replacement. |
 | [`public static void SaveCustom(string path)`](#m-electron2d-projectsettings-savecustom-system-string) | Saves the current document to an explicit file using atomic replacement. |
@@ -1129,7 +1131,7 @@ Checks whether any changed setting starts with a category prefix.
 <a id="m-electron2d-projectsettings-load"></a>
 ### `public static void Load()`
 
-Loads the project file and then merges the conventional override file when it exists.
+Loads the project file and applies the enabled conventional and configured overrides. The effective disable policy and configured path are evaluated from the candidate document. See [automatic overrides](../components/project-settings.md#automatic-override-files).
 
 **Exceptions**
 

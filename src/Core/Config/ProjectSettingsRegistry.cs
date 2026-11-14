@@ -61,6 +61,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(BootSplashShowImage, isBasic: true);
         RegisterInternal(BootSplashStretchMode, isBasic: true);
         RegisterInternal(BootSplashUseFilter, isBasic: true);
+        RegisterInternal(ProjectSettingsOverride, isBasic: false);
+        RegisterInternal(DisableProjectSettingsOverride, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationIcon, isBasic: true);
         RegisterInternal(WindowsNativeIcon, isBasic: true);
@@ -705,14 +707,21 @@ public partial class ProjectSettingsRegistry : ElectronObject
             try
             {
                 var projectFile = IOPath.Combine(_projectRoot, ProjectFileName);
-                var overrideFile = IOPath.Combine(_projectRoot, OverrideFileName);
                 if (!File.Exists(projectFile))
                     throw new FileNotFoundException("The project settings file does not exist.", projectFile);
 
                 using var candidate = new ConfigFile();
                 candidate.Load(projectFile);
-                if (File.Exists(overrideFile))
-                    candidate.Load(overrideFile);
+                if (!ReadLoadPolicy(candidate, DisableProjectSettingsOverride))
+                {
+                    LoadOptionalOverride(candidate, "res://" + OverrideFileName);
+                    if (!ReadLoadPolicy(candidate, DisableProjectSettingsOverride))
+                    {
+                        var path = ReadLoadPolicy(candidate, ProjectSettingsOverride);
+                        if (path.Length != 0)
+                            LoadOptionalOverride(candidate, path);
+                    }
+                }
 
                 ReplaceDocumentLocked(candidate.EncodeToText(), clearChanges: true);
             }
@@ -721,6 +730,35 @@ public partial class ProjectSettingsRegistry : ElectronObject
                 _loading = false;
             }
         }
+    }
+
+    private T ReadLoadPolicy<T>(ConfigFile candidate, ProjectSetting<T> setting) where T : notnull
+    {
+        var entry = GetEntry(setting);
+        foreach (var feature in entry.ValidateAndFindOverrides(candidate, EnumerateFullNames(candidate)))
+        {
+            if (_builtInFeatures.Contains(feature) || _customFeatures.Contains(feature))
+                return candidate.GetValue(entry.GetOverrideKey(feature));
+        }
+        return candidate.GetValue(entry.BaseKey, setting.Deserialize(entry.InitialSerialized));
+    }
+
+    private void LoadOptionalOverride(ConfigFile candidate, string path)
+    {
+        path = ResourceUID.EnsurePath(path);
+        if (!IOPath.IsPathRooted(path) && !path.Contains("://", StringComparison.Ordinal))
+            path = "res://" + path;
+        var globalPath = GlobalizePathCore(path);
+        if (_processWide && path.StartsWith("res://", StringComparison.Ordinal) &&
+            ResourcePacks.Runtime.TryOpen(ToVirtualPath("res://", IOPath.GetRelativePath(_projectRoot, globalPath)), out var packed))
+        {
+            using (packed) candidate.Load(packed);
+            return;
+        }
+
+        try { candidate.Load(globalPath); }
+        catch (FileNotFoundException) { }
+        catch (DirectoryNotFoundException) { }
     }
 
     internal void LoadCustomCore(string path)
@@ -1280,6 +1318,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, BootSplashShowImage) ||
         ReferenceEquals(setting, BootSplashStretchMode) ||
         ReferenceEquals(setting, BootSplashUseFilter) ||
+        ReferenceEquals(setting, ProjectSettingsOverride) ||
+        ReferenceEquals(setting, DisableProjectSettingsOverride) ||
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationIcon) ||
         ReferenceEquals(setting, WindowsNativeIcon) ||

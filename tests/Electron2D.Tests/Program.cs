@@ -430,6 +430,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCAL_RESOURCE_CONSUMERS
     AnimatedSpriteTests.Run(); RenderingRuntimeTests.VerifyAtlasResources(); AnimatedTextureTests.Run(); StyleBoxTests.Run();
     ThemeResourceTests.Run(); ShortcutTests.Run(); AudioSynchronizedTests.Run(); return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_OVERRIDES") == "1") { VerifyProjectSettings(); ProjectOverrideTests.Run(packed: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
@@ -2425,6 +2426,7 @@ ByteBufferTests.Run();
 VerifyFileAccess();
 VerifyDirAccess();
 VerifyProjectSettings();
+ProjectOverrideTests.Run();
 VerifyResources();
 VerifyPackedScenes();
 VerifyInputMapConfiguration();

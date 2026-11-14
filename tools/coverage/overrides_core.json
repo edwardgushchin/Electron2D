@@ -613,6 +613,16 @@
       "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash."
     },
     {
+      "electron2d": "property:Electron2D.ProjectSettings.ProjectSettingsOverride()",
+      "godot": "ProjectSettings::property:application/config/project_settings_override",
+      "reason": "ADR 0019: Load applies the effective candidate policy to conventional then configured overrides. The path may name a project, user, absolute or registered UID file. Process resource paths include mounts. Missing optional files are skipped, failures preserve the published registry, and explicit LoadCustom remains caller-driven."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.DisableProjectSettingsOverride()",
+      "godot": "ProjectSettings::property:application/config/disable_project_settings_override",
+      "reason": "ADR 0019: Load applies the effective candidate policy to conventional then configured overrides. The path may name a project, user, absolute or registered UID file. Process resource paths include mounts. Missing optional files are skipped, failures preserve the published registry, and explicit LoadCustom remains caller-driven."
+    },
+    {
       "electron2d": "property:Electron2D.ProjectSettings.ApplicationIcon()",
       "godot": "ProjectSettings::property:application/config/icon",
       "reason": "ADRs 0015/0019/0040: effective startup image file path for the application default window icon."
@@ -1847,6 +1857,14 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0019: Load applies the effective candidate policy to conventional then configured overrides. The path may name a project, user, absolute or registered UID file. Process resource paths include mounts. Missing optional files are skipped, failures preserve the published registry, and explicit LoadCustom remains caller-driven.",
+      "godot": [
+        "ProjectSettings::property:application/config/project_settings_override",
+        "ProjectSettings::property:application/config/disable_project_settings_override"
+      ]
+    },
     {
       "state": "Implemented",
       "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash.",
