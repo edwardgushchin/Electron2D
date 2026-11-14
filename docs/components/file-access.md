@@ -46,11 +46,20 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Directory access scope is immutable; virtual roots are captured, lexically confined, and never switched by an instance. Case-sensitivity queries use read-only native metadata and do not create probe entries.
 - Public directory removal is permanent and nonrecursive; link removal never traverses the target.
 - Streaming enumeration order is unspecified; file/directory snapshot helpers sort ordinally.
-- Fixed-size values either read completely or fail; EOF records only an attempted incomplete read.
 - Caller-visible decoded content is published only after compression validation or successful authentication.
 - Transformed writes replace a destination atomically after the temporary file is flushed.
 - Instance calls are lock-serialized; compound caller sequences require caller synchronization.
 - The component is blocking and allocating, never a real-time hot-path service.
+
+## Operation failures and EOF
+
+`FileAccess.Open` and `DirAccess.Open` return owned instances on success and throw from the failing call. A missing file requested for reading raises `FileNotFoundException`. A missing parent on file creation or a missing directory on directory open raises `DirectoryNotFoundException`. Invalid modes or paths and denied access are reported through their corresponding exceptions. This also applies to transformed file factories, which report validation, decode or authentication failures before returning an instance.
+
+On a seekable file, `ReadBytes` returns the available prefix. A nonzero request that runs out of bytes sets `EOFReached`. A fixed-width read that runs out consumes any available prefix, sets EOF and throws `EndOfStreamException`. Reading exactly through the last byte leaves a clear EOF flag unchanged. Seek, resize and successful writes clear it. Mode violations throw `InvalidOperationException`, and I/O failures propagate exceptions from the operation.
+
+A live nonblocking process pipe can return a short or empty buffer with EOF clear. An incomplete exact read in that state can consume bytes before throwing `IOException`. When the reader detects that the writer has closed and the pipe is drained, `EOFReached` becomes true. A failed pipe write can throw [`PipeWriteException`](../classes/PipeWriteException.md) with the exact `BytesWritten` accepted by the pipe during that call.
+
+The existing `ELECTRON2D_TEST_PACK_FILE_SYSTEM=1` runner checks file and directory open failures, access modes and seekable EOF transitions. `ELECTRON2D_TEST_OS_PROCESS=1` checks live pipe readiness, EOF and the integrity of writes retried from the reported byte offset.
 
 ## Text framing
 

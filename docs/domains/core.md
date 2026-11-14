@@ -133,6 +133,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - `JSON`: document-scoped JSON tree parsing, formatting, diagnostics, source retention and explicitly typed model conversion.
 - `FileAccess`: seekable raw and transformed file ownership, typed binary and [strict UTF-8 text I/O](../components/file-access.md#text-framing), mounted or directory-backed virtual paths, process pipes, metadata/hashes, native attributes, temporary files, compression, and authenticated encryption.
 - `DirAccess`: scoped current-directory state, streaming/sorted enumeration, file/directory mutation, links, temporary-directory ownership, drive/capacity/type/case/identity queries, and static absolute helpers.
+- [File and directory I/O failures](../components/file-access.md#operation-failures-and-eof) are reported by typed exceptions. `FileAccess` additionally reports stream exhaustion through `EOFReached` and pipe write progress through `PipeWriteException.BytesWritten`.
 - `FileAccessModeFlags`, `FileCompressionMode`, and `UnixPermissionFlags`: exact typed mode, codec, and Unix mode-bit identities.
 - `ProjectSetting<T>`: immutable typed setting identity, default snapshot, and optional validator.
 - `ProjectSettings`: process and isolated registries, feature overrides, metadata, dirty/event state, project persistence/discovery, directory-backed virtual paths, typed input-action defaults, and typed 2D gravity/damping world defaults consumed by SceneTree physics.

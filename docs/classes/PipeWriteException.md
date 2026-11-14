@@ -6,7 +6,7 @@ Last updated: 2026-10-12
 
 ## Description and member
 
-`public int BytesWritten { get; }` is the exact nonnegative prefix length consumed by the failed process-pipe WriteBytes operation. A full nonblocking pipe is temporary; closed/failed streams cannot accept further input. The exception projects native partial-write error state without public backend handles or a shared last-error field. It does not roll back bytes delivered to the child. Retry only the remainder and impose application-specific deadlines/error policy.
+`public int BytesWritten { get; }` gives the number of bytes accepted by the pipe before the operation failed. For framed writes the count includes framing bytes, such as the Pascal string length prefix or the LF appended by `WriteLine`. A full nonblocking pipe is temporary. Closed or failed streams cannot accept further input. When retrying a temporary failure, send only the unconsumed suffix of the complete byte sequence.
 
 ```csharp
 try { child.StandardIO.WriteBytes(payload.AsSpan(offset)); offset = payload.Length; }

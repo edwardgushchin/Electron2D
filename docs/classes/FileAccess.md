@@ -16,7 +16,7 @@ Linux/macOS extended-attribute calls use [tracked UTF8 path/name storage](../cov
 
 ## Description
 
-Provides seekable binary and text access to ordinary and directory-backed virtual files.
+Provides binary and text access to ordinary and virtual files, transformed files and process pipes. [File and directory access](../components/file-access.md#operation-failures-and-eof) describes exceptions and EOF transitions.
 
 `FileAccess` owns one seekable physical stream or decoded in-memory view. It supplies blocking binary/text I/O, virtual-path resolution, file metadata, hashing, Linux/macOS/Windows extended attributes, temporary files, whole-file compression, and authenticated whole-file encryption. The instance exclusively owns and closes its stream; it never owns `ProjectSettings`.
 
@@ -151,9 +151,11 @@ Gets whether the owned stream is still open.
 <a id="p-electron2d-fileaccess-eofreached"></a>
 ### `public bool EOFReached { get; }`
 
-Gets whether a read has attempted to move beyond the end of the file.
+Gets whether a read encountered end of stream.
 
-**Value:** `true` only after an incomplete read; a successful seek clears it.
+**Value:** `true` after a read detects exhaustion. Reading exactly to a seekable file's end or finding a live nonblocking pipe temporarily empty leaves a clear flag unchanged.
+
+A successful seek, resize or write clears the seekable file's EOF flag.
 
 **Exceptions**
 
@@ -247,6 +249,9 @@ Opens a file with the requested access mode.
 **Returns:** A new owner of the opened file stream.
 
 **Exceptions**
+
+- `IO.FileNotFoundException`: The requested mode requires an existing file and it is missing.
+- `IO.DirectoryNotFoundException`: A parent directory in the path is missing.
 
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or `mode` is invalid.
@@ -556,7 +561,7 @@ Reads up to a requested number of bytes.
 - `IO.IOException`: Reading fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** [`FileAccess.EOFReached`](FileAccess.md#p-electron2d-fileaccess-eofreached) becomes true when fewer than `length` bytes are available.
+**Remarks:** A short file read sets [`FileAccess.EOFReached`](FileAccess.md#p-electron2d-fileaccess-eofreached). A zero-length request leaves it unchanged. A live nonblocking pipe can return a short or empty buffer with EOF clear. Blocking pipes wait for the requested count or EOF.
 
 <a id="m-electron2d-fileaccess-readline"></a>
 ### `public string ReadLine()`
@@ -757,6 +762,7 @@ Writes bytes at the current cursor.
 
 **Exceptions**
 
+- [`PipeWriteException`](PipeWriteException.md): A process pipe stopped accepting bytes. `BytesWritten` gives the consumed prefix of this write.
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.

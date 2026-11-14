@@ -91,7 +91,8 @@ public sealed partial class DirAccess : ElectronObject
 
     /// <summary>Opens an existing ordinary or directory-backed virtual directory.</summary>
     /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path.</param>
-    /// <returns>A new directory owner positioned at <paramref name="path"/>.</returns>
+    /// <returns>A new directory owner positioned at <paramref name="path"/> on success.</returns>
+    /// <remarks>The call reports a failure directly through an exception.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="DirectoryNotFoundException">The resolved directory does not exist.</exception>

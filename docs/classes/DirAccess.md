@@ -126,7 +126,7 @@ Opens an existing ordinary or directory-backed virtual directory.
 
 - `path`: A nonempty ordinary, `res://`, or `user://` path.
 
-**Returns:** A new directory owner positioned at `path`.
+**Returns:** A new directory owner positioned at `path` on success. The call reports a failure directly through an exception.
 
 **Exceptions**
 

@@ -14,9 +14,11 @@ namespace Electron2D;
 /// pipes serialize each read/write direction independently. A
 /// multi-call seek/read/write sequence is not atomic. File operations may block and are unsuitable for real-time frame
 /// callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
-/// Process pipes from OS.ExecuteWithPipe are non-seekable. Nonblocking ReadBytes returns currently available bytes;
-/// temporary emptiness is not EOF. Exact reads may consume a partial value before raising IOException. Nonblocking
-/// writes may raise PipeWriteException with an exact consumed prefix. Closing a pipe does not terminate its child.
+/// Open, read and write failures are reported by exceptions from the operation. Fixed-width reads can consume a
+/// prefix before throwing <see cref="EndOfStreamException"/>. Process pipes from OS.ExecuteWithPipe are non-seekable.
+/// A nonblocking <see cref="ReadBytes"/> returns the available prefix, and temporary emptiness leaves EOF clear.
+/// An incomplete exact read on a live nonblocking pipe throws <see cref="IOException"/>. A failed pipe write may
+/// throw <see cref="PipeWriteException"/> with the consumed byte count. Closing a pipe leaves its child running.
 /// </remarks>
 public sealed partial class FileAccess : ElectronObject
 {
@@ -122,8 +124,10 @@ public sealed partial class FileAccess : ElectronObject
         }
     }
 
-    /// <summary>Gets whether a read has attempted to move beyond the end of the file.</summary>
-    /// <value><see langword="true"/> only after an incomplete read; a successful seek clears it.</value>
+    /// <summary>Gets whether a read encountered end of stream.</summary>
+    /// <value><see langword="true"/> after reading detects exhaustion. Reading exactly to a seekable file's end or
+    /// finding a live nonblocking pipe temporarily empty leaves a clear flag unchanged.</value>
+    /// <remarks>A successful seek, resize or write clears the seekable file's EOF flag.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public bool EOFReached
@@ -266,6 +270,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <remarks>OS.SetUseFileAccessSaveAndSwap selects staging for the exact Write mode at open. Path retains the
     /// supplied name and AbsolutePath identifies staging. Close/disposal publishes completed output; Flush alone does not.
     /// I/O write failure aborts staging. A failed final replacement retains completed staging for recovery.</remarks>
+    /// <exception cref="FileNotFoundException">The requested mode requires an existing file and it is missing.</exception>
+    /// <exception cref="DirectoryNotFoundException">A parent directory in the path is missing.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
@@ -639,8 +645,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <summary>Reads up to a requested number of bytes.</summary>
     /// <param name="length">The nonnegative maximum byte count.</param>
     /// <returns>A new array containing all available requested bytes.</returns>
-    /// <remarks>For files, EOFReached becomes true after an incomplete read. For a process pipe, temporary emptiness
-    /// returns the available prefix without claiming EOF. Blocking pipes wait until the requested count or EOF.</remarks>
+    /// <remarks>A short file read sets <see cref="EOFReached"/>. A zero-length request leaves the flag unchanged.
+    /// A live nonblocking pipe can return a short or empty buffer with EOF clear. Blocking pipes wait until the requested count or EOF.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails.</exception>
@@ -913,6 +919,7 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Writes bytes at the current cursor.</summary>
     /// <param name="bytes">The bytes to write.</param>
+    /// <exception cref="PipeWriteException">A process pipe stopped accepting bytes. The exception reports the consumed prefix of this write.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>

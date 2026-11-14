@@ -6907,8 +6907,17 @@ static void VerifyFileAccess()
             Expect<InvalidOperationException>(() => readOnly.WriteByte(1),
                 "Read-only files must reject writes.");
             Require(readOnly.ReadString(6) == "abcdef", "Raw UTF-8 strings must round-trip.");
-            Require(readOnly.ReadBytes(1).Length == 0 && readOnly.EOFReached,
-                "A short buffer read must return available bytes and mark EOF.");
+            Require(!readOnly.EOFReached && readOnly.ReadBytes(0).Length == 0 && !readOnly.EOFReached,
+                "Reading to the exact end and requesting zero bytes must leave EOF clear.");
+            readOnly.SeekEnd(-2);
+            Require(readOnly.ReadBytes(3).SequenceEqual("ef"u8.ToArray()) && readOnly.EOFReached,
+                "A short buffer read must return the available prefix and mark EOF.");
+            readOnly.SeekEnd(-2);
+            Require(!readOnly.EOFReached, "Seeking must clear EOF before another read.");
+            Expect<EndOfStreamException>(() => readOnly.ReadUInt32(),
+                "A truncated fixed-width read must fail after consuming the prefix.");
+            Require(readOnly.Position == readOnly.Length && readOnly.EOFReached,
+                "An exact read must consume the available prefix and mark EOF.");
             readOnly.Close();
             readOnly.Close();
             Require(!readOnly.IsOpen, "Closing must be idempotent and publish the closed state.");
