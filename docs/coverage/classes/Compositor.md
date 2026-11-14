@@ -10,5 +10,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class Compositor`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Compositor.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
-| [`property CompositorEffect[] compositor_effects = []`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Compositor.xml) | — | Excluded | 3D/XR product scope is excluded by ADR 0004; no implementation trigger. |
+| [`class Compositor`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Compositor.xml) | — | Excluded | Owns the effect list selected by the 3D scene camera or scenario. [ADR 0004](../../decisions/product.md#adr-0004) |
+| [`property CompositorEffect[] compositor_effects = []`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Compositor.xml) | — | Excluded | Supplies ordered effect RID membership to the 3D scene renderer. [ADR 0004](../../decisions/product.md#adr-0004) |
