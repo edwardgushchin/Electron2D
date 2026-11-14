@@ -3,9 +3,10 @@
 
 import json
 import re
+from hashlib import sha256
 from unittest.mock import Mock, patch
 
-from render import ALIASES, CLASS_PAGES, DATA, cell, choose, coverage_target, engine_link, render, validate_public_type_names
+from render import ALIASES, CLASS_PAGES, DATA, ROOT, cell, choose, coverage_target, engine_link, render, validate_public_type_names
 from physics_report import scope
 
 
@@ -832,6 +833,19 @@ def main():
     for item in engine:
         assert "Electron2D.Resource.SetupLocalToScene(" not in item["id"]
         assert "Electron2D.Resource.SetupLocalToSceneRequested(" not in item["id"]
+    pinned_snapshot = DATA / "godot-4.7.2.json"
+    pinned_digest = sha256(pinned_snapshot.read_text(encoding="utf-8").encode()).hexdigest()
+    pinned_evidence = f"JSON snapshot `{pinned_snapshot.relative_to(ROOT).as_posix()}` SHA-256 {pinned_digest}"
+    for name in ("ParallaxBackground", "ParallaxLayer"):
+        owner = next(item for item in upstream["types"] if item["name"] == name)
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert len(rows) == 1 + len(owner["members"])
+        evidence = cell(f'class deprecated="{owner["attributes"]["deprecated"]}"')
+        for row in rows:
+            assert " | — | Excluded | " in row and evidence in row
+            assert owner["source"] in row and upstream["godot_commit"] in row and upstream["godot_version"] in row
+            assert pinned_evidence in row and "No implementation trigger." in row and "Trigger:" not in row
+        assert not any(f"Electron2D.{name}" in item["signature"] for item in engine)
     for name, target in (("Shape2D", "Shape"), ("CircleShape2D", "CircleShape"),
                          ("CapsuleShape2D", "CapsuleShape"),
                          ("SegmentShape2D", "SegmentShape"),
@@ -1022,7 +1036,10 @@ def main():
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
     hint_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines() if "PROPERTY_HINT_" in row.split(" | ")[0]]
     assert len(hint_rows) == 45
-    assert sum(" | Implemented | " in row for row in hint_rows) == 40
+    for hint_name in ("TYPE_STRING", "ARRAY_TYPE", "DICTIONARY_TYPE"):
+        hint_row, = [row for row in hint_rows if f"PROPERTY_HINT_{hint_name} [" in row]
+        assert " | Partial | " in hint_row and "PropertyDescriptor.ValueType" in hint_row, hint_row
+    assert sum(" | Implemented | " in row for row in hint_rows) == 37
     assert sum(" | Excluded | " in row for row in hint_rows) == 5
     base_rows = pages[CLASS_PAGES / "VisualShaderNode.md"].splitlines()
     assert " | Implemented | " in next(row for row in base_rows if "PORT_TYPE_TRANSFORM [" in row)

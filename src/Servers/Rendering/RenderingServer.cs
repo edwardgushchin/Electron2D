@@ -477,7 +477,7 @@ public sealed partial class RenderingServer : ElectronObject
     private static (Vector2 Size, int Times) RepeatSettings(CanvasItem item)
     {
         if (item.ServerState is { ItemRepeatSize: { } size } state) return (size, state.ItemRepeatTimes);
-        return item is Parallax parallax ? (parallax.RepeatSize, parallax.RepeatTimes) : item is ParallaxLayer layer ? (layer.RepeatPeriod, 1) : (Vector2.Zero, 0);
+        return item is Parallax parallax ? (parallax.RepeatSize, parallax.RepeatTimes) : (Vector2.Zero, 0);
     }
     private static bool IsRepeatSource(CanvasItem item) { var repeat = RepeatSettings(item); return repeat.Times != 0 && repeat.Size != Vector2.Zero; }
     private void AppendOrderedCanvas(RenderEntry item, Vector2i pixels, bool unshaded = false)
@@ -573,7 +573,6 @@ public sealed partial class RenderingServer : ElectronObject
     private void OrderCanvas(CanvasItem item, Transform transform, Transform model, bool alreadyYSorted = false)
     {
         if (!item.RenderVisible || (item.RenderVisibilityLayer & CanvasCullMask(_viewport)) == 0) return;
-        if (item is ParallaxLayer layer) { _repeatTransforms[layer] = transform; _repeatModels[layer] = model; }
         if (!alreadyYSorted)
         {
             var local = item.RenderLocal(_interpolationFraction);
@@ -611,7 +610,7 @@ public sealed partial class RenderingServer : ElectronObject
 
     private void AddRenderEntry(CanvasItem item, Transform transform, Transform model)
     {
-        if (IsRepeatSource(item) && (item is not ParallaxLayer || item.ServerState?.ItemRepeatSize is not null)) { _repeatTransforms[item] = transform; _repeatModels[item] = model; }
+        if (IsRepeatSource(item)) { _repeatTransforms[item] = transform; _repeatModels[item] = model; }
         _canvasTransforms[item] = transform;
         if (!IsCompositor(item) && item.ServerState?.CustomRect is not null)
         {

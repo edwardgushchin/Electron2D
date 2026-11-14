@@ -510,12 +510,6 @@
       "reason": "Parent-first manual notification delivery."
     },
     {
-      "electron2d": "property:Electron2D.CanvasLayer.Layer()",
-      "godot": "ParallaxBackground::property:layer",
-      "state": "Partial",
-      "reason": "The inherited CanvasLayer.Layer property defaults to -100 on ParallaxBackground and orders its canvas behind the default layer. Managed construction and native pixels verify the root Window path; independent viewport and editor canvas behavior remain unaudited."
-    },
-    {
       "electron2d": "property:Electron2D.InputEventScreenTouch.Index()",
       "godot": "InputEventScreenTouch::property:index",
       "reason": "Signed touch-contact identifier maps to the typed C# property."
@@ -5735,6 +5729,11 @@
       "reason": "ADR 0093 executable RESET save preparation. Stored ResetOnSave defaults true and executes through separate allocating PackedScene.PackForSave: guarded source capture, detached exact factories, isolated deep resource copies, RESET value/Bezier at zero, coupled property/resource capture, original factory metadata and owned copied assets. Preview values/clocks/queues remain untouched; ordinary Pack stays actual-pose. Method/audio/nested events, scene activation/instantiation notification and local-resource setup are suppressed. AnimationResetSaveTests verifies all controller families, disabled/missing/inactive policies, setter failures, source/hierarchy guards, asset lifetime and fresh-process files; Linux native GPU/compatibility checks are recorded separately."
     },
     {
+      "godot": "Parallax2D::property:physics_interpolation_mode",
+      "electron2d": "property:Electron2D.Node.PhysicsInterpolationMode()",
+      "reason": "Parallax uses the inherited typed Node property with the Inherit default."
+    },
+    {
       "godot": "Viewport::property:physics_interpolation_mode",
       "electron2d": "property:Electron2D.Node.PhysicsInterpolationMode()",
       "reason": "The inherited typed Node property preserves the Viewport On-default override through construction, revert metadata and stored/duplicated/copied scenes. CPU/GPU physical/presentation and nested native pixel checks execute the complete policy."
@@ -6413,41 +6412,6 @@
       "electron2d": "property:Electron2D.Node.TranslationDomain()",
       "reason": "Derived C# override of the inherited Object translation-domain contract; Node resolves its parent's current domain until explicitly assigned, as required by ADR 0007.",
       "adr": "adr-0007"
-    },
-    {
-      "electron2d": "constructor:Electron2D.ParallaxBackground..ctor()",
-      "state": "Implemented",
-      "reason": "Typed construction initializes the inherited canvas layer to -100 and all scroll settings to their pinned defaults."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxBackground.CreateSceneInstanceFactory()",
-      "state": "Implemented",
-      "reason": "Static exact-type constructor for PackedScene reconstruction."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxBackground.GetPropertyDescriptors()",
-      "state": "Implemented",
-      "reason": "Typed descriptors store six scroll settings and the background-specific inherited layer default."
-    },
-    {
-      "electron2d": "constructor:Electron2D.ParallaxLayer..ctor()",
-      "state": "Implemented",
-      "reason": "Typed detached construction defaults motion to unit scale, zero offset and no mirroring."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxLayer.CreateSceneInstanceFactory()",
-      "state": "Implemented",
-      "reason": "Static exact-type constructor for PackedScene reconstruction."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxLayer.GetConfigurationWarnings()",
-      "state": "Implemented",
-      "reason": "Reports the direct ParallaxBackground parent requirement through the existing typed Node diagnostics API."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxLayer.GetPropertyDescriptors()",
-      "state": "Implemented",
-      "reason": "Typed descriptors store original position and scale instead of camera-calculated values, plus three motion settings."
     },
     {
       "electron2d": "constructor:Electron2D.Parallax..ctor()",
@@ -8943,6 +8907,31 @@
   ],
   "statusGroups": [
     {
+      "state": "Excluded",
+      "reason": "ADR 0004: doc/classes/ParallaxBackground.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use the [Parallax2D] node instead.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Use Electron2D Parallax. No implementation trigger.",
+      "godot": [
+        "class:ParallaxBackground",
+        "ParallaxBackground::property:layer",
+        "ParallaxBackground::property:scroll_base_offset",
+        "ParallaxBackground::property:scroll_base_scale",
+        "ParallaxBackground::property:scroll_ignore_camera_zoom",
+        "ParallaxBackground::property:scroll_limit_begin",
+        "ParallaxBackground::property:scroll_limit_end",
+        "ParallaxBackground::property:scroll_offset"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: doc/classes/ParallaxLayer.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use the [Parallax2D] node instead.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Use Electron2D Parallax. No implementation trigger.",
+      "godot": [
+        "class:ParallaxLayer",
+        "ParallaxLayer::property:motion_mirroring",
+        "ParallaxLayer::property:motion_offset",
+        "ParallaxLayer::property:motion_scale",
+        "ParallaxLayer::property:physics_interpolation_mode"
+      ]
+    },
+    {
       "state": "Implemented",
       "reason": "ADR 0016/0095: exact borrowed object identity; absent lookup throws KeyNotFoundException instead of logging and returning null in the pinned implementation. The registry retains names after caller disposal. The generic overload checks C# assignability while preserving the same identity and absent-name behavior.",
       "godot": [
@@ -10462,42 +10451,6 @@
     },
     {
       "state": "Partial",
-      "reason": "Legacy canvas layer and direct spatial children follow pinned parallax_background.cpp/parallax_layer.cpp camera scrolling, zoom policy, mirroring and scene storage. Managed and native root Window checks pass. Editor behavior, independent/offscreen viewports and full canvas interpolation are missing or unaudited; no complete type parity is claimed.",
-      "godot": [
-        "class:ParallaxBackground",
-        "class:ParallaxLayer"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "Pinned camera movement and setter timing are implemented with typed finite validation; LegacyParallaxTests checks defaults, manual changes, zoom policy and packed state. Independent viewport and editor behavior remain unaudited.",
-      "godot": [
-        "ParallaxBackground::property:scroll_base_offset",
-        "ParallaxBackground::property:scroll_base_scale",
-        "ParallaxBackground::property:scroll_ignore_camera_zoom",
-        "ParallaxBackground::property:scroll_limit_begin",
-        "ParallaxBackground::property:scroll_limit_end",
-        "ParallaxBackground::property:scroll_offset"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "Pinned motion setters and one-extra-copy mirrored canvas submission execute through retained drawing; managed state and Linux dummy/Wayland pixels cover camera motion, original scale and packing. Editor and independent viewport behavior remain unaudited.",
-      "godot": [
-        "ParallaxLayer::property:motion_mirroring",
-        "ParallaxLayer::property:motion_offset",
-        "ParallaxLayer::property:motion_scale"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: implement Node.PhysicsInterpolationMode and render-pose interpolation in the scene and canvas backends; ParallaxLayer must default the inherited policy to Off. No inert per-type property is exposed (ADR 0008).",
-      "godot": [
-        "ParallaxLayer::property:physics_interpolation_mode"
-      ]
-    },
-    {
-      "state": "Partial",
       "reason": "The complete runtime countdown contract is executable and audited against pinned timer.cpp/timer.h under ADR 0036. Edited-scene autostart suppression requires the absent editor runtime; inherited Node gaps remain on Node coverage.",
       "godot": [
         "class:Timer",
@@ -10643,7 +10596,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Parallax : Entity executes camera-relative scroll, limits, autoscroll, repeated descendant drawing and packed configuration on Linux Wayland compatibility/GPU. The inherited physics-interpolation override awaits the Node interpolation slice; other platforms remain unverified (ADRs 0004/0008/0028).",
+      "reason": "Parallax : Entity supports camera-relative scroll, limits, autoscroll, retained descendant repetition and packed configuration (ADRs 0004/0008/0028). Native pixels pass on Windows x64 (Compatibility/D3D11 and GPU/D3D12), Linux Wayland (Compatibility and GPU) and SDL dummy (software Compatibility). This is root-window evidence. Other platforms, nested/offscreen viewports, high repeat counts, combined physics interpolation and editor behavior remain open.",
       "godot": [
         "class:Parallax2D"
       ]
@@ -10671,8 +10624,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: implement Node.PhysicsInterpolationMode and render-pose interpolation across the scene and both canvas backends; Parallax defaults this inherited policy to Off when that first interpolation slice lands (ADR 0008). No inert per-type property is exposed.",
+      "state": "Partial",
+      "reason": "Parallax inherits the implemented Node.PhysicsInterpolationMode and defaults to Inherit. The pinned Parallax2D default is Off. The interaction with parallax scrolling and repetition remains unverified.",
       "godot": [
         "Parallax2D::property:physics_interpolation_mode"
       ]

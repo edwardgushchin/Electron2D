@@ -21,7 +21,6 @@ namespace Electron2D.NVorbisBindings
             return ret;
         }
 
-        int _channels;
         int _begin;
         int _end;
         int _partitionSize;
@@ -116,10 +115,14 @@ namespace Electron2D.NVorbisBindings
                 }
             }
 
-            _channels = channels;
         }
 
         virtual public void Decode(IPacket packet, bool[] doNotDecodeChannel, int blockSize, float[][] buffer)
+        {
+            DecodeCore(packet, doNotDecodeChannel, blockSize, buffer, buffer.Length, false);
+        }
+
+        protected void DecodeCore(IPacket packet, bool[] doNotDecodeChannel, int blockSize, float[][] buffer, int channels, bool interleaved)
         {
             // this is pretty well stolen directly from libvorbis...  BSD license
             var end = _end < blockSize / 2 ? _end : blockSize / 2;
@@ -130,7 +133,7 @@ namespace Electron2D.NVorbisBindings
                 var partitionCount = n / _partitionSize;
 
                 var partitionWords = (partitionCount + _classBook.Dimensions - 1) / _classBook.Dimensions;
-                var partWordCache = new int[_channels, partitionWords][];
+                var partWordCache = new int[channels, partitionWords][];
 
                 for (var stage = 0; stage < _maxStages; stage++)
                 {
@@ -138,8 +141,9 @@ namespace Electron2D.NVorbisBindings
                     {
                         if (stage == 0)
                         {
-                            for (var ch = 0; ch < _channels; ch++)
+                            for (var ch = 0; ch < channels; ch++)
                             {
+                                if (!interleaved && doNotDecodeChannel[ch]) continue;
                                 var idx = _classBook.DecodeScalar(packet);
                                 if (idx >= 0 && idx < _decodeMap.Length)
                                 {
@@ -156,8 +160,9 @@ namespace Electron2D.NVorbisBindings
                         for (var dimensionIdx = 0; partitionIdx < partitionCount && dimensionIdx < _classBook.Dimensions; dimensionIdx++, partitionIdx++)
                         {
                             var offset = _begin + partitionIdx * _partitionSize;
-                            for (var ch = 0; ch < _channels; ch++)
+                            for (var ch = 0; ch < channels; ch++)
                             {
+                                if (!interleaved && doNotDecodeChannel[ch]) continue;
                                 var idx = partWordCache[ch, entryIdx][dimensionIdx];
                                 if ((_cascade[idx] & (1 << stage)) != 0)
                                 {

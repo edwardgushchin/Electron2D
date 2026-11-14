@@ -61,9 +61,9 @@ def build():
 
 
 def build_locked():
-    lock = (root / 'toolchain.lock.json').read_bytes()
+    lock = (root / 'toolchain.lock.json').read_bytes().replace(b'\r\n', b'\n')
     output = root / f'obj/toolchain/{host}'
-    recipe = hashlib.sha256(lock + Path(__file__).read_bytes()).hexdigest()
+    recipe = hashlib.sha256(lock + Path(__file__).read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     receipt = output / 'recipe.sha256'
     if (receipt.exists() and receipt.read_text() == recipe and
             all((output / 'bin' / (name + suffix)).is_file() for name in ('glslangValidator', 'spirv-val', 'spirv-dis'))):
@@ -79,7 +79,7 @@ def build_sources(lock, output):
     work.mkdir(parents=True, exist_ok=True)
     source = work / 'source'
     stamp = work / 'sources.json'
-    if not stamp.exists() or stamp.read_bytes() != lock or not (source / 'CMakeLists.txt').exists():
+    if not stamp.exists() or stamp.read_bytes().replace(b'\r\n', b'\n') != lock or not (source / 'CMakeLists.txt').exists():
         with tempfile.TemporaryDirectory(dir=work) as temporary:
             staging = Path(temporary)
             for entry in sources:
