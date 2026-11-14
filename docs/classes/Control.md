@@ -109,7 +109,6 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `protected virtual string OnGetAccessibilityContainerName(Node node)` | Immediate-child position, forwarding this container to a parent Control by default. |
 | `public float GetAnchor(Side side)` | Reads one anchor fraction. |
 | `public void SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)` | Updates one anchor and optionally the opposite anchor. |
-| `public void SetAnchorEndpoint(Side side, Anchor anchor, bool keepOffset = false, bool pushOppositeAnchor = true)` | Uses a named fraction through the same layout operation. |
 | `public void SetAnchorsPreset(LayoutPreset preset, bool keepOffsets = false)` | Applies all four anchor fractions; preserves the current rectangle unless offsets are kept. |
 | `public void SetOffsetsPreset(LayoutPreset preset, LayoutPresetMode resizeMode = MinSize, int margin = 0)` | Places all edges without changing anchors; wide presets span the parent axis. |
 | `public void SetAnchorsAndOffsetsPreset(LayoutPreset preset, LayoutPresetMode resizeMode = MinSize, int margin = 0)` | Applies anchors, then matching offsets. |
@@ -260,11 +259,7 @@ The virtual `HasPoint` tests a control-local point against `[0, Size.X) × [0, S
 
 ### `GetAnchor(Side side)`, `SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)`
 
-Side chooses left, top, right or bottom. GetAnchor returns the stored fraction. SetAnchor accepts finite fractions outside the zero-to-one range. By default it compensates offsets to preserve the resolved edge coordinates before size limits and RTL mirroring. With `keepOffset: true`, offsets are retained. A crossing either moves the opposite anchor to the new fraction or, with `pushOppositeAnchor: false`, clamps the edited anchor to the opposite fraction. Each Anchor property writes with offset retention and opposite-anchor pushing enabled.
-
-### `SetAnchorEndpoint(Side side, Anchor anchor, bool keepOffset = false, bool pushOppositeAnchor = true)`
-
-Uses [Anchor.Begin or Anchor.End](Control.Anchor.md) while keeping the same flags and geometry rules as SetAnchor. An undefined endpoint throws ArgumentOutOfRangeException.
+Side chooses left, top, right or bottom. GetAnchor returns the stored fraction. SetAnchor accepts finite fractions outside the zero-to-one range. By default it compensates offsets to preserve the resolved edge coordinates before size limits and RTL mirroring. With `keepOffset: true`, offsets are retained. A crossing either moves the opposite anchor to the new fraction or, with `pushOppositeAnchor: false`, clamps the edited anchor to the opposite fraction. Each Anchor property writes with offset retention and opposite-anchor pushing enabled. Cast [Anchor.Begin or Anchor.End](Control.Anchor.md) to `float` for the named fractions.
 
 ### `GetOffset(Side side)`, `SetOffset(Side side, float offset)`
 

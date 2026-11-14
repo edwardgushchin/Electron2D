@@ -524,20 +524,6 @@ public partial class Control : CanvasItem
     /// <exception cref="ArgumentOutOfRangeException">The side is undefined.</exception>
     public float GetAnchor(Side side) { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _anchors[SideIndex(side)]; }
 
-    /// <summary>Sets an anchor to a named endpoint of the parent area.</summary>
-    /// <param name="side">The side to update.</param>
-    /// <param name="anchor">The beginning or end of the selected axis.</param>
-    /// <param name="keepOffset">Keep offsets instead of preserving the affected edge coordinates.</param>
-    /// <param name="pushOppositeAnchor">Push a crossed opposite anchor; otherwise clamp the edited anchor to it.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The side or endpoint is undefined, or the resulting layout is nonfinite.</exception>
-    public void SetAnchorEndpoint(Side side, Anchor anchor, bool keepOffset = false, bool pushOppositeAnchor = true) =>
-        SetAnchor(side, anchor switch
-        {
-            Anchor.Begin => 0f,
-            Anchor.End => 1f,
-            _ => throw new ArgumentOutOfRangeException(nameof(anchor), anchor, "Unknown anchor endpoint.")
-        }, keepOffset, pushOppositeAnchor);
-
     /// <summary>Sets an anchor, optionally preserving its offset and moving the opposite anchor.</summary>
     /// <param name="side">The side to update.</param>
     /// <param name="anchor">A finite fraction of the parent area, which may be outside zero to one.</param>

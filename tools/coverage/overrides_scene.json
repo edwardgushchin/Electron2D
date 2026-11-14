@@ -3,22 +3,17 @@
     {
       "godot": "Control::enum:Anchor",
       "electron2d": "T:Electron2D.Control.Anchor",
-      "reason": "ADR 0051 keeps Control's endpoint values under their owning type. SetAnchorEndpoint consumes both values."
+      "reason": "ADR 0051 keeps Control's endpoint values under their owning type. Both values are named fractions for SetAnchor."
     },
     {
       "godot": "Control::enum_value:Anchor.ANCHOR_BEGIN",
       "electron2d": "enumValue:Electron2D.Control.Anchor.Begin()",
-      "reason": "Named endpoint executes through SetAnchorEndpoint."
+      "reason": "Named endpoint is a fractional input to SetAnchor."
     },
     {
       "godot": "Control::enum_value:Anchor.ANCHOR_END",
       "electron2d": "enumValue:Electron2D.Control.Anchor.End()",
-      "reason": "Named endpoint executes through SetAnchorEndpoint."
-    },
-    {
-      "godot": "Control::method:set_anchor(int:Side,float:,bool:,bool:)",
-      "electron2d": "method:Electron2D.Control.SetAnchorEndpoint(Electron2D.Side,Electron2D.Control.Anchor,System.Boolean,System.Boolean)",
-      "reason": "Typed endpoint authoring delegates to the same fractional side edit."
+      "reason": "Named endpoint is a fractional input to SetAnchor."
     },
     {
       "godot": "Control::method:set_anchor(int:Side,float:,bool:,bool:)",
@@ -8957,7 +8952,7 @@
         "Control::enum_value:Anchor.ANCHOR_END"
       ],
       "state": "Implemented",
-      "reason": "Both active numeric endpoint values execute through typed SetAnchorEndpoint and are checked on an attached Control."
+      "reason": "Both active numeric endpoint values are converted to fractions for SetAnchor and are checked on an attached Control."
     },
     {
       "godot": [

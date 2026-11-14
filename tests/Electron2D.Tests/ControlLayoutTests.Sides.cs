@@ -194,14 +194,11 @@ internal static partial class ControlLayoutTests
         using var control = new Control { Position = new(8, 12), Size = new(50, 24) };
         parent.AddChild(control);
         Check((int)Control.Anchor.Begin == 0 && (int)Control.Anchor.End == 1, "Named endpoint identity.");
-        control.SetAnchorEndpoint(Side.Right, Control.Anchor.End, keepOffset: true);
+        control.SetAnchor(Side.Right, (float)Control.Anchor.End, keepOffset: true);
         control.SetAnchor(Side.Left, .25f);
-        control.SetAnchorEndpoint(Side.Left, Control.Anchor.Begin, keepOffset: true);
+        control.SetAnchor(Side.Left, (float)Control.Anchor.Begin, keepOffset: true);
         Check(control.GetAnchor(Side.Left) == 0 && control.AnchorRight == 1 && control.OffsetLeft == -32 &&
               control.Position == new Vector2(-32, 12) && control.Size == new Vector2(250, 24), "Named endpoints participate in live layout.");
-        var before = Capture(control);
-        Reject<ArgumentOutOfRangeException>(() => control.SetAnchorEndpoint(Side.Top, (Control.Anchor)2));
-        Check(Capture(control).SequenceEqual(before), "An undefined named endpoint leaves the rectangle unchanged.");
     }
 
     private static void SetAnchorProperty(Control control, Side side, float value)

@@ -107955,40 +107955,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Control.SetAnchorEndpoint(Electron2D.Side,Electron2D.Control.Anchor,System.Boolean,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.Control",
-    "name": "SetAnchorEndpoint",
-    "signature": "public System.Void SetAnchorEndpoint(Electron2D.Side side, Electron2D.Control.Anchor anchor, System.Boolean keepOffset = false, System.Boolean pushOppositeAnchor = true)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "side",
-        "type": "Electron2D.Side",
-        "default": null
-      },
-      {
-        "name": "anchor",
-        "type": "Electron2D.Control.Anchor",
-        "default": null
-      },
-      {
-        "name": "keepOffset",
-        "type": "System.Boolean",
-        "default": "false"
-      },
-      {
-        "name": "pushOppositeAnchor",
-        "type": "System.Boolean",
-        "default": "true"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.Control.SetAnchorsAndOffsetsPreset(Electron2D.LayoutPreset,Electron2D.LayoutPresetMode,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
