@@ -25,6 +25,10 @@ The pinned [domain methods](https://github.com/godotengine/godot/blob/ed1daf0bf0
 
 Reproduce with `dotnet run --project tests/TranslationQueries.Consumer -c Release -- managed`, then the built apphost with `gpu OUTPUT` and `compatibility OUTPUT`. Use the matching native closure required by [development preflight](../development-ci.md). The local receipt at `bin/translation-queries/validation.json` records commands, dependency hashes and actual outcomes. No foreign-host, NativeAOT, native-allocation, package-delivery or full product-platform qualification is claimed by this bounded query slice.
 
+## Optimized catalog assets
+
+Generate a catalog explicitly from a `Translation` during authoring and save it as `.e2dres`. A runtime consumer loads and registers the borrowed catalog, then uses the ordinary culture selection path. The asset contains hashed keys, raw or Brotli values and its locale. Context is ignored during lookup, and plural requests use the selected key's first form. Loading validates the whole payload before replacing cached catalog state. See the [class contract](../classes/OptimizedTranslation.md#resource-files) for limits and verification.
+
 <a id="unicode-pseudolocalization"></a>
 ## Unicode pseudolocalization
 
