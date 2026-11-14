@@ -135,6 +135,7 @@ public static partial class ResourceFileTypes
         RegisterVisualShaderResources();
         RegisterResource("ShaderInclude", CreateShaderIncludeFileResource);
         RegisterResource("Translation", CreateTranslationFileResource);
+        RegisterResource("OptimizedTranslation", CreateOptimizedTranslationFileResource);
         RegisterResource("ShaderMaterial", CreateShaderMaterialFileResource);
         RegisterResource("CircleShape", CreateCircleFileResource);
         RegisterResource("CapsuleShape", CreateCapsuleFileResource);
@@ -158,6 +159,7 @@ public static partial class ResourceFileTypes
     private static Shader CreateShaderFileResource() => new();
     private static ShaderInclude CreateShaderIncludeFileResource() => new();
     private static Translation CreateTranslationFileResource() => new();
+    private static OptimizedTranslation CreateOptimizedTranslationFileResource() => new();
     private static ShaderMaterial CreateShaderMaterialFileResource() => new();
     private static Node CreateNode() => new();
     private static Entity CreateEntity() => new();
