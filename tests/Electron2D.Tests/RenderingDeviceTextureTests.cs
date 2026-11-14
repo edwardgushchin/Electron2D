@@ -3,9 +3,14 @@ using Electron2D;
 
 internal static class RenderingDeviceTextureTests
 {
-    internal static void Run()
+    internal static void Run(bool samplingOnly = false)
     {
         using var device = RenderingServer.CreateLocalRenderingDevice();
+        if (samplingOnly)
+        {
+            SamplingModes(device);
+            return;
+        }
         foreach (var name in new[] { "LocalTexture.comp", "LocalTextureHLSL.comp" })
         {
             using var format = new RDTextureFormat { Width = 13, Height = 9, Format = RenderingDevice.DataFormat.R8G8B8A8UNORM, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanUpdate | RenderingDevice.TextureUsageBits.CPURead };
@@ -100,7 +105,9 @@ internal static class RenderingDeviceTextureTests
         using var parameter = new RDUniform { Binding = 1, UniformType = RenderingDevice.UniformType.UniformBuffer }; parameter.AddID(parameters); var parameterSet = device.UniformSetCreate([parameter], shader, 2);
         float[] Sample(RDSamplerState state, float u, float v, float layer, float lod)
         {
-            var sampler = device.SamplerCreate(state); using var source = new RDUniform { Binding = 7, UniformType = RenderingDevice.UniformType.SamplerWithTexture }; source.AddID(sampler); source.AddID(texture);
+            RID sampler;
+            using (var description = SamplerConfiguration.Capture(state).CreateState()) sampler = device.SamplerCreate(description);
+            using var source = new RDUniform { Binding = 7, UniformType = RenderingDevice.UniformType.SamplerWithTexture }; source.AddID(sampler); source.AddID(texture);
             var sourceSet = device.UniformSetCreate([source], shader, 3); float[] coords = [u, v, layer, lod]; device.BufferUpdate(parameters, 0, 16, MemoryMarshal.AsBytes(coords.AsSpan()));
             var list = device.ComputeListBegin(); device.ComputeListBindComputePipeline(list, pipeline); device.ComputeListBindUniformSet(list, sourceSet, 3); device.ComputeListBindUniformSet(list, parameterSet, 2); device.ComputeListBindUniformSet(list, targetSet, 9); device.ComputeListDispatch(list, 1, 1, 1); device.ComputeListEnd();
             var value = MemoryMarshal.Cast<byte, float>(device.BufferGetData(output).AsSpan()).ToArray(); device.FreeRID(sampler); Check(!device.UniformSetIsValid(sourceSet), "Sampler free invalidates borrowing sets."); device.FreeRID(sourceSet); return value;
@@ -117,9 +124,25 @@ internal static class RenderingDeviceTextureTests
         state.MIPFilter = RenderingDevice.SamplerFilter.Linear; var mixed = Sample(state, .75f, .25f, 0, .5f); Check(Math.Abs(mixed[0] - .5f) <= filteredTolerance && Math.Abs(mixed[1] - .5f) <= filteredTolerance, "Mip filtering interpolates two mip levels.");
         state.MinLOD = state.MaxLOD = 1; Check(Sample(state, .75f, .25f, 0, 0)[1] == 1, "The minimum LOD clamps to the smaller mip.");
         state.MinLOD = state.MaxLOD = 0; Check(Sample(state, .75f, .25f, 0, 1)[0] == 1, "The maximum LOD clamps to the larger mip.");
-        using var wrong = new RDTextureFormat { Format = RenderingDevice.DataFormat.R8G8B8A8UINT, UsageBits = RenderingDevice.TextureUsageBits.Sampling }; var integer = device.TextureCreate(wrong, view); var samplerRID = device.SamplerCreate(state);
-        using var binding = new RDUniform { Binding = 7, UniformType = RenderingDevice.UniformType.SamplerWithTexture }; binding.AddID(samplerRID); binding.AddID(integer); Reject<ArgumentException>(() => device.UniformSetCreate([binding], shader, 3));
-        device.FreeRID(integer); device.FreeRID(samplerRID); device.FreeRID(texture); device.FreeRID(output); device.FreeRID(parameters); device.FreeRID(targetSet); device.FreeRID(parameterSet); device.FreeRID(pipeline); device.FreeRID(shader);
+        using var wrong = new RDTextureFormat { Format = RenderingDevice.DataFormat.R8G8B8A8UINT, UsageBits = RenderingDevice.TextureUsageBits.Sampling };
+        if (device.TextureIsFormatSupportedForUsage(wrong.Format, wrong.UsageBits))
+        {
+            var integer = device.TextureCreate(wrong, view);
+            var samplerRID = device.SamplerCreate(state);
+            using var binding = new RDUniform { Binding = 7, UniformType = RenderingDevice.UniformType.SamplerWithTexture };
+            binding.AddID(samplerRID);
+            binding.AddID(integer);
+            Reject<ArgumentException>(() => device.UniformSetCreate([binding], shader, 3));
+            device.FreeRID(integer);
+            device.FreeRID(samplerRID);
+            Console.WriteLine("The sampled integer format cannot bind to a float shader slot.");
+        }
+        else
+        {
+            Reject<NotSupportedException>(() => device.TextureCreate(wrong, view));
+            Console.WriteLine("The device refuses the unsupported sampled integer format.");
+        }
+        device.FreeRID(texture); device.FreeRID(output); device.FreeRID(parameters); device.FreeRID(targetSet); device.FreeRID(parameterSet); device.FreeRID(pipeline); device.FreeRID(shader);
         Console.WriteLine("Texture layers, nearest/linear, repeat/mirror/clamp and mip/LOD sampling passed.");
     }
     private static void IntegerImages(RenderingDevice device)
