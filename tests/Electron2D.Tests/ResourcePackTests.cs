@@ -126,13 +126,16 @@ internal static class ResourcePackTests
             writer.Flush();
         }
         var zip = Path.Combine(folder, "listing.zip");
-        using (var archive = System.IO.Compression.ZipFile.Open(zip, System.IO.Compression.ZipArchiveMode.Create))
+        using (var writer = new ZIPPacker())
         {
-            archive.CreateEntry("listing/.hidden-dir/item");
-            archive.CreateEntry("listing/.hidden-file");
-            archive.CreateEntry("listing/zip-child/item");
-            using var file = archive.CreateEntry("listing/zip-file").Open();
-            file.WriteByte(3);
+            writer.Open(zip);
+            writer.StartFile("listing/.hidden-dir/item");
+            writer.StartFile("listing/.hidden-file");
+            writer.StartFile("listing/zip-child/item");
+            writer.StartFile("listing/zip-child/other");
+            writer.StartFile("listing/zip-file");
+            writer.WriteFile([3]);
+            writer.Close();
         }
         var emptyZip = Path.Combine(folder, "listing-empty.zip");
         using (var writer = new ZIPPacker())
@@ -189,7 +192,7 @@ internal static class ResourcePackTests
               names["pck-child"] && names["zip-child"] && !resources.CurrentIsDir(),
             "The merged cursor must enumerate each visible name and reset its kind at EOF.");
         resources.ChangeDir("zip-child");
-        Check(resources.GetCurrentDir() == virtualPath + "/zip-child" && resources.GetFiles().SequenceEqual(["item"]),
+        Check(resources.GetCurrentDir() == virtualPath + "/zip-child" && resources.GetFiles().SequenceEqual(["item", "other"]),
             "A ZIP-only directory supports navigation and enumeration.");
         resources.ChangeDir("..");
 
@@ -226,7 +229,20 @@ internal static class ResourcePackTests
             writer.AddFileFromBuffer("listing/zip-child", [4]);
             writer.Flush();
         }
-        Check(ProjectSettings.LoadResourcePack(removal), "Replace a mounted directory with a file.");
+        Check(!ProjectSettings.LoadResourcePack(removal) &&
+              DirAccess.GetFilesAt(virtualPath + "/zip-child").SequenceEqual(["item", "other"]),
+            "Replacing a directory with a surviving child must reject without dropping the removed child.");
+        using (var writer = new PCKPacker())
+        {
+            writer.PCKStart(removal);
+            writer.AddFileRemoval("listing/zip-child/item");
+            writer.AddFileRemoval("listing/zip-child/other");
+            writer.AddFileFromBuffer("listing/zip-child", [4]);
+            writer.Flush();
+        }
+        Check(ProjectSettings.LoadResourcePack(removal) &&
+              EFile.GetFileAsBytes(virtualPath + "/zip-child").SequenceEqual(new byte[] { 4 }),
+            "Replace a directory recorded by ZIPPacker with a file after removing all of its children.");
         Check(DirAccess.GetDirectoriesAt(virtualPath + "/nested").SequenceEqual(["empty"]),
             "Later mounts preserve explicit empty ZIP directories.");
         var conflict = Path.Combine(folder, "listing-conflict.pck");
@@ -242,7 +258,8 @@ internal static class ResourcePackTests
             "An explicit directory collision rejects the entire mount.");
         Reject<DirectoryNotFoundException>(() => shadowed.ListDirBegin());
         Reject<DirectoryNotFoundException>(() => DirAccess.GetDirectoriesAt(virtualPath + "/zip-child"));
-        Check(shadowed.CurrentIsDir() && shadowed.GetNext() == ".." && shadowed.GetNext() == "item",
+        Check(shadowed.CurrentIsDir() && shadowed.GetNext() == ".." &&
+              new[] { shadowed.GetNext(), shadowed.GetNext() }.Order(StringComparer.Ordinal).SequenceEqual(["item", "other"]),
             "A failed restart must preserve the already captured listing.");
         shadowed.Dispose();
         shadowed.Dispose();

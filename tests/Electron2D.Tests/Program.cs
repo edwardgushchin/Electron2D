@@ -718,7 +718,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION") == "1") { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_GROUP") is { } groupBackend) { CanvasServerGroupTests.Run(groupBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS_HOST") == "1") { RenderingCanvasTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS") == "1") { RenderingCanvasTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARALLAX_REGRESSION") == "1") { ParallaxTests.Run(); LegacyParallaxTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARALLAX_REGRESSION") == "1") { ParallaxTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_REPEAT") is { } repeatBackend) { CanvasRepeatTests.Run(repeatBackend); return; }
 if (args.Length == 2 && args[0] == "--gettext-oracle") { TranslationCatalogTests.VerifyFiles(args[1]); return; }
 if (args.Length == 2 && args[0] == "--gettext-child") { TranslationCatalogTests.ReadArchive(args[1]); return; }
@@ -2393,7 +2393,6 @@ CanvasCoordinateTests.Run();
 CameraTests.Run();
 JsonTests.Run();
 ParallaxTests.Run();
-LegacyParallaxTests.Run();
 CanvasLayerTests.Run();
 CanvasMaskTests.Run();
 CanvasTransformNotificationTests.Run();

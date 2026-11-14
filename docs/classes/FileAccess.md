@@ -242,6 +242,8 @@ Opens a file with the requested access mode.
 
 On Windows, physical read-only streams allow staged replacement. An open reader can finish reading the original file, and subsequent opens of the path see the replacement.
 
+When a mounted directory and a physical file share a `res://` path, the directory takes precedence. `Open` throws `FileNotFoundException` for that resource path. The physical file remains accessible through its native absolute path.
+
 **Parameters**
 
 - `path`: A nonempty ordinary, `res://`, or `user://` path.

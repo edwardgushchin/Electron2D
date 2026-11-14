@@ -162,6 +162,13 @@ internal sealed class ResourcePacks
             }
             records.Add((PCKFormat.Normalize(entry.FullName), new(pack, 0, entry.Length, null, i)));
         }
+
+        // ZIP writers can emit parent records for files. Those directories follow the lifetime of their file entries.
+        foreach (var (name, _) in records)
+        {
+            for (var slash = name.IndexOf('/'); slash >= 0; slash = name.IndexOf('/', slash + 1))
+                explicitDirectories.Remove(name[..slash]);
+        }
         return records;
     }
 

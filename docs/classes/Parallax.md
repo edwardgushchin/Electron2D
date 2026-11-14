@@ -12,7 +12,7 @@ Last updated: 2026-09-23
 
 Parallax positions its canvas subtree in response to the current camera. `ScrollScale` changes the apparent scrolling speed; `ScrollOffset` adds a manual displacement. `RepeatSize` and `RepeatTimes` draw copies of each descendant CanvasItem without copying nodes or invoking draw callbacks again. It is an ordinary spatial Entity for hierarchy and transform queries. `Position` is calculated during scroll updates and is omitted from packed scene state.
 
-Camera updates assign `ScreenOffset` unless `IgnoreCameraScroll` is true. Attached mutations and callbacks run on the scene owner thread. The root Window is the currently supported rendering viewport. Physics interpolation is an inherited Node gap recorded in coverage.
+Camera updates assign `ScreenOffset` unless `IgnoreCameraScroll` is true. Attached mutations and callbacks run on the scene owner thread. The root Window is the currently supported rendering viewport. Parallax inherits [Node.PhysicsInterpolationMode](Node.md#p-electron2d-node-physicsinterpolationmode) and defaults to `PhysicsInterpolationMode.Inherit`.
 
 ## Example
 
@@ -92,6 +92,12 @@ Initially `(-10000000, -10000000)` and `(10000000, 10000000)`. The camera-derive
 
 `OnNotification` calls the base notification path first, then advances Autoscroll for `NotificationInternalProcess` while attached. A derived override should call `base.OnNotification(what)` to retain this behavior. `GetPropertyDescriptors` extends the Entity descriptors, omitting `Position` and adding all ten Parallax settings. Derived types should include these descriptors when adding their own stored state. `CreateSceneInstanceFactory` returns a static constructor only for the exact Parallax type; a derived type needs its own noncapturing factory for `PackedScene` reconstruction.
 
+## Scenes authored with the former parallax types
+
+Author camera-relative scrolling with `Parallax` and use an ordinary [CanvasLayer](CanvasLayer.md) when the subtree needs a separate canvas or layer order. Move each scrolling subtree under a `Parallax` and set its scroll and repeat properties for the intended effect. The former `ParallaxBackground` and `ParallaxLayer` node IDs and their fields have no automatic conversion.
+
+With the default strict policy enabled, reading an archive containing either retired factory ID throws `InvalidDataException`. Explicit missing-type recovery through `ResourceLoader.SetAbortOnMissingResources(false)` may preserve the original ID and recoverable stored fields as a [MissingNode](MissingNode.md) under the ordinary archive rules. That placeholder does not scroll or repeat the canvas. The default `ResourceLoader.CacheMode.Reuse` returns a cached `PackedScene` even after strict policy is restored. To recheck the file under strict policy, enable it with `ResourceLoader.SetAbortOnMissingResources(true)` and load with `ResourceLoader.CacheMode.Ignore`.
+
 ## Lifecycle and rendering
 
 On tree entry, Parallax binds to its containing Viewport and computes its current position. The current Camera publishes an adjusted screen origin on view updates. If a parallax transform callback throws, the Viewport attempts the remaining registered updates and then reports the aggregated failures. Auto scrolling uses Node's internal idle lane and inherited pause/process policy. Tree exit unregisters the node even when canvas callbacks fail. `PackedScene` stores the ten settings and inherited spatial orientation/scale, while the calculated `Position` and live Viewport association are not stored.
@@ -100,7 +106,7 @@ The renderer finds the nearest repeated Parallax ancestor for each retained Canv
 
 ## Verification and limits
 
-[ParallaxTests](../../tests/Electron2D.Tests/ParallaxTests.cs) covers defaults, clamping, invalid input, camera and manual movement, limits, follow/ignore policy, automatic wrapping, packed state, detach/reattach, callback-failure continuation and owner-thread guards. Its self-contained native pixel check verifies retained drawing, nearest nested repeat sources, scaled/Y-sorted copies, copy counts and camera motion on Linux Wayland compatibility and GPU backends and dummy/software compatibility. The full Linux Wayland rendering suite also passes. Other platforms, high repeat counts, nested/offscreen viewports, physics interpolation, editor behavior and owner visual acceptance remain unverified or unimplemented as tracked in coverage.
+[ParallaxTests](../../tests/Electron2D.Tests/ParallaxTests.cs) covers defaults, clamping, invalid input, camera and manual movement, limits, follow/ignore policy, automatic wrapping, packed state, detach/reattach, callback-failure continuation and owner-thread guards. Native pixel checks verify retained drawing, nearest nested repeat sources, scaled and Y-sorted copies, copy counts and camera motion in a root window. They passed on Windows x64 with Compatibility/D3D11 and GPU/D3D12 on an RTX 3090 Ti, on Linux Wayland with Compatibility and GPU, and on SDL dummy with software Compatibility. A previous full Linux Wayland rendering suite also passed. Other platforms, high repeat counts for Parallax, nested or offscreen viewports, the combination with physics interpolation, editor behavior and owner visual acceptance remain open.
 
 The public name follows [ADR 0004](../decisions/product.md#adr-0004), scene inheritance follows [ADR 0008](../decisions/scene.md#adr-0008), and rendering follows [ADR 0028](../decisions/rendering.md#adr-0028).
 
