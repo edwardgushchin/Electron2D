@@ -310394,6 +310394,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Window.AccessibilityDescription()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "AccessibilityDescription",
+    "signature": "public System.String AccessibilityDescription { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.AccessibilityName()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "AccessibilityName",
+    "signature": "public System.String AccessibilityName { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Window.AlwaysOnTop()",
     "kind": "property",
     "declaringType": "Electron2D.Window",

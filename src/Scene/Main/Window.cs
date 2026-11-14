@@ -16,6 +16,8 @@ public partial class Window : Viewport
         new PropertyDescriptor<Window, Vector2i>(nameof(Position), w => w.Position, (w, v) => w.Position = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, WindowInitialPosition>(nameof(InitialPosition), w => w.InitialPosition, (w, v) => w.InitialPosition = v, _ => WindowInitialPosition.Absolute, stored: true),
         new PropertyDescriptor<Window, string>(nameof(Title), w => w.Title, (w, v) => w.Title = v, _ => "", stored: true),
+        new PropertyDescriptor<Window, string>(nameof(AccessibilityName), w => w.AccessibilityName, (w, v) => w.AccessibilityName = v, _ => "", stored: true),
+        new PropertyDescriptor<Window, string>(nameof(AccessibilityDescription), w => w.AccessibilityDescription, (w, v) => w.AccessibilityDescription = v, _ => "", stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2i.Zero, stored: true),
@@ -34,6 +36,8 @@ public partial class Window : Viewport
     private DisplayServer? _display;
     private RenderingServer? _renderer;
     private string _title = "";
+    private string _accessibilityName = "", _accessibilityDescription = "";
+    private string _resolvedAccessibilityName = "", _resolvedAccessibilityDescription = "";
     private Vector2i _size = new(100, 100);
     private Vector2i _minSize;
     private Vector2i _maxSize;
@@ -79,7 +83,55 @@ public partial class Window : Viewport
         }
     }
 
-    internal string AccessibilityTitle => _display?.AccessibilityTitle ?? _title;
+    /// <summary>Gets or sets the authored name reported to assistive technology.</summary>
+    /// <value>Empty initially. An empty name uses the window title in the semantic tree.</value>
+    /// <remarks>Stored in scenes and automatically translated using this window's translation context.</remarks>
+    /// <exception cref="ArgumentNullException">The new name is null.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner or mutation is capture-owned.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    public string AccessibilityName
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _accessibilityName; }
+        set
+        {
+            EnsureMutable();
+            ArgumentNullException.ThrowIfNull(value);
+            if (_accessibilityName == value) return;
+            _resolvedAccessibilityName = Atr(value);
+            _accessibilityName = value;
+            QueueAccessibilityUpdate();
+            UpdateConfigurationWarnings();
+        }
+    }
+
+    /// <summary>Gets or sets the authored description reported to assistive technology.</summary>
+    /// <value>Empty initially.</value>
+    /// <remarks>Stored in scenes and automatically translated using this window's translation context.</remarks>
+    /// <exception cref="ArgumentNullException">The new description is null.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner or mutation is capture-owned.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    public string AccessibilityDescription
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _accessibilityDescription; }
+        set
+        {
+            EnsureMutable();
+            ArgumentNullException.ThrowIfNull(value);
+            if (_accessibilityDescription == value) return;
+            _resolvedAccessibilityDescription = Atr(value);
+            _accessibilityDescription = value;
+            QueueAccessibilityUpdate();
+        }
+    }
+
+    internal string AccessibleCaption => _accessibilityName.Length != 0 ? _resolvedAccessibilityName : _display?.AccessibilityTitle ?? _title;
+    internal string AccessibleDescription => _resolvedAccessibilityDescription;
+
+    private void RefreshAccessibilityText()
+    {
+        _resolvedAccessibilityName = Atr(_accessibilityName);
+        _resolvedAccessibilityDescription = Atr(_accessibilityDescription);
+    }
 
     /// <summary>Gets the observed client size or requests a positive client size.</summary>
     /// <value>100 by 100 before configuration or native activation.</value>

@@ -62,6 +62,8 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public Vector2i Position { get; set; }`](#position) | Gets or requests the client origin in native desktop or embedded-host coordinates. |
 | [`public Vector2i Size { get; set; }`](#size) | Gets the observed client size or requests a positive client size. |
 | [`public string Title { get; set; }`](#title) | Gets or sets the native window title. |
+| [`public string AccessibilityName { get; set; }`](#accessibility-metadata) | Stores the name reported to assistive technology. Empty uses the window title. |
+| [`public string AccessibilityDescription { get; set; }`](#accessibility-metadata) | Stores the description reported to assistive technology. Empty clears it. |
 | [`public bool Visible { get; set; }`](#visible) | Gets or sets native or embedded visibility; hiding a native child retires its host. |
 | [`public WindowMode Mode { get; set; }`](#mode) | Gets the observed native mode, or configures a presentation-mode request. |
 | [`public int CurrentScreen { get; set; }`](#currentscreen) | Gets the observed display index, or requests placement on a zero-based display index. |
@@ -75,6 +77,10 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public bool ExcludeFromCapture { get; set; }`](#exclude-from-capture) | Excludes the native window from ordinary OS capture where supported. |
 | [`public bool ForceNative { get; set; }`](#forcenative) | Overrides a containing embedding viewport while hidden. |
 | [`public bool TransientToFocused { get; set; }`](#transienttofocused) | Chooses the focused native transient owner on the next show. |
+
+## Accessibility metadata
+
+Both properties default to an empty string and return authored text. Assignment rejects null. Scenes and duplicates retain the strings. Automatic scene publication resolves them using the window's translation context and updates the native accessibility tree when the effective text changes. The ordinary window title and its decoration are independent of this metadata. See [Native accessibility](../components/accessibility.md#window-names-and-descriptions) for native and embedded window behavior.
 
 ## Native mouse input
 

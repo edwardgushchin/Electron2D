@@ -528,6 +528,8 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 
 [SceneAccessibility](../classes/SceneAccessibility.md) reconciles automatic Node semantic identity/order after ordinary frame/deferred work. [SceneTree](../classes/SceneTree.md#native-accessibility-integration) exposes connected support and automatic publication for the tree’s own native display. Node exposes queued update/invalidate notifications and warning/focused-element extension points. Control stores translated accessible names/descriptions; GUI focus and BaseButton activation remain the behavior owners. Native RIDs and callbacks are never copied or serialized. See [Native accessibility](../components/accessibility.md) for application policy, native protocols and verification limits.
 
+Window stores [accessible names and descriptions](../components/accessibility.md#window-names-and-descriptions) for native and embedded windows.
+
 [Native collection accessibility](../classes/AccessibilityServer.md#native-collections) connects ItemList, Tree/TreeItem and TabBar/TabContainer source records to real Selection/Table/TableCell requests, expansion and ordinary GUI selection. The owning reference records identity, lifetime and exercised limits.
 
 [Native live and popup accessibility](../classes/AccessibilityServer.md#native-live-and-popups) connects typed live policy, explicit tooltip/context actions and real PopupMenu/OptionButton selection. Authored policy survives scenes; runtime menu and native identities retain their own lifetime.

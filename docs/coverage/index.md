@@ -1,3 +1,5 @@
+[Window names and descriptions](../components/accessibility.md#window-names-and-descriptions) publish localized metadata for native and embedded windows through AT-SPI. Two properties move to Implemented and two deprecated font-oversampling aliases move to Excluded. Coverage is **14,000/18,898 (74.08%)**, with 1,120 Partial, 269 Unimplemented, 3,509 Blocked, 8,395 Excluded and zero unmapped.
+
 [Dynamic raster state](../components/depth-stencil-state.md#dynamic-raster-state) changes line width, depth bias and depth bounds within Vulkan draw lists. Three flags move from Blocked to Implemented and their completed enum moves from Partial to Implemented. Coverage is **13,998/18,900 (74.06%)**, with 1,120 Partial, 269 Unimplemented, 3,513 Blocked, 8,393 Excluded and zero unmapped.
 
 [Dynamic stencil state](../components/depth-stencil-state.md#dynamic-stencil-state) records independent per-face masks and references within Vulkan draw lists. Three rows move from Blocked to Implemented. Coverage is **13,994/18,900 (74.04%)**, with 1,121 Partial, 269 Unimplemented, 3,516 Blocked, 8,393 Excluded and zero unmapped.

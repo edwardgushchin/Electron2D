@@ -1,6 +1,6 @@
 # Native accessibility
 
-Last updated: 2026-10-27
+Last updated: 2026-11-14
 
 ## Scope and owned types
 
@@ -33,6 +33,12 @@ The `ELECTRON2D_TEST_SCENE_ACCESSIBILITY_STATE` profile verifies the tree querie
 These checks establish the exercised Linux protocol and GUI behavior. A real human screen-reader session, native heap totals, physical GPUs/input, performance throughput, X11 screen placement and foreign-platform adapters remain separate acceptance gates. Remaining color/custom payload actions retain explicit follow-up slices in coverage; assigning a role does not implement those protocols. Driver selection and automatic scene scheduling now execute as described below.
 
 Container.AccessibilityRegion is stored and inherited across the complete container family. It toggles the real landmark/container native role using the ordinary accessible name; unnamed landmarks and actions expose authoring warnings. The typed project policy has generated JSON enum metadata so static startup and persistence work without reflection.
+
+## Window names and descriptions
+
+[`Window.AccessibilityName` and `Window.AccessibilityDescription`](../classes/Window.md#accessibility-metadata) follow automatic scene publication. A native root or native child publishes its metadata on its own accessibility root. An embedded window publishes on its window element in the enclosing native tree. An empty name falls back to the ordinary title and an empty description clears that field. Locale and translation-context changes resolve the authored text before publication. Metadata changes and retirement use the existing native notifications and prepared source snapshots.
+
+The managed foundation fixture checks duplication and a fresh-process scene load. The `ELECTRON2D_TEST_WINDOW_ACCESSIBILITY=compatibility` profile passed on WSLg X11 and Wayland with the source-built Linux bridge and SDL 3.4.18. An [independent AT-SPI client](../../tests/AccessibilityClient/window_metadata.py) in a private D-Bus session reads the root, embedded and native child properties, checks a live locale change and observes child retirement, description clearing and title fallback. Native output requires the Linux AT-SPI adapter and automatic scene publication. Other platform adapters remain open under ADR 0114.
 
 The standalone NativeAOT consumer verifies compiled policy persistence, native callback failure/reopening, manual semantic geometry/hit/action output and automatic Compatibility GUI landmarks/roles/states/focus/actions with local native prerequisites in the documented runtimes layout. This is an executable public-project check; release-package qualification remains the separate development/release pipeline.
 

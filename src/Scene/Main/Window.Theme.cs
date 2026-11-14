@@ -267,6 +267,7 @@ public partial class Window
         var reversed = IsNotificationReversed;
 
         if (!reversed) base.OnNotification(what);
+        if (what is NotificationEnterTree or NotificationTranslationChanged) RefreshAccessibilityText();
         if (what == NotificationVPMouseEnter && !_mouseInContent) { _mouseInContent = true; EmitWindowSignal(BeginEventEmission(_publisherMouseEntered.Handlers)); }
         else if (what == NotificationVPMouseExit && _mouseInContent) { _mouseInContent = false; EmitWindowSignal(BeginEventEmission(_publisherMouseExited.Handlers)); }
         else if (what == NotificationEnterTree) ThemeOwner.NotifySelf();

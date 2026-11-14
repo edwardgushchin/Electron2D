@@ -10613,13 +10613,19 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "First typed GUI, text and theme integration with Window after the renderer (ADRs 0008 and 0028).",
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned ed1daf0b scene/main/window.cpp guards both definitions and bindings with DISABLE_DEPRECATED. They forward to Viewport oversampling, exposed as the inherited Viewport.Oversampling property.",
       "godot": [
         "Window::method:is_using_font_oversampling()",
-        "Window::method:set_use_font_oversampling(bool:)",
-        "Window::property:accessibility_description",
-        "Window::property:accessibility_name"
+        "Window::method:set_use_font_oversampling(bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: stored authored names and descriptions feed native root and embedded semantic elements via prepared translated source metadata. Empty name restores the title and empty description clears its native property. Managed duplication and fresh-process archive checks and the independent AT-SPI window metadata client cover both declarations. Foreign platform adapters retain their owning integration and acceptance gates.",
+      "godot": [
+        "Window::property:accessibility_name",
+        "Window::property:accessibility_description"
       ]
     },
     {

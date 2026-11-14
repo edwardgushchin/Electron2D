@@ -9,6 +9,8 @@ Process-wide service operations and events use static access to retained objects
 
 ## Scope and types
 
+Window also owns [accessible name and description](accessibility.md#window-names-and-descriptions) for native and embedded windows. These stored properties follow the automatic scene accessibility policy.
+
 [Window](../classes/Window.md) derives from [Viewport](../classes/Viewport.md), which derives from the neutral Node. Window owns the [WindowMode](../classes/WindowMode.md) and [Flags](../classes/WindowFlag.md) identifiers. A consumer configures a root Window and can add scene children directly or start the [configured main scene](engine-runtime.md#project-main-scene). The root window connects scene processing and retained canvas drawing through [RenderingServer](../classes/RenderingServer.md). Broader rendering and GUI APIs remain incomplete.
 
 [ADR 0028](../decisions/rendering.md#adr-0028) selects HLSL and GLSL compilation at project import/build, followed by one SPIR-V validation, reflection and GPU-program path through SDL3-CS/SDL_shadercross. Compatible SPIR-V from third-party compilers uses the same path. Direct language support also requires diagnostics, material parameters, textures, consistent bindings and backend checks. The current [shader/material integration](shader-materials.md) executes typed fragment uniforms and sampled textures on Linux Wayland/Vulkan. The SDL_Renderer fallback rejects arbitrary shaders explicitly.
