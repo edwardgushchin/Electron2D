@@ -1,0 +1,12 @@
+<Project>
+  <Target Name="GenerateElectron2DEngineMetadata" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_EngineMetadata>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)engine-metadata.bin'))</_EngineMetadata>
+    </PropertyGroup>
+    <Exec Command="&quot;$(Electron2DNativePython)&quot; -B &quot;$(MSBuildThisFileDirectory)generate_engine_metadata.py&quot; --output &quot;$(_EngineMetadata)&quot;" />
+    <ItemGroup>
+      <EmbeddedResource Include="$(_EngineMetadata)" LogicalName="Electron2D.EngineMetadata" />
+      <FileWrites Include="$(_EngineMetadata)" />
+    </ItemGroup>
+  </Target>
+</Project>

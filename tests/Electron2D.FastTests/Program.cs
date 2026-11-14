@@ -1,3 +1,4 @@
+if (args.Contains("--engine-metadata")) { EngineMetadataChecks.Run(); return; }
 if (args.Contains("--webrtc")) { WebRTCTests.Run(); return; }
 if (args.Contains("--webrtc-close-error")) { WebRTCTests.CloseError(); return; }
 if (args.Contains("--ktx-production-memory")) { NativeKTXMemoryTests.RunProduction(); return; }
@@ -10,4 +11,5 @@ if (args.Contains("--freetype-allocation")) { NativeFontAllocationTests.Run(); r
 NativeAllocationTests.Run();
 if (args.Contains("--native-allocation")) return;
 ContractChecks.Run();
+EngineMetadataChecks.Run();
 CanvasVertexLayoutTests.Run();
