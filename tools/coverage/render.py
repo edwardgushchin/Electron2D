@@ -740,7 +740,7 @@ def render():
             updated = "2026-10-28"
         if name in {"NativeMenu", "PopupMenu"}:
             updated = "2026-11-06"
-        if name in {"ProjectSettings", "RenderingServer", "TranslationDomain", "TranslationServer"}:
+        if name in {"@GlobalScope", "ProjectSettings", "RenderingServer", "TranslationDomain", "TranslationServer"}:
             updated = "2026-11-14"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

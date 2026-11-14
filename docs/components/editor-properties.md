@@ -77,6 +77,7 @@ Each `CanvasItem.Material` assignment, including an equal one, now raises the ty
 
 - Names are non-empty and unique within a resolved property list.
 - Owner and value types are fixed by generic arguments.
+- `ValueType` exposes the CLR type of the declared value for tooling. The descriptor's compiled getter and setter carry that value type through discovery, validation, reads and writes. Arbitrary named object metadata is outside this boundary under [ADR 0001](../decisions/product.md#adr-0001).
 - Read-only descriptors reject writes and cannot define revert values.
 - Stored descriptors must be writable. Unsupported reference-shaped stored values fail capture instead of retaining arbitrary object graphs.
 - Validators reject values with `ArgumentOutOfRangeException`.
