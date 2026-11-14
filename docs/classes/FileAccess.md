@@ -41,7 +41,7 @@ file.WriteString("ready");
 | [`public string Path { get; }`](#p-electron2d-fileaccess-path) | Gets the path supplied when this file was opened. |
 | [`public string AbsolutePath { get; }`](#p-electron2d-fileaccess-absolutepath) | Gets the physical operating-system path, including staging when save and swap is enabled. |
 | [`public bool IsOpen { get; }`](#p-electron2d-fileaccess-isopen) | Gets whether the owned stream is still open. |
-| [`public bool EOFReached { get; }`](#p-electron2d-fileaccess-eofreached) | Gets whether a read has attempted to move beyond the end of the file. |
+| [`public bool EOFReached { get; }`](#p-electron2d-fileaccess-eofreached) | Gets whether a read encountered end of stream. |
 | [`public long Position { get; }`](#p-electron2d-fileaccess-position) | Gets the current byte offset. |
 | [`public long Length { get; }`](#p-electron2d-fileaccess-length) | Gets the decoded file length in bytes. |
 | [`public bool Hidden { get; set; }`](#p-electron2d-fileaccess-hidden) | Gets or sets whether the physical file has the hidden attribute. |
