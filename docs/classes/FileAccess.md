@@ -153,7 +153,9 @@ Gets whether the owned stream is still open.
 
 Gets whether a read has attempted to move beyond the end of the file.
 
-**Value:** `true` only after an incomplete read; a successful seek clears it.
+**Value:** `true` after an incomplete file read or when a process pipe reports EOF.
+
+**Remarks:** Successful seeks, writes and resizes clear file EOF. Zero-length reads preserve it. A nonblocking pipe with no data yet has not reached EOF.
 
 **Exceptions**
 
@@ -171,6 +173,7 @@ Gets the current byte offset.
 
 - `InvalidOperationException`: The file is closed.
 - `IO.IOException`: The stream cannot report its cursor.
+- `NotSupportedException`: The stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="p-electron2d-fileaccess-length"></a>
@@ -184,6 +187,7 @@ Gets the decoded file length in bytes.
 
 - `InvalidOperationException`: The file is closed.
 - `IO.IOException`: The stream cannot report its length.
+- `NotSupportedException`: The stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="p-electron2d-fileaccess-hidden"></a>
@@ -391,7 +395,10 @@ Moves the cursor to an absolute byte offset.
 - `ArgumentOutOfRangeException`: `position` is negative.
 - `InvalidOperationException`: The file is closed.
 - `IO.IOException`: Seeking fails.
+- `NotSupportedException`: The stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
+
+**Remarks:** A successful seek clears EOF without growing the file.
 
 <a id="m-electron2d-fileaccess-seekend-system-int64"></a>
 ### `public void SeekEnd(long offset = 0)`
@@ -406,7 +413,10 @@ Moves the cursor relative to the end of the file.
 
 - `InvalidOperationException`: The file is closed.
 - `IO.IOException`: Seeking fails.
+- `NotSupportedException`: The stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
+
+**Remarks:** A successful seek clears EOF without growing the file.
 
 <a id="m-electron2d-fileaccess-resize-system-int64"></a>
 ### `public void Resize(long length)`
@@ -422,9 +432,10 @@ Changes the file length.
 - `ArgumentOutOfRangeException`: `length` is negative.
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Resizing fails.
+- `NotSupportedException`: The writable stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** Extending fills the new region with zero bytes. The current cursor is unchanged.
+**Remarks:** Extending fills the new region with zero bytes. The absolute cursor is preserved even beyond the new end. Resizing successfully clears EOF.
 
 <a id="m-electron2d-fileaccess-readbyte"></a>
 ### `public byte ReadByte()`
@@ -556,7 +567,7 @@ Reads up to a requested number of bytes.
 - `IO.IOException`: Reading fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** [`FileAccess.EOFReached`](FileAccess.md#p-electron2d-fileaccess-eofreached) becomes true when fewer than `length` bytes are available.
+**Remarks:** The returned buffer owns its bytes. An incomplete file read sets [`EOFReached`](#p-electron2d-fileaccess-eofreached). An empty request preserves the cursor and EOF. A blocking pipe waits for the requested count or EOF. A nonblocking pipe returns the available prefix, and temporary emptiness does not set EOF.
 
 <a id="m-electron2d-fileaccess-readline"></a>
 ### `public string ReadLine()`
@@ -1273,6 +1284,8 @@ All instance state/stream operations are serialized by one private lock. One cal
 - Has no SDL, Scene, renderer, resource loader, scripting, editor, physics, or external package dependency.
 
 ## Verification and known limits
+
+The [binary I/O checks](../components/file-access.md#binary-io) exercise independent wire vectors, exact and short reads, cursor preservation and native process-pipe behavior.
 
 `tests/Electron2D.Tests/Program.cs` covers invalid paths/modes, all four access modes, truncation/preservation, little/big-endian primitives, half/float/double/real, buffers, strict UTF-8, CR/LF/null lines, CSV/Pascal strings, EOF and seek transitions, resize, cursor preservation on decode failure, close/dispose, static metadata/hashes and missing-file errors, explicit unsupported Linux hidden/read-only attributes, Unix permissions, Linux xattrs, temporary ownership including prefix/extension/read-only mode, three codecs, malformed/mismatched compression, raw/password encryption, wrong keys/passwords/mode confusion, tampering, virtual project paths, concurrent static hashing and compound Pascal writes, and commit failure cleanup.
 

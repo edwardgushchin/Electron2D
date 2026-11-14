@@ -123,7 +123,9 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Gets whether a read has attempted to move beyond the end of the file.</summary>
-    /// <value><see langword="true"/> only after an incomplete read; a successful seek clears it.</value>
+    /// <value><see langword="true"/> after an incomplete file read or when a process pipe reports EOF.</value>
+    /// <remarks>A successful seek, write, or resize clears the file state. A zero-length read preserves it.
+    /// Temporary emptiness on a nonblocking pipe does not indicate EOF.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public bool EOFReached
@@ -143,6 +145,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <value>A zero-based position from the beginning of the decoded file.</value>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="IOException">The stream cannot report its cursor.</exception>
+    /// <exception cref="NotSupportedException">The stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public long Position
     {
@@ -158,6 +161,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <value>The number of bytes visible through this instance.</value>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="IOException">The stream cannot report its length.</exception>
+    /// <exception cref="NotSupportedException">The stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public long Length
     {
@@ -514,9 +518,11 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Moves the cursor to an absolute byte offset.</summary>
     /// <param name="position">The nonnegative offset from the beginning.</param>
+    /// <remarks>A successful seek clears <see cref="EOFReached"/> without growing the file.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="position"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="IOException">Seeking fails.</exception>
+    /// <exception cref="NotSupportedException">The stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void Seek(long position)
     {
@@ -532,8 +538,10 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Moves the cursor relative to the end of the file.</summary>
     /// <param name="offset">A signed byte offset; zero selects the end and negative values select preceding bytes.</param>
+    /// <remarks>A successful seek clears <see cref="EOFReached"/> without growing the file.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="IOException">Seeking fails.</exception>
+    /// <exception cref="NotSupportedException">The stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void SeekEnd(long offset = 0)
     {
@@ -547,10 +555,12 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Changes the file length.</summary>
     /// <param name="length">The nonnegative decoded length in bytes.</param>
-    /// <remarks>Extending fills the new region with zero bytes. The current cursor is unchanged.</remarks>
+    /// <remarks>Extending fills the new region with zero bytes. The absolute cursor is preserved even if it
+    /// lies beyond the new end. A successful resize clears <see cref="EOFReached"/>.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Resizing fails.</exception>
+    /// <exception cref="NotSupportedException">The writable stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void Resize(long length)
     {
@@ -559,9 +569,15 @@ public sealed partial class FileAccess : ElectronObject
         ThrowIfDisposed();
         lock (_gate)
         {
-            EnsureWritable();
-            EnsureOpen().SetLength(length);
+            var stream = EnsureWritable();
+            if (!stream.CanSeek)
+                throw new NotSupportedException("This stream cannot resize.");
+            var position = stream.Position;
+            stream.SetLength(length);
             _dirty = true;
+            // FileStream and MemoryStream can clamp the cursor when truncating.
+            if (position > length)
+                stream.Position = position;
             _eofReached = false;
         }
     }
@@ -639,8 +655,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <summary>Reads up to a requested number of bytes.</summary>
     /// <param name="length">The nonnegative maximum byte count.</param>
     /// <returns>A new array containing all available requested bytes.</returns>
-    /// <remarks>For files, EOFReached becomes true after an incomplete read. For a process pipe, temporary emptiness
-    /// returns the available prefix without claiming EOF. Blocking pipes wait until the requested count or EOF.</remarks>
+    /// <remarks>For files, an incomplete read sets <see cref="EOFReached"/>. A zero-length request preserves the cursor
+    /// and EOF. For a process pipe, temporary emptiness returns the available prefix without claiming EOF.
+    /// Blocking pipes wait until the requested count or EOF.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails.</exception>
@@ -913,8 +930,10 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Writes bytes at the current cursor.</summary>
     /// <param name="bytes">The bytes to write.</param>
+    /// <remarks>Byte order does not affect the supplied bytes. A successful write clears file EOF.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">A process pipe write failed or accepted only a prefix.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteBytes(ReadOnlySpan<byte> bytes)
     {

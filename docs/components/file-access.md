@@ -46,11 +46,21 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Directory access scope is immutable; virtual roots are captured, lexically confined, and never switched by an instance. Case-sensitivity queries use read-only native metadata and do not create probe entries.
 - Public directory removal is permanent and nonrecursive; link removal never traverses the target.
 - Streaming enumeration order is unspecified; file/directory snapshot helpers sort ordinally.
-- Fixed-size values either read completely or fail; EOF records only an attempted incomplete read.
+- [Binary I/O](#binary-io) defines byte order, complete scalar reads, byte buffers, cursor movement and EOF transitions for each stream capability.
 - Caller-visible decoded content is published only after compression validation or successful authentication.
 - Transformed writes replace a destination atomically after the temporary file is flushed.
 - Instance calls are lock-serialized; compound caller sequences require caller synchronization.
 - The component is blocking and allocating, never a real-time hot-path service.
+
+## Binary I/O
+
+Fresh sessions default to little endian. `BigEndian` selects the byte order for multi-byte unsigned values, IEEE 754 binary16/32/64 and Pascal length prefixes. `Real` uses binary32. Binary buffers move unchanged across the stream boundary. `ReadBytes` returns a caller-owned prefix up to the requested count, and `WriteBytes` consumes its input before returning.
+
+On seekable files, a short scalar read consumes the available prefix and throws `EndOfStreamException`. A positive buffer request can return a short prefix. Either failure to fill a read sets EOF. Reaching the end exactly leaves EOF clear, and a zero-length read preserves cursor and EOF. A successful seek, write or resize clears EOF. `Position` and `Length` observe state without moving the cursor or clearing EOF. Seeks can place the cursor beyond the end without growing the file. Resizing removes truncated bytes or appends zero bytes while preserving the absolute cursor, including a cursor beyond the new end.
+
+Process pipes reject seek, length, position and resize with `NotSupportedException` when the direction is otherwise permitted. A nonblocking exact read that runs out of available bytes consumes the prefix and throws `IOException` until the pipe reports actual EOF. `ReadBytes` can return the prefix in either case. A pipe write can throw `PipeWriteException` with the consumed count, which permits retrying the unwritten suffix. Closing an owned stream releases it independently of the child process. See [process pipes](processes.md).
+
+`ELECTRON2D_TEST_FILE_BINARY=1` checks independent little- and big-endian wire vectors and seekable cursor and error behavior through public calls. `ELECTRON2D_TEST_OS_PROCESS=1` exercises native blocking/nonblocking streams, short scalar and buffer reads, and partial-write retries with SHA-256 verification. `ELECTRON2D_TEST_FILE_TEXT=1` covers the Pascal framing that shares the byte-order setting.
 
 ## Text framing
 

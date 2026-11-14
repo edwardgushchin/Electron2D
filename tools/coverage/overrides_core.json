@@ -1910,6 +1910,66 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["FileAccess::method:get_8()", "FileAccess::method:get_16()", "FileAccess::method:get_32()", "FileAccess::method:get_64()"],
+      "state": "Implemented",
+      "reason": "ADR 0020 projects the pinned unsigned field widths as byte and UInt16/32/64. FileBinaryTests checks minimum, maximum and exact endian vectors, plus prefix consumption and typed failure on truncation."
+    },
+    {
+      "godot": ["FileAccess::method:store_8(int:)", "FileAccess::method:store_16(int:)", "FileAccess::method:store_32(int:)", "FileAccess::method:store_64(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 uses width-matched unsigned inputs and exceptions in place of a success flag. FileBinaryTests verifies the physical bytes for boundaries and both byte orders."
+    },
+    {
+      "godot": ["FileAccess::method:get_half()", "FileAccess::method:get_float()", "FileAccess::method:get_double()", "FileAccess::method:store_half(float:)", "FileAccess::method:store_float(float:)", "FileAccess::method:store_double(float:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 maps binary16/32/64 to Half/Single/Double. Independent endian vectors check subnormal, infinity and NaN payload bits. Half takes an explicit Half value; write failures are exceptions."
+    },
+    {
+      "godot": ["FileAccess::method:get_real()", "FileAccess::method:store_real(float:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 fixes Real to binary32, the pinned single-precision form. FileBinaryTests checks its width and signed-zero representation in both orders. Double has its own explicit methods."
+    },
+    {
+      "godot": ["FileAccess::method:get_buffer(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 uses a managed count and a caller-owned byte array. Exact reads and available prefixes advance by bytes consumed. FileBinaryTests checks zero, short and exact reads; OSProcessTests distinguishes NotReady from EOF."
+    },
+    {
+      "godot": ["FileAccess::method:store_buffer(PackedByteArray:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 accepts a synchronous read-only span and uses typed exceptions. FileBinaryTests checks copied bytes and untouched endian order. OSProcessTests retries a partial write from BytesWritten and verifies the exact SHA-256."
+    },
+    {
+      "godot": ["FileAccess::method:get_file_as_bytes(String:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 projects the full-file snapshot to a managed byte array through the shared resource path resolver. FileBinaryTests compares the ordinary-path result independently with the expected wire bytes; resource pack checks cover mounted files."
+    },
+    {
+      "godot": ["FileAccess::method:eof_reached()"],
+      "state": "Implemented",
+      "reason": "ADR 0020 uses a bool property. Exact end and empty requests preserve EOF; short file reads set it and successful seeks, writes and resize clear it. OSProcessTests checks nonblocking readiness and true writer closure."
+    },
+    {
+      "godot": ["FileAccess::method:get_length()", "FileAccess::method:get_position()"],
+      "state": "Implemented",
+      "reason": "ADR 0020 uses 64-bit byte-count properties. FileBinaryTests checks independent cursor and length observations, including after truncation and beyond end. OSProcessTests checks capability errors on pipes."
+    },
+    {
+      "godot": ["FileAccess::method:seek(int:)", "FileAccess::method:seek_end(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 supports absolute and signed end-relative byte offsets with default zero for SeekEnd. FileBinaryTests checks past-end, invalid seeks and EOF reset; OSProcessTests checks unsupported pipes."
+    },
+    {
+      "godot": ["FileAccess::method:resize(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020 replaces the numeric result with typed errors. FileBinaryTests checks zero-fill, truncation, preserved cursor and EOF reset on raw and decoded files. Read-only files and native process pipes reject resize."
+    },
+    {
+      "godot": ["FileAccess::property:big_endian"],
+      "state": "Implemented",
+      "reason": "ADR 0020 defaults to little endian for each open and selects multi-byte scalar order and Pascal length prefixes. FileBinaryTests and FileTextTests exercise both orders and unchanged raw buffers."
+    },
     {"godot":["Engine::method:get_architecture_name()"],"state":"Implemented","reason":"ADR 0016: portable managed code reports the architecture selected by its process, including emulation and Wasm width. The native pin selects the compiled binary architecture (core/config/engine.cpp at ed1daf0bf001b61586d9930840f2f1394092c079). Known names match where .NET exposes the architecture; other values use invariant lowercase. See engine-runtime.md#build-metadata."},
     {"godot":["Engine::method:get_version_info()"],"state":"Implemented","reason":"ADR 0016/0096: typed immutable snapshot maps the pinned major/minor/patch/hex/status/build/hash/timestamp/string results to actual product version, configuration, SDK revision, optional source timestamp and the existing informational string. Missing provenance yields unknown/zero. Win-x64 execution is checked by the public metadata consumer; full platform qualification follows ADR 0021. See engine-runtime.md#build-metadata."},
     {"godot": ["FileAccess::method:get_as_text()"], "state": "Implemented", "reason": "ADR 0020: a strict seekable snapshot restores cursor and preserves EOF, BOM and NUL in managed strings. Optional CR removal follows UTF-8 validation. FileTextTests exercises bytes, state and failed decoding."},
