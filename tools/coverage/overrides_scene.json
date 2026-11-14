@@ -1,6 +1,31 @@
 {
   "mappings": [
     {
+      "godot": "Control::enum:Anchor",
+      "electron2d": "T:Electron2D.Control.Anchor",
+      "reason": "ADR 0051 keeps Control's endpoint values under their owning type. SetAnchorEndpoint consumes both values."
+    },
+    {
+      "godot": "Control::enum_value:Anchor.ANCHOR_BEGIN",
+      "electron2d": "enumValue:Electron2D.Control.Anchor.Begin()",
+      "reason": "Named endpoint executes through SetAnchorEndpoint."
+    },
+    {
+      "godot": "Control::enum_value:Anchor.ANCHOR_END",
+      "electron2d": "enumValue:Electron2D.Control.Anchor.End()",
+      "reason": "Named endpoint executes through SetAnchorEndpoint."
+    },
+    {
+      "godot": "Control::method:set_anchor(int:Side,float:,bool:,bool:)",
+      "electron2d": "method:Electron2D.Control.SetAnchorEndpoint(Electron2D.Side,Electron2D.Control.Anchor,System.Boolean,System.Boolean)",
+      "reason": "Typed endpoint authoring delegates to the same fractional side edit."
+    },
+    {
+      "godot": "Control::method:set_anchor(int:Side,float:,bool:,bool:)",
+      "electron2d": "method:Electron2D.Control.SetAnchor(Electron2D.Side,System.Single,System.Boolean,System.Boolean)",
+      "reason": "Preserves the full fractional domain and public defaults."
+    },
+    {
       "godot": "Window::method:child_controls_changed()",
       "electron2d": "method:Electron2D.Window.ChildControlsChanged()",
       "reason": "Coalesced scene refresh and desktop native content minimum under ADRs 0008/0028/0040."
@@ -8925,6 +8950,33 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "Control::enum:Anchor",
+        "Control::enum_value:Anchor.ANCHOR_BEGIN",
+        "Control::enum_value:Anchor.ANCHOR_END"
+      ],
+      "state": "Implemented",
+      "reason": "Both active numeric endpoint values execute through typed SetAnchorEndpoint and are checked on an attached Control."
+    },
+    {
+      "godot": [
+        "Control::method:get_anchor(int:Side)",
+        "Control::method:get_offset(int:Side)",
+        "Control::method:set_anchor(int:Side,float:,bool:,bool:)",
+        "Control::method:set_offset(int:Side,float:)",
+        "Control::property:anchor_left",
+        "Control::property:anchor_top",
+        "Control::property:anchor_right",
+        "Control::property:anchor_bottom",
+        "Control::property:offset_left",
+        "Control::property:offset_top",
+        "Control::property:offset_right",
+        "Control::property:offset_bottom"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned executable ControlLayoutTests cases cover all sides, crossing flags, property offset retention, detached/attached reflow, parent and viewport geometry, limits, RTL and ordered layout signals. Invalid sides, nonfinite values and overflowing side edits reject atomically in typed C#."
+    },
     {
       "state": "Partial",
       "reason": "Windows observes the native maximize style. Detached and embedded windows report local policy. Remaining native adapters include macOS, X11 and Wayland compositor capabilities (ADR 0040).",

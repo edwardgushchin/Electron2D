@@ -3942,6 +3942,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Control.Anchor",
+    "kind": "type",
+    "declaringType": "Electron2D.Control.Anchor",
+    "name": "Anchor",
+    "signature": "public enum Electron2D.Control.Anchor",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Control.SizeFlags",
     "kind": "type",
     "declaringType": "Electron2D.Control.SizeFlags",
@@ -36627,6 +36645,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ContentScaleStretch",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.Anchor.Begin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.Anchor",
+    "name": "Begin",
+    "signature": "public const Electron2D.Control.Anchor Begin = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.Anchor",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Control.Anchor.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Control.Anchor",
+    "name": "End",
+    "signature": "public const Electron2D.Control.Anchor End = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.Anchor",
     "value": "1"
   },
   {
@@ -107905,6 +107949,40 @@
         "name": "pushOppositeAnchor",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetAnchorEndpoint(Electron2D.Side,Electron2D.Control.Anchor,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetAnchorEndpoint",
+    "signature": "public System.Void SetAnchorEndpoint(Electron2D.Side side, Electron2D.Control.Anchor anchor, System.Boolean keepOffset = false, System.Boolean pushOppositeAnchor = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "anchor",
+        "type": "Electron2D.Control.Anchor",
+        "default": null
+      },
+      {
+        "name": "keepOffset",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "pushOppositeAnchor",
+        "type": "System.Boolean",
+        "default": "true"
       }
     ],
     "returnType": "System.Void",
