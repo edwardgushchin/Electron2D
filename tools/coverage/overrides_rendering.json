@@ -6282,7 +6282,7 @@
     },
     {
       "state": "Excluded",
-      "reason": "Sky background requires spatial sky rendering outside ADR 0004.",
+      "reason": "ADRs 0004/0028/0051: this background mode selects the 3D sky pass. The shared canvas background enum retains its applicable modes and Max sentinel.",
       "godot": [
         "RenderingServer::enum_value:EnvironmentBG.ENV_BG_SKY"
       ]
@@ -6299,6 +6299,221 @@
       "reason": "ADRs 0028/0051/0115: the live owned or borrowed environment setter selects the registered feed by process-local ID on GPU and Compatibility. Zero clears selection. Caller-owned frames are verified on Windows. Physical capture, external images and unqualified platforms retain separate gates. See docs/components/canvas-environment-background.md#camera-feed.",
       "godot": [
         "RenderingServer::method:environment_set_camera_id(RID:,int:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: Sky RIDs, material, radiance resolution, update modes, camera field of view and rotation belong to the 3D sky pass. The sky reflection settings configure its radiance filtering and storage.",
+      "godot": [
+        "RenderingServer::enum:SkyMode",
+        "RenderingServer::enum_value:SkyMode.SKY_MODE_AUTOMATIC",
+        "RenderingServer::enum_value:SkyMode.SKY_MODE_INCREMENTAL",
+        "RenderingServer::enum_value:SkyMode.SKY_MODE_QUALITY",
+        "RenderingServer::enum_value:SkyMode.SKY_MODE_REALTIME",
+        "RenderingServer::method:environment_set_sky(RID:,RID:)",
+        "RenderingServer::method:environment_set_sky_custom_fov(RID:,float:)",
+        "RenderingServer::method:environment_set_sky_orientation(RID:,Basis:)",
+        "RenderingServer::method:sky_bake_panorama(RID:,float:,bool:,Vector2i:)",
+        "RenderingServer::method:sky_create()",
+        "RenderingServer::method:sky_set_material(RID:,RID:)",
+        "RenderingServer::method:sky_set_mode(RID:,int:RenderingServer.SkyMode)",
+        "RenderingServer::method:sky_set_radiance_size(RID:,int:)",
+        "ProjectSettings::property:rendering/reflections/sky_reflections/fast_filter_high_quality",
+        "ProjectSettings::property:rendering/reflections/sky_reflections/ggx_samples",
+        "ProjectSettings::property:rendering/reflections/sky_reflections/ggx_samples.mobile",
+        "ProjectSettings::property:rendering/reflections/sky_reflections/roughness_layers",
+        "ProjectSettings::property:rendering/reflections/sky_reflections/texture_array_reflections",
+        "ProjectSettings::property:rendering/reflections/sky_reflections/texture_array_reflections.mobile"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028: environment_bake_panorama bakes 3D sky radiance or irradiance. Its solid-color fallback still bakes a lighting panorama, and Canvas, CameraFeed and Keep return an empty image reference.",
+      "godot": [
+        "RenderingServer::method:environment_bake_panorama(RID:,bool:,Vector2i:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: the directional-light selector controls whether a 3D light contributes to scene lighting, sky shaders or both.",
+      "godot": [
+        "RenderingServer::enum:LightDirectionalSkyMode",
+        "RenderingServer::enum_value:LightDirectionalSkyMode.LIGHT_DIRECTIONAL_SKY_MODE_LIGHT_AND_SKY",
+        "RenderingServer::enum_value:LightDirectionalSkyMode.LIGHT_DIRECTIONAL_SKY_MODE_LIGHT_ONLY",
+        "RenderingServer::enum_value:LightDirectionalSkyMode.LIGHT_DIRECTIONAL_SKY_MODE_SKY_ONLY",
+        "RenderingServer::method:light_directional_set_sky_mode(RID:,int:RenderingServer.LightDirectionalSkyMode)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: this setter and both selector enums control 3D ambient and reflected lighting, including the background, constant-color ambient input, sky contribution and disabled modes. Canvas background color and energy have their own setters.",
+      "godot": [
+        "RenderingServer::enum:EnvironmentAmbientSource",
+        "RenderingServer::enum:EnvironmentReflectionSource",
+        "RenderingServer::enum_value:EnvironmentAmbientSource.ENV_AMBIENT_SOURCE_BG",
+        "RenderingServer::enum_value:EnvironmentAmbientSource.ENV_AMBIENT_SOURCE_COLOR",
+        "RenderingServer::enum_value:EnvironmentAmbientSource.ENV_AMBIENT_SOURCE_DISABLED",
+        "RenderingServer::enum_value:EnvironmentAmbientSource.ENV_AMBIENT_SOURCE_SKY",
+        "RenderingServer::enum_value:EnvironmentReflectionSource.ENV_REFLECTION_SOURCE_BG",
+        "RenderingServer::enum_value:EnvironmentReflectionSource.ENV_REFLECTION_SOURCE_DISABLED",
+        "RenderingServer::enum_value:EnvironmentReflectionSource.ENV_REFLECTION_SOURCE_SKY",
+        "RenderingServer::method:environment_set_ambient_light(RID:,Color:,int:RenderingServer.EnvironmentAmbientSource,float:,float:,int:RenderingServer.EnvironmentReflectionSource)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: exponential and depth fog use 3D view depth or height, with spatial light and sky inputs. The legacy blend option configures this same scene fog.",
+      "godot": [
+        "RenderingServer::enum:EnvironmentFogMode",
+        "RenderingServer::enum_value:EnvironmentFogMode.ENV_FOG_MODE_DEPTH",
+        "RenderingServer::enum_value:EnvironmentFogMode.ENV_FOG_MODE_EXPONENTIAL",
+        "RenderingServer::method:environment_set_fog(RID:,bool:,Color:,float:,float:,float:,float:,float:,float:,float:,int:RenderingServer.EnvironmentFogMode)",
+        "RenderingServer::method:environment_set_fog_depth(RID:,float:,float:,float:)",
+        "ProjectSettings::property:rendering/environment/fog/use_legacy_blending"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: volumetric fog uses a camera-space froxel volume with 3D lights, shadows, GI and temporal reprojection. The fog volume RID, shape and material feed that pass.",
+      "godot": [
+        "RenderingServer::enum:FogVolumeShape",
+        "RenderingServer::enum_value:FogVolumeShape.FOG_VOLUME_SHAPE_BOX",
+        "RenderingServer::enum_value:FogVolumeShape.FOG_VOLUME_SHAPE_CONE",
+        "RenderingServer::enum_value:FogVolumeShape.FOG_VOLUME_SHAPE_CYLINDER",
+        "RenderingServer::enum_value:FogVolumeShape.FOG_VOLUME_SHAPE_ELLIPSOID",
+        "RenderingServer::enum_value:FogVolumeShape.FOG_VOLUME_SHAPE_MAX",
+        "RenderingServer::enum_value:FogVolumeShape.FOG_VOLUME_SHAPE_WORLD",
+        "RenderingServer::enum_value:InstanceType.INSTANCE_FOG_VOLUME",
+        "RenderingServer::enum_value:LightParam.LIGHT_PARAM_VOLUMETRIC_FOG_ENERGY",
+        "RenderingServer::method:environment_set_volumetric_fog(RID:,bool:,float:,Color:,Color:,float:,float:,float:,float:,float:,bool:,float:,float:,float:)",
+        "RenderingServer::method:environment_set_volumetric_fog_filter_active(bool:)",
+        "RenderingServer::method:environment_set_volumetric_fog_volume_size(int:,int:)",
+        "RenderingServer::method:fog_volume_create()",
+        "RenderingServer::method:fog_volume_set_material(RID:,RID:)",
+        "RenderingServer::method:fog_volume_set_shape(RID:,int:RenderingServer.FogVolumeShape)",
+        "RenderingServer::method:fog_volume_set_size(RID:,Vector3:)",
+        "ProjectSettings::property:rendering/environment/volumetric_fog/use_filter",
+        "ProjectSettings::property:rendering/environment/volumetric_fog/volume_depth",
+        "ProjectSettings::property:rendering/environment/volumetric_fog/volume_size"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: SSAO uses projected 3D scene depth and normal buffers to attenuate lighting. Its quality, resolution, adaptive sampling, blur, distance fades and diagnostic view belong to that pass.",
+      "godot": [
+        "RenderingServer::enum:EnvironmentSSAOQuality",
+        "RenderingServer::enum_value:EnvironmentSSAOQuality.ENV_SSAO_QUALITY_HIGH",
+        "RenderingServer::enum_value:EnvironmentSSAOQuality.ENV_SSAO_QUALITY_LOW",
+        "RenderingServer::enum_value:EnvironmentSSAOQuality.ENV_SSAO_QUALITY_MEDIUM",
+        "RenderingServer::enum_value:EnvironmentSSAOQuality.ENV_SSAO_QUALITY_ULTRA",
+        "RenderingServer::enum_value:EnvironmentSSAOQuality.ENV_SSAO_QUALITY_VERY_LOW",
+        "RenderingServer::enum_value:ViewportDebugDraw.VIEWPORT_DEBUG_DRAW_SSAO",
+        "RenderingServer::method:environment_set_ssao(RID:,bool:,float:,float:,float:,float:,float:,float:,float:,float:)",
+        "RenderingServer::method:environment_set_ssao_quality(int:RenderingServer.EnvironmentSSAOQuality,bool:,float:,int:,float:,float:)",
+        "ProjectSettings::property:rendering/environment/ssao/adaptive_target",
+        "ProjectSettings::property:rendering/environment/ssao/blur_passes",
+        "ProjectSettings::property:rendering/environment/ssao/fadeout_from",
+        "ProjectSettings::property:rendering/environment/ssao/fadeout_to",
+        "ProjectSettings::property:rendering/environment/ssao/half_size",
+        "ProjectSettings::property:rendering/environment/ssao/quality"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: SSIL uses 3D scene depth, normals, camera reprojection and previous-frame lighting. Its quality, resolution, adaptive sampling, blur, distance fades and diagnostic view belong to that pass.",
+      "godot": [
+        "RenderingServer::enum:EnvironmentSSILQuality",
+        "RenderingServer::enum_value:EnvironmentSSILQuality.ENV_SSIL_QUALITY_HIGH",
+        "RenderingServer::enum_value:EnvironmentSSILQuality.ENV_SSIL_QUALITY_LOW",
+        "RenderingServer::enum_value:EnvironmentSSILQuality.ENV_SSIL_QUALITY_MEDIUM",
+        "RenderingServer::enum_value:EnvironmentSSILQuality.ENV_SSIL_QUALITY_ULTRA",
+        "RenderingServer::enum_value:EnvironmentSSILQuality.ENV_SSIL_QUALITY_VERY_LOW",
+        "RenderingServer::enum_value:ViewportDebugDraw.VIEWPORT_DEBUG_DRAW_SSIL",
+        "RenderingServer::method:environment_set_ssil_quality(int:RenderingServer.EnvironmentSSILQuality,bool:,float:,int:,float:,float:)",
+        "ProjectSettings::property:rendering/environment/ssil/adaptive_target",
+        "ProjectSettings::property:rendering/environment/ssil/blur_passes",
+        "ProjectSettings::property:rendering/environment/ssil/fadeout_from",
+        "ProjectSettings::property:rendering/environment/ssil/fadeout_to",
+        "ProjectSettings::property:rendering/environment/ssil/half_size",
+        "ProjectSettings::property:rendering/environment/ssil/quality"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028: SSR traces reflections using projected 3D depth, normal and roughness data and camera reprojection. Half size controls the resolution of that pass.",
+      "godot": [
+        "RenderingServer::method:environment_set_ssr(RID:,bool:,int:,float:,float:,float:)",
+        "RenderingServer::method:environment_set_ssr_half_size(bool:)",
+        "ProjectSettings::property:rendering/environment/screen_space_reflection/half_size"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned RenderingServer.xml marks this no-op setter deprecated=\"This option no longer does anything.\"",
+      "godot": [
+        "RenderingServer::method:environment_set_ssr_roughness_quality(int:RenderingServer.EnvironmentSSRRoughnessQuality)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: these 3D SSR roughness-filter quality values serve the deprecated no-op environment_set_ssr_roughness_quality setter, their only consumer in the pinned API.",
+      "godot": [
+        "RenderingServer::enum:EnvironmentSSRRoughnessQuality",
+        "RenderingServer::enum_value:EnvironmentSSRRoughnessQuality.ENV_SSR_ROUGHNESS_QUALITY_DISABLED",
+        "RenderingServer::enum_value:EnvironmentSSRRoughnessQuality.ENV_SSR_ROUGHNESS_QUALITY_HIGH",
+        "RenderingServer::enum_value:EnvironmentSSRRoughnessQuality.ENV_SSR_ROUGHNESS_QUALITY_LOW",
+        "RenderingServer::enum_value:EnvironmentSSRRoughnessQuality.ENV_SSR_ROUGHNESS_QUALITY_MEDIUM"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: SDFGI updates 3D scene regions and light cascades. Vertical scale, rays, convergence and light-update selectors, their bounds, and the debug views belong to those spatial probes.",
+      "godot": [
+        "RenderingServer::enum:EnvironmentSDFGIFramesToConverge",
+        "RenderingServer::enum:EnvironmentSDFGIFramesToUpdateLight",
+        "RenderingServer::enum:EnvironmentSDFGIRayCount",
+        "RenderingServer::enum:EnvironmentSDFGIYScale",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToConverge.ENV_SDFGI_CONVERGE_IN_10_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToConverge.ENV_SDFGI_CONVERGE_IN_15_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToConverge.ENV_SDFGI_CONVERGE_IN_20_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToConverge.ENV_SDFGI_CONVERGE_IN_25_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToConverge.ENV_SDFGI_CONVERGE_IN_30_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToConverge.ENV_SDFGI_CONVERGE_IN_5_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToConverge.ENV_SDFGI_CONVERGE_MAX",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToUpdateLight.ENV_SDFGI_UPDATE_LIGHT_IN_16_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToUpdateLight.ENV_SDFGI_UPDATE_LIGHT_IN_1_FRAME",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToUpdateLight.ENV_SDFGI_UPDATE_LIGHT_IN_2_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToUpdateLight.ENV_SDFGI_UPDATE_LIGHT_IN_4_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToUpdateLight.ENV_SDFGI_UPDATE_LIGHT_IN_8_FRAMES",
+        "RenderingServer::enum_value:EnvironmentSDFGIFramesToUpdateLight.ENV_SDFGI_UPDATE_LIGHT_MAX",
+        "RenderingServer::enum_value:EnvironmentSDFGIRayCount.ENV_SDFGI_RAY_COUNT_128",
+        "RenderingServer::enum_value:EnvironmentSDFGIRayCount.ENV_SDFGI_RAY_COUNT_16",
+        "RenderingServer::enum_value:EnvironmentSDFGIRayCount.ENV_SDFGI_RAY_COUNT_32",
+        "RenderingServer::enum_value:EnvironmentSDFGIRayCount.ENV_SDFGI_RAY_COUNT_4",
+        "RenderingServer::enum_value:EnvironmentSDFGIRayCount.ENV_SDFGI_RAY_COUNT_64",
+        "RenderingServer::enum_value:EnvironmentSDFGIRayCount.ENV_SDFGI_RAY_COUNT_8",
+        "RenderingServer::enum_value:EnvironmentSDFGIRayCount.ENV_SDFGI_RAY_COUNT_96",
+        "RenderingServer::enum_value:EnvironmentSDFGIRayCount.ENV_SDFGI_RAY_COUNT_MAX",
+        "RenderingServer::enum_value:EnvironmentSDFGIYScale.ENV_SDFGI_Y_SCALE_100_PERCENT",
+        "RenderingServer::enum_value:EnvironmentSDFGIYScale.ENV_SDFGI_Y_SCALE_50_PERCENT",
+        "RenderingServer::enum_value:EnvironmentSDFGIYScale.ENV_SDFGI_Y_SCALE_75_PERCENT",
+        "RenderingServer::enum_value:ViewportDebugDraw.VIEWPORT_DEBUG_DRAW_SDFGI",
+        "RenderingServer::enum_value:ViewportDebugDraw.VIEWPORT_DEBUG_DRAW_SDFGI_PROBES",
+        "RenderingServer::method:environment_set_sdfgi(RID:,bool:,int:,float:,int:RenderingServer.EnvironmentSDFGIYScale,bool:,float:,bool:,float:,float:,float:)",
+        "RenderingServer::method:environment_set_sdfgi_frames_to_converge(int:RenderingServer.EnvironmentSDFGIFramesToConverge)",
+        "RenderingServer::method:environment_set_sdfgi_frames_to_update_light(int:RenderingServer.EnvironmentSDFGIFramesToUpdateLight)",
+        "RenderingServer::method:environment_set_sdfgi_ray_count(int:RenderingServer.EnvironmentSDFGIRayCount)",
+        "RenderingServer::method:light_set_max_sdfgi_cascade(RID:,int:)",
+        "ProjectSettings::property:rendering/global_illumination/sdfgi/frames_to_converge",
+        "ProjectSettings::property:rendering/global_illumination/sdfgi/frames_to_update_lights",
+        "ProjectSettings::property:rendering/global_illumination/sdfgi/probe_ray_count"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028/0051: PostSky is a callback stage of the 3D scene renderer after drawing the sky.",
+      "godot": [
+        "RenderingServer::enum_value:CompositorEffectCallbackType.COMPOSITOR_EFFECT_CALLBACK_TYPE_POST_SKY"
       ]
     },
     {
