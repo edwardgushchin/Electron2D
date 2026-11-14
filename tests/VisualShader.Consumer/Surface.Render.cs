@@ -38,7 +38,7 @@ internal static partial class GraphChecks
         private ArrayMesh Quad(bool skin = false, bool procedural = false)
         {
             var mesh = KeepSurface(new ArrayMesh());
-            mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+            mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
             {
                 Vertices = procedural ? [] : [new(0, 0), new(16, 0), new(16, 16), new(0, 16)],
                 VertexCount = 4,

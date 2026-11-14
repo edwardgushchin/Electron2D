@@ -17,7 +17,7 @@ internal static class ImmediateMeshRenderingTests
         var window = new Window { Size = new(96, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var node = new MeshInstance { Mesh = mesh, Position = new(6, 6) }; window.AddChild(node);
         window.AddChild(new RIDNode(mesh.GetRID()) { Position = new(40, 6) }); var frames = 0;
-        mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles); mesh.SurfaceSetColor(Colors.Red);
+        mesh.SurfaceBegin(MeshPrimitiveType.Triangles); mesh.SurfaceSetColor(Colors.Red);
         mesh.SurfaceAddVertex2D(Vector2.Zero); mesh.SurfaceAddVertex2D(new(20, 0)); mesh.SurfaceAddVertex2D(new(0, 20));
         window.Ready += _ =>
         {
@@ -35,7 +35,7 @@ internal static class ImmediateMeshRenderingTests
                     case 1: mesh.SurfaceEnd(); Check(RenderingServer.MeshGetSurfaceCount(mesh.GetRID()) == 1, "Server sees the commit."); break;
                     case 2: mesh.ClearSurfaces(); break;
                     case 3:
-                        mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles); mesh.SurfaceSetUV(Vector2.Zero); mesh.SurfaceAddVertex2D(Vector2.Zero);
+                        mesh.SurfaceBegin(MeshPrimitiveType.Triangles); mesh.SurfaceSetUV(Vector2.Zero); mesh.SurfaceAddVertex2D(Vector2.Zero);
                         mesh.SurfaceSetUV(new(1, 0)); mesh.SurfaceAddVertex2D(new(20, 0)); mesh.SurfaceSetUV(new(0, 1)); mesh.SurfaceAddVertex2D(new(0, 20)); mesh.SurfaceEnd(); node.Texture = texture;
                         break;
                     case 4: node.Material = add; mesh.SurfaceSetMaterial(0, multiply); break;
@@ -51,11 +51,11 @@ internal static class ImmediateMeshRenderingTests
     private static void VerifyTopologies(string method)
     {
         var meshes = new List<ImmediateMesh>(); var window = new Window { Size = new(140, 48) };
-        foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>())
+        foreach (var primitive in Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max))
         {
             var mesh = new ImmediateMesh(); meshes.Add(mesh); mesh.SurfaceBegin(primitive); mesh.SurfaceSetColor(Colors.Green);
             mesh.SurfaceAddVertex2D(Vector2.Zero); mesh.SurfaceAddVertex2D(new(16, 0));
-            if (primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip) mesh.SurfaceAddVertex2D(new(0, 16));
+            if (primitive is MeshPrimitiveType.Triangles or MeshPrimitiveType.TriangleStrip) mesh.SurfaceAddVertex2D(new(0, 16));
             mesh.SurfaceEnd(); window.AddChild(new MeshInstance { Name = primitive.ToString(), Mesh = mesh, Position = new(8 + (int)primitive * 26, 8) });
         }
         window.Ready += _ =>

@@ -18,7 +18,7 @@ Completed edits emit Changed after commitment outside the storage lock, includin
 
 ```csharp
 using var mesh = new ImmediateMesh();
-mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles);
+mesh.SurfaceBegin(MeshPrimitiveType.Triangles);
 mesh.SurfaceSetColor(Colors.Red);
 mesh.SurfaceAddVertex2D(new(0, 0));
 mesh.SurfaceAddVertex2D(new(20, 0));
@@ -44,7 +44,7 @@ Construction is backend-independent. GetRID creates a stable borrowed resource i
 
 | Signature | Contract |
 | --- | --- |
-| `public void SurfaceBegin(Mesh.PrimitiveType primitive, Material? material = null)` | Starts an invisible draft. |
+| `public void SurfaceBegin(MeshPrimitiveType primitive, Material? material = null)` | Starts an invisible draft. |
 | `public void SurfaceAddVertex2D(Vector2 vertex)` | Captures the current attributes at a finite local position. |
 | `public void SurfaceSetColor(Color color)` | Activates/backfills or changes current color. |
 | `public void SurfaceSetUV(Vector2 uv)` | Activates/backfills or changes primary UV. |
@@ -56,7 +56,7 @@ Construction is backend-independent. GetRID creates a stable borrowed resource i
 
 ### SurfaceBegin
 
-`public void SurfaceBegin(Mesh.PrimitiveType primitive, Material? material = null)`
+`public void SurfaceBegin(MeshPrimitiveType primitive, Material? material = null)`
 
 Accepts Points, Lines, LineStrip, Triangles or TriangleStrip. A second Begin while active throws InvalidOperationException and retains the first draft. Invalid topology throws ArgumentOutOfRangeException; a disposed material or mesh throws ObjectDisposedException. Material is captured as a borrowed reference. Initially all optional channels are absent, so rendering supplies white color and zero UV.
 
@@ -104,7 +104,7 @@ Cancels the active draft, clears its attributes/material, removes every complete
 | `protected override MeshSurfaceData OnSurfaceGetArrays(int surfaceIndex)` | Independent channel copies. |
 | `protected override int OnSurfaceGetArrayLen(int surfaceIndex)` | Sequential vertex count. |
 | `protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex)` | Zero for each valid surface. |
-| `protected override Mesh.PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex)` | Captured topology. |
+| `protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex)` | Captured topology. |
 | `protected override Mesh.ArrayFormat OnSurfaceGetFormat(int surfaceIndex)` | Vertex/Use2DVertices and activated Color/TexUV bits. |
 | `protected override Material? OnSurfaceGetMaterial(int surfaceIndex)` | Borrowed surface material. |
 | `protected override void OnSurfaceSetMaterial(int surfaceIndex, Material? material)` | Commit replacement before Changed. |
@@ -194,10 +194,10 @@ Returns the inherited resource descriptors plus stored completed surface bytes a
 | `protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` |  |
 | `protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` |  |
-| `protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` |  |
+| `protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` |  |
 | `protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` |  |
 | `public System.Void SurfaceAddVertex2D(Electron2D.Vector2 vertex)` | Appends a finite local vertex using the current color and texture-coordinate channels. |
-| `public System.Void SurfaceBegin(Electron2D.Mesh.PrimitiveType primitive, Electron2D.Material material = null)` | Begins an invisible surface using the selected topology and borrowed material. |
+| `public System.Void SurfaceBegin(Electron2D.MeshPrimitiveType primitive, Electron2D.Material material = null)` | Begins an invisible surface using the selected topology and borrowed material. |
 | `public System.Void SurfaceEnd()` | Validates and commits the draft, then emits Changed outside the storage lock. |
 | `public System.Void SurfaceSetColor(Electron2D.Color color)` | Sets the current color, enabling the color channel on its first call. |
 | `public System.Void SurfaceSetNormal(Electron2D.Vector3 normal)` | Assigns the current mesh-local normal and backfills the draft on first activation. |
@@ -265,7 +265,7 @@ System.ObjectDisposedException: The mesh is disposed.
 
 ### OnSurfaceGetPrimitiveType
 
-`protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
+`protected override Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
 
 ### OnSurfaceSetMaterial
 
@@ -287,7 +287,7 @@ System.ObjectDisposedException: The mesh is disposed.
 
 ### SurfaceBegin
 
-`public System.Void SurfaceBegin(Electron2D.Mesh.PrimitiveType primitive, Electron2D.Material material = null)`
+`public System.Void SurfaceBegin(Electron2D.MeshPrimitiveType primitive, Electron2D.Material material = null)`
 
 summary: Begins an invisible surface using the selected topology and borrowed material.
 

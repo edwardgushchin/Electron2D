@@ -67,7 +67,7 @@ internal static partial class GraphChecks
             var nested = KeepMetadata(new AtlasTexture { Atlas = atlas, Region = new(1, 0, 2, 2) });
             var style = KeepMetadata(new StyleBoxTexture { Texture = atlas, TextureMarginLeft = 1, TextureMarginRight = 1, TextureMarginTop = 1, TextureMarginBottom = 1 });
             var mesh = KeepMetadata(new ArrayMesh()); var cpuMesh = KeepMetadata(new ArrayMesh());
-            foreach (var target in new[] { mesh, cpuMesh }) target.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+            foreach (var target in new[] { mesh, cpuMesh }) target.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
             {
                 Vertices = [new(0, 0), new(16, 0), new(16, 16), new(0, 16)],
                 UVs = [new(0, 0), new(1, 0), new(1, 1), new(0, 1)],

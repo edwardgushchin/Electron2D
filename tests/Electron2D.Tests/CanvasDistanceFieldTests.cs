@@ -15,7 +15,7 @@ internal static class CanvasDistanceFieldTests
     internal static void Run()
     {
         using var image = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8); image.Fill(Colors.White); using var texture = ImageTexture.CreateFromImage(image);
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = [Vector2.Zero, Vector2.Right, Vector2.Down] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = [Vector2.Zero, Vector2.Right, Vector2.Down] });
         using var node = new Painter(texture, mesh); using var child = new Entity(); node.AddChild(child);
         // Isolate replay policy; the public consumer verifies real renderer ownership and session cleanup.
         node.ServerState = new(null!, false) { DistanceFieldMode = true };

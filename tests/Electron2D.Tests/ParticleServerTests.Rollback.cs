@@ -19,7 +19,7 @@ internal static partial class ParticleServerTests
         using var processShader = ReadShader("ParticleRollback.comp", Shader.Mode.Particles); using var drawShader = ReadShader("ParticleRollback.frag", Shader.Mode.CanvasItem);
         using var process = new ShaderMaterial { Shader = processShader }; using var draw = new ShaderMaterial { Shader = drawShader };
         var owner = new Entity { Material = draw }; root.AddChild(owner); using var mesh = new ArrayMesh();
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
         {
             Vertices = [new(-2, -2), new(2, -2), new(2, 2), new(-2, 2)],
             Indices = [0, 1, 2, 0, 2, 3],

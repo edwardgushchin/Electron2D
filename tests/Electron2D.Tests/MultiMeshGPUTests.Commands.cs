@@ -7,7 +7,7 @@ internal static partial class MultiMeshGPUTests
     private static void Commands(string language = "GLSL", bool wide = false, bool modern = false)
     {
         using var mesh = new ArrayMesh(); Vector2[] vertices = [Vector2.Zero, new(20, 0), new(0, 20), new(40, 0), new(60, 0), new(40, 20)];
-        mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = vertices, Indices = [3, 4, 5, 0, 1, 2] }); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = vertices });
+        mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = vertices, Indices = [3, 4, 5, 0, 1, 2] }); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = vertices });
         byte[] Module(string name) { using var input = typeof(MultiMeshGPUTests).Assembly.GetManifestResourceStream("Electron2D.Device." + name)!; using var output = new MemoryStream(); input.CopyTo(output); return output.ToArray(); }
         var vertex = Module("DeviceInstance" + language + ".vert.spv"); using var shader = Shader.CreateFromSPIRV(modern ? MeshVertexIDTests.Modern(vertex) : vertex, Module("DeviceVertexIDGLSL.frag.spv")); using var material = new ShaderMaterial { Shader = shader }; material.SetShaderParameter("expected_first", wide ? 65536 : 0);
         using var window = new Window { Size = new(128, 96) }; var draw = new Draw { Material = material }; window.AddChild(draw); var first = wide ? 65536 : 0; var frames = 0; RID owned = default, command = default;

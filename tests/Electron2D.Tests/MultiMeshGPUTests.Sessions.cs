@@ -6,7 +6,7 @@ internal static partial class MultiMeshGPUTests
 {
     private static void Sessions()
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var resource = new MultiMesh { Mesh = mesh, UseColors = true, InstanceCount = 1, CustomAABB = new(0, 0, 128, 96) }; resource.SetInstanceTransform2D(0, new(0, new(8, 8))); resource.SetInstanceColor(0, Colors.Red);
         var logical = resource.GetRID(); RID firstBuffer = default, owned = default; RenderingDevice? firstDevice = null;
         for (var session = 0; session < 2; session++)

@@ -125,7 +125,7 @@ internal static class CanvasCounterTests
         }
         private void MeshInstances()
         {
-            using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, new(10, 0), new(10, 10), new(0, 10)], Indices = [0, 1, 2, 0, 2, 3] });
+            using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, new(10, 0), new(10, 10), new(0, 10)], Indices = [0, 1, 2, 0, 2, 3] });
             using var instances = new MultiMesh { Mesh = mesh, InstanceCount = 3, VisibleInstanceCount = 2 };
             instances.SetInstanceTransform2D(0, new(0, new(8, 8))); instances.SetInstanceTransform2D(1, new(0, new(30, 8)));
             var node = new MultiMeshInstance { MultiMesh = instances }; window.AddChild(node);

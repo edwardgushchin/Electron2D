@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed class MeshMorphPose : IDisposable
 {
-    private readonly record struct Source(MeshSurfaceData Basis, uint[] FrameWords, MeshSurfaceData[] Shapes, Mesh.ArrayFormat Mask, Mesh.PrimitiveType Primitive, Material? Material, string Name, MeshLOD[] LODs, MeshCompression? Compression);
+    private readonly record struct Source(MeshSurfaceData Basis, uint[] FrameWords, MeshSurfaceData[] Shapes, Mesh.ArrayFormat Mask, MeshPrimitiveType Primitive, Material? Material, string Name, MeshLOD[] LODs, MeshCompression? Compression);
     private Source[] _sources = [];
     private int _count;
     private Mesh? _source;
