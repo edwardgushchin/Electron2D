@@ -149,6 +149,38 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <summary>Gets the project-local directory name reserved for generated engine data.</summary>
     public const string ProjectDataDirectoryName = ".electron2d";
 
+    /// <summary>Defines the color behind the project boot splash.</summary>
+    /// <value>application/boot_splash/bg_color; opaque dark gray initially.</value>
+    public static ProjectSetting<Color> BootSplashBackgroundColor { get; } =
+        new("application/boot_splash/bg_color", new Color(0.14f, 0.14f, 0.14f), color => color.IsFinite());
+
+    /// <summary>Defines the custom project boot image path.</summary>
+    /// <value>application/boot_splash/image; empty initially, selecting the built-in image.</value>
+    /// <remarks>Accepts PNG files, including mounted resources and registered resource UIDs. An unreadable image
+    /// selects the built-in image. The windowed project host reads the effective value at startup.</remarks>
+    public static ProjectSetting<string> BootSplashImage { get; } = new("application/boot_splash/image", string.Empty);
+
+    /// <summary>Defines the minimum number of milliseconds to display the project boot splash.</summary>
+    /// <value>application/boot_splash/minimum_display_time; zero initially.</value>
+    /// <remarks>Time already spent preparing the application after presentation counts toward the minimum.</remarks>
+    public static ProjectSetting<int> BootSplashMinimumDisplayTimeMSEC { get; } =
+        new("application/boot_splash/minimum_display_time", 0, value => value >= 0);
+
+    /// <summary>Defines whether the project boot splash draws an image over its background.</summary>
+    /// <value>application/boot_splash/show_image; true initially.</value>
+    public static ProjectSetting<bool> BootSplashShowImage { get; } = new("application/boot_splash/show_image", true);
+
+    /// <summary>Defines how a custom boot image fits the native main-window client.</summary>
+    /// <value>application/boot_splash/stretch_mode; Keep initially.</value>
+    public static ProjectSetting<RenderingServer.SplashStretchMode> BootSplashStretchMode { get; } =
+        new("application/boot_splash/stretch_mode", RenderingServer.SplashStretchMode.Keep,
+            value => value is >= RenderingServer.SplashStretchMode.Disabled and <= RenderingServer.SplashStretchMode.Ignore);
+
+    /// <summary>Defines whether the custom project boot image uses linear filtering when scaled.</summary>
+    /// <value>application/boot_splash/use_filter; true initially.</value>
+    /// <remarks>False selects nearest sampling. The software compatibility driver uses nearest sampling.</remarks>
+    public static ProjectSetting<bool> BootSplashUseFilter { get; } = new("application/boot_splash/use_filter", true);
+
     /// <summary>Defines the human-readable application name.</summary>
     public static ProjectSetting<string> ApplicationName { get; } =
         new("application/config/name", string.Empty);

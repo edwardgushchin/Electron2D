@@ -131,6 +131,12 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; }`](#moviewriterogvkeyframeinterval) | Maximum keyframe spacing, 64 initially; 1..1024 frames. |
 | [`public static ProjectSetting<Color> DebugPathsColor { get; }`](#diagnostics-debugpathscolor) | Defines the color of path curves and tangent markers when scene path diagnostics are enabled. |
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
+| `public static ProjectSetting<Color> BootSplashBackgroundColor { get; }` | Sets the startup background. Defaults to opaque dark gray. |
+| `public static ProjectSetting<string> BootSplashImage { get; }` | Selects a PNG path. An empty path selects the bundled image. |
+| `public static ProjectSetting<int> BootSplashMinimumDisplayTimeMSEC { get; }` | Sets the minimum display time in milliseconds. Defaults to zero. |
+| `public static ProjectSetting<bool> BootSplashShowImage { get; }` | Selects an image over the background. Defaults to true. |
+| `public static ProjectSetting<RenderingServer.SplashStretchMode> BootSplashStretchMode { get; }` | Fits the custom image in the native client. Defaults to Keep. |
+| `public static ProjectSetting<bool> BootSplashUseFilter { get; }` | Selects linear sampling where available. Defaults to true. |
 | [`public static ProjectSetting<string> ApplicationIcon { get; }`](../components/window-runtime.md#application-image-icons) | Defines the image path used for the default window icon. Defaults to empty. |
 | [`public static ProjectSetting<string> WindowsNativeIcon { get; }`](../components/window-runtime.md#windows-native-icons) | Defines the Windows ICO path loaded before scene entry. Defaults to empty. |
 | [`public static ProjectSetting<bool> AutoAcceptQuit { get; }`](#autoacceptquit) | application/config/auto_accept_quit; true. |

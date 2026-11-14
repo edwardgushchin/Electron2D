@@ -69,7 +69,8 @@ public sealed partial class Engine
     /// <param name="window">The live detached window, owned by the runtime after successful reservation.</param>
     /// <returns>The scene's quit code, or zero for a custom loop, after owned cleanup.</returns>
     /// <remarks>The default <see cref="ProjectSettings.MainLoopType"/> loads <see cref="ProjectSettings.MainScene"/>
-    /// as the tree's current scene from initial entry, after existing window children. A custom loop is published
+    /// as the tree's current scene from initial entry, after existing window children. The project boot splash is presented
+    /// before scene entry on visible native windows. A custom loop is published
     /// before initialization and can request exit through either frame callback. The host pumps events,
     /// renders the window's server canvas, and disposes the custom loop and window. Custom loops do not activate window children.</remarks>
     /// <exception cref="InvalidOperationException">The scene is missing, the selected class cannot construct a MainLoop, or the run cannot start.</exception>

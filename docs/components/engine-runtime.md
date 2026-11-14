@@ -59,6 +59,8 @@ Managed scheduling, lifecycle integration, timing properties, metrics, architect
 
 ## Project main scene
 
+The visible native project host presents the [configured boot splash](boot-images.md#project-startup-splash) before activating the scene or custom loop.
+
 Call `Engine.RunProject(window)` or `Engine.RunProjectAsync(window)` with a configured detached window. The host samples the effective `ProjectSettings.MainLoopType` after reservation. Its default and empty value select `SceneTree`. This mode requires `ProjectSettings.MainScene` to name a packed-scene path or resource UID. Relative and virtual paths, UID resolution, localization remaps and template retention follow the resource loader's rules. An empty scene setting, missing file, wrong type or failed startup aborts the run and releases the owned window.
 
 The instance is appended after existing ordinary window children and becomes `SceneTree.CurrentScene` before tree entry. The tree is published before readiness. Existing children become ready in the normal order, then the main scene and then the window. Initial selection uses ordinary tree entry. Subsequent scene transitions use the deferred scene-change API and its signal. Explicit `Run`, `RunAsync` and recording calls use the caller's hierarchy.

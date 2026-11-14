@@ -154,6 +154,10 @@ public sealed partial class Engine
             OS.LowProcessorUsageModeSleepUsec = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorModeSleepUsec);
             window.ApplyProjectHDROutput();
             window.OpenNative(movieDisableVSync, printGPUProfile);
+            var splashStarted = runProject && window.Visible && !OperatingSystem.IsBrowser() &&
+                RenderingServer.Service!.PresentProjectBootSplash() ? Stopwatch.GetTimestamp() : (long?)null;
+            var splashMinimum = splashStarted.HasValue && !IsEditorHint
+                ? ProjectSettings.GetWithOverride(ProjectSettings.BootSplashMinimumDisplayTimeMSEC) : 0;
             DisplayServer.Service!.ApplyProjectWindowIcon();
             window.ApplyProjectMSAA();
             window.ApplyProjectScreenSpaceAA();
@@ -187,6 +191,20 @@ public sealed partial class Engine
             var loop = (MainLoop?)tree ?? customLoop!;
             Volatile.Write(ref _mainLoop, loop);
             loop.StartForEngine();
+            if (splashStarted is { } splashStart && splashMinimum > 0)
+            {
+                while (!(tree?.QuitRequested ?? window.HostQuitRequested))
+                {
+                    var remaining = (int)Math.Ceiling(splashMinimum - Stopwatch.GetElapsedTime(splashStart).TotalMilliseconds);
+                    if (remaining <= 0) break;
+                    var delay = Math.Min(remaining, 10);
+                    if (asynchronous) await Task.Delay(delay);
+                    else Thread.Sleep(delay);
+                    if (Environment.CurrentManagedThreadId != Volatile.Read(ref _runtimeOwnerThreadId))
+                        throw new InvalidOperationException("The application synchronization context must retain the native window thread.");
+                    window.PumpEvents();
+                }
+            }
             ResetRunState();
             Volatile.Write(ref _runtimeState, RuntimeRunning);
             using var frameTimer = asynchronous ? new PeriodicTimer(TimeSpan.FromMilliseconds(1)) : null;

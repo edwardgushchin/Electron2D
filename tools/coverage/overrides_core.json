@@ -583,6 +583,36 @@
       "reason": "ADRs 0015/0019/0040: permanent typed startup path with active feature overrides. The Windows display loads it before scene entry using the native icon path."
     },
     {
+      "electron2d": "property:Electron2D.ProjectSettings.BootSplashBackgroundColor()",
+      "godot": "ProjectSettings::property:application/boot_splash/bg_color",
+      "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.BootSplashImage()",
+      "godot": "ProjectSettings::property:application/boot_splash/image",
+      "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.BootSplashMinimumDisplayTimeMSEC()",
+      "godot": "ProjectSettings::property:application/boot_splash/minimum_display_time",
+      "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.BootSplashShowImage()",
+      "godot": "ProjectSettings::property:application/boot_splash/show_image",
+      "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.BootSplashStretchMode()",
+      "godot": "ProjectSettings::property:application/boot_splash/stretch_mode",
+      "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.BootSplashUseFilter()",
+      "godot": "ProjectSettings::property:application/boot_splash/use_filter",
+      "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash."
+    },
+    {
       "electron2d": "property:Electron2D.ProjectSettings.ApplicationIcon()",
       "godot": "ProjectSettings::property:application/config/icon",
       "reason": "ADRs 0015/0019/0040: effective startup image file path for the application default window icon."
@@ -1817,6 +1847,18 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0015/0019/0028: effective typed boot settings feed native project presentation before scene entry. Packed PNGs and registered UIDs use the existing image loader. Invalid paths fall back to the bundled image. Background-only mode, all six custom image fits, native filtering with an explicit SDL software nearest fallback, minimum visible duration and first-scene handoff execute. Browser startup keeps its host splash.",
+      "godot": [
+        "ProjectSettings::property:application/boot_splash/bg_color",
+        "ProjectSettings::property:application/boot_splash/image",
+        "ProjectSettings::property:application/boot_splash/minimum_display_time",
+        "ProjectSettings::property:application/boot_splash/show_image",
+        "ProjectSettings::property:application/boot_splash/stretch_mode",
+        "ProjectSettings::property:application/boot_splash/use_filter"
+      ]
+    },
     {
       "state": "Partial",
       "reason": "ADRs 0015/0019/0040: windowed startup reads the effective image path through the Image loader and applies the copied default to root and future native children. A native platform icon takes precedence and unsupported drivers skip the request. Exporter icon fallback requires the owning export/package integration.",

@@ -36,33 +36,98 @@ public sealed partial class RenderingServer
     public static void SetBootImageWithStretch(Image? image, Color color, SplashStretchMode stretchMode, bool useFilter = true)
     {
         var server = RequireService(); server.EnsureOwner();
-        if (server._closing || server._rendering || server._submittingTextures || server._nativeFrameStarted) throw new InvalidOperationException("A loading image cannot reenter scene submission.");
+        server.EnsureBootPresentation();
         if (stretchMode is < SplashStretchMode.Disabled or > SplashStretchMode.Ignore) throw new ArgumentOutOfRangeException(nameof(stretchMode));
         if (!color.IsFinite()) throw new ArgumentException("The loading background must be finite.", nameof(color));
         if (image is null || image.IsEmpty) return;
-        var backend = server._backend; var size = backend.GetPixelSize(); if (size.X <= 0 || size.Y <= 0) return;
+        server.PresentBootImage(image, color, stretchMode, useFilter);
+    }
+
+    internal bool PresentProjectBootSplash()
+    {
+        EnsureOwner();
+        EnsureBootPresentation();
+        var color = ProjectSettings.GetWithOverride(ProjectSettings.BootSplashBackgroundColor);
+        if (!ProjectSettings.GetWithOverride(ProjectSettings.BootSplashShowImage))
+            return PresentBootImage(null, color, SplashStretchMode.Disabled, false);
+
+        using var image = new Image();
+        var path = ProjectSettings.GetWithOverride(ProjectSettings.BootSplashImage);
+        if (path.Length > 0)
+        {
+            try
+            {
+                var resolved = ResourceUID.EnsurePath(path);
+                if (!string.Equals(System.IO.Path.GetExtension(resolved), ".png", StringComparison.OrdinalIgnoreCase))
+                    throw new NotSupportedException("Project boot images must be PNG files.");
+                image.Load(resolved);
+                if (image.IsEmpty) throw new InvalidDataException("The boot image is empty.");
+            }
+            catch (Exception error) when (error is IOException or InvalidDataException or UnauthorizedAccessException or ArgumentException or NotSupportedException or KeyNotFoundException)
+            {
+                RuntimeDiagnostics.Instance.Error("", "", 0, "", $"Cannot load boot image '{path}': {error.Message}", LoggerErrorType.Warning);
+            }
+            if (!image.IsEmpty)
+            {
+                var mode = ProjectSettings.GetWithOverride(ProjectSettings.BootSplashStretchMode);
+                var filter = ProjectSettings.GetWithOverride(ProjectSettings.BootSplashUseFilter);
+                if (filter && _backend is CompatibilityCanvasBackend { Driver: "software" })
+                {
+                    RuntimeDiagnostics.Instance.Error("", "", 0, "", "Linear boot splash filtering is unavailable on the software renderer; using nearest.", LoggerErrorType.Warning);
+                    filter = false;
+                }
+                return PresentBootImage(image, color, mode, filter);
+            }
+        }
+
+        using var asset = typeof(RenderingServer).Assembly.GetManifestResourceStream("Electron2D.DefaultBootSplash.png")!;
+        var bytes = new byte[checked((int)asset.Length)];
+        asset.ReadExactly(bytes);
+        image.LoadPNGFromBuffer(bytes);
+        return PresentBootImage(image, color, SplashStretchMode.Disabled, false);
+    }
+
+    private void EnsureBootPresentation()
+    {
+        if (_closing || _rendering || _submittingTextures || _nativeFrameStarted)
+            throw new InvalidOperationException("A loading image cannot reenter scene submission.");
+    }
+
+    private bool PresentBootImage(Image? image, Color color, SplashStretchMode stretchMode, bool useFilter)
+    {
+        var size = _backend.GetPixelSize();
+        if (size.X <= 0 || size.Y <= 0) return false;
         if (size.X > 16384 || size.Y > 16384) throw new NotSupportedException("Loading targets support at most 16384 client pixels per axis.");
-        using var texture = ImageTexture.CreateFromImage(image);
-        var rect = BootImageRect(new(texture.GetWidth(), texture.GetHeight()), size, stretchMode);
-        if (!server._window.Transparent) color.A = 1;
-        var current = backend.CreateTarget(size, color); RenderHandle next;
-        try { next = backend.CreateTarget(size, color); } catch { current.Dispose(); throw; }
+        using var texture = image is null ? null : ImageTexture.CreateFromImage(image);
+        if (!_window.Transparent) color.A = 1;
+        var current = _backend.CreateTarget(size, color);
+        RenderHandle next;
+        try { next = _backend.CreateTarget(size, color); } catch { current.Dispose(); throw; }
         using var target = new CanvasRenderTarget(current, next, size);
-        Span<CanvasVertex> vertices = stackalloc CanvasVertex[6];
-        var a = new CanvasVertex(rect.Position, Colors.White, Vector2.Zero); var b = new CanvasVertex(new(rect.End.X, rect.Position.Y), Colors.White, new(1, 0));
-        var c = new CanvasVertex(rect.End, Colors.White, Vector2.One); var d = new CanvasVertex(new(rect.Position.X, rect.End.Y), Colors.White, new(0, 1));
-        vertices[0] = a; vertices[1] = b; vertices[2] = c; vertices[3] = a; vertices[4] = c; vertices[5] = d;
-        var batch = new CanvasBatch(0, 6, null, texture, useFilter ? TextureFilter.Linear : TextureFilter.Nearest);
-        server._rendering = server._submittingTextures = true; server.MarkChanged();
+        Span<CanvasVertex> vertices = stackalloc CanvasVertex[texture is null ? 0 : 6];
+        Span<CanvasBatch> batches = texture is null ? [] : new CanvasBatch[1];
+        if (texture is not null)
+        {
+            var rect = BootImageRect(new(texture.GetWidth(), texture.GetHeight()), size, stretchMode);
+            var a = new CanvasVertex(rect.Position, Colors.White, Vector2.Zero);
+            var b = new CanvasVertex(new(rect.End.X, rect.Position.Y), Colors.White, new(1, 0));
+            var c = new CanvasVertex(rect.End, Colors.White, Vector2.One);
+            var d = new CanvasVertex(new(rect.Position.X, rect.End.Y), Colors.White, new(0, 1));
+            vertices[0] = a; vertices[1] = b; vertices[2] = c; vertices[3] = a; vertices[4] = c; vertices[5] = d;
+            batches[0] = new CanvasBatch(0, 6, null, texture, useFilter ? TextureFilter.Linear : TextureFilter.Nearest);
+        }
+        _rendering = _submittingTextures = true;
+        MarkChanged();
         try
         {
-            backend.Draw(target, vertices, [batch], color, true, server.CanvasTime, [], new CanvasLightingFrame(), processParticles: false);
-            backend.Present([new(target, new(Vector2.Zero, size))]);
+            _backend.Draw(target, vertices, batches, color, true, CanvasTime, [], new CanvasLightingFrame(), processParticles: false);
+            _backend.Present([new(target, new(Vector2.Zero, size))]);
+            return true;
         }
         finally
         {
-            try { backend.ReleaseTemporaryTexture(texture); }
-            finally { server._rendering = server._submittingTextures = false; }
+            try { if (texture is not null) _backend.ReleaseTemporaryTexture(texture); }
+            finally { _rendering = _submittingTextures = false; }
         }
     }
 

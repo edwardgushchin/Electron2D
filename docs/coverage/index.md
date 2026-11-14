@@ -1,3 +1,5 @@
+[Project boot splash](../components/boot-images.md#project-startup-splash) connects six typed settings to native startup before the first game frame. Six Blocked rows move to Implemented. Coverage is **14,008/18,898 (74.12%)**, with 1,122 Partial, 269 Unimplemented, 3,499 Blocked, 8,395 Excluded and zero unmapped.
+
 [Viewport stretch queries](../classes/Viewport.md#getstretchtransform) expose the canvas-to-raster scale for windows and offscreen viewports. One Blocked row moves to Implemented. Coverage is **14,002/18,898 (74.09%)**, with 1,122 Partial, 269 Unimplemented, 3,505 Blocked, 8,395 Excluded and zero unmapped.
 
 [Application image icons](../components/window-runtime.md#application-image-icons) connect the project setting to native window startup, including packed images and child inheritance. The setting moves from Blocked to Partial pending exporter fallback. Coverage is **14,001/18,898 (74.09%)**, with 1,122 Partial, 269 Unimplemented, 3,506 Blocked, 8,395 Excluded and zero unmapped.

@@ -55,6 +55,12 @@ public partial class ProjectSettingsRegistry : ElectronObject
         AddBuiltInFeatures(_builtInFeatures);
         RegisterInternal(WebPCompressionMethod, isBasic: false);
         RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
+        RegisterInternal(BootSplashBackgroundColor, isBasic: true);
+        RegisterInternal(BootSplashImage, isBasic: true);
+        RegisterInternal(BootSplashMinimumDisplayTimeMSEC, isBasic: false);
+        RegisterInternal(BootSplashShowImage, isBasic: true);
+        RegisterInternal(BootSplashStretchMode, isBasic: true);
+        RegisterInternal(BootSplashUseFilter, isBasic: true);
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationIcon, isBasic: true);
         RegisterInternal(WindowsNativeIcon, isBasic: true);
@@ -1268,6 +1274,12 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MovieWriterOGVAudioQuality) ||
         ReferenceEquals(setting, MovieWriterOGVEncodingSpeed) ||
         ReferenceEquals(setting, MovieWriterOGVKeyframeInterval) ||
+        ReferenceEquals(setting, BootSplashBackgroundColor) ||
+        ReferenceEquals(setting, BootSplashImage) ||
+        ReferenceEquals(setting, BootSplashMinimumDisplayTimeMSEC) ||
+        ReferenceEquals(setting, BootSplashShowImage) ||
+        ReferenceEquals(setting, BootSplashStretchMode) ||
+        ReferenceEquals(setting, BootSplashUseFilter) ||
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationIcon) ||
         ReferenceEquals(setting, WindowsNativeIcon) ||

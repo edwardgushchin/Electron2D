@@ -19,7 +19,18 @@ window.Ready += _ => RenderingServer.SetBootImageWithStretch(
 Engine.Run(window);
 ```
 
-The existing native service is already available during readiness. Call outside scene rendering on its owner thread, for example before preparing additional loading work. This is explicit runtime presentation; no automatic project startup-image setting or additional loader is introduced. It does not pump native events or run scene work while the caller is occupied.
+The existing native service is already available during readiness. Call outside scene rendering on its owner thread, for example before preparing additional loading work. This explicit operation does not pump native events or run scene work while the caller is occupied.
+
+## Project startup splash
+
+Set the six typed `ProjectSettings.BootSplash*` definitions to configure the splash presented by `Engine.RunProject` and `Engine.RunProjectAsync`, including project recording runs. Settings use feature overrides and the existing project document. The window must start visible and use a native display. The browser host owns its startup screen. Use the explicit RenderingServer method during caller-owned `Engine.Run` sessions.
+
+- `BootSplashBackgroundColor` defaults to opaque dark gray. `BootSplashShowImage` defaults to true. False presents a solid background and skips reading the image path.
+- `BootSplashImage` accepts a PNG path, including mounted `res://` files and registered resource UIDs. An empty path or an unreadable image selects the bundled Electron2D splash. Invalid custom files emit a runtime warning.
+- `BootSplashStretchMode` defaults to Keep. `BootSplashUseFilter` defaults to true for linear filtering. The software Compatibility driver warns and uses nearest because it cannot filter textured triangles linearly. The bundled splash uses the 128 × 128 app icon at its original size, centered.
+- `BootSplashMinimumDisplayTimeMSEC` defaults to zero. Time preparing the scene or custom loop after presentation counts toward the minimum. The host pumps events after initialization while waiting out the remaining time and stops waiting for a quit request. Editor-hint runs skip the minimum. The first normal scene frame replaces the splash. The waiting interval is outside simulation and movie frame timing.
+
+ProjectBootSplashTests reads actual Windows Compatibility and Vulkan pixels in readiness and after the first scene draw. It checks persisted settings, packed overrides, sampled texels, fitting, background-only presentation, corrupt-file fallback, yielding startup and the minimum interval. Other native platforms and human visual acceptance are separate checks.
 
 ## Geometry, sampling and lifetime
 

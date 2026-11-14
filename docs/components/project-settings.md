@@ -36,6 +36,8 @@ The input action records are defined by the [Input runtime](input-runtime.md); t
 
 ## Runtime flow
 
+The [project boot splash](boot-images.md#project-startup-splash) consumes six typed settings at native project startup.
+
 `ApplicationIcon` and `WindowsNativeIcon` follow the normal typed startup and feature-override path and accept mounted project files. [Application image icons](window-runtime.md#application-image-icons) · [Windows native icons](window-runtime.md#windows-native-icons)
 
 1. The component creates built-in application, timing, rendering, six GUI-focus input, two locale and nine pseudolocalization definitions and registers them in each registry.
