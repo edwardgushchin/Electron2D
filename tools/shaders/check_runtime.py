@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """Check source-only built-ins, include invalidation, failure, cleanup and embedded delivery."""
-from pathlib import Path
+from contextlib import ExitStack
+import hashlib
 import os
+from pathlib import Path
 import subprocess
+import sys
 import tempfile
 from xml.sax.saxutils import escape
 
 from build_runtime import generate, ROOT
+from build_toolchain import exclusive
 
 
 with tempfile.TemporaryDirectory(prefix='electron2d-runtime-shaders-') as temporary:
@@ -61,8 +65,44 @@ void main() { data.value = VALUE; }
     assert (output / 'Physics/Test.comp.spv').read_bytes() == good, 'Failure replaced last valid bytecode'
     include.write_text('#define VALUE 2.0\n')
     stale = output / 'Physics/Removed.comp.spv'; stale.write_bytes(good)
-    generate(output, root)
+    interrupted = output / 'Rendering/tmp-interrupted'
+    interrupted.mkdir()
+    (interrupted / 'shader.spv').write_bytes(b'partial shader')
+    (interrupted / 'library.frag.glsl').write_text('partial source')
+    manifest = output / 'manifest.json'
+    manifest_bytes = manifest.read_bytes()
+    stamps = {key: (output / key).stat().st_mtime_ns for key in second}
+    assert generate(output, root) == second
     assert not stale.exists(), 'Removed shader was retained'
+    assert not interrupted.exists(), 'Interrupted compilation directory was retained'
+
+    interrupted.mkdir()
+    (interrupted / 'shader.spv').write_bytes(b'partial shader')
+    command = [sys.executable, '-B', '-c',
+               'from pathlib import Path; from build_runtime import generate; '
+               'import sys; generate(Path(sys.argv[1]), Path(sys.argv[2]))', str(output), str(root)]
+    with ExitStack() as processes:
+        with exclusive(output.with_suffix('.lock')):
+            workers = []
+            for _ in range(2):
+                worker = processes.enter_context(subprocess.Popen(command, cwd=ROOT / 'tools/shaders'))
+                processes.callback(worker.terminate)
+                workers.append(worker)
+            for worker in workers:
+                try:
+                    worker.wait(timeout=1)
+                    raise AssertionError('Generator exited while another process held the output lock')
+                except subprocess.TimeoutExpired:
+                    pass
+            assert interrupted.is_dir(), 'Recovery bypassed the output lock'
+        for worker in workers:
+            assert worker.wait(timeout=30) == 0, 'Concurrent generation failed'
+    assert not interrupted.exists(), 'Concurrent generation left an interrupted directory'
+    assert manifest.read_bytes() == manifest_bytes, 'Recovery changed the valid manifest'
+    for key, entry in second.items():
+        target = output / key
+        assert hashlib.sha256(target.read_bytes()).hexdigest() == entry['binary'], f'Recovery changed {key}'
+        assert target.stat().st_mtime_ns == stamps[key], f'Recovery rewrote {key}'
     (output / 'Physics/Test.comp.spv').write_bytes(b'corrupt')
     generate(output, root)
     assert (output / 'Physics/Test.comp.spv').read_bytes() == good, 'Corrupt cache was reused'
