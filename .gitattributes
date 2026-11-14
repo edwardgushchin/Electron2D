@@ -10,5 +10,11 @@ tests/Electron2D.Tests/Fixtures/Fonts/LICENSE.* -whitespace
 src/Vendor/FAudio/** -whitespace
 src/Vendor/QOA/** -whitespace
 src/Scene/Theme/Icons/*.svg text eol=lf
+# Build entry points and byte-sensitive inputs must survive Windows checkout.
+tools/**/*.sh text eol=lf
+tools/shaders/*.py text eol=lf
+tools/shaders/toolchain.lock.json text eol=lf
+docs/coverage/data/*.json text eol=lf
+
 tools/**/*.gd -linguist-detectable
 docs/coverage/data/electron2d.json text eol=lf
