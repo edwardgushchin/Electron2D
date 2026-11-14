@@ -7,6 +7,11 @@ internal static partial class NativeWindowIconTests
 {
     internal static void Run(string profile)
     {
+        if (profile is "image" or "x11-image" or "wayland-image" or "dummy-image")
+        {
+            RunApplicationIcon(profile);
+            return;
+        }
         if (profile == "unsupported")
         {
             using var display = DisplayServer.Open("Unsupported native icon", new(96, 96), hidden: true);
@@ -31,6 +36,13 @@ internal static partial class NativeWindowIconTests
             File.WriteAllBytes(badPayload, malformed);
             ProjectSettings.Set(ProjectSettings.WindowsNativeIcon, bad);
             ProjectSettings.SetFeatureOverride(ProjectSettings.WindowsNativeIcon, "windows", first);
+            var imagePath = Path.Combine(folder.FullName, "fallback.png");
+            using (var image = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8))
+            {
+                image.Fill(Colors.Magenta);
+                image.SavePNG(imagePath);
+            }
+            ProjectSettings.Set(ProjectSettings.ApplicationIcon, imagePath);
             ProjectSettings.Set(ProjectSettings.RenderingMethod, "compatibility");
             ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
             using var window = new Window { Title = "Native icon contract", Size = new(300, 160), Visible = false };
@@ -115,17 +127,17 @@ internal static partial class NativeWindowIconTests
         Check(ReadIconPixel(icons.Small) == smallColor && ReadIconPixel(icons.Large) == largeColor, "Each Win32 icon draws the selected source image.");
     }
 
-    private static uint ReadIconPixel(nint icon)
+    private static uint ReadIconPixel(nint icon, int size = 32)
     {
         var dc = CreateCompatibleDC(0);
         var display = GetDC(0);
-        var bitmap = CreateCompatibleBitmap(display, 32, 32);
+        var bitmap = CreateCompatibleBitmap(display, size, size);
         ReleaseDC(0, display);
         var previous = SelectObject(dc, bitmap);
         try
         {
-            Check(DrawIconEx(dc, 0, 0, icon, 32, 32, 0, 0, 3) != 0, "GDI draws the stored native icon.");
-            return GetPixel(dc, 16, 16);
+            Check(DrawIconEx(dc, 0, 0, icon, size, size, 0, 0, 3) != 0, "GDI draws the stored native icon.");
+            return GetPixel(dc, size / 2, size / 2);
         }
         finally
         {

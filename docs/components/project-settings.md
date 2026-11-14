@@ -36,7 +36,7 @@ The input action records are defined by the [Input runtime](input-runtime.md); t
 
 ## Runtime flow
 
-`WindowsNativeIcon` follows the normal typed startup and feature-override path and accepts mounted project files. [Windows native icons](window-runtime.md#windows-native-icons)
+`ApplicationIcon` and `WindowsNativeIcon` follow the normal typed startup and feature-override path and accept mounted project files. [Application image icons](window-runtime.md#application-image-icons) · [Windows native icons](window-runtime.md#windows-native-icons)
 
 1. The component creates built-in application, timing, rendering, six GUI-focus input, two locale and nine pseudolocalization definitions and registers them in each registry.
 2. Domains register additional `ProjectSetting<T>` definitions. A definition immediately claims and validates compatible values that may already exist in the loaded document.

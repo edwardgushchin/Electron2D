@@ -10,6 +10,32 @@ public sealed partial class DisplayServer
     private Image? _defaultWindowIcon;
     private bool _nativeWaylandIconAvailable;
 
+    internal void ApplyProjectWindowIcon()
+    {
+        if (HasFeatureCore(Feature.NativeIcon) &&
+            ProjectSettings.GetWithOverride(ProjectSettings.WindowsNativeIcon) is { Length: > 0 } nativeIcon)
+        {
+            SetNativeIconCore(nativeIcon);
+            return;
+        }
+        if (ProjectSettings.GetWithOverride(ProjectSettings.ApplicationIcon) is not { Length: > 0 } path ||
+            !HasFeatureCore(Feature.Icon))
+            return;
+
+        using var icon = new Image();
+        try
+        {
+            icon.Load(path);
+            ValidateIcon(icon);
+        }
+        catch (Exception error) when (error is IOException or InvalidDataException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            RuntimeDiagnostics.Instance.Error("", "", 0, "", $"Cannot load application icon '{path}': {error.Message}", LoggerErrorType.Warning);
+            return;
+        }
+        SetIconCore(icon);
+    }
+
     internal void WindowSetIconCore(Image image, int windowId = MainWindowId)
     {
         if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetIconCore(image, MainWindowId); return; }

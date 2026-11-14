@@ -295281,6 +295281,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.ApplicationIcon()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ApplicationIcon",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E ApplicationIcon { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.ApplicationName()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",

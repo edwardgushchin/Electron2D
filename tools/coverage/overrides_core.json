@@ -583,6 +583,11 @@
       "reason": "ADRs 0015/0019/0040: permanent typed startup path with active feature overrides. The Windows display loads it before scene entry using the native icon path."
     },
     {
+      "electron2d": "property:Electron2D.ProjectSettings.ApplicationIcon()",
+      "godot": "ProjectSettings::property:application/config/icon",
+      "reason": "ADRs 0015/0019/0040: effective startup image file path for the application default window icon."
+    },
+    {
       "electron2d": "property:Electron2D.ProjectSettings.ApplicationVersion()",
       "godot": "ProjectSettings::property:application/config/version",
       "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
@@ -1812,6 +1817,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Partial",
+      "reason": "ADRs 0015/0019/0040: windowed startup reads the effective image path through the Image loader and applies the copied default to root and future native children. A native platform icon takes precedence and unsupported drivers skip the request. Exporter icon fallback requires the owning export/package integration.",
+      "godot": ["ProjectSettings::property:application/config/icon"]
+    },
     {
       "state": "Implemented",
       "reason": "ADRs 0015/0019/0040: the Windows windowed host samples the effective typed ICO path before scene entry. Native root and child windows receive distinct small and large icons. The project definition defaults to empty and retains ordinary and mounted resource paths.",

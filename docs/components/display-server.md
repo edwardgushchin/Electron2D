@@ -102,7 +102,7 @@ On Wayland, `HasFeature(Ime)` still identifies the SDL path without proving text
 
 `WindowRectChanged` replaces split move and resize notifications with one typed full-rectangle callback. The event uses observed native payloads in queue order; a real compositor move/resize sequence and Wayland's zero-position convention still need native verification.
 
-`SetIcon` retains a copied default for current and future native windows, preserving each successful `WindowSetIcon` override. On Wayland, nonsquare images are rejected and `HasFeature(Icon)` becomes true only after a native icon request succeeds. The default is applied before a new child presents. Launcher icons remain external host configuration.
+`SetIcon` retains a copied default for current and future native windows, preserving each successful `WindowSetIcon` override. On Wayland, nonsquare images are rejected and `HasFeature(Icon)` can report the compositor's advertised icon-manager global before publication. The default is applied before a new child presents. [Application icon startup](window-runtime.md#application-image-icons) uses the same display path. Launcher icons remain external host configuration.
 
 ## Capability query allocation
 

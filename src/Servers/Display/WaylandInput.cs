@@ -18,7 +18,13 @@ internal sealed unsafe partial class WaylandInput : IDisposable
     private GCHandle _listener;
     private nint _queue;
     private nint _registry;
+    private uint _toplevelIconGlobal;
     private Exception? _listenerFailure;
+
+    internal bool HasToplevelIcon
+    {
+        get { DispatchPending(); return _toplevelIconGlobal != 0; }
+    }
 
     private WaylandInput(nint display, nint library)
     {
@@ -157,12 +163,14 @@ internal sealed unsafe partial class WaylandInput : IDisposable
                 var name = Marshal.PtrToStringUTF8(arguments[1].Object);
                 var version = arguments[2].UInt;
                 if (name == "wl_seat") owner.AddSeat(id, version);
+                else if (name == "xdg_toplevel_icon_manager_v1" && version >= 1) owner._toplevelIconGlobal = id;
                 else if (name == BellProtocol.Name && owner._systemBellGlobal == 0) owner._systemBellGlobal = id;
                 else owner.ObserveCaptureGlobal(id, name, version);
             }
             else if (opcode == 1)
             {
                 if (owner._seats.Remove(id, out var seat)) seat.Dispose();
+                else if (id == owner._toplevelIconGlobal) owner._toplevelIconGlobal = 0;
                 else if (id == owner._systemBellGlobal)
                 {
                     owner._systemBellGlobal = 0;

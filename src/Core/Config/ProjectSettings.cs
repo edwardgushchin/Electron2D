@@ -153,6 +153,13 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<string> ApplicationName { get; } =
         new("application/config/name", string.Empty);
 
+    /// <summary>Defines the image file used for the application's default window icon.</summary>
+    /// <value>application/config/icon; empty initially.</value>
+    /// <remarks>The windowed host reads the effective path before scene entry on displays that support image icons.
+    /// Paths may refer to mounted resources. A configured native icon takes priority on its supported display.</remarks>
+    public static ProjectSetting<string> ApplicationIcon { get; } =
+        new("application/config/icon", string.Empty);
+
     /// <summary>Defines the native ICO file loaded when opening a Windows application window.</summary>
     /// <value>application/config/windows_native_icon; empty initially.</value>
     /// <remarks>The effective project path is read at startup and can refer to a mounted resource pack.</remarks>

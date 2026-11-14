@@ -1183,7 +1183,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0040/0042: SetIcon now retains a copied default for current and future native windows, applies it before child presentation and preserves successful per-window overrides. The former one-window dependency is implemented. Complete per-window native icon/property and compositor-output verification remains its own acceptance gate; this slice does not infer icon pixels from rendered canvas tests.",
+      "reason": "ADRs 0040/0042: SetIcon retains a copied default for current and future native windows, applies it before child presentation and preserves successful per-window overrides. Application startup exercises this path with Win32 GDI pixel readback and the X11 native icon property on both root and child windows. Cocoa and a Wayland compositor advertising the icon protocol retain their native verification gates.",
       "godot": [
         "DisplayServer::method:set_icon(Image:)"
       ]

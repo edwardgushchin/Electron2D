@@ -21,9 +21,15 @@ Window also owns [accessible name and description](accessibility.md#window-names
 
 `DisplayServer.SetNativeIcon` reads ordinary files and `res://` overlays through FileAccess. The Win32 driver on Windows 10 version 1607 or later loads the small and large images separately for the window's DPI. The display prepares replacement handles before publishing them, retains the file bytes for future windows and display-scale changes, and destroys its own handles after replacement or native window retirement. `SetIcon` can replace this default with an image. A prior successful `WindowSetIcon` keeps its precedence. Fullscreen exit restores the native icons if SDL reinstalls a prior image.
 
-`ProjectSettings.WindowsNativeIcon` loads the effective `application/config/windows_native_icon` path before scene entry on the Windows display. Empty skips startup publication. This controls the running window icons. Executable and launcher icon resources have their own packaging requirements. Cocoa ICNS and the generic application-image startup setting remain open.
+`ProjectSettings.WindowsNativeIcon` loads the effective `application/config/windows_native_icon` path before scene entry on the Windows display. Empty allows the image default below. This controls the running window icons. Executable and launcher icon resources have their own packaging requirements. Cocoa ICNS remains open.
 
 On Windows x64 the `ELECTRON2D_TEST_NATIVE_ICON=windows` profile reads the actual window handles and draws them through GDI to verify the two selected pixels. It covers feature-override startup and later children, mounted resource replacement, malformed input rollback, an explicit child image, replacing the default with an image, a fullscreen round trip and a queued scale notification. The `unsupported` profile checks the capability and refusal on SDL dummy. Physical transfers between displays with different DPI, Windows x86/ARM64 and release package execution remain unverified.
+
+### Application image icons
+
+`ProjectSettings.ApplicationIcon` reads the effective `application/config/icon` path through Image before scene entry. The path may address a mounted resource. A configured native icon wins on a supported native-icon host. Empty paths and displays without image-icon capability skip image loading. An unreadable or invalid image emits a warning and startup continues. A successful load uses the same display-owned default as `DisplayServer.SetIcon`, including native children opened later and explicit window overrides. Exporter fallback requires the owning packaging integration.
+
+`ELECTRON2D_TEST_NATIVE_ICON=image` verifies root and child icon pixels through Win32 GDI on Windows x64. `x11-image` checks the X11 `_NET_WM_ICON` property under WSLg. Both load the image from a pack using a feature override and start a fresh display with a missing file. `wayland-image` and `dummy-image` verified startup on displays without icon capability. Wayland publication requires a compositor advertising `xdg_toplevel_icon_manager_v1`. Cocoa and package qualification remain open.
 
 ### Window startup
 

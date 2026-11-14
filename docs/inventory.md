@@ -2552,3 +2552,5 @@ The retained [DisplayServer](classes/DisplayServer.md) includes owner-thread [Wi
 [Canvas redraw diagnostics](components/canvas-rendering.md#canvas-redraw-diagnostic) use the existing ProjectSettings, CanvasItem and RenderingServer types to highlight freshly recorded canvas command bounds.
 
 [DisplayServer.Icons.Windows.cs](../src/Servers/Display/DisplayServer.Icons.Windows.cs) extends the existing display and project-settings types with [Windows native icons](components/window-runtime.md#windows-native-icons).
+
+[DisplayServer.Icons.cs](../src/Servers/Display/DisplayServer.Icons.cs) applies the typed [application image icon](components/window-runtime.md#application-image-icons) through the display's existing default icon lifetime. The Wayland registry tracks the compositor icon capability.

@@ -42,7 +42,7 @@ Own the native display connection, borrowed operating-system display/window and 
 
 ## Public surface
 
-The display owns [Windows native ICO publication](../components/window-runtime.md#windows-native-icons) and its native handles. Engine samples the corresponding typed project path before scene activation.
+The display owns [Windows native ICO publication](../components/window-runtime.md#windows-native-icons) and its native handles. The windowed host samples the native path and the [application image path](../components/window-runtime.md#application-image-icons) before scene activation.
 
 [DisplayWindowEvents](../classes/DisplayWindowEvents.md), obtained by static `DisplayServer.GetWindowEvents`, owns typed per-native-window subscriptions and retirement. Its parsed-input phase precedes scene delivery; native notifications follow existing window callbacks. See [the connected component](../components/display-server.md#per-window-typed-events).
 

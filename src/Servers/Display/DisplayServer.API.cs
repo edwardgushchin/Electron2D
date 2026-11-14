@@ -21,8 +21,8 @@ public sealed partial class DisplayServer
     /// access is available while open. The native driver identity is retained for this display lifetime. Mouse follows connected devices;
     /// touchscreen also follows mouse-to-touch emulation. Pointer warp, cursor
     /// shapes, content scale, native dialogs, primary selection, and input-method composition are advertised only on
-    /// the native drivers listed in the feature reference. On Wayland, icon support becomes known after a successful native icon request;
-    /// a false result before that request does not prove the compositor lacks the icon protocol. Other defined values and unknown numeric values return
+    /// the native drivers listed in the feature reference. On Wayland, icon support follows the compositor's advertised icon protocol
+    /// or a successful native icon request. Other defined values and unknown numeric values return
     /// false. On Wayland, a positive <see cref="Feature.Ime"/> result does not yet prove compositor text-input support.
     /// Linux native-file and MIME capabilities probe the FileChooser interface version without opening UI; this is cold
     /// native service work and may block during startup. Native operations can still fail after a positive query.

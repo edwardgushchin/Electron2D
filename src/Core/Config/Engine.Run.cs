@@ -154,9 +154,7 @@ public sealed partial class Engine
             OS.LowProcessorUsageModeSleepUsec = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorModeSleepUsec);
             window.ApplyProjectHDROutput();
             window.OpenNative(movieDisableVSync, printGPUProfile);
-            if (DisplayServer.HasFeature(DisplayServer.Feature.NativeIcon) &&
-                ProjectSettings.GetWithOverride(ProjectSettings.WindowsNativeIcon) is { Length: > 0 } nativeIcon)
-                DisplayServer.SetNativeIcon(nativeIcon);
+            DisplayServer.Service!.ApplyProjectWindowIcon();
             window.ApplyProjectMSAA();
             window.ApplyProjectScreenSpaceAA();
             window.ApplyProjectMIPMapBias();

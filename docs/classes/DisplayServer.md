@@ -503,7 +503,7 @@ Sets the application-default icon for the main window while it has no explicit w
 
 - `image`: A live nonempty source image.
 
-**Remarks:** The image is copied before submission. After a successful `WindowSetIcon`, this call validates the new image but preserves the window-specific icon. Wayland requires a square image and compositor window-icon support. The API does not yet propagate the default icon to future engine windows, because this server owns only one window.
+**Remarks:** The display copies the image and applies it to current and future native windows without a successful `WindowSetIcon` override. Wayland requires a square image and the compositor icon protocol. [Application icon startup](../components/window-runtime.md#application-image-icons) also uses this default.
 
 **Errors:** `ArgumentNullException` for null, `ArgumentException` for an empty image or a nonsquare Wayland image, `InvalidOperationException` for a native failure or wrong thread, and `ObjectDisposedException` after the server or image is disposed.
 
