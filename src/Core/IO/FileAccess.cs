@@ -833,6 +833,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The value to write.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe failed before accepting the byte.
+    /// <see cref="PipeWriteException.BytesWritten"/> is zero. Retry the byte if the pipe can still accept writes.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteByte(byte value) => WriteBytes([value]);
 
@@ -840,6 +842,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The value written using <see cref="BigEndian"/> byte order.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteUInt16(ushort value)
     {
@@ -862,6 +868,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The value written using <see cref="BigEndian"/> byte order.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteUInt32(uint value)
     {
@@ -884,6 +894,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The value written using <see cref="BigEndian"/> byte order.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteUInt64(ulong value)
     {
@@ -906,6 +920,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The half-precision value.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteHalf(Half value) => WriteUInt16(BitConverter.HalfToUInt16Bits(value));
 
@@ -913,6 +931,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The single-precision value.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteSingle(float value) => WriteUInt32(BitConverter.SingleToUInt32Bits(value));
 
@@ -920,6 +942,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The double-precision value.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteDouble(double value) => WriteUInt64(BitConverter.DoubleToUInt64Bits(value));
 
@@ -927,6 +953,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The binary32 value used by the engine's 2D numeric types.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteReal(float value) => WriteSingle(value);
 
@@ -935,7 +965,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <remarks>Byte order does not affect the supplied bytes. A successful write clears file EOF.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
-    /// <exception cref="PipeWriteException">A process pipe write failed or accepted only a prefix.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, send the unwritten suffix of <paramref name="bytes"/>,
+    /// starting at <see cref="PipeWriteException.BytesWritten"/>.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteBytes(ReadOnlySpan<byte> bytes)
     {

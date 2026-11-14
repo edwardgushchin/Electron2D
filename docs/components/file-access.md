@@ -27,7 +27,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 1. A file open resolves the path through `ProjectSettings`, validates the exact mode and transformation inputs, and acquires/decodes the content before returning an instance.
 2. Raw files use a `FileStream`. Read-only physical streams share read and delete access so [file save and swap](file-save-and-swap.md) can replace the name while existing readers finish reading the original file. Physical reads through the resource resolver use the same policy, including the initial reads of transformed files. Transformed views retain decoded data in memory and release the physical handle before returning.
 3. A directory open captures physical/resource/user scope and its current directory. Listing begin captures an unsorted entry snapshot; sorted helpers create independent immutable snapshots.
-4. Every instance operation locks its stream/cursor or directory/listing state boundary.
+4. Seekable files lock stream operations and directory sessions lock listing state. Process pipes lock reads and writes separately so a thread can read while another writes to the same instance.
 5. Dirty compressed/encrypted content is encoded to a complete snapshot and atomically replaces its target on flush/close.
 6. Disposal releases file state and optionally deletes a temporary file; directory disposal closes listing state and recursively deletes only a non-kept temporary directory it created and owns.
 
@@ -49,7 +49,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - [Binary I/O](#binary-io) defines byte order, complete scalar reads, byte buffers, cursor movement and EOF transitions for each stream capability.
 - Caller-visible decoded content is published only after compression validation or successful authentication.
 - Transformed writes replace a destination atomically after the temporary file is flushed.
-- Instance calls are lock-serialized; compound caller sequences require caller synchronization.
+- Callers synchronize compound operations such as seek followed by read, or a write followed by a retry on the same pipe.
 - The component is blocking and allocating, never a real-time hot-path service.
 
 ## Binary I/O
@@ -58,7 +58,9 @@ Fresh sessions default to little endian. `BigEndian` selects the byte order for 
 
 On seekable files, a short scalar read consumes the available prefix and throws `EndOfStreamException`. A positive buffer request can return a short prefix. Either failure to fill a read sets EOF. Reaching the end exactly leaves EOF clear, and a zero-length read preserves cursor and EOF. A successful seek, write or resize clears EOF. `Position` and `Length` observe state without moving the cursor or clearing EOF. Seeks can place the cursor beyond the end without growing the file. Resizing removes truncated bytes or appends zero bytes while preserving the absolute cursor, including a cursor beyond the new end.
 
-Process pipes reject seek, length, position and resize with `NotSupportedException` when the direction is otherwise permitted. A nonblocking exact read that runs out of available bytes consumes the prefix and throws `IOException` until the pipe reports actual EOF. `ReadBytes` can return the prefix in either case. A pipe write can throw `PipeWriteException` with the consumed count, which permits retrying the unwritten suffix. Closing an owned stream releases it independently of the child process. See [process pipes](processes.md).
+Process pipes reject seek, length, position and resize with `NotSupportedException` when the direction is otherwise permitted. A nonblocking exact read that runs out of available bytes consumes the prefix and throws `IOException` until the pipe reports actual EOF. `ReadBytes` can return the prefix in either case. Closing an owned stream releases it independently of the child process. See [process pipes](processes.md).
+
+Binary writes can throw [`PipeWriteException`](../classes/PipeWriteException.md). `BytesWritten` counts the accepted prefix of the bytes supplied to `WriteBytes` or of the encoded numeric value. For a retryable failure, use `WriteBytes` to send the unwritten suffix. For numeric values, preserve the original byte order and bit representation when preparing that suffix. Calling the numeric method again would resend any accepted bytes. `WriteByte` can only fail before its one byte is accepted. If a suffix write fails again, add its `BytesWritten` to the offset before retrying.
 
 `ELECTRON2D_TEST_FILE_BINARY=1` checks independent little- and big-endian wire vectors and seekable cursor and error behavior through public calls. `ELECTRON2D_TEST_OS_PROCESS=1` exercises native blocking/nonblocking streams, short scalar and buffer reads, and partial-write retries with SHA-256 verification. `ELECTRON2D_TEST_FILE_TEXT=1` covers the Pascal framing that shares the byte-order setting.
 

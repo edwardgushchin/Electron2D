@@ -649,6 +649,7 @@ Writes one unsigned byte.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe failed before accepting the byte. `BytesWritten` is zero. Retry the byte if the pipe can still accept writes.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writeuint16-system-uint16"></a>
@@ -664,6 +665,7 @@ Writes one unsigned 16-bit integer.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writeuint32-system-uint32"></a>
@@ -679,6 +681,7 @@ Writes one unsigned 32-bit integer.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writeuint64-system-uint64"></a>
@@ -694,6 +697,7 @@ Writes one unsigned 64-bit integer.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writehalf-system-half"></a>
@@ -709,6 +713,7 @@ Writes an IEEE 754 binary16 value.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writesingle-system-single"></a>
@@ -724,6 +729,7 @@ Writes an IEEE 754 binary32 value.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writedouble-system-double"></a>
@@ -739,6 +745,7 @@ Writes an IEEE 754 binary64 value.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writereal-system-single"></a>
@@ -754,6 +761,7 @@ Writes the engine real-number storage format.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte"></a>
