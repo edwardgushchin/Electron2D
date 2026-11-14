@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-28
+Last updated: 2026-11-14
 
 The [Node contract audit](node-contract-audit.md) accounts for the neutral
 class and all 212 applicable own members. Inherited Object script-replacement
@@ -229,7 +229,10 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 
 `Node.PhysicsInterpolationMode` resolves Inherit, On and Off through the parent chain; a root inherits On and Control starts Off. `IsPhysicsInterpolatedAndEnabled` also requires the tree-wide switch. `ResetPhysicsInterpolation` delivers notification 2001 and resets presentation history without changing logical transforms. Pause and application-suspend notifications reset active histories. SceneTree snapshots eligible canvas items around physics callbacks, and the renderer samples the resulting poses on both backends; a current Camera's viewport transform follows the same fraction.
 
-`Control.SetAnchorsPreset` applies all four anchors in the pinned side order. Its default preserves the current rectangle by adjusting offsets; `keepOffsets` leaves the offsets and immediately reflows within the current parent area. `SetOffsetsPreset` places all four edges with the selected size mode and signed margin without changing anchors; `SetAnchorsAndOffsetsPreset` composes both steps. `SetAnchorAndOffset` updates one side. `ControlLayoutTests` checks all sixteen arrangements, four size modes, LTR/RTL, arbitrary anchors, parent and viewport origins, failures and later parent resize. Complete GUI container layout remains separate.
+<a id="control-anchor-layout"></a>
+[Control's single-side edits](../classes/Control.md#member-behavior) share the rectangle resolver with presets and parent-driven reflow. Anchor property writes retain offsets. Method writes default to compensating them when the anchor moves. A direct Control parent supplies its size, a neutral Node boundary uses the viewport, and a direct Entity parent supplies a zero-size area. Detached anchor writes defer reflow until attachment or a geometry edit. Offset writes resolve immediately against a zero area while detached. Attached layout signals follow significant changes after committing the exact rectangle.
+
+`Control.SetAnchorsPreset` applies all four anchors in the pinned side order. Its default preserves the current rectangle by adjusting offsets; `keepOffsets` leaves the offsets and reflows attached controls within the current parent area. `SetOffsetsPreset` places all four edges with the selected size mode and signed margin without changing anchors; `SetAnchorsAndOffsetsPreset` composes both steps. `SetAnchorAndOffset` updates one side. `ControlLayoutTests` checks all sixteen arrangements, four size modes, LTR/RTL, arbitrary anchors, parent and viewport origins, failures and later parent resize. Complete GUI container layout remains separate.
 
 Control resolves componentwise minima and maxima from virtual hooks, finite custom values and direct-parent maximum propagation. Negative maximum components are unbounded. Reflow grows to the minimum, then shrinks to the maximum if enabled; the three growth directions choose which edges move. Attached visible changes coalesce through the scene tree's deferred queue before their size-change events. `ControlLayoutTests` checks conflicting bounds, notification order, derived values, parent propagation, top-level escape, packed-scene policy and invalid inputs. Container/Box layout now consumes size flags and propagated bounds under [ADR 0081](../decisions/rendering.md#adr-0081). Desired-size consumers and wrapping windows remain distinct gaps.
 
