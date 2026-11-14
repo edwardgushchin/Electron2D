@@ -663,117 +663,117 @@
     {
       "godot": "AudioStreamMP3::method:load_from_buffer(PackedByteArray:)",
       "electron2d": "method:Electron2D.AudioStreamMP3.LoadFromBuffer(System.ReadOnlySpan<System.Byte>)",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamMP3::method:load_from_file(String:)",
       "electron2d": "method:Electron2D.AudioStreamMP3.LoadFromFile(System.String)",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamMP3::property:bar_beats",
       "electron2d": "property:Electron2D.AudioStreamMP3.BarBeats()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamMP3::property:beat_count",
       "electron2d": "property:Electron2D.AudioStreamMP3.BeatCount()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamMP3::property:bpm",
       "electron2d": "property:Electron2D.AudioStreamMP3.BPM()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamMP3::property:data",
       "electron2d": "property:Electron2D.AudioStreamMP3.Data()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamMP3::property:loop",
       "electron2d": "property:Electron2D.AudioStreamMP3.Loop()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamMP3::property:loop_offset",
       "electron2d": "property:Electron2D.AudioStreamMP3.LoopOffset()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::method:load_from_buffer(PackedByteArray:)",
       "electron2d": "method:Electron2D.AudioStreamOggVorbis.LoadFromBuffer(System.ReadOnlySpan<System.Byte>)",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::method:load_from_file(String:)",
       "electron2d": "method:Electron2D.AudioStreamOggVorbis.LoadFromFile(System.String)",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::property:bar_beats",
       "electron2d": "property:Electron2D.AudioStreamOggVorbis.BarBeats()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::property:beat_count",
       "electron2d": "property:Electron2D.AudioStreamOggVorbis.BeatCount()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::property:bpm",
       "electron2d": "property:Electron2D.AudioStreamOggVorbis.BPM()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::property:loop",
       "electron2d": "property:Electron2D.AudioStreamOggVorbis.Loop()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::property:loop_offset",
       "electron2d": "property:Electron2D.AudioStreamOggVorbis.LoopOffset()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::property:packet_sequence",
       "electron2d": "property:Electron2D.AudioStreamOggVorbis.PacketSequence()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamOggVorbis::property:tags",
       "electron2d": "property:Electron2D.AudioStreamOggVorbis.Tags()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "OggPacketSequence::method:get_length()",
       "electron2d": "method:Electron2D.OggPacketSequence.GetLength()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "OggPacketSequence::property:granule_positions",
       "electron2d": "property:Electron2D.OggPacketSequence.GranulePositions()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "OggPacketSequence::property:packet_data",
       "electron2d": "property:Electron2D.OggPacketSequence.PacketData()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "OggPacketSequence::property:sampling_rate",
       "electron2d": "property:Electron2D.OggPacketSequence.SamplingRate()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamPlayback::method:_get_parameter(StringName:)",
       "electron2d": "property:Electron2D.AudioStreamPlayback.LoopingOverride()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamPlayback::method:_set_parameter(StringName:,Variant:)",
       "electron2d": "property:Electron2D.AudioStreamPlayback.LoopingOverride()",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     },
     {
       "godot": "AudioStreamRandomizer::enum:PlaybackMode",
@@ -4067,7 +4067,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate.",
+      "reason": "ADR 0047: copied compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate.",
       "godot": [
         "AudioStreamMP3::method:load_from_buffer(PackedByteArray:)",
         "AudioStreamMP3::method:load_from_file(String:)",
@@ -4094,8 +4094,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Mono/stereo Vorbis executes. Pinned NVorbis 0.10.5 submap/residue decoding produces incorrect six-channel PCM against native libvorbisfile; >2 channels explicitly reject. Trigger: verified multichannel submap channel-bundle decoding against retained surround.ogg/libvorbisfile fixtures before accepting these imports (ADR 0047).",
+      "state": "Implemented",
+      "reason": "ADR 0047: managed submap/residue decoding preserves encoded channel order, verified against retained libvorbisfile stereo and six-channel PCM. File, buffer and packet replacement validate before publishing. Stream and native sample playback use channels 0 and 1 (mono plays on both sides), matching the pinned stream projection.",
       "godot": [
         "AudioStreamOggVorbis::method:load_from_buffer(PackedByteArray:)",
         "AudioStreamOggVorbis::method:load_from_file(String:)",
