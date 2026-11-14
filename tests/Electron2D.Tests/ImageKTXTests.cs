@@ -81,22 +81,7 @@ internal static partial class ImageKTXTests
         using var source = Source(Image.Format.Rgba8);
         foreach (var x in new[] { false, true }) foreach (var y in new[] { false, true })
             {
-                var input = source.GetData();
-                var expected = new byte[input.Length];
-                var width = source.Width;
-                var height = source.Height;
-                for (var mip = 0; mip <= source.MIPMapCount; mip++)
-                {
-                    var offset = source.GetMIPMapOffset(mip);
-                    for (var row = 0; row < height; row++)
-                        for (var column = 0; column < width; column++)
-                        {
-                            var sourceIndex = (y ? height - 1 - row : row) * width + (x ? width - 1 - column : column);
-                            input.AsSpan(offset + sourceIndex * 4, 4).CopyTo(expected.AsSpan(offset + (row * width + column) * 4));
-                        }
-                    width = Math.Max(1, width / 2);
-                    height = Math.Max(1, height / 2);
-                }
+                var expected = ReflectStoredLevels(source, x, y);
                 using var image = new Image(); image.LoadKTXFromBuffer(KTX1(source, "KTXorientation", $"S={(x ? 'l' : 'r')},T={(y ? 'u' : 'd')}"));
                 Check(image.GetData().AsSpan().SequenceEqual(expected), "KTX logical orientation applies to every mip.");
             }
@@ -111,6 +96,34 @@ internal static partial class ImageKTXTests
         using var srgb = new Image(); srgb.LoadKTXFromBuffer(KTX1(source, srgb: true));
         using var linear = (Image)source.Duplicate(); linear.SRGBToLinear();
         Check(srgb.GetData().AsSpan().SequenceEqual(linear.GetData()), "KTX sRGB conversion retains alpha and every mip.");
+    }
+
+    internal static byte[] ReflectStoredLevels(Image source, bool flipX, bool flipY)
+    {
+        var input = source.GetData();
+        var expected = new byte[input.Length];
+        var width = source.Width;
+        var height = source.Height;
+        var mipCount = source.MIPMapCount;
+        var baseLength = mipCount > 0 ? source.GetMIPMapOffset(1) : input.Length;
+        var bytesPerPixel = baseLength / (width * height);
+        var offset = 0;
+        for (var mip = 0; mip <= mipCount; mip++)
+        {
+            for (var row = 0; row < height; row++)
+                for (var column = 0; column < width; column++)
+                {
+                    var sourceRow = flipY ? height - 1 - row : row;
+                    var sourceColumn = flipX ? width - 1 - column : column;
+                    var read = offset + (sourceRow * width + sourceColumn) * bytesPerPixel;
+                    var write = offset + (row * width + column) * bytesPerPixel;
+                    input.AsSpan(read, bytesPerPixel).CopyTo(expected.AsSpan(write));
+                }
+            offset += width * height * bytesPerPixel;
+            width = Math.Max(1, width / 2);
+            height = Math.Max(1, height / 2);
+        }
+        return expected;
     }
 
     private static void Failure()
