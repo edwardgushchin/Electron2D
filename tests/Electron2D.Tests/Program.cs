@@ -438,6 +438,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCAL_RESOURCE_CONSUMERS
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_USER_DATA") == "1") { ProjectUserDataTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_OVERRIDES") == "1") { VerifyProjectSettings(); ProjectOverrideTests.Run(packed: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_LISTING") == "1")
+{
+    VerifyDirAccess(listingOnly: true);
+    Console.WriteLine("Physical directory listing and cursor regressions passed.");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
@@ -7160,7 +7166,7 @@ static void VerifyFileAccess()
     }
 }
 
-static void VerifyDirAccess()
+static void VerifyDirAccess(bool listingOnly = false)
 {
     Expect<ArgumentNullException>(() => DirAccess.Open(null!),
         "Directory opening must reject null paths.");
@@ -7228,6 +7234,36 @@ static void VerifyDirAccess()
                 "Streaming enumeration must return names, preserve entry kinds, and clear state at EOF.");
             directory.ListDirEnd();
             directory.ListDirEnd();
+            Require(directory.GetNext() == "" && !directory.CurrentIsDir(),
+                "Closing a listing twice must leave no current entry.");
+
+            directory.ListDirBegin();
+            Require(directory.GetNext() == "." && directory.CurrentIsDir(),
+                "A new listing must start with the navigational candidates when enabled.");
+            directory.ListDirBegin();
+            Require(!directory.CurrentIsDir(), "Restarting must clear the last entry kind.");
+            directory.IncludeNavigational = false;
+            directory.IncludeHidden = false;
+            var beforeChange = directory.GetFiles();
+            Expect<NotSupportedException>(() => ((IList<string>)beforeChange)[0] = "changed",
+                "A returned snapshot must prohibit mutation.");
+            var newPath = IOPath.Combine(root, "Beta.txt");
+            File.WriteAllText(newPath, "new");
+            try
+            {
+                Require(directory.GetFiles().SequenceEqual(["Beta.txt", "alpha.txt", "zeta.txt"]) &&
+                        beforeChange.SequenceEqual(["alpha.txt", "zeta.txt"]),
+                    "A fresh snapshot must sort ordinally and leave earlier snapshots intact.");
+                var captured = new List<string>();
+                for (var name = directory.GetNext(); name.Length > 0; name = directory.GetNext())
+                    captured.Add(name);
+                Require(captured.Order(StringComparer.Ordinal).SequenceEqual(["alpha.txt", "visible-dir", "zeta.txt"]),
+                    "Live filters and snapshot helpers must preserve the active cursor and its captured names.");
+            }
+            finally
+            {
+                File.Delete(newPath);
+            }
 
             directory.IncludeHidden = false;
             directory.IncludeNavigational = false;
@@ -7257,12 +7293,32 @@ static void VerifyDirAccess()
             Require(directory.DirExists("single") && directory.DirExists("nested/child"),
                 "Recursive directory creation must create missing parents and be idempotent.");
 
+            directory.IncludeNavigational = true;
+            directory.ListDirBegin();
+            Require(directory.GetNext() == "." && directory.CurrentIsDir(), "The active cursor must have a directory entry.");
+            Expect<DirectoryNotFoundException>(() => directory.ChangeDir("missing"),
+                "Changing to a missing directory must fail.");
+            Require(directory.GetCurrentDir() == IOPath.GetFullPath(root) && directory.CurrentIsDir() &&
+                    directory.GetNext() == "..", "A failed directory change must preserve the path, kind, and cursor.");
             directory.ChangeDir("nested/child");
             Require(directory.GetCurrentDir() == IOPath.Combine(root, "nested", "child"),
                 "Relative directory changes must update the current native path.");
+            Require(!directory.CurrentIsDir() && directory.GetNext() == "",
+                "A successful change must retire the previous listing.");
             directory.ChangeDir("../..");
             Expect<InvalidOperationException>(() => directory.ChangeDir("res://"),
                 "A physical accessor must reject a virtual scope switch.");
+            Require(DirAccess.GetFilesAt(root).SequenceEqual(["alpha.txt", "zeta.txt"]) &&
+                    DirAccess.GetDirectoriesAt(root).SequenceEqual(["nested", "single", "visible-dir"]),
+                "Static helpers must use default filters, independent of the open instance.");
+            if (OperatingSystem.IsWindows())
+            {
+                using var extendedPath = DirAccess.Open(@"\\?\" + IOPath.GetFullPath(root));
+                Require(extendedPath.GetCurrentDir(includeDrive: false) == IOPath.GetFullPath(root)[2..],
+                    "Drive suppression must also work for extended Windows drive paths.");
+            }
+            if (listingOnly)
+                return;
 
             directory.Copy("alpha.txt", "copy.txt");
             Require(File.ReadAllText(IOPath.Combine(root, "copy.txt")) == "alpha",

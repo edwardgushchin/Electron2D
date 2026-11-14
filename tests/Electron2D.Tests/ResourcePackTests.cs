@@ -90,7 +90,7 @@ internal static class ResourcePackTests
             Check(ProjectSettings.LoadResourcePack(layered), "Mount authenticated raw/password containers.");
             using (var file = EFile.OpenEncrypted("res://transformed/authenticated", FileAccessModeFlags.Read, fileKey)) Check(file.ReadOnly && file.AbsolutePath == "res://transformed/authenticated" && file.ReadBytes(bytes.Length).SequenceEqual(bytes), "Raw-key transformed stream retains packed identity.");
             using (var file = EFile.OpenEncryptedWithPassword("res://transformed/password", FileAccessModeFlags.Read, "test password")) Check(file.ReadOnly && file.AbsolutePath == "res://transformed/password" && file.ReadBytes(bytes.Length).SequenceEqual(bytes), "Password transformed stream retains packed identity.");
-            Crypto(folder); Invalid(folder); ZIP(folder); VersionsAndOffsets(folder); Resources(folder);
+            Crypto(folder); Invalid(folder); ZIP(folder); VerifyDirectoryListing(folder); VersionsAndOffsets(folder); Resources(folder);
             var lifecycle = new PCKPacker(); var lifetimePath = Path.Combine(folder, "lifetime.pck"); lifecycle.PCKStart(lifetimePath);
             lifecycle.AddFileFromBuffer("lifetime/entry", [1]); Reject<ArgumentException>(() => lifecycle.PCKStart(lifetimePath, key: "wrong"));
             var previousOutput = Console.Out; using var report = new StringWriter();
@@ -103,6 +103,169 @@ internal static class ResourcePackTests
             Console.WriteLine($"Resource packs: {_checks} assertions passed.");
         }
         finally { ProjectSettings.ConfigurePaths(oldProject, oldUser); Directory.Delete(folder, recursive: true); }
+    }
+
+    private static void VerifyDirectoryListing(string folder)
+    {
+        const string virtualPath = "res://listing";
+        var projectDirectory = Path.Combine(folder, "listing");
+        var userRoot = ProjectSettings.UserDataRoot;
+        Directory.CreateDirectory(Path.Combine(projectDirectory, "collision"));
+        Directory.CreateDirectory(Path.Combine(userRoot, "listing", "user-child"));
+        File.WriteAllText(Path.Combine(projectDirectory, "physical"), "physical");
+        var shadowedFile = Path.Combine(projectDirectory, "pck-child");
+        File.WriteAllText(shadowedFile, "fallback");
+        File.WriteAllText(Path.Combine(userRoot, "listing", "user-file"), "user");
+
+        var pack = Path.Combine(folder, "listing.pck");
+        using (var writer = new PCKPacker())
+        {
+            writer.PCKStart(pack);
+            writer.AddFileFromBuffer("listing/collision", [1]);
+            writer.AddFileFromBuffer("listing/pck-child/item", [2]);
+            writer.Flush();
+        }
+        var zip = Path.Combine(folder, "listing.zip");
+        using (var writer = new ZIPPacker())
+        {
+            writer.Open(zip);
+            writer.StartFile("listing/.hidden-dir/item");
+            writer.StartFile("listing/.hidden-file");
+            writer.StartFile("listing/zip-child/item");
+            writer.StartFile("listing/zip-child/other");
+            writer.StartFile("listing/zip-file");
+            writer.WriteFile([3]);
+            writer.Close();
+        }
+        var emptyZip = Path.Combine(folder, "listing-empty.zip");
+        using (var writer = new ZIPPacker())
+        {
+            writer.Open(emptyZip);
+            writer.AddDirectory("listing/nested/empty");
+            writer.Close();
+        }
+
+        Check(ProjectSettings.LoadResourcePack(pack) && ProjectSettings.LoadResourcePack(zip), "Mount PCK and ZIP into the same directory.");
+        Check(ProjectSettings.LoadResourcePack(emptyZip), "Mount a ZIP containing only an explicit empty directory.");
+        using var resources = DirAccess.Open(virtualPath);
+        using var user = DirAccess.Open("user://listing");
+        Check(DirAccess.GetFilesAt(virtualPath).SequenceEqual(["collision", "physical", "zip-file"]) &&
+              DirAccess.GetDirectoriesAt(virtualPath).SequenceEqual(["nested", "pck-child", "zip-child"]) &&
+              EFile.GetFileAsBytes(virtualPath + "/collision").SequenceEqual(new byte[] { 1 }),
+            "Static helpers and FileAccess must see the shared overlay with mounted-file precedence.");
+        Check(DirAccess.GetFilesAt("user://listing").SequenceEqual(["user-file"]) &&
+              DirAccess.GetDirectoriesAt("user://listing").SequenceEqual(["user-child"]) &&
+              DirAccess.GetDirectoriesAt(projectDirectory).SequenceEqual(["collision"]),
+            "Absolute filesystem and user paths must stay physical.");
+        var mountedDirectory = virtualPath + "/pck-child";
+        Check(resources.DirExists("pck-child") && !resources.FileExists("pck-child") &&
+              !EFile.FileExists(mountedDirectory) && EFile.GetFileAsString(shadowedFile) == "fallback" &&
+              EFile.GetFileAsBytes(mountedDirectory + "/item").SequenceEqual(new byte[] { 2 }),
+            "A mounted directory has one identity across listing and file lookup and leaves the physical file intact.");
+        Reject<FileNotFoundException>(() => EFile.Open(mountedDirectory, FileAccessModeFlags.Read));
+        Reject<FileNotFoundException>(() => EFile.GetFileAsBytes(mountedDirectory));
+        Reject<FileNotFoundException>(() => EFile.GetSize(mountedDirectory));
+        using (var empty = DirAccess.Open(virtualPath + "/nested/empty"))
+        {
+            Check(empty.GetFiles().Count == 0 && empty.GetDirectories().Count == 0 &&
+                  DirAccess.GetDirectoriesAt(virtualPath + "/nested").SequenceEqual(["empty"]),
+                "An explicit ZIP leaf and its implicit parent are visible, including an empty snapshot.");
+            empty.ChangeDir("..");
+            empty.ChangeDir("empty");
+            Check(empty.GetCurrentDir() == virtualPath + "/nested/empty", "ChangeDir can enter an empty ZIP directory.");
+        }
+
+        resources.IncludeNavigational = true;
+        resources.IncludeHidden = true;
+        resources.ListDirBegin();
+        Check(resources.GetNext() == "." && resources.CurrentIsDir(), "Navigation entries must carry their directory kind.");
+        Reject<DirectoryNotFoundException>(() => resources.ChangeDir("collision"));
+        Reject<UnauthorizedAccessException>(() => resources.ChangeDir("res://../outside"));
+        Reject<UnauthorizedAccessException>(() => user.ChangeDir("user://../outside"));
+        Reject<UnauthorizedAccessException>(() => DirAccess.GetDirectoriesAt("res://../outside"));
+        Check(resources.GetCurrentDir(false) == virtualPath && resources.CurrentIsDir() && resources.GetNext() == "..",
+            "A mounted file that masks a directory must leave the current listing intact.");
+        var names = new Dictionary<string, bool>(StringComparer.Ordinal);
+        for (var name = resources.GetNext(); name.Length > 0; name = resources.GetNext())
+            names.Add(name, resources.CurrentIsDir());
+        Check(names.Count == 8 && names[".hidden-dir"] && !names[".hidden-file"] && !names["collision"] &&
+              names["pck-child"] && names["zip-child"] && !resources.CurrentIsDir(),
+            "The merged cursor must enumerate each visible name and reset its kind at EOF.");
+        resources.ChangeDir("zip-child");
+        Check(resources.GetCurrentDir() == virtualPath + "/zip-child" && resources.GetFiles().SequenceEqual(["item", "other"]),
+            "A ZIP-only directory supports navigation and enumeration.");
+        resources.ChangeDir("..");
+
+        var newProjectRoot = Path.Combine(folder, "listing-project");
+        var newUserRoot = Path.Combine(folder, "listing-user");
+        Directory.CreateDirectory(newProjectRoot);
+        Directory.CreateDirectory(newUserRoot);
+        try
+        {
+            ProjectSettings.ConfigurePaths(newProjectRoot, newUserRoot);
+            Check(resources.GetFiles().SequenceEqual(["pck-child", "physical"]) &&
+                  resources.GetDirectories().SequenceEqual([".", "..", "collision"]) &&
+                  user.GetFiles().SequenceEqual(["user-file"]), "Existing accessors must retain their physical roots.");
+            resources.ChangeDir("collision");
+            user.ChangeDir("user-child");
+            Check(resources.GetCurrentDir() == virtualPath + "/collision" && user.GetCurrentDir(false) == "user://listing/user-child",
+                "Relative changes must also use the captured roots.");
+            Reject<DirectoryNotFoundException>(() => DirAccess.GetFilesAt("user://listing"));
+        }
+        finally
+        {
+            ProjectSettings.ConfigurePaths(folder, userRoot);
+        }
+
+        using var shadowed = DirAccess.Open(virtualPath + "/zip-child");
+        shadowed.IncludeNavigational = true;
+        shadowed.ListDirBegin();
+        Check(shadowed.GetNext() == "." && shadowed.CurrentIsDir(), "The old listing must be active before a mount changes.");
+        var removal = Path.Combine(folder, "listing-removal.pck");
+        using (var writer = new PCKPacker())
+        {
+            writer.PCKStart(removal);
+            writer.AddFileRemoval("listing/zip-child/item");
+            writer.AddFileFromBuffer("listing/zip-child", [4]);
+            writer.Flush();
+        }
+        Check(!ProjectSettings.LoadResourcePack(removal) &&
+              DirAccess.GetFilesAt(virtualPath + "/zip-child").SequenceEqual(["item", "other"]),
+            "Replacing a directory with a surviving child must reject without dropping the removed child.");
+        using (var writer = new PCKPacker())
+        {
+            writer.PCKStart(removal);
+            writer.AddFileRemoval("listing/zip-child/item");
+            writer.AddFileRemoval("listing/zip-child/other");
+            writer.AddFileFromBuffer("listing/zip-child", [4]);
+            writer.Flush();
+        }
+        Check(ProjectSettings.LoadResourcePack(removal) &&
+              EFile.GetFileAsBytes(virtualPath + "/zip-child").SequenceEqual(new byte[] { 4 }),
+            "Replace a directory recorded by ZIPPacker with a file after removing all of its children.");
+        Check(DirAccess.GetDirectoriesAt(virtualPath + "/nested").SequenceEqual(["empty"]),
+            "Later mounts preserve explicit empty ZIP directories.");
+        var conflict = Path.Combine(folder, "listing-conflict.pck");
+        using (var writer = new PCKPacker())
+        {
+            writer.PCKStart(conflict);
+            writer.AddFileFromBuffer("listing/nested/empty", [5]);
+            writer.AddFileFromBuffer("listing/unpublished", [6]);
+            writer.Flush();
+        }
+        Check(!ProjectSettings.LoadResourcePack(conflict) && !EFile.FileExists(virtualPath + "/unpublished") &&
+              DirAccess.GetDirectoriesAt(virtualPath + "/nested").SequenceEqual(["empty"]),
+            "An explicit directory collision rejects the entire mount.");
+        Reject<DirectoryNotFoundException>(() => shadowed.ListDirBegin());
+        Reject<DirectoryNotFoundException>(() => DirAccess.GetDirectoriesAt(virtualPath + "/zip-child"));
+        Check(shadowed.CurrentIsDir() && shadowed.GetNext() == ".." &&
+              new[] { shadowed.GetNext(), shadowed.GetNext() }.Order(StringComparer.Ordinal).SequenceEqual(["item", "other"]),
+            "A failed restart must preserve the already captured listing.");
+        shadowed.Dispose();
+        shadowed.Dispose();
+        Reject<ObjectDisposedException>(() => shadowed.ListDirEnd());
+        Reject<ObjectDisposedException>(() => shadowed.GetNext());
+        Reject<ObjectDisposedException>(() => shadowed.GetFiles());
     }
 
     private static void Crypto(string folder)
