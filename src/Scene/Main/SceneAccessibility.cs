@@ -14,8 +14,9 @@ internal sealed class SceneAccessibility(SceneTree tree)
         tree.IsAccessibilityEnabled() ? new(tree) : null;
     internal static Window? NativeWindow(Node node)
     {
-        var window = node.GetWindow();
-        while (window is not null && window.GetWindowID() < 0) window = window.Embedder?.GetWindow();
+        // Warning providers can follow authored labels across groups. The topology is owner-managed.
+        var window = node.GetWindowFromActiveViewport();
+        while (window is not null && window.GetWindowID() < 0) window = window.Embedder?.GetWindowFromActiveViewport();
         return window;
     }
     internal RID GetElement(Node node)

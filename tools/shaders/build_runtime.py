@@ -6,6 +6,7 @@ import json
 import itertools
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 
@@ -140,7 +141,10 @@ def generate(output, source_root=ROOT):
                             current[n] = {'source': fingerprint, 'binary': hashlib.sha256(data).hexdigest()}
         for stale in output.glob('*/*'):
             if stale.relative_to(output).as_posix() not in current:
-                stale.unlink()
+                if stale.is_dir() and not stale.is_symlink():
+                    shutil.rmtree(stale)
+                else:
+                    stale.unlink()
         content = json.dumps(current, indent=2) + '\n'
         if not manifest.exists() or manifest.read_text() != content:
             temporary = manifest.with_suffix('.tmp')

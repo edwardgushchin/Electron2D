@@ -770,7 +770,10 @@ Writes bytes at the current cursor.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): A process pipe write failed after accepting zero or more bytes. For a retryable write, pass the unwritten suffix starting at `error.BytesWritten` in the supplied span.
 - `ObjectDisposedException`: The instance is disposing or disposed.
+
+**Remarks:** Byte order does not affect the supplied bytes. A successful write clears file EOF.
 
 <a id="m-electron2d-fileaccess-writestring-system-string"></a>
 ### `public void WriteString(string value)`
@@ -1289,7 +1292,7 @@ The [binary I/O checks](../components/file-access.md#binary-io) exercise indepen
 
 `tests/Electron2D.Tests/Program.cs` covers invalid paths/modes, all four access modes, truncation/preservation, little/big-endian primitives, half/float/double/real, buffers, strict UTF-8, CR/LF/null lines, CSV/Pascal strings, EOF and seek transitions, resize, cursor preservation on decode failure, close/dispose, static metadata/hashes and missing-file errors, explicit unsupported Linux hidden/read-only attributes, Unix permissions, Linux xattrs, temporary ownership including prefix/extension/read-only mode, three codecs, malformed/mismatched compression, raw/password encryption, wrong keys/passwords/mode confusion, tampering, virtual project paths, concurrent static hashing and compound Pascal writes, and commit failure cleanup.
 
-The checks ran on Linux with its active filesystem. They do not prove the implemented macOS xattr or Windows alternate-stream backends, and no Android/iOS extended-attribute backend or native-host verification is currently claimed. Web browser storage behavior is unimplemented and unverified; its capability boundary belongs to the first Web host slice. These checks also do not prove every filesystem's crash durability, very-large-file memory behavior for transformed whole-file access, hostile TOCTOU races, or protection after process compromise. FastLZ and Zstandard execute through the matching private native bundle; packed archives remain unimplemented. Native file-codec verification covers Linux x64 only.
+The binary and text checks also ran on Windows x64. PCK and ZIP overlays expose read-only files through [resource packs](../components/resource-packs.md). Native [file-codec checks](../components/file-access.md#verification) cover Windows x64 and Linux x64 and require a matching private bundle. macOS extended attributes, Android/iOS extended-attribute support and browser storage remain outside these checks. Filesystem crash durability and very large transformed files remain unverified.
 
 ## Decisions
 
