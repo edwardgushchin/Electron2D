@@ -300,10 +300,10 @@ Opens a whole-file compressed container.
 - `ArgumentOutOfRangeException`: `compressionMode` is unknown.
 - `PlatformNotSupportedException`: The selected native codec is unavailable in the packaged bridge.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
-- `IO.IOException`: The physical file cannot be read or replaced.
+- `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 
-**Remarks:** Changes are atomically encoded to the destination by [`FileAccess.Flush`](FileAccess.md#m-electron2d-fileaccess-flush) or [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close).
+**Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encodes pending data and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte"></a>
 ### `public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)`
@@ -324,11 +324,11 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `ArgumentException`: `key` is not exactly 32 bytes or the mode is invalid.
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses password mode.
-- `IO.IOException`: The physical file cannot be read or replaced.
+- `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
-**Remarks:** Writing uses a fresh random nonce for every atomic commit.
+**Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data with a fresh random nonce and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string"></a>
 ### `public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`
@@ -349,11 +349,11 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `ArgumentException`: `password` is empty or the mode is invalid.
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses raw-key mode.
-- `IO.IOException`: The physical file cannot be read or replaced.
+- `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
-**Remarks:** A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key; commits use fresh nonces.
+**Remarks:** A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data with a fresh nonce and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-close"></a>
 ### `public void Close()`
@@ -362,6 +362,7 @@ Closes the file, committing transformed data or completed save-and-swap output w
 
 **Exceptions**
 
+- `IO.DirectoryNotFoundException`: Pending transformed data cannot be committed because the destination parent directory is missing.
 - `IO.IOException`: A pending write cannot be committed or a temporary file cannot be deleted.
 - `UnauthorizedAccessException`: The caller cannot replace or delete the physical file.
 - `AggregateException`: Both a primary close operation and cleanup fail.
@@ -377,7 +378,9 @@ Flushes pending data to the physical file.
 **Exceptions**
 
 - `InvalidOperationException`: The file is closed or was opened read-only.
+- `IO.DirectoryNotFoundException`: Pending transformed data cannot be committed because the destination parent directory is missing.
 - `IO.IOException`: The data cannot be persisted.
+- `UnauthorizedAccessException`: The caller lacks access to persist the data.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 **Remarks:** Transformed data atomically replaces the destination. Save-and-swap streams persist staging without publishing it; ordinary streams flush to disk.

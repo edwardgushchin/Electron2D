@@ -357,13 +357,14 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="mode">The required access mode.</param>
     /// <param name="compressionMode">The codec used to decode or encode the container.</param>
     /// <returns>A seekable view of the decoded bytes.</returns>
-    /// <remarks>Changes are atomically encoded by <see cref="Flush"/> or <see cref="Close"/>. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
+    /// <remarks><see cref="FileAccessModeFlags.Write"/> and <see cref="FileAccessModeFlags.WriteRead"/> start with an empty memory stream.
+    /// <see cref="Flush"/> or <see cref="Close"/> encodes pending data and atomically creates or replaces the destination. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or the mode is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="compressionMode"/> is unknown.</exception>
     /// <exception cref="PlatformNotSupportedException">The selected native codec is unavailable in the packaged bridge.</exception>
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
-    /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
+    /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     public static FileAccess OpenCompressed(
         string path,
@@ -388,12 +389,13 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="mode">The required access mode.</param>
     /// <param name="key">Exactly 32 key bytes.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
-    /// <remarks>Writing uses a fresh random nonce for every atomic commit.</remarks>
+    /// <remarks><see cref="FileAccessModeFlags.Write"/> and <see cref="FileAccessModeFlags.WriteRead"/> start with an empty memory stream.
+    /// <see cref="Flush"/> or <see cref="Close"/> encrypts pending data with a fresh random nonce and atomically creates or replaces the destination.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="key"/> is not exactly 32 bytes or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses password mode.</exception>
-    /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
+    /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
     public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)
@@ -426,12 +428,14 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="mode">The required access mode.</param>
     /// <param name="password">A nonempty password.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
-    /// <remarks>A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key; commits use fresh nonces.</remarks>
+    /// <remarks>A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key.
+    /// <see cref="FileAccessModeFlags.Write"/> and <see cref="FileAccessModeFlags.WriteRead"/> start with an empty memory stream.
+    /// <see cref="Flush"/> or <see cref="Close"/> encrypts pending data with a fresh nonce and atomically creates or replaces the destination.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> or <paramref name="password"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="password"/> is empty or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses raw-key mode.</exception>
-    /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
+    /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
     public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)
@@ -489,6 +493,7 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Closes the file, committing transformed data or completed save-and-swap output when necessary.</summary>
     /// <remarks>The method is idempotent. Owned buffers and key material are released even when commit or deletion fails.</remarks>
+    /// <exception cref="DirectoryNotFoundException">Pending transformed data cannot be committed because the destination parent directory is missing.</exception>
     /// <exception cref="IOException">A pending write cannot be committed or a temporary file cannot be deleted.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller cannot replace or delete the physical file.</exception>
     /// <exception cref="AggregateException">Both a primary close operation and cleanup fail.</exception>
@@ -506,7 +511,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <summary>Flushes pending data to the physical file.</summary>
     /// <remarks>Transformed data atomically replaces the destination. Save-and-swap streams flush staging without publishing it; ordinary streams flush to disk.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed or was opened read-only.</exception>
+    /// <exception cref="DirectoryNotFoundException">Pending transformed data cannot be committed because the destination parent directory is missing.</exception>
     /// <exception cref="IOException">The data cannot be persisted.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller lacks access to persist the data.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void Flush()
     {
