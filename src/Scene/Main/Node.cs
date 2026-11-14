@@ -647,6 +647,11 @@ public partial class Node : ElectronObject
     public Window? GetWindow()
     {
         ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+        return GetWindowFromActiveViewport();
+    }
+
+    internal Window? GetWindowFromActiveViewport()
+    {
         for (var viewport = _activeViewport; viewport is not null; viewport = viewport.Parent?._activeViewport)
             if (viewport is Window window) return window;
         return null;
