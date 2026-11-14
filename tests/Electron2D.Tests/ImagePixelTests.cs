@@ -85,6 +85,11 @@ internal static class ImagePixelTests
         Transform(5, 3, authored, x => x.Rotate90(ClockDirection.CounterClockwise), 3, 5, "326496285A8C1E50821446780A3C6E46323C");
         Transform(1, 5, "0A141E2832F0F1F2", x => x.Rotate90(ClockDirection.Clockwise), 5, 1, "32281E140A2D1923");
         Transform(5, 1, "0A141E2832F0F1F2", x => x.Rotate90(ClockDirection.CounterClockwise), 1, 5, "32281E140A2D1923");
+        using (var packed = Image.CreateFromData(2, 2, true, Format.Rgb565, [0, 8, 0, 8, 0, 8, 0, 8, 255, 255]))
+        {
+            packed.Rotate90(ClockDirection.Clockwise);
+            Equal(packed, 2, 2, [0, 8, 0, 8, 0, 8, 0, 8, 0, 8], "uniform RGB565 retains the first red step in its regenerated mip");
+        }
         VerifyFailures();
         Console.WriteLine("Image pixels: 25 format vectors, authored and regenerated mips, narrow and rectangular extents, copies, events and rollback passed.");
     }

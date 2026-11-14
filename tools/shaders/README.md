@@ -80,8 +80,10 @@ Generated shaders and their content manifest live in the runtime's
 `$(IntermediateOutputPath)shaders/`, with the original resource names embedded in
 Electron2D.dll. Build inputs include the compiler recipe, all local shader/include
 files and output hashes. Unchanged bytes keep their timestamps; failed compilation
-fails the build and preserves the last valid artifact. Deleted shaders are removed,
-and `dotnet clean` removes generated resources. `publish --no-build` uses the already
+fails the build and preserves the last valid artifact. Before publishing its manifest,
+successful generation removes stale files and scratch directories left by interrupted
+compiles under the same exclusive output lock. `dotnet clean` removes generated
+resources. `publish --no-build` uses the already
 built assembly. A game/package consumer needs no Python, CMake or shader compiler.
 
 Generated runtime `.spv` files are excluded from Git. The fixed `.spv` files in
@@ -91,8 +93,8 @@ they remain versioned so a compiler regression cannot silently rewrite the oracl
 Canvas HLSL source fixtures live beside this corpus and exercise the material
 interface independently of private channels added to built-in renderer programs.
 The material check also verifies rejection of the live private glyph interface;
-`check_runtime.py` and `check_canvas_glyphs.py` validate built-in delivery and
-composition.
+`check_runtime.py` verifies interrupted-output recovery, concurrent generation and
+built-in delivery. `check_canvas_glyphs.py` checks glyph composition.
 The user-material importer below still uses ShaderCross/DXC for HLSL and emits
 logical-type metadata. Its output need not be byte-identical to built-in glslang output.
 

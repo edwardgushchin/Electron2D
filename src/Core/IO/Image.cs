@@ -898,7 +898,8 @@ public sealed partial class Image : Resource
 
     private static int ToNibble(float value) => ToBits(value, 15);
 
-    private static int ToBits(float value, int maximum) => (int)(ClampUnsigned(value, 1f) * (double)maximum);
+    // Use the same precision as decoding so an encoded sample survives a decode/encode round trip.
+    private static int ToBits(float value, int maximum) => (int)(ClampUnsigned(value, 1f) * maximum);
 
     private static ushort ToUShortNormalized(float value) => (ushort)ToBits(value, 65535);
 

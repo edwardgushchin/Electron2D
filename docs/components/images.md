@@ -76,7 +76,7 @@ Run `ELECTRON2D_TEST_IMAGE_STORAGE=1` to check all raw format sizes, odd compres
 
 `GetPixel` and `SetPixel` use zero-based base-level coordinates. Scalar and vector overloads share the same bounds checks. `SetPixel` leaves the authored mip bytes intact. `Fill` writes the same encoded color to every stored pixel, including all lower levels.
 
-Unsigned channels clamp before truncating. Byte luminance stores the maximum of RGB. Half-float writes truncate the significand, flush half subnormals and signed zero to zero, and retain the sign of overflow and canonical NaN. Raw half buffers can still contain subnormals and signed zeros. Full floats retain their component bits. RGB9E5 uses a shared exponent and ignores alpha.
+Unsigned channels clamp before truncating. Normalized channels scale in single precision so decoding and re-encoding a stored sample preserves its code. Byte luminance stores the maximum of RGB. Half-float writes truncate the significand, flush half subnormals and signed zero to zero, and retain the sign of overflow and canonical NaN. Raw half buffers can still contain subnormals and signed zeros. Full floats retain their component bits. RGB9E5 uses a shared exponent and ignores alpha.
 
 Flips and rotations permute the stored base pixels byte for byte. Quarter turns swap width and height. Every orientation change regenerates an existing mip chain from the result, including when a one-pixel axis makes the base permutation an identity. Images with only a base level stay base-only.
 

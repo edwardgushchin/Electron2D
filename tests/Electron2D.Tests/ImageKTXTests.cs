@@ -103,6 +103,11 @@ internal static partial class ImageKTXTests
         using var swizzled = new Image(); swizzled.LoadKTXFromBuffer(KTX1(source, "KTXswizzle", "bg01"));
         var color = swizzled.GetPixel(0, 0); var original = source.GetPixel(0, 0);
         Check(color == new Color(original.B, original.G, 0, 1), "KTX channel/constants swizzle.");
+        using var rgba16 = Image.CreateFromData(1, 1, false, Image.Format.Rgba16, [1, 0, 2, 0, 3, 0, 255, 255]);
+        swizzled.LoadKTXFromBuffer(KTX1(rgba16, "KTXswizzle", "grba"));
+        Check(swizzled.PixelFormat == Image.Format.Rgba16 &&
+              swizzled.GetData().AsSpan().SequenceEqual(new byte[] { 2, 0, 1, 0, 3, 0, 255, 255 }),
+            "KTX Rgba16 channel swizzle preserves low encoded samples.");
         using var srgb = new Image(); srgb.LoadKTXFromBuffer(KTX1(source, srgb: true));
         using var linear = (Image)source.Duplicate(); linear.SRGBToLinear();
         Check(srgb.GetData().AsSpan().SequenceEqual(linear.GetData()), "KTX sRGB conversion retains alpha and every mip.");

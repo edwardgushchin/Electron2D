@@ -807,13 +807,19 @@
     },
     {
       "state": "Implemented",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate. The Windows x64 RESOURCE_ARCHIVE fixture verifies admission with default ENet channels, path-based templates, pre-Ready file state, live graphs after registration clear and remote despawn.",
+      "godot": [
+        "MultiplayerSpawner::method:add_spawnable_scene(String:)",
+        "MultiplayerSpawner::method:get_spawnable_scene(int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
       "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate.",
       "godot": [
         "@GlobalScope::property:ResourceLoader",
         "@GlobalScope::property:ResourceSaver",
         "@GlobalScope::property:ResourceUID",
-        "MultiplayerSpawner::method:add_spawnable_scene(String:)",
-        "MultiplayerSpawner::method:get_spawnable_scene(int:)",
         "ResourceFormatLoader::enum:CacheMode",
         "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_IGNORE",
         "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_IGNORE_DEEP",

@@ -1,6 +1,6 @@
 # MultiplayerSpawner
 
-Last updated: 2026-10-25
+Last updated: 2026-11-14
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.MultiplayerSpawner`. **Source:** [MultiplayerSpawner.cs](../../src/Scene/Multiplayer/MultiplayerSpawner.cs).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-25
 
 Replicates authored PackedScene children or explicit typed custom factories from its authority.
 
-Registered scenes/factory tokens are borrowed. Spawn construction and membership are cold work. Remote ownership belongs to the configured parent; Spawned/Despawned run only on remote participants.
+In-memory templates, cached file templates and factory tokens are borrowed. The spawner owns newly loaded file templates. Spawn construction and membership are cold work. Remote ownership belongs to the configured parent; Spawned/Despawned run only on remote participants.
 
 **Inherits:** [Node](Node.md).
 
@@ -281,7 +281,7 @@ See [resource-file contracts](../components/resource-files.md) for registered ty
 
 Loads and registers a file-backed typed PackedScene for automatic replication.
 
-Cached templates remain borrowed. This spawner owns newly loaded templates until clear/disposal; live instances retain their file graph leases.
+Cached templates remain borrowed. This spawner owns newly loaded templates until clear or disposal. Each peer loads its own template at the matching index and restores its stored values before the instance enters the tree. Live instances retain their file graph leases.
 
 - `path`: Resource scene path or UID.
 
