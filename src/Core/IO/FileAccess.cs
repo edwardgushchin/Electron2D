@@ -125,9 +125,11 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Gets whether a read encountered end of stream.</summary>
-    /// <value><see langword="true"/> after reading detects exhaustion. Reading exactly to a seekable file's end or
-    /// finding a live nonblocking pipe temporarily empty leaves a clear flag unchanged.</value>
-    /// <remarks>A successful seek, resize or write clears the seekable file's EOF flag.</remarks>
+    /// <value><see langword="true"/> after a read detects end of stream. A live nonblocking pipe that is
+    /// temporarily empty leaves the flag clear.</value>
+    /// <remarks>A read that stops as soon as it has the requested bytes can reach the end with the flag clear.
+    /// <see cref="ReadCSVLine"/> can detect EOF while returning a complete final record without a line terminator.
+    /// A successful seek, resize or write clears the seekable file's EOF flag.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public bool EOFReached
@@ -720,9 +722,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <summary>Reads a length-prefixed UTF-8 string.</summary>
     /// <returns>The decoded string whose byte count is stored as an unsigned 32-bit prefix.</returns>
     /// <remarks>The prefix uses <see cref="BigEndian"/>. An incomplete read consumes the available prefix or payload.</remarks>
-    /// <exception cref="EndOfStreamException">The prefix or payload is incomplete.</exception>
+    /// <exception cref="EndOfStreamException">The stream ended before the complete prefix or payload was read.</exception>
     /// <exception cref="DecoderFallbackException">The payload is not valid UTF-8.</exception>
-    /// <exception cref="IOException">The declared length exceeds the supported managed array length.</exception>
+    /// <exception cref="IOException">The declared length exceeds the supported managed array length, or a live nonblocking pipe runs out of available bytes before the prefix or payload is complete. In the latter case <see cref="EOFReached"/> stays clear.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public string ReadPascalString()

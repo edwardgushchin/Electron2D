@@ -153,9 +153,9 @@ Gets whether the owned stream is still open.
 
 Gets whether a read encountered end of stream.
 
-**Value:** `true` after a read detects exhaustion. Reading exactly to a seekable file's end or finding a live nonblocking pipe temporarily empty leaves a clear flag unchanged.
+**Value:** `true` after a read detects end of stream. A live nonblocking pipe that is temporarily empty leaves the flag clear.
 
-A successful seek, resize or write clears the seekable file's EOF flag.
+A read that stops as soon as it has the requested bytes can reach the end with the flag clear. [`ReadCSVLine`](#m-electron2d-fileaccess-readcsvline-system-char) can detect EOF while returning a complete final record without a line terminator. A successful seek, resize or write clears the seekable file's EOF flag.
 
 **Exceptions**
 
@@ -611,9 +611,9 @@ Reads a length-prefixed UTF-8 string.
 
 **Exceptions**
 
-- `IO.EndOfStreamException`: The prefix or payload is incomplete.
+- `IO.EndOfStreamException`: The stream ended before the complete prefix or payload was read.
 - `Text.DecoderFallbackException`: The payload is not valid UTF-8.
-- `IO.IOException`: The declared length exceeds the supported managed array length.
+- `IO.IOException`: The declared length exceeds the supported managed array length, or a live nonblocking pipe runs out of available bytes before the prefix or payload is complete. In the latter case `EOFReached` stays clear.
 - `InvalidOperationException`: The file is closed or not readable.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
