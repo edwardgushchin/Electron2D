@@ -39,7 +39,7 @@ public sealed class AudioSample : ElectronObject
     /// <summary>Gets copied interleaved PCM.</summary>
     /// <value>Caller-owned interleaved copy.</value>
     public float[] Data { get { ThrowIfDisposed(); return (float[])_data.Clone(); } }
-    /// <summary>Gets the source channel count.</summary>
+    /// <summary>Gets the channel count of the PCM stored in this sample.</summary>
     /// <value>One or two.</value>
     public int NumChannels { get { ThrowIfDisposed(); return _channels; } }
     /// <summary>Gets the source frequency in Hz.</summary>

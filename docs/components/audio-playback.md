@@ -87,7 +87,7 @@ AudioCompressedTests runs CPU/copy/corruption/seek/loop/lifetime/cache checks in
 
 The private NVorbis adaptation decodes each residue submap against its own channel bundle and preserves encoded PCM order. Playback and generated stereo samples project encoded channels 0 and 1, including front left and center for 5.1. Mono plays on both sides. Long assets occupy full prepared PCM.
 
-On Windows x64, the compressed CPU and native FAudio profiles passed. The six-channel fixture matched all 5,760 libvorbisfile sample values with a maximum absolute error of 1.79e-7. File and buffer loaders rejected a zero identification framing bit and a nonzero setup time-domain transform with valid Ogg page checksums. Packet assignment and cache replacement preserved the previous resource data. A separate public API consumer checked the stereo projection and captured FAudio frames at 44,100 Hz through SDL's dummy driver. Physical listening, surround speaker output and the wider platform matrix remain unverified for this change.
+On Windows x64, the compressed CPU and native FAudio profiles passed. The six-channel fixture matched all 5,760 libvorbisfile sample values with a maximum absolute error of 1.79e-7. File and buffer loaders rejected zero identification and comment framing bits and a nonzero setup time-domain transform with valid Ogg page checksums. Packet assignment and cache replacement preserved the previous resource data. A separate public API consumer checked the stereo projection and captured FAudio frames at 44,100 Hz through SDL's dummy driver. Physical listening, surround speaker output and the wider platform matrix remain unverified for this change.
 
 ## Random stream pools
 

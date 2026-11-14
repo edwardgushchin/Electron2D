@@ -34,6 +34,7 @@ internal static class AudioCompressedTests
         VerifyBoundaries(mp3, ogg, trace);
         using var surround = VerifyMultichannel();
         VerifyIdentificationFraming(surround);
+        VerifyCommentFraming(surround);
         VerifySetupTimeTransform(surround);
         VerifyLoaderAndNative(mp3, surround, native);
         Console.WriteLine(native ? "Compressed format/PCM/cursor/loop/loader/native and 64-pass allocation checks passed." : "Compressed CPU/cursor/loop/loader checks passed; native checks run separately.");
@@ -179,6 +180,21 @@ internal static class AudioCompressedTests
             "Surround fixture begins with one complete, framed identification packet.");
         encoded[28 + framingByte] &= 0xfe;
         VerifyRejectedHeader(stream, encoded, 0, 58, 0, framingByte, 1, "identification framing");
+    }
+
+    private static void VerifyCommentFraming(AudioStreamOggVorbis stream)
+    {
+        // The pinned surround fixture stores the complete comments packet at the start of page two.
+        const int pageStart = 58;
+        const int packetSize = 62;
+        var encoded = Fixture("surround.ogg");
+        var packetStart = pageStart + 27 + encoded[pageStart + 26];
+        var framingOffset = packetStart + packetSize - 1;
+        Check(encoded[pageStart + 27] == packetSize &&
+            encoded.AsSpan(packetStart, 7).SequenceEqual("\x03vorbis"u8) && (encoded[framingOffset] & 1) == 1,
+            "Surround fixture begins its second page with a complete, framed comments packet.");
+        encoded[framingOffset] &= 0xfe;
+        VerifyRejectedHeader(stream, encoded, pageStart, 7412, 1, packetSize - 1, 1, "comment framing");
     }
 
     private static void VerifySetupTimeTransform(AudioStreamOggVorbis stream)

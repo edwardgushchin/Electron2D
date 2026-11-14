@@ -225,6 +225,11 @@ namespace Electron2D.NVorbisBindings
                 _comments[i] = ReadString(packet);
             }
 
+            if (!packet.ReadBit())
+            {
+                return false;
+            }
+
             _stats.AddPacket(-1, packet.BitsRead, packet.BitsRemaining, packet.ContainerOverheadBits);
 
             return true;
