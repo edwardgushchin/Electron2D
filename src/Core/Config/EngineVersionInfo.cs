@@ -69,28 +69,39 @@ public sealed class EngineVersionInfo
     /// </value>
     public string InformationalVersion { get; }
 
-    /// <summary>Gets the product major version, falling back to the assembly major version.</summary>
+    /// <summary>Gets the major version of the loaded product.</summary>
+    /// <value>The product major component, or <see cref="Version.Major"/> from <see cref="AssemblyVersion"/> when the product version is missing or its numeric part is invalid.</value>
     public int Major { get; }
 
-    /// <summary>Gets the product minor version, falling back to the assembly minor version.</summary>
+    /// <summary>Gets the minor version of the loaded product.</summary>
+    /// <value>The product minor component, or <see cref="Version.Minor"/> from <see cref="AssemblyVersion"/> when the product version is missing or its numeric part is invalid.</value>
     public int Minor { get; }
 
-    /// <summary>Gets the product patch version, falling back to the assembly build component or zero.</summary>
+    /// <summary>Gets the patch version of the loaded product.</summary>
+    /// <value>The product patch component, or <see cref="Version.Build"/> from <see cref="AssemblyVersion"/> when the product version is missing or its numeric part is invalid. An unspecified component is zero.</value>
     public int Patch { get; }
 
-    /// <summary>Gets the numeric product version encoded as major times 65536 plus minor times 256 plus patch.</summary>
+    /// <summary>Gets the combined numeric version.</summary>
+    /// <value>
+    /// The arithmetic sum <c>Major * 65536 + Minor * 256 + Patch</c> as a signed 64-bit integer,
+    /// using the full component values, including values of 256 or greater.
+    /// </value>
     public long Hex => (Major * 65536L) + (Minor * 256L) + Patch;
 
-    /// <summary>Gets the product prerelease label, <c>stable</c> for a release version, or <c>unknown</c> when product metadata is unavailable.</summary>
+    /// <summary>Gets the release status of the loaded product.</summary>
+    /// <value>The full prerelease label, <c>stable</c> if the parsed product version has no nonempty label, or <c>unknown</c> if the product version is missing or its numeric part is invalid.</value>
     public string Status { get; }
 
-    /// <summary>Gets the recorded assembly build configuration or <c>unknown</c>.</summary>
+    /// <summary>Gets the recorded build configuration.</summary>
+    /// <value>The assembly configuration string, or <c>unknown</c> if it is missing, empty, or whitespace.</value>
     public string Build { get; }
 
-    /// <summary>Gets the recorded source revision identifier or <c>unknown</c>.</summary>
+    /// <summary>Gets the recorded source revision identifier.</summary>
+    /// <value>The source revision embedded by the build, or <c>unknown</c> if it is missing, empty, or whitespace.</value>
     public string SourceRevision { get; }
 
-    /// <summary>Gets the recorded source revision's Unix timestamp in seconds, or zero when unavailable or invalid.</summary>
+    /// <summary>Gets the recorded source revision timestamp.</summary>
+    /// <value>Unix seconds as a nonnegative signed 64-bit integer. Zero indicates an unknown revision or a missing, invalid, negative, or out-of-range timestamp.</value>
     public long SourceTimestamp { get; }
 
     /// <summary>Returns the complete product version string.</summary>

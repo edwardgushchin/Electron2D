@@ -36,11 +36,11 @@ Console.WriteLine(version.InformationalVersion);
 | [`public Version AssemblyVersion { get; }`](#p-electron2d-engineversioninfo-assemblyversion) | Gets the numeric assembly version. |
 | [`public string InformationalVersion { get; }`](#p-electron2d-engineversioninfo-informationalversion) | Gets the complete product version string. |
 | `public int Major { get; }`, `public int Minor { get; }`, `public int Patch { get; }` | Numeric product version components. If product metadata is missing or its numeric part cannot be parsed, these come from the assembly version, with zero for an unspecified patch. |
-| `public long Hex { get; }` | Numeric product version encoded as `major * 65536 + minor * 256 + patch`. |
+| `public long Hex { get; }` | Arithmetic sum `Major * 65536 + Minor * 256 + Patch` in signed 64-bit precision. Each component contributes its full value, including at and above 256. For example, `1.256.256` yields `131328` (`0x20100`). |
 | `public string Status { get; }` | The full product prerelease label, `stable` for a product version without a prerelease label, or `unknown` when usable product version metadata is absent. |
 | `public string Build { get; }` | Assembly build configuration, such as `Release`, or `unknown` if missing or blank. |
 | `public string SourceRevision { get; }` | SDK source revision recorded independently of informational version, or `unknown` if missing or blank. |
-| `public long SourceTimestamp { get; }` | Unix seconds supplied for the source revision. Zero denotes an absent revision or timestamp, or a timestamp that is invalid, negative or beyond the signed 64-bit range. |
+| `public long SourceTimestamp { get; }` | Unix seconds supplied for the source revision. Zero denotes an unknown revision or a timestamp that is absent, invalid, negative, or beyond the signed 64-bit range. |
 
 ## Methods
 
