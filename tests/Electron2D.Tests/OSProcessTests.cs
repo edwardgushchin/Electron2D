@@ -28,6 +28,17 @@ internal static partial class OSProcessTests
             case "exit-native": Environment.ExitCode = unchecked((int)0xc0000005); break;
             case "exit-still-active": Environment.ExitCode = 259; break;
             case "utf8-bytes": Console.OpenStandardOutput().Write([0xef, 0xbb, 0xbf, 65, 0xff, 0xce, 0xbb]); break;
+            case "file-text":
+                using (var stdout = Console.OpenStandardOutput())
+                {
+                    stdout.Write("A\rNEXT\n\"a\r\nb\",z\n"u8);
+                    stdout.Write([0, 0, 0, 2, 0xc3, 0xa9, 0, 0, 0, 64, 0xc3, 0xa9]);
+                    stdout.Flush();
+                    Console.Error.WriteLine("ready");
+                    Console.Error.Flush();
+                    Console.OpenStandardInput().ReadByte();
+                }
+                break;
             case "hold": Thread.Sleep(30000); break;
             case "transfer": var bytes = new byte[int.Parse(args[2])]; Console.OpenStandardInput().ReadExactly(bytes); Console.Write(Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(bytes)) + "\n"); break;
             default: throw new ArgumentException("Unknown child mode.");
@@ -90,8 +101,102 @@ internal static partial class OSProcessTests
             Wait(pipes.PID); Check(pipes.StandardIO.ReadLine() == Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(payload)), "Partial-write retries preserve every byte exactly once.");
         }
         var forgotten = Forgotten(hold.Path, hold.Arguments); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); Check(OS.IsProcessRunning(forgotten), "Finalized pipe handles release streams without killing the independent child."); OS.Kill(forgotten); Wait(forgotten);
+        VerifyFileTextPipes();
         if (OperatingSystem.IsWindows()) RunWindows();
         Console.WriteLine("OS processes: literal argv, independent/current instances, actual exit/kill, 4MiB capture, blocking/nonblocking native stdin/stdout/stderr, EOF, partial-write state and cleanup passed.");
+    }
+
+    private static void VerifyFileTextPipes()
+    {
+        foreach (var blocking in new[] { true, false })
+        {
+            var (path, arguments) = Launch("file-text");
+            using var pipes = OS.ExecuteWithPipe(path, arguments, blocking);
+            try
+            {
+                var pipe = pipes.StandardIO;
+                Reject<NotSupportedException>(() => pipe.ReadAllText());
+                if (!blocking)
+                {
+                    var deadline = Stopwatch.StartNew();
+                    byte[] ready;
+                    while ((ready = pipes.StandardError.ReadBytes(1)).Length == 0 && deadline.ElapsedMilliseconds < 5000)
+                        Thread.Sleep(1);
+                    Check(ready.SequenceEqual("r"u8.ToArray()), "The live text pipe became readable.");
+                }
+                Check(pipe.ReadLine() == "A" && pipe.ReadLine() == "NEXT" &&
+                      pipe.ReadCSVLine().SequenceEqual(["a\nb", "z"]), "Pipe line framing, CR lookahead and multiline CSV.");
+                pipe.BigEndian = true;
+                Check(pipe.ReadPascalString() == "é", "Big-endian Pascal frame over the live pipe.");
+                if (blocking)
+                {
+                    pipe.WriteLine("");
+                    Wait(pipes.PID);
+                }
+                pipe.BigEndian = false;
+                var before = GC.GetAllocatedBytesForCurrentThread();
+                if (blocking)
+                    Reject<EndOfStreamException>(() => pipe.ReadPascalString());
+                else
+                    Reject<IOException>(() => pipe.ReadPascalString());
+                Check(GC.GetAllocatedBytesForCurrentThread() - before < 65536 && pipe.EOFReached == blocking,
+                    "Truncated pipe Pascal frame consumes its available bytes without allocating its announced length.");
+                if (!blocking)
+                {
+                    pipe.WriteCSVLine([]);
+                    Wait(pipes.PID);
+                    Check(pipe.ReadBytes(8).Length == 0 && pipe.EOFReached, "Only closing the pipe publishes EOF.");
+                }
+            }
+            finally
+            {
+                if (OS.IsProcessRunning(pipes.PID))
+                    OS.Kill(pipes.PID);
+            }
+        }
+
+        var text = new string('A', 2 * 1024 * 1024);
+        var frame = new byte[text.Length + sizeof(uint)];
+        System.Buffers.Binary.BinaryPrimitives.WriteUInt32BigEndian(frame, (uint)text.Length);
+        Encoding.UTF8.GetBytes(text, frame.AsSpan(sizeof(uint)));
+        var transfer = Launch("transfer", frame.Length.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        using var writer = OS.ExecuteWithPipe(transfer.Path, transfer.Arguments, false);
+        try
+        {
+            writer.StandardIO.BigEndian = true;
+            var written = 0;
+            try
+            {
+                writer.StandardIO.WritePascalString(text);
+                written = frame.Length;
+            }
+            catch (PipeWriteException error)
+            {
+                written = error.BytesWritten;
+            }
+            Check(written >= 0 && written < frame.Length, "A large Pascal write reports a partial frame.");
+            var deadline = Stopwatch.StartNew();
+            while (written < frame.Length)
+            {
+                try { writer.StandardIO.WriteBytes(frame.AsSpan(written)); written = frame.Length; }
+                catch (PipeWriteException error)
+                {
+                    written += error.BytesWritten;
+                    if (deadline.ElapsedMilliseconds > 8000)
+                        throw;
+                    Thread.Sleep(1);
+                }
+            }
+            Wait(writer.PID);
+            Check(writer.StandardIO.ReadLine() == Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(frame)),
+                "The reported Pascal prefix includes the header and retries deliver the exact frame.");
+        }
+        finally
+        {
+            if (OS.IsProcessRunning(writer.PID))
+                OS.Kill(writer.PID);
+        }
+        Console.WriteLine("Process-pipe FileAccess text: blocking/nonblocking framing, EOF and Pascal partial-write SHA-256 passed.");
     }
 }
 

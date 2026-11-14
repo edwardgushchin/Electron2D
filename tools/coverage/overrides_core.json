@@ -229,7 +229,7 @@
     {
       "electron2d": "method:Electron2D.FileAccess.ReadAllText(System.Boolean)",
       "godot": "FileAccess::method:get_as_text()",
-      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+      "reason": "Typed FileAccess text operation (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.ReadByte()",
@@ -244,7 +244,7 @@
     {
       "electron2d": "method:Electron2D.FileAccess.ReadCSVLine(System.Char)",
       "godot": "FileAccess::method:get_csv_line(String:)",
-      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+      "reason": "Typed FileAccess text operation (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.ReadDouble()",
@@ -259,12 +259,12 @@
     {
       "electron2d": "method:Electron2D.FileAccess.ReadLine()",
       "godot": "FileAccess::method:get_line()",
-      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+      "reason": "Typed FileAccess text operation (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.ReadPascalString()",
       "godot": "FileAccess::method:get_pascal_string()",
-      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+      "reason": "Typed FileAccess text operation (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.ReadReal()",
@@ -304,7 +304,7 @@
     {
       "electron2d": "method:Electron2D.FileAccess.WriteCSVLine(System.Collections.Generic.IEnumerable<System.String>,System.Char)",
       "godot": "FileAccess::method:store_csv_line(PackedStringArray:,String:)",
-      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+      "reason": "Typed FileAccess text operation (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.WriteDouble(System.Double)",
@@ -319,12 +319,12 @@
     {
       "electron2d": "method:Electron2D.FileAccess.WriteLine(System.String)",
       "godot": "FileAccess::method:store_line(String:)",
-      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+      "reason": "Typed FileAccess text operation (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.WritePascalString(System.String)",
       "godot": "FileAccess::method:store_pascal_string(String:)",
-      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+      "reason": "Typed FileAccess text operation (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.WriteReal(System.Single)",
@@ -339,7 +339,7 @@
     {
       "electron2d": "method:Electron2D.FileAccess.WriteString(System.String)",
       "godot": "FileAccess::method:store_string(String:)",
-      "reason": "C# Read/Write naming with typed buffers and exceptions; verify binary semantics (ADR 0020)."
+      "reason": "Typed FileAccess text operation (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.WriteUInt16(System.UInt16)",
@@ -1900,6 +1900,14 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["FileAccess::method:get_as_text()"], "state": "Implemented", "reason": "ADR 0020: a strict seekable snapshot restores cursor and preserves EOF, BOM and NUL in managed strings. Optional CR removal follows UTF-8 validation. FileTextTests exercises bytes, state and failed decoding."},
+    {"godot": ["FileAccess::method:get_csv_line(String:)"], "state": "Implemented", "reason": "ADR 0020: char separator and string array, empty array at EOF, strict UTF-8 and quote errors. Quoted LF, CR, CRLF and NUL normalize to LF. FileTextTests and OSProcessTests exercise values, cursor, EOF and live pipes."},
+    {"godot": ["FileAccess::method:get_line()"], "state": "Implemented", "reason": "ADR 0020: LF, CR, CRLF and NUL framing and strict UTF-8. Managed strings preserve BOM. FileTextTests checks exact cursor and EOF against pinned ordinary-file results; OSProcessTests checks live CR lookahead."},
+    {"godot": ["FileAccess::method:get_pascal_string()"], "state": "Implemented", "reason": "ADR 0020: endian-aware UInt32 byte count and strict UTF-8. Incomplete frames consume the available prefix and throw without allocating the announced length. FileTextTests and OSProcessTests exercise both byte orders and truncation."},
+    {"godot": ["FileAccess::method:store_csv_line(PackedStringArray:,String:)"], "state": "Implemented", "reason": "ADR 0020: typed enumerable and char separator, quoting, doubled quotes and LF. Managed NUL fields are quoted. Exceptions replace bool; a pipe failure reports the complete consumed record prefix. FileTextTests compares exact output bytes."},
+    {"godot": ["FileAccess::method:store_line(String:)"], "state": "Implemented", "reason": "ADR 0020: strict UTF-8 followed by one LF, including empty input. Exceptions replace bool and a pipe failure reports the complete consumed line prefix. FileTextTests checks exact bytes and invalid input."},
+    {"godot": ["FileAccess::method:store_pascal_string(String:)"], "state": "Implemented", "reason": "ADR 0020: endian-aware UInt32 UTF-8 byte count, no additional terminator. Exceptions replace bool. FileTextTests compares bytes in both endian modes and OSProcessTests verifies SHA-256 after partial-write retries."},
+    {"godot": ["FileAccess::method:store_string(String:)"], "state": "Implemented", "reason": "ADR 0020: strict UTF-8 without implicit BOM or terminator. Exceptions replace bool. FileTextTests checks exact bytes and invalid input; OSProcessTests retains the existing live pipe write regression."},
     {"godot": ["Engine::method:get_author_info()", "Engine::method:get_copyright_info()", "Engine::method:get_donor_info()", "Engine::method:get_license_info()", "Engine::method:get_license_text()"], "state": "Implemented", "reason": "ADR 0016/0095: complete executable distribution-metadata projection with actual package authors, reviewed contributor records, all 71 component/97 legal-document parts, full legal text, typed deeply immutable values and exact source/header attribution. Public source/package CLR and strict full-trim NativeAOT checks audit all fields, texts, nested mutation refusals and concurrent first reads. No known semantic gap remains in these five operations; foreign-host qualification remains separate under ADR 0021. See engine-runtime.md#distribution-metadata."},
     {"godot": ["TranslationServer::method:get_loaded_locales()"], "state": "Implemented", "reason": "ADR 0007: independent stored-locale string snapshots from live main-domain resources, ordinal deduplication in first registration order, live Locale edits and retirement. Direct entries and other domains are excluded. TranslationQueryChecks verifies duplicates, mutation, removal/disposal, independent snapshots and public language selection; docs/components/localization.md#catalog-queries records platform qualification separately."},
     {

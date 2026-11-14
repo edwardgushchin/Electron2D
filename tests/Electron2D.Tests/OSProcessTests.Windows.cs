@@ -1,9 +1,12 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Electron2D;
 using static TextureArrayTests;
 
 internal static partial class OSProcessTests
 {
+    private const int SharingViolation = unchecked((int)0x80070020);
+
     [LibraryImport("kernel32.dll", EntryPoint = "GetConsoleWindow")]
     private static partial nint ConsoleWindow();
     [LibraryImport("kernel32.dll", EntryPoint = "GetConsoleProcessList", SetLastError = true)]
@@ -65,13 +68,64 @@ internal static partial class OSProcessTests
         var instanceFile = System.IO.Path.Combine(directory, "console-instance"); var instance = OS.CreateInstance(["--os-process-child", "console-report", instanceFile]); Wait(instance);
         Check(File.ReadAllLines(instanceFile)[0] == "0", "CreateInstance uses the default hidden launch.");
         var openFile = System.IO.Path.Combine(directory, "console-open"); var open = Launch("console-report", openFile); File.Delete(openFile); OS.OpenWithProgram(open.Path, open.Arguments);
-        var deadline = System.Diagnostics.Stopwatch.StartNew(); while (!File.Exists(openFile)) { if (deadline.Elapsed.TotalSeconds > 8) throw new InvalidOperationException("OpenWithProgram did not produce its report."); Thread.Sleep(5); }
-        Check(File.ReadAllLines(openFile)[0] == "0", "OpenWithProgram shares the hidden launch.");
+        Check(ReadConsoleReport(openFile)[0] == "0", "OpenWithProgram shares the hidden launch.");
         Console.Write("CONSOLE-PASSED");
     }
+
+    private static string[] ReadConsoleReport(string file, Action? onSharingViolation = null)
+    {
+        var deadline = Stopwatch.StartNew();
+        IOException? pending = null;
+        while (deadline.Elapsed < TimeSpan.FromSeconds(8))
+        {
+            try
+            {
+                var report = File.ReadAllLines(file);
+                Check(report.Length == 2, "The atomically published console report has two lines.");
+                return report;
+            }
+            catch (FileNotFoundException error)
+            {
+                pending = error;
+            }
+            catch (IOException error) when (error.HResult == SharingViolation)
+            {
+                pending = error;
+                onSharingViolation?.Invoke();
+            }
+            Thread.Sleep(5);
+        }
+        throw new InvalidOperationException("OpenWithProgram did not produce a readable console report.", pending);
+    }
+
+    private static void VerifyConsoleReportRetry(string directory)
+    {
+        var file = System.IO.Path.Combine(directory, "console-busy-report");
+        var expected = new[] { "0", "" };
+        File.WriteAllLines(file, expected);
+        try
+        {
+            using var exclusive = File.Open(file, FileMode.Open, System.IO.FileAccess.Read, FileShare.None);
+            var retries = 0;
+            // Keep the published report locked until the reader actually sees the sharing violation.
+            var report = ReadConsoleReport(file, () =>
+            {
+                retries++;
+                exclusive.Dispose();
+            });
+            Check(retries == 1 && report.SequenceEqual(expected), "A sharing violation retries the published console report.");
+        }
+        finally
+        {
+            File.Delete(file);
+        }
+        Console.WriteLine("Windows console report: sharing violation observed and the full report recovered.");
+    }
+
     private static void RunWindows()
     {
         var directory = System.IO.Path.GetFullPath("bin/os-process-validation/windows"); Directory.CreateDirectory(directory);
+        VerifyConsoleReportRetry(directory);
         var parent = Launch("console-parent", directory); var output = new List<string>();
         var code = OS.Execute(parent.Path, parent.Arguments, output, true, true);
         Check(code == 0 && output.Single().EndsWith("CONSOLE-PASSED", StringComparison.Ordinal), "Native console parent verifies hidden, inherited and separate consoles: " + code + ": " + string.Join("", output));

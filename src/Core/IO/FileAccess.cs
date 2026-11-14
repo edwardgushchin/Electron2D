@@ -668,6 +668,7 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Reads UTF-8 bytes through the next LF, CR, CRLF, or null terminator.</summary>
     /// <returns>The decoded line without its terminator; an empty string after end of file.</returns>
+    /// <remarks>A nonblocking pipe can return the available prefix without reaching EOF.</remarks>
     /// <exception cref="DecoderFallbackException">The bytes are not valid UTF-8.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails.</exception>
@@ -682,7 +683,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <summary>Reads one CSV record.</summary>
     /// <param name="delimiter">The one-character field separator.</param>
     /// <returns>The decoded fields; an empty array when called at end of file.</returns>
-    /// <exception cref="ArgumentException"><paramref name="delimiter"/> is CR, LF, or a double quote.</exception>
+    /// <remarks>Within quotes, LF, CR, CRLF, and null terminators are normalized to LF.
+    /// Use byte reads for incremental framing on nonblocking pipes.</remarks>
+    /// <exception cref="ArgumentException"><paramref name="delimiter"/> is a line terminator, a double quote, or a UTF-16 surrogate.</exception>
     /// <exception cref="FormatException">The record has an unterminated or misplaced quoted field.</exception>
     /// <exception cref="DecoderFallbackException">The bytes are not valid UTF-8.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
@@ -701,6 +704,7 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Reads a length-prefixed UTF-8 string.</summary>
     /// <returns>The decoded string whose byte count is stored as an unsigned 32-bit prefix.</returns>
+    /// <remarks>The prefix uses <see cref="BigEndian"/>. An incomplete read consumes the available prefix or payload.</remarks>
     /// <exception cref="EndOfStreamException">The prefix or payload is incomplete.</exception>
     /// <exception cref="DecoderFallbackException">The payload is not valid UTF-8.</exception>
     /// <exception cref="IOException">The declared length exceeds the supported managed array length.</exception>
@@ -722,17 +726,44 @@ public sealed partial class FileAccess : ElectronObject
             var length = _bigEndian
                 ? BinaryPrimitives.ReadUInt32BigEndian(prefix)
                 : BinaryPrimitives.ReadUInt32LittleEndian(prefix);
-            if (length > int.MaxValue)
+            if (length > Array.MaxLength)
                 throw new IOException("The length-prefixed string exceeds the supported managed array length.");
-            var bytes = new byte[checked((int)length)];
-            if (ReadAtMost(stream, bytes) != bytes.Length)
+
+            if (stream.CanSeek)
             {
-                _eofReached = true;
-                if (stream is ProcessPipeStream { EOFReached: false }) throw new IOException("The nonblocking pipe has no complete string payload available.");
-                throw new EndOfStreamException("The file ended before the complete string payload was read.");
+                var end = stream.Length;
+                if (length > Math.Max(0, end - stream.Position))
+                {
+                    stream.Position = end;
+                    throw IncompletePascalPayload(stream);
+                }
+                var bytes = new byte[(int)length];
+                if (ReadAtMost(stream, bytes) != bytes.Length)
+                    throw IncompletePascalPayload(stream);
+                return StrictUtf8.GetString(bytes);
             }
-            return StrictUtf8.GetString(bytes);
+
+            // A pipe cannot confirm that the announced payload exists. Grow only as bytes arrive.
+            using var payload = new MemoryStream();
+            Span<byte> chunk = stackalloc byte[4096];
+            for (var remaining = (int)length; remaining > 0;)
+            {
+                var part = chunk[..Math.Min(remaining, chunk.Length)];
+                if (ReadAtMost(stream, part) != part.Length)
+                    throw IncompletePascalPayload(stream);
+                payload.Write(part);
+                remaining -= part.Length;
+            }
+            return StrictUtf8.GetString(payload.GetBuffer().AsSpan(0, (int)payload.Length));
         }
+    }
+
+    private IOException IncompletePascalPayload(Stream stream)
+    {
+        _eofReached = true;
+        return stream is ProcessPipeStream { EOFReached: false }
+            ? new IOException("The nonblocking pipe has no complete string payload available.")
+            : new EndOfStreamException("The file ended before the complete string payload was read.");
     }
 
     /// <summary>Reads an exact number of bytes and decodes them as UTF-8.</summary>
@@ -746,12 +777,13 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     internal string ReadString(int byteLength) => StrictUtf8.GetString(ReadExact(byteLength));
 
-    /// <summary>Reads the entire file as UTF-8 without changing the cursor.</summary>
-    /// <param name="skipCarriageReturns">Whether CR bytes are omitted before decoding.</param>
+    /// <summary>Reads the entire seekable file as UTF-8 without changing the cursor or EOF state.</summary>
+    /// <param name="skipCarriageReturns">Whether decoded CR characters are omitted.</param>
     /// <returns>The decoded complete contents.</returns>
     /// <exception cref="DecoderFallbackException">The file is not valid UTF-8.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails or the file is too large for a managed snapshot.</exception>
+    /// <exception cref="NotSupportedException">The stream is not seekable.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public string ReadAllText(bool skipCarriageReturns = false)
     {
@@ -763,13 +795,13 @@ public sealed partial class FileAccess : ElectronObject
             try
             {
                 stream.Position = 0;
-                if (stream.Length > int.MaxValue)
+                var length = stream.Length;
+                if (length > Array.MaxLength)
                     throw new IOException("The file is too large for a managed text snapshot.");
-                var bytes = new byte[checked((int)stream.Length)];
+                var bytes = new byte[(int)length];
                 ReadExactly(stream, bytes);
-                if (!skipCarriageReturns)
-                    return StrictUtf8.GetString(bytes);
-                return StrictUtf8.GetString(bytes.Where(value => value != (byte)'\r').ToArray());
+                var text = StrictUtf8.GetString(bytes);
+                return skipCarriageReturns ? text.Replace("\r", string.Empty, StringComparison.Ordinal) : text;
             }
             finally
             {
@@ -918,23 +950,14 @@ public sealed partial class FileAccess : ElectronObject
     public void WriteLine(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
-        var bytes = StrictUtf8.GetBytes(value);
-        ThrowIfDisposed();
-        lock (WriteGate)
-        {
-            var stream = EnsureWritable();
-            stream.Write(bytes);
-            stream.WriteByte((byte)'\n');
-            _dirty = true;
-            _eofReached = false;
-        }
+        WriteString(value + '\n');
     }
 
     /// <summary>Writes one CSV record followed by LF.</summary>
     /// <param name="values">The non-null field values.</param>
     /// <param name="delimiter">The one-character field separator.</param>
     /// <exception cref="ArgumentNullException"><paramref name="values"/> or one of its fields is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="delimiter"/> is CR, LF, or a double quote.</exception>
+    /// <exception cref="ArgumentException"><paramref name="delimiter"/> is a line terminator, a double quote, or a UTF-16 surrogate.</exception>
     /// <exception cref="EncoderFallbackException">A field contains invalid UTF-16.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
@@ -949,6 +972,7 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Writes a UTF-8 string preceded by its unsigned 32-bit byte count.</summary>
     /// <param name="value">The text to encode.</param>
+    /// <remarks>The prefix uses <see cref="BigEndian"/>.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
     /// <exception cref="EncoderFallbackException">The string contains invalid UTF-16.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
@@ -957,17 +981,17 @@ public sealed partial class FileAccess : ElectronObject
     public void WritePascalString(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
-        var bytes = StrictUtf8.GetBytes(value);
+        var length = StrictUtf8.GetByteCount(value);
+        var bytes = new byte[checked(sizeof(uint) + length)];
+        StrictUtf8.GetBytes(value, bytes.AsSpan(sizeof(uint)));
         ThrowIfDisposed();
         lock (WriteGate)
         {
             var stream = EnsureWritable();
-            Span<byte> prefix = stackalloc byte[sizeof(uint)];
             if (_bigEndian)
-                BinaryPrimitives.WriteUInt32BigEndian(prefix, checked((uint)bytes.Length));
+                BinaryPrimitives.WriteUInt32BigEndian(bytes, (uint)length);
             else
-                BinaryPrimitives.WriteUInt32LittleEndian(prefix, checked((uint)bytes.Length));
-            stream.Write(prefix);
+                BinaryPrimitives.WriteUInt32LittleEndian(bytes, (uint)length);
             stream.Write(bytes);
             _dirty = true;
             _eofReached = false;
@@ -1487,7 +1511,7 @@ public sealed partial class FileAccess : ElectronObject
 
     private static string EncodeCSVField(string value, char delimiter)
     {
-        if (value.IndexOfAny([delimiter, '"', '\r', '\n']) < 0)
+        if (value.IndexOfAny([delimiter, '"', '\r', '\n', '\0']) < 0)
             return value;
         return $"\"{value.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";
     }
@@ -1648,7 +1672,7 @@ public sealed partial class FileAccess : ElectronObject
     private string? ReadCSVRecordLocked()
     {
         var stream = EnsureReadable();
-        var output = new MemoryStream();
+        using var output = new MemoryStream();
         var quoted = false;
         var readAny = false;
         while (true)
@@ -1689,14 +1713,13 @@ public sealed partial class FileAccess : ElectronObject
                 }
             }
 
-            if (!quoted && (value == '\n' || value == 0))
-                break;
-            if (!quoted && value == '\r')
+            if (value is '\r' or '\n' or 0)
             {
-                var next = stream.ReadByte();
-                if (next >= 0 && next != '\n')
-                { if (stream is ProcessPipeStream pipe) pipe.PushBack((byte)next); else stream.Position--; }
-                break;
+                if (value == '\r')
+                    ConsumeOptionalLF(stream);
+                if (!quoted)
+                    break;
+                value = '\n';
             }
             output.WriteByte((byte)value);
         }
@@ -1739,14 +1762,23 @@ public sealed partial class FileAccess : ElectronObject
                 break;
             if (value == '\r')
             {
-                var next = stream.ReadByte();
-                if (next >= 0 && next != '\n')
-                { if (stream is ProcessPipeStream pipe) pipe.PushBack((byte)next); else stream.Position--; }
+                ConsumeOptionalLF(stream);
                 break;
             }
             output.WriteByte((byte)value);
         }
         return StrictUtf8.GetString(output.ToArray());
+    }
+
+    private static void ConsumeOptionalLF(Stream stream)
+    {
+        var next = stream.ReadByte();
+        if (next < 0 || next == '\n')
+            return;
+        if (stream is ProcessPipeStream pipe)
+            pipe.PushBack((byte)next);
+        else
+            stream.Position--;
     }
 
     private T ReadScalar<T>(int size, Func<byte[], T> decode)
@@ -1809,8 +1841,8 @@ public sealed partial class FileAccess : ElectronObject
 
     private static void ValidateDelimiter(char delimiter)
     {
-        if (delimiter is '\r' or '\n' or '"')
-            throw new ArgumentException("A CSV delimiter cannot be CR, LF, or a double quote.", nameof(delimiter));
+        if (delimiter is '\r' or '\n' or '\0' or '"' || char.IsSurrogate(delimiter))
+            throw new ArgumentException("A CSV delimiter cannot be a line terminator, double quote, or UTF-16 surrogate.", nameof(delimiter));
     }
 
     private static void ValidateEncryptionKey(ReadOnlySpan<byte> key)
