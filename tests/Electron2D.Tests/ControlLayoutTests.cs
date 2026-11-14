@@ -1,7 +1,7 @@
 using System.Globalization;
 using Electron2D;
 
-internal static class ControlLayoutTests
+internal static partial class ControlLayoutTests
 {
     internal static void Run()
     {
@@ -68,6 +68,7 @@ internal static class ControlLayoutTests
             Check(negative.Size == Vector2.Zero, "Negative finite size requests clamp to the effective minimum.");
             Reject<InvalidOperationException>(() => Task.Run(() => child.Position = Vector2.Zero).GetAwaiter().GetResult());
         }
+        VerifyAnchorAndOffsetSides();
         VerifyAnchorPresets();
         VerifyMinimumSize();
         VerifyMaximumSize();
