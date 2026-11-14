@@ -310,8 +310,11 @@ internal static class ProjectMainSceneTests
             ProjectSettings.Set(mode, WindowMode.Maximized);
             using var authored = new Window
             {
-                Size = new(192, 144), Borderless = true, Position = new(180, 170),
-                InitialPosition = Window.WindowInitialPosition.Absolute, Mode = WindowMode.Windowed
+                Size = new(192, 144),
+                Borderless = true,
+                Position = new(180, 170),
+                InitialPosition = Window.WindowInitialPosition.Absolute,
+                Mode = WindowMode.Windowed
             };
             using var packed = new PackedScene();
             packed.Pack(authored);
@@ -399,8 +402,12 @@ internal static class ProjectMainSceneTests
 
             using var authored = new Window
             {
-                Size = new(240, 160), Unresizable = false, Borderless = false, AlwaysOnTop = false,
-                Unfocusable = false, SharpCorners = false,
+                Size = new(240, 160),
+                Unresizable = false,
+                Borderless = false,
+                AlwaysOnTop = false,
+                Unfocusable = false,
+                SharpCorners = false,
             };
             using var packed = new PackedScene();
             packed.Pack(authored);

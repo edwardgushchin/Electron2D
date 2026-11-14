@@ -24,8 +24,10 @@ internal static class SubViewportTests
         root.AddChild(parent);
         var child = new SubViewport
         {
-            Size = new(64, 48), Size2DOverride = new(32, 16),
-            CanvasTransform = new(0, new(10, 20)), GlobalCanvasTransform = new(0, new(2, 3))
+            Size = new(64, 48),
+            Size2DOverride = new(32, 16),
+            CanvasTransform = new(0, new(10, 20)),
+            GlobalCanvasTransform = new(0, new(2, 3))
         };
         Check(child.GetStretchTransform() == Transform.Identity, "An override does not stretch unless enabled.");
         child.Size2DOverrideStretch = true;

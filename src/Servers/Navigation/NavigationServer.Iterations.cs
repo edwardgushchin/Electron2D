@@ -39,6 +39,7 @@ public sealed partial class NavigationServer
     private static NavigationRegionState CaptureRegion(NavigationRegionState region) => new(region.RID, null)
     {
         Map = region.Map,
+        MapOrder = region.MapOrder,
         Geometry = region.Geometry,
         Transform = region.Transform,
         Enabled = region.Enabled,
@@ -52,9 +53,9 @@ public sealed partial class NavigationServer
     private static NavigationMapState CaptureMap(NavigationMapState map) => new(map.RID, null)
     { Active = map.Active, UseEdgeConnections = map.UseEdgeConnections, EdgeMargin = map.EdgeMargin, LinkRadius = map.LinkRadius, CellSize = map.CellSize, RasterScale = map.RasterScale };
     private static NavigationLinkState CaptureLink(NavigationLinkState link) => new(link.RID, null)
-    { Map = link.Map, Enabled = link.Enabled, Bidirectional = link.Bidirectional, Start = link.Start, End = link.End, Layers = link.Layers, EnterCost = link.EnterCost, TravelCost = link.TravelCost, OwnerID = link.OwnerID };
-    private static bool Matches(NavigationRegionState value, NavigationRegionState input) => value.Map == input.Map && ReferenceEquals(value.Geometry, input.Geometry) && value.Transform == input.Transform && value.Enabled == input.Enabled && value.UseEdgeConnections == input.UseEdgeConnections && value.Layers == input.Layers && value.EnterCost == input.EnterCost && value.TravelCost == input.TravelCost && value.OwnerID == input.OwnerID;
-    private static bool Matches(NavigationLinkState value, NavigationLinkState input) => value.Map == input.Map && value.Enabled == input.Enabled && value.Bidirectional == input.Bidirectional && value.Start == input.Start && value.End == input.End && value.Layers == input.Layers && value.EnterCost == input.EnterCost && value.TravelCost == input.TravelCost && value.OwnerID == input.OwnerID;
+    { Map = link.Map, MapOrder = link.MapOrder, Enabled = link.Enabled, Bidirectional = link.Bidirectional, Start = link.Start, End = link.End, Layers = link.Layers, EnterCost = link.EnterCost, TravelCost = link.TravelCost, OwnerID = link.OwnerID };
+    private static bool Matches(NavigationRegionState value, NavigationRegionState input) => value.Map == input.Map && value.MapOrder == input.MapOrder && ReferenceEquals(value.Geometry, input.Geometry) && value.Transform == input.Transform && value.Enabled == input.Enabled && value.UseEdgeConnections == input.UseEdgeConnections && value.Layers == input.Layers && value.EnterCost == input.EnterCost && value.TravelCost == input.TravelCost && value.OwnerID == input.OwnerID;
+    private static bool Matches(NavigationLinkState value, NavigationLinkState input) => value.Map == input.Map && value.MapOrder == input.MapOrder && value.Enabled == input.Enabled && value.Bidirectional == input.Bidirectional && value.Start == input.Start && value.End == input.End && value.Layers == input.Layers && value.EnterCost == input.EnterCost && value.TravelCost == input.TravelCost && value.OwnerID == input.OwnerID;
     private bool Matches(NavigationMapState map, IterationWork work)
     {
         var input = work.Map!;

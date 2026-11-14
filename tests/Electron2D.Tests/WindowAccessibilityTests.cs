@@ -23,19 +23,28 @@ internal static class WindowAccessibilityTests
         domain.AddTranslation(french);
         using var root = new Window
         {
-            Title = "Workspace caption", Size = new(240, 120), GUIEmbedSubwindows = true,
-            TranslationDomain = "window-accessibility", AccessibilityName = "Window name key",
+            Title = "Workspace caption",
+            Size = new(240, 120),
+            GUIEmbedSubwindows = true,
+            TranslationDomain = "window-accessibility",
+            AccessibilityName = "Window name key",
             AccessibilityDescription = "Window description key",
         };
         var embedded = new Window
         {
-            Title = "Embedded caption", AccessibilityName = "Embedded dialog",
-            AccessibilityDescription = "Embedded details", Size = new(64, 48), Borderless = true,
+            Title = "Embedded caption",
+            AccessibilityName = "Embedded dialog",
+            AccessibilityDescription = "Embedded details",
+            Size = new(64, 48),
+            Borderless = true,
         };
         var native = new Window
         {
-            Title = "Native caption", AccessibilityName = "Native dialog",
-            AccessibilityDescription = "Native details", Size = new(64, 48), ForceNative = true,
+            Title = "Native caption",
+            AccessibilityName = "Native dialog",
+            AccessibilityDescription = "Native details",
+            Size = new(64, 48),
+            ForceNative = true,
         };
         root.AddChild(embedded);
         root.AddChild(native);

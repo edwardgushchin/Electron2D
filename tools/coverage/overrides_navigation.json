@@ -1903,7 +1903,7 @@
       "godot": [
         "class:NavigationServer2D"
       ],
-      "reason": "ADR 0097 authored maps/regions/links, typed query controls, direct-parent agents, managed ORCA avoidance, source parsing/baking, async iterations and global simulation/drawing controls execute. Remaining weighted-search state and tie equivalence are tracked on the two exact query rows. Native allocator, foreign targets and large-scene performance retain separate verification gates."
+      "reason": "ADR 0097 authored maps/regions/links, typed query controls, direct-parent agents, managed ORCA avoidance, source parsing/baking, async iterations and global simulation/drawing controls execute. Same-portal arrivals and binary-heap ties execute with independent pinned corridor/provenance checks and unlimited slanted zero-cost cycles.  Native allocator, foreign targets and large-scene performance retain separate verification gates."
     },
     {
       "state": "Implemented",
@@ -2096,8 +2096,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADRs 0097/0095: typed controls, provenance and copied paths use committed topology. Disconnected and limited searches rebuild to a reached walkable polygon. Goal arrivals compare complete weighted cost, including the last in-region segment. The lower bound uses the smallest eligible travel multiplier. The entered owner pays its documented entry charge. Distinct points on each directed portal retain alternative arrivals at an intermediate polygon and share its polygon budget. Tests cover six-polygon relay routes, zero-cost link detours, alternative goal approaches, equal costs, deferred weights and bounded link fallback. Same-polygon goals compare the direct segment with multiple departures and reentries, preserving completed routes at search limits and link provenance through both server queries and NavigationAgent. Same-portal regressions cover cost reversal after publication, all postprocessing modes, server/agent integration and rendered link transitions. Remaining: larger equal-priority topologies need pinned corridor and provenance comparisons.",
+      "state": "Implemented",
+      "reason": "ADRs 0097/0095: typed controls, provenance and copied paths use committed topology. Disconnected and limited searches rebuild to a reached walkable polygon. Goal arrivals compare complete weighted cost, including the last in-region segment. The lower bound uses the smallest eligible travel multiplier. The entered owner pays its documented entry charge. Distinct points on each directed portal retain alternative arrivals at an intermediate polygon and share its polygon budget. Tests cover six-polygon relay routes, zero-cost link detours, alternative goal approaches, equal costs, deferred weights and bounded link fallback. Same-polygon goals compare the direct segment with multiple departures and reentries, preserving completed routes at search limits and link provenance through both server queries and NavigationAgent. Same-portal regressions cover cost reversal after publication, all postprocessing modes, server/agent integration and rendered link transitions. NavigationSearchEquivalenceTests compares five independent ed1daf0bf fixtures across both map modes and full query/agent RID provenance, covering reversed region order, reversed authored edge order and equal f with different g. Two ordinary slanted eight-triangle zero-cost cycles exhaust search without polygon/distance limits. Indexed binary-heap f/h ties and map-local swap-removal order fix the reproduced tied-corridor defects. Native/package/platform/performance qualification remains separately bounded.",
       "godot": [
         "NavigationServer2D::method:map_get_path(RID:,Vector2:,Vector2:,bool:,int:)",
         "NavigationServer2D::method:query_path(NavigationPathQueryParameters2D:,NavigationPathQueryResult2D:,Callable:)"

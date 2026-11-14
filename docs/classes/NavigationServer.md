@@ -1,6 +1,6 @@
 # NavigationServer
 
-Last updated: 2026-10-18
+Last updated: 2026-11-14
 
 [Frame timing monitors](../components/frame-monitors.md) observe owner-side synchronization and avoidance inside Engine physics steps. Queries and independent direct hosts do not publish Engine timing windows; no native device timestamps or summed worker CPU time are implied.
 
@@ -1848,3 +1848,5 @@ Works in every build configuration. Changes coalesce until the next navigation s
 Parameters:
 
 - `enabled`: New process-wide drawing request, independent of simulation activity.
+
+The shared query kernel uses an indexed binary heap ordered by estimated total and remaining cost, without polygon/discovery priorities. See [same-portal arrivals and tied corridors](../components/navigation-maps.md#arrivals-through-the-same-portal) for the pinned comparisons and unlimited slanted-cycle checks.
