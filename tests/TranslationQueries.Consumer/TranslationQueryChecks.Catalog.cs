@@ -184,4 +184,55 @@ internal static partial class TranslationQueryChecks
             "Both overrides allow another thread to acquire the catalog lock before falling through.");
         Console.WriteLine("Translation catalog concurrency: captured forms and selector, unlocked overrides and committed Changed delivery passed.");
     }
+
+    private static void CheckServerLocaleChange()
+    {
+        using var fallback = new Translation { Locale = "fr" };
+        using var catalog = new CatalogOverrides { Locale = "fr-CA" };
+        catalog.AddPluralMessage("item", ["regional-one", "regional-many"], "menu");
+        fallback.AddPluralMessage("item", ["fallback-one", "fallback-many"], "menu");
+        TranslationServer.Culture = CultureInfo.GetCultureInfo("fr-CA");
+        TranslationServer.AddTranslation(fallback);
+        TranslationServer.AddTranslation(catalog);
+        using var entered = new ManualResetEventSlim();
+        using var release = new ManualResetEventSlim();
+        var deadline = TimeSpan.FromSeconds(10);
+        string Lookup() => TranslationServer.TranslatePlural("", "item", "items", 0, "menu");
+        try
+        {
+            Check(Lookup() == "regional-one", "The exact French catalog selects its first form for zero.");
+            catalog.Plural = (_, _, _, _) =>
+            {
+                entered.Set();
+                Check(release.Wait(deadline), "The plural override waited for a locale change.");
+                return null;
+            };
+            var read = Task.Run(Lookup);
+            try
+            {
+                Check(entered.Wait(deadline), "The server selected the regional catalog and entered its override.");
+                Task.Run(() => catalog.Locale = "en").WaitAsync(deadline).GetAwaiter().GetResult();
+            }
+            finally { release.Set(); }
+            var actual = read.WaitAsync(deadline).GetAwaiter().GetResult();
+            Check(actual == "fallback-one", $"Expected the French fallback after the locale edit, got '{actual}'.");
+            Check(Lookup() == "fallback-one" && catalog.GetPluralMessage("item", "items", 0, "menu") == "regional-many",
+                "Subsequent server lookup skips the edited catalog, which uses the English rule for direct lookup.");
+
+            catalog.Locale = "fr-CA";
+            catalog.Singular = (_, _) =>
+            {
+                catalog.Locale = "en";
+                return "stale override";
+            };
+            Check(TranslationServer.Translate("", "item", "menu") == "fallback-one",
+                "Singular lookup also discards the result of an override whose catalog changed locale.");
+        }
+        finally
+        {
+            TranslationServer.RemoveTranslation(catalog);
+            TranslationServer.RemoveTranslation(fallback);
+        }
+        Console.WriteLine("Translation server: locale edits during singular and plural overrides discard stale rankings.");
+    }
 }

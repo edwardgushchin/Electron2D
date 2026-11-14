@@ -141,7 +141,10 @@ provider), optionally `--threaded` and `--pool-owner`. The root selector is
 `ELECTRON2D_TEST_GROUP_MODULATION=cpu|gpu|registered` with matching suffixes.
 Native pixels use `--native-group-modulation --cpu|--gpu`, optional `--threaded`,
 and `ELECTRON2D_GROUP_MODULATION_RENDERER=gpu|compatibility`; use the corresponding
-`ELECTRON2D_TEST_NATIVE_GROUP_MODULATION` root selector. See
+`ELECTRON2D_TEST_NATIVE_GROUP_MODULATION` root selector. The native profile also
+checks landmark warnings on the scene owner and in a processing group. Labels
+in the same window clear the warning across groups, while a label in a second
+native window leaves it active. See
 [grouped canvas diagnostics](../../docs/components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
 
 ### Grouped coordinate observations

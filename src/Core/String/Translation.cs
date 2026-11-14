@@ -26,6 +26,7 @@ public partial class Translation : Resource
     private readonly object _gate = new();
     private readonly Dictionary<(string Context, string Source), string[]> _messages = new();
     private string _locale = "en";
+    private long _localeRevision;
     private Func<long, int>? _pluralSelector;
     private string _pluralRulesOverride = "";
     private CatalogPluralRule? _importedRule;
@@ -57,7 +58,23 @@ public partial class Translation : Resource
         ArgumentNullException.ThrowIfNull(value);
         var normalized = CultureInfo.GetCultureInfo(value.Replace('_', '-')).Name;
         var defaultSelector = TranslationServer.FindPluralRule(normalized).Select;
-        lock (_gate) { ThrowIfDisposed(); _locale = normalized; _defaultPluralSelector = defaultSelector; }
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            UpdateLocaleUnderLock(normalized);
+            _defaultPluralSelector = defaultSelector;
+        }
+    }
+
+    private void UpdateLocaleUnderLock(string locale)
+    {
+        if (!string.Equals(_locale, locale, StringComparison.Ordinal)) _localeRevision++;
+        _locale = locale;
+    }
+
+    internal (string Locale, long Revision) CaptureLocale()
+    {
+        lock (_gate) { ThrowIfDisposed(); return (_locale, _localeRevision); }
     }
 
     /// <summary>Gets or sets the locale-specific plural-form index selector.</summary>
@@ -135,10 +152,20 @@ public partial class Translation : Resource
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(context);
+        return ResolveMessage(source, context);
+    }
+
+    internal string ResolveMessage(string source, string context, long? localeRevision = null)
+    {
         ThrowIfDisposed();
         var custom = OnGetMessage(source, context);
-        if (custom is not null) return custom;
-        lock (_gate) { ThrowIfDisposed(); return _messages.TryGetValue((context, source), out var forms) ? forms[0] : string.Empty; }
+        if (custom is not null && localeRevision is null) return custom;
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            if (localeRevision is { } expected && expected != _localeRevision) return string.Empty;
+            return custom ?? (_messages.TryGetValue((context, source), out var forms) ? forms[0] : string.Empty);
+        }
     }
 
     /// <summary>Gets a translated plural form, or an empty string when no entry exists.</summary>
@@ -156,10 +183,14 @@ public partial class Translation : Resource
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(plural);
         ArgumentNullException.ThrowIfNull(context);
+        return ResolvePluralMessage(source, plural, count, context);
+    }
+
+    internal string ResolvePluralMessage(string source, string plural, long count, string context, long? localeRevision = null)
+    {
         ThrowIfDisposed();
         var custom = OnGetPluralMessage(source, plural, count, context);
-        if (custom is not null) return custom;
-        if (count < 0) return string.Empty;
+        if (localeRevision is null && (custom is not null || count < 0)) return custom ?? string.Empty;
 
         string[]? forms;
         Func<long, int>? selector;
@@ -167,7 +198,10 @@ public partial class Translation : Resource
         lock (_gate)
         {
             ThrowIfDisposed();
-            if (!_messages.TryGetValue((context, source), out forms)) return string.Empty;
+            // Ranking happens before the unlocked override. Validate it where we take the forms and rule.
+            if (localeRevision is { } expected && expected != _localeRevision) return string.Empty;
+            if (custom is not null) return custom;
+            if (count < 0 || !_messages.TryGetValue((context, source), out forms)) return string.Empty;
             selector = _pluralSelector;
             imported = selector is null ? _importedRule : null;
             selector ??= _defaultPluralSelector;
@@ -264,7 +298,7 @@ public partial class Translation : Resource
         lock (_gate)
         {
             ThrowIfDisposed();
-            _locale = snapshot.Locale;
+            UpdateLocaleUnderLock(snapshot.Locale);
             _pluralSelector = snapshot.Selector;
             _pluralRulesOverride = snapshot.RuleDefinition;
             _importedRule = snapshot.ImportedRule;

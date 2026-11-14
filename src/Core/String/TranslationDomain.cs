@@ -300,10 +300,10 @@ public sealed class TranslationDomain : ElectronObject
             var translation = translations[i];
             try
             {
-                var candidate = translation.Locale;
+                var (candidate, revision) = translation.CaptureLocale();
                 var score = TranslationServer.CompareLocales(locale, candidate);
                 if (score <= bestScore) continue;
-                var value = translation.GetMessage(message, context);
+                var value = translation.ResolveMessage(message, context, revision);
                 if (value.Length == 0) continue;
                 best = value;
                 bestScore = score;
@@ -324,10 +324,10 @@ public sealed class TranslationDomain : ElectronObject
             var translation = translations[i];
             try
             {
-                var candidate = translation.Locale;
+                var (candidate, revision) = translation.CaptureLocale();
                 var score = TranslationServer.CompareLocales(locale, candidate);
                 if (score <= bestScore) continue;
-                var value = translation.GetPluralMessage(singular, plural, count, context);
+                var value = translation.ResolvePluralMessage(singular, plural, count, context, revision);
                 if (value.Length == 0) continue;
                 best = value;
                 bestScore = score;

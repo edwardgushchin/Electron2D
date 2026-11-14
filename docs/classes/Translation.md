@@ -16,7 +16,7 @@ Last updated: 2026-11-14
 
 The message-count and list methods are virtual so a compressed derived catalog can omit source keys while retaining the same server lookup contract. [OptimizedTranslation](OptimizedTranslation.md) supplies that implementation.
 
-Reads and writes are serialized per resource. `Resource.Changed` is raised after a mutation commits, outside the resource lock; a throwing handler does not roll it back. The managed `Resource` duplication hooks copy message containers independently and retain the plural-selector delegate reference. Catalog operations reject a disposed resource. Direct lookup can return an empty value, while empty resource results let the server continue to the next candidate.
+Reads and writes are serialized per resource. `Resource.Changed` is raised after a mutation commits, outside the resource lock; a throwing handler does not roll it back. The managed `Resource` duplication hooks copy message containers independently and retain the plural-selector delegate reference. Catalog operations reject a disposed resource. Direct lookup can return an empty value, while empty resource results let the server continue to the next candidate. A ranked lookup also skips the candidate if its locale changed before the lookup captured the forms and rule or accepted an override result.
 
 ## Example
 
@@ -147,7 +147,7 @@ Clears stored entries. Registered catalogs are detached by the server's disposal
 - [ADR 0007: Typed localization](../decisions/localization.md#adr-0007)
 - [ADR 0013: Managed Resource](../decisions/resources.md#adr-0013)
 
-The fixed locale catalog exposes language/script/country names, aliases, script/regional defaults and gettext definitions through TranslationServer. Translation resources without a caller PluralSelector use these prepared integer rules; copying and archive loading restore the automatic locale policy. Unknown multi-form rules require a caller selector. Runtime Culture remains CultureInfo. Decimal CLDR category selection remains separate; integer PO/MO import executes through ResourceLoader.
+The fixed locale catalog exposes language/script/country names, aliases, script/regional defaults and gettext definitions through TranslationServer. Translation resources use these prepared integer rules when neither a caller PluralSelector nor a valid stored PluralRulesOverride takes precedence. If the locale has no built-in rule, a catalog with multiple forms needs either a valid PluralRulesOverride or a caller PluralSelector. The stored definition survives archive loading. Runtime Culture remains CultureInfo. Decimal CLDR category selection remains separate; integer PO/MO import executes through ResourceLoader.
 
 Resource archives support exact Translation catalogs. The stored Messages descriptor is a copied string-array record stream of context/source/form-count/forms. Its setter validates non-null forms and unique complete records before replacing state. Arbitrary PluralSelector delegates cannot be archived and cause failure before file replacement. OptimizedTranslation persists its separate [versioned hash payload](OptimizedTranslation.md#resource-files).
 

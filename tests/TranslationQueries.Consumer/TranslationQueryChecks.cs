@@ -44,6 +44,7 @@ internal static partial class TranslationQueryChecks
             CheckConcurrentRetirement();
             CheckCatalog();
             CheckConcurrentCatalogLookup();
+            CheckServerLocaleChange();
         }
         finally { TranslationServer.Clear(); TranslationServer.Culture = originalCulture; }
         if (errors.Count != 0) throw new InvalidOperationException(string.Join(Environment.NewLine, errors));
