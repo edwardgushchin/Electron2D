@@ -14,6 +14,14 @@ public partial class Translation : Resource
         new PropertyDescriptor<Translation, string>(nameof(PluralRulesOverride), translation => translation.PluralRulesOverride, (translation, value) => translation.PluralRulesOverride = value, _ => "", stored: true),
         new PropertyDescriptor<Translation, string[]>("Messages", translation => translation.CaptureMessages(), (translation, value) => translation.RestoreMessages(value), _ => [], stored: true),
     ]);
+    private static readonly IReadOnlyList<PropertyDescriptor> OptimizedProperties = Array.AsReadOnly<PropertyDescriptor>(
+    [
+        new PropertyDescriptor<Translation, string>(nameof(Locale), translation => translation.Locale,
+            (translation, value) => translation.Locale = value, _ => "en"),
+        TranslationProperties[1],
+        new PropertyDescriptor<OptimizedTranslation, byte[]>(OptimizedTranslation.CatalogPropertyName,
+            translation => translation.SaveCatalog(), (translation, data) => translation.LoadCatalog(data), stored: true),
+    ]);
 
     private readonly object _gate = new();
     private readonly Dictionary<(string Context, string Source), string[]> _messages = new();
@@ -22,6 +30,7 @@ public partial class Translation : Resource
     private string _pluralRulesOverride = "";
     private CatalogPluralRule? _importedRule;
     private Func<long, int>? _defaultPluralSelector = TranslationServer.FindPluralRule("en").Select;
+    internal object CatalogGate => _gate;
 
     /// <summary>Creates an empty English translation catalog.</summary>
     public Translation() { }
@@ -36,12 +45,17 @@ public partial class Translation : Resource
         get { lock (_gate) { ThrowIfDisposed(); return _locale; } }
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
-            var normalized = CultureInfo.GetCultureInfo(value.Replace('_', '-')).Name;
-            var defaultSelector = TranslationServer.FindPluralRule(normalized).Select;
-            lock (_gate) { ThrowIfDisposed(); _locale = normalized; _defaultPluralSelector = defaultSelector; }
+            SetCatalogLocale(value);
             EmitChanged();
         }
+    }
+
+    internal void SetCatalogLocale(string value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        var normalized = CultureInfo.GetCultureInfo(value.Replace('_', '-')).Name;
+        var defaultSelector = TranslationServer.FindPluralRule(normalized).Select;
+        lock (_gate) { ThrowIfDisposed(); _locale = normalized; _defaultPluralSelector = defaultSelector; }
     }
 
     /// <summary>Gets or sets the locale-specific plural-form index selector.</summary>
@@ -221,38 +235,40 @@ public partial class Translation : Resource
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
+        => ((Translation)target).RestoreCatalogCopy(CaptureCatalogCopy());
+
+    internal sealed record CatalogCopy(string Locale, string RuleDefinition, CatalogPluralRule? ImportedRule,
+        Func<long, int>? Selector, Func<long, int>? DefaultSelector,
+        KeyValuePair<(string Context, string Source), string[]>[] Entries);
+
+    internal CatalogCopy CaptureCatalogCopy()
     {
-        string locale;
-        string ruleDefinition;
-        CatalogPluralRule? importedRule;
-        Func<long, int>? selector;
-        KeyValuePair<(string Context, string Source), string[]>[] entries;
         lock (_gate)
         {
             ThrowIfDisposed();
-            locale = _locale;
-            selector = _pluralSelector;
-            ruleDefinition = _pluralRulesOverride;
-            importedRule = _importedRule;
-            entries = _messages.Select(entry => new KeyValuePair<(string, string), string[]>(entry.Key, (string[])entry.Value.Clone())).ToArray();
+            var entries = _messages.Select(entry => new KeyValuePair<(string, string), string[]>(entry.Key, (string[])entry.Value.Clone())).ToArray();
+            return new CatalogCopy(_locale, _pluralRulesOverride, _importedRule, _pluralSelector, _defaultPluralSelector, entries);
         }
-        var copy = (Translation)target;
-        lock (copy._gate)
+    }
+
+    internal void RestoreCatalogCopy(CatalogCopy snapshot)
+    {
+        lock (_gate)
         {
-            copy.ThrowIfDisposed();
-            copy._locale = locale;
-            copy._pluralSelector = selector;
-            copy._pluralRulesOverride = ruleDefinition;
-            copy._importedRule = importedRule;
-            copy._defaultPluralSelector = TranslationServer.FindPluralRule(locale).Select;
-            copy._messages.Clear();
-            foreach (var entry in entries) copy._messages.Add(entry.Key, entry.Value);
+            ThrowIfDisposed();
+            _locale = snapshot.Locale;
+            _pluralSelector = snapshot.Selector;
+            _pluralRulesOverride = snapshot.RuleDefinition;
+            _importedRule = snapshot.ImportedRule;
+            _defaultPluralSelector = snapshot.DefaultSelector;
+            _messages.Clear();
+            foreach (var entry in snapshot.Entries) _messages.Add(entry.Key, entry.Value);
         }
     }
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        base.GetPropertyDescriptors().Concat(TranslationProperties);
+        base.GetPropertyDescriptors().Concat(this is OptimizedTranslation ? OptimizedProperties : TranslationProperties);
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

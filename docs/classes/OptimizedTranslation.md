@@ -1,6 +1,6 @@
 # OptimizedTranslation
 
-Last updated: 2026-09-24
+Last updated: 2026-11-14
 
 **Inherits:** [Translation](Translation.md) → [Resource](Resource.md)
 
@@ -14,7 +14,7 @@ Last updated: 2026-09-24
 
 Stores translated values as UTF-8 bytes, optionally compressed with Brotli, under 128-bit hashes of their source strings. The source strings are discarded after `Generate`. Lookup is case-sensitive; contextual entries are skipped during generation, and plural entries keep only their first form. Plural lookup returns that singular translation. Compressed values are decoded once on first lookup and cached for subsequent calls. The catalog can be registered with `TranslationServer` and follows the inherited managed `Resource` lifetime and locale contract.
 
-This in-memory representation is not a serialized catalog format. Generation is available to tools using the shared engine assembly. Asset-file loading and the reference Smaz binary representation are not implemented.
+Save generated catalogs as `.e2dres` with `ResourceSaver` and load them with `ResourceLoader`. The file preserves the exact catalog type, locale, hashed lookup and translated values. Runtime loading validates a complete catalog before publication. Generation is available to tools and applications using the shared engine assembly.
 
 ## Example
 
@@ -22,10 +22,21 @@ This in-memory representation is not a serialized catalog format. Generation is 
 using var source = new Translation { Locale = "fr" };
 source.AddMessage("Play", "Jouer");
 using var compact = new OptimizedTranslation();
-if (compact.Generate(source))
-    TranslationServer.AddTranslation(compact);
-// Remove the borrowed catalog before disposing it when lookup is no longer needed.
-TranslationServer.RemoveTranslation(compact);
+if (!compact.Generate(source))
+    throw new InvalidOperationException("No eligible translations.");
+ResourceSaver.Save(compact, "res://menu.fr.e2dres");
+
+using var catalog = ResourceLoader.Load<OptimizedTranslation>("res://menu.fr.e2dres");
+TranslationServer.AddTranslation(catalog);
+try
+{
+    TranslationServer.Culture = System.Globalization.CultureInfo.GetCultureInfo(catalog.Locale);
+    Console.WriteLine(TranslationServer.Translate("", "Play"));
+}
+finally
+{
+    TranslationServer.RemoveTranslation(catalog);
+}
 ```
 
 ## Constructors
@@ -52,7 +63,11 @@ TranslationServer.RemoveTranslation(compact);
 
 ### Generate
 
-Reads the source's public message list and skips keys containing the context separator. For each remaining key it copies the first translated form, hashes the source text, and stores the translated UTF-8 bytes. A value is compressed only when Brotli makes it smaller. An empty source or one containing only contextual keys returns false and retains the previous catalog. On success the locale is copied and `Resource.Changed` is emitted. Generation allocates and is intended for asset authoring, not a frame callback. Disposed resources and exceptions from source lookups or change observers propagate.
+Reads the source's public message list and skips keys containing the context separator. For each remaining key it copies the first translated form, hashes the source text, and stores the translated UTF-8 bytes. A value is compressed only when Brotli makes it smaller. Null, an empty source or one containing only contextual keys returns false and retains the previous catalog. On success the locale and lookup commit together before `Resource.Changed`. Use generation during asset authoring. Disposed resources and exceptions from source lookups or change observers propagate. Invalid Unicode values, key collisions and budget violations fail before publication.
+
+### Resource files
+
+The versioned payload stores the locale, up to 65,536 key hashes with raw or Brotli values, at most 1 MiB of UTF-8 per value and at most 32 MiB expanded overall. Empty values and empty catalogs have valid representations. All payloads must pass length, uniqueness, Brotli and UTF-8 validation before the loader can publish a resource or replace cached state. Decoded value strings are cached on demand. The inherited message mutators do not feed optimized lookup and their base message storage is omitted from this asset.
 
 ### GetMessageCount and GetMessageList
 
@@ -76,7 +91,7 @@ Clears the lookup map. Inherited `Translation` and `Resource` cleanup and borrow
 
 ## Verification and limits
 
-`VerifyTranslations` in [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) covers long and short UTF-8 values, contextual and plural behavior, no-key generation, lookup after source edits, duplication, disposal, and registration with `TranslationServer`. After 64 warm-up lookups, 1,024 direct successful lookups across both stored values allocated 0 managed bytes on Linux/.NET 8. This does not measure native or external cryptographic allocations, the entire `TranslationServer` route, other platforms, or memory saved by compression. Exact reference compression bytes, file persistence, and editor-only generation gating remain open in [coverage](../coverage/classes/OptimizedTranslation.md).
+`VerifyTranslations` in [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) covers in-memory lookup and registration. The public [resource locale consumer](../../tests/ResourceLocales.Consumer/OptimizedCatalogChecks.cs) exercises archive authoring and fresh-process loading with raw, compressed, Unicode and empty values, endian/compression flags, copying, cache replacement and registration. Its rendering profile switches the locale through an `OptionButton` and compares the resulting `Label` pixels with literal controls. This passed on Windows x64 with GPU/Direct3D 12 and Compatibility/Direct3D 11 on an RTX 3090 Ti. Other hosts and release packages still need qualification under ADR 0021. See [coverage](../coverage/classes/OptimizedTranslation.md) for the accepted format and authoring adaptations.
 
 ## Decisions
 
