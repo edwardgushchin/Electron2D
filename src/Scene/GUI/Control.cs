@@ -477,14 +477,14 @@ public partial class Control : CanvasItem
         Reflow();
     }
 
-    /// <summary>Gets or sets the left anchor fraction.</summary>
-    public float AnchorLeft { get => GetAnchor(Side.Left); set => SetAnchor(Side.Left, value); }
-    /// <summary>Gets or sets the top anchor fraction.</summary>
-    public float AnchorTop { get => GetAnchor(Side.Top); set => SetAnchor(Side.Top, value); }
-    /// <summary>Gets or sets the right anchor fraction.</summary>
-    public float AnchorRight { get => GetAnchor(Side.Right); set => SetAnchor(Side.Right, value); }
-    /// <summary>Gets or sets the bottom anchor fraction.</summary>
-    public float AnchorBottom { get => GetAnchor(Side.Bottom); set => SetAnchor(Side.Bottom, value); }
+    /// <summary>Gets or sets the left anchor fraction, retaining offsets and pushing a crossed opposite anchor.</summary>
+    public float AnchorLeft { get => GetAnchor(Side.Left); set => SetAnchor(Side.Left, value, keepOffset: true); }
+    /// <summary>Gets or sets the top anchor fraction, retaining offsets and pushing a crossed opposite anchor.</summary>
+    public float AnchorTop { get => GetAnchor(Side.Top); set => SetAnchor(Side.Top, value, keepOffset: true); }
+    /// <summary>Gets or sets the right anchor fraction, retaining offsets and pushing a crossed opposite anchor.</summary>
+    public float AnchorRight { get => GetAnchor(Side.Right); set => SetAnchor(Side.Right, value, keepOffset: true); }
+    /// <summary>Gets or sets the bottom anchor fraction, retaining offsets and pushing a crossed opposite anchor.</summary>
+    public float AnchorBottom { get => GetAnchor(Side.Bottom); set => SetAnchor(Side.Bottom, value, keepOffset: true); }
     /// <summary>Gets or sets the left offset.</summary>
     public float OffsetLeft { get => GetOffset(Side.Left); set => SetOffset(Side.Left, value); }
     /// <summary>Gets or sets the top offset.</summary>
@@ -521,34 +521,47 @@ public partial class Control : CanvasItem
     /// <summary>Gets the anchor for a rectangle side.</summary>
     /// <param name="side">The side to query.</param>
     /// <returns>The fraction of the parent area's corresponding axis.</returns>
-    public float GetAnchor(Side side) { ThrowIfDisposed(); return _anchors[SideIndex(side)]; }
+    /// <exception cref="ArgumentOutOfRangeException">The side is undefined.</exception>
+    public float GetAnchor(Side side) { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _anchors[SideIndex(side)]; }
 
     /// <summary>Sets an anchor, optionally preserving its offset and moving the opposite anchor.</summary>
     /// <param name="side">The side to update.</param>
-    /// <param name="anchor">A finite fraction of the parent area.</param>
-    /// <param name="keepOffset">Keep the current offset instead of the current edge position.</param>
-    /// <param name="pushOppositeAnchor">Move the opposite anchor when the anchors cross.</param>
+    /// <param name="anchor">A finite fraction of the parent area, which may be outside zero to one.</param>
+    /// <param name="keepOffset">Keep offsets instead of preserving the affected edge coordinates.</param>
+    /// <param name="pushOppositeAnchor">Push a crossed opposite anchor; otherwise clamp the edited anchor to it.</param>
+    /// <remarks>Attached controls reflow immediately. Detached controls resolve the stored anchors when entering the tree.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The side is undefined, or an input or resulting layout is nonfinite.</exception>
     public void SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)
     {
         EnsureMutable(); EnsureFinite(anchor, nameof(anchor));
         var index = SideIndex(side);
         var opposite = (index + 2) % 4;
-        var area = GetParentAreaSize();
-        var range = index % 2 == 0 ? area.X : area.Y;
-        var previous = _offsets[index] + _anchors[index] * range;
-        var previousOpposite = _offsets[opposite] + _anchors[opposite] * range;
-        _anchors[index] = anchor;
-        if (index < 2 ? anchor > _anchors[opposite] : anchor < _anchors[opposite])
+        var parentRect = GetParentAnchorRect();
+        var range = index % 2 == 0 ? parentRect.Size.X : parentRect.Size.Y;
+        Span<float> anchors = stackalloc float[4];
+        Span<float> offsets = stackalloc float[4];
+        _anchors.AsSpan().CopyTo(anchors);
+        _offsets.AsSpan().CopyTo(offsets);
+        anchors[index] = anchor;
+        if (index < 2 ? anchor > anchors[opposite] : anchor < anchors[opposite])
         {
-            if (pushOppositeAnchor) _anchors[opposite] = anchor;
-            else _anchors[index] = _anchors[opposite];
+            if (pushOppositeAnchor) anchors[opposite] = anchor;
+            else anchors[index] = anchors[opposite];
         }
         if (!keepOffset)
         {
-            _offsets[index] = previous - _anchors[index] * range;
-            if (pushOppositeAnchor) _offsets[opposite] = previousOpposite - _anchors[opposite] * range;
+            offsets[index] = (_offsets[index] + _anchors[index] * range) - anchors[index] * range;
+            if (pushOppositeAnchor)
+                offsets[opposite] = (_offsets[opposite] + _anchors[opposite] * range) - anchors[opposite] * range;
+            EnsureFinite(offsets[index], nameof(anchor));
+            EnsureFinite(offsets[opposite], nameof(anchor));
         }
-        Reflow(); QueueRedraw();
+        var attached = IsInsideTree;
+        var rect = attached ? ResolveLayout(parentRect, anchors, offsets, nameof(anchor)) : default;
+        anchors.CopyTo(_anchors);
+        offsets.CopyTo(_offsets);
+        if (attached) ApplyLayout(rect);
+        QueueRedraw();
     }
 
     /// <summary>Arranges all four anchors in a standard layout preset.</summary>
@@ -624,18 +637,25 @@ public partial class Control : CanvasItem
     /// <summary>Gets the offset for a rectangle side.</summary>
     /// <param name="side">The side to query.</param>
     /// <returns>The offset in local canvas units.</returns>
-    public float GetOffset(Side side) { ThrowIfDisposed(); return _offsets[SideIndex(side)]; }
+    /// <exception cref="ArgumentOutOfRangeException">The side is undefined.</exception>
+    public float GetOffset(Side side) { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _offsets[SideIndex(side)]; }
 
     /// <summary>Sets the offset for a rectangle side and resolves the rectangle.</summary>
     /// <param name="side">The side to update.</param>
     /// <param name="offset">A finite local offset.</param>
+    /// <remarks>Reflows even while detached. An equal offset does not trigger a reflow.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The side is undefined, or an input or resulting layout is nonfinite.</exception>
     public void SetOffset(Side side, float offset)
     {
         EnsureMutable(); EnsureFinite(offset, nameof(offset));
         var index = SideIndex(side);
         if (_offsets[index] == offset) return;
+        Span<float> offsets = stackalloc float[4];
+        _offsets.AsSpan().CopyTo(offsets);
+        offsets[index] = offset;
+        var rect = ResolveLayout(GetParentAnchorRect(), _anchors, offsets, nameof(offset));
         _offsets[index] = offset;
-        Reflow();
+        ApplyLayout(rect);
     }
 
     /// <summary>Returns the direct parent when it is a Control.</summary>
@@ -807,13 +827,19 @@ public partial class Control : CanvasItem
         BeginEventEmission(_publisherMaximumSizeChanged.Handlers)?.Invoke();
     }
 
-    private void Reflow()
+    private void Reflow() => ApplyLayout(ResolveLayout(GetParentAnchorRect(), _anchors, _offsets));
+
+    private Rect2 ResolveLayout(Rect2 parentRect, ReadOnlySpan<float> anchors, ReadOnlySpan<float> offsets, string? parameter = null)
     {
-        var parentRect = GetParentAnchorRect();
         var area = parentRect.Size;
-        var position = new Vector2(_offsets[0] + _anchors[0] * area.X, _offsets[1] + _anchors[1] * area.Y);
-        var end = new Vector2(_offsets[2] + _anchors[2] * area.X, _offsets[3] + _anchors[3] * area.Y);
+        var position = new Vector2(offsets[0] + anchors[0] * area.X, offsets[1] + anchors[1] * area.Y);
+        var end = new Vector2(offsets[2] + anchors[2] * area.X, offsets[3] + anchors[3] * area.Y);
         var size = end - position;
+        if (parameter is not null)
+        {
+            EnsureFinite(position, parameter);
+            EnsureFinite(size, parameter);
+        }
         var minimum = GetCombinedMinimumSize();
         if (size.X < minimum.X)
         {
@@ -837,13 +863,34 @@ public partial class Control : CanvasItem
             position.Y += (size.Y - maximum.Y) * GrowthShift(_growVertical);
             size.Y = maximum.Y;
         }
-        if (position == _position && size == _size) return;
-        var sizeChanged = size != _size;
-        _position = position; _size = size;
-        NotifyLocalTransformChanged();
-        NotifyItemRectChanged(sizeChanged);
-        if (sizeChanged && IsInsideTree) DispatchNotification(NotificationResized);
+        if (parameter is not null)
+        {
+            EnsureFinite(position, parameter);
+            EnsureFinite(size, parameter);
+        }
+        return new(position, size);
     }
+
+    private void ApplyLayout(Rect2 rect)
+    {
+        if (rect.Position == _position && rect.Size == _size) return;
+        var sizeChanged = rect.Size != _size;
+        var notifySize = !LayoutEqualApprox(rect.Size, _size);
+        var notifyPosition = !LayoutEqualApprox(rect.Position, _position);
+        _position = rect.Position; _size = rect.Size;
+        NotifyLocalTransformChanged();
+        if (IsInsideTree && (notifySize || notifyPosition))
+        {
+            NotifyItemRectChanged(sizeChanged);
+            if (notifySize) DispatchNotification(NotificationResized);
+        }
+        else if (sizeChanged) QueueRedraw();
+    }
+
+    // Layout notifications use a separate tolerance so compensating offsets do not report floating-point noise.
+    private static bool LayoutEqualApprox(Vector2 value, Vector2 previous) =>
+        Mathf.IsEqualApprox(value.X, previous.X, 0.00001f * MathF.Max(1, MathF.Abs(value.X))) &&
+        Mathf.IsEqualApprox(value.Y, previous.Y, 0.00001f * MathF.Max(1, MathF.Abs(value.Y)));
 
     private static (float Left, float Top, float Right, float Bottom) GetPresetAnchors(LayoutPreset preset)
     {

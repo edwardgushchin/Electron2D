@@ -1616,6 +1616,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_SHADER") == "1"
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_HOST") == "1") { SubViewportTests.RunHost(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_ANCHORS") is { } anchorProfile)
+{
+    if (anchorProfile == "managed") ControlLayoutTests.Run();
+    else ControlAnchorRenderingTests.Run(anchorProfile);
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_OWNERSHIP") == "1")
 {
     SceneHierarchyTests.Run(); NodeReplacementTests.Run(); SubViewportTests.Run(); SubViewportContainerTests.Run();
