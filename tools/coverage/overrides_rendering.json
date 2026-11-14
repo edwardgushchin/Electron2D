@@ -6058,6 +6058,66 @@
   ],
   "statusGroups": [
     {
+      "state": "Excluded",
+      "reason": "ADRs 0004 and 0028: Camera3D and World3D supply the camera and scenario consumed by the 3D scene render and visibility pass. See [3D scene visibility](../index.md#3d-scene-visibility).",
+      "godot": [
+        "RenderingServer::method:viewport_attach_camera(RID:,RID:)",
+        "RenderingServer::method:viewport_set_scenario(RID:,RID:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004 and 0028: Occluder3D supplies indexed 3D triangles to scenario instances and the CPU raycast scene. See [3D scene visibility](../index.md#3d-scene-visibility).",
+      "godot": [
+        "RenderingServer::method:occluder_create()",
+        "RenderingServer::method:occluder_set_mesh(RID:,PackedVector3Array:,PackedInt32Array:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004 and 0028: enables and binds the per-viewport hierarchical depth buffer used to reject occluded 3D scenario instances. See [3D scene visibility](../index.md#3d-scene-visibility).",
+      "godot": [
+        "RenderingServer::method:viewport_set_use_occlusion_culling(RID:,bool:)",
+        "Viewport::property:use_occlusion_culling",
+        "ProjectSettings::property:rendering/occlusion_culling/use_occlusion_culling"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004 and 0028: global CPU ray budget sizes the per-viewport 3D occlusion depth buffer. See [3D scene visibility](../index.md#3d-scene-visibility).",
+      "godot": [
+        "RenderingServer::method:viewport_set_occlusion_rays_per_thread(int:)",
+        "ProjectSettings::property:rendering/occlusion_culling/occlusion_rays_per_thread"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004 and 0028: global quality for building the Embree BVHs used by 3D scenario occlusion. See [3D scene visibility](../index.md#3d-scene-visibility).",
+      "godot": [
+        "RenderingServer::method:viewport_set_occlusion_culling_build_quality(int:RenderingServer.ViewportOcclusionCullingBuildQuality)",
+        "RenderingServer::enum:ViewportOcclusionCullingBuildQuality",
+        "RenderingServer::enum_value:ViewportOcclusionCullingBuildQuality.VIEWPORT_OCCLUSION_BUILD_QUALITY_LOW",
+        "RenderingServer::enum_value:ViewportOcclusionCullingBuildQuality.VIEWPORT_OCCLUSION_BUILD_QUALITY_MEDIUM",
+        "RenderingServer::enum_value:ViewportOcclusionCullingBuildQuality.VIEWPORT_OCCLUSION_BUILD_QUALITY_HIGH",
+        "ProjectSettings::property:rendering/occlusion_culling/bvh_build_quality"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004 and 0028: jitter offsets samples in the 3D occlusion camera projection. See [3D scene visibility](../index.md#3d-scene-visibility).",
+      "godot": [
+        "ProjectSettings::property:rendering/occlusion_culling/jitter_projection"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004 and 0028: selects the 3D scene occlusion buffer debug texture. See [3D scene visibility](../index.md#3d-scene-visibility).",
+      "godot": [
+        "RenderingServer::enum_value:ViewportDebugDraw.VIEWPORT_DEBUG_DRAW_OCCLUDERS",
+        "Viewport::enum_value:DebugDraw.DEBUG_DRAW_OCCLUDERS"
+      ]
+    },
+    {
       "godot": [
         "RenderingServer::enum:Features",
         "RenderingServer::enum_value:Features.FEATURE_MULTITHREADED",
