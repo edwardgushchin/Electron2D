@@ -2550,3 +2550,5 @@ The retained [DisplayServer](classes/DisplayServer.md) includes owner-thread [Wi
 [Configured project loops](components/engine-runtime.md#custom-project-loop) use the existing Engine, MainLoop, Script, ProjectSettings, Window and RenderingServer types. The custom loop owns its callbacks and submits server canvas RIDs without creating a SceneTree.
 
 [Canvas redraw diagnostics](components/canvas-rendering.md#canvas-redraw-diagnostic) use the existing ProjectSettings, CanvasItem and RenderingServer types to highlight freshly recorded canvas command bounds.
+
+[DisplayServer.Icons.Windows.cs](../src/Servers/Display/DisplayServer.Icons.Windows.cs) extends the existing display and project-settings types with [Windows native icons](components/window-runtime.md#windows-native-icons).

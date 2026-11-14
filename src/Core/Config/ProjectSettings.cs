@@ -153,6 +153,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<string> ApplicationName { get; } =
         new("application/config/name", string.Empty);
 
+    /// <summary>Defines the native ICO file loaded when opening a Windows application window.</summary>
+    /// <value>application/config/windows_native_icon; empty initially.</value>
+    /// <remarks>The effective project path is read at startup and can refer to a mounted resource pack.</remarks>
+    public static ProjectSetting<string> WindowsNativeIcon { get; } =
+        new("application/config/windows_native_icon", string.Empty);
+
     /// <summary>Defines the initial SceneTree policy for root window close requests.</summary>
     /// <value>application/config/auto_accept_quit; true initially. Sampled before scene activation.</value>
     public static ProjectSetting<bool> AutoAcceptQuit { get; } = new("application/config/auto_accept_quit", true);

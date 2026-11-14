@@ -646,6 +646,7 @@ public sealed partial class DisplayServer : ElectronObject
                 _mouseInputRegion?.Dispose(); _mouseInputRegion = null; _mouseInputPolygon = [];
                 _pendingDroppedFiles = null;
                 _window.Dispose();
+                ReleaseNativeWindowIcon();
                 base.Dispose(disposing);
                 if (retirementFailure is not null) throw retirementFailure;
                 return;
@@ -672,6 +673,8 @@ public sealed partial class DisplayServer : ElectronObject
             _waylandInput?.Dispose();
             _waylandInput = null;
             _window.Dispose();
+            ReleaseNativeWindowIcon();
+            _defaultNativeIcon = null;
             RemoveGTKTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
             SDL.QuitSubSystem(SDL.InitFlags.Gamepad);
             SDL.QuitSubSystem(SDL.InitFlags.Video);

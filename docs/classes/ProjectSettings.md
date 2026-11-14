@@ -131,6 +131,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; }`](#moviewriterogvkeyframeinterval) | Maximum keyframe spacing, 64 initially; 1..1024 frames. |
 | [`public static ProjectSetting<Color> DebugPathsColor { get; }`](#diagnostics-debugpathscolor) | Defines the color of path curves and tangent markers when scene path diagnostics are enabled. |
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
+| [`public static ProjectSetting<string> WindowsNativeIcon { get; }`](../components/window-runtime.md#windows-native-icons) | Defines the Windows ICO path loaded before scene entry. Defaults to empty. |
 | [`public static ProjectSetting<bool> AutoAcceptQuit { get; }`](#autoacceptquit) | application/config/auto_accept_quit; true. |
 | [`public static ProjectSetting<bool> QuitOnGoBack { get; }`](#quitongoback) | application/config/quit_on_go_back; true. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |

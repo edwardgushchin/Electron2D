@@ -42,6 +42,8 @@ Own the native display connection, borrowed operating-system display/window and 
 
 ## Public surface
 
+The display owns [Windows native ICO publication](../components/window-runtime.md#windows-native-icons) and its native handles. Engine samples the corresponding typed project path before scene activation.
+
 [DisplayWindowEvents](../classes/DisplayWindowEvents.md), obtained by static `DisplayServer.GetWindowEvents`, owns typed per-native-window subscriptions and retirement. Its parsed-input phase precedes scene delivery; native notifications follow existing window callbacks. See [the connected component](../components/display-server.md#per-window-typed-events).
 
 [`DisplayServer`](../classes/DisplayServer.md) provides process singleton access, main-window and display queries, native light/dark-theme queries, [borrowed native display/window identities](../classes/DisplayServer.HandleType.md) through `WindowGetNativeHandle`, typed native notifications including `SystemThemeChanged`, `WindowDpiChanged`, and complete client-rectangle changes through `WindowRectChanged`, clipboard and IME state, pointer control, basic native dialogs, and deterministic disposal. The handle query is implemented in [`DisplayServer.Windows.cs`](../../src/Servers/Display/DisplayServer.Windows.cs) over SDL window properties. See the complete public member reference and [coverage inventory](../coverage/classes/DisplayServer.md).

@@ -578,6 +578,11 @@
       "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
     },
     {
+      "electron2d": "property:Electron2D.ProjectSettings.WindowsNativeIcon()",
+      "godot": "ProjectSettings::property:application/config/windows_native_icon",
+      "reason": "ADRs 0015/0019/0040: permanent typed startup path with active feature overrides. The Windows display loads it before scene entry using the native icon path."
+    },
+    {
       "electron2d": "property:Electron2D.ProjectSettings.ApplicationVersion()",
       "godot": "ProjectSettings::property:application/config/version",
       "reason": "Typed key identity for upstream setting; Get/Set access values (ADR 0019)."
@@ -1807,6 +1812,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0015/0019/0040: the Windows windowed host samples the effective typed ICO path before scene entry. Native root and child windows receive distinct small and large icons. The project definition defaults to empty and retains ordinary and mounted resource paths.",
+      "godot": ["ProjectSettings::property:application/config/windows_native_icon"]
+    },
     {"godot": ["ProjectSettings::property:compression/formats/gzip/compression_level", "ProjectSettings::property:compression/formats/zlib/compression_level"], "state": "Implemented", "reason": "ADRs 0019/0020: exact integer levels -1 through 9 feed the existing BCL encoders. FileAccess and ByteBuffer share the settings; compressed resource/scene saves and dependency rewrites use the zlib level. Readers retain existing formats and ignore encoder settings. See docs/components/file-access.md#compression-levels."},
     {"godot": ["ProjectSettings::property:compression/formats/zstd/compression_level", "ProjectSettings::property:compression/formats/zstd/long_distance_matching", "ProjectSettings::property:compression/formats/zstd/window_log_size"], "state": "Implemented", "reason": "ADRs 0019/0020: typed project settings feed the production Zstandard context and window validation for FileAccess and ByteBuffer. The independent 64 KiB E2DCMP blocks remain interoperable. Native Linux x64 checks cover levels, bounded windows, allocation failure and public file/buffer round trips. See docs/components/file-access.md#compression-levels."},
     {

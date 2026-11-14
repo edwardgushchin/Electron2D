@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:set_native_icon(String:)",
+      "electron2d": "method:Electron2D.DisplayServer.SetNativeIcon(System.String)",
+      "reason": "ADRs 0019/0040: Win32 publishes independently decoded small and large icons from an ordinary or packed ICO file."
+    },
+    {
       "godot": "DisplayServer::method:window_can_draw(int:)",
       "electron2d": "method:Electron2D.DisplayServer.WindowCanDraw(System.Int32)",
       "reason": "ADRs 0028/0040/0095: retained native-window identity and automatic renderer eligibility; shown and minimized state come from SDL."
@@ -1328,8 +1333,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First platform-native icon resource packaging and host integration; Image icon is already separate.",
+      "state": "Partial",
+      "reason": "ADRs 0019/0040: Windows selects size-specific ICO entries for the current DPI and publishes owned small/large icons to live and future windows, including project startup and packed resources. Explicit image overrides keep their precedence. The remaining target requires a Cocoa NSImage ICNS loader, application-icon lifetime and native macOS verification.",
       "godot": [
         "DisplayServer::method:set_native_icon(String:)"
       ]

@@ -132,6 +132,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static Key KeyboardGetLabelFromPhysical(Key physical)`](#method-keyboardgetlabelfromphysical) | Maps a physical key to its localized label in the current keyboard layout. |
 | [`public static void WindowSetIcon(Image image, int windowId = MainWindowId)`](#method-windowseticon) | Sets an icon specifically for the main window. |
 | [`public static void SetIcon(Image image)`](#method-seticon) | Sets the application-default icon while the main window has no override. |
+| [`public static void SetNativeIcon(string filename)`](../components/window-runtime.md#windows-native-icons) | Loads the application-default ICO file on Windows with independent small and large window icons. |
 | [`public static MouseMode MouseGetMode()`](#method-mousegetmode) | Gets the last successfully requested mouse mode. |
 | [`public static void MouseSetMode(MouseMode mode)`](#method-mousesetmode) | Requests cursor visibility, capture, and confinement as one mode. |
 | [`public static Vector2i MouseGetPosition()`](#method-mousegetposition) | Gets desktop pointer coordinates or the window-relative position on Wayland. |

@@ -56,6 +56,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WebPCompressionMethod, isBasic: false);
         RegisterInternal(WebPLosslessCompressionFactor, isBasic: false);
         RegisterInternal(ApplicationName, isBasic: true);
+        RegisterInternal(WindowsNativeIcon, isBasic: true);
         RegisterInternal(MainScene, isBasic: true);
         RegisterInternal(MainLoopType, isBasic: false);
         RegisterInternal(AutoAcceptQuit, isBasic: true);
@@ -1267,6 +1268,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MovieWriterOGVEncodingSpeed) ||
         ReferenceEquals(setting, MovieWriterOGVKeyframeInterval) ||
         ReferenceEquals(setting, ApplicationName) ||
+        ReferenceEquals(setting, WindowsNativeIcon) ||
         ReferenceEquals(setting, MainScene) ||
         ReferenceEquals(setting, MainLoopType) ||
         ReferenceEquals(setting, AutoAcceptQuit) ||

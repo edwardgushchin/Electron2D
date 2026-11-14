@@ -283,6 +283,16 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void SetIcon(Image image) => RequireService().SetIconCore(image);
 
+    /// <summary>Loads a native icon for current and future native windows without an explicit icon.</summary>
+    /// <param name="filename">The path to a Windows ICO file, including a project resource path.</param>
+    /// <remarks>Windows chooses independent small and large images from the icon. The display owns both native handles and retains the icon data for future children. Check <see cref="Feature.NativeIcon"/> for host support.</remarks>
+    /// <exception cref="ArgumentNullException">The filename is null.</exception>
+    /// <exception cref="ArgumentException">The filename is empty or malformed.</exception>
+    /// <exception cref="IOException">The file cannot be read or is not a valid native icon.</exception>
+    /// <exception cref="NotSupportedException">The active display cannot load native icon files.</exception>
+    /// <exception cref="InvalidOperationException">The display is inactive or the caller is off-owner.</exception>
+    public static void SetNativeIcon(string filename) => RequireService().SetNativeIconCore(filename);
+
     /// <summary>Gets the current mouse mode.</summary>
     /// <returns>The mode owned by this display server.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

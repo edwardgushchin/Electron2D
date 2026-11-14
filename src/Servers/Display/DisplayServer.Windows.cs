@@ -420,6 +420,8 @@ public sealed partial class DisplayServer
         };
         if (!success)
             throw SDLFailure("set window mode");
+        if (mode is WindowMode.Windowed or WindowMode.Maximized && _nativeIcon.Small != 0)
+            PublishWindowsIcon(WindowGetNativeHandleCore(HandleType.WindowHandle), _nativeIcon);
     }
 
     private bool SetExclusiveFullscreen(nint window)
