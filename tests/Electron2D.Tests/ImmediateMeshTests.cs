@@ -10,12 +10,12 @@ internal static class ImmediateMeshTests
         Reject<InvalidOperationException>(() => mesh.SurfaceSetColor(Colors.Red));
         Reject<InvalidOperationException>(() => mesh.SurfaceSetUV(Vector2.Zero));
         Reject<InvalidOperationException>(mesh.SurfaceEnd);
-        Reject<ArgumentOutOfRangeException>(() => mesh.SurfaceBegin((Mesh.PrimitiveType)5));
+        Reject<ArgumentOutOfRangeException>(() => mesh.SurfaceBegin((MeshPrimitiveType)5));
         using var material = new CanvasItemMaterial(); material.Dispose();
-        Reject<ObjectDisposedException>(() => mesh.SurfaceBegin(Mesh.PrimitiveType.Points, material));
+        Reject<ObjectDisposedException>(() => mesh.SurfaceBegin(MeshPrimitiveType.Points, material));
         var changed = 0; mesh.Changed += _ => changed++;
-        mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles);
-        Reject<InvalidOperationException>(() => mesh.SurfaceBegin(Mesh.PrimitiveType.Points));
+        mesh.SurfaceBegin(MeshPrimitiveType.Triangles);
+        Reject<InvalidOperationException>(() => mesh.SurfaceBegin(MeshPrimitiveType.Points));
         Reject<ArgumentException>(mesh.SurfaceEnd);
         Reject<ArgumentException>(() => mesh.SurfaceAddVertex2D(new(float.NaN, 0)));
         Reject<ArgumentException>(() => mesh.SurfaceSetColor(new(float.NaN, 0, 0)));
@@ -32,29 +32,29 @@ internal static class ImmediateMeshTests
         Check(data.Colors[0] == new Color(1, 0, 127 / 255f) && data.Colors[1] == data.Colors[0] && data.Colors[2] == Colors.Blue, "First color backfills; later colors capture and quantize.");
         Check(data.UVs[0] == new Vector2(.25f, .75f) && data.UVs[1] == data.UVs[0] && data.UVs[2] == new Vector2(1, 0), "First UV backfills; subsequent UV capture.");
         data.Vertices[0] = Vector2.One; Check(mesh.SurfaceGetArrays(0).Vertices[0] == Vector2.Zero, "Returned arrays are independent.");
-        mesh.SurfaceBegin(Mesh.PrimitiveType.Points); mesh.SurfaceAddVertex2D(Vector2.One); mesh.SurfaceEnd();
+        mesh.SurfaceBegin(MeshPrimitiveType.Points); mesh.SurfaceAddVertex2D(Vector2.One); mesh.SurfaceEnd();
         Check(mesh.SurfaceGetArrays(1).Colors.Length == 0 && mesh.SurfaceGetArrays(1).UVs.Length == 0 && mesh.SurfaceGetFormat(1) == (Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Use2DVertices), "Each surface resets channel activation.");
-        mesh.SurfaceBegin(Mesh.PrimitiveType.Lines); mesh.SurfaceAddVertex2D(Vector2.Zero);
+        mesh.SurfaceBegin(MeshPrimitiveType.Lines); mesh.SurfaceAddVertex2D(Vector2.Zero);
         using var duplicate = (ImmediateMesh)mesh.Duplicate();
         Check(duplicate.GetSurfaceCount() == 2, "Duplicates copy completed surfaces without a draft.");
-        duplicate.SurfaceBegin(Mesh.PrimitiveType.Points); duplicate.SurfaceAddVertex2D(Vector2.One); duplicate.SurfaceEnd();
+        duplicate.SurfaceBegin(MeshPrimitiveType.Points); duplicate.SurfaceAddVertex2D(Vector2.One); duplicate.SurfaceEnd();
         mesh.ClearSurfaces(); Reject<InvalidOperationException>(mesh.SurfaceEnd);
         Check(mesh.GetSurfaceCount() == 0 && duplicate.GetSurfaceCount() == 3 && changed == 3, "Clear cancels draft, emits once and preserves copies.");
         VerifyTopologies(mesh); VerifyFailures(mesh); VerifyGraph(); VerifyReplay();
         var rid = mesh.GetRID(); Check(rid == mesh.GetRID() && ReferenceEquals(RenderingMeshRegistry.Resolve(rid), mesh), "Stable borrowed mesh identity.");
         mesh.Dispose(); Reject<ArgumentException>(() => RenderingMeshRegistry.Resolve(rid));
-        Reject<ObjectDisposedException>(() => mesh.SurfaceBegin(Mesh.PrimitiveType.Points)); Reject<ObjectDisposedException>(mesh.ClearSurfaces);
+        Reject<ObjectDisposedException>(() => mesh.SurfaceBegin(MeshPrimitiveType.Points)); Reject<ObjectDisposedException>(mesh.ClearSurfaces);
         Reject<ObjectDisposedException>(() => mesh.SurfaceSetColor(Colors.Red)); Reject<ObjectDisposedException>(() => mesh.SurfaceSetUV(Vector2.Zero));
         Reject<ObjectDisposedException>(() => mesh.SurfaceAddVertex2D(Vector2.Zero)); Reject<ObjectDisposedException>(mesh.SurfaceEnd);
         Console.WriteLine("ImmediateMesh drafts, attribute capture, topology, rollback, callbacks, copies, lifetime and warmed replay passed.");
     }
     private static void VerifyTopologies(ImmediateMesh mesh)
     {
-        foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>())
+        foreach (var primitive in Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max))
         {
             mesh.SurfaceBegin(primitive);
             mesh.SurfaceAddVertex2D(Vector2.Zero); mesh.SurfaceAddVertex2D(new(20, 0));
-            if (primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip) mesh.SurfaceAddVertex2D(new(0, 20));
+            if (primitive is MeshPrimitiveType.Triangles or MeshPrimitiveType.TriangleStrip) mesh.SurfaceAddVertex2D(new(0, 20));
             mesh.SurfaceEnd();
             Check(mesh.SurfaceGetPrimitiveType((int)primitive) == primitive, "Every topology preserves ordering.");
         }
@@ -65,14 +65,14 @@ internal static class ImmediateMeshTests
     private static void VerifyFailures(ImmediateMesh mesh)
     {
         using var material = new CanvasItemMaterial();
-        mesh.SurfaceBegin(Mesh.PrimitiveType.Points, material); mesh.SurfaceAddVertex2D(Vector2.Zero); material.Dispose();
+        mesh.SurfaceBegin(MeshPrimitiveType.Points, material); mesh.SurfaceAddVertex2D(Vector2.Zero); material.Dispose();
         Reject<ObjectDisposedException>(mesh.SurfaceEnd); Check(mesh.GetSurfaceCount() == 5, "Disposed draft material does not commit.");
         mesh.ClearSurfaces();
         Action<Resource> fail = _ => throw new ApplicationException("Changed listener failure"); mesh.Changed += fail;
-        mesh.SurfaceBegin(Mesh.PrimitiveType.Points); mesh.SurfaceAddVertex2D(Vector2.Zero);
+        mesh.SurfaceBegin(MeshPrimitiveType.Points); mesh.SurfaceAddVertex2D(Vector2.Zero);
         Reject<ApplicationException>(mesh.SurfaceEnd); Check(mesh.GetSurfaceCount() == 1, "Listener failure leaves committed geometry.");
-        mesh.SurfaceBegin(Mesh.PrimitiveType.Points); Reject<ApplicationException>(mesh.ClearSurfaces);
-        mesh.Changed -= fail; mesh.SurfaceBegin(Mesh.PrimitiveType.Points); mesh.SurfaceAddVertex2D(Vector2.Zero); mesh.SurfaceEnd();
+        mesh.SurfaceBegin(MeshPrimitiveType.Points); Reject<ApplicationException>(mesh.ClearSurfaces);
+        mesh.Changed -= fail; mesh.SurfaceBegin(MeshPrimitiveType.Points); mesh.SurfaceAddVertex2D(Vector2.Zero); mesh.SurfaceEnd();
         using var live = new CanvasItemMaterial(); mesh.Changed += fail;
         Reject<ApplicationException>(() => mesh.SurfaceSetMaterial(0, live)); Check(ReferenceEquals(mesh.SurfaceGetMaterial(0), live), "Material replacement commits before callback failure.");
         mesh.Changed -= fail;
@@ -116,7 +116,7 @@ internal static class ImmediateMeshTests
     }
     internal static void Triangle(ImmediateMesh mesh, Material? material = null)
     {
-        mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles, material); mesh.SurfaceAddVertex2D(Vector2.Zero);
+        mesh.SurfaceBegin(MeshPrimitiveType.Triangles, material); mesh.SurfaceAddVertex2D(Vector2.Zero);
         mesh.SurfaceAddVertex2D(new(20, 0)); mesh.SurfaceAddVertex2D(new(0, 20)); mesh.SurfaceEnd();
     }
     private sealed class DrawNode(Mesh mesh) : Entity

@@ -14,7 +14,7 @@ internal static partial class MultiMeshGPUTests
         {
             var data = name.EndsWith("LOD", StringComparison.Ordinal) ? MeshLODTests.Data() : MeshTests.Quad(Colors.White);
             if (name == "skin") { data.Bones = new int[data.VertexCount * 4]; data.Weights = new float[data.VertexCount * 4]; for (var i = 0; i < data.VertexCount; i++) data.Weights[i * 4] = 1; }
-            var mesh = new ArrayMesh(); resources.Add(mesh); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, data, lods: name.EndsWith("LOD", StringComparison.Ordinal) ? MeshLODTests.Levels() : null);
+            var mesh = new ArrayMesh(); resources.Add(mesh); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, data, lods: name.EndsWith("LOD", StringComparison.Ordinal) ? MeshLODTests.Levels() : null);
             ShaderMaterial? material = null;
             if (name is "custom" or "both" or "shader snap") { using var module = typeof(MultiMeshGPUTests).Assembly.GetManifestResourceStream("TestShaders.InstanceCustom.spv")!; using var bytes = new MemoryStream(); module.CopyTo(bytes); var shader = Shader.CreateFromSPIRV(bytes.ToArray()); resources.Add(shader); material = new() { Shader = shader }; resources.Add(material); }
             var source = new MultiMesh { Mesh = mesh, UseColors = name != "plain", UseCustomData = name is "custom" or "both" or "shader snap", InstanceCount = 2, CustomAABB = new(0, 0, 128, 96) }; resources.Add(source);

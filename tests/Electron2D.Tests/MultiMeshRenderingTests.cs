@@ -12,7 +12,7 @@ internal static class MultiMeshRenderingTests
     }
     private static void Pixels(string method)
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var resource = new MultiMesh { Mesh = mesh, UseColors = true, UseCustomData = true, InstanceCount = 2 };
         resource.SetInstanceTransform2D(0, new Transform(0, new(10, 10))); resource.SetInstanceTransform2D(1, new Transform(0, new(40, 10)));
         resource.SetInstanceColor(0, Colors.Red); resource.SetInstanceColor(1, Colors.Green); resource.SetInstanceCustomData(0, Colors.Blue); resource.SetInstanceCustomData(1, Colors.Yellow);
@@ -25,7 +25,7 @@ internal static class MultiMeshRenderingTests
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
             owned = RenderingServer.MultiMeshCreate(); RenderingServer.MultiMeshAllocateData(owned, 1, useColors: true, useCustomData: true); RenderingServer.MultiMeshSetMesh(owned, mesh.GetRID());
-            var ownedMesh = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(ownedMesh, Mesh.PrimitiveType.Triangles, MeshTests.Quad()); RenderingServer.MultiMeshSetMesh(owned, ownedMesh);
+            var ownedMesh = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(ownedMesh, MeshPrimitiveType.Triangles, MeshTests.Quad()); RenderingServer.MultiMeshSetMesh(owned, ownedMesh);
             Check(RenderingServer.MultiMeshGetMesh(owned) == ownedMesh, "Owned child mesh identity remains canonical through instance queries."); RenderingServer.MultiMeshSetMesh(owned, mesh.GetRID()); RenderingServer.FreeRID(ownedMesh);
             RenderingServer.MultiMeshInstanceSetTransform2D(owned, 0, new Transform(0, new(70, 10))); RenderingServer.MultiMeshInstanceSetColor(owned, 0, Colors.Blue);
             Check(RenderingServer.MultiMeshGetInstanceCount(owned) == 1 && RenderingServer.MultiMeshGetBuffer(owned).Length == 16 && RenderingServer.MultiMeshGetMesh(owned) == mesh.GetRID(), "Owned server producer/read path.");
@@ -92,7 +92,7 @@ internal static class MultiMeshRenderingTests
     }
     private static void Warm(string method)
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.White));
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.White));
         using var resource = new MultiMesh { Mesh = mesh, UseColors = true, InstanceCount = 256 };
         for (var i = 0; i < 256; i++) { resource.SetInstanceTransform2D(i, new Transform(0, new((i % 16) * 12, i / 16 * 6))); resource.SetInstanceColor(i, Colors.Red); }
         var window = new Window { Size = new(240, 120) }; var node = new MultiMeshInstance { MultiMesh = resource }; window.AddChild(node);
@@ -118,7 +118,7 @@ internal static class MultiMeshRenderingTests
     {
         var settings = ProjectSettings.Service; var old = ProjectSettings.Get(ProjectSettings.PhysicsInterpolation); var fps = Engine.MaxFPS; var ticks = Engine.PhysicsTicksPerSecond;
         ProjectSettings.Set(ProjectSettings.PhysicsInterpolation, true); Engine.MaxFPS = 120; Engine.PhysicsTicksPerSecond = 30;
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, new(6, 0), new(0, 6)], Colors = [Colors.Red, Colors.Red, Colors.Red] });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new() { Vertices = [Vector2.Zero, new(6, 0), new(0, 6)], Colors = [Colors.Red, Colors.Red, Colors.Red] });
         using var resource = new MultiMesh { Mesh = mesh, InstanceCount = 1 }; resource.SetInstanceTransform2D(0, new Transform(0, new(10, 40)));
         var window = new Window { Size = new(240, 120) }; window.AddChild(new MultiMeshInstance { MultiMesh = resource }); var mover = new Mover(resource); window.AddChild(mover);
         var frames = 0; var sampled = 0; ulong firstTick = 0;

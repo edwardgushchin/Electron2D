@@ -14,11 +14,11 @@ internal static partial class GraphChecks
         using (var mesh = new ArrayMesh())
         using (var emitter = new VisualShaderNodeParticleMeshEmitter { Mesh = mesh })
         {
-            var changes = 0; emitter.Changed += _ => changes++; mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.Zero] });
+            var changes = 0; emitter.Changed += _ => changes++; mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [Vector2.Zero] });
             Check(changes == 1, "A borrowed mesh change invalidates its graph definition.");
             using var shallow = (VisualShaderNodeParticleMeshEmitter)emitter.Duplicate(); using var deep = (VisualShaderNodeParticleMeshEmitter)emitter.Duplicate(true);
             Check(ReferenceEquals(shallow.Mesh, mesh) && !ReferenceEquals(deep.Mesh, mesh), "Mesh duplication follows the resource graph ownership policy.");
-            emitter.Mesh = null; mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, new() { Vertices = [Vector2.One] }); Check(changes == 2, "Rebinding detaches old mesh notifications.");
+            emitter.Mesh = null; mesh.AddSurfaceFromArrays(MeshPrimitiveType.Points, new() { Vertices = [Vector2.One] }); Check(changes == 2, "Rebinding detaches old mesh notifications.");
             Reject<ArgumentOutOfRangeException>(() => emitter.SurfaceIndex = -1);
         }
         using var graph = new V(); Shader shader = graph;

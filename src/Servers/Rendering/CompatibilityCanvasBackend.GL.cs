@@ -58,9 +58,9 @@ internal sealed partial class CompatibilityCanvasBackend
         _lineDrawArrays = (delegate* unmanaged<uint, int, int, void>)LineGLFunction("glDrawArrays");
     }
 
-    private unsafe int DrawGLAttributeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    private unsafe int DrawGLAttributeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, MeshPrimitiveType primitive, bool snap)
     {
-        var connected = primitive == Mesh.PrimitiveType.LineStrip; var count = 0;
+        var connected = primitive == MeshPrimitiveType.LineStrip; var count = 0;
         if (_attributePoints.Length < vertices.Length) Array.Resize(ref _attributePoints, vertices.Length);
         var previous = default(SDL.FPoint); var previousSource = default(SDL.FPoint);
         for (var i = 0; i < vertices.Length; i++)

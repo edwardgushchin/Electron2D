@@ -25,13 +25,13 @@ internal static class MeshCustomNativeTests
     private static void Retained(string language, string backend = "gpu")
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); using var shader = backend == "gpu" ? Shader(language) : null; using Material material = shader is null ? new CanvasItemMaterial() : new ShaderMaterial { Shader = shader };
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data()); mesh.SurfaceSetMaterial(0, material); using var floats = new ArrayMesh(); floats.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, Data(4)); floats.SurfaceSetMaterial(0, material);
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data()); mesh.SurfaceSetMaterial(0, material); using var floats = new ArrayMesh(); floats.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, Data(4)); floats.SurfaceSetMaterial(0, material);
         using var builder = new SurfaceTool(); builder.CreateFromArrays(Data()); builder.Index(); builder.GenerateNormals(); builder.GenerateTangents(); builder.SetMaterial(material); using var authored = builder.Commit(); using var custom = new Custom(material);
         using var skin = new ArrayMesh(); var skinnedData = Data(4); skinnedData.Bones = new int[32]; skinnedData.Weights = new float[32]; for (var i = 0; i < 4; i++) { skinnedData.Bones[i * 8 + 5] = 5; skinnedData.Weights[i * 8 + 5] = 1; }
-        skin.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, skinnedData, flags: Mesh.ArrayFormat.Use8BoneWeights); skin.SurfaceSetMaterial(0, material);
-        using var strip = new ArrayMesh(); var stripData = Data(); stripData.Indices = [0, 1, 3, 2]; strip.AddSurfaceFromArrays(Mesh.PrimitiveType.TriangleStrip, stripData); strip.SurfaceSetMaterial(0, material);
-        using var lines = new ArrayMesh(); var lineData = Data(4); lineData.Indices = [0, 1, 2, 3]; lines.AddSurfaceFromArrays(Mesh.PrimitiveType.Lines, lineData); lines.SurfaceSetMaterial(0, material);
-        using var points = new ArrayMesh(); var pointData = Data(); pointData.Indices = []; points.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, pointData); points.SurfaceSetMaterial(0, material);
+        skin.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, skinnedData, flags: Mesh.ArrayFormat.Use8BoneWeights); skin.SurfaceSetMaterial(0, material);
+        using var strip = new ArrayMesh(); var stripData = Data(); stripData.Indices = [0, 1, 3, 2]; strip.AddSurfaceFromArrays(MeshPrimitiveType.TriangleStrip, stripData); strip.SurfaceSetMaterial(0, material);
+        using var lines = new ArrayMesh(); var lineData = Data(4); lineData.Indices = [0, 1, 2, 3]; lines.AddSurfaceFromArrays(MeshPrimitiveType.Lines, lineData); lines.SurfaceSetMaterial(0, material);
+        using var points = new ArrayMesh(); var pointData = Data(); pointData.Indices = []; points.AddSurfaceFromArrays(MeshPrimitiveType.Points, pointData); points.SurfaceSetMaterial(0, material);
         using var instances = new MultiMesh { Mesh = floats, InstanceCount = 1 }; instances.SetInstanceTransform2D(0, Transform.Identity);
         using var window = new Window { Size = new(256, 64), Visible = true };
         window.AddChild(new MeshInstance { Name = "CustomPath1", Mesh = mesh, Position = new(4, 4) }); window.AddChild(new MeshInstance { Name = "CustomPath2", Mesh = floats, Position = new(40, 4) }); window.AddChild(new MeshInstance { Name = "CustomPath3", Mesh = authored, Position = new(76, 4) }); window.AddChild(new MeshInstance { Name = "CustomPath4", Mesh = custom, Position = new(112, 4) }); window.AddChild(new MultiMeshInstance { Name = "CustomPath5", MultiMesh = instances, Position = new(148, 4) }); var skinned = new MeshInstance { Name = "CustomPath6", Mesh = skin, Position = new(184, 4) }; window.AddChild(skinned);
@@ -62,7 +62,7 @@ internal static class MeshCustomNativeTests
         protected override MeshSurfaceData OnSurfaceGetArrays(int surfaceIndex) => _data;
         protected override int OnSurfaceGetArrayLen(int surfaceIndex) => 4;
         protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => 6;
-        protected override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => PrimitiveType.Triangles;
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => MeshPrimitiveType.Triangles;
         protected override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.TexUV | ArrayFormat.Index | ArrayFormat.Use2DVertices | MeshCustomCodec.Channels(_data);
         protected override Material? OnSurfaceGetMaterial(int surfaceIndex) => material;
         protected override void OnSurfaceSetMaterial(int surfaceIndex, Material? value) { material = value!; EmitChanged(); }

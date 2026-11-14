@@ -49,7 +49,7 @@ internal static partial class PhysicsPipelinePerformance
                 var vertices = new Vector2[9]; var indices = new int[24];
                 for (var i = 0; i < 8; i++)
                 { vertices[i + 1] = Vector2.FromAngle(i * Mathf.Tau / 8); indices[i * 3 + 1] = i + 1; indices[i * 3 + 2] = (i + 1) % 8 + 1; }
-                _mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = vertices, Indices = indices });
+                _mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = vertices, Indices = indices });
                 _instances.Mesh = _mesh; _instances.InstanceCount = count;
                 _instances.CustomAABB = new(0, 0, 1152 * _scale, (bottom - 190 + 24) * _scale);
                 Window.AddChild(new MultiMeshInstance { Name = "SceneInstances", MultiMesh = _instances, Position = new(32, 64) });

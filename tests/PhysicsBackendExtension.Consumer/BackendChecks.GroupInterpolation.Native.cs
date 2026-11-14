@@ -14,7 +14,7 @@ public static partial class BackendChecks
         {
             using var world = new World(backend); using var shape = new CircleShape { Radius = 2 };
             using var image = Image.CreateEmpty(8, 8, false, Image.Format.Rgba8); image.Fill(Colors.White); using var texture = ImageTexture.CreateFromImage(image);
-            using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(-3, -3), new(3, -3), new(3, 3), new(-3, 3)], Indices = [0, 1, 2, 0, 2, 3] });
+            using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = [new(-3, -3), new(3, -3), new(3, 3), new(-3, 3)], Indices = [0, 1, 2, 0, 2, 3] });
             using var instances = new MultiMesh { Mesh = mesh, InstanceCount = 1 };
             using var window = new Window { Size = new(128, 80), World = world };
             var writer = new NativeTransformWriter { ProcessThreadGroup = Node.ProcessThreadGroupMode.SubThread };

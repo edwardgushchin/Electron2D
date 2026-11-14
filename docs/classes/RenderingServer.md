@@ -356,7 +356,7 @@ Retained screen regions now sample the same actual render transforms, layer/mask
 
 ## Owned mesh identities
 
-MeshCreate returns an owned empty ArrayMesh identity. MeshAddSurfaceFromArrays, MeshClear, MeshSurfaceRemove, MeshSurfaceUpdateVertexRegion/AttributeRegion and MeshSurfaceSetMaterial require this renderer's ownership before mutation. Resource-owned Mesh.GetRID is borrowed: getters and drawing resolve it, mutations/free reject it. MeshGetSurfaceCount, MeshSurfaceGetArrays, MeshSurfaceGetFormat/PrimitiveType/ArrayLen/ArrayIndexLen and MeshSurfaceGetMaterial expose typed current fields; queries return caller-owned arrays or borrowed materials. Packed stride helpers report eight-byte positions and present four-byte color and separate eight-byte primary/secondary UV attributes. Owned identities expire at FreeRID/shutdown; mesh cleanup and texture/backend cleanup are attempted separately. Further raw surface/deformation/LOD/extra-channel data remains Partial with exact dependencies. [Mesh component](../components/meshes.md) records runtime and current limits.
+MeshCreate returns an owned empty ArrayMesh identity. Surface authoring and queries use the same [MeshPrimitiveType](MeshPrimitiveType.md) as Mesh resources. Max is a bound and cannot be submitted. MeshAddSurfaceFromArrays, MeshClear, MeshSurfaceRemove, MeshSurfaceUpdateVertexRegion/AttributeRegion and MeshSurfaceSetMaterial require this renderer's ownership before mutation. Resource-owned Mesh.GetRID is borrowed: getters and drawing resolve it, mutations/free reject it. MeshGetSurfaceCount, MeshSurfaceGetArrays, MeshSurfaceGetFormat/PrimitiveType/ArrayLen/ArrayIndexLen and MeshSurfaceGetMaterial expose typed current fields; queries return caller-owned arrays or borrowed materials. Packed stride helpers report eight-byte positions and present four-byte color and separate eight-byte primary/secondary UV attributes. Owned identities expire at FreeRID/shutdown; mesh cleanup and texture/backend cleanup are attempted separately. Further raw surface/deformation/LOD/extra-channel data remains Partial with exact dependencies. [Mesh component](../components/meshes.md) records runtime and current limits.
 
 ## Mesh methods
 
@@ -364,7 +364,7 @@ All methods require a live object; RenderingServer operations require the render
 
 | Complete signature | Contract |
 | --- | --- |
-| `public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)` | Adds copied typed surface channels to an owned mesh. |
+| `public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null)` | Adds copied typed surface channels to an owned mesh. |
 | `public static System.Void MeshClear(Electron2D.RID mesh)` | Removes every surface from an owned mesh. |
 | `public static Electron2D.RID MeshCreate()` | Creates an owned empty two-dimensional mesh. |
 | `public static System.Int32 MeshGetSurfaceCount(Electron2D.RID mesh)` | Gets a live mesh's surface count. |
@@ -375,7 +375,7 @@ All methods require a live object; RenderingServer operations require the render
 | `public static System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the packed color/texture-coordinate stride for a supported format. |
 | `public static System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the primary two-dimensional vertex stride for a supported surface format. |
 | `public static Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)` | Gets a borrowed material from a live surface. |
-| `public static Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)` | Gets one surface's primitive topology. |
+| `public static Electron2D.MeshPrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)` | Gets one surface's primitive topology. |
 | `public static System.Void MeshSurfaceRemove(Electron2D.RID mesh, System.Int32 surface)` | Removes one surface from an owned mesh. |
 | `public static System.Void MeshSurfaceSetMaterial(Electron2D.RID mesh, System.Int32 surface, Electron2D.Material material)` | Assigns a borrowed surface material on an owned mesh. |
 | `public static System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates packed attribute bytes, including partial records, in an owned mesh. |
@@ -385,7 +385,7 @@ All methods require a live object; RenderingServer operations require the render
 
 ### MeshAddSurfaceFromArrays
 
-`public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)`
+`public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null)`
 
 Summary: Adds copied typed surface channels to an owned mesh.
 
@@ -530,7 +530,7 @@ Returns: The borrowed material or null.
 
 ### MeshSurfaceGetPrimitiveType
 
-`public static Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)`
+`public static Electron2D.MeshPrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)`
 
 Summary: Gets one surface's primitive topology.
 
@@ -1338,7 +1338,7 @@ Four independent typed MeshSurfaceData custom channels use the shared [MeshCusto
 
 | Complete signature | Contract |
 | --- | --- |
-| `public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
+| `public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.MeshPrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None, System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData> blendShapes = null, System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> lods = null)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
 | `public static Electron2D.RID MeshCreate(System.Int32 blendShapeCount)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
 | `public static System.Int32 MeshGetBlendShapeCount(Electron2D.RID mesh)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
 | `public static Electron2D.BlendShapeMode MeshGetBlendShapeMode(Electron2D.RID mesh)` | Copied typed surface/target storage; owned mutations and borrowed queries follow the common mesh identity contract. |
@@ -1524,7 +1524,7 @@ using var window = new Window { Size = new(160, 120) };
 var owner = new Entity();
 window.AddChild(owner);
 using var mesh = new ArrayMesh();
-mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData
 {
     Vertices = [new(-4, -4), new(4, -4), new(4, 4), new(-4, 4)],
     Indices = [0, 1, 2, 0, 2, 3]

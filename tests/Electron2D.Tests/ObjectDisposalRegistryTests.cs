@@ -92,7 +92,7 @@ internal static class ObjectDisposalRegistryTests
         protected override MeshSurfaceData OnSurfaceGetArrays(int index) => throw new ArgumentOutOfRangeException(nameof(index));
         protected override int OnSurfaceGetArrayLen(int index) => throw new ArgumentOutOfRangeException(nameof(index));
         protected override int OnSurfaceGetArrayIndexLen(int index) => throw new ArgumentOutOfRangeException(nameof(index));
-        protected override PrimitiveType OnSurfaceGetPrimitiveType(int index) => throw new ArgumentOutOfRangeException(nameof(index));
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int index) => throw new ArgumentOutOfRangeException(nameof(index));
         protected override ArrayFormat OnSurfaceGetFormat(int index) => throw new ArgumentOutOfRangeException(nameof(index));
         protected override Material? OnSurfaceGetMaterial(int index) => throw new ArgumentOutOfRangeException(nameof(index));
         protected override void OnSurfaceSetMaterial(int index, Material? material) => throw new ArgumentOutOfRangeException(nameof(index));

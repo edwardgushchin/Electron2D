@@ -49,7 +49,7 @@ internal static class NavigationBakingTests
     private static void MeshesAndTiles()
     {
         using var polygon = new NavigationPolygon(); using var data = new NavigationMeshSourceGeometryData(); using var root = new Entity();
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = Rect(0, 0, 4, 4), Indices = [0, 1, 2, 0, 2, 3] }); root.AddChild(new MeshInstance { Mesh = mesh, Position = new(10, 20) });
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = Rect(0, 0, 4, 4), Indices = [0, 1, 2, 0, 2, 3] }); root.AddChild(new MeshInstance { Mesh = mesh, Position = new(10, 20) });
         using var multi = new MultiMesh { Mesh = mesh, InstanceCount = 2, VisibleInstanceCount = 1 }; multi.SetInstanceTransform2D(0, new Transform(0, new(30, 40))); multi.SetInstanceTransform2D(1, new Transform(0, new(300, 400))); root.AddChild(new MultiMeshInstance { MultiMesh = multi });
         NavigationServer.ParseSourceGeometryData(polygon, data, root); Check(data.GetObstructionOutlines().Length == 4 && data.GetBounds() == new Rect2(10, 20, 24, 24), "Mesh triangles and visible transformed MultiMesh instances have concrete source consumers.");
         using var image = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8); using var texture = ImageTexture.CreateFromImage(image); using var atlas = new TileSetAtlasSource { Texture = texture }; using var set = new TileSet(); set.AddPhysicsLayer(); set.AddSource(atlas, 3); atlas.CreateTile(default);

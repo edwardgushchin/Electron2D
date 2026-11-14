@@ -1026,7 +1026,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static bool FileExists(string path) => ResourcePacks.Runtime.TrySize(path, out _) || !ResourcePacks.Runtime.HasFileAncestor(path) && File.Exists(ResolvePath(path));
 
-    /// <summary>Reads a complete physical or directory-backed virtual file.</summary>
+    /// <summary>Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack.</summary>
     /// <param name="path">The file path.</param>
     /// <returns>A new byte array containing the file.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>

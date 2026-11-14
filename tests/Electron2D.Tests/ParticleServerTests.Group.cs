@@ -12,7 +12,7 @@ internal static partial class ParticleServerTests
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var root = new Window { Size = new(64, 64) }; var group = new ParticleGroup { SelfModulate = new(1, 1, 1, .5f), FitMargin = 0, ClearMargin = 0 }; group.AddChild(new GroupFill()); root.AddChild(group);
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
         {
             Vertices = [new(-4, -4), new(4, -4), new(4, 4), new(-4, 4)],
             Indices = [0, 1, 2, 0, 2, 3],

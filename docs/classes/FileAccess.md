@@ -10,18 +10,15 @@ Last updated: 2026-10-29
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed class FileAccess : ElectronObject`
 
-> Provides seekable binary and text access to ordinary and directory-backed virtual files.
+> Provides binary and text access to ordinary files, mounted or directory-backed virtual files, and process pipes.
 
 Linux/macOS extended-attribute calls use [tracked UTF8 path/name storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29) and pin caller data for the call without retaining its pointer.
 
 ## Description
 
-Provides seekable binary and text access to ordinary and directory-backed virtual files.
+`FileAccess` supplies binary and text I/O for seekable file streams and decoded in-memory views, including mounted resources. It also wraps [non-seekable process pipes](#process-pipe-streams) in blocking or nonblocking mode. Each instance owns its stream until [`Close`](#m-electron2d-fileaccess-close) or disposal. File operations include virtual-path resolution, metadata, hashing, extended attributes, and temporary files.
 
-`FileAccess` owns one seekable physical stream or decoded in-memory view. It supplies blocking binary/text I/O, virtual-path resolution, file metadata, hashing, Linux/macOS/Windows extended attributes, temporary files, whole-file compression, and authenticated whole-file encryption. The instance exclusively owns and closes its stream; it never owns `ProjectSettings`.
-
-Instances own their stream until [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close) or disposal. Individual operations are serialized, but a
-multi-call seek/read/write sequence is not atomic. FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard use the matching native file-codec bridge. Configured Zstandard options use its updated exports; an older bundle fails before file effects. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
+FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard use the matching native file-codec bridge. Configured Zstandard options use its updated exports; an older bundle fails before file effects. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
 callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
 
 ## Examples
@@ -89,7 +86,7 @@ file.WriteString("ready");
 | [`public void WriteCSVLine(IEnumerable<string> values, char delimiter = ',')`](#m-electron2d-fileaccess-writecsvline-system-collections-generic-ienumerable-system-string-system-char) | Writes one CSV record followed by LF. |
 | [`public void WritePascalString(string value)`](#m-electron2d-fileaccess-writepascalstring-system-string) | Writes a UTF-8 string preceded by its unsigned 32-bit byte count. |
 | [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical or directory-backed virtual file exists. |
-| [`public static byte[] GetFileAsBytes(string path)`](#m-electron2d-fileaccess-getfileasbytes-system-string) | Reads a complete physical or directory-backed virtual file. |
+| [`public static byte[] GetFileAsBytes(string path)`](#m-electron2d-fileaccess-getfileasbytes-system-string) | Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
 | [`public static string GetFileAsString(string path)`](#m-electron2d-fileaccess-getfileasstring-system-string) | Reads a complete physical or directory-backed virtual file as strict UTF-8. |
 | [`public static long GetAccessTime(string path)`](#m-electron2d-fileaccess-getaccesstime-system-string) | Gets the last-access time as Unix seconds. |
 | [`public static long GetModifiedTime(string path)`](#m-electron2d-fileaccess-getmodifiedtime-system-string) | Gets the last-modification time as Unix seconds. |
@@ -866,7 +863,7 @@ Determines whether a physical or directory-backed virtual file exists.
 <a id="m-electron2d-fileaccess-getfileasbytes-system-string"></a>
 ### `public static byte[] GetFileAsBytes(string path)`
 
-Reads a complete physical or directory-backed virtual file.
+Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. Mounted entries resolve through [the `res://` overlay](../components/resource-packs.md).
 
 **Parameters**
 
@@ -1275,7 +1272,7 @@ Filesystem, authorization, decoder, compression, cryptographic, and disposed/clo
 
 ## Threading and re-entrancy
 
-All instance state/stream operations are serialized by one private lock. One call is atomic with respect to other calls, including Pascal prefix+payload operations and transformed flush. A caller-owned sequence such as `Seek` followed by `ReadBytes` is not atomic against another caller unless externally synchronized. Static operations own only local state and are safe concurrently. Blocking I/O, hashing, compression, PBKDF2, and allocation make the component unsuitable for frame, physics, audio, or render hot paths.
+Each seekable instance uses one lock to serialize its stream operations, including a single call that handles both the Pascal string prefix and payload or flushes a transformed file. Callers must synchronize compound sequences such as `Seek` followed by `ReadBytes`. Process pipes serialize reads and writes separately, so one thread can read while another writes to the same instance. Blocking I/O, hashing, compression, PBKDF2, and allocation make the component unsuitable for frame, physics, audio, or render hot paths.
 
 ## Dependencies and interactions
 
@@ -1284,7 +1281,7 @@ All instance state/stream operations are serialized by one private lock. One cal
 - Uses .NET file, UTF-8, hash, compression, PBKDF2, random, and AES-GCM primitives.
 - Reuses the same internal atomic-replacement helper as `ConfigFile`.
 - Uses Linux libc xattrs, macOS libSystem xattrs, and Windows alternate data streams for the extended-attribute surface.
-- Has no SDL, Scene, renderer, resource loader, scripting, editor, physics, or external package dependency.
+- Process pipes use the OS service's native backend. Mounted file reads use the shared resource pack resolver.
 
 ## Verification and known limits
 
