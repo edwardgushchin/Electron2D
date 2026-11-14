@@ -27,7 +27,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 1. A file open resolves the path through `ProjectSettings`, validates the exact mode and transformation inputs, and acquires/decodes the content before returning an instance.
 2. Raw files use a `FileStream`. Read-only physical streams share read and delete access so [file save and swap](file-save-and-swap.md) can replace the name while existing readers finish reading the original file. Physical reads through the resource resolver use the same policy, including the initial reads of transformed files. Transformed views retain decoded data in memory and release the physical handle before returning.
 3. A directory open captures physical/resource/user scope and its current directory. Listing begin captures an unsorted entry snapshot; sorted helpers create independent immutable snapshots.
-4. Every instance operation locks its stream/cursor or directory/listing state boundary.
+4. Seekable files lock stream operations and directory sessions lock listing state. Process pipes lock reads and writes separately so a thread can read while another writes to the same instance.
 5. Dirty compressed/encrypted content is encoded to a complete snapshot and atomically replaces its target on flush/close.
 6. Disposal releases file state and optionally deletes a temporary file; directory disposal closes listing state and recursively deletes only a non-kept temporary directory it created and owns.
 
@@ -46,15 +46,15 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Directory access scope is immutable; virtual roots are captured, lexically confined, and never switched by an instance. Case-sensitivity queries use read-only native metadata and do not create probe entries.
 - Public directory removal is permanent and nonrecursive; link removal never traverses the target.
 - Streaming enumeration order is unspecified; file/directory snapshot helpers sort ordinally.
-- Fixed-size values either read completely or fail; EOF records only an attempted incomplete read.
+- [Binary I/O](#binary-io) defines byte order, complete scalar reads, byte buffers, cursor movement and EOF transitions for each stream capability.
 - Caller-visible decoded content is published only after compression validation or successful authentication.
 - Transformed writes replace a destination atomically after the temporary file is flushed.
-- Instance calls are lock-serialized; compound caller sequences require caller synchronization.
+- Callers synchronize compound operations such as seek followed by read, or a write followed by a retry on the same pipe.
 - The component is blocking and allocating, never a real-time hot-path service.
 
 ## Directory enumeration
 
-An open [DirAccess](../classes/DirAccess.md) holds its captured physical root. Resource accessors also see the live PCK/ZIP overlay while that root is the configured project root. A mounted file masks an exact-name physical directory and its descendants. Physical absolute paths and `user://` use the filesystem.
+An open [DirAccess](../classes/DirAccess.md) holds its captured physical root. Resource accessors also see the live PCK/ZIP overlay while that root is the configured project root. Mounted entries take precedence at an exact-name collision. A mounted file masks a physical directory and its descendants. A mounted directory masks a physical file. Explicit ZIP directories appear even when empty. Physical absolute paths and `user://` use the filesystem.
 
 `ListDirBegin` captures immediate names and kinds. Both include flags default to false and apply when `GetNext` advances. Windows physical hidden entries carry the Hidden attribute. Unix-family hosts also hide dot names. Mounted dot names are hidden. The navigational names `.` and `..` are governed by `IncludeNavigational`, including at virtual roots, where changing to an escaping path still fails.
 
@@ -63,6 +63,18 @@ An open [DirAccess](../classes/DirAccess.md) holds its captured physical root. R
 `GetFiles` and `GetDirectories` return independent, ordinally sorted, read-only snapshots and leave any active cursor intact. The static `At` methods accept fully qualified native or virtual paths and use the default filters. A missing directory, a mounted file masking the directory, or denied physical enumeration raises a standard exception.
 
 See the [coverage audit](../coverage/dir-access-listing.md) for the pinned source comparison and verification limits.
+
+## Binary I/O
+
+Fresh sessions default to little endian. `BigEndian` selects the byte order for multi-byte unsigned values, IEEE 754 binary16/32/64 and Pascal length prefixes. `Real` uses binary32. Binary buffers move unchanged across the stream boundary. `ReadBytes` returns a caller-owned prefix up to the requested count, and `WriteBytes` consumes its input before returning.
+
+On seekable files, a short scalar read consumes the available prefix and throws `EndOfStreamException`. A positive buffer request can return a short prefix. Either failure to fill a read sets EOF. Reaching the end exactly leaves EOF clear, and a zero-length read preserves cursor and EOF. A successful seek, write or resize clears EOF. `Position` and `Length` observe state without moving the cursor or clearing EOF. Seeks can place the cursor beyond the end without growing the file. Resizing removes truncated bytes or appends zero bytes while preserving the absolute cursor, including a cursor beyond the new end.
+
+Process pipes reject seek, length, position and resize with `NotSupportedException` when the direction is otherwise permitted. A nonblocking exact read that runs out of available bytes consumes the prefix and throws `IOException` until the pipe reports actual EOF. `ReadBytes` can return the prefix in either case. Closing an owned stream releases it independently of the child process. See [process pipes](processes.md).
+
+Binary writes can throw [`PipeWriteException`](../classes/PipeWriteException.md). `BytesWritten` counts the accepted prefix of the bytes supplied to `WriteBytes` or of the encoded numeric value. For a retryable failure, use `WriteBytes` to send the unwritten suffix. For numeric values, preserve the original byte order and bit representation when preparing that suffix. Calling the numeric method again would resend any accepted bytes. `WriteByte` can only fail before its one byte is accepted. If a suffix write fails again, add its `BytesWritten` to the offset before retrying.
+
+`ELECTRON2D_TEST_FILE_BINARY=1` checks independent little- and big-endian wire vectors and seekable cursor and error behavior through public calls. `ELECTRON2D_TEST_OS_PROCESS=1` exercises native blocking/nonblocking streams, short scalar and buffer reads, and partial-write retries with SHA-256 verification. `ELECTRON2D_TEST_FILE_TEXT=1` covers the Pascal framing that shares the byte-order setting.
 
 ## Text framing
 
@@ -82,7 +94,7 @@ FastLZ and Zstandard reuse the unchanged, accepted native dependencies via two p
 
 [`FileTextTests`](../../tests/Electron2D.Tests/FileTextTests.cs) compares exact wire bytes and cursor/EOF transitions, including a fresh reader process and directory-backed and Gzip-backed files. [`OSProcessTests`](../../tests/Electron2D.Tests/OSProcessTests.cs) checks live pipe framing and verifies the SHA-256 of a Pascal frame delivered by partial-write retries.
 
-The hidden-entry fixtures use the actual filesystem policy: dot-prefixed file and directory names on Unix, explicit `FileAttributes.Hidden` on Windows. Both fixture attributes are asserted before testing default/opt-in snapshots and streaming/concurrent filters. The Windows full suite in [run 37407321875](https://github.com/edwardgushchin/Electron2D/actions/runs/37407321875) passed configuration/file checks and exposed the previous dot-name-only fixture assumption on all three architectures. Runtime hidden-entry policy is unchanged; corrected target execution remains required.
+The hidden-entry fixtures use the actual filesystem policy: dot-prefixed file and directory names on Unix, explicit `FileAttributes.Hidden` on Windows. Both fixture attributes are asserted before testing default/opt-in snapshots and streaming/concurrent filters. The Windows full suite in [run 37407321875](https://github.com/edwardgushchin/Electron2D/actions/runs/37407321875) passed configuration/file checks and exposed the previous dot-name-only fixture assumption on all three architectures. The focused Windows x64 CLR directory-listing profile verifies the corrected hidden-entry fixtures and concurrent cursor reads. The resource-pack profile verifies ZIP directories, shared file and directory lookup, and lexical virtual-root escape. Other Windows architectures and full directory backend qualification remain open.
 
 The Linux executable harness covers file and directory success, invalid input, malformed/truncated data, wrong credentials/modes, tampering, scope/traversal rejection, listing state/filtering/concurrency, directory creation/copy/rename/removal, link target safety, filesystem identity/case/capacity/type, temporary ownership, close/disposal, concurrent independent operations, and commit failure. On Windows x64 CLR with a matching native bundle, the focused profiles verify text and binary file operations, ordinary and directory-backed virtual paths, Gzip-backed text and a fresh reader process. They also exercise blocking and nonblocking process pipes, including exact partial-write retry, 110 round trips across all five codecs, image-texture loading and cache/failure behavior, and 119 resource-pack assertions. NativeAOT, release packages and other runtime targets are outside this Windows verification. Transformed files are whole-file and have no stress-test results near managed array limits.
 

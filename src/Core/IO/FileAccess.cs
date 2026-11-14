@@ -123,7 +123,9 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Gets whether a read has attempted to move beyond the end of the file.</summary>
-    /// <value><see langword="true"/> only after an incomplete read; a successful seek clears it.</value>
+    /// <value><see langword="true"/> after an incomplete file read or when a process pipe reports EOF.</value>
+    /// <remarks>A successful seek, write, or resize clears the file state. A zero-length read preserves it.
+    /// Temporary emptiness on a nonblocking pipe does not indicate EOF.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public bool EOFReached
@@ -143,6 +145,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <value>A zero-based position from the beginning of the decoded file.</value>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="IOException">The stream cannot report its cursor.</exception>
+    /// <exception cref="NotSupportedException">The stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public long Position
     {
@@ -158,6 +161,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <value>The number of bytes visible through this instance.</value>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="IOException">The stream cannot report its length.</exception>
+    /// <exception cref="NotSupportedException">The stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public long Length
     {
@@ -267,7 +271,8 @@ public sealed partial class FileAccess : ElectronObject
     /// supplied name and AbsolutePath identifies staging. Close/disposal publishes completed output; Flush alone does not.
     /// An open physical read-only stream can finish reading its original file after a staged replacement.
     /// Subsequent opens of the path see the replacement. I/O write failure aborts staging. A failed final
-    /// replacement retains completed staging for recovery.</remarks>
+    /// replacement retains completed staging for recovery. A mounted directory at a resource path masks
+    /// any physical file at that path.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
@@ -278,7 +283,6 @@ public sealed partial class FileAccess : ElectronObject
         var absolutePath = ResolvePath(path);
         ValidateMode(mode);
         if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
-        ResourcePacks.Runtime.EnsureReadablePath(path);
         if (mode == FileAccessModeFlags.Read && ResourcePacks.Runtime.TryOpen(path, out var packed))
             return new FileAccess(path, "res://" + PCKFormat.Normalize(ResourceUID.EnsurePath(path)), mode, packed, packed: true);
         var stream = OpenPhysical(absolutePath, mode);
@@ -516,9 +520,11 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Moves the cursor to an absolute byte offset.</summary>
     /// <param name="position">The nonnegative offset from the beginning.</param>
+    /// <remarks>A successful seek clears <see cref="EOFReached"/> without growing the file.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="position"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="IOException">Seeking fails.</exception>
+    /// <exception cref="NotSupportedException">The stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void Seek(long position)
     {
@@ -534,8 +540,10 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Moves the cursor relative to the end of the file.</summary>
     /// <param name="offset">A signed byte offset; zero selects the end and negative values select preceding bytes.</param>
+    /// <remarks>A successful seek clears <see cref="EOFReached"/> without growing the file.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="IOException">Seeking fails.</exception>
+    /// <exception cref="NotSupportedException">The stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void SeekEnd(long offset = 0)
     {
@@ -549,10 +557,12 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Changes the file length.</summary>
     /// <param name="length">The nonnegative decoded length in bytes.</param>
-    /// <remarks>Extending fills the new region with zero bytes. The current cursor is unchanged.</remarks>
+    /// <remarks>Extending fills the new region with zero bytes. The absolute cursor is preserved even if it
+    /// lies beyond the new end. A successful resize clears <see cref="EOFReached"/>.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Resizing fails.</exception>
+    /// <exception cref="NotSupportedException">The writable stream is a process pipe.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void Resize(long length)
     {
@@ -561,9 +571,15 @@ public sealed partial class FileAccess : ElectronObject
         ThrowIfDisposed();
         lock (_gate)
         {
-            EnsureWritable();
-            EnsureOpen().SetLength(length);
+            var stream = EnsureWritable();
+            if (!stream.CanSeek)
+                throw new NotSupportedException("This stream cannot resize.");
+            var position = stream.Position;
+            stream.SetLength(length);
             _dirty = true;
+            // FileStream and MemoryStream can clamp the cursor when truncating.
+            if (position > length)
+                stream.Position = position;
             _eofReached = false;
         }
     }
@@ -641,8 +657,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <summary>Reads up to a requested number of bytes.</summary>
     /// <param name="length">The nonnegative maximum byte count.</param>
     /// <returns>A new array containing all available requested bytes.</returns>
-    /// <remarks>For files, EOFReached becomes true after an incomplete read. For a process pipe, temporary emptiness
-    /// returns the available prefix without claiming EOF. Blocking pipes wait until the requested count or EOF.</remarks>
+    /// <remarks>For files, an incomplete read sets <see cref="EOFReached"/>. A zero-length request preserves the cursor
+    /// and EOF. For a process pipe, temporary emptiness returns the available prefix without claiming EOF.
+    /// Blocking pipes wait until the requested count or EOF.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails.</exception>
@@ -816,6 +833,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The value to write.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe failed before accepting the byte.
+    /// <see cref="PipeWriteException.BytesWritten"/> is zero. Retry the byte if the pipe can still accept writes.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteByte(byte value) => WriteBytes([value]);
 
@@ -823,6 +842,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The value written using <see cref="BigEndian"/> byte order.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteUInt16(ushort value)
     {
@@ -845,6 +868,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The value written using <see cref="BigEndian"/> byte order.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteUInt32(uint value)
     {
@@ -867,6 +894,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The value written using <see cref="BigEndian"/> byte order.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteUInt64(ulong value)
     {
@@ -889,6 +920,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The half-precision value.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteHalf(Half value) => WriteUInt16(BitConverter.HalfToUInt16Bits(value));
 
@@ -896,6 +931,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The single-precision value.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteSingle(float value) => WriteUInt32(BitConverter.SingleToUInt32Bits(value));
 
@@ -903,6 +942,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The double-precision value.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteDouble(double value) => WriteUInt64(BitConverter.DoubleToUInt64Bits(value));
 
@@ -910,13 +953,21 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="value">The binary32 value used by the engine's 2D numeric types.</param>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, use <see cref="WriteBytes"/> to send the suffix of the value encoded with the
+    /// original <see cref="BigEndian"/> setting, starting at <see cref="PipeWriteException.BytesWritten"/>.
+    /// Retrying the numeric method would resend any bytes already accepted.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteReal(float value) => WriteSingle(value);
 
     /// <summary>Writes bytes at the current cursor.</summary>
     /// <param name="bytes">The bytes to write.</param>
+    /// <remarks>Byte order does not affect the supplied bytes. A successful write clears file EOF.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
+    /// <exception cref="PipeWriteException">The process pipe accepted zero or more bytes before the write failed.
+    /// If the failure is retryable, send the unwritten suffix of <paramref name="bytes"/>,
+    /// starting at <see cref="PipeWriteException.BytesWritten"/>.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void WriteBytes(ReadOnlySpan<byte> bytes)
     {
@@ -1000,16 +1051,17 @@ public sealed partial class FileAccess : ElectronObject
         }
     }
 
-    /// <summary>Determines whether a physical or directory-backed virtual file exists.</summary>
+    /// <summary>Determines whether a physical, virtual, or mounted file exists.</summary>
     /// <param name="path">The file path.</param>
     /// <returns><see langword="true"/> only when the resolved path identifies an existing file.</returns>
+    /// <remarks>Mounted directories resolve as directories even when a physical file has the same name.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="UnauthorizedAccessException">A virtual path escapes its configured root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static bool FileExists(string path) => ResourcePacks.Runtime.TrySize(path, out _) || !ResourcePacks.Runtime.HasFileAncestor(path) && File.Exists(ResolvePath(path));
+    public static bool FileExists(string path) => ResourcePacks.Runtime.TrySize(path, out _) || !ResourcePacks.Runtime.BlocksPhysicalFile(path) && File.Exists(ResolvePath(path));
 
-    /// <summary>Reads a complete physical or directory-backed virtual file.</summary>
+    /// <summary>Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack.</summary>
     /// <param name="path">The file path.</param>
     /// <returns>A new byte array containing the file.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -1019,7 +1071,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static byte[] GetFileAsBytes(string path) => ResourcePacks.ReadBytes(path);
 
-    /// <summary>Reads a complete physical or directory-backed virtual file as strict UTF-8.</summary>
+    /// <summary>Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack.</summary>
     /// <param name="path">The file path.</param>
     /// <returns>The decoded text.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -1357,7 +1409,6 @@ public sealed partial class FileAccess : ElectronObject
 
     private static FileInfo GetFileInfo(string path)
     {
-        ResourcePacks.Runtime.EnsureReadablePath(path);
         var info = new FileInfo(ResolvePath(path));
         if (!info.Exists)
             throw new FileNotFoundException("The file does not exist.", info.FullName);
@@ -1832,7 +1883,7 @@ public sealed partial class FileAccess : ElectronObject
         ArgumentNullException.ThrowIfNull(path);
         if (path.Length == 0)
             throw new ArgumentException("A file path cannot be empty.", nameof(path));
-        ResourcePacks.Runtime.EnsureReadablePath(path);
+        ResourcePacks.Runtime.EnsureFilePath(path);
         return ProjectSettings.GlobalizePath(path);
     }
 

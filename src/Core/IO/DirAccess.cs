@@ -1145,8 +1145,8 @@ public sealed partial class DirAccess : ElectronObject
 
     private static string? GetLinkTarget(string path)
     {
-        ResourcePacks.Runtime.EnsureReadablePath(path);
         if (ResourcePacks.Runtime.TrySize(path, out _) || ResourcePacks.Runtime.IsDirectory(path)) return null;
+        ResourcePacks.Runtime.EnsureFilePath(path);
         path = Physical(path);
         var fileTarget = new FileInfo(path).LinkTarget;
         return fileTarget ?? new DirectoryInfo(path).LinkTarget;
