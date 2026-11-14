@@ -1,6 +1,16 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-11-04
+Last updated: 2026-11-14
+
+## Windows native layout
+
+The Windows producer selects six native assets: `libElectron2D.dll`, `FAudio.dll`, `freetype.dll`, `harfbuzz.dll`, `libcrypto-4.dll` and `libssl-4.dll`. The managed API remains in `Electron2D.dll`. OpenSSL keeps its upstream major in the filename; the selected configuration omits architecture suffixes because NuGet's RID directory already separates architectures. Source pins, exported PE identity, imports, required exports and SHA-256 are checked before packaging. FreeType and HarfBuzz retain their existing allocator adapters and source versions under their library names.
+
+`WindowsNative.targets` removes only the listed retired modules, font aliases and old OpenSSL pairs from the selected RID's build/publish directory. The Windows producer uses that same list before writing a new receipt. Unrelated application files are preserved. An old `Electron2D.Windows` package is rejected before copying; removing its DLLs cannot supply the new native ABI. The package delivers `Electron2D.native-manifest.json` alongside the application, and the Windows publish checker compares all six file hashes and audits the common module's exact ABI. SDL core/image/shader dependencies retain their own names and package versions.
+
+HarfBuzz fetches enable Git long paths for its upstream font fixtures on Windows. The complete source revision and tracked-content checks still run before configuration. Immutable native sources and licence bytes use explicit Git checkout attributes. Native build recipes use LF on every host, so their source receipt has the same inputs in Windows and Unix checkouts. `tools/native/test_windows_checkout.py` checks the original native pin hashes with `core.autocrlf=true` and exercises the source validator against a changed file.
+
+`tools/native/test_windows_delivery.py` exercises clean and contaminated build/publish directories for all three Windows RIDs and rejection of old package assets. These MSBuild checks use fixture bytes. Qualification of native execution requires the produced DLLs and a public consumer. The publicly restored `Electron2D.Windows 0.2.0-alpha` inspected on 2026-11-14 still contains the retired subsystem layout and OpenSSL 3. A newly produced and qualified platform package is required before ordinary consumers can use this layout. Native production, public-consumer execution and publication remain separate gates.
 
 A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, filename/license classification and source, license and notice byte comparisons remain strict.
 

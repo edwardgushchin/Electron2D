@@ -9,7 +9,7 @@ internal static class NativeLibraryTests
         Electron2D.NativeAllocation.Prepare();
         var engine = OperatingSystem.IsWindows() ? "libElectron2D.dll" : OperatingSystem.IsMacOS() ? "libElectron2D.dylib" : "libElectron2D.so";
         var names = OperatingSystem.IsWindows()
-            ? new[] { engine, "FAudio.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll", "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll" }
+            ? new[] { engine, "FAudio.dll", "freetype.dll", "harfbuzz.dll", "libcrypto-4.dll", "libssl-4.dll" }
             : OperatingSystem.IsMacOS()
                 ? [engine, "libFAudio.0.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib", "libElectron2DCrypto.4.dylib", "libElectron2DSSL.4.dylib"]
                 : [engine, "libFAudio.so.0", "libElectron2DFreeType.so", "libHarfBuzzSharp.so", "libcrypto.so.4", "libssl.so.4"];

@@ -12,7 +12,7 @@ if(FETCHCONTENT_SOURCE_DIR_SHAPING)
     verify_source(HarfBuzz "${revision}" "${FETCHCONTENT_SOURCE_DIR_SHAPING}")
 endif()
 FetchContent_Declare(Shaping GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
-    GIT_TAG ${revision} GIT_SHALLOW FALSE SOURCE_SUBDIR unused)
+    GIT_TAG ${revision} GIT_CONFIG core.autocrlf=false core.longpaths=true GIT_SHALLOW FALSE SOURCE_SUBDIR unused)
 FetchContent_MakeAvailable(Shaping)
 verify_source(HarfBuzz "${revision}" "${shaping_SOURCE_DIR}")
 set(BUILD_SHARED_LIBS ON)
@@ -42,6 +42,9 @@ endif()
 set_target_properties(harfbuzz PROPERTIES OUTPUT_NAME HarfBuzzSharp PREFIX lib
     CXX_VISIBILITY_PRESET hidden C_VISIBILITY_PRESET hidden SKIP_BUILD_RPATH TRUE
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}" RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+if(WIN32)
+    set_target_properties(harfbuzz PROPERTIES OUTPUT_NAME harfbuzz PREFIX "")
+endif()
 set_property(TARGET harfbuzz PROPERTY VERSION)
 set_property(TARGET harfbuzz PROPERTY SOVERSION)
 if(APPLE)

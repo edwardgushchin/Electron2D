@@ -2,6 +2,7 @@
 """Check a self-contained desktop application and its private native ABIs."""
 
 import json
+import hashlib
 import re
 import subprocess
 import sys
@@ -74,7 +75,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     if not app_name or Path(app_name).name != app_name:
         raise ValueError("The application name must be a nonempty basename")
     if rid.startswith("win-"):
-        platform, host, names = "Windows", app_name + ".exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "libElectron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll", "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll")
+        platform, host, names = "Windows", app_name + ".exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "libElectron2D.dll", "freetype.dll", "harfbuzz.dll", "libcrypto-4.dll", "libssl-4.dll")
     elif rid.startswith("osx-"):
         platform, host, names = "MacOS", app_name, ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libElectron2D.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib", "libElectron2DCrypto.4.dylib", "libElectron2DSSL.4.dylib")
     elif rid.startswith("linux-"):
@@ -101,6 +102,18 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     assert platform_packages == {f"Electron2D.{platform}"}, f"Wrong engine platform packages: {platform_packages}"
     sys.path.insert(0, str(Path(__file__).resolve().parent / "native"))
     import package as native_package
+    if platform == "Windows":
+        receipt = json.loads((publish / "Electron2D.native-manifest.json").read_text())[rid]
+        assert set(receipt["files"]) == set(native_package.LIBRARIES["Windows"]), "Wrong Windows native manifest"
+        assert not any((native / name).exists() for name in native_package.retired_windows_files()), "Retired Windows payload leaked into publish"
+        for name, checksum in receipt["files"].items():
+            library = native / name
+            assert hashlib.sha256(library.read_bytes()).hexdigest() == checksum, f"Native manifest checksum mismatch: {name}"
+            exports = native_package.windows_exports(library, rid, name)
+            required = native_package.required_exports(name)
+            assert required <= exports, f"Missing native exports: {name}"
+            if name == "libElectron2D.dll":
+                assert exports == required, "Unified Windows native ABI mismatch"
     engine = native / ("libElectron2D.dll" if platform == "Windows" else "libElectron2D.dylib" if platform == "MacOS" else "libElectron2D.so")
     assert engine.is_file() and not (publish / engine.name).exists(), "Unified native engine must retain its RID directory"
     required = native_package.required_exports(engine.name)

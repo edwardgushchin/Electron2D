@@ -1,0 +1,23 @@
+<Project>
+  <PropertyGroup>
+    <_Electron2DWindowsRID Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</_Electron2DWindowsRID>
+    <_Electron2DWindowsRID Condition="'$(_Electron2DWindowsRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</_Electron2DWindowsRID>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Only retired engine payloads are removed; application and third-party files stay intact. -->
+    <_Electron2DLegacyWindowsFile Include="Electron2DENet.dll;Electron2DKTX.dll;Electron2DMesh.dll;Electron2DOGV.dll;Electron2DTextBreak.dll;Electron2DWebP.dll;Electron2DWebRTC.dll;Electron2DRender.dll;Electron2DFreeType.dll;libHarfBuzzSharp.dll;libHarfBuzzSharp.pdb;libcrypto-3-Electron2D.dll;libssl-3-Electron2D.dll;libcrypto-4-Electron2D.dll;libssl-4-Electron2D.dll" />
+  </ItemGroup>
+  <Target Name="RejectElectron2DLegacyWindowsPackage" AfterTargets="ResolvePackageAssets" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-'))">
+    <ItemGroup>
+      <_Electron2DWindowsPackageAsset Include="@(NativeCopyLocalItems);@(RuntimeTargetsCopyLocalItems)" Condition="'%(NuGetPackageId)' == 'Electron2D.Windows'" />
+      <_Electron2DLegacyWindowsAsset Include="@(_Electron2DWindowsPackageAsset)" Condition="'%(Filename)%(Extension)' == 'Electron2DENet.dll' or '%(Filename)%(Extension)' == 'Electron2DFreeType.dll' or '%(Filename)%(Extension)' == 'libHarfBuzzSharp.dll' or '%(Filename)%(Extension)' == 'libcrypto-3-Electron2D.dll' or '%(Filename)%(Extension)' == 'libcrypto-4-Electron2D.dll'" />
+    </ItemGroup>
+    <Error Condition="'@(_Electron2DLegacyWindowsAsset)' != ''" Text="Electron2D.Windows contains retired native modules. Restore a qualified package with libElectron2D.dll, freetype.dll, harfbuzz.dll and the OpenSSL 4 pair; deleting output files cannot upgrade this package." />
+  </Target>
+  <Target Name="CleanElectron2DLegacyWindowsBuild" AfterTargets="CopyFilesToOutputDirectory" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(TargetDir)' != ''">
+    <Delete Files="@(_Electron2DLegacyWindowsFile->'$(TargetDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
+  </Target>
+  <Target Name="CleanElectron2DLegacyWindowsPublish" AfterTargets="Publish" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(PublishDir)' != ''">
+    <Delete Files="@(_Electron2DLegacyWindowsFile->'$(PublishDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
+  </Target>
+</Project>
