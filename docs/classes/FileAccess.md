@@ -85,7 +85,7 @@ file.WriteString("ready");
 | [`public void WriteLine(string value)`](#m-electron2d-fileaccess-writeline-system-string) | Writes UTF-8 text followed by LF. |
 | [`public void WriteCSVLine(IEnumerable<string> values, char delimiter = ',')`](#m-electron2d-fileaccess-writecsvline-system-collections-generic-ienumerable-system-string-system-char) | Writes one CSV record followed by LF. |
 | [`public void WritePascalString(string value)`](#m-electron2d-fileaccess-writepascalstring-system-string) | Writes a UTF-8 string preceded by its unsigned 32-bit byte count. |
-| [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical or directory-backed virtual file exists. |
+| [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical, virtual, or mounted file exists. |
 | [`public static byte[] GetFileAsBytes(string path)`](#m-electron2d-fileaccess-getfileasbytes-system-string) | Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
 | [`public static string GetFileAsString(string path)`](#m-electron2d-fileaccess-getfileasstring-system-string) | Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
 | [`public static long GetAccessTime(string path)`](#m-electron2d-fileaccess-getaccesstime-system-string) | Gets the last-access time as Unix seconds. |
@@ -241,6 +241,8 @@ Gets or sets Unix permission and special-mode bits for the physical file.
 Opens a file with the requested access mode.
 
 On Windows, physical read-only streams allow staged replacement. An open reader can finish reading the original file, and subsequent opens of the path see the replacement.
+
+When a mounted directory and a physical file share a `res://` path, the directory takes precedence. `Open` throws `FileNotFoundException` for that resource path. The physical file remains accessible through its native absolute path.
 
 **Parameters**
 
@@ -855,13 +857,15 @@ Writes a UTF-8 string preceded by its unsigned 32-bit byte count in the selected
 <a id="m-electron2d-fileaccess-fileexists-system-string"></a>
 ### `public static bool FileExists(string path)`
 
-Determines whether a physical or directory-backed virtual file exists.
+Determines whether a physical, virtual, or mounted file exists.
 
 **Parameters**
 
 - `path`: The file path.
 
 **Returns:** `true` only when the resolved path identifies an existing file.
+
+Mounted directories resolve as directories even when a physical file has the same name.
 
 **Exceptions**
 

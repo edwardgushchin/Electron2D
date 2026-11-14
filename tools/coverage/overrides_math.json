@@ -2964,7 +2964,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Returns signed infinity at В±1 and NaN outside the domain. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "reason": "Returns signed infinity at ±1 and NaN outside the domain. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
       "godot": [
         "@GlobalScope::method:atanh(float:)"
       ]
@@ -3391,7 +3391,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Maps signed infinities to В±1. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
+      "reason": "Maps signed infinities to ±1. Typed C# under ADR 0034. See [scalar verification](../../components/scalar-math.md#verification).",
       "godot": [
         "@GlobalScope::method:tanh(float:)"
       ]
