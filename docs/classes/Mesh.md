@@ -16,7 +16,7 @@ Abstract typed two-dimensional surface contract. Count/array/format/topology/mat
 
 ```csharp
 using var mesh = new ArrayMesh();
-mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData
+mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData
 { Vertices = [new(0, 0), new(20, 0), new(0, 20)] });
 int count = mesh.GetSurfaceCount();
 ```
@@ -47,7 +47,7 @@ int count = mesh.GetSurfaceCount();
 | `protected abstract Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)` | Supplies a surface format mask. |
 | `protected virtual System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> OnSurfaceGetLODs(System.Int32 surfaceIndex)` | Supplies copied alternative index sets for one surface. |
 | `protected abstract Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)` | Supplies a surface's borrowed material. |
-| `protected abstract Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Supplies the primitive ordering policy. |
+| `protected abstract Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Supplies the primitive ordering policy. |
 | `protected abstract System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` | Commits a borrowed surface material and reports its change. |
 | `public System.Void SetBlendShapeName(System.Int32 index, System.String name)` | Renames one shape without changing its index or payload. |
 | `public System.Int32 SurfaceGetArrayIndexLen(System.Int32 surfaceIndex)` | Gets one surface's explicit index count. |
@@ -57,7 +57,7 @@ int count = mesh.GetSurfaceCount();
 | `public Electron2D.Mesh.ArrayFormat SurfaceGetFormat(System.Int32 surfaceIndex)` | Gets one surface's typed channel and policy mask. |
 | `public System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]> SurfaceGetLODs(System.Int32 surfaceIndex)` | Returns copied local edge-error thresholds and alternative vertex indices. |
 | `public Electron2D.Material SurfaceGetMaterial(System.Int32 surfaceIndex)` | Gets a surface's borrowed material. |
-| `public Electron2D.Mesh.PrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Gets one surface's primitive topology. |
+| `public Electron2D.MeshPrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)` | Gets one surface's primitive topology. |
 | `public System.Void SurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)` | Assigns a borrowed material to one surface. |
 
 ## Member descriptions
@@ -252,7 +252,7 @@ returns: The borrowed material or null.
 
 ### OnSurfaceGetPrimitiveType
 
-`protected abstract Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
+`protected abstract Electron2D.MeshPrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
 
 summary: Supplies the primitive ordering policy.
 
@@ -360,7 +360,7 @@ returns: The material or null for the drawing item's material.
 
 ### SurfaceGetPrimitiveType
 
-`public Electron2D.Mesh.PrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
+`public Electron2D.MeshPrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)`
 
 summary: Gets one surface's primitive topology.
 

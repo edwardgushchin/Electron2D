@@ -26,7 +26,7 @@ public sealed partial class ImporterMesh
                 var s = surfaces[j]; TransformData(s.Data, s.Primitive, transform); var name = s.Name.Length == 0 ? "surface_" + j.ToString(System.Globalization.CultureInfo.InvariantCulture) : s.Name;
                 if (groups.TryGetValue(name, out var existing))
                 {
-                    if (deduplicateSurfaces && (s.Data.VertexCount == 0) == (existing.Data.VertexCount == 0) && s.Data.Bones.Length == 0 && existing.Data.Bones.Length == 0 && s.Primitive != Mesh.PrimitiveType.LineStrip && existing.Primitive == s.Primitive && existing.Flags == s.Flags && (ArrayMesh.Surface.Channels(existing.Data) & ~Mesh.ArrayFormat.Index) == (ArrayMesh.Surface.Channels(s.Data) & ~Mesh.ArrayFormat.Index))
+                    if (deduplicateSurfaces && (s.Data.VertexCount == 0) == (existing.Data.VertexCount == 0) && s.Data.Bones.Length == 0 && existing.Data.Bones.Length == 0 && s.Primitive != MeshPrimitiveType.LineStrip && existing.Primitive == s.Primitive && existing.Flags == s.Flags && (ArrayMesh.Surface.Channels(existing.Data) & ~Mesh.ArrayFormat.Index) == (ArrayMesh.Surface.Channels(s.Data) & ~Mesh.ArrayFormat.Index))
                     {
                         groups[name] = new(Join(existing.Data, s.Data, s.Primitive), [], [], s.Primitive, s.Flags, name, existing.Material); continue;
                     }
@@ -43,7 +43,7 @@ public sealed partial class ImporterMesh
         }
         catch { result.Dispose(); throw; }
     }
-    private static void TransformData(MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform)
+    private static void TransformData(MeshSurfaceData data, MeshPrimitiveType primitive, Transform transform)
     {
         if (data.IsProcedural)
         {
@@ -57,12 +57,12 @@ public sealed partial class ImporterMesh
             if (data.Tangents.Length != 0) { var t = data.Tangents[i]; var v = MeshFrameCodec.Unit(transform.X.X * (double)t.X + transform.Y.X * (double)t.Y, transform.X.Y * (double)t.X + transform.Y.Y * (double)t.Y, t.Z); data.Tangents[i] = new(v.X, v.Y, v.Z, t.W); }
         }
         var determinant = (double)transform.X.X * transform.Y.Y - (double)transform.X.Y * transform.Y.X;
-        if (determinant < 0 && primitive == Mesh.PrimitiveType.Triangles)
+        if (determinant < 0 && primitive == MeshPrimitiveType.Triangles)
         {
             if (data.Indices.Length != 0) for (var i = 0; i < data.Indices.Length; i += 3) (data.Indices[i + 1], data.Indices[i + 2]) = (data.Indices[i + 2], data.Indices[i + 1]);
             else for (var i = 0; i < data.Vertices.Length; i += 3) Swap(data, i + 1, i + 2);
         }
-        else if (determinant < 0 && primitive == Mesh.PrimitiveType.TriangleStrip)
+        else if (determinant < 0 && primitive == MeshPrimitiveType.TriangleStrip)
         {
             var order = Order(data); var flipped = new int[order.Length + 1]; flipped[0] = order[0]; order.CopyTo(flipped, 1); data.Indices = flipped;
         }
@@ -76,14 +76,14 @@ public sealed partial class ImporterMesh
         for (var c = 0; c < 4; c++) if (d.Custom(c) is { } custom) { var stride = MeshCustomCodec.Stride(custom.Format); for (var k = 0; k < stride; k++) Values(custom.Data, a * stride + k, b * stride + k); }
     }
     private static int[] Order(MeshSurfaceData data) => data.Indices.Length == 0 ? Enumerable.Range(0, data.VertexCount).ToArray() : data.Indices;
-    private static MeshSurfaceData Join(MeshSurfaceData a, MeshSurfaceData b, Mesh.PrimitiveType primitive)
+    private static MeshSurfaceData Join(MeshSurfaceData a, MeshSurfaceData b, MeshPrimitiveType primitive)
     {
         static T[] Concat<T>(T[] x, T[] y) { var result = new T[checked(x.Length + y.Length)]; x.CopyTo(result, 0); y.CopyTo(result, x.Length); return result; }
         var d = new MeshSurfaceData { VertexCount = checked(a.VertexCount + b.VertexCount), Vertices = Concat(a.Vertices, b.Vertices), Normals = Concat(a.Normals, b.Normals), Tangents = Concat(a.Tangents, b.Tangents), Colors = Concat(a.Colors, b.Colors), UVs = Concat(a.UVs, b.UVs), UV2s = Concat(a.UV2s, b.UV2s) };
         for (var c = 0; c < 4; c++) if (a.Custom(c) is { } x) d.SetCustom(c, new() { Format = x.Format, Data = Concat(x.Data, b.Custom(c)!.Data) });
-        if (a.Indices.Length != 0 || b.Indices.Length != 0 || primitive == Mesh.PrimitiveType.TriangleStrip)
+        if (a.Indices.Length != 0 || b.Indices.Length != 0 || primitive == MeshPrimitiveType.TriangleStrip)
         {
-            var x = Order(a); var y = Order(b); var bridge = primitive == Mesh.PrimitiveType.TriangleStrip ? 2 + x.Length % 2 : 0; d.Indices = new int[checked(x.Length + bridge + y.Length)]; x.CopyTo(d.Indices, 0);
+            var x = Order(a); var y = Order(b); var bridge = primitive == MeshPrimitiveType.TriangleStrip ? 2 + x.Length % 2 : 0; d.Indices = new int[checked(x.Length + bridge + y.Length)]; x.CopyTo(d.Indices, 0);
             if (bridge != 0) { d.Indices[x.Length] = x[^1]; if (bridge == 3) d.Indices[x.Length + 1] = x[^1]; d.Indices[x.Length + bridge - 1] = checked(a.VertexCount + y[0]); }
             for (var i = 0; i < y.Length; i++) d.Indices[x.Length + bridge + i] = checked(a.VertexCount + y[i]);
         }

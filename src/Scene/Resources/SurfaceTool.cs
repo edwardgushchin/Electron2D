@@ -22,7 +22,7 @@ public sealed partial class SurfaceTool : ElectronObject
     private List<Vertex> _vertices = [];
     private List<int> _indices = [];
     private Vertex _current = Defaults(new(default, Colors.White, default, default, 0, default, default, default, default));
-    private Mesh.PrimitiveType _primitive = Mesh.PrimitiveType.Lines;
+    private MeshPrimitiveType _primitive = MeshPrimitiveType.Lines;
     private Mesh.ArrayFormat _format;
     private Material? _material;
     private SkinWeightCount _skin;
@@ -35,15 +35,15 @@ public sealed partial class SurfaceTool : ElectronObject
     /// <param name="primitive">One of the five supported mesh topologies.</param>
     /// <remarks>Retains the selected skin width. An existing draft is replaced.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The topology is invalid.</exception>
-    public void Begin(Mesh.PrimitiveType primitive)
+    public void Begin(MeshPrimitiveType primitive)
     {
-        lock (_gate) { Mutable(); if (primitive is < Mesh.PrimitiveType.Points or > Mesh.PrimitiveType.TriangleStrip) throw new ArgumentOutOfRangeException(nameof(primitive)); var skin = _skin; Reset(); _skin = skin; _primitive = primitive; _begun = true; }
+        lock (_gate) { Mutable(); if (primitive is < MeshPrimitiveType.Points or > MeshPrimitiveType.TriangleStrip) throw new ArgumentOutOfRangeException(nameof(primitive)); var skin = _skin; Reset(); _skin = skin; _primitive = primitive; _begun = true; }
     }
     /// <summary>Clears geometry, attributes and borrowed material and restores four-slot line defaults.</summary>
     public void Clear() { lock (_gate) { Mutable(); Reset(); } }
     /// <summary>Gets the selected primitive topology, including while empty.</summary>
     /// <returns>Lines initially and after Clear.</returns>
-    public Mesh.PrimitiveType GetPrimitiveType() { lock (_gate) { ThrowIfDisposed(); return _primitive; } }
+    public MeshPrimitiveType GetPrimitiveType() { lock (_gate) { ThrowIfDisposed(); return _primitive; } }
     /// <summary>Gets the selected influence-width mode.</summary>
     /// <returns>Four initially; imported skin selects its actual width.</returns>
     public SkinWeightCount GetSkinWeightCount() { lock (_gate) { ThrowIfDisposed(); return _skin; } }
@@ -146,7 +146,7 @@ public sealed partial class SurfaceTool : ElectronObject
     {
         Array.Fill(_customFormats, MeshCustomFormat.Max);
         _vertices.Clear(); _indices.Clear(); _current = Defaults(new(default, Colors.White, default, default, 0, default, default, default, default));
-        _bones = []; _weights = []; _material = null; _skin = SkinWeightCount.Four; _format = 0; _primitive = Mesh.PrimitiveType.Lines; _begun = _skinDirty = false;
+        _bones = []; _weights = []; _material = null; _skin = SkinWeightCount.Four; _format = 0; _primitive = MeshPrimitiveType.Lines; _begun = _skinDirty = false;
     }
     private void PrepareSkin()
     {

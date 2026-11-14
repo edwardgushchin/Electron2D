@@ -391,7 +391,7 @@ internal static class PhysicsMassPerformance
             using var mesh = new ArrayMesh(); using var instances = new MultiMesh { UseColors = true };
             var vertices = new Vector2[9]; var indices = new int[24];
             for (var i = 0; i < 8; i++) { vertices[i + 1] = Vector2.FromAngle(i * Mathf.Tau / 8); indices[i * 3 + 1] = i + 1; indices[i * 3 + 2] = (i + 1) % 8 + 1; }
-            mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = vertices, Indices = indices }); instances.Mesh = mesh; instances.InstanceCount = pile.Count;
+            mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = vertices, Indices = indices }); instances.Mesh = mesh; instances.InstanceCount = pile.Count;
             var pixels = new float[pile.Count * 12]; var scale = Math.Min(1088 / pile.Width, 696 / pile.Height);
             var field = new Entity { Name = "Pile", Position = new(32, 64) }; field.Draw += canvas => canvas.DrawMultiMesh(instances); window.AddChild(field);
             var ticker = new TickNode(pile, field, instances, pixels, scale); window.AddChild(ticker);

@@ -12,13 +12,13 @@ internal static class MeshRenderingTests
     }
     private static void VerifyPixels(string method)
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(), flags: Mesh.ArrayFormat.UseDynamicUpdate);
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(), flags: Mesh.ArrayFormat.UseDynamicUpdate);
         var window = new Window { Size = new(96, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var node = new MeshInstance { Mesh = mesh, Position = new(4, 4) }; window.AddChild(node); RID owned = default; var frames = 0; var attributes = new byte[12 * 4]; var vertices = new byte[8 * 4];
         window.Ready += _ =>
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
-            owned = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, MeshTests.Quad());
+            owned = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(owned, MeshPrimitiveType.Triangles, MeshTests.Quad());
             Check(RenderingServer.MeshGetSurfaceCount(owned) == 1 && RenderingServer.MeshSurfaceGetArrayLen(owned, 0) == 4, "Owned server mesh producer/query.");
             Check(RenderingServer.MeshSurfaceGetFormatVertexStride(mesh.SurfaceGetFormat(0), 4) == 8 && RenderingServer.MeshSurfaceGetFormatAttributeStride(mesh.SurfaceGetFormat(0), 4) == 12, "Pinned 2D channel strides.");
             Reject<NotSupportedException>(() => RenderingServer.MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat.Vertex, 4));
@@ -28,7 +28,7 @@ internal static class MeshRenderingTests
             Reject<InvalidOperationException>(() => RenderingServer.MeshClear(mesh.GetRID()));
             Task.Run(() => Reject<InvalidOperationException>(() => RenderingServer.MeshGetSurfaceCount(owned))).GetAwaiter().GetResult();
             RenderingServer.FreeRID(owned); owned = RenderingServer.MeshCreate();
-            RenderingServer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.Green));
+            RenderingServer.MeshAddSurfaceFromArrays(owned, MeshPrimitiveType.Triangles, MeshTests.Quad(Colors.Green));
             window.AddChild(new DrawRIDNode(owned) { Position = new(64, 4) });
             RenderingServer.FramePostDraw += () =>
             {
@@ -65,12 +65,12 @@ internal static class MeshRenderingTests
         var resources = new List<ArrayMesh>(); var window = new Window { Size = new(100, 60), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         using var image = Image.CreateEmpty(2, 1, false, Image.Format.Rgba8); image.SetPixel(0, 0, Colors.Red); image.SetPixel(1, 0, Colors.Green);
         using var texture = ImageTexture.CreateFromImage(image); using var material = new CanvasItemMaterial { BlendMode = BlendMode.Add }; using var fallback = new CanvasItemMaterial { BlendMode = BlendMode.Mul };
-        foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>())
+        foreach (var primitive in Enum.GetValues<MeshPrimitiveType>().Where(value => value != MeshPrimitiveType.Max))
         {
             var mesh = new ArrayMesh(); resources.Add(mesh);
-            var points = primitive == Mesh.PrimitiveType.Triangles ? new Vector2[] { new(0, 0), new(12, 0), new(0, 12) } : new Vector2[] { new(0, 0), new(12, 0), new(0, 12), new(12, 12) };
+            var points = primitive == MeshPrimitiveType.Triangles ? new Vector2[] { new(0, 0), new(12, 0), new(0, 12) } : new Vector2[] { new(0, 0), new(12, 0), new(0, 12), new(12, 12) };
             mesh.AddSurfaceFromArrays(primitive, new() { Vertices = points, UVs = points.Select(p => p / 12).ToArray() }); mesh.SurfaceSetMaterial(0, material);
-            window.AddChild(new MeshInstance { Name = primitive.ToString(), Mesh = mesh, Material = fallback, Texture = primitive == Mesh.PrimitiveType.TriangleStrip ? texture : null, Position = new(6 + (int)primitive * 18, 8) });
+            window.AddChild(new MeshInstance { Name = primitive.ToString(), Mesh = mesh, Material = fallback, Texture = primitive == MeshPrimitiveType.TriangleStrip ? texture : null, Position = new(6 + (int)primitive * 18, 8) });
         }
         var frames = 0;
         window.Ready += _ =>
@@ -95,7 +95,7 @@ internal static class MeshRenderingTests
     }
     private static void VerifyWarm(string method)
     {
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshTests.Quad(), flags: Mesh.ArrayFormat.UseDynamicUpdate);
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshTests.Quad(), flags: Mesh.ArrayFormat.UseDynamicUpdate);
         var window = new Window { Size = new(96, 64) }; var node = new MeshInstance { Mesh = mesh }; window.AddChild(node);
         var frames = 0; var bytes = new byte[8]; long start = 0, active = 0, idle = 0, renderStart = 0;
         var cpuBytes = new long[148]; var renderBytes = new long[148];

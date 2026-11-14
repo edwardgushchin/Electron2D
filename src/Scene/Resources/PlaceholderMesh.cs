@@ -21,7 +21,7 @@ public sealed class PlaceholderMesh : Mesh
     /// <inheritdoc />
     protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
     /// <inheritdoc />
-    protected override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
+    protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
     /// <inheritdoc />
     protected override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => throw new ArgumentOutOfRangeException(nameof(surfaceIndex));
     /// <inheritdoc />

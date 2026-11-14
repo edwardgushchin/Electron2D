@@ -24,7 +24,7 @@ public sealed partial class RenderingServer
     /// <exception cref="ArgumentException">The identity or geometry is invalid.</exception>
     /// <exception cref="InvalidOperationException">The mesh is borrowed or owned by another renderer.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
-    public static void MeshAddSurfaceFromArrays(RID mesh, Mesh.PrimitiveType primitive, MeshSurfaceData arrays, Mesh.ArrayFormat flags = Mesh.ArrayFormat.None, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null) => RequireService().MeshAddSurfaceFromArraysCore(mesh, primitive, arrays, flags, blendShapes, lods);
+    public static void MeshAddSurfaceFromArrays(RID mesh, MeshPrimitiveType primitive, MeshSurfaceData arrays, Mesh.ArrayFormat flags = Mesh.ArrayFormat.None, IReadOnlyList<MeshSurfaceData>? blendShapes = null, IReadOnlyDictionary<float, int[]>? lods = null) => RequireService().MeshAddSurfaceFromArraysCore(mesh, primitive, arrays, flags, blendShapes, lods);
 
     /// <summary>Gets a live mesh's surface count.</summary>
     /// <param name="mesh">Borrowed or owned mesh identity.</param>
@@ -94,7 +94,7 @@ public sealed partial class RenderingServer
     /// <param name="surface">Existing zero-based surface index.</param>
     /// <returns>The topology.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
-    public static Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(RID mesh, int surface) => RequireService().MeshSurfaceGetPrimitiveTypeCore(mesh, surface);
+    public static MeshPrimitiveType MeshSurfaceGetPrimitiveType(RID mesh, int surface) => RequireService().MeshSurfaceGetPrimitiveTypeCore(mesh, surface);
 
     /// <summary>Gets the surface vertex count.</summary>
     /// <param name="mesh">Live borrowed or owned mesh identity.</param>

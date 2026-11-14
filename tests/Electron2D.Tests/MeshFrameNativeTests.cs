@@ -18,7 +18,7 @@ internal static class MeshFrameNativeTests
     private static void Device(string language)
     {
         var data = MeshFrameTests.Data(); for (var i = 0; i < data.Vertices.Length; i++) data.Vertices[i] = data.Vertices[i] / 16 - Vector2.One * .5f;
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, data); data = mesh.SurfaceGetArrays(0);
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, data); data = mesh.SurfaceGetArrays(0);
         using var device = RenderingServer.CreateLocalRenderingDevice(); using var module = RenderingDeviceGraphicsTests.Load("DeviceMeshFrame" + language); var shader = device.ShaderCreateFromSPIRV(module);
         using var position = new RDVertexAttribute { Binding = 0, Location = 0, Stride = 36, Format = RenderingDevice.DataFormat.R32G32SFLOAT }; using var normal = new RDVertexAttribute { Binding = 0, Location = 1, Offset = 8, Stride = 36, Format = RenderingDevice.DataFormat.R32G32B32SFLOAT }; using var tangent = new RDVertexAttribute { Binding = 0, Location = 2, Offset = 20, Stride = 36, Format = RenderingDevice.DataFormat.R32G32B32A32SFLOAT }; var format = device.VertexFormatCreate([position, normal, tangent]);
         var values = new float[data.Vertices.Length * 9]; for (var i = 0; i < data.Vertices.Length; i++) { values[i * 9] = data.Vertices[i].X; values[i * 9 + 1] = data.Vertices[i].Y; values[i * 9 + 2] = data.Normals[i].X; values[i * 9 + 3] = data.Normals[i].Y; values[i * 9 + 4] = data.Normals[i].Z; values[i * 9 + 5] = data.Tangents[i].X; values[i * 9 + 6] = data.Tangents[i].Y; values[i * 9 + 7] = data.Tangents[i].Z; values[i * 9 + 8] = data.Tangents[i].W; }
@@ -35,16 +35,16 @@ internal static class MeshFrameNativeTests
     }
     private static void Immediate(ImmediateMesh mesh, bool changed)
     {
-        mesh.ClearSurfaces(); mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles); mesh.SurfaceSetNormal(new(0, 0, changed ? 1 : -1)); mesh.SurfaceSetTangent(new(changed ? -1 : 1, 0, 0, changed ? -1 : 1)); var data = MeshFrameTests.Data(); foreach (var index in data.Indices) mesh.SurfaceAddVertex2D(data.Vertices[index]); mesh.SurfaceEnd();
+        mesh.ClearSurfaces(); mesh.SurfaceBegin(MeshPrimitiveType.Triangles); mesh.SurfaceSetNormal(new(0, 0, changed ? 1 : -1)); mesh.SurfaceSetTangent(new(changed ? -1 : 1, 0, 0, changed ? -1 : 1)); var data = MeshFrameTests.Data(); foreach (var index in data.Indices) mesh.SurfaceAddVertex2D(data.Vertices[index]); mesh.SurfaceEnd();
     }
     private static void Retained(string language, string backend = "gpu")
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false); using var shader = backend == "gpu" ? Shader(language) : null; using Material material = shader is null ? new CanvasItemMaterial() : new ShaderMaterial { Shader = shader };
-        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, MeshFrameTests.Data()); mesh.SurfaceSetMaterial(0, material); using var immediate = new ImmediateMesh(); Immediate(immediate, false); immediate.SurfaceSetMaterial(0, material); using var custom = new Custom(material); using var skin = new ArrayMesh(); var skinData = MeshFrameTests.Data(); skinData.Bones = new int[32]; skinData.Weights = new float[32]; for (var i = 0; i < 4; i++) { skinData.Bones[i * 8 + 5] = 5; skinData.Weights[i * 8 + 5] = 1; }
-        skin.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, skinData, flags: Mesh.ArrayFormat.Use8BoneWeights); skin.SurfaceSetMaterial(0, material);
-        using var strip = new ArrayMesh(); var stripData = MeshFrameTests.Data(); stripData.Indices = [0, 1, 3, 2]; strip.AddSurfaceFromArrays(Mesh.PrimitiveType.TriangleStrip, stripData); strip.SurfaceSetMaterial(0, material);
-        using var lines = new ArrayMesh(); var lineData = MeshFrameTests.Data(); lineData.Indices = [0, 1, 2, 3]; lines.AddSurfaceFromArrays(Mesh.PrimitiveType.Lines, lineData); lines.SurfaceSetMaterial(0, material);
-        using var points = new ArrayMesh(); var pointData = MeshFrameTests.Data(); pointData.Indices = []; points.AddSurfaceFromArrays(Mesh.PrimitiveType.Points, pointData); points.SurfaceSetMaterial(0, material);
+        using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, MeshFrameTests.Data()); mesh.SurfaceSetMaterial(0, material); using var immediate = new ImmediateMesh(); Immediate(immediate, false); immediate.SurfaceSetMaterial(0, material); using var custom = new Custom(material); using var skin = new ArrayMesh(); var skinData = MeshFrameTests.Data(); skinData.Bones = new int[32]; skinData.Weights = new float[32]; for (var i = 0; i < 4; i++) { skinData.Bones[i * 8 + 5] = 5; skinData.Weights[i * 8 + 5] = 1; }
+        skin.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, skinData, flags: Mesh.ArrayFormat.Use8BoneWeights); skin.SurfaceSetMaterial(0, material);
+        using var strip = new ArrayMesh(); var stripData = MeshFrameTests.Data(); stripData.Indices = [0, 1, 3, 2]; strip.AddSurfaceFromArrays(MeshPrimitiveType.TriangleStrip, stripData); strip.SurfaceSetMaterial(0, material);
+        using var lines = new ArrayMesh(); var lineData = MeshFrameTests.Data(); lineData.Indices = [0, 1, 2, 3]; lines.AddSurfaceFromArrays(MeshPrimitiveType.Lines, lineData); lines.SurfaceSetMaterial(0, material);
+        using var points = new ArrayMesh(); var pointData = MeshFrameTests.Data(); pointData.Indices = []; points.AddSurfaceFromArrays(MeshPrimitiveType.Points, pointData); points.SurfaceSetMaterial(0, material);
         using var builder = new SurfaceTool(); builder.CreateFromArrays(MeshFrameTests.Data()); builder.GenerateNormals(); builder.GenerateTangents(); builder.SetMaterial(material); using var authored = builder.Commit();
         using var instances = new MultiMesh { Mesh = mesh, InstanceCount = 1 }; instances.SetInstanceTransform2D(0, Transform.Identity);
         using var window = new Window { Size = new(256, 64), MinSize = new(256, 64), MaxSize = new(256, 64), Visible = true };
@@ -75,7 +75,7 @@ internal static class MeshFrameNativeTests
         protected override MeshSurfaceData OnSurfaceGetArrays(int surfaceIndex) => _data;
         protected override int OnSurfaceGetArrayLen(int surfaceIndex) => 4;
         protected override int OnSurfaceGetArrayIndexLen(int surfaceIndex) => 6;
-        protected override PrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => PrimitiveType.Triangles;
+        protected override MeshPrimitiveType OnSurfaceGetPrimitiveType(int surfaceIndex) => MeshPrimitiveType.Triangles;
         protected override ArrayFormat OnSurfaceGetFormat(int surfaceIndex) => ArrayFormat.Vertex | ArrayFormat.Normal | ArrayFormat.Tangent | ArrayFormat.TexUV | ArrayFormat.Index | ArrayFormat.Use2DVertices;
         protected override Material? OnSurfaceGetMaterial(int surfaceIndex) => material;
         protected override void OnSurfaceSetMaterial(int surfaceIndex, Material? value) { material = value!; EmitChanged(); }

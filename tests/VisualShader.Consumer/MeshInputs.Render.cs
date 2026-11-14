@@ -59,7 +59,7 @@ internal static partial class GraphChecks
         }
         private ArrayMesh MeshFor(MeshCustomData? a, MeshCustomData? b)
         {
-            var mesh = KeepMeshInput(new ArrayMesh()); mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new()
+            var mesh = KeepMeshInput(new ArrayMesh()); mesh.AddSurfaceFromArrays(MeshPrimitiveType.Triangles, new()
             { Vertices = [Vector2.Zero, new(12, 0), new(12, 12), new(0, 12)], UVs = [Vector2.Zero, Vector2.Right, Vector2.One, Vector2.Down], Indices = [0, 1, 2, 0, 2, 3], Custom0 = a, Custom1 = b }); return mesh;
         }
         protected override void OnReady()
