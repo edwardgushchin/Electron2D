@@ -105,7 +105,8 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     if platform == "Windows":
         receipt = json.loads((publish / "Electron2D.native-manifest.json").read_text())[rid]
         assert set(receipt["files"]) == set(native_package.LIBRARIES["Windows"]), "Wrong Windows native manifest"
-        assert not any((native / name).exists() for name in native_package.retired_windows_files()), "Retired Windows payload leaked into publish"
+        assert not any((directory / name).exists() for directory in (publish, native)
+                       for name in native_package.retired_windows_files()), "Retired Windows payload leaked into publish"
         for name, checksum in receipt["files"].items():
             library = native / name
             assert hashlib.sha256(library.read_bytes()).hexdigest() == checksum, f"Native manifest checksum mismatch: {name}"
