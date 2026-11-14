@@ -237,16 +237,16 @@ Gets the currently attached application loop.
 <a id="p-electron2d-engine-architecturename"></a>
 ### `public static string ArchitectureName { get; }`
 
-Gets the architecture targeted by the current Electron2D process.
+Gets the architecture on which the loaded engine code executes. For portable assemblies this is the architecture selected by the running .NET host, including under emulation.
 
-**Value:** A stable lowercase architecture name such as `x86_64`, `x86_32`, `arm64`, or `arm32`.
+**Value:** `x86_64`, `x86_32`, `arm64`, `arm32`, `rv64`, `ppc64`, `loongarch64`, `wasm32`, or `wasm64` where reported by the runtime. Other architectures use the lowercase .NET process architecture value.
 
 <a id="p-electron2d-engine-versioninfo"></a>
 ### `public static EngineVersionInfo VersionInfo { get; }`
 
 Gets immutable version information for the loaded Electron2D assembly.
 
-**Value:** The process-wide version descriptor.
+**Value:** The same immutable [version descriptor](EngineVersionInfo.md) on every read, including reads from different threads.
 
 ## Method Descriptions
 

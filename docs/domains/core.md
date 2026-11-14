@@ -138,7 +138,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - `ProjectSettings`: process and isolated registries, feature overrides, metadata, dirty/event state, project persistence/discovery, directory-backed virtual paths, typed input-action defaults, and typed 2D gravity/damping world defaults consumed by SceneTree physics.
 - `MainLoop`: explicit initialization, variable/fixed frame callbacks, host-stop results, finalization, system notification IDs, typed permission results, internal original-delta context, and Input transition/dispatch integration.
 - `Engine`: singleton runtime configuration, bounded host-driven scheduling, scaled/original delta delivery, callback metrics, architecture/version data, and [typed named-singleton registry](../components/engine-runtime.md#named-singleton-registry) with 18 permanent services and borrowed user registrations.
-- `EngineVersionInfo`: immutable typed assembly version metadata.
+- `EngineVersionInfo`: immutable typed metadata for the loaded engine's product and assembly versions, build configuration and source provenance.
 - `EngineCopyrightInfo` and `EngineCopyrightPart`: deeply immutable typed distribution component attribution; [Engine metadata](../components/engine-runtime.md#distribution-metadata) also exposes recorded authors/donors and full license documents.
 - `Mathf`: seven scalar constants and 127 integer/float/double/decimal operations covering transcendental math, angles, interpolation, approximation, rounding, periodic values, and audio conversion.
 - `RandomNumberGenerator`: independent managed PCG32 stream with restorable 64-bit seed/state and integer, float, normal and weighted sampling; it is not a cryptographic random source.

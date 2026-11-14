@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -26,7 +25,7 @@ public sealed partial class Engine : ElectronObject
     private const int RuntimeStopping = 4;
 
     private static readonly Engine SharedInstance = new();
-    private static readonly EngineVersionInfo SharedVersionInfo = CreateVersionInfo();
+    private static readonly EngineVersionInfo SharedVersionInfo = EngineVersionInfo.FromAssembly(typeof(Engine).Assembly);
     private static readonly IReadOnlyList<PropertyDescriptor> EngineProperties =
         Array.AsReadOnly<PropertyDescriptor>(
         [
@@ -424,20 +423,16 @@ public sealed partial class Engine : ElectronObject
     protected override void ValidateDisposal() =>
         throw new InvalidOperationException("The process-wide Engine instance cannot be disposed.");
 
-    private static EngineVersionInfo CreateVersionInfo()
-    {
-        var assembly = typeof(Engine).Assembly;
-        var assemblyVersion = assembly.GetName().Version ?? new Version(0, 0);
-        var informationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-        return new EngineVersionInfo(assemblyVersion, informationalVersion ?? assemblyVersion.ToString());
-    }
-
     private static string GetArchitectureName() => RuntimeInformation.ProcessArchitecture switch
     {
         Architecture.X64 => "x86_64",
         Architecture.X86 => "x86_32",
         Architecture.Arm64 => "arm64",
-        Architecture.Arm => "arm32",
+        Architecture.Arm or Architecture.Armv6 => "arm32",
+        Architecture.Wasm => Environment.Is64BitProcess ? "wasm64" : "wasm32",
+        Architecture.RiscV64 => "rv64",
+        Architecture.Ppc64le => "ppc64",
+        Architecture.LoongArch64 => "loongarch64",
         _ => RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant()
     };
 
