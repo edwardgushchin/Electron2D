@@ -18,9 +18,9 @@ Provides position, button-mask, and modifier state shared by mouse events.
 
 - Responsibility: common mouse button mask, local position, and canvas or viewport global position; initializes inherited `Device` to mouse ID 32, including its typed revert default.
 - Complete declared API: protected constructor; `ButtonMask`, `Position`, `GlobalPosition`; protected overrides `CopyEventStateTo` and `GetPropertyDescriptors`. All three values are stored typed descriptors.
-- Invariants: the five named held-button bits are Left/Right/Middle/X1/X2, while a caller-supplied bitfield is stored without narrowing. Source positions are retained, including non-finite components; positional transforms still require finite local coordinates. Concrete transforms preserve `GlobalPosition`.
+- Invariants: the five named held-button bits are Left/Right/Middle/X1/X2, while a caller-supplied bitfield is stored without narrowing. Source positions are retained, including non-finite components; positional transforms still require finite local coordinates. Concrete transforms preserve `GlobalPosition`. Native and window-coordinate input localize Position to the receiving viewport and set GlobalPosition to that point on the temporary scene event. Control GUI callbacks receive control-local Position and GlobalPosition in their receiving canvas. Local PushInput passes the original GlobalPosition to scene callbacks.
 - Threading/lifecycle: caller-owned mutable Resource; disposed access fails.
-- Verification: `VerifyInput` checks defaults, raw mask bits, non-finite positions, change notification and copies on both mouse subclasses. `CanvasCoordinateTests` checks viewport and item transforms; `ControlInputTests` checks default and transformed CanvasLayer GUI coordinates.
+- Verification: `VerifyInput` checks defaults, raw mask bits, non-finite positions, change notification and copies on both mouse subclasses. `CanvasCoordinateTests` checks viewport and item transforms; `ControlInputTests` checks default and transformed CanvasLayer GUI coordinates. [ViewportMotionTests](../../tests/Electron2D.Tests/ViewportMotionTests.cs) covers mouse motion through root stretch, transformed nested containers and a child CanvasLayer with native events and direct injection.
 
 ## Examples
 
