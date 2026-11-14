@@ -85,6 +85,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(WindowAlwaysOnTop, isBasic: false);
         RegisterInternal(WindowNoFocus, isBasic: false);
         RegisterInternal(WindowSharpCorners, isBasic: false);
+        RegisterInternal(AllowPerPixelTransparency, isBasic: false);
+        _settings[AllowPerPixelTransparency.Name].RestartIfChanged = true;
+        RegisterInternal(WindowTransparent, isBasic: false);
+        RegisterInternal(ViewportTransparentBackground, isBasic: false);
         RegisterInternal(WindowStretchAspect, isBasic: false);
         RegisterInternal(WindowStretchScale, isBasic: false);
         RegisterInternal(WindowStretchScaleMode, isBasic: false);
@@ -543,6 +547,13 @@ public partial class ProjectSettingsRegistry : ElectronObject
             return (GetWithOverrideCore(WindowResizable), GetWithOverrideCore(WindowBorderless),
                 GetWithOverrideCore(WindowAlwaysOnTop), GetWithOverrideCore(WindowNoFocus),
                 GetWithOverrideCore(WindowSharpCorners));
+    }
+
+    internal (bool Allowed, bool NativeWindow, bool Viewport) ReadProjectWindowTransparency()
+    {
+        lock (_gate)
+            return (GetWithOverrideCore(AllowPerPixelTransparency), GetWithOverrideCore(WindowTransparent),
+                GetWithOverrideCore(ViewportTransparentBackground));
     }
 
     internal T GetCore<T>(ProjectSetting<T> setting)

@@ -246,17 +246,17 @@ public partial class Window
             return;
 
         var settings = ProjectSettings.Service.ReadProjectWindowChrome();
-        Apply(WindowFlag.ResizeDisabled, !settings.Resizable && !OperatingSystem.IsIOS());
-        Apply(WindowFlag.Borderless, settings.Borderless);
-        Apply(WindowFlag.AlwaysOnTop, settings.AlwaysOnTop && display.SupportsTopLevelFocusAndStacking);
-        Apply(WindowFlag.NoFocus, settings.NoFocus && display.SupportsTopLevelFocusAndStacking);
-        Apply(WindowFlag.SharpCorners, settings.SharpCorners && display.SupportsSharpCorners);
+        ApplyProjectFlag(WindowFlag.ResizeDisabled, !settings.Resizable && !OperatingSystem.IsIOS());
+        ApplyProjectFlag(WindowFlag.Borderless, settings.Borderless);
+        ApplyProjectFlag(WindowFlag.AlwaysOnTop, settings.AlwaysOnTop && display.SupportsTopLevelFocusAndStacking);
+        ApplyProjectFlag(WindowFlag.NoFocus, settings.NoFocus && display.SupportsTopLevelFocusAndStacking);
+        ApplyProjectFlag(WindowFlag.SharpCorners, settings.SharpCorners && display.SupportsSharpCorners);
+    }
 
-        void Apply(WindowFlag flag, bool enabled)
-        {
-            if (enabled && !IsFlagAssigned(flag))
-                _flags |= 1u << (int)flag;
-        }
+    private void ApplyProjectFlag(WindowFlag flag, bool enabled)
+    {
+        if (enabled && !IsFlagAssigned(flag))
+            _flags |= 1u << (int)flag;
     }
 
     private void ValidateFlag(WindowFlag flag)

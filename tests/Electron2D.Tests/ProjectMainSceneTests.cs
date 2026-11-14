@@ -41,6 +41,8 @@ internal static class ProjectMainSceneTests
             VerifyProjectWindow(project.FullName, user.FullName, main, backend);
             VerifyProjectPlacement(project.FullName, user.FullName);
             VerifyProjectChrome(project.FullName, user.FullName);
+            if (OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy")
+                VerifyProjectTransparency(project.FullName, user.FullName, backend);
 
             ProjectSettings.Reset(ProjectSettings.MainScene);
             CheckFailed<InvalidOperationException>();
@@ -438,6 +440,96 @@ internal static class ProjectMainSceneTests
             window.Ready += _ => { verify(); window.Tree!.Quit(); };
             Check(Engine.RunProject(window) == 0 && window.IsDisposed && !DisplayServer.IsAvailable,
                 "The window chrome host retires cleanly.");
+        }
+    }
+
+    private static void VerifyProjectTransparency(string project, string user, string backend)
+    {
+        var allowed = ProjectSettings.AllowPerPixelTransparency;
+        var native = ProjectSettings.WindowTransparent;
+        var clear = ProjectSettings.ViewportTransparentBackground;
+        const string feature = "root_alpha_test";
+
+        ProjectSettings.Save();
+        using (var saved = new ProjectSettingsRegistry(project, user))
+        {
+            saved.Load();
+            Check(!saved.Get(allowed) && !saved.Get(native) && !saved.Get(clear), "All three alpha settings default to false.");
+            saved.Set(native, true);
+            saved.Set(clear, true);
+            saved.SetFeatureOverride(allowed, feature, true);
+            saved.Save();
+        }
+        ProjectSettings.Load();
+        try
+        {
+            Verify(new Window(), backend, nativeAlpha: false, transparentClear: true);
+            ProjectSettings.AddCustomFeature(feature);
+            if (backend == "gpu")
+            {
+                using var unsupported = new Window { Size = new(192, 144) };
+                Reject<NotSupportedException>(() => Engine.RunProject(unsupported));
+                Check(unsupported.IsDisposed && !DisplayServer.IsAvailable && !RenderingServer.IsAvailable && Engine.MainLoop is null,
+                    "Strict GPU refusal releases the configured transparent host.");
+                ProjectSettings.Set(ProjectSettings.RenderingFallback, true);
+            }
+
+            Verify(new Window(), "compatibility", nativeAlpha: true, transparentClear: true);
+            ProjectSettings.Set(native, false);
+            Verify(new Window(), backend, nativeAlpha: false, transparentClear: true);
+            ProjectSettings.Set(native, true);
+            ProjectSettings.Set(clear, false);
+            Verify(new Window(), "compatibility", nativeAlpha: true, transparentClear: false);
+            ProjectSettings.Set(clear, true);
+
+            using var packed = new PackedScene();
+            using var authored = new Window { Transparent = false, TransparentBG = false };
+            packed.Pack(authored);
+            Verify((Window)packed.Instantiate(), backend, nativeAlpha: false, transparentClear: false);
+
+            ProjectSettings.RemoveCustomFeature(feature);
+            Verify(new Window { Transparent = true }, "compatibility", nativeAlpha: true, transparentClear: true);
+        }
+        finally
+        {
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.ClearFeatureOverride(allowed, feature);
+            ProjectSettings.Reset(allowed);
+            ProjectSettings.Reset(native);
+            ProjectSettings.Reset(clear);
+            ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        }
+
+        static void Verify(Window window, string renderer, bool nativeAlpha, bool transparentClear)
+        {
+            using (window)
+            {
+                window.Size = new(192, 144);
+                window.ContentScaleSize = new(96, 96);
+                window.ContentScaleMode = ContentScaleMode.Viewport;
+                window.ContentScaleAspect = ContentScaleAspect.Keep;
+                var observed = false;
+                window.Ready += _ =>
+                {
+                    Check(window.Transparent == nativeAlpha && DisplayServer.WindowGetFlag(WindowFlag.Transparent) == nativeAlpha &&
+                        window.TransparentBG == transparentClear && RenderingServer.GetCurrentRenderingMethod() == renderer,
+                        "The native window flag, viewport clear policy and renderer are independently observable.");
+                    RenderingServer.FramePostDraw += () =>
+                    {
+                        using var viewport = window.GetTexture().GetImage()!;
+                        using var presentation = RenderingServer.Service!.Readback();
+                        Check(viewport.GetPixel(10, 10).IsEqualApprox(Colors.Red) && presentation.GetPixel(39, 15).IsEqualApprox(Colors.Red),
+                            "Opaque scene content reaches the viewport and the fitted native presentation.");
+                        Check(viewport.GetPixel(90, 90).A == (transparentClear ? 0 : 1), "The viewport clear carries the configured alpha.");
+                        Check(presentation.GetPixel(2, 2).A == (nativeAlpha ? 0 : 1), "Fitted margins reflect native window alpha.");
+                        if (nativeAlpha)
+                            Check(presentation.GetPixel(150, 126).A == (transparentClear ? 0 : 1), "The native presentation copy preserves viewport alpha.");
+                        observed = true;
+                        window.Tree!.Quit();
+                    };
+                };
+                Check(Engine.RunProject(window) == 0 && observed && window.IsDisposed, "The transparency host renders and retires.");
+            }
         }
     }
 

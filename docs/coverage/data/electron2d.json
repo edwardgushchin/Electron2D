@@ -295481,6 +295481,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.AllowPerPixelTransparency()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AllowPerPixelTransparency",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E AllowPerPixelTransparency { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.AnisotropicFilteringLevel()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -298406,6 +298419,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.ViewportTransparentBackground()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ViewportTransparentBackground",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E ViewportTransparentBackground { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.ViewportWidth()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -298624,6 +298650,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CElectron2D.ContentScaleStretch\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowTransparent()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowTransparent",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowTransparent { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {

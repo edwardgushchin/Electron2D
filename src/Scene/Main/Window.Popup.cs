@@ -67,7 +67,8 @@ public partial class Window
     public bool MinimizeDisabled { get => GetFlag(WindowFlag.MinimizeDisabled); set => SetFlag(WindowFlag.MinimizeDisabled, value); }
     /// <summary>Gets or sets transparent window composition, configured before native window creation.</summary>
     /// <value>False initially; PopupPanel defaults to true.</value>
-    /// <remarks>Main and child native surfaces select alpha before creation. Compatibility presents native alpha;
+    /// <remarks>Configured project startup can supply the root's unassigned transparency flag.
+    /// Main and child native surfaces select alpha before creation. Compatibility presents native alpha;
     /// GPU requires permitted fallback or rejects startup. Changing native alpha while open is unsupported.
     /// Embedded composition retains its viewport host.</remarks>
     /// <exception cref="NotSupportedException">Native alpha would change after creation or the backend cannot present it.</exception>
@@ -379,6 +380,7 @@ public partial class Window
         new PropertyDescriptor<Window,bool>(nameof(PopupWMHint),w=>w.PopupWMHint,(w,v)=>w.PopupWMHint=v,_=>false,stored:true),
         new PropertyDescriptor<Window,bool>(nameof(MinimizeDisabled),w=>w.MinimizeDisabled,(w,v)=>w.MinimizeDisabled=v,_=>false,stored:true),
         new PropertyDescriptor<Window,bool>(nameof(MaximizeDisabled),w=>w.MaximizeDisabled,(w,v)=>w.MaximizeDisabled=v,_=>false,stored:true),
-        new PropertyDescriptor<Window,bool>(nameof(Transparent),w=>w.Transparent,(w,v)=>w.Transparent=v,_=>false,stored:true),
+        new PropertyDescriptor<Window, bool>(nameof(Transparent), w => w.Transparent, (w, v) => w.Transparent = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.Transparent) },
     ];
 }

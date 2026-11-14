@@ -1,3 +1,5 @@
+[Project window transparency](../components/window-runtime.md#main-window-native-transparency) connects the native alpha permission and flag with the independent viewport clear policy. Two Blocked rows move to Implemented and the permission moves to Partial pending the Android activity-surface adapter. Coverage is **14,039/18,898 (74.29%)**, with 1,123 Partial, 268 Unimplemented, 3,468 Blocked, 8,395 Excluded and zero unmapped.
+
 [Project window flags](../components/window-runtime.md#project-startup-window-flags) apply five resize, border, stacking, focus and corner settings during configured startup. Five Blocked rows move to Implemented. Coverage is **14,037/18,898 (74.28%)**, with 1,122 Partial, 268 Unimplemented, 3,471 Blocked, 8,395 Excluded and zero unmapped.
 
 [Project window placement](../components/window-runtime.md#project-startup-placement) connects four typed placement and mode settings to configured root startup. Four Blocked rows move to Implemented. Coverage is **14,032/18,898 (74.25%)**, with 1,122 Partial, 268 Unimplemented, 3,476 Blocked, 8,395 Excluded and zero unmapped.

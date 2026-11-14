@@ -5584,6 +5584,21 @@
       "reason": "Typed configured-root window flag."
     },
     {
+      "godot": "ProjectSettings::property:display/window/per_pixel_transparency/allowed",
+      "electron2d": "property:Electron2D.ProjectSettings.AllowPerPixelTransparency()",
+      "reason": "Typed project setting for the configured root transparency policy."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/size/transparent",
+      "electron2d": "property:Electron2D.ProjectSettings.WindowTransparent()",
+      "reason": "Typed project setting for the configured root transparency policy."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/viewport/transparent_background",
+      "electron2d": "property:Electron2D.ProjectSettings.ViewportTransparentBackground()",
+      "reason": "Typed project setting for the configured root transparency policy."
+    },
+    {
       "godot": "ProjectSettings::property:display/window/size/viewport_width",
       "electron2d": "property:Electron2D.ProjectSettings.ViewportWidth()",
       "reason": "Typed configured root-window startup setting."
@@ -8918,10 +8933,24 @@
     },
     {
       "godot": [
+        "ProjectSettings::property:display/window/per_pixel_transparency/allowed"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0040. Gates the project's creation-time native transparency flag. Explicit Window configuration keeps its existing contract. Android still requires a transparent Activity/SurfaceView creation and composition path controlled by this setting, with device verification; the current host rejects that request explicitly."
+    },
+    {
+      "godot": [
         "ProjectSettings::property:display/window/size/transparent"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: connect the project per-pixel transparency permission, native root creation flag and separate viewport clear-alpha setting through the existing compatibility presentation, with explicit strict GPU/fallback behavior under ADR 0040."
+      "state": "Implemented",
+      "reason": "ADR 0040. On configured startup the permitted request creates an alpha-capable native root before renderer selection. Strict GPU refuses this surface and permitted fallback selects Compatibility. Android uses the separate platform permission policy. Explicit Window assignments take precedence."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:rendering/viewport/transparent_background"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0019/0028. Configured startup selects the root viewport's transparent-black clear independently of native window alpha. Explicit Window viewport values take precedence. Both ordinary renderers use the existing per-viewport clear path."
     },
     {
       "godot": [

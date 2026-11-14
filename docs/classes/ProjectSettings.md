@@ -113,6 +113,16 @@ Viewport dimensions and scale must be positive, scale must be finite, override a
 
 `WindowResizable` defaults to true. `WindowBorderless`, `WindowAlwaysOnTop`, `WindowNoFocus` and `WindowSharpCorners` default to false. These bool descriptors register the corresponding `display/window/size/` keys. See [project startup window flags](../components/window-runtime.md#project-startup-window-flags) for native application and platform limits.
 
+## Project window transparency
+
+| Descriptor | Project key |
+| --- | --- |
+| `AllowPerPixelTransparency` | `display/window/per_pixel_transparency/allowed` |
+| `WindowTransparent` | `display/window/size/transparent` |
+| `ViewportTransparentBackground` | `rendering/viewport/transparent_background` |
+
+All three settings default to false. The permission is sampled at startup and marked restart-required. See [native transparency and viewport clearing](../components/window-runtime.md#main-window-native-transparency).
+
 ## Project theme startup
 
 `GUIThemeCustom` and `GUIThemeCustomFont` are permanent typed `ProjectSetting<string>` definitions for `gui/theme/custom` and `gui/theme/custom_font`, both empty by default, basic and restart-required. Feature overrides and ordinary project path resolution apply. Engine.Start and windowed Engine.Run load the selected Theme/font before activating the main loop. Invalid files fail preparation and retain the previous selection. See [ThemeDB](ThemeDB.md#project-startup-theme) for ownership and lookup order.

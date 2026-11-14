@@ -384,6 +384,15 @@ public partial class Window : Viewport
 
     internal void OpenNative(bool disableVSync = false, bool printGPUProfile = false, bool runProject = false)
     {
+        if (runProject)
+        {
+            var alpha = ProjectSettings.Service.ReadProjectWindowTransparency();
+            if (OperatingSystem.IsAndroid() && alpha.Allowed)
+                throw new NotSupportedException("The Android host cannot request a transparent activity surface.");
+            ApplyProjectFlag(WindowFlag.Transparent, alpha.Allowed && alpha.NativeWindow);
+            ApplyProjectViewportTransparency(alpha.Viewport);
+        }
+
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible, transparent: Transparent);
         _display.SceneWindow = this;
         _display.ConfigureSystemMenu(Engine.IsEditorHint || ProjectSettings.GetWithOverride(ProjectSettings.EnableAltSpaceMenu));

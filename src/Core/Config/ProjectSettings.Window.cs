@@ -81,4 +81,20 @@ public sealed partial class ProjectSettings
     /// <summary>Requests sharp native corners for the configured project window on Windows 11.</summary>
     /// <value>False by default, using the system corner policy. An explicitly assigned window flag takes precedence.</value>
     public static ProjectSetting<bool> WindowSharpCorners { get; } = new("display/window/size/sharp_corners", false);
+
+    /// <summary>Allows the configured project's native window transparency request.</summary>
+    /// <value>False by default. Read before opening the root surface.</value>
+    /// <remarks>Applies to the project flag. Explicit <see cref="Window.Transparent"/> assignments retain their own native contract.</remarks>
+    public static ProjectSetting<bool> AllowPerPixelTransparency { get; } =
+        new("display/window/per_pixel_transparency/allowed", false);
+
+    /// <summary>Requests a native window capable of presenting per-pixel alpha.</summary>
+    /// <value>False by default. Requires <see cref="AllowPerPixelTransparency"/> and a compatible native renderer.</value>
+    public static ProjectSetting<bool> WindowTransparent { get; } = new("display/window/size/transparent", false);
+
+    /// <summary>Clears the configured root viewport to transparent black.</summary>
+    /// <value>False by default. An explicit <see cref="Viewport.TransparentBG"/> assignment takes precedence.</value>
+    /// <remarks>Applies independently of the native window transparency request.</remarks>
+    public static ProjectSetting<bool> ViewportTransparentBackground { get; } =
+        new("rendering/viewport/transparent_background", false);
 }

@@ -403,7 +403,11 @@ Use SDK 32 to exercise the legacy producer. The runner verifies the emulator ide
 
 ## Main-window native transparency
 
+Configured project startup samples three [typed settings](../classes/ProjectSettings.md#project-window-transparency) with feature overrides. AllowPerPixelTransparency permits the project's WindowTransparent request to select a native alpha surface at creation. ViewportTransparentBackground separately selects transparent-black viewport clearing, including on an opaque native window. An explicit Window.Transparent or TransparentBG assignment takes precedence for that property. Packed scenes preserve explicit false values. Older archives restore stored values as explicit. On Android, turning on the native transparency permission requires an Activity/SurfaceView adapter and currently fails explicitly. Viewport alpha remains independent.
+
 Window.Transparent configured before Engine.Run is passed into native main-window creation, sharing the existing child creation-time alpha policy. Compatibility preserves native alpha, including loading-image backgrounds. Strict GPU startup rejects because the current SDL GPU presentation API cannot present transparent windows; configured RenderingFallback can select Compatibility. Equal live assignments preserve the active flag; changing alpha after native creation rejects without changing authored state.
+
+The Windows project-scene profiles verify the native SDL creation flag, actual viewport alpha and alpha in the retained presentation frame, transparent margins, feature override precedence and packed explicit false values. They also verify strict GPU refusal with cleanup and a rendered Compatibility fallback. OS desktop composition, Android, other targets and release-package qualification remain separate.
 
 BootImageTests verifies real main-window alpha pixels, the native transparency flag, strict GPU failure cleanup, permitted fallback and live-change rollback on software Linux Wayland/X11. This does not establish physical compositor appearance, native GPU alpha or other-platform support.
 
