@@ -1,6 +1,6 @@
 # File and directory access component
 
-Last updated: 2026-10-29
+Last updated: 2026-11-14
 
 ## Scope
 
@@ -52,6 +52,14 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Instance calls are lock-serialized; compound caller sequences require caller synchronization.
 - The component is blocking and allocating, never a real-time hot-path service.
 
+## Text framing
+
+`ReadLine` consumes LF, CRLF, lone CR or NUL. A final unterminated line is returned with EOF set. For seekable files, a physical terminator at the end of the file sets EOF on the next incomplete read. `ReadCSVLine` uses the same framing, normalizing terminators inside quotes to LF. An empty record has one empty field. Exhaustion returns an empty array. Misplaced and unclosed quotes raise `FormatException`. CSV uses a single nonsurrogate character as delimiter, excluding quote and line terminators.
+
+`WriteString` writes the supplied UTF-8 bytes without adding a BOM. `WriteLine` and `WriteCSVLine` append one LF. CSV quotes fields containing the delimiter, quotes or line terminators and doubles embedded quotes. Pascal strings use an unsigned 32-bit UTF-8 byte count in the selected byte order. A representable but truncated Pascal frame consumes available bytes and raises `EndOfStreamException` on files or closed pipes. On a live nonblocking pipe, temporary short reads raise `IOException` without setting EOF. Seekable files check the remaining length before allocating, and pipes grow storage as bytes arrive.
+
+`ReadAllText` is a seekable snapshot. It preserves the cursor and EOF on success and failure. It preserves BOM and embedded NUL as managed characters and optionally drops CR after validating UTF-8. All text writes validate UTF-16 before emitting bytes. A partial pipe write reports the consumed prefix of the complete operation, including any Pascal header or appended LF. Use `ReadBytes` for incremental framing on a nonblocking pipe.
+
 ## Current status and exclusions
 
 Implemented for raw access, scoped directory navigation/enumeration/mutation, directory-backed `res://`/`user://`, typed binary/text methods, metadata/hashes, temporary files/directories, links, filesystem identity/case/capacity/type queries, Unix permissions, Linux/macOS/Windows extended attributes, FastLZ/DEFLATE/Zstandard/GZip/Brotli, and raw-key/password AES-GCM containers. The executable test host verifies the Linux platform backend; macOS and Windows backends compile but require native-host verification. Android and iOS are product runtime targets, but link and drive enumeration deliberately reject them until host/storage integration exists; neither mobile target has native verification or a claimed extended-attribute backend. Web is also a runtime target, but no browser host or storage integration exists; the first Web host slice must define and verify its filesystem capability boundary.
@@ -59,6 +67,8 @@ Implemented for raw access, scoped directory navigation/enumeration/mutation, di
 FastLZ and Zstandard reuse the unchanged, accepted native dependencies via two private file-codec exports, without an ENet host or socket. The matching source-built native bundle is required; older published bundles lack this ABI. `Electron2DNativeLibrary` explicitly selects the target bridge and is copied after package assets for repository consumers. Native compression uses 64 KiB blocks, a compressed-length prefix and SHA-256 checksum; the decoder validates record structure before allocation and checks exact output and padding. BCL decoders consume only the declared decoded length and reject surplus output. The outer E2DCMP version-1 envelope and atomic whole-file commit remain unchanged. Compression is not authentication. Sparse/delta exported pack formats and arbitrary named `pipe://` connections retain their export-decoder/named-pipe dependencies. Ordinary PCK/ZIP mounts now share resource reads, hashes, transformed streams and directory lookup. Registered UID identities/imported resources use their existing loader/registry paths. OS-created process pipes now execute through the existing FileAccess methods; registered resources and UID paths retain their current loader/registry boundaries. Exact Android storage-volume discovery requires its future host integration. Universal-value storage and shared numeric/thread-local error slots are permanent typed-C# exclusions. No empty compatibility methods exist for these gaps.
 
 ## Verification
+
+[`FileTextTests`](../../tests/Electron2D.Tests/FileTextTests.cs) compares exact wire bytes and cursor/EOF transitions, including a fresh reader process and directory-backed and Gzip-backed files. [`OSProcessTests`](../../tests/Electron2D.Tests/OSProcessTests.cs) checks live pipe framing and verifies the SHA-256 of a Pascal frame delivered by partial-write retries.
 
 The hidden-entry fixtures use the actual filesystem policy: dot-prefixed file and directory names on Unix, explicit `FileAttributes.Hidden` on Windows. Both fixture attributes are asserted before testing default/opt-in snapshots and streaming/concurrent filters. The Windows full suite in [run 37407321875](https://github.com/edwardgushchin/Electron2D/actions/runs/37407321875) passed configuration/file checks and exposed the previous dot-name-only fixture assumption on all three architectures. Runtime hidden-entry policy is unchanged; corrected target execution remains required.
 

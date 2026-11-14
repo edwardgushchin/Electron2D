@@ -74,7 +74,7 @@ file.WriteString("ready");
 | [`public string ReadLine()`](#m-electron2d-fileaccess-readline) | Reads UTF-8 bytes through the next LF, CR, CRLF, or null terminator. |
 | [`public string[] ReadCSVLine(char delimiter = ',')`](#m-electron2d-fileaccess-readcsvline-system-char) | Reads one CSV record. |
 | [`public string ReadPascalString()`](#m-electron2d-fileaccess-readpascalstring) | Reads a length-prefixed UTF-8 string. |
-| [`public string ReadAllText(bool skipCarriageReturns = false)`](#m-electron2d-fileaccess-readalltext-system-boolean) | Reads the entire file as UTF-8 without changing the cursor. |
+| [`public string ReadAllText(bool skipCarriageReturns = false)`](#m-electron2d-fileaccess-readalltext-system-boolean) | Reads the entire seekable file as UTF-8 without changing the cursor or EOF state. |
 | [`public void WriteByte(byte value)`](#m-electron2d-fileaccess-writebyte-system-byte) | Writes one unsigned byte. |
 | [`public void WriteUInt16(ushort value)`](#m-electron2d-fileaccess-writeuint16-system-uint16) | Writes one unsigned 16-bit integer. |
 | [`public void WriteUInt32(uint value)`](#m-electron2d-fileaccess-writeuint32-system-uint32) | Writes one unsigned 32-bit integer. |
@@ -563,7 +563,7 @@ Reads up to a requested number of bytes.
 
 Reads UTF-8 bytes through the next LF, CR, CRLF, or null terminator.
 
-**Returns:** The decoded line without its terminator; an empty string after end of file.
+**Returns:** The decoded line without its terminator; an empty string after end of file. A nonblocking pipe can return the available prefix without reaching EOF.
 
 **Exceptions**
 
@@ -581,11 +581,11 @@ Reads one CSV record.
 
 - `delimiter`: The one-character field separator.
 
-**Returns:** The decoded fields; an empty array when called at end of file.
+**Returns:** The decoded fields; an empty array when called at end of file. Within quotes, LF, CR, CRLF and NUL normalize to LF. Use byte reads for incremental framing on nonblocking pipes.
 
 **Exceptions**
 
-- `ArgumentException`: `delimiter` is CR, LF, or a double quote.
+- `ArgumentException`: `delimiter` is a line terminator, a double quote, or a UTF-16 surrogate.
 - `FormatException`: The record has an unterminated or misplaced quoted field.
 - `Text.DecoderFallbackException`: The bytes are not valid UTF-8.
 - `InvalidOperationException`: The file is closed or not readable.
@@ -597,7 +597,7 @@ Reads one CSV record.
 
 Reads a length-prefixed UTF-8 string.
 
-**Returns:** The decoded string whose byte count is stored as an unsigned 32-bit prefix.
+**Returns:** The decoded string whose byte count is stored as an unsigned 32-bit prefix. The prefix uses `BigEndian`. An incomplete read consumes the available prefix or payload.
 
 **Exceptions**
 
@@ -610,11 +610,11 @@ Reads a length-prefixed UTF-8 string.
 <a id="m-electron2d-fileaccess-readalltext-system-boolean"></a>
 ### `public string ReadAllText(bool skipCarriageReturns = false)`
 
-Reads the entire file as UTF-8 without changing the cursor.
+Reads the entire seekable file as UTF-8 without changing the cursor or EOF state.
 
 **Parameters**
 
-- `skipCarriageReturns`: Whether CR bytes are omitted before decoding.
+- `skipCarriageReturns`: Whether decoded CR characters are omitted.
 
 **Returns:** The decoded complete contents.
 
@@ -623,6 +623,7 @@ Reads the entire file as UTF-8 without changing the cursor.
 - `Text.DecoderFallbackException`: The file is not valid UTF-8.
 - `InvalidOperationException`: The file is closed or not readable.
 - `IO.IOException`: Reading fails or the file is too large for a managed snapshot.
+- `NotSupportedException`: The stream is not seekable.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writebyte-system-byte"></a>
@@ -807,7 +808,7 @@ Writes one CSV record followed by LF.
 **Exceptions**
 
 - `ArgumentNullException`: `values` or one of its fields is `null`.
-- `ArgumentException`: `delimiter` is CR, LF, or a double quote.
+- `ArgumentException`: `delimiter` is a line terminator, a double quote, or a UTF-16 surrogate.
 - `Text.EncoderFallbackException`: A field contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
@@ -816,7 +817,7 @@ Writes one CSV record followed by LF.
 <a id="m-electron2d-fileaccess-writepascalstring-system-string"></a>
 ### `public void WritePascalString(string value)`
 
-Writes a UTF-8 string preceded by its unsigned 32-bit byte count.
+Writes a UTF-8 string preceded by its unsigned 32-bit byte count in the selected byte order.
 
 **Parameters**
 
