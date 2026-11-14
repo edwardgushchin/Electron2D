@@ -1,7 +1,7 @@
 using System.Globalization;
 using Electron2D;
 
-internal static class TranslationQueryChecks
+internal static partial class TranslationQueryChecks
 {
     // Expected memberships are fixed independently of the runtime matching helper.
     private static readonly string[] Locales = ["fr", "fr-CA", "sr-Cyrl-RS", "sr-Latn-ME", "he-IL", "id-ID", "zh-CN", "zh-Hant-TW", "fr-CA", "", "yi", "en-GB", "ro-MD"];
@@ -42,6 +42,8 @@ internal static class TranslationQueryChecks
             Reject<ObjectDisposedException>(() => retired.FindTranslations("fr", true));
             Reject<ObjectDisposedException>(() => retired.HasTranslationForLocale("fr", false));
             CheckConcurrentRetirement();
+            CheckCatalog();
+            CheckConcurrentCatalogLookup();
         }
         finally { TranslationServer.Clear(); TranslationServer.Culture = originalCulture; }
         if (errors.Count != 0) throw new InvalidOperationException(string.Join(Environment.NewLine, errors));
@@ -150,8 +152,15 @@ internal static class TranslationQueryChecks
         internal string Value = "";
         protected override void OnDraw()
         {
-            Value = Atr("Choice");
-            DrawRect(new(8, 40, 16, 12), Value == "French" ? Colors.Red : Value == "Hebrew" ? Colors.Blue : Colors.Black);
+            Value = AtrN("Choice", "Choices", 2, "menu");
+            DrawRect(new(8, 40, 16, 12), Value switch
+            {
+                "French" => Colors.Red,
+                "Edited" => Colors.Yellow,
+                "Fallback" => Colors.Green,
+                "Hebrew" => Colors.Blue,
+                _ => Colors.Black
+            });
         }
     }
 
@@ -163,10 +172,17 @@ internal static class TranslationQueryChecks
         TranslationServer.Clear();
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-        using var french = new Translation { Locale = "fr-CA" };
-        using var hebrew = new Translation { Locale = "he-IL" };
-        french.AddMessage("Choice", "French"); hebrew.AddMessage("Choice", "Hebrew");
-        TranslationServer.AddTranslation(french); TranslationServer.AddTranslation(hebrew);
+        using var french = new CatalogOverrides { Locale = "fr-CA" };
+        using var fallback = new Translation { Locale = "fr-CA" };
+        using var hebrewSource = new Translation { Locale = "he-IL" };
+        using var hebrew = new OptimizedTranslation();
+        french.AddPluralMessage("Choice", ["Un", "French"], "menu");
+        fallback.AddPluralMessage("Choice", ["Un", "Fallback"], "menu");
+        hebrewSource.AddPluralMessage("Choice", ["Hebrew", "Other"]);
+        Check(hebrew.Generate(hebrewSource), "The optimized catalog generates from the source first form.");
+        TranslationServer.AddTranslation(fallback);
+        TranslationServer.AddTranslation(french);
+        TranslationServer.AddTranslation(hebrew);
         var locales = TranslationServer.GetLoadedLocales();
         var menu = new OptionButton { Position = new(32, 4), Size = new(170, 28) };
         foreach (var locale in locales) menu.AddItem(TranslationServer.GetLocaleName(locale));
@@ -180,11 +196,12 @@ internal static class TranslationQueryChecks
         {
             menu.Select(index);
             var locale = locales[menu.Selected];
-            Check(TranslationServer.HasTranslationForLocale(locale, true) && TranslationServer.FindTranslations(locale, true).Length == 1, "The language menu selects an available exact catalog.");
+            Check(TranslationServer.HasTranslationForLocale(locale, true) && TranslationServer.FindTranslations(locale, true).Length == (index == 0 ? 2 : 1), "The language menu selects an available exact catalog.");
             if (index == 1) Check(TranslationServer.HasTranslationForLocale("iw_IL", false) && TranslationServer.FindTranslations("iw_IL", false).SequenceEqual([hebrew]), "Alias availability and retrieval agree in the language consumer.");
             TranslationServer.Culture = CultureInfo.GetCultureInfo(locale);
             indicator.QueueRedraw();
         }
+        (string Value, Color Pixel)[] expected = [("French", Colors.Red), ("Edited", Colors.Yellow), ("Fallback", Colors.Green), ("Hebrew", Colors.Blue)];
         Action? capture = null;
         window.Ready += _ =>
         {
@@ -199,13 +216,21 @@ internal static class TranslationQueryChecks
             {
                 using var image = window.GetTexture().GetImage() ?? throw new InvalidOperationException("No scene framebuffer.");
                 var pixel = image.GetPixel(12, 44);
-                Check(frames == 0 ? indicator.Value == "French" && pixel.R > .95f && pixel.B < .05f : indicator.Value == "Hebrew" && pixel.B > .95f && pixel.R < .05f, "Language selection reaches the expected native pixels.");
+                var (value, color) = expected[frames];
+                Check(indicator.Value == value && Math.Abs(pixel.R - color.R) < .05f && Math.Abs(pixel.G - color.G) < .05f && Math.Abs(pixel.B - color.B) < .05f,
+                    $"Language menu frame {frames}: expected {value}/{color}, got {indicator.Value}/{pixel}.");
                 if (output is not null) { Directory.CreateDirectory(output); image.SavePNG(System.IO.Path.Combine(output, $"{backend}-{frames}.png")); }
-                if (++frames == 1) Select(1); else window.Tree!.Quit();
+                switch (++frames)
+                {
+                    case 1: french.AddPluralMessage("Choice", ["Un", "Edited"], "menu"); indicator.QueueRedraw(); break;
+                    case 2: french.EraseMessage("Choice", "menu"); indicator.QueueRedraw(); break;
+                    case 3: Select(1); break;
+                    default: window.Tree!.Quit(); break;
+                }
             };
             RenderingServer.FramePostDraw += capture;
         };
-        try { Check(Engine.Run(window) == 0 && frames == 2 && window.IsDisposed && !RenderingServer.IsAvailable, "Native language consumer teardown."); }
+        try { Check(Engine.Run(window) == 0 && frames == expected.Length && window.IsDisposed && !RenderingServer.IsAvailable, "Native language consumer teardown."); }
         finally
         {
             if (capture is not null && RenderingServer.IsAvailable) RenderingServer.FramePostDraw -= capture;
@@ -214,7 +239,7 @@ internal static class TranslationQueryChecks
             ProjectSettings.Set(ProjectSettings.RenderingFallback, originalFallback);
             if (!window.IsDisposed) window.Dispose();
         }
-        Console.WriteLine($"Translation query language menu: {actualMethod}/{actualDriver}, French/Hebrew pixels and teardown passed.");
+        Console.WriteLine($"Translation query language menu: {actualMethod}/{actualDriver}, four catalog states reached native pixels and teardown passed.");
     }
 
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
