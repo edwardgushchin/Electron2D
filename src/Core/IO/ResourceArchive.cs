@@ -813,7 +813,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             var nodePath = i == 0 ? "." : parent == 0 ? name : nodes[parent].Path + "/" + name;
             var factory = new SceneFactoryData(() => (Node)type.Factory(), type.Type, 0,
                 type.Type == typeof(MissingNode) && missingScene.Length == 0 ? typeID : "", missingScene, source);
-            nodes[i] = new(factory, name, parent, owner, sibling, nodePath, parent < 0 ? "." : nodes[parent].Path, owner < 0 ? "" : owner == 0 ? "." : "", groups, properties, (PackedScene?)instance, link.Placeholder, instanceRoot, instancePath, deferred);
+            nodes[i] = new(factory, name, parent, owner, sibling, nodePath, parent < 0 ? "" : nodes[parent].Path, owner < 0 ? "" : owner == 0 ? "." : "", Array.AsReadOnly(groups), properties, (PackedScene?)instance, link.Placeholder, instanceRoot, instancePath, deferred);
         }
         if (count == 0)
         {

@@ -385,7 +385,7 @@ public sealed partial class PackedScene : Resource
             var path = index == 0
                 ? "."
                 : parentIndex == 0 ? node.Name : $"{nodes[parentIndex].Path}/{node.Name}";
-            var parentPath = parentIndex < 0 ? "." : nodes[parentIndex].Path;
+            var parentPath = parentIndex < 0 ? string.Empty : nodes[parentIndex].Path;
             var ownerPath = ownerIndex < 0 ? string.Empty : ownerIndex == 0 ? "." : nodes[ownerIndex].Path;
             var origin = inheritance?.Nodes.GetValueOrDefault(node.InstanceID);
             if (origin is not null && origin.RuntimeType != node.GetType())
@@ -395,7 +395,7 @@ public sealed partial class PackedScene : Resource
                 .Select(property => new ScenePropertyData(property.Name, property.CaptureStoredValue(node)))
                 .ToArray();
             var groups = node.GetPersistentGroups();
-            if (origin is not null) groups = groups.Where(group => !origin.Groups.Contains(group)).ToArray();
+            if (origin is not null) groups = Array.AsReadOnly(groups.Where(group => !origin.Groups.Contains(group)).ToArray());
 
             var instanceRoot = index > 0 && origin is not null ? 0 : -1;
             var instancePath = instanceRoot >= 0 ? origin!.Path : string.Empty;
