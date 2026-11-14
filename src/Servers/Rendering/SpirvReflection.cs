@@ -10,6 +10,40 @@ internal static unsafe partial class SpirvReflection
     private const string Library = "spirv-cross-c-shared";
     private const int Binding = 33, DescriptorSet = 34;
 
+    internal static string TranspileAdvancedHLSL(byte[] code)
+    {
+        const int hlsl = 2, hlslOption = 0x4000000;
+        if (CreateContext(out var context) != 0 || context == 0)
+            throw new InvalidOperationException("Could not create the HLSL translation context.");
+        using var owner = new RenderHandle(context, DestroyContext);
+        nint ir;
+        fixed (byte* pointer = code) Check(Parse(context, (nint)pointer, (nuint)code.Length / 4, out ir));
+        Check(CreateCompiler(context, hlsl, ir, 1, out var compiler));
+        Check(CreateCompilerOptions(compiler, out var options));
+        Check(SetCompilerOption(options, hlslOption | 13, 67)); // HLSL_SHADER_MODEL
+        Check(SetCompilerOption(options, hlslOption | 14, 1)); // HLSL_POINT_SIZE_COMPAT
+        Check(SetCompilerOption(options, hlslOption | 55, 1)); // HLSL_NONWRITABLE_UAV_TEXTURE_AS_SRV
+        Check(SetCompilerOption(options, hlslOption | 71, 1)); // HLSL_FLATTEN_MATRIX_VERTEX_INPUT_SEMANTICS
+        Check(SetCompilerOption(options, hlslOption | 90, 1)); // HLSL_USE_ENTRY_POINT_NAME
+        Check(InstallCompilerOptions(compiler, options));
+        Check(CompileSource(compiler, out var source));
+        return Marshal.PtrToStringUTF8(source) ?? throw new InvalidOperationException("SPIR-V translation returned no HLSL.");
+
+        void Check(int result)
+        {
+            if (result != 0) throw new NotSupportedException("Shader Model 6.7 HLSL translation failed: " + Marshal.PtrToStringUTF8(GetError(context)));
+        }
+    }
+
+    [LibraryImport(Library, EntryPoint = "spvc_compiler_create_compiler_options"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int CreateCompilerOptions(nint compiler, out nint options);
+    [LibraryImport(Library, EntryPoint = "spvc_compiler_options_set_uint"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int SetCompilerOption(nint options, int name, uint value);
+    [LibraryImport(Library, EntryPoint = "spvc_compiler_install_compiler_options"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int InstallCompilerOptions(nint compiler, nint options);
+    [LibraryImport(Library, EntryPoint = "spvc_compiler_compile"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int CompileSource(nint compiler, out nint source);
+
     internal static Dictionary<(uint Set, int Slot), uint> DeviceUniformSizes(byte[] code)
     {
         if (CreateContext(out var context) != 0 || context == 0) throw new InvalidOperationException("Could not create the device reflection context.");

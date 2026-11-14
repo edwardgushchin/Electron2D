@@ -611,6 +611,8 @@ Reports whether the selected format supports the requested two-dimensional textu
 
 False for formats or roles unavailable on this backend.
 
+Direct3D 12 integer `Sampling` requires a shader-readable typed format, Shader Model 6.7 and Advanced Texture Operations. Integer samplers require nearest filtering.
+
 `format`: A concrete format to query.
 
 `usageFlags`: Requested allocation and transfer roles.

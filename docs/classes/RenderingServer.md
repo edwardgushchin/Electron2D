@@ -1391,7 +1391,7 @@ Margins are finite nonnegative screen pixels. fitEmpty synthesizes a rectangle a
 
 Retained screen snapshots can be configured through RenderingServer.CanvasItemSetCopyToBackBuffer on live item identities. BackBufferCopy source assignments republish the authored policy; renderer-only settings stay outside scene getters/storage. See [retained copy contract](../components/canvas-rendering.md#retained-backbuffer-copy-settings).
 
-[UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
+[UInt16 image texture sources](../components/integer-textures.md) retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility. Direct3D 12 borrows the typed renderer allocation for raw transfers and reports `Sampling` when the device confirms Shader Model 6.7 and Advanced Texture Operations.
 
 ## Viewport screen attachment
 
