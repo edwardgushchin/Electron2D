@@ -802,6 +802,8 @@ def render():
             matches = ([engine_by_id[row["electron2d"]] for row in override] if override else
                        [] if special and special[0] == "Excluded" else exact_enum or choose(godot_type, member, candidates, used_local))
             adapted = None
+            if not matches and member["id"] == "@GlobalScope::method:fmod(float:,float:)":
+                adapted = "C# Single % Single / Double % Double"
             if not matches and member["kind"] == "constructor" and owners and " struct " in class_engine["signature"]:
                 parameters = member["attributes"].get("params", [])
                 if not parameters:

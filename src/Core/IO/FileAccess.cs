@@ -271,7 +271,8 @@ public sealed partial class FileAccess : ElectronObject
     /// supplied name and AbsolutePath identifies staging. Close/disposal publishes completed output; Flush alone does not.
     /// An open physical read-only stream can finish reading its original file after a staged replacement.
     /// Subsequent opens of the path see the replacement. I/O write failure aborts staging. A failed final
-    /// replacement retains completed staging for recovery.</remarks>
+    /// replacement retains completed staging for recovery. A mounted directory at a resource path masks
+    /// any physical file at that path.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
@@ -282,7 +283,6 @@ public sealed partial class FileAccess : ElectronObject
         var absolutePath = ResolvePath(path);
         ValidateMode(mode);
         if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
-        ResourcePacks.Runtime.EnsureReadablePath(path);
         if (mode == FileAccessModeFlags.Read && ResourcePacks.Runtime.TryOpen(path, out var packed))
             return new FileAccess(path, "res://" + PCKFormat.Normalize(ResourceUID.EnsurePath(path)), mode, packed, packed: true);
         var stream = OpenPhysical(absolutePath, mode);
@@ -1051,14 +1051,15 @@ public sealed partial class FileAccess : ElectronObject
         }
     }
 
-    /// <summary>Determines whether a physical or directory-backed virtual file exists.</summary>
+    /// <summary>Determines whether a physical, virtual, or mounted file exists.</summary>
     /// <param name="path">The file path.</param>
     /// <returns><see langword="true"/> only when the resolved path identifies an existing file.</returns>
+    /// <remarks>Mounted directories resolve as directories even when a physical file has the same name.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="UnauthorizedAccessException">A virtual path escapes its configured root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static bool FileExists(string path) => ResourcePacks.Runtime.TrySize(path, out _) || !ResourcePacks.Runtime.HasFileAncestor(path) && File.Exists(ResolvePath(path));
+    public static bool FileExists(string path) => ResourcePacks.Runtime.TrySize(path, out _) || !ResourcePacks.Runtime.BlocksPhysicalFile(path) && File.Exists(ResolvePath(path));
 
     /// <summary>Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack.</summary>
     /// <param name="path">The file path.</param>
@@ -1408,7 +1409,6 @@ public sealed partial class FileAccess : ElectronObject
 
     private static FileInfo GetFileInfo(string path)
     {
-        ResourcePacks.Runtime.EnsureReadablePath(path);
         var info = new FileInfo(ResolvePath(path));
         if (!info.Exists)
             throw new FileNotFoundException("The file does not exist.", info.FullName);
@@ -1883,7 +1883,7 @@ public sealed partial class FileAccess : ElectronObject
         ArgumentNullException.ThrowIfNull(path);
         if (path.Length == 0)
             throw new ArgumentException("A file path cannot be empty.", nameof(path));
-        ResourcePacks.Runtime.EnsureReadablePath(path);
+        ResourcePacks.Runtime.EnsureFilePath(path);
         return ProjectSettings.GlobalizePath(path);
     }
 

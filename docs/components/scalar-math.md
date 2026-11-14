@@ -1,6 +1,6 @@
 # Scalar math component
 
-Last updated: 2026-09-25
+Last updated: 2026-11-14
 
 ## Scope
 
@@ -23,7 +23,7 @@ This Core component owns backend-independent scalar mathematics shared by engine
 
 - .NET scalar numeric primitives and stack-based decimal bit inspection.
 - No package, native backend, renderer, scene, resource, I/O, editor, or platform-host dependency.
-- Geometry, color, and scene transform code depend on this component; dependency never points back from scalar math.
+- Vectors, rectangles, transforms, color, and Entity angle conversion use this component. Scalar math depends only on .NET.
 
 ## Invariants and error behavior
 
@@ -36,18 +36,20 @@ This Core component owns backend-independent scalar mathematics shared by engine
 
 ## Current implementation status
 
-Implemented and verified. The complete audited 4.7.2 stable typed scalar surface is present as seven constants and 127 method overloads. Matching scalar formulas formerly duplicated by vectors and transforms now route through `Mathf`; color, rectangle, transform, vector, integer-vector snapping, and Entity degree conversion use the shared contract. The former `1e-5f` component approximation was corrected to `1e-6f`.
+Implemented and verified. The complete audited 4.7.2 stable typed scalar surface is present as seven constants and 127 method overloads. Matching scalar formulas in vectors and transforms route through `Mathf`; color, rectangle, transform, vector, integer-vector snapping, and Entity degree conversion use the shared contract. The former `1e-5f` component approximation was corrected to `1e-6f`.
 
 ## Exclusions and limitations
 
 - Random generation is a separate [Core component](random-generation.md). This scalar-math component has no noise, generic numeric abstraction, vector overload, configurable global epsilon, approximate fast-trigonometry mode, or public SIMD contract.
 - Cube root and truncation remain direct internal `System.MathF` operations because they are not part of the audited public surface.
 - Transcendental bit-for-bit equivalence across every supported OS/architecture is not claimed; only contract-level behavior is fixed.
-- Verification currently executes on Linux/.NET 10. Windows, macOS, Android, iOS, Android TV, tvOS, and Web remain unverified; this scalar component has no X11/Wayland-specific behavior.
+- The scalar component is independent of display backends. Platform and NativeAOT qualification are tracked separately from scalar API coverage.
 
 ## Verification
 
-The executable harness checks the exact reflected surface, every method family, positive/negative/domain/boundary cases, strict epsilon behavior, documented exceptions, integer overflow, NaN/infinity, angle ties and wrapping, downstream geometry behavior, and zero warmed allocations. Release XML generation treats warnings as errors.
+The Release runner's scalar profile executes the same VerifyMathF and geometry checks as the default runner. It checks the 127 overloads and seven constants, independent interpolation polynomials and timed knots, integer boundaries, non-finite inputs, signed zero, rounding and strict epsilon. The warmed workload compares results and counts current-thread managed allocations across four concurrent threads.
+
+The Windows x64 .NET 10 scalar audit compares all overloads and constants with the pinned typed C# implementation. The Release profile also checks the C# floating remainder operator for signed zero, non-finite operands, zero divisors, and extreme finite values. The [global coverage table](../coverage/classes/@GlobalScope.md) records each typed mapping, including float/integer spellings that share an overload. DecimalCount reads decimal scale and SinCos returns a value tuple. Both are managed conveniences. Variadic dynamic extrema and mixed scalar-to-integral snapping are outside the accepted typed family.
 
 ## Decisions
 
