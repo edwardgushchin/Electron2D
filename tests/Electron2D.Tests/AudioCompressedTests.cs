@@ -33,6 +33,7 @@ internal static class AudioCompressedTests
         VerifyMetadataAndCorruption(mp3, ogg);
         VerifyBoundaries(mp3, ogg, trace);
         using var surround = VerifyMultichannel();
+        VerifyIdentificationFraming(surround);
         VerifyLoaderAndNative(mp3, surround, native);
         Console.WriteLine(native ? "Compressed format/PCM/cursor/loop/loader/native and 64-pass allocation checks passed." : "Compressed CPU/cursor/loop/loader checks passed; native checks run separately.");
     }
@@ -168,6 +169,58 @@ internal static class AudioCompressedTests
             fromFile.Dispose();
             throw;
         }
+    }
+    private static void VerifyIdentificationFraming(AudioStreamOggVorbis stream)
+    {
+        const int framingByte = 29;
+        var encoded = Fixture("surround.ogg");
+        Check(encoded[26] == 1 && encoded[27] == 30 && (encoded[28 + framingByte] & 1) == 1,
+            "Surround fixture begins with one complete, framed identification packet.");
+        encoded[28 + framingByte] &= 0xfe;
+        // Keep the first page's CRC valid so both loaders reach identification header validation.
+        uint crc = 0;
+        encoded.AsSpan(22, 4).Clear();
+        foreach (var value in encoded.AsSpan(0, 28 + 30))
+        {
+            crc ^= (uint)value << 24;
+            for (var bit = 0; bit < 8; bit++)
+                crc = (crc << 1) ^ ((crc & 0x80000000u) == 0 ? 0 : 0x04c11db7u);
+        }
+        System.Buffers.Binary.BinaryPrimitives.WriteUInt32LittleEndian(encoded.AsSpan(22, 4), crc);
+        Reject<FormatException>(() => AudioStreamOggVorbis.LoadFromBuffer(encoded).Dispose());
+
+        var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-vorbis-framing-" + Guid.NewGuid() + ".ogg");
+        var original = stream.PacketSequence!;
+        using var before = stream.GenerateSample();
+        var tags = stream.Tags;
+        var duration = stream.GetLength();
+        try
+        {
+            System.IO.File.WriteAllBytes(path, Fixture("surround.ogg"));
+            using var cached = ResourceLoader.Load<AudioStreamOggVorbis>(path);
+            var cachedPackets = cached.PacketSequence;
+            System.IO.File.WriteAllBytes(path, encoded);
+            Reject<FormatException>(() => AudioStreamOggVorbis.LoadFromFile(path).Dispose());
+            Reject<FormatException>(() => ResourceLoader.Load<AudioStreamOggVorbis>(path, ResourceLoader.CacheMode.Replace));
+            Check(ReferenceEquals(ResourceLoader.GetCachedRef<AudioStreamOggVorbis>(path), cached) &&
+                ReferenceEquals(cached.PacketSequence, cachedPackets), "Invalid identification framing preserves the cached resource and packets.");
+            using var cachedSample = cached.GenerateSample();
+            Check(cachedSample.Data.SequenceEqual(before.Data), "Invalid identification framing preserves cached PCM.");
+        }
+        finally { System.IO.File.Delete(path); }
+
+        using var malformed = (OggPacketSequence)original.Duplicate();
+        var pages = malformed.PacketData;
+        pages[0][0][framingByte] &= 0xfe;
+        malformed.PacketData = pages;
+        malformed.SamplingRate = 123;
+        Reject<FormatException>(() => stream.PacketSequence = malformed);
+        Check(ReferenceEquals(stream.PacketSequence, original) && stream.Tags.SequenceEqual(tags) &&
+            stream.GetLength() == duration && malformed.SamplingRate == 123,
+            "Invalid identification framing changes neither the published resource nor candidate metadata.");
+        using var after = stream.GenerateSample();
+        Check(after.Data.SequenceEqual(before.Data), "Invalid identification framing preserves published PCM.");
+        Console.WriteLine("Vorbis identification framing: valid Ogg CRC, both loaders, cache replacement, and PacketSequence rollback passed.");
     }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
     private static void VerifyLoaderAndNative(AudioStreamMP3 mp3, AudioStreamOggVorbis ogg, bool runNative)

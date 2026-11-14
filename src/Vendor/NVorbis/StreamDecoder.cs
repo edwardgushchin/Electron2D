@@ -194,6 +194,10 @@ namespace Electron2D.NVorbisBindings
 
             _block0Size = 1 << (int)packet.ReadBits(4);
             _block1Size = 1 << (int)packet.ReadBits(4);
+            if (!packet.ReadBit())
+            {
+                return false;
+            }
 
             if (NominalBitrate == 0 && UpperBitrate > 0 && LowerBitrate > 0)
             {

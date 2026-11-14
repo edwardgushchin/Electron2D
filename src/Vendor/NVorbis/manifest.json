@@ -66,9 +66,11 @@
     "Disable nullable/missing XML diagnostics for preserved upstream sources.",
     "Internalize top-level delegate types and the upstream reversed-modifier DataPacket declaration.",
     "Suppress CA2265 for the upstream span comparison.",
-    "Decode residue with submap-local channel bundles and coupling flags; preserve encoded PCM channel order."
+    "Decode residue with submap-local channel bundles and coupling flags; preserve encoded PCM channel order.",
+    "Reject an identification header without its mandatory framing bit."
   ],
   "patchedSourcesLfSha256": {
+    "StreamDecoder.cs": "c28ed76d35c64d41ec98eded1aebe92c92e9081f75d07187d2e9c8a1c42c1973",
     "Mapping.cs": "ec13bd7a9cd76d00131f364a473a70405f11d5f1d58d7ca6c19ee91639ed2026",
     "Residue0.cs": "9ff9a20e599364cefe737225f7fc9608daa92f571d470eab8f6957ed73b34c7f",
     "Residue2.cs": "a65d2060d97b037320a0d93c1d79ffd072ca879e96151782485feebaedcbc10d"
