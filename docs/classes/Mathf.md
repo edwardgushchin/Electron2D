@@ -18,6 +18,8 @@ Provides scalar constants and common mathematical operations for engine code and
 
 `Mathf` is the engine's stateless scalar-math surface. It centralizes single- and double-precision transcendental functions, angle conversion and shortest-path arithmetic, interpolation, approximation, rounding, wrapping, audio-scale conversion, and integer helpers. It owns no mutable state, resource, handle, callback, or lifecycle.
 
+Scalar overloads select their numeric types at compile time. Use C# operators for ordinary arithmetic and remainder. `Pow` evaluates floating-point powers, and `PosMod` computes modulus with the sign of its divisor. Geometry and color overloads are documented on their declaring types. See [ADR 0034](../decisions/core-math.md#adr-0034).
+
 Single precision is the primary engine scalar contract. Double overloads exist where the audited typed API provides them. `Pi`, `Tau`, `E`, `Sqrt2`, `Inf`, `NaN`, and `Epsilon` are single-precision constants; `Epsilon` is exactly `1e-6f`. Double approximate comparisons use an internal `1e-14` threshold.
 
 Angles use radians unless a member explicitly names degrees. Single-precision overloads are the
