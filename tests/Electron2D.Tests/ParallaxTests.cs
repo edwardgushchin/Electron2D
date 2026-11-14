@@ -63,7 +63,62 @@ internal static class ParallaxTests
             Reject<AggregateException>(failureCamera.ForceUpdateTransform);
             Near(succeeding.ScreenOffset, new(20, 0));
         }
+        VerifySceneArchives();
         Console.WriteLine("Parallax camera, limits, repetition, automatic scroll, packing and ownership passed.");
+    }
+
+    private static void VerifySceneArchives()
+    {
+        var folder = System.IO.Directory.CreateTempSubdirectory("e2d-parallax-");
+        var previousPolicy = ResourceLoader.AbortOnMissingResources;
+        try
+        {
+            using var root = new CanvasLayer { Layer = -100 };
+            var modern = new Parallax { Name = "Scrolling", RepeatSize = new(32, 0), RepeatTimes = 3, ScrollScale = new(.5f, 1) };
+            Check(modern.PhysicsInterpolationMode == PhysicsInterpolationMode.Inherit,
+                "Parallax inherits the default physics interpolation policy.");
+            root.AddChild(modern);
+            modern.Owner = root;
+            var modernPath = System.IO.Path.Combine(folder.FullName, "parallax.e2dscene");
+            ResourceSaver.SaveScene(root, modernPath);
+            ResourceLoader.SetAbortOnMissingResources(true);
+            using (var packed = ResourceLoader.Load<PackedScene>(modernPath, ResourceLoader.CacheMode.Ignore))
+            using (var copy = (CanvasLayer)packed.Instantiate())
+            {
+                var scrolling = copy.GetNode<Parallax>("Scrolling");
+                Check(copy.Layer == -100 && ReferenceEquals(scrolling.Owner, copy) &&
+                      scrolling.RepeatSize == modern.RepeatSize && scrolling.RepeatTimes == 3 &&
+                      scrolling.ScrollScale == modern.ScrollScale, "Typed CanvasLayer and Parallax archive round trip.");
+            }
+
+            // Write the old IDs and representative fields through the generic missing-node archive path.
+            foreach (var (id, field) in new[] { ("ParallaxBackground", "ScrollBaseOffset"), ("ParallaxLayer", "MotionMirroring") })
+            {
+                var path = System.IO.Path.Combine(folder.FullName, id + ".e2dscene");
+                using var legacy = new MissingNode { OriginalClass = id, RecordingProperties = true };
+                legacy.SetStoredValue(field, new Vector2(12, 0));
+                legacy.RecordingProperties = false;
+                ResourceSaver.SaveScene(legacy, path);
+                ResourceLoader.SetAbortOnMissingResources(true);
+                Reject<InvalidDataException>(() => ResourceLoader.Load<PackedScene>(path));
+                Check(!ResourceLoader.HasCached(path), "A rejected legacy scene leaves no cached resource.");
+                ResourceLoader.SetAbortOnMissingResources(false);
+                using var recovered = ResourceLoader.Load<PackedScene>(path);
+                ResourceLoader.SetAbortOnMissingResources(true);
+                Check(ReferenceEquals(recovered, ResourceLoader.Load<PackedScene>(path)),
+                    "The default cache mode reuses a recovered scene under strict policy.");
+                Reject<InvalidDataException>(() => ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore));
+                using var missing = (MissingNode)recovered.Instantiate();
+                Check(missing.OriginalClass == id && missing.GetStoredValue<Vector2>(field) == new Vector2(12, 0),
+                    "Explicit recovery keeps the old ID and stored field as missing-node data.");
+            }
+        }
+        finally
+        {
+            ResourceLoader.SetAbortOnMissingResources(previousPolicy);
+            folder.Delete(recursive: true);
+        }
+        Console.WriteLine("Parallax scene archives: modern round trip and both legacy factory boundaries passed.");
     }
 
     private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 100, 80); }
@@ -89,12 +144,15 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
+            var actualBackend = RenderingServer.GetCurrentRenderingMethod();
+            Check(actualBackend == backend, $"Expected {backend}, got {actualBackend}.");
+            Console.WriteLine($"Parallax renderer: {actualBackend}, {RenderingServer.GetCurrentRenderingDriverName()}, {RenderingServer.GetVideoAdapterName()}.");
             camera.ForceUpdateScroll();
-            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.SetDefaultClearColor(Colors.Black);
             RenderingServer.RenderLoopEnabled = false;
             RenderingServer.FramePostDraw += () =>
             {
-                using var pixels = server.Readback(); frames++;
+                using var pixels = window.GetTexture().GetImage()!; frames++;
                 Pixel(pixels, 1, 1, Colors.Red); Pixel(pixels, 17, 1, Colors.Red);
                 Pixel(pixels, 33, 1, frames == 1 ? Colors.Black : Colors.Red);
                 Pixel(pixels, 8, 1, Colors.Black);
