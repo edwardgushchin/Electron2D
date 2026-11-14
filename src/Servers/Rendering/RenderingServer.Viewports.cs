@@ -31,6 +31,7 @@ public sealed partial class RenderingServer
     {
         EnsureOwner(); var view = Viewport.ResolveViewportRID(rid);
         if (_serverViewports.TryGetValue(view, out var state) && state.Owned) return view;
+        if (ReferenceEquals(view, _window) && _window.HostsCustomMainLoop) return view;
         if (!view.IsInsideTree || !ReferenceEquals(view.Tree, _window.Tree)) throw new InvalidOperationException("Viewport belongs to another scene or rendering session.");
         return view;
     }
@@ -107,7 +108,7 @@ public sealed partial class RenderingServer
     }
     private ViewportUpdateMode UpdateMode(Viewport view) => view is SubViewport sub ? sub.RenderTargetUpdateMode : _serverViewports.TryGetValue(view, out var state) && state.Update is { } mode ? mode : ReferenceEquals(view, _window) ? ViewportUpdateMode.WhenVisible : ViewportUpdateMode.Always;
     private ViewportClearMode ClearMode(Viewport view) => view is SubViewport sub ? sub.RenderTargetClearMode : _serverViewports.TryGetValue(view, out var state) ? state.Clear : ViewportClearMode.Always;
-    private bool ViewportLive(Viewport view, SceneTree tree) => !view.IsDisposed && (ReferenceEquals(view.Tree, tree) || _serverViewports.TryGetValue(view, out var state) && state.Owned);
+    private bool ViewportLive(Viewport view, SceneTree? tree) => !view.IsDisposed && (ReferenceEquals(view, _window) || tree is not null && ReferenceEquals(view.Tree, tree) || _serverViewports.TryGetValue(view, out var state) && state.Owned);
     private bool ViewportActive(Viewport view) => !_serverViewports.TryGetValue(view, out var state) || state.Active && state.ViewCount != 0;
     private bool ViewportScheduled(Viewport view, int depth = 0)
     {

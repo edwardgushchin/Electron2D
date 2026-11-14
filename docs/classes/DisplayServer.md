@@ -2,7 +2,7 @@
 
 [Native Windows capture exclusion](../components/window-capture.md) applies WindowFlag.ExcludeFromCapture to the selected HWND and reads observed OS state. ScreenExcludeFromCapture requires Windows 10 version 2004 or later and DWM composition; other native backends currently reject this flag.
 
-Last updated: 2026-11-07
+Last updated: 2026-11-14
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -132,6 +132,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static Key KeyboardGetLabelFromPhysical(Key physical)`](#method-keyboardgetlabelfromphysical) | Maps a physical key to its localized label in the current keyboard layout. |
 | [`public static void WindowSetIcon(Image image, int windowId = MainWindowId)`](#method-windowseticon) | Sets an icon specifically for the main window. |
 | [`public static void SetIcon(Image image)`](#method-seticon) | Sets the application-default icon while the main window has no override. |
+| [`public static void SetNativeIcon(string filename)`](../components/window-runtime.md#windows-native-icons) | Loads the application-default ICO file on Windows with independent small and large window icons. |
 | [`public static MouseMode MouseGetMode()`](#method-mousegetmode) | Gets the last successfully requested mouse mode. |
 | [`public static void MouseSetMode(MouseMode mode)`](#method-mousesetmode) | Requests cursor visibility, capture, and confinement as one mode. |
 | [`public static Vector2i MouseGetPosition()`](#method-mousegetposition) | Gets desktop pointer coordinates or the window-relative position on Wayland. |
@@ -154,16 +155,17 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)`](#method-windowsetcurrentscreen) | Requests that the main window move to another connected display. |
 | [`public static float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)`](#method-screengetrefreshrate) | Gets the current mode's refresh rate in hertz, or `-1` when unavailable. |
 | [`public static float ScreenGetMaxScale()`](#method-screengetmaxscale) | Gets the largest reported content scale among connected displays. |
-| [`public static Vector2i WindowGetMinSize(int windowId = MainWindowId)`](#method-windowgetminsize) | Gets the requested minimum client size. |
+| [`public static Vector2i WindowGetMinSize(int windowId = MainWindowId)`](#method-windowgetminsize) | Gets the requested minimum client size. [Wrapped content](../components/window-runtime.md#fitting-child-controls) can raise the native lower bound. |
 | [`public static void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetminsize) | Requests minimum client dimensions. |
 | [`public static Vector2i WindowGetMaxSize(int windowId = MainWindowId)`](#method-windowgetmaxsize) | Gets the requested maximum client size. |
 | [`public static void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetmaxsize) | Requests maximum client dimensions. |
+| [`public static bool WindowCanDraw(int windowID = MainWindowId)`](#method-windowcandraw) | Reports eligibility for automatic on-screen presentation. |
 | [`public static WindowMode WindowGetMode(int windowId = MainWindowId)`](#method-windowgetmode) | Gets the main window's current native mode. |
 | [`public static void WindowSetMode(WindowMode mode, int windowId = MainWindowId)`](#method-windowsetmode) | Requests a native main-window mode. |
 | [`public static bool WindowIsFocused(int windowId = MainWindowId)`](#method-windowisfocused) | Gets whether the main window currently has keyboard focus. |
 | [`public static bool WindowGetFlag(WindowFlag flag, int windowId = MainWindowId)`](#method-windowgetflag) | Reads a supported native window flag. |
 | [`public static void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId)`](#method-windowsetflag) | Requests a supported native window policy. |
-| [`public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`](#method-windowismaximizeallowed) | Gets whether the current SDL resize policy permits a maximize request. |
+| [`public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`](#method-windowismaximizeallowed) | Reports whether the current window policy permits user maximization. |
 | [`public static void WindowMoveToForeground(int windowId = MainWindowId)`](#method-windowmovetoforeground) | Requests native foreground on supported drivers; does nothing on Wayland. |
 | [`public static void WindowRequestAttention(int windowId = MainWindowId)`](#method-windowrequestattention) | Requests user attention until the main window receives focus. |
 | [`public static Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)`](#method-windowgetpositionwithdecorations) | Gets the main-window position including its left and top decorations. |
@@ -374,7 +376,7 @@ On the verified Linux Wayland host, the returned request state corresponded to `
 <a id="method-screensetkeepon"></a>
 #### `public static void ScreenSetKeepOn(bool enable)`
 
-Requests a process-wide screen-blanking policy. `enable: true` inhibits blanking; `false` permits normal power saving. The native subsystem releases the inhibition on shutdown. Call on the opening thread.
+Requests a process-wide screen-blanking policy. True inhibits blanking and false permits normal power saving. Call on the opening thread. A configured project restores the preceding policy when its display closes. See [project screen wakefulness](../components/window-runtime.md#project-screen-wakefulness).
 
 The Linux Wayland native test observed corresponding `UnInhibit`, `Inhibit`, and `UnInhibit` calls on the session bus while changing this state. Compositor power policies can still override the request.
 
@@ -501,7 +503,7 @@ Sets the application-default icon for the main window while it has no explicit w
 
 - `image`: A live nonempty source image.
 
-**Remarks:** The image is copied before submission. After a successful `WindowSetIcon`, this call validates the new image but preserves the window-specific icon. Wayland requires a square image and compositor window-icon support. The API does not yet propagate the default icon to future engine windows, because this server owns only one window.
+**Remarks:** The display copies the image and applies it to current and future native windows without a successful `WindowSetIcon` override. Wayland requires a square image and the compositor icon protocol. [Application icon startup](../components/window-runtime.md#application-image-icons) also uses this default.
 
 **Errors:** `ArgumentNullException` for null, `ArgumentException` for an empty image or a nonsquare Wayland image, `InvalidOperationException` for a native failure or wrong thread, and `ObjectDisposedException` after the server or image is disposed.
 
@@ -801,6 +803,11 @@ Requests maximum client dimensions for the main window. Wayland converts each pi
 
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
+<a id="method-windowcandraw"></a>
+#### `public static bool WindowCanDraw(int windowID = MainWindowId)`
+
+Returns true for a shown, non-minimized native window with an active screen renderer and automatic drawing enabled. Zero selects the root window. Display-only, dummy and offscreen hosts return false. Unknown or retired identities, inactive service and off-owner access reject. See [window drawability](../components/window-runtime.md#window-drawability).
+
 <a id="method-windowgetmode"></a>
 #### `public static WindowMode WindowGetMode(int windowId = MainWindowId)`
 
@@ -871,11 +878,7 @@ An undefined flag throws `ArgumentOutOfRangeException`. An unsupported backend t
 <a id="method-windowismaximizeallowed"></a>
 #### `public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`
 
-Gets whether the current SDL resize policy permits a maximize request.
-
-**Returns:** `true` when the window is resizable, regardless of its current mode.
-
-The native window manager can independently disable maximization. This method does not query Wayland `wm_capabilities`, so the result is only the SDL resize-policy subset of the native answer. A fullscreen window can leave fullscreen before requesting maximization.
+Reports the current maximize style on Windows native top-level windows, including the active mode and caption policy. Other backends report SDL resizability. Wayland compositor `wm_capabilities` remain unavailable. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
 
 - `windowId`: The main-window ID, zero.
 
@@ -1520,7 +1523,7 @@ The complete coverage and exact implementation triggers for absent services are 
 
 ## Presentation synchronization
 
-`public static void WindowSetVSyncMode(DisplayServer.VSyncMode vsyncMode, int windowId = MainWindowId)` selects the native main-window policy. `public static DisplayServer.VSyncMode WindowGetVSyncMode(int windowId = MainWindowId)` returns the applied policy, or the pending request before rendering starts. Both enforce the display owner thread and main-window identity; invalid enum values fail before mutation. Changes during active canvas submission are rejected. See [VSyncMode](DisplayServer.VSyncMode.md).
+`public static void WindowSetVSyncMode(DisplayServer.VSyncMode vsyncMode, int windowId = MainWindowId)` selects the policy for an active native window. `public static DisplayServer.VSyncMode WindowGetVSyncMode(int windowId = MainWindowId)` returns the applied policy, or the pending request before rendering starts. Both enforce the display owner thread and validate the window identity. The setter rejects invalid enum values before mutation and rejects changes during active rendering. See [VSyncMode](DisplayServer.VSyncMode.md) and [project startup VSync](../components/window-runtime.md#project-startup-vsync).
 
 GPU presentation uses immediate, FIFO or mailbox modes according to device support; adaptive requests fall back to Enabled. Compatibility rendering uses swap intervals 0, 1 or -1, with unsupported modes falling back to Enabled. Readback reflects that fallback. This is independent of Engine.MaxFPS, and a desktop compositor can impose its own final synchronization. Feature.SwapBuffers reports whether a renderer is attached. Renderer hide/show restores its policy after reclaiming a surface.
 

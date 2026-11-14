@@ -1,6 +1,16 @@
 {
   "mappings": [
     {
+      "godot": "DisplayServer::method:set_native_icon(String:)",
+      "electron2d": "method:Electron2D.DisplayServer.SetNativeIcon(System.String)",
+      "reason": "ADRs 0019/0040: Win32 publishes independently decoded small and large icons from an ordinary or packed ICO file."
+    },
+    {
+      "godot": "DisplayServer::method:window_can_draw(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowCanDraw(System.Int32)",
+      "reason": "ADRs 0028/0040/0095: retained native-window identity and automatic renderer eligibility; shown and minimized state come from SDL."
+    },
+    {
       "godot": "DisplayServer::method:beep()",
       "electron2d": "method:Electron2D.DisplayServer.Beep()",
       "reason": "Requests the native system bell on the display owner through Win32, AppKit, X11 or optional Wayland system-bell protocol. Missing providers and system policy can yield no feedback."
@@ -1173,7 +1183,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADRs 0040/0042: SetIcon now retains a copied default for current and future native windows, applies it before child presentation and preserves successful per-window overrides. The former one-window dependency is implemented. Complete per-window native icon/property and compositor-output verification remains its own acceptance gate; this slice does not infer icon pixels from rendered canvas tests.",
+      "reason": "ADRs 0040/0042: SetIcon retains a copied default for current and future native windows, applies it before child presentation and preserves successful per-window overrides. Application startup exercises this path with Win32 GDI pixel readback and the X11 native icon property on both root and child windows. Cocoa and a Wayland compositor advertising the icon protocol retain their native verification gates.",
       "godot": [
         "DisplayServer::method:set_icon(Image:)"
       ]
@@ -1323,8 +1333,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First platform-native icon resource packaging and host integration; Image icon is already separate.",
+      "state": "Partial",
+      "reason": "ADRs 0019/0040: Windows selects size-specific ICO entries for the current DPI and publishes owned small/large icons to live and future windows, including project startup and packed resources. Explicit image overrides keep their precedence. The remaining target requires a Cocoa NSImage ICNS loader, application-icon lifetime and native macOS verification.",
       "godot": [
         "DisplayServer::method:set_native_icon(String:)"
       ]
@@ -1383,8 +1393,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First renderer and presentation loop; drawability needs a real rendering backend.",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0040: observes live native visibility, minimization and active renderer policy; display-only and headless sessions report false. Presentation shares native visibility eligibility. See docs/components/window-runtime.md#window-drawability.",
       "godot": [
         "DisplayServer::method:window_can_draw(int:)"
       ]
@@ -1511,15 +1521,15 @@
     },
     {
       "state": "Partial",
-      "reason": "Windows 11 applies the selected HWND's DWM corner preference and reads the observed policy. WindowCornerTests exercises scene/root/child/popup lifetimes, independent DWM reads, external changes and rejection on dummy. Existing native border, resize, input and capture policies keep their own capabilities. Remaining triggers include macOS extend-to-title and capture sharing, native minimize/maximize policy on ordinary windows and a supported top-level Wayland stacking/focus adapter (ADRs 0040/0021).",
+      "reason": "Windows 11 applies the selected HWND's DWM corner preference and reads the observed policy. WindowCornerTests exercises scene/root/child/popup lifetimes, independent DWM reads, external changes and rejection on dummy. Existing native border, resize, input and capture policies keep their own capabilities. Remaining triggers include macOS extend-to-title and capture sharing, macOS and X11 caption controls on ordinary windows and a supported top-level Wayland stacking/focus adapter (ADRs 0040/0021).",
       "godot": [
         "DisplayServer::method:window_set_flag(int:DisplayServer.WindowFlags,bool:,int:)",
         "DisplayServer::method:window_get_flag(int:DisplayServer.WindowFlags,int:)"
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "The SDL resizable policy is checked without treating the current fullscreen mode as permanent inhibition, but the Wayland compositor can independently disallow maximization. Trigger: a native window-policy integration that observes xdg_toplevel wm_capabilities through SDL's owned listener or an SDL-exposed capability, plus MaximizeDisabled policy; include in its first compositor-tested slice (ADR 0040).",
+      "state": "Partial",
+      "reason": "Windows reads the observed maximize style including caption policy and mode. Other backends report SDL resizability. Requires macOS and X11 native maximize-policy observation and an SDL-owned listener or exposed capability for Wayland xdg_toplevel wm_capabilities (ADR 0040).",
       "godot": [
         "DisplayServer::method:window_is_maximize_allowed(int:)"
       ]

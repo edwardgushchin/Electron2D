@@ -230,6 +230,8 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 
 ## Windowed lifecycle
 
+The windowed host applies the project [Alt+Space system menu policy](../components/window-runtime.md#windows-system-menu) to native Windows windows.
+
 Window's authored [native mouse input policy](../components/window-input-region.md)
 survives scene copying and native reopening; embedded GUI routing stays unchanged.
 
@@ -243,7 +245,7 @@ Node now exposes typed configuration-warning queries/refresh requests. SceneTree
 
 Timer and AnimatedSprite override the common warning query for short countdowns and missing frame libraries. ZIndex, timer duration/start, frame-library replacement and window title setters issue the corresponding refresh requests; SceneDiagnosticsTests and native PathRenderingTests cover their ordering and failures.
 
-Root viewport canvas/final transforms are connected to retained rendering, scene input localization and CanvasItem coordinate/pointer queries. Logical node transforms stay unchanged. [Canvas coordinate integration](../components/canvas-rendering.md#viewport-coordinates) records ownership, singular/overflow behavior, runtime-only properties and Linux Wayland/dummy verification. Camera, CanvasLayer, root content scaling, embedded containers and embedded Window chains are integrated. Pointer reads select the root's native/emulated input or an isolated section's retained hover point before Node callbacks. Item screen queries separately target popup space, stopping at embedding viewports; viewport screen queries retain the full native-client chain. Warp requests resolve the native root after one screen projection and reject an absent host. Independent native child windows remain unavailable.
+Viewport canvas and final transforms connect retained rendering, scene input localization and CanvasItem coordinate/pointer queries. [GetStretchTransform](../classes/Viewport.md#getstretchtransform) exposes the raster scale for pixel-aligned drawing and texture sizing. Logical node transforms stay unchanged. [Canvas coordinate integration](../components/canvas-rendering.md#viewport-coordinates) records ownership, singular/overflow behavior, runtime-only properties and Linux Wayland/dummy verification. Camera, CanvasLayer, root content scaling, embedded containers and embedded Window chains are integrated. Pointer reads select the root's native/emulated input or an isolated section's retained hover point before Node callbacks. Item screen queries separately target popup space, stopping at embedding viewports; viewport screen queries retain the full native-client chain. Warp requests resolve the native root after one screen projection and reject an absent host. Independent native child windows remain unavailable.
 
 [Camera tracking](../components/canvas-rendering.md#camera-tracking) connects Camera : Entity to viewport selection, idle/physics updates, zoom/rotation, drag/limit policies and smoothing. It reuses scene ownership and canvas/input transforms. Inherited 2D physics interpolation now samples the camera on physics ticks and presents its viewport transform between ticks; editor preview remains absent.
 
@@ -307,7 +309,7 @@ The [embedded popup window slice](../components/popup-windows.md) composes Windo
 
 [Color authoring](../components/color-authoring.md) connects spatial/numeric color editing, local swatches, typed palette files, owned popup buttons and completed application-viewport sampling. Native external capture and semantic/foreign-target gates remain separate.
 
-The executable [multiline editing component](../components/multiline-editing.md) connects TextEdit documents, typed syntax resources, existing font/Control rendering, scene storage and input. Its cold/warm and target limits are recorded with the exercised workflow.
+The executable [multiline editing component](../components/multiline-editing.md) connects TextEdit documents, typed syntax resources, existing font/Control rendering, scene storage and input. TextEdit and CodeEdit use the same [timed interactive undo](../components/multiline-editing.md#undo-for-interactive-edits) for committed text and deletion. Its cold/warm and target limits are recorded with the exercised workflow.
 
 [Hierarchical cells](../components/hierarchical-cells.md) now connect Tree/TreeItem ownership, columns, typed metadata, checks/ranges/buttons, ordinary GUI input, embedded cell editors and real canvas drawing. Stored column configuration reloads in a fresh process; runtime item graphs and semantic/native/editor gates retain their explicit limits.
 
@@ -527,6 +529,8 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 ## Native accessibility producers
 
 [SceneAccessibility](../classes/SceneAccessibility.md) reconciles automatic Node semantic identity/order after ordinary frame/deferred work. [SceneTree](../classes/SceneTree.md#native-accessibility-integration) exposes connected support and automatic publication for the tree’s own native display. Node exposes queued update/invalidate notifications and warning/focused-element extension points. Control stores translated accessible names/descriptions; GUI focus and BaseButton activation remain the behavior owners. Native RIDs and callbacks are never copied or serialized. See [Native accessibility](../components/accessibility.md) for application policy, native protocols and verification limits.
+
+Window stores [accessible names and descriptions](../components/accessibility.md#window-names-and-descriptions) for native and embedded windows.
 
 [Native collection accessibility](../classes/AccessibilityServer.md#native-collections) connects ItemList, Tree/TreeItem and TabBar/TabContainer source records to real Selection/Table/TableCell requests, expansion and ordinary GUI selection. The owning reference records identity, lifetime and exercised limits.
 

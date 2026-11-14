@@ -1,6 +1,6 @@
 # AudioStreamPlaybackPlaylist
 
-Last updated: 2026-10-05
+Last updated: 2026-11-14
 
 **Declaration:** `public sealed class Electron2D.AudioStreamPlaybackPlaylist` · **Source:** [AudioStreamPlaybackPlaylist.cs](../../src/Scene/Resources/AudioStreamPlaybackPlaylist.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -88,4 +88,4 @@ Unregisters the weak consumer, releases every owned child even after Stop/Dispos
 
 Finite nonnegative FadeTime, finite tempo/nonnegative durations and finite PCM are trust boundaries. Source disposal invalidates consumption; Stop/Dispose still release ownership. Factories cannot reuse attached or already-owned playback. Input activation occurs only on eligible declared track scheduling; unknown-length microphone alone has no timed segment, while a wrapper with declared duration executes.
 
-[AudioPlaylistTests](../../tests/Electron2D.Tests/AudioPlaylistTests.cs) covers exact PCM boundaries/fades/order, negative/end/modulo offsets, cycle counters, shuffle permutations, factory/cleanup/callback errors, typed resource copies and queued input. [Playlist playback](../components/audio-playback.md#playlist-playback) records native/public host/allocation scope. Inherited usage tagging/general parameters retain their own coverage dependencies.
+[AudioPlaylistTests](../../tests/Electron2D.Tests/AudioPlaylistTests.cs) covers exact PCM boundaries/fades/order, negative/end/modulo offsets, cycle counters, shuffle permutations, factory/cleanup/callback errors, typed resource copies and queued input. [Playlist playback](../components/audio-playback.md#playlist-playback) records native/public host/allocation scope. Inherited general parameters retain their own coverage dependencies.

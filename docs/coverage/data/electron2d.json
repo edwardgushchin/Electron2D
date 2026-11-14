@@ -5528,6 +5528,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.GlobalScriptClass",
+    "kind": "type",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "GlobalScriptClass",
+    "signature": "public sealed class Electron2D.GlobalScriptClass",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
     "kind": "type",
     "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
@@ -6113,6 +6126,19 @@
       "System.IFormattable",
       "System.ISpanFormattable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.IconAttribute",
+    "kind": "type",
+    "declaringType": "Electron2D.IconAttribute",
+    "name": "IconAttribute",
+    "signature": "public sealed class Electron2D.IconAttribute",
+    "visibility": "public",
+    "baseType": "System.Attribute",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -23448,6 +23474,25 @@
       {
         "name": "Addresses",
         "type": "System.String[]",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.IconAttribute..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.IconAttribute",
+    "name": ".ctor",
+    "signature": "public IconAttribute(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -56460,6 +56505,84 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
     "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.DepthBias()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "DepthBias",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags DepthBias = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.DepthBounds()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "DepthBounds",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags DepthBounds = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.LineWidth()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "LineWidth",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags LineWidth = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilCompareMask()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "StencilCompareMask",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilCompareMask = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilReference()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "StencilReference",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilReference = 64",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "64"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.StencilWriteMask()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "StencilWriteMask",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags StencilWriteMask = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "32"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.PolygonCullMode.Back()",
@@ -89513,6 +89636,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioServer.SetEnableTaggingUsedAudioStreams(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "SetEnableTaggingUsedAudioStreams",
+    "signature": "public static System.Void SetEnableTaggingUsedAudioStreams(System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioServer.SetInputDeviceActive(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.AudioServer",
@@ -89655,6 +89797,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.PropertyDescriptor[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStream.GetTaggedPlaybackOffsets()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStream",
+    "name": "GetTaggedPlaybackOffsets",
+    "signature": "public System.Double[] GetTaggedPlaybackOffsets()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double[]",
     "value": null
   },
   {
@@ -91763,6 +91918,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioStreamPlayback.OnTagUsedStreams()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlayback",
+    "name": "OnTagUsedStreams",
+    "signature": "protected virtual System.Void OnTagUsedStreams()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioStreamPlayback.Seek(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.AudioStreamPlayback",
@@ -91829,6 +91997,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlayback.TagUsedStream(Electron2D.AudioStream,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlayback",
+    "name": "TagUsedStream",
+    "signature": "protected System.Void TagUsedStream(Electron2D.AudioStream stream, System.Double position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "stream",
+        "type": "Electron2D.AudioStream",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -112244,6 +112436,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.SetNativeIcon(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "SetNativeIcon",
+    "signature": "public static System.Void SetNativeIcon(System.String filename)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.StatusIndicatorGetRect(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -112582,6 +112793,25 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowCanDraw(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowCanDraw",
+    "signature": "public static System.Boolean WindowCanDraw(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -116111,6 +116341,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.RegisterMainLoop\u00601(Func\u003CTLoop\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RegisterMainLoop",
+    "signature": "public static System.Void RegisterMainLoop\u003CTLoop\u003E(Func\u003CTLoop\u003E factory)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "factory",
+        "type": "Func\u003CTLoop\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.RegisterSingleton(System.String,Electron2D.ElectronObject)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -116452,6 +116701,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.RunProject(Electron2D.Window,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunProject",
+    "signature": "public static System.Int32 RunProject(Electron2D.Window window, System.String moviePath, System.Int32 fps = 60)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      },
+      {
+        "name": "moviePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": "60"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",
@@ -116465,6 +116743,35 @@
         "name": "window",
         "type": "Electron2D.Window",
         "default": null
+      }
+    ],
+    "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Engine.RunProjectAsync(Electron2D.Window,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunProjectAsync",
+    "signature": "public static System.Threading.Tasks.Task\u003CSystem.Int32\u003E RunProjectAsync(Electron2D.Window window, System.String moviePath, System.Int32 fps = 60)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      },
+      {
+        "name": "moviePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fps",
+        "type": "System.Int32",
+        "default": "60"
       }
     ],
     "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
@@ -174825,6 +175132,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ProjectSettings.ConfigurePaths(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ConfigurePaths",
+    "signature": "public static System.Void ConfigurePaths(System.String projectRoot)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "projectRoot",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ProjectSettings.ConfigurePaths(System.String,System.String)",
     "kind": "method",
     "declaringType": "Electron2D.ProjectSettings",
@@ -174923,6 +175249,19 @@
       }
     ],
     "returnType": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProjectSettings.GetGlobalClassList()",
+    "kind": "method",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "GetGlobalClassList",
+    "signature": "public static Electron2D.GlobalScriptClass[] GetGlobalClassList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GlobalScriptClass[]",
     "value": null
   },
   {
@@ -175594,6 +175933,25 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ProjectSettingsRegistry.ConfigurePaths(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ProjectSettingsRegistry",
+    "name": "ConfigurePaths",
+    "signature": "public System.Void ConfigurePaths(System.String projectRoot)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "projectRoot",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -180425,6 +180783,93 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetDepthBias(System.Int64,System.Single,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetDepthBias",
+    "signature": "public System.Void DrawListSetDepthBias(System.Int64 drawList, System.Single constantFactor, System.Single clamp, System.Single slopeFactor)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "constantFactor",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "clamp",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "slopeFactor",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetDepthBounds(System.Int64,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetDepthBounds",
+    "signature": "public System.Void DrawListSetDepthBounds(System.Int64 drawList, System.Single minimum, System.Single maximum)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "minimum",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "maximum",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetLineWidth(System.Int64,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetLineWidth",
+    "signature": "public System.Void DrawListSetLineWidth(System.Int64 drawList, System.Single width)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.DrawListSetPushConstant(System.Int64,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.UInt32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -180447,6 +180892,93 @@
       {
         "name": "sizeBytes",
         "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetStencilCompareMask(System.Int64,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetStencilCompareMask",
+    "signature": "public System.Void DrawListSetStencilCompareMask(System.Int64 drawList, System.Int32 frontMask, System.Int32 backMask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "frontMask",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "backMask",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetStencilReference(System.Int64,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetStencilReference",
+    "signature": "public System.Void DrawListSetStencilReference(System.Int64 drawList, System.Int32 frontReference, System.Int32 backReference)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "frontReference",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "backReference",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetStencilWriteMask(System.Int64,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetStencilWriteMask",
+    "signature": "public System.Void DrawListSetStencilWriteMask(System.Int64 drawList, System.Int32 frontMask, System.Int32 backMask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "frontMask",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "backMask",
+        "type": "System.Int32",
         "default": null
       }
     ],
@@ -252885,6 +253417,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GetStretchTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetStretchTransform",
+    "signature": "public Electron2D.Transform GetStretchTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetTexture()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -259759,6 +260304,32 @@
     "declaringType": "Electron2D.Window",
     "name": "BeginBulkThemeOverride",
     "signature": "public System.Void BeginBulkThemeOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.CanDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "CanDraw",
+    "signature": "public System.Boolean CanDraw()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.ChildControlsChanged()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "ChildControlsChanged",
+    "signature": "public System.Void ChildControlsChanged()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -282287,6 +282858,97 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.GlobalScriptClass.BaseType()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "BaseType",
+    "signature": "public System.Type BaseType { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Type",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.IconPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "IconPath",
+    "signature": "public System.String IconPath { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.IsAbstract()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "IsAbstract",
+    "signature": "public System.Boolean IsAbstract { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.IsTool()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "IsTool",
+    "signature": "public System.Boolean IsTool { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "Language",
+    "signature": "public System.String Language { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "Name",
+    "signature": "public System.String Name { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GlobalScriptClass.Path()",
+    "kind": "property",
+    "declaringType": "Electron2D.GlobalScriptClass",
+    "name": "Path",
+    "signature": "public System.String Path { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.GlobalShaderParameterSettings\u003CT\u003E.Type()",
     "kind": "property",
     "declaringType": "Electron2D.GlobalShaderParameterSettings\u003CT\u003E",
@@ -283384,6 +284046,19 @@
     "declaringType": "Electron2D.IPInterfaceInfo",
     "name": "Name",
     "signature": "public System.String Name { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.IconAttribute.Path()",
+    "kind": "property",
+    "declaringType": "Electron2D.IconAttribute",
+    "name": "Path",
+    "signature": "public System.String Path { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -294962,6 +295637,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.AllowPerPixelTransparency()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AllowPerPixelTransparency",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E AllowPerPixelTransparency { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.AnisotropicFilteringLevel()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -294972,6 +295660,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.ApplicationIcon()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ApplicationIcon",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E ApplicationIcon { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {
@@ -295235,6 +295936,84 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.BootSplashBackgroundColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "BootSplashBackgroundColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E BootSplashBackgroundColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.BootSplashImage()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "BootSplashImage",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E BootSplashImage { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.BootSplashMinimumDisplayTimeMSEC()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "BootSplashMinimumDisplayTimeMSEC",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E BootSplashMinimumDisplayTimeMSEC { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.BootSplashShowImage()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "BootSplashShowImage",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E BootSplashShowImage { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.BootSplashStretchMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "BootSplashStretchMode",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.RenderingServer.SplashStretchMode\u003E BootSplashStretchMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.RenderingServer.SplashStretchMode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.BootSplashUseFilter()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "BootSplashUseFilter",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E BootSplashUseFilter { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.ButtonShortcutFeedbackHighlightTime()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -295258,6 +296037,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.CustomUserDirName()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "CustomUserDirName",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E CustomUserDirName { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {
@@ -295326,6 +296118,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.DebugRedrawColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DebugRedrawColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E DebugRedrawColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.DebugRedrawTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DebugRedrawTime",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Double\u003E DebugRedrawTime { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DefaultClearColor()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -295378,6 +296196,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.DisableProjectSettingsOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DisableProjectSettingsOverride",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E DisableProjectSettingsOverride { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DisableSTDERR()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -295396,6 +296227,19 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "DisableSTDOUT",
     "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E DisableSTDOUT { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.EnableAltSpaceMenu()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "EnableAltSpaceMenu",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E EnableAltSpaceMenu { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -296353,6 +297197,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.KeepScreenOn()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "KeepScreenOn",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E KeepScreenOn { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.LCDSubpixelLayout()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -296454,6 +297311,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Viewport.MSAA\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.MainLoopType()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MainLoopType",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E MainLoopType { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {
@@ -296834,6 +297704,71 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.NavigationDefaultCellSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDefaultCellSize",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E NavigationDefaultCellSize { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDefaultEdgeConnectionMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDefaultEdgeConnectionMargin",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E NavigationDefaultEdgeConnectionMargin { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDefaultLinkConnectionRadius()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDefaultLinkConnectionRadius",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E NavigationDefaultLinkConnectionRadius { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationMergeRasterizerCellScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationMergeRasterizerCellScale",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E NavigationMergeRasterizerCellScale { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationUseEdgeConnections()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationUseEdgeConnections",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E NavigationUseEdgeConnections { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.NodeNameNumberSeparator()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -297133,6 +298068,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.PrintGPUProfile()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "PrintGPUProfile",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E PrintGPUProfile { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.PrintHeader()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -297182,6 +298130,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.ProjectSettingsOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ProjectSettingsOverride",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E ProjectSettingsOverride { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {
@@ -297458,6 +298419,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.TextEditIdleDetectSeconds()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "TextEditIdleDetectSeconds",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Double\u003E TextEditIdleDetectSeconds { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.TextEditUndoStackMaxSize()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -297520,6 +298494,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.UseCustomUserDir()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "UseCustomUserDir",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E UseCustomUserDir { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {
@@ -297588,6 +298575,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.ViewportHeight()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ViewportHeight",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E ViewportHeight { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.ViewportTransparentBackground()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ViewportTransparentBackground",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E ViewportTransparentBackground { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.ViewportWidth()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ViewportWidth",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E ViewportWidth { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.WebPCompressionMethod()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -297611,6 +298637,266 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowAlwaysOnTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowAlwaysOnTop",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowAlwaysOnTop { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowBorderless()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowBorderless",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowBorderless { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowHeightOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowHeightOverride",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E WindowHeightOverride { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowInitialMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowInitialMode",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.WindowMode\u003E WindowInitialMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.WindowMode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowInitialPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowInitialPosition",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Vector2i\u003E WindowInitialPosition { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Vector2i\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowInitialPositionType()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowInitialPositionType",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Window.WindowInitialPosition\u003E WindowInitialPositionType { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Window.WindowInitialPosition\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowInitialScreen()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowInitialScreen",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E WindowInitialScreen { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowMaximizeDisabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowMaximizeDisabled",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowMaximizeDisabled { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowMinimizeDisabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowMinimizeDisabled",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowMinimizeDisabled { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowNoFocus()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowNoFocus",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowNoFocus { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowResizable()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowResizable",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowResizable { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowSharpCorners()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowSharpCorners",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowSharpCorners { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowStretchAspect()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowStretchAspect",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.ContentScaleAspect\u003E WindowStretchAspect { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.ContentScaleAspect\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowStretchMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowStretchMode",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.ContentScaleMode\u003E WindowStretchMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.ContentScaleMode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowStretchScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowStretchScale",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E WindowStretchScale { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowStretchScaleMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowStretchScaleMode",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.ContentScaleStretch\u003E WindowStretchScaleMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.ContentScaleStretch\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowTransparent()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowTransparent",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E WindowTransparent { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowVSyncMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowVSyncMode",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.DisplayServer.VSyncMode\u003E WindowVSyncMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.DisplayServer.VSyncMode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowWidthOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowWidthOverride",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E WindowWidthOverride { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WindowsNativeIcon()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WindowsNativeIcon",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E WindowsNativeIcon { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {
@@ -310052,6 +311338,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.AccessibilityDescription()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "AccessibilityDescription",
+    "signature": "public System.String AccessibilityDescription { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.AccessibilityName()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "AccessibilityName",
+    "signature": "public System.String AccessibilityName { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

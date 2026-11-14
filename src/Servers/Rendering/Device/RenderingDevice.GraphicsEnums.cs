@@ -26,8 +26,20 @@ public sealed unsafe partial class RenderingDevice
     [Flags]
     public enum PipelineDynamicStateFlags
     {
+        /// <summary>Allows draw commands to replace the copied raster line width.</summary>
+        LineWidth = 1,
+        /// <summary>Allows draw commands to replace the copied depth bias factors and clamp.</summary>
+        DepthBias = 2,
         /// <summary>Allows DrawListSetBlendConstants to replace the copied pipeline constant.</summary>
-        BlendConstants = 4
+        BlendConstants = 4,
+        /// <summary>Allows draw commands to replace the copied stored-depth bounds.</summary>
+        DepthBounds = 8,
+        /// <summary>Allows draw commands to replace the copied stencil comparison masks.</summary>
+        StencilCompareMask = 16,
+        /// <summary>Allows draw commands to replace the copied stencil write masks.</summary>
+        StencilWriteMask = 32,
+        /// <summary>Allows draw commands to replace the copied stencil references.</summary>
+        StencilReference = 64
     }
     /// <summary>Identifies VertexFrequency values for executable graphics operations.</summary>
     public enum VertexFrequency

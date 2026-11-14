@@ -8,13 +8,13 @@ public partial class TextEdit
     /// <summary>Returns the current number of carets.</summary><returns>At least one.</returns>
     public int GetCaretCount() { CheckTextEdit(); return _carets.Count; }
     /// <summary>Adds a distinct caret at a logical/scalar position.</summary><param name="line">Existing line.</param><param name="column">Scalar column.</param><returns>The index, or -1 when disabled/duplicate.</returns>
-    public int AddCaret(int line, int column) { EnsureTextMutable(); ValidatePosition(line, column); if (!_caretMultiple || _carets.Any(c => c.Position == new Vector2i(column, line))) return -1; _carets.Add(new() { Position = new(column, line), Origin = new(column, line) }); CaretsChanged(); return _carets.Count - 1; }
+    public int AddCaret(int line, int column) { EnsureTextMutable(); ValidatePosition(line, column); if (!_caretMultiple || _carets.Any(c => c.Position == new Vector2i(column, line))) return -1; EndInteractiveAction(); _carets.Add(new() { Position = new(column, line), Origin = new(column, line) }); CaretsChanged(); return _carets.Count - 1; }
     /// <summary>Adds a caret on the adjacent visible row for each current caret.</summary><param name="below">Chooses following rows when true.</param>
     public void AddCaretAtCarets(bool below) { EnsureTextMutable(); EnsureTextLayout(); foreach (var caret in _carets.ToArray()) { var at = VisualIndex(caret.Position.Y, GetLineWrapIndexAtColumn(caret.Position.Y, caret.Position.X)); var target = Math.Clamp(at + (below ? 1 : -1), 0, _visual.Count - 1); if (target == at) continue; var row = _visual[target]; var x = CaretX(_lines[caret.Position.Y], caret.Position.X, GetLineWrapIndexAtColumn(caret.Position.Y, caret.Position.X)); var point = GetLineColumnAtPos(new((int)(_contentRect.Position.X + x - _scrollHorizontal), (int)(_contentRect.Position.Y + (target - _scrollVertical + .5) * _rowHeight))); AddCaret(point.Y, point.X); } }
     /// <summary>Removes one caret, retaining a primary caret.</summary><param name="caret">Existing index; the sole caret cannot be removed.</param>
-    public void RemoveCaret(int caret) { EnsureTextMutable(); AtCaret(caret); if (_carets.Count == 1) return; _carets.RemoveAt(caret); CaretsChanged(); }
+    public void RemoveCaret(int caret) { EnsureTextMutable(); AtCaret(caret); if (_carets.Count == 1) return; EndInteractiveAction(); _carets.RemoveAt(caret); CaretsChanged(); }
     /// <summary>Removes all carets except the first.</summary>
-    public void RemoveSecondaryCarets() { EnsureTextMutable(); if (_carets.Count > 1) { _carets.RemoveRange(1, _carets.Count - 1); CaretsChanged(); } }
+    public void RemoveSecondaryCarets() { EnsureTextMutable(); if (_carets.Count > 1) { EndInteractiveAction(); _carets.RemoveRange(1, _carets.Count - 1); CaretsChanged(); } }
     /// <summary>Returns a caret's logical line.</summary><param name="caretIndex">Existing index.</param><returns>Logical line index.</returns>
     public int GetCaretLine(int caretIndex = 0) => AtCaret(caretIndex).Position.Y;
     /// <summary>Returns a caret's scalar column.</summary><param name="caretIndex">Existing index.</param><returns>Logical scalar column.</returns>
@@ -24,11 +24,11 @@ public partial class TextEdit
     {
         EnsureTextMutable(); var caret = AtCaret(caretIndex); line = Math.Clamp(line, 0, _lines.Count - 1); if (!canBeHidden) { while (line < _lines.Count - 1 && _lines[line].Hidden) line++; while (line > 0 && _lines[line].Hidden) line--; }
         EnsureTextLayout(); var desired = CaretX(_lines[caret.Position.Y], caret.Position.X, GetCaretWrapIndex(caretIndex)); var wrap = Math.Clamp(wrapIndex, 0, GetLineWrapCount(line)); var visual = VisualIndex(line, wrap);
-        var point = GetLineColumnAtPos(new((int)(_contentRect.Position.X + desired - _scrollHorizontal), (int)(_contentRect.Position.Y + (visual - _scrollVertical + .5) * _rowHeight))); caret.Position = point; caret.Wrap = wrap; CaretsChanged(); if (adjustViewport) AdjustViewportToCaret(caretIndex);
+        var point = GetLineColumnAtPos(new((int)(_contentRect.Position.X + desired - _scrollHorizontal), (int)(_contentRect.Position.Y + (visual - _scrollVertical + .5) * _rowHeight))); if (caret.Position != point) EndInteractiveAction(); caret.Position = point; caret.Wrap = wrap; CaretsChanged(); if (adjustViewport) AdjustViewportToCaret(caretIndex);
     }
     /// <summary>Moves a caret to a clamped scalar column, respecting grapheme policy.</summary><param name="column">Requested column.</param><param name="adjustViewport">Keeps the caret in view.</param><param name="caretIndex">Existing index.</param>
     public void SetCaretColumn(int column, bool adjustViewport = true, int caretIndex = 0)
-    { EnsureTextMutable(); var caret = AtCaret(caretIndex); var line = caret.Position.Y; var value = Math.Clamp(column, 0, _lines[line].Scalars); EnsureTextLayout(); if (!_caretMidGrapheme) value = _lines[line].Layout.ClosestGrapheme(value); caret.Position.X = value; caret.Wrap = GetLineWrapIndexAtColumn(line, value); CaretsChanged(); if (adjustViewport) AdjustViewportToCaret(caretIndex); }
+    { EnsureTextMutable(); var caret = AtCaret(caretIndex); var line = caret.Position.Y; var value = Math.Clamp(column, 0, _lines[line].Scalars); EnsureTextLayout(); if (!_caretMidGrapheme) value = _lines[line].Layout.ClosestGrapheme(value); if (caret.Position.X != value) EndInteractiveAction(); caret.Position.X = value; caret.Wrap = GetLineWrapIndexAtColumn(line, value); CaretsChanged(); if (adjustViewport) AdjustViewportToCaret(caretIndex); }
     /// <summary>Returns the caret's current wrap row.</summary><param name="caretIndex">Existing index.</param><returns>Wrap row index.</returns>
     public int GetCaretWrapIndex(int caretIndex = 0) { var caret = AtCaret(caretIndex); return GetLineWrapIndexAtColumn(caret.Position.Y, caret.Position.X); }
     /// <summary>Returns whether a caret is eligible for drawing inside the viewport.</summary><param name="caretIndex">Existing index.</param><returns>Whether its logical/wrapped row is visible.</returns>
@@ -36,7 +36,7 @@ public partial class TextEdit
     /// <summary>Returns caret indices in ascending selection-start/document order.</summary><param name="includeIgnoredCarets">Includes suppressed carets from a multicaret edit.</param><returns>Independent index array.</returns>
     public int[] GetSortedCarets(bool includeIgnoredCarets = false) { CheckTextEdit(); return Enumerable.Range(0, _carets.Count).Where(i => includeIgnoredCarets || !_carets[i].Ignored).OrderBy(i => Offset(_carets[i].Selected ? SelectionStart(_carets[i]) : _carets[i].Position)).ToArray(); }
     /// <summary>Starts a nested multicaret operation, deferring overlap merging.</summary>
-    public void BeginMulticaretEdit() { EnsureTextMutable(); if (_multiEdit++ == 0) foreach (var caret in _carets) caret.Ignored = false; }
+    public void BeginMulticaretEdit() { EnsureTextMutable(); if (_multiEdit == 0) { EndInteractiveAction(); foreach (var caret in _carets) caret.Ignored = false; } _multiEdit++; }
     /// <summary>Ends a multicaret operation and merges overlapping selections at the outer boundary.</summary>
     public void EndMulticaretEdit() { EnsureTextMutable(); if (_multiEdit == 0) throw new InvalidOperationException("No multicaret edit is active."); if (--_multiEdit == 0) { MergeOverlappingCarets(); FinishEdit(); } }
     /// <summary>Reports whether a grouped multicaret edit is active.</summary><returns>Whether nested edit depth is nonzero.</returns>
@@ -60,11 +60,11 @@ public partial class TextEdit
     { EnsureTextMutable(); ValidatePosition(fromLine, fromColumn); ValidatePosition(toLine, toColumn); var from = Offset(new(fromColumn, fromLine)); var to = Offset(new(toColumn, toLine)); if (to < from) throw new ArgumentException("Caret interval is reversed."); foreach (var caret in _carets) { var at = Offset(caret.Position); if (inclusive ? at >= from && at <= to : at > from && at < to) caret.Position = new(fromColumn, fromLine); } MergeOverlappingCarets(); }
     /// <summary>Selects between an origin and caret endpoint.</summary><param name="originLine">Origin line.</param><param name="originColumn">Origin scalar column.</param><param name="caretLine">Endpoint line.</param><param name="caretColumn">Endpoint scalar column.</param><param name="caretIndex">Existing caret.</param>
     public void Select(int originLine, int originColumn, int caretLine, int caretColumn, int caretIndex = 0)
-    { EnsureTextMutable(); if (!_selectingEnabled) return; var caret = AtCaret(caretIndex); caret.Origin = ClampPosition(new(originColumn, originLine)); caret.Position = ClampPosition(new(caretColumn, caretLine)); caret.Selected = caret.Origin != caret.Position; CaretsChanged(); }
+    { EnsureTextMutable(); if (!_selectingEnabled) return; var caret = AtCaret(caretIndex); EndInteractiveAction(); caret.Origin = ClampPosition(new(originColumn, originLine)); caret.Position = ClampPosition(new(caretColumn, caretLine)); caret.Selected = caret.Origin != caret.Position; CaretsChanged(); }
     /// <summary>Selects the complete document with the primary caret.</summary>
     public void SelectAll() { EnsureTextMutable(); if (!_selectingEnabled) return; RemoveSecondaryCarets(); Select(0, 0, _lines.Count - 1, _lines[^1].Scalars); }
     /// <summary>Clears one or all selections without moving carets.</summary><param name="caretIndex">Existing index or -1 for all.</param>
-    public void Deselect(int caretIndex = -1) { EnsureTextMutable(); foreach (var index in Indices(caretIndex)) { var caret = _carets[index]; caret.Selected = false; caret.Origin = caret.Position; } _selectionMode = SelectionMode.None; CaretsChanged(); }
+    public void Deselect(int caretIndex = -1) { EnsureTextMutable(); foreach (var index in Indices(caretIndex)) { var caret = _carets[index]; if (caret.Selected) EndInteractiveAction(); caret.Selected = false; caret.Origin = caret.Position; } _selectionMode = SelectionMode.None; CaretsChanged(); }
     /// <summary>Reports whether one or any caret owns selected text.</summary><param name="caretIndex">Existing index or -1 for any.</param><returns>Whether a nonempty selection exists.</returns>
     public bool HasSelection(int caretIndex = -1) { CheckTextEdit(); return Indices(caretIndex).Any(i => _carets[i].Selected); }
     private IEnumerable<int> Indices(int index) { if (index == -1) return Enumerable.Range(0, _carets.Count); AtCaret(index); return [index]; }
@@ -134,5 +134,5 @@ public partial class TextEdit
     /// <summary>Gets whether user typing replaces characters.</summary><returns>Overtype policy.</returns>
     public bool IsOvertypeModeEnabled() { CheckTextEdit(); return _overtype; }
     /// <summary>Sets whether user typing replaces characters.</summary><param name="enabled">Overtype policy.</param>
-    public void SetOvertypeModeEnabled(bool enabled) { EnsureTextMutable(); _overtype = enabled; QueueRedraw(); }
+    public void SetOvertypeModeEnabled(bool enabled) { EnsureTextMutable(); if (_overtype != enabled) EndInteractiveAction(); _overtype = enabled; QueueRedraw(); }
 }

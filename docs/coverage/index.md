@@ -1,3 +1,67 @@
+[Engine distribution metadata](../components/engine-runtime.md#distribution-metadata) now has five `Implemented` operation rows after the complete signature/data/immutability audit and repeated source/package CLR and strict full-trim NativeAOT checks on the candidate updated from `main` `e825b304b`. The earlier `Partial` labels represented unexecuted platforms rather than a known semantic gap and are corrected under [the state vocabulary](#state-vocabulary). Current runtime declaration coverage is **14,040/18,898 (74.2935760397925706423960207429%)**, with 1,132 Partial, 263 Unimplemented, 3,463 Blocked, 8,395 Excluded and zero unmapped. Foreign-host execution and full ADR 0021 qualification remain separate limits.
+
+[Native caption buttons](../components/window-runtime.md#native-caption-buttons) connect Windows top-level styles with configured and live minimize/maximize controls. Three Blocked rows move to Partial pending additional native adapters. Coverage is **14,040/18,898 (74.29%)**, with 1,127 Partial, 268 Unimplemented, 3,463 Blocked, 8,395 Excluded and zero unmapped.
+
+[Project screen wakefulness](../components/window-runtime.md#project-screen-wakefulness) connects the stored project policy to SDL screen inhibition and restores the preceding policy on retirement. One Blocked row moves to Partial pending a browser wake-lock adapter. Coverage is **14,040/18,898 (74.29%)**, with 1,124 Partial, 268 Unimplemented, 3,466 Blocked, 8,395 Excluded and zero unmapped.
+
+[Project startup VSync](../components/window-runtime.md#project-startup-vsync) connects the typed main-window presentation mode with its native renderer and startup overrides. One Blocked row moves to Implemented. Coverage is **14,040/18,898 (74.29%)**, with 1,123 Partial, 268 Unimplemented, 3,467 Blocked, 8,395 Excluded and zero unmapped.
+
+[Project window transparency](../components/window-runtime.md#main-window-native-transparency) connects the native alpha permission and flag with the independent viewport clear policy. Two Blocked rows move to Implemented and the permission moves to Partial pending the Android activity-surface adapter. Coverage is **14,039/18,898 (74.29%)**, with 1,123 Partial, 268 Unimplemented, 3,468 Blocked, 8,395 Excluded and zero unmapped.
+
+[Project window flags](../components/window-runtime.md#project-startup-window-flags) apply five resize, border, stacking, focus and corner settings during configured startup. Five Blocked rows move to Implemented. Coverage is **14,037/18,898 (74.28%)**, with 1,122 Partial, 268 Unimplemented, 3,471 Blocked, 8,395 Excluded and zero unmapped.
+
+[Project window placement](../components/window-runtime.md#project-startup-placement) connects four typed placement and mode settings to configured root startup. Four Blocked rows move to Implemented. Coverage is **14,032/18,898 (74.25%)**, with 1,122 Partial, 268 Unimplemented, 3,476 Blocked, 8,395 Excluded and zero unmapped.
+
+[Project window geometry](../components/window-runtime.md#project-startup-geometry) applies eight size and stretch settings to configured project startup. Eight Blocked rows move to Implemented. Coverage is **14,028/18,898 (74.23%)**, with 1,122 Partial, 268 Unimplemented, 3,480 Blocked, 8,395 Excluded and zero unmapped.
+
+[Timed multiline undo](../components/multiline-editing.md#undo-for-interactive-edits) groups committed input and deletions in TextEdit and CodeEdit. One Blocked setting moves to Implemented. Coverage is **14,020/18,898 (74.19%)**, with 1,122 Partial, 268 Unimplemented, 3,488 Blocked, 8,395 Excluded and zero unmapped.
+
+[World navigation defaults](../components/navigation-maps.md#project-topology-defaults) apply typed project values and feature overrides to the topology of newly allocated world maps. Five Blocked rows move to Implemented. Coverage is **14,019/18,898 (74.18%)**, with 1,122 Partial, 268 Unimplemented, 3,489 Blocked, 8,395 Excluded and zero unmapped.
+
+[Global C# class discovery](../components/scripting.md#global-class-discovery) publishes project-scoped typed source metadata from the compiled registration catalog. One Unimplemented row moves to Implemented. Coverage is **14,014/18,898 (74.16%)**, with 1,122 Partial, 268 Unimplemented, 3,494 Blocked, 8,395 Excluded and zero unmapped.
+
+[Windows system menu](../components/window-runtime.md#windows-system-menu) connects the Alt+Space startup policy to real Win32 menus. One Blocked row moves to Implemented. Coverage is **14,013/18,898 (74.15%)**, with 1,122 Partial, 269 Unimplemented, 3,494 Blocked, 8,395 Excluded and zero unmapped.
+
+[Project user-data selection](../components/project-settings.md#user-data-directory) applies two typed settings to the automatic user directory and configured override lookup. Two Blocked rows move to Implemented. Coverage is **14,012/18,898 (74.15%)**, with 1,122 Partial, 269 Unimplemented, 3,495 Blocked, 8,395 Excluded and zero unmapped.
+
+[Automatic project overrides](../components/project-settings.md#automatic-override-files) connect two typed settings to the project load sequence. Two Blocked rows move to Implemented. Coverage is **14,010/18,898 (74.13%)**, with 1,122 Partial, 269 Unimplemented, 3,497 Blocked, 8,395 Excluded and zero unmapped.
+
+[Project boot splash](../components/boot-images.md#project-startup-splash) connects six typed settings to native startup before the first game frame. Six Blocked rows move to Implemented. Coverage is **14,008/18,898 (74.12%)**, with 1,122 Partial, 269 Unimplemented, 3,499 Blocked, 8,395 Excluded and zero unmapped.
+
+[Viewport stretch queries](../classes/Viewport.md#getstretchtransform) expose the canvas-to-raster scale for windows and offscreen viewports. One Blocked row moves to Implemented. Coverage is **14,002/18,898 (74.09%)**, with 1,122 Partial, 269 Unimplemented, 3,505 Blocked, 8,395 Excluded and zero unmapped.
+
+[Application image icons](../components/window-runtime.md#application-image-icons) connect the project setting to native window startup, including packed images and child inheritance. The setting moves from Blocked to Partial pending exporter fallback. Coverage is **14,001/18,898 (74.09%)**, with 1,122 Partial, 269 Unimplemented, 3,506 Blocked, 8,395 Excluded and zero unmapped.
+
+[Windows native ICO icons](../components/window-runtime.md#windows-native-icons) apply size-specific images to running windows and connect the Windows project startup path. The setting moves to Implemented and the shared native-icon method moves to Partial pending Cocoa ICNS support. Coverage is **14,001/18,898 (74.09%)**, with 1,121 Partial, 269 Unimplemented, 3,507 Blocked, 8,395 Excluded and zero unmapped.
+
+[Window names and descriptions](../components/accessibility.md#window-names-and-descriptions) publish localized metadata for native and embedded windows through AT-SPI. Two properties move to Implemented and two deprecated font-oversampling aliases move to Excluded. Coverage is **14,000/18,898 (74.08%)**, with 1,120 Partial, 269 Unimplemented, 3,509 Blocked, 8,395 Excluded and zero unmapped.
+
+[Dynamic raster state](../components/depth-stencil-state.md#dynamic-raster-state) changes line width, depth bias and depth bounds within Vulkan draw lists. Three flags move from Blocked to Implemented and their completed enum moves from Partial to Implemented. Coverage is **13,998/18,900 (74.06%)**, with 1,120 Partial, 269 Unimplemented, 3,513 Blocked, 8,393 Excluded and zero unmapped.
+
+[Dynamic stencil state](../components/depth-stencil-state.md#dynamic-stencil-state) records independent per-face masks and references within Vulkan draw lists. Three rows move from Blocked to Implemented. Coverage is **13,994/18,900 (74.04%)**, with 1,121 Partial, 269 Unimplemented, 3,516 Blocked, 8,393 Excluded and zero unmapped.
+
+[Stream usage tagging](../components/audio-playback.md#stream-usage-tagging) publishes active managed playback cursors from completed realtime and movie audio quanta. Two rows move from Blocked to Implemented. Coverage is **13,991/18,900 (74.03%)**, with 1,121 Partial, 269 Unimplemented, 3,519 Blocked, 8,393 Excluded and zero unmapped.
+
+[Source-free project MainLoop registration](../components/engine-runtime.md#custom-project-loop) runs compiled global classes in ordinary and recording hosts, including full-trim NativeAOT. The project selector moves to Implemented. Coverage is **13,989/18,900 (74.02%)**, with 1,121 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
+
+[Competing arrivals on the same navigation portal](../components/navigation-maps.md#arrivals-through-the-same-portal) retain distinct entry points for server queries and scene agents. The two query rows remain Partial for larger equal-priority corridor equivalence. Coverage remains **13,988/18,900 (74.01%)**, with 1,122 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
+
+[Canvas redraw on accumulating targets](../components/canvas-rendering.md#canvas-redraw-diagnostic) composes fading highlights over the finished frame and preserves clean history on GPU and Compatibility. Two ProjectSettings rows move to Implemented. Coverage is **13,988/18,900 (74.01%)**, with 1,122 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
+
+[Desktop window content limits](../components/window-runtime.md#fitting-child-controls) apply the live content minimum to native resizing while preserving authored limits. `Window.ChildControlsChanged` moves from Partial to Implemented. Coverage is **13,986/18,900 (74.00%)**, with 1,124 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
+
+[Window content fitting](../components/window-runtime.md#fitting-child-controls) connects dynamic Control bounds to coalesced embedded and native resize requests. One Blocked row moves to Partial pending live window-manager size constraints. Coverage is **13,985/18,900 (73.99%)**, with 1,125 Partial, 269 Unimplemented, 3,521 Blocked, 8,393 Excluded and zero unmapped.
+
+[Window drawability](../components/window-runtime.md#window-drawability) exposes presentation eligibility and suppresses presentation to hidden or minimized native windows while keeping viewport rendering available. Two Blocked rows move to Implemented. Coverage is **13,985/18,900 (73.99%)**, with 1,124 Partial, 269 Unimplemented, 3,522 Blocked, 8,393 Excluded and zero unmapped.
+
+[Configured project recording](../components/movie-writing.md#recording-the-configured-project) combines the configured scene or custom loop with the existing movie writer lifecycle. Coverage remains **13,983/18,900 (73.98%)**, with 1,124 Partial, 269 Unimplemented, 3,524 Blocked, 8,393 Excluded and zero unmapped. The custom loop selector still needs stripped and AOT script registration.
+
+[GPU frame profiling](../components/gpu-timestamps.md#window-frame-profiling) reports real Vulkan frame and stage times through the typed startup setting or host switch. One Blocked row moves to Partial pending the remaining timestamp adapters and platform qualification. Coverage is **13,983/18,900 (73.98%)**, with 1,124 Partial, 269 Unimplemented, 3,524 Blocked, 8,393 Excluded and zero unmapped.
+
+[Canvas redraw diagnostics](../components/canvas-rendering.md#canvas-redraw-diagnostic) show fading command bounds on clearing viewports. Two Blocked settings move to Partial pending independent overlay composition on accumulating targets and platform qualification. Coverage is **13,983/18,900 (73.98%)**, with 1,123 Partial, 269 Unimplemented, 3,525 Blocked, 8,393 Excluded and zero unmapped.
+
+[Configured custom main loops](../components/engine-runtime.md#custom-project-loop) execute a registered global C# or extension class on the window host and submit server canvases without a scene tree. The main-loop setting moves from Blocked to Partial while stripped and AOT script registration and delivery remain open. Coverage is **13,983/18,900 (73.98%)**, with 1,121 Partial, 269 Unimplemented, 3,527 Blocked, 8,393 Excluded and zero unmapped.
+
 [Windows process launch and capture](../components/processes.md#windows-console-and-capture) closes shared-output capture and separate console identity on the exercised Windows x64 host. Counts remain **13,983/18,900 (73.98412698412699%)**, with 1,120 Partial, 269 Unimplemented, 3,528 Blocked, 8,393 Excluded and zero unmapped. All status deltas are zero: Android launch/pipe and general macOS bundle prerequisites keep the shared process rows Partial. The broader API goal remains incomplete.
 
 [Native texture import delivery](../components/native-texture-handles.md#verification) restores the Vulkan and GPU Direct3D 12 import entry points in the common native module. Both public import methods stay Partial for the remaining formats, resource roles and adapters. Coverage is **13,983/18,900 (73.98%)**.
@@ -1051,7 +1115,7 @@ The [code-authoring slice](../components/code-authoring.md) now implements all 1
 
 The executable TabBar slice adds shaped/theme-rendered tabs, selection/scroll/RTL/close behavior, typed identity-stable group drags, a real hover timer and fresh-process scene persistence. CPU and current Linux Wayland GPU/compatibility pixel/visual checks pass; 64 warmed active selection/layout/record/render frames measure zero managed bytes per backend. TabContainer now executes through the tab-panel consumer; native accessibility and editor authoring remain separate dependencies.
 
-Saved AudioBusLayout resources now execute generate/apply, all 27 effect archive schemas and project-default startup before initialization/autoplay. Fresh-process, native Stream/Sample replacement, factory/lifetime/failure and current public GPU/compatibility checks verify the slice; physical and other-target gates remain separate. Usage tagging/editor integration retains its exact dependency.
+Saved AudioBusLayout resources now execute generate/apply, all 27 effect archive schemas and project-default startup before initialization/autoplay. Fresh-process, native Stream/Sample replacement, factory/lifetime/failure and current public GPU/compatibility checks verify the slice; physical and other-target gates remain separate. [Stream usage tagging](../components/audio-playback.md#stream-usage-tagging) adds executable runtime position snapshots and an extension callback for authoring consumers.
 
 Desktop DTLS oracle portability now avoids console-banner readiness and platform newline translation, with stderr-preserving process failures and native DTLS/ENet stage diagnostics. Linux focused checks passed; target Windows/macOS reruns remain required. These test-only changes do not alter production declarations or coverage states.
 

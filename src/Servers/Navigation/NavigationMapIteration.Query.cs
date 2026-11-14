@@ -3,7 +3,7 @@ namespace Electron2D;
 internal sealed partial class NavigationMapIteration
 {
     private readonly record struct CorridorArrival(int Cell, Vector2 Entry, Portal Portal, int Parent, double Cost,
-        (int Source, int PortalIndex) Key);
+        (int Source, int PortalIndex, Vector2 Entry) Key);
 
     internal Vector2[] Path(Vector2 origin, Vector2 destination, bool optimize, uint layers) => Query(NavigationPathQuerySettings.Default with { StartPosition = origin, TargetPosition = destination, NavigationLayers = layers, MetadataFlags = NavigationPathQueryParameters.PathMetadataFlags.IncludeNone, PostProcessing = optimize ? NavigationPathQueryParameters.PathPostProcessing.CorridorFunnel : NavigationPathQueryParameters.PathPostProcessing.EdgeCentered }).Path;
     internal NavigationPathQueryData Query(NavigationPathQuerySettings settings)
@@ -28,7 +28,7 @@ internal sealed partial class NavigationMapIteration
             Add(points, to, finish);
             return Complete(points);
         }
-        var bestArrivals = new Dictionary<(int Source, int PortalIndex), int>();
+        var bestArrivals = new Dictionary<(int Source, int PortalIndex, Vector2 Entry), int>();
         var processedPolygons = new bool[Cells.Length];
         var arrivals = new List<CorridorArrival>();
         var queue = new PriorityQueue<int, (double Total, double NegativeCost, int Polygon, int Sequence)>();
@@ -91,7 +91,7 @@ internal sealed partial class NavigationMapIteration
         int FindCorridor(int goal, Vector2 destination, bool trackFrontier)
         {
             bestArrivals.Clear();
-            var startKey = (start, -1);
+            var startKey = (start, -1, from);
             bestArrivals.Add(startKey, 0);
             arrivals.Clear();
             arrivals.Add(new(start, from, default, -1, 0, startKey));
@@ -163,8 +163,8 @@ internal sealed partial class NavigationMapIteration
                     var final = next == goal && !startsInGoal;
                     if (final)
                         cost += remaining * Cells[goal].TravelCost;
-                    // Different incoming portals can have different costs to reach the next exit.
-                    var key = final ? (goal, -1) : (index, portalIndex);
+                    // A higher cost at a different entry point can still lead to a cheaper exit.
+                    var key = final ? (goal, -1, destination) : (index, portalIndex, point);
                     if (bestArrivals.TryGetValue(key, out var previous) && cost >= arrivals[previous].Cost)
                         continue;
                     var sequence = arrivals.Count;

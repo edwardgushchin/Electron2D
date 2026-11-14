@@ -1,6 +1,8 @@
 # MainLoop
 
-Last updated: 2026-10-26
+Last updated: 2026-11-14
+
+A registered custom MainLoop can be selected by `ProjectSettings.MainLoopType` for [configured project startup](../components/engine-runtime.md#custom-project-loop). The owned native host publishes it before initialization, drives both callback lanes and finalizes it while native services and its script asset remain live.
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 

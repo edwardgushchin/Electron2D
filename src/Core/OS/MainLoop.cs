@@ -138,13 +138,15 @@ public abstract partial class MainLoop : ElectronObject
     /// The loop becomes terminal even if the callback throws. Calling <see cref="ElectronObject.Dispose()"/> on a running loop performs
     /// this finalization automatically; disposing an uninitialized or failed loop does not invoke the callback.
     /// </remarks>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread, the loop is not running, or finalization is rejected by a derived invariant.</exception>
+    /// <exception cref="InvalidOperationException">The caller is not the owner thread, the loop is not running,
+    /// the window host owns retirement, or finalization is rejected by a derived invariant.</exception>
     /// <exception cref="ObjectDisposedException">Disposal has started or finished.</exception>
     /// <exception cref="Exception"><see cref="OnFinalize"/> throws.</exception>
     public void FinalizeLoop()
     {
         ThrowIfDisposed();
         EnsureOwnerThread();
+        EnsureWindowHostCanRetire();
         FinalizeCore(validate: true);
     }
 
@@ -229,12 +231,25 @@ public abstract partial class MainLoop : ElectronObject
             throw new InvalidOperationException("The MainLoop cannot be attached to Engine in its current lifecycle state.");
     }
 
+    internal void FinishOwnedRun()
+    {
+        if (_state == LoopState.Running)
+            FinalizeCore(validate: false);
+    }
+
+    private void EnsureWindowHostCanRetire()
+    {
+        if (ReferenceEquals(Engine.MainLoop, this) && Engine.Service.OwnsWindowRun)
+            throw new InvalidOperationException("The window host owns this MainLoop's retirement.");
+    }
+
     /// <inheritdoc />
-    /// <remarks>Requires the owner thread and rejects disposal from initialization, frame, or finalization callbacks.</remarks>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread or a lifecycle callback is executing.</exception>
+    /// <remarks>Requires the owner thread and rejects disposal during lifecycle callbacks or an owned window run.</remarks>
+    /// <exception cref="InvalidOperationException">The caller is not the owner thread, a lifecycle callback is executing, or the window host owns retirement.</exception>
     protected override void ValidateDisposal()
     {
         EnsureOwnerThread();
+        EnsureWindowHostCanRetire();
 
         if (_state is LoopState.Initializing or LoopState.Processing or LoopState.Finalizing)
             throw new InvalidOperationException("A MainLoop cannot be disposed from one of its lifecycle or frame callbacks.");

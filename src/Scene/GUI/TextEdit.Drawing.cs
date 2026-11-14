@@ -160,13 +160,15 @@ public partial class TextEdit
             switch (what)
             {
                 case NotificationEnterTree: InvalidateTextLayout(); UpdateProcessing(); break;
-                case NotificationExitTree: ReleaseTextures(); ActivateIME(false); _ime = ""; _draggingCursor = _draggingMinimap = false; SetInternalProcessing(false, false); break;
+                case NotificationExitTree: ReleaseTextures(); ActivateIME(false); _ime = ""; _draggingCursor = _draggingMinimap = false; SetInternalProcessing(false, false); if (!_disposing) EndInteractiveAction(); break;
                 case NotificationFocusEnter: ActivateIME(_editable); ResetBlink(); break;
-                case NotificationFocusExit: ApplyIME(); ActivateIME(false); _draggingCursor = false; if (_deselectOnFocusLossEnabled) Deselect(); UpdateProcessing(); break;
+                case NotificationFocusExit: ApplyIME(); EndInteractiveAction(); ActivateIME(false); _draggingCursor = false; if (_deselectOnFocusLossEnabled) Deselect(); UpdateProcessing(); break;
                 case NotificationThemeChanged: if (_highlighter is { IsDisposed: false }) _highlighter.ClearHighlightingCache(); InvalidateTextLayout(); break;
                 case NotificationResized: case NotificationTranslationChanged: case NotificationLayoutDirectionChanged: InvalidateTextLayout(); break;
                 case NotificationDragEnd: FinishTextDrag(); break;
                 case NotificationInternalProcess:
+                    if (_interactiveAction && !_editingInput && (_undoIdleRemaining -= ProcessDeltaTime) <= 0)
+                        EndInteractiveAction();
                     if (Interlocked.Exchange(ref _resourcePending, 0) != 0 || _font is { IsDisposed: false } && _font.GetContentGeneration() != _fontGeneration) InvalidateTextLayout();
                     if (_caretBlink && HasFocus()) { _blinkTime += ProcessDeltaTime; if (_blinkTime >= _caretBlinkInterval) { _blinkTime %= _caretBlinkInterval; _caretVisible = !_caretVisible; QueueRedraw(); } }
                     if (_scrollSmooth && Math.Abs(_verticalTarget - _scrollVertical) > .0001) { var step = _scrollVScrollSpeed * ProcessDeltaTime; _scrollVertical += Math.Sign(_verticalTarget - _scrollVertical) * Math.Min(step, Math.Abs(_verticalTarget - _scrollVertical)); _vBar.SetValueNoSignal(_scrollVertical); QueueRedraw(); UpdateProcessing(); }

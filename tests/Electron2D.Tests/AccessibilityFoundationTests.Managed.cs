@@ -60,6 +60,16 @@ internal static partial class AccessibilityFoundationTests
             Check(empty.GetConfigurationWarnings().Length == 1, "An unnamed action exposes an authoring warning.");
             empty.AccessibilityName = "Named action"; Check(empty.GetConfigurationWarnings().Length == 0, "An authored name resolves the warning.");
         }
+        using (var window = new Window { Title = "Window caption" })
+        {
+            Check(window.AccessibilityName == "" && window.AccessibilityDescription == "", "Window metadata defaults to empty.");
+            window.AccessibilityName = "Window name";
+            window.AccessibilityDescription = "Window details";
+            Reject<ArgumentNullException>(() => window.AccessibilityName = null!);
+            Reject<ArgumentNullException>(() => window.AccessibilityDescription = null!);
+            using var copy = (Window)window.Duplicate();
+            Check(copy.Title == "Window caption" && copy.AccessibilityName == "Window name" && copy.AccessibilityDescription == "Window details" && !copy.GetAccessibilityElement().IsValid(), "Window duplication preserves authored metadata and independent title.");
+        }
         using (var region = new VBoxContainer { AccessibilityRegion = true })
         {
             Check(region.GetConfigurationWarnings().Length == 1, "An unnamed landmark exposes an authoring warning.");
@@ -81,6 +91,7 @@ internal static partial class AccessibilityFoundationTests
             var child = new Button("Caption") { Name = "Action", AccessibilityName = "Authored action", AccessibilityDescription = "Action details" }; root.AddChild(child); child.Owner = root;
             var region = new PanelContainer { Name = "Region", AccessibilityRegion = true, AccessibilityName = "Scene region" }; root.AddChild(region); region.Owner = root;
             var line = new LineEdit { Name = "Line", ContextMenuEnabled = false, AccessibilityLive = AccessibilityServer.AccessibilityLiveMode.Assertive }; root.AddChild(line); line.Owner = root;
+            var window = new Window { Name = "Window", AccessibilityName = "Window source name", AccessibilityDescription = "Window source description" }; root.AddChild(window); window.Owner = root;
             var path = Path.Combine(folder, "semantic.e2dscene"); ResourceSaver.SaveScene(root, path);
             var start = new ProcessStartInfo(Environment.ProcessPath!) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };
             if (Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(typeof(AccessibilityFoundationTests).Assembly.Location);
@@ -99,6 +110,7 @@ internal static partial class AccessibilityFoundationTests
         Check(root.AccessibilityLive == AccessibilityServer.AccessibilityLiveMode.Polite && root.GetNode<LineEdit>("Line") is { ContextMenuEnabled: false, AccessibilityLive: AccessibilityServer.AccessibilityLiveMode.Assertive }, "Live and context-menu policies survive a fresh process.");
         Check(root.AccessibilityName == "Root name" && root.AccessibilityDescription == "Root description" && child.Text == "Caption" && child.AccessibilityName == "Authored action" && child.AccessibilityDescription == "Action details", "Scene preserves both metadata properties across process boundaries.");
         Check(root.GetNode<PanelContainer>("Region").AccessibilityRegion && root.GetNode<PanelContainer>("Region").AccessibilityName == "Scene region", "Landmark metadata survives a fresh process.");
+        Check(root.GetNode<Window>("Window") is { AccessibilityName: "Window source name", AccessibilityDescription: "Window source description" }, "Window metadata survives a fresh process.");
         Check(!root.GetAccessibilityElement().IsValid() && !child.GetAccessibilityElement().IsValid(), "Scene archives have no live native identities.");
     }
     private static void ServerEdges(int windowID, RID borrowed)

@@ -8,7 +8,7 @@ effective feature override only to an unassigned root Window before native
 creation. Explicit scene authoring wins; independent SubViewports retain their
 own HDR canvas policy.
 
-Last updated: 2026-11-06
+Last updated: 2026-11-14
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
@@ -27,11 +27,15 @@ Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Conf
 
 `MainScene` supplies the packed-scene path or resource UID for [configured project startup](../components/engine-runtime.md#project-main-scene). The default is empty.
 
-`MaxFPS` sets the initial window cadence cap, `FrameDelayMsec` adds a fixed delay after each continuing real-time window frame, and `PrintFPS` enables periodic rate diagnostics. These typed startup settings accept feature overrides.
+`public static ProjectSetting<string> MainLoopType { get; }` is the permanent nonbasic selector `application/run/main_loop_type`. `SceneTree` is the default, and an empty string selects the same host. A custom value names an extension class identity or an exact compiled C# global class with a registered default factory. Register a typed startup factory with Engine.RegisterMainLoop for source-free trimmed and NativeAOT builds. Whitespace-only names and control characters are invalid. Configured project runs sample the effective value once after reservation.
+
+`MaxFPS` sets the initial window cadence cap, `FrameDelayMsec` adds a fixed delay after each continuing real-time window frame, and `PrintFPS` enables periodic rate diagnostics. These typed startup settings accept feature overrides. [PrintGPUProfile](../components/gpu-timestamps.md#window-frame-profiling) enables periodic frame and stage timings on the supported Vulkan window renderer.
 
 `GZIPCompressionLevel` and `ZLibCompressionLevel` control exact compression levels for new encodes. The default is -1 (the codec default), and 0 through 9 are valid explicit levels. `ZstandardCompressionLevel`, `ZstandardLongDistanceMatching` and `ZstandardWindowLogSize` select the native Zstandard file and buffer codec policy. See [compression levels](../components/file-access.md#compression-levels). See [frame-rate settings](../components/engine-runtime.md#frame-rate-settings).
 
 `DisableSTDOUT`, `DisableSTDERR`, `FlushSTDOUTOnPrint` and `PrintHeader` configure [startup output](../components/diagnostics.md#startup-output-policy).
+
+`public static ProjectSetting<Color> DebugRedrawColor { get; }` and `public static ProjectSetting<double> DebugRedrawTime { get; }` set the initial color and duration in seconds of [canvas redraw highlights](../components/canvas-rendering.md#canvas-redraw-diagnostic). The renderer samples active feature overrides at startup. Defaults are RGBA (1, 0.2, 0.2, 0.5) and one second. Colors must be finite. Duration must be finite and nonnegative. The overlay also fades on viewports that retain scene pixels between frames.
 
 `VerboseSTDOUT` is the false-by-default typed setting `debug/settings/stdout/verbose_stdout`. Startup samples its active feature override. See [verbose diagnostics](../components/diagnostics.md#verbose-stdout).
 
@@ -73,6 +77,63 @@ require GPU rendering. FXAA also uses the canvas mipmap-bias adapter. See [scree
 
 `ProjectSettings.MSAA2D` is a typed `ProjectSetting<Viewport.MSAA>` for `rendering/anti_aliasing/quality/msaa_2d`. Disabled is the default; Max and undefined values reject. Engine startup reads active feature overrides for an unconfigured root window. Explicit window and offscreen viewport selections remain independent. Enabled values require GPU support for the selected byte/half-float format and requested sample count; compatibility fails explicitly. See [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).
 
+
+## Navigation topology defaults
+
+| Setting | Project key | Default |
+| --- | --- | --- |
+| `ProjectSetting<float> NavigationDefaultCellSize` | `navigation/2d/default_cell_size` | 1 |
+| `ProjectSetting<float> NavigationDefaultEdgeConnectionMargin` | `navigation/2d/default_edge_connection_margin` | 1 |
+| `ProjectSetting<float> NavigationDefaultLinkConnectionRadius` | `navigation/2d/default_link_connection_radius` | 4 |
+| `ProjectSetting<float> NavigationMergeRasterizerCellScale` | `navigation/2d/merge_rasterizer_cell_scale` | 1 |
+| `ProjectSetting<bool> NavigationUseEdgeConnections` | `navigation/2d/use_edge_connections` | true |
+
+These built-in descriptors support project files and feature overrides. A world captures the effective values when its map is first allocated. See [map initialization and effective bounds](../components/navigation-maps.md#project-topology-defaults).
+
+## Project window geometry
+
+| Descriptor | Key under `display/window/` | Default |
+| --- | --- | --- |
+| `ProjectSetting<int> ViewportWidth` | `size/viewport_width` | 1152 |
+| `ProjectSetting<int> ViewportHeight` | `size/viewport_height` | 648 |
+| `ProjectSetting<int> WindowWidthOverride` | `size/window_width_override` | 0 |
+| `ProjectSetting<int> WindowHeightOverride` | `size/window_height_override` | 0 |
+| `ProjectSetting<ContentScaleMode> WindowStretchMode` | `stretch/mode` | Disabled |
+| `ProjectSetting<ContentScaleAspect> WindowStretchAspect` | `stretch/aspect` | Keep |
+| `ProjectSetting<float> WindowStretchScale` | `stretch/scale` | 1 |
+| `ProjectSetting<ContentScaleStretch> WindowStretchScaleMode` | `stretch/scale_mode` | Fractional |
+
+Viewport dimensions and scale must be positive, scale must be finite, override axes must be nonnegative, and the typed modes reject undefined values. See [project startup geometry](../components/window-runtime.md#project-startup-geometry) for feature precedence and observed client sizing.
+
+## Project window placement
+
+`WindowInitialMode` (`display/window/size/mode`) defaults to Windowed. `WindowInitialPositionType` (`display/window/size/initial_position_type`) defaults to CenterPrimaryScreen. Both use the existing window enums and reject undefined values. `WindowInitialPosition` (`display/window/size/initial_position`) defaults to zero and allows signed desktop coordinates. `WindowInitialScreen` (`display/window/size/initial_screen`) defaults to zero and requires a nonnegative index. See [project startup placement](../components/window-runtime.md#project-startup-placement).
+
+## Project window flags
+
+`WindowResizable` defaults to true. `WindowBorderless`, `WindowAlwaysOnTop`, `WindowNoFocus` and `WindowSharpCorners` default to false. These bool descriptors register the corresponding `display/window/size/` keys. See [project startup window flags](../components/window-runtime.md#project-startup-window-flags) for native application and platform limits.
+
+### Caption buttons
+
+`WindowMinimizeDisabled` and `WindowMaximizeDisabled` are bool settings under `display/window/size/`. Both default to false. The effective settings apply to the Windows project root before scene entry. Explicit window flags, including packed false values, take precedence. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
+
+## Project window VSync
+
+`ProjectSetting<DisplayServer.VSyncMode> WindowVSyncMode` (`display/window/vsync/vsync_mode`) defaults to Enabled and rejects undefined values. Configured project runs sample the effective feature value before renderer creation. See [startup VSync and override precedence](../components/window-runtime.md#project-startup-vsync).
+
+## Project screen wakefulness
+
+`ProjectSetting<bool> KeepScreenOn` (`display/window/energy_saving/keep_screen_on`) defaults to true. Configured windowed startup applies its effective feature value. False permits normal system blanking. Live changes use DisplayServer.ScreenSetKeepOn. See [project screen wakefulness](../components/window-runtime.md#project-screen-wakefulness).
+
+## Project window transparency
+
+| Descriptor | Project key |
+| --- | --- |
+| `AllowPerPixelTransparency` | `display/window/per_pixel_transparency/allowed` |
+| `WindowTransparent` | `display/window/size/transparent` |
+| `ViewportTransparentBackground` | `rendering/viewport/transparent_background` |
+
+All three settings default to false. The permission is sampled at startup and marked restart-required. See [native transparency and viewport clearing](../components/window-runtime.md#main-window-native-transparency).
 
 ## Project theme startup
 
@@ -127,6 +188,19 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<int> MovieWriterOGVKeyframeInterval { get; }`](#moviewriterogvkeyframeinterval) | Maximum keyframe spacing, 64 initially; 1..1024 frames. |
 | [`public static ProjectSetting<Color> DebugPathsColor { get; }`](#diagnostics-debugpathscolor) | Defines the color of path curves and tangent markers when scene path diagnostics are enabled. |
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
+| `public static ProjectSetting<Color> BootSplashBackgroundColor { get; }` | Sets the startup background. Defaults to opaque dark gray. |
+| `public static ProjectSetting<string> BootSplashImage { get; }` | Selects a PNG path. An empty path selects the bundled image. |
+| `public static ProjectSetting<int> BootSplashMinimumDisplayTimeMSEC { get; }` | Sets the minimum display time in milliseconds. Defaults to zero. |
+| `public static ProjectSetting<bool> BootSplashShowImage { get; }` | Selects an image over the background. Defaults to true. |
+| `public static ProjectSetting<RenderingServer.SplashStretchMode> BootSplashStretchMode { get; }` | Fits the custom image in the native client. Defaults to Keep. |
+| `public static ProjectSetting<bool> BootSplashUseFilter { get; }` | Selects linear sampling where available. Defaults to true. |
+| `public static ProjectSetting<string> ProjectSettingsOverride { get; }` | Selects an optional file after the conventional project override. Empty by default. |
+| `public static ProjectSetting<bool> DisableProjectSettingsOverride { get; }` | Skips automatic override loading when true. False by default. |
+| `public static ProjectSetting<bool> UseCustomUserDir { get; }` | Selects application-owned automatic user storage. Defaults to false. |
+| `public static ProjectSetting<string> CustomUserDirName { get; }` | Selects the custom user directory or relative subpath. Empty uses the application name. |
+| [`public static ProjectSetting<string> ApplicationIcon { get; }`](../components/window-runtime.md#application-image-icons) | Defines the image path used for the default window icon. Defaults to empty. |
+| `public static ProjectSetting<bool> EnableAltSpaceMenu { get; }` | Enables the [Windows system menu shortcut](../components/window-runtime.md#windows-system-menu) at startup. Defaults to false. |
+| [`public static ProjectSetting<string> WindowsNativeIcon { get; }`](../components/window-runtime.md#windows-native-icons) | Defines the Windows ICO path loaded before scene entry. Defaults to empty. |
 | [`public static ProjectSetting<bool> AutoAcceptQuit { get; }`](#autoacceptquit) | application/config/auto_accept_quit; true. |
 | [`public static ProjectSetting<bool> QuitOnGoBack { get; }`](#quitongoback) | application/config/quit_on_go_back; true. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |
@@ -189,6 +263,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 
 | Member | Description |
 | --- | --- |
+| `public static void ConfigurePaths(string projectRoot)` | Resets the project and selects [automatic user-data resolution](../components/project-settings.md#user-data-directory). |
 | [`public static void ConfigurePaths(string projectRoot, string userDataRoot)`](#m-electron2d-projectsettings-configurepaths-system-string-system-string) | Changes the project and user-data roots and clears all loaded or explicitly stored values. |
 | [`public static void Register<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-register-1-electron2d-projectsetting-0) | Registers a setting definition for typed access and tooling discovery. |
 | [`public static void Unregister<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-unregister-1-electron2d-projectsetting-0) | Unregisters a setting and removes its stored base value and feature overrides. |
@@ -217,7 +292,8 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static void SetRestartIfChanged<T>(ProjectSetting<T> setting, bool restart)`](#m-electron2d-projectsettings-setrestartifchanged-1-electron2d-projectsetting-0-system-boolean) | Sets whether changing a setting requires the host application to restart. |
 | [`public static IReadOnlyList<string> GetChangedSettings()`](#m-electron2d-projectsettings-getchangedsettings) | Gets setting names included in the pending or currently delivered change notification. |
 | [`public static bool CheckChangedSettingsInGroup(string prefix)`](#m-electron2d-projectsettings-checkchangedsettingsingroup-system-string) | Checks whether any changed setting starts with a category prefix. |
-| [`public static void Load()`](#m-electron2d-projectsettings-load) | Loads the project file and then merges the conventional override file when it exists. |
+| `public static GlobalScriptClass[] GetGlobalClassList()` | Lists registered global C# source classes in the current project. [Compiled class discovery](../components/scripting.md#global-class-discovery). |
+| [`public static void Load()`](#m-electron2d-projectsettings-load) | Loads the project file and applies the enabled conventional and configured overrides. |
 | [`public static void LoadCustom(string path)`](#m-electron2d-projectsettings-loadcustom-system-string) | Merges a custom configuration file into the current settings after full validation. |
 | [`public static void Save()`](#m-electron2d-projectsettings-save) | Saves the current document to [`ProjectSettings.ProjectFilePath`](ProjectSettings.md#p-electron2d-projectsettings-projectfilepath) using atomic replacement. |
 | [`public static void SaveCustom(string path)`](#m-electron2d-projectsettings-savecustom-system-string) | Saves the current document to an explicit file using atomic replacement. |
@@ -1117,7 +1193,7 @@ Checks whether any changed setting starts with a category prefix.
 <a id="m-electron2d-projectsettings-load"></a>
 ### `public static void Load()`
 
-Loads the project file and then merges the conventional override file when it exists.
+Loads the project file and applies the enabled conventional and configured overrides. The effective disable policy and configured path are evaluated from the candidate document. See [automatic overrides](../components/project-settings.md#automatic-override-files).
 
 **Exceptions**
 
@@ -1389,6 +1465,10 @@ Typed built-in nonnegative finite timeout in seconds, read during output prepara
 
 `public static ProjectSetting<AudioDefaultPlaybackType> AudioGeneralDefaultPlaybackType { get; }` registers `audio/general/default_playback_type`, default Stream=0. Sample=1 selects native finite buffers for sample-capable streams and falls back to streaming otherwise. Undefined values reject; .web overrides retain the existing feature-override mechanism/platform gate. [AudioDefaultPlaybackType](AudioDefaultPlaybackType.md) has a distinct value set from the per-request server selector.
 
+## Multiline undo timeout
+
+`TextEditIdleDetectSeconds` registers `gui/timers/text_edit_idle_detect_sec` as a `ProjectSetting<double>`. Each new TextEdit or CodeEdit samples the effective value on construction. The default is three seconds and the value must be finite and positive. See [interactive undo](../components/multiline-editing.md#undo-for-interactive-edits).
+
 ## Text editing actions
 
 The `InputUIText*`, `InputUICopy`, `InputUICut`, `InputUIPaste`, `InputUIUndo`, `InputUIRedo` and `InputUISwapInputDirection` permanent typed InputActionSettings entries provide the default [LineEdit](LineEdit.md) keyboard actions. Their stored definitions participate in the existing InputMap transaction and can be remapped by a project. Shift extends caret movement after matching without Shift. LineEditTests exercises submission, movement, deletion and history on the prepared scene GUI path.
@@ -1615,7 +1695,7 @@ Projects editor/movie_writer/ogv/keyframe_interval. Nonbasic, default 64, range 
 <a id="moviewriterfps"></a>
 ### `public static ProjectSetting<int> MovieWriterFPS { get; }`
 
-Nonbasic editor/movie_writer/fps setting, default 60 and positive Int32 values. Engine.RunMovie/RunMovieAsync sample its active feature override before startup. Explicit recording Run/RunAsync FPS arguments retain precedence, including their optional 60 FPS default. Invalid nonpositive assignments reject.
+Nonbasic editor/movie_writer/fps setting, default 60 and positive Int32 values. Engine.RunMovie/RunMovieAsync sample its active feature override before startup. Explicit recording Run, RunAsync, RunProject and RunProjectAsync FPS arguments retain precedence, including their optional 60 FPS default. Invalid nonpositive assignments reject.
 
 <a id="moviewriterfile"></a>
 ### `public static ProjectSetting<string> MovieWriterFile { get; }`

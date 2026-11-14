@@ -16,7 +16,7 @@ public sealed partial class NavigationServer
     /// <returns>Independent link identity array, including disabled links.</returns>
     /// <exception cref="ArgumentException">The map RID is absent, stale or of another kind.</exception>
     public static RID[] MapGetLinks(RID map) { lock (Shared._gate) { Shared.Map(map); return Shared._links.Values.Where(l => l.Map == map).Select(l => l.RID).ToArray(); } }
-    /// <summary>Stages the finite nonnegative endpoint attachment radius, initially four world units.</summary>
+    /// <summary>Stages the finite nonnegative endpoint attachment radius for this map.</summary>
     /// <param name="map">Live navigation map RID.</param><param name="radius">World distance; attachment is strictly inside this radius. Zero prevents attachment.</param>
     /// <exception cref="ArgumentOutOfRangeException">Radius is nonfinite or negative.</exception>
     /// <exception cref="ArgumentException">The map RID is absent, stale or of another kind.</exception>

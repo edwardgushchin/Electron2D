@@ -2,6 +2,12 @@ namespace Electron2D;
 
 public sealed partial class ProjectSettings
 {
+    /// <summary>Lists the registered global C# source classes in the current project.</summary>
+    /// <returns>A caller-owned snapshot ordered by class name and project-relative source path.</returns>
+    /// <remarks>The catalog uses explicit compiled registrations. Queries do not open source files, construct objects
+    /// or run tool callbacks. Each source path can be passed to ResourceLoader to load the Script.</remarks>
+    public static GlobalScriptClass[] GetGlobalClassList() => Script.GetGlobalClasses(ProjectRoot);
+
     /// <summary>Gets the current absolute project resource directory.</summary>
     /// <value>The directory to which <c>res://</c> resolves.</value>
     public new static string ProjectRoot
@@ -55,6 +61,17 @@ public sealed partial class ProjectSettings
         add => Service.SettingsChangedCore += value;
         remove => Service.SettingsChangedCore -= value;
     }
+
+    /// <summary>Changes the project root and selects automatic user-data directory resolution.</summary>
+    /// <param name="projectRoot">An existing project directory.</param>
+    /// <remarks>Clears stored values like the two-path overload. The next successful Load applies the project's directory settings.</remarks>
+    /// <exception cref="ArgumentNullException">The path is null.</exception>
+    /// <exception cref="ArgumentException">The path is empty or invalid.</exception>
+    /// <exception cref="DirectoryNotFoundException">The project directory does not exist.</exception>
+    /// <exception cref="InvalidOperationException">Unsaved setting changes exist or a load is already running.</exception>
+    /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
+    public new static void ConfigurePaths(string projectRoot) =>
+        Service.ConfigurePathsCore(projectRoot, GetDefaultUserDataRoot(projectRoot), automaticUserDataRoot: true);
 
     /// <summary>Changes the project and user-data roots and clears all loaded or explicitly stored values.</summary>
     /// <param name="projectRoot">An existing project directory.</param>
@@ -342,7 +359,7 @@ public sealed partial class ProjectSettings
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public new static bool CheckChangedSettingsInGroup(string prefix) => Service.CheckChangedSettingsInGroupCore(prefix);
 
-    /// <summary>Loads the project file and then merges the conventional override file when it exists.</summary>
+    /// <summary>Loads the project file and applies the enabled conventional and configured overrides.</summary>
     /// <remarks>
     /// The complete candidate document and every registered typed value are validated before current state is replaced.
     /// Successful loading clears unsaved-value tracking and any pending change notification.

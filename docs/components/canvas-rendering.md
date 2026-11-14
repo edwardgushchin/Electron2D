@@ -6,7 +6,7 @@
 
 [Sampled component views](local-compute.md#sampled-component-views) follow device-backed command/material images through paired stages, lighting, glyphs, clipping and particle consumers. Raw snapshots preserve storage channels.
 
-Last updated: 2026-11-12
+Last updated: 2026-11-14
 
 [Viewport mipmap bias](viewport-mipmap-bias.md) supplies scene, server and project level offsets through retained native canvas/material samplers, with bounded configuration retirement and explicit backend limits.
 
@@ -15,6 +15,16 @@ Process-wide service operations and events use static access to retained objects
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
+
+## Canvas redraw diagnostic
+
+Start the application with `--debug-canvas-item-redraw` before the `--` or `++` argument separator. The renderer samples the effective `ProjectSettings.DebugRedrawColor` and `DebugRedrawTime` when it opens. They default to RGBA (1, 0.2, 0.2, 0.5) and one second. Zero duration or nonpositive alpha suppresses the effect.
+
+The diagnostic marks scene items after their draw callbacks successfully record commands, and server items when `CanvasItemClear` clears their command list. The first visible submission highlights the new command bounds at full configured alpha. The highlight fades linearly in rendering-clock seconds, including explicit `ForceDraw` steps. The overlay uses the item's transform and viewport clip. It schedules frames through expiry so low-processor mode can erase the last highlight.
+
+The overlay draws after scene composition and any screen-space antialiasing. GPU and Compatibility preserve clean history before applying it, including the first frame of Once, Never-clear targets and the Keep environment background. GPU draws the highlight on the resolved image, leaving multisample history intact. Compatibility direct-to-screen viewports draw into the current presentation without a retained texture. See [runtime diagnostics](diagnostics.md#canvas-redraw).
+
+`ELECTRON2D_TEST_CANVAS_REDRAW` runs the enabled, zero-duration and argument-separator profiles on Windows x64 Vulkan and Direct3D 11 Compatibility. The enabled profile checks scene and RID pixel colors at full opacity, halfway through the fade and after expiry, plus clipping, feature selection, re-recording and release. Moving and retiring an item exposes its original retained pixels on Never, Once-to-Never and Keep targets. The GPU fixture combines HDR, 4× MSAA and FXAA. Each profile checks 64 warmed frames with fresh commands, 64 retained frames and 64 accumulating redraws at zero owner-thread managed bytes. Native allocation accounting and the other delivered platform hosts remain open.
 
 ## Draw callback recording
 
@@ -484,6 +494,8 @@ The SDL software triangle backend truncates destination vertices: at half-pixel 
 Typed Node diagnostics also cover AnimatedSprite missing-library warnings and refresh before SpriteFramesChanged. CanvasItem ZIndex requests warning refresh after each valid assignment. SceneDiagnosticsTests verifies committed state, repeated requests and callback failures; clipping/CanvasGroup diagnostic conditions remain with those absent features.
 
 ## Viewport coordinates
+
+[Viewport.GetStretchTransform](../classes/Viewport.md#getstretchtransform) exposes the logical-to-raster scale shared by canvas composition and text oversampling. CanvasItems mode incorporates the content scale factor and the fitted raster dimensions. A SubViewport uses its own override and raster dimensions, even under a scaled Window. The final client projection separately composes fitting margins or image enlargement and the global canvas transform. The screen projection adds the embedding chain. Windows Compatibility and Vulkan tests sample the returned coordinates in the native Window and SubViewport textures, including live mode changes, nonuniform offscreen stretch and a zero-sized window raster. Managed checks cover size observers, detached and disposed reads, and active processing groups.
 
 Window rendering composes its raster stretch, global/default canvas matrices and node/drawing transforms; presentation then fits that image into the client. GetFinalTransform includes presentation, content stretch and GlobalCanvasTransform for input and coordinate queries. GetScreenTransform additionally composes ancestor container placement, StretchShrink and embedded-window positions. CanvasItem.GetViewportTransform stops at its owning viewport output. Live viewport transforms update retained geometry on the next submission on GPU and compatibility, including material shaders; logical Entity state, transform notifications and drawing invalidation are unchanged. TopLevel and neutral-parent roots still receive viewport transforms.
 

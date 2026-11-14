@@ -10,6 +10,8 @@ Last updated: 2026-10-18
 
 ## Description
 
+`MapCreate()` starts an inactive caller-owned map with built-in topology defaults. [World maps](../components/navigation-maps.md#project-topology-defaults) start active and capture project topology settings on first access.
+
 Permanent retained navigation service with static map/region/link/agent lifecycle, staged settings, committed queries and MapChanged publication.
 
 The [navigation contract](../components/navigation-maps.md) defines staged versus committed state, world coordinates and ownership. Static server operations serialize configuration; scene node mutations follow the scene owner thread. Resource arrays and returned paths are copied. The current topology/query profile has explicit coverage limits.
@@ -143,7 +145,7 @@ Configuration setters stage the next iteration; configuration getters report sta
 <a id="mapgetpath"></a>
 ### `public static Vector2[] MapGetPath(RID map, Vector2 origin, Vector2 destination, bool optimize, uint navigationLayers = 1)`
 
-Returns a copied path across the committed polygon map. The search compares weighted routes through to the projected target, including distinct portal entries to an intermediate polygon and [cheaper detours within the same polygon](../components/navigation-maps.md#weighted-routes-within-one-polygon). For an unreachable target, the nearest reached portal entry selects a walkable polygon. The search rebuilds the corridor to the original target projected onto that polygon. If the start polygon offers a closer projection, the path stays there.
+Returns a copied path across the committed polygon map. The search compares weighted routes through to the projected target, including distinct arrival points on the same directed portal and [cheaper detours within the same polygon](../components/navigation-maps.md#weighted-routes-within-one-polygon). For an unreachable target, the nearest reached portal entry selects a walkable polygon. The search rebuilds the corridor to the original target projected onto that polygon. If the start polygon offers a closer projection, the path stays there.
 
 `map` is the live navigation map RID. `origin` and `destination` are finite world-space points. With `optimize`, the route uses portal funnel corners. The default route keeps portal midpoints. `navigationLayers` defaults to layer one, and zero selects no cells.
 
@@ -734,7 +736,7 @@ Queries capture settings and one map iteration, then publish selected arrays and
 <a id="querypath"></a>
 ### `public static void QueryPath(NavigationPathQueryParameters parameters, NavigationPathQueryResult result, Action? callback = null)`
 
-Queries one committed map using a captured parameter snapshot and atomically replaces the supplied result. Route selection considers distinct incoming portals, charges the entered owner and includes the final segment to the projected target. When the projected endpoints share one polygon, the direct segment competes with cheaper detours and wins ties. The result's path length measures the processed world-space points. Disconnection or a search limit can yield a rebuilt corridor to a reached polygon. Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication. Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.
+Queries one committed map using a captured parameter snapshot and atomically replaces the supplied result. Route selection considers distinct arrival points on each directed portal, charges the entered owner and includes the final segment to the projected target. When the projected endpoints share one polygon, the direct segment competes with cheaper detours and wins ties. The result's path length measures the processed world-space points. Disconnection or a search limit can yield a rebuilt corridor to a reached polygon. Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication. Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.
 
 `parameters`: Caller-owned typed settings; copied filter arrays remain stable during the query.
 

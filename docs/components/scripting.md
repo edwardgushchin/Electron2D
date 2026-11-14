@@ -287,3 +287,12 @@ producer and promotes the row. Live SetScript/ScriptChanged and Script
 implementation reload remain distinct open workflows under ADR 0091. Physics
 declaration coverage is 1363/1369 (99.56%), six Partial,
 92 Excluded. Full numerical/network/window/performance acceptance is separate.
+
+
+## Global class discovery
+
+`ProjectSettings.GetGlobalClassList()` returns caller-owned `GlobalScriptClass[]` snapshots for the active project. Entries come from explicit source registrations whose compiled type has its own `GlobalClassAttribute` and a primary source under `res://`. Generic declarations and source-free main loop registrations are outside the source list. Results are sorted by class name and then source path with ordinal comparison. A name shared by multiple registered source types can appear at multiple paths.
+
+Each record exposes a name, C# language, project source path, abstract flag, and inherited tool flag. The typed base is the nearest global project class, engine class or extension role. An `IconAttribute` on the class can name an icon relative to the source or project root. Icons outside the project are omitted. Discovery reads registration metadata without opening files or constructing instances. To create an object, load the returned source through `ResourceLoader.Load<Script>()` and call the typed `New<T>()`. That operation enforces the ordinary source checksum and construction requirements. Changing the configured project root changes discovery scope.
+
+The executable fixture queries an empty catalog, registers concrete and abstract project classes, inspects base/tool/icon metadata, changes the result array and switches projects. It then loads the discovered source, constructs the exact class and runs its callbacks in a headless scene. This verifies programmatic discovery and simulation. Editor UI, agent workflow and rendered output are separate checks.

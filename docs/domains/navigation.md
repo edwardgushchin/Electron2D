@@ -13,7 +13,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 | Component | Responsibility | State |
 | --- | --- | --- |
 | [A-star point graph](../components/astar-graph.md) | Directed weighted points, nearest-segment queries and full/partial path search | Implemented and verified in managed execution |
-| [Authored maps](../components/navigation-maps.md) | World map ownership, scene regions, convex portal routes and deferred publication | Implemented profile; further capabilities retain coverage dependencies |
+| [Authored maps](../components/navigation-maps.md) | World map ownership, scene regions, [weighted portal routes](../components/navigation-maps.md#arrivals-through-the-same-portal) and deferred publication | Implemented profile; further capabilities retain coverage dependencies |
 | [A-star grid](../components/astar-grid.md) | Rectangular cells, obstacles, weights, diagonal and jump-point search | Implemented and verified in managed execution |
 
 ## Public surface
@@ -39,6 +39,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 
 ## Decisions
 
+- [Project topology defaults](../components/navigation-maps.md#project-topology-defaults) configure rasterization, margin connections and links for newly allocated world maps.
 - [0097: Typed planar navigation maps](../decisions/navigation.md#adr-0097)
 - [0052: Standalone typed AStar](../decisions/navigation.md#adr-0052)
 - [0053: Standalone typed 2D grid search](../decisions/navigation.md#adr-0053)

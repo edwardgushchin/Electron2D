@@ -341,15 +341,29 @@ public sealed partial class DisplayServer
                 RefreshOutput();
                 break;
             case SDL.EventType.WindowDisplayScaleChanged:
-                RefreshMouseInputRegion();
-                RenderingServer.NotifyRenderMutation();
-                if (_waylandWindowPosition)
                 {
-                    ReapplyWaylandWindowLimits();
-                    RefreshBlankWindowSurface();
+                    List<Exception>? errors = null;
+                    try
+                    {
+                        if (_nativeIcon.Small != 0 && (_rootDisplay ?? this)._defaultNativeIcon is { } icon)
+                            SetWindowsIcon(WindowGetNativeHandleCore(HandleType.WindowHandle), PrepareWindowsIcon(icon));
+                    }
+                    catch (Exception error) { Node.CollectException(ref errors, error); }
+                    try
+                    {
+                        RefreshMouseInputRegion();
+                        RenderingServer.NotifyRenderMutation();
+                        if (_waylandWindowPosition)
+                        {
+                            ReapplyWaylandWindowLimits();
+                            RefreshBlankWindowSurface();
+                        }
+                        PublishWindow(BeginEventEmission(_publisherWindowDpiChangedCore.Handlers), _windowEvents?.DPIHandlers);
+                    }
+                    catch (Exception error) { Node.CollectException(ref errors, error); }
+                    Node.ThrowCollected("Window scale update failed.", errors);
+                    break;
                 }
-                PublishWindow(BeginEventEmission(_publisherWindowDpiChangedCore.Handlers), _windowEvents?.DPIHandlers);
-                break;
             case SDL.EventType.WindowCloseRequested:
                 _pendingDroppedFiles = null;
                 if (IsNativePopup) ForceClosePopup();

@@ -14,17 +14,27 @@ public partial class Window : Viewport
     [
         new PropertyDescriptor<Window, bool>(nameof(Visible), w => w.Visible, (w, v) => w.Visible = v, _ => true, stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(Position), w => w.Position, (w, v) => w.Position = v, _ => Vector2i.Zero, stored: true),
-        new PropertyDescriptor<Window, WindowInitialPosition>(nameof(InitialPosition), w => w.InitialPosition, (w, v) => w.InitialPosition = v, _ => WindowInitialPosition.Absolute, stored: true),
+        new PropertyDescriptor<Window, WindowInitialPosition>(nameof(InitialPosition), w => w.InitialPosition, (w, v) => w.InitialPosition = v, _ => WindowInitialPosition.Absolute, stored: true)
+        { StoreCondition = w => w._initialPositionAssigned },
         new PropertyDescriptor<Window, string>(nameof(Title), w => w.Title, (w, v) => w.Title = v, _ => "", stored: true),
-        new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
+        new PropertyDescriptor<Window, string>(nameof(AccessibilityName), w => w.AccessibilityName, (w, v) => w.AccessibilityName = v, _ => "", stored: true),
+        new PropertyDescriptor<Window, string>(nameof(AccessibilityDescription), w => w.AccessibilityDescription, (w, v) => w.AccessibilityDescription = v, _ => "", stored: true),
+        new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true)
+        { StoreCondition = w => w._sizeAssigned || (!w._projectContentApplied && w._size != new Vector2i(100, 100)) },
         new PropertyDescriptor<Window, Vector2i>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2i.Zero, stored: true),
-        new PropertyDescriptor<Window, WindowMode>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => WindowMode.Windowed, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(Unresizable), w => w.Unresizable, (w, v) => w.Unresizable = v, _ => false, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(AlwaysOnTop), w => w.AlwaysOnTop, (w, v) => w.AlwaysOnTop = v, _ => false, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(Unfocusable), w => w.Unfocusable, (w, v) => w.Unfocusable = v, _ => false, stored: true),
-        new PropertyDescriptor<Window, bool>(nameof(SharpCorners), w => w.SharpCorners, (w, v) => w.SharpCorners = v, _ => false, stored: true),
+        new PropertyDescriptor<Window, WindowMode>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => WindowMode.Windowed, stored: true)
+        { StoreCondition = w => w._modeAssigned || w._mode != WindowMode.Windowed },
+        new PropertyDescriptor<Window, bool>(nameof(Unresizable), w => w.Unresizable, (w, v) => w.Unresizable = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.ResizeDisabled) },
+        new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.Borderless) },
+        new PropertyDescriptor<Window, bool>(nameof(AlwaysOnTop), w => w.AlwaysOnTop, (w, v) => w.AlwaysOnTop = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.AlwaysOnTop) },
+        new PropertyDescriptor<Window, bool>(nameof(Unfocusable), w => w.Unfocusable, (w, v) => w.Unfocusable = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.NoFocus) },
+        new PropertyDescriptor<Window, bool>(nameof(SharpCorners), w => w.SharpCorners, (w, v) => w.SharpCorners = v, _ => false, stored: true)
+        { StoreCondition = w => w.IsFlagAssigned(WindowFlag.SharpCorners) },
         new PropertyDescriptor<Window, bool>(nameof(ExcludeFromCapture), w => w.ExcludeFromCapture, (w, v) => w.ExcludeFromCapture = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(MousePassthrough), w => w.MousePassthrough, (w, v) => w.MousePassthrough = v, _ => false, stored: true),
         new PropertyDescriptor<Window, Vector2[]>(nameof(MousePassthroughPolygon), w => w.MousePassthroughPolygon, (w, v) => w.MousePassthroughPolygon = v, _ => [], stored: true),
@@ -34,7 +44,10 @@ public partial class Window : Viewport
     private DisplayServer? _display;
     private RenderingServer? _renderer;
     private string _title = "";
+    private string _accessibilityName = "", _accessibilityDescription = "";
+    private string _resolvedAccessibilityName = "", _resolvedAccessibilityDescription = "";
     private Vector2i _size = new(100, 100);
+    private bool _sizeAssigned, _projectContentApplied;
     private Vector2i _minSize;
     private Vector2i _maxSize;
     private Vector2i? _screenPosition;
@@ -79,12 +92,61 @@ public partial class Window : Viewport
         }
     }
 
-    internal string AccessibilityTitle => _display?.AccessibilityTitle ?? _title;
+    /// <summary>Gets or sets the authored name reported to assistive technology.</summary>
+    /// <value>Empty initially. An empty name uses the window title in the semantic tree.</value>
+    /// <remarks>Stored in scenes and automatically translated using this window's translation context.</remarks>
+    /// <exception cref="ArgumentNullException">The new name is null.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner or mutation is capture-owned.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    public string AccessibilityName
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _accessibilityName; }
+        set
+        {
+            EnsureMutable();
+            ArgumentNullException.ThrowIfNull(value);
+            if (_accessibilityName == value) return;
+            _resolvedAccessibilityName = Atr(value);
+            _accessibilityName = value;
+            QueueAccessibilityUpdate();
+            UpdateConfigurationWarnings();
+        }
+    }
+
+    /// <summary>Gets or sets the authored description reported to assistive technology.</summary>
+    /// <value>Empty initially.</value>
+    /// <remarks>Stored in scenes and automatically translated using this window's translation context.</remarks>
+    /// <exception cref="ArgumentNullException">The new description is null.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner or mutation is capture-owned.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    public string AccessibilityDescription
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _accessibilityDescription; }
+        set
+        {
+            EnsureMutable();
+            ArgumentNullException.ThrowIfNull(value);
+            if (_accessibilityDescription == value) return;
+            _resolvedAccessibilityDescription = Atr(value);
+            _accessibilityDescription = value;
+            QueueAccessibilityUpdate();
+        }
+    }
+
+    internal string AccessibleCaption => _accessibilityName.Length != 0 ? _resolvedAccessibilityName : _display?.AccessibilityTitle ?? _title;
+    internal string AccessibleDescription => _resolvedAccessibilityDescription;
+
+    private void RefreshAccessibilityText()
+    {
+        _resolvedAccessibilityName = Atr(_accessibilityName);
+        _resolvedAccessibilityDescription = Atr(_accessibilityDescription);
+    }
 
     /// <summary>Gets the observed client size or requests a positive client size.</summary>
     /// <value>100 by 100 before configuration or native activation.</value>
     /// <remarks>Native changes may be asynchronous or constrained by the compositor and size limits.
     /// SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size.
+    /// Configured project runs supply a startup request when size has not been assigned.
     /// On Android, iOS, tvOS and browsers the native surface determines the initial observed size,
     /// regardless of the requested size. These profiles and Wayland expose physical client pixels.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Either component is nonpositive.</exception>
@@ -99,10 +161,8 @@ public partial class Window : Viewport
             if (value.X <= 0 || value.Y <= 0)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Client dimensions must be positive.");
             RenderingOwner?.EnsureViewportMutation();
-            value = value.Max(GetWindowMinimumSize());
+            value = ConstrainRequestedSize(value);
             EnsureMutable();
-            if (_maxSize.X > 0) value.X = Math.Min(value.X, _maxSize.X);
-            if (_maxSize.Y > 0) value.Y = Math.Min(value.Y, _maxSize.Y);
             RequestMeasuredWindowSize(value);
         }
     }
@@ -182,6 +242,8 @@ public partial class Window : Viewport
             if (value) Tree?.RegisterNativePopup(this);
             try { UpdateExclusiveSelection(); } catch (Exception error) { CollectException(ref errors, error); }
             try { EmbeddedVisibilityChanged(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (value && _wrapControls && !IsDisposed) ChildControlsChanged(); }
+            catch (Exception error) { CollectException(ref errors, error); }
             try { Notify(NotificationVisibilityChanged); } catch (Exception error) { CollectException(ref errors, error); }
             if (IsDisposed) { ThrowCollected("Window visibility callbacks failed.", errors); return; }
             try { BeginEventEmission(_publisherVisibilityChanged.Handlers)?.Invoke(); }
@@ -247,6 +309,19 @@ public partial class Window : Viewport
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public int GetWindowID() { ThrowIfDisposed(); return _display?.WindowID ?? DisplayServer.InvalidWindowId; }
 
+    /// <summary>Reports whether this window can draw through its native or embedded host.</summary>
+    /// <returns>False while detached or hidden. Native windows use the display server's presentation
+    /// eligibility. A visible attached embedded window is eligible for composition in its viewport.</returns>
+    /// <remarks>The root of an active custom MainLoop uses its native host.</remarks>
+    /// <exception cref="InvalidOperationException">The caller is off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    public bool CanDraw()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
+        return _display is { } display ? display.CanDrawWindow() : Visible && IsInsideTree && Embedder is not null;
+    }
+
     /// <summary>Reports whether the active native window has keyboard focus.</summary>
     /// <returns>The platform's current focus observation.</returns>
     /// <exception cref="InvalidOperationException">The window is inactive or accessed off-thread.</exception>
@@ -307,23 +382,46 @@ public partial class Window : Viewport
 
     internal DisplayServer? NativeDisplay => _display;
 
-    internal void OpenNative(bool disableVSync = false)
+    internal void OpenNative(bool disableVSync = false, bool printGPUProfile = false, bool runProject = false)
     {
-        _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible, transparent: Transparent);
+        if (runProject)
+        {
+            var alpha = ProjectSettings.Service.ReadProjectWindowTransparency();
+            if (OperatingSystem.IsAndroid() && alpha.Allowed)
+                throw new NotSupportedException("The Android host cannot request a transparent activity surface.");
+            ApplyProjectFlag(WindowFlag.Transparent, alpha.Allowed && alpha.NativeWindow);
+            ApplyProjectViewportTransparency(alpha.Viewport);
+        }
+
+        _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible, transparent: Transparent, runProject);
         _display.SceneWindow = this;
-        ConfigureNative();
-        if (disableVSync) DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
-        _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow());
+        if (runProject)
+            _display.ApplyProjectScreenPolicy();
+        _display.ConfigureSystemMenu(Engine.IsEditorHint || ProjectSettings.GetWithOverride(ProjectSettings.EnableAltSpaceMenu));
+        (WindowMode Mode, WindowInitialPosition Policy, Vector2i Position, int Screen)? placement =
+            runProject ? ProjectSettings.Service.ReadProjectWindowPlacement() : null;
+        if (runProject)
+            ApplyProjectChrome(_display);
+        ConfigureNative(placement);
+        if (disableVSync)
+            DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled);
+        else if (runProject)
+            DisplayServer.WindowSetVSyncMode(ProjectSettings.GetWithOverride(ProjectSettings.WindowVSyncMode));
+        _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow(), printGPUProfile);
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }
 
-    private void ConfigureNative()
+    private static bool SupportsNativeSizeLimits =>
+        !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() && !OperatingSystem.IsBrowser();
+
+    private void ConfigureNative(
+        (WindowMode Mode, WindowInitialPosition Policy, Vector2i Position, int Screen)? projectPlacement = null)
     {
         if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         var display = _display ?? throw new InvalidOperationException("The native window is absent.");
         display.SetHDROutputRequestCore(_hdrOutputRequested);
         _observedNativePosition = display.ObservedWindowPosition;
-        if (OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser())
+        if (!SupportsNativeSizeLimits)
         {
             if (_minSize.X != 0 || _minSize.Y != 0 || _maxSize.X != 0 || _maxSize.Y != 0)
                 throw new NotSupportedException("Mobile, TV and browser surfaces do not support window size limits.");
@@ -340,9 +438,11 @@ public partial class Window : Viewport
         display.WindowSetMousePassthroughCore(_mousePassthroughPolygon);
         if (_currentScreen is { } screen)
             display.WindowSetCurrentScreenCore(screen);
-        if (!display.IsNativePopup || _popupClientPosition is null) ApplyInitialNativePosition();
-        if (_mode != WindowMode.Windowed)
-            display.WindowSetModeCore(_mode);
+        if (!display.IsNativePopup || _popupClientPosition is null)
+            ApplyInitialNativePosition(display, projectPlacement);
+        var mode = _modeAssigned ? _mode : projectPlacement?.Mode ?? _mode;
+        if (mode != WindowMode.Windowed)
+            display.WindowSetModeCore(mode);
         _size = display.WindowGetSizeCore(); _contentLayoutValid = false;
         display.CloseRequestedCore += HandleClose;
         display.QuitRequestedCore += HandleClose;
@@ -419,7 +519,23 @@ public partial class Window : Viewport
 
     internal void PumpEvents() => GetDisplay().ProcessEventsCore();
 
-    internal void Render(SceneTree tree, double step) => tree.RenderCanvas(_renderer ?? throw new InvalidOperationException("Rendering has not started."), step);
+    private bool _hostQuitOnClose, _hostQuitOnGoBack;
+    internal bool HostsCustomMainLoop { get; private set; }
+    internal bool HostQuitRequested { get; private set; }
+
+    internal void ConfigureCustomMainLoop()
+    {
+        HostsCustomMainLoop = true;
+        _hostQuitOnClose = ProjectSettings.GetWithOverride(ProjectSettings.AutoAcceptQuit);
+        _hostQuitOnGoBack = ProjectSettings.GetWithOverride(ProjectSettings.QuitOnGoBack);
+    }
+
+    internal void Render(SceneTree? tree, double step)
+    {
+        var renderer = _renderer ?? throw new InvalidOperationException("Rendering has not started.");
+        if (tree is null) renderer.Render(null, step);
+        else tree.RenderCanvas(renderer, step);
+    }
 
     private DisplayServer GetDisplay()
     {
@@ -434,7 +550,11 @@ public partial class Window : Viewport
         try { RequestEmbeddedClose(); }
         finally
         {
-            if (Parent is null) Tree?.AcceptWindowClose();
+            if (Parent is null)
+            {
+                if (Tree is { } tree) tree.AcceptWindowClose();
+                else if (_hostQuitOnClose) HostQuitRequested = true;
+            }
         }
     }
 
@@ -494,7 +614,14 @@ public partial class Window : Viewport
         if (what == NotificationWmWindowFocusOut) try { Tree?.CancelEmbeddedDecorationTree(this); } catch (Exception error) { CollectException(ref errors, error); }
         try { PropagateWindowNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         if (what == NotificationWmGoBackRequest)
-            try { if (!IsBlockingSignals() && Parent is null) Tree?.AcceptWindowGoBack(); }
+            try
+            {
+                if (!IsBlockingSignals() && Parent is null)
+                {
+                    if (Tree is { } tree) tree.AcceptWindowGoBack();
+                    else if (_hostQuitOnGoBack) HostQuitRequested = true;
+                }
+            }
             catch (Exception error) { CollectException(ref errors, error); }
         var handlers = what switch
         {
@@ -529,6 +656,15 @@ public partial class Window : Viewport
         _size = size; _contentLayoutValid = false;
         InvalidateViewportRecording(); _embeddedCanvas?.QueueRedraw();
         NotifyContentSizeChanged();
+    }
+
+    private Vector2i ConstrainRequestedSize(Vector2i size)
+    {
+        size = size.Max(GetWindowMinimumSize());
+        var maximum = MaxSize;
+        if (maximum.X > 0) size.X = Math.Min(size.X, maximum.X);
+        if (maximum.Y > 0) size.Y = Math.Min(size.Y, maximum.Y);
+        return size;
     }
 
     private static void ValidateLimits(Vector2i minimum, Vector2i maximum)

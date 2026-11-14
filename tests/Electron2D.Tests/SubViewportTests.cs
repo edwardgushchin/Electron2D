@@ -2,7 +2,7 @@ using Electron2D;
 
 internal static class SubViewportTests
 {
-    internal static void Run() { Authoring(); SceneCopies(); Input(); RecordingScale(); Console.WriteLine("Offscreen viewport authoring, scene-local copies and input boundary checks passed."); }
+    internal static void Run() { Authoring(); SceneCopies(); Input(); StretchQueries(); RecordingScale(); Console.WriteLine("Offscreen viewport authoring, scene-local copies and input boundary checks passed."); }
     private static void Authoring()
     {
         using var viewport = new SubViewport(); Check(viewport.Size == new Vector2i(512, 512) && viewport.Size2DOverride == Vector2i.Zero && !viewport.Size2DOverrideStretch && !viewport.TransparentBG && viewport.RenderTargetUpdateMode == ViewportUpdateMode.WhenVisible && viewport.RenderTargetClearMode == ViewportClearMode.Always, "Defaults."); var texture = viewport.GetTexture(); Check(ReferenceEquals(texture, viewport.GetTexture()) && texture.GetSize() == new Vector2(512, 512) && texture.GetImage() is null && texture.ResourceLocalToScene && texture.PixelFormat == Image.Format.Rgba8 && !texture.HasAlpha && !texture.HasMIPMaps, "Live view defaults without a renderer."); var rid = texture.GetRID(); var viewportRID = viewport.GetViewportRID(); Check(viewportRID.IsValid() && viewportRID == viewport.GetViewportRID() && viewportRID != rid, "Stable distinct viewport identity."); viewport.Size = new(-1, 1); Check(viewport.Size == new Vector2i(2, 2) && texture.GetSize() == new Vector2(2, 2) && texture.GetRID() == rid, "Minimum clamp and stable identity."); var sizes = 0; var changes = 0; viewport.SizeChanged += () => sizes++; texture.Changed += _ => changes++; viewport.Size = new(64, 32); Check(sizes == 1 && changes == 1, "Single texture/size notification."); viewport.Size2DOverride = new(32, 8); viewport.Size2DOverrideStretch = true; Check(viewport.GetVisibleRect() == new Rect2(0, 0, 32, 8) && viewport.GetFinalTransform().Scale == new Vector2(2, 4), "Logical override/stretch."); viewport.GlobalCanvasTransform = new(0, new(2, 3)); Near(viewport.GetFinalTransform() * Vector2.Zero, new(4, 12)); viewport.Size2DOverride = new(0, 8); Check(viewport.GetFinalTransform() == viewport.GlobalCanvasTransform, "Partial-zero override disables stretch."); Reject<ArgumentOutOfRangeException>(() => viewport.RenderTargetClearMode = (ViewportClearMode)99); Reject<ArgumentOutOfRangeException>(() => viewport.RenderTargetUpdateMode = (ViewportUpdateMode)99);
@@ -17,6 +17,34 @@ internal static class SubViewportTests
     {
         var root = new TestViewport(); var outside = new Listener { InputEnabled = true }; var viewport = new SubViewport { Size = new(64, 64), Size2DOverride = new(32, 32), Size2DOverrideStretch = true }; var inside = new Listener { InputEnabled = true }; root.AddChild(outside); root.AddChild(viewport); viewport.AddChild(inside); using var scene = new SceneTree(root); using var input = new InputEventMouseMotion { Position = new(16, 20) }; root.PushInput(input, true); Check(outside.Calls == 1 && inside.Calls == 0, "Root input skips nested viewports."); viewport.PushInput(input); Check(inside.Calls == 1 && outside.Calls == 1 && inside.Position == new Vector2(8, 10), "Explicit input isolates and removes stretch."); Check(inside.GetViewport() == viewport && inside.GetWindow() is null, "Containing viewport remains distinct from a native window."); Task.Run(() => Reject<InvalidOperationException>(() => viewport.Size = new(40, 40))).GetAwaiter().GetResult();
     }
+    private static void StretchQueries()
+    {
+        using var root = new SubViewport { GUIEmbedSubwindows = true };
+        var parent = new Window { ContentScaleFactor = 3 };
+        root.AddChild(parent);
+        var child = new SubViewport
+        {
+            Size = new(64, 48), Size2DOverride = new(32, 16),
+            CanvasTransform = new(0, new(10, 20)), GlobalCanvasTransform = new(0, new(2, 3))
+        };
+        Check(child.GetStretchTransform() == Transform.Identity, "An override does not stretch unless enabled.");
+        child.Size2DOverrideStretch = true;
+        var stretch = new Transform(new(2, 0), new(0, 3), Vector2.Zero);
+        Check(child.GetStretchTransform() == stretch, "Detached stretch uses each axis independently.");
+        parent.AddChild(child);
+        using var scene = new SceneTree(root);
+        Check(child.GetStretchTransform() == stretch && child.GetFinalTransform().Origin == new Vector2(4, 9), "Parent stretch and canvas placement are separate from target stretch.");
+        child.SizeChanged += () => stretch = child.GetStretchTransform();
+        child.Size = new(96, 32);
+        Check(stretch == new Transform(new(3, 0), new(0, 2), Vector2.Zero), "Resize publishes the new stretch before size observers.");
+        child.Size2DOverride = new(0, 16);
+        Check(stretch == Transform.Identity, "A zero override axis disables stretch.");
+        child.Size2DOverride = new(32, -16);
+        Check(stretch == Transform.Identity, "A negative override axis disables stretch.");
+        child.Dispose();
+        Reject<ObjectDisposedException>(() => child.GetStretchTransform());
+    }
+
     private static void RecordingScale()
     {
         using var viewport = new SubViewport { Size = new(64, 64) }; using var style = new StyleBoxFlat(); style.SetCornerRadiusAll(4); var painter = new StyledBox(style); viewport.AddChild(painter); using var scene = new SceneTree(viewport); var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>(); painter.PrepareCanvas(); painter.AppendCanvas(vertices, batches, Transform.Identity); var normal = vertices.Min(v => v.Position.X); viewport.Size2DOverride = new(32, 32); viewport.Size2DOverrideStretch = true; painter.PrepareCanvas(); vertices.Clear(); batches.Clear(); painter.AppendCanvas(vertices, batches, Transform.Identity); var scaled = vertices.Min(v => v.Position.X); Check(Math.Abs(normal + .5f) < .0001 && Math.Abs(scaled + .25f) < .0001, $"Nonunit recording scale divides AA feather and invalidates retained geometry: {normal}, {scaled}.");
@@ -74,9 +102,19 @@ internal static class SubViewportTests
             {
                 using var image = renderer.Readback(); using var first = textureA.GetImage(); using var second = textureB.GetImage(); Check(stage == 4 || first is not null && second is not null, "Dependency targets complete before their consumer at stage " + stage);
                 if (stage == 0) { Pixel(image, 44, 12, Colors.Red); Pixel(first!, 16, 16, Colors.Blue); Pixel(image, 16, 16, Colors.Black); source.Fill = Colors.Green; source.QueueRedraw(); feedback.Visible = true; }
-                else if (stage == 1) { Pixel(image, 44, 12, Colors.Green); Pixel(first!, 36, 4, Colors.Red); Pixel(second!, 36, 4, Colors.Red); a.Size2DOverride = new(32, 16); a.Size2DOverrideStretch = true; feedback.Visible = false; source.Position = new(4, 4); }
-                else if (stage == 2) { Pixel(first!, 8, 8, Colors.Green); a.RenderTargetUpdateMode = ViewportUpdateMode.Always; output.Visible = false; window.Hide(); source.Fill = Colors.Blue; source.QueueRedraw(); }
-                else if (stage == 3) { Pixel(first!, 8, 8, Colors.Blue); if (backend == "gpu" && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland") { Reject<NotSupportedException>(() => window.Show()); Check(!window.Visible, "Unsafe remap rejects before managed visibility changes."); } else window.Show(); window.RemoveChild(a); }
+                else if (stage == 1) { Pixel(image, 44, 12, Colors.Green); Pixel(first!, 36, 4, Colors.Red); Pixel(second!, 36, 4, Colors.Red); a.Size2DOverride = new(32, 8); a.Size2DOverrideStretch = true; feedback.Visible = false; source.Position = new(4, 4); }
+                else if (stage == 2)
+                {
+                    var stretch = a.GetStretchTransform();
+                    Check(stretch.Scale == new Vector2(2, 4), "Offscreen raster uses nonuniform stretch.");
+                    var pixel = (Vector2i)(stretch * new Vector2(5, 5));
+                    Pixel(first!, pixel.X, pixel.Y, Colors.Green);
+                    Pixel(second!, pixel.X, pixel.Y, Colors.Green);
+                    Pixel(image, 40 + pixel.X, 8 + pixel.Y, Colors.Green);
+                    Pixel(first!, 6, 10, Colors.Black);
+                    a.RenderTargetUpdateMode = ViewportUpdateMode.Always; output.Visible = false; window.Hide(); source.Fill = Colors.Blue; source.QueueRedraw();
+                }
+                else if (stage == 3) { Pixel(first!, 10, 20, Colors.Blue); if (backend == "gpu" && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland") { Reject<NotSupportedException>(() => window.Show()); Check(!window.Visible, "Unsafe remap rejects before managed visibility changes."); } else window.Show(); window.RemoveChild(a); }
                 else if (stage == 4) { Check(textureA.GetImage() is null && !a.IsDisposed, "Detached target releases native storage without owning the node."); a.Dispose(); window.Tree!.Quit(); }
                 stage++;
             };

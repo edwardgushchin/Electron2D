@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-11-12
+Last updated: 2026-11-14
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs), [RenderingServer.Threads.cs](../../src/Servers/Rendering/RenderingServer.Threads.cs)
@@ -1370,7 +1370,7 @@ Uses the initialized process service on its owner thread. Invalid/disposed ident
 
 ## Explicit frame execution
 
-ForceDraw(bool swapBuffers = true, double frameStep = 0) executes the current native scene even when RenderLoopEnabled is false; non-presenting frames still update viewport textures. ForceSync drains selected render-thread requests, submits pending renderer device work and waits for prior GPU operations. Synchronization itself does not draw; user actions retain their ordinary operations. RequestFrameDrawnCallback(Action) schedules an ordered one-shot owner-thread action after a completed frame, with capture release and error cleanup. See [clock, ownership, failure and actual pixel verification](../components/manual-render-frames.md).
+ForceDraw(bool swapBuffers = true, double frameStep = 0) executes the active native canvas even when RenderLoopEnabled is false. Non-presenting frames still update viewport textures. A configured custom MainLoop can draw its server-owned canvases and viewports through the same submission path. ForceSync drains selected render-thread requests, submits pending renderer device work and waits for prior GPU operations. Synchronization itself does not draw. RequestFrameDrawnCallback(Action) schedules an ordered one-shot owner-thread action after a completed frame, with capture release and error cleanup. See [clock, ownership, failure and pixel verification](../components/manual-render-frames.md).
 
 
 ## Retained canvas visibility callbacks

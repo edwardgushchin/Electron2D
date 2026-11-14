@@ -246,10 +246,19 @@ public partial class Window
     {
         List<Exception>? errors = null;
         try { UpdateTransientMembership(entering); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!entering) try { UpdateEmbeddedMembership(false); } catch (Exception error) { CollectException(ref errors, error); }
+        if (!entering)
+        {
+            _childControlsGeneration++;
+            _childControlsPending = false;
+            try { UpdateEmbeddedMembership(false); } catch (Exception error) { CollectException(ref errors, error); }
+        }
         try { ThemeOwner.Membership(entering); } catch (Exception error) { CollectException(ref errors, error); }
         try { base.OnTreeMembershipChanged(entering); } catch (Exception error) { CollectException(ref errors, error); }
-        if (entering) try { UpdateEmbeddedMembership(true); } catch (Exception error) { CollectException(ref errors, error); }
+        if (entering)
+        {
+            try { UpdateEmbeddedMembership(true); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (_wrapControls) ChildControlsChanged(); } catch (Exception error) { CollectException(ref errors, error); }
+        }
         ThrowCollected("Window membership callbacks failed.", errors);
     }
     /// <inheritdoc />
@@ -258,6 +267,7 @@ public partial class Window
         var reversed = IsNotificationReversed;
 
         if (!reversed) base.OnNotification(what);
+        if (what is NotificationEnterTree or NotificationTranslationChanged) RefreshAccessibilityText();
         if (what == NotificationVPMouseEnter && !_mouseInContent) { _mouseInContent = true; EmitWindowSignal(BeginEventEmission(_publisherMouseEntered.Handlers)); }
         else if (what == NotificationVPMouseExit && _mouseInContent) { _mouseInContent = false; EmitWindowSignal(BeginEventEmission(_publisherMouseExited.Handlers)); }
         else if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
