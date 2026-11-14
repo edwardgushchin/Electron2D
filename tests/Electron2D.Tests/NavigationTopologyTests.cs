@@ -5,8 +5,8 @@ internal static class NavigationTopologyTests
 {
     internal static void Run()
     {
-        ReferenceCases(); Publication(); Sampling(); ResourceOwnerDelivery();
-        Console.WriteLine("Navigation raster ownership, reference counters/pathways/routes, deferred rollback/versions, filtered area sampling and warmed reads passed.");
+        ReferenceCases(); Publication(); ProjectDefaults(); Sampling(); ResourceOwnerDelivery();
+        Console.WriteLine("Navigation raster ownership, reference counters/pathways/routes, world defaults, deferred rollback/versions, filtered area sampling and warmed reads passed.");
     }
     private static int[] Counts() => Enumerable.Range(0, 10).Select(i => NavigationServer.GetProcessInfo((NavigationServer.ProcessInfo)i)).ToArray();
     private static Vector2 Point(JsonElement value) => new(value[0].GetSingle(), value[1].GetSingle());
@@ -100,6 +100,135 @@ internal static class NavigationTopologyTests
         finally { NavigationServer.FreeRID(agent); NavigationServer.FreeRID(obstacle); NavigationServer.FreeRID(link); NavigationServer.FreeRID(ra); NavigationServer.FreeRID(rb); NavigationServer.FreeRID(map); NavigationServer.Synchronize(); }
         Reject<ArgumentException>(() => NavigationServer.MapGetCellSize(map)); Reject<ArgumentException>(() => NavigationServer.RegionGetConnectionsCount(ra));
     }
+    private static void ProjectDefaults()
+    {
+        var cell = ProjectSettings.NavigationDefaultCellSize;
+        var margin = ProjectSettings.NavigationDefaultEdgeConnectionMargin;
+        var radius = ProjectSettings.NavigationDefaultLinkConnectionRadius;
+        var scale = ProjectSettings.NavigationMergeRasterizerCellScale;
+        var edges = ProjectSettings.NavigationUseEdgeConnections;
+        const string feature = "nav-topology-test";
+        var previous = (ProjectSettings.Get(cell), ProjectSettings.Get(margin), ProjectSettings.Get(radius),
+            ProjectSettings.Get(scale), ProjectSettings.Get(edges));
+        Check((cell.DefaultValue, margin.DefaultValue, radius.DefaultValue, scale.DefaultValue, edges.DefaultValue) ==
+            (1f, 1f, 4f, 1f, true), "Built-in project values.");
+        using var world = new World();
+        using var other = new World();
+        using var left = Rectangle(0, 0, 10, 10);
+        using var near = Rectangle(10.4f, 2, 10, 6);
+        using var far = Rectangle(30, 0, 10, 10);
+        var a = NavigationServer.RegionCreate();
+        var b = NavigationServer.RegionCreate();
+        var c = NavigationServer.RegionCreate();
+        var link = NavigationServer.LinkCreate();
+        var caller = default(RID);
+        try
+        {
+            ProjectSettings.Set(cell, 2f);
+            ProjectSettings.Set(margin, .5f);
+            ProjectSettings.Set(radius, 2f);
+            ProjectSettings.Set(scale, .025f);
+            ProjectSettings.Set(edges, true);
+            var map = world.NavigationMap;
+            Check(NavigationServer.MapIsActive(map) && Defaults(map) == (2f, .5f, 2f, .025f, true),
+                "First access captures all configured topology values.");
+            using var alias = (World)world.Duplicate();
+            Check(alias.NavigationMap == map, "World aliases share the captured map.");
+            NavigationServer.RegionSetNavigationPolygon(a, left);
+            NavigationServer.RegionSetNavigationPolygon(b, near);
+            NavigationServer.RegionSetNavigationPolygon(c, far);
+            NavigationServer.LinkSetStartPosition(link, new(5, 12));
+            NavigationServer.LinkSetEndPosition(link, new(35, 5));
+            Attach(map);
+            Check(Reached(map, new(15, 5)) && !Reached(map, new(35, 5)),
+                "Configured edge margin joins nearby regions; a link endpoint exactly on the configured radius remains unattached.");
+
+            ProjectSettings.Set(edges, false);
+            ProjectSettings.SetFeatureOverride(radius, feature, 2.5f);
+            ProjectSettings.AddCustomFeature(feature);
+            var second = other.NavigationMap;
+            Check(Defaults(second) == (2f, .5f, 2.5f, .025f, false), "New worlds resolve active feature overrides.");
+            Check(Defaults(map) == (2f, .5f, 2f, .025f, true), "Existing maps retain captured topology after project edits.");
+            Attach(second);
+            Check(!Reached(second, new(15, 5)) && Reached(second, new(35, 5)),
+                "Disabled edge connections leave the near region unreachable; the overridden radius attaches the link.");
+
+            caller = NavigationServer.MapCreate();
+            Check(!NavigationServer.MapIsActive(caller) && Defaults(caller) == (1f, 1f, 4f, .1f, true),
+                "Caller-owned maps retain independent topology defaults.");
+
+            Reject<ArgumentException>(() => ProjectSettings.Set(cell, float.NaN));
+            Reject<ArgumentException>(() => ProjectSettings.Set(scale, float.PositiveInfinity));
+            Reject<ArgumentException>(() => ProjectSettings.Set(margin, -1f));
+            Reject<ArgumentException>(() => ProjectSettings.Set(radius, -1f));
+            ProjectSettings.Set(cell, 0f);
+            ProjectSettings.Set(scale, 0f);
+            using var minimum = new World();
+            Check(Defaults(minimum.NavigationMap) == (.0001f, .5f, 2.5f, .0001f, false), "World initialization uses the setter floors.");
+            ProjectSettings.Set(scale, 1f);
+            using var maximum = new World();
+            Check(NavigationServer.MapGetMergeRasterizerCellScale(maximum.NavigationMap) == .1f, "World initialization uses the setter cap.");
+
+            var directory = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-nav-settings-" + Guid.NewGuid().ToString("N"));
+            var project = System.IO.Path.Combine(directory, "project");
+            var user = System.IO.Path.Combine(directory, "user");
+            try
+            {
+                Directory.CreateDirectory(project);
+                Directory.CreateDirectory(user);
+                using (var saved = new ProjectSettingsRegistry(project, user))
+                {
+                    saved.Set(cell, 3f);
+                    saved.Set(margin, 0f);
+                    saved.Set(radius, 0f);
+                    saved.Set(scale, .02f);
+                    saved.Set(edges, false);
+                    saved.SetFeatureOverride(radius, feature, 7f);
+                    saved.Save();
+                }
+                using var loaded = new ProjectSettingsRegistry(project, user);
+                loaded.Load();
+                Check((loaded.Get(cell), loaded.Get(margin), loaded.Get(radius), loaded.Get(scale), loaded.Get(edges)) ==
+                    (3f, 0f, 0f, .02f, false) && loaded.GetWithOverride(radius, [feature]) == 7f,
+                    "Independent registries persist all topology defaults and feature overrides.");
+            }
+            finally { if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true); }
+        }
+        finally
+        {
+            NavigationServer.FreeRID(link);
+            NavigationServer.FreeRID(c);
+            NavigationServer.FreeRID(b);
+            NavigationServer.FreeRID(a);
+            if (caller.IsValid())
+                NavigationServer.FreeRID(caller);
+            ProjectSettings.ClearFeatureOverride(radius, feature);
+            ProjectSettings.RemoveCustomFeature(feature);
+            ProjectSettings.Set(cell, previous.Item1);
+            ProjectSettings.Set(margin, previous.Item2);
+            ProjectSettings.Set(radius, previous.Item3);
+            ProjectSettings.Set(scale, previous.Item4);
+            ProjectSettings.Set(edges, previous.Item5);
+        }
+
+        void Attach(RID map)
+        {
+            NavigationServer.RegionSetMap(a, map);
+            NavigationServer.RegionSetMap(b, map);
+            NavigationServer.RegionSetMap(c, map);
+            NavigationServer.LinkSetMap(link, map);
+            NavigationServer.Synchronize();
+        }
+
+        static bool Reached(RID map, Vector2 target) =>
+            NavigationServer.MapGetPath(map, new(5, 5), target, true)[^1] == target;
+
+        static (float Cell, float Margin, float Radius, float Scale, bool Edges) Defaults(RID map) =>
+            (NavigationServer.MapGetCellSize(map), NavigationServer.MapGetEdgeConnectionMargin(map),
+                NavigationServer.MapGetLinkConnectionRadius(map), NavigationServer.MapGetMergeRasterizerCellScale(map),
+                NavigationServer.MapGetUseEdgeConnections(map));
+    }
+
     private static void Sampling()
     {
         using var small = Rectangle(0, 0, 10, 10); using var large = Rectangle(20, 0, 20, 20); var map = NavigationServer.MapCreate(); var a = NavigationServer.RegionCreate(); var b = NavigationServer.RegionCreate();

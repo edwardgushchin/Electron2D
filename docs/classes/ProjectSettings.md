@@ -78,6 +78,18 @@ require GPU rendering. FXAA also uses the canvas mipmap-bias adapter. See [scree
 `ProjectSettings.MSAA2D` is a typed `ProjectSetting<Viewport.MSAA>` for `rendering/anti_aliasing/quality/msaa_2d`. Disabled is the default; Max and undefined values reject. Engine startup reads active feature overrides for an unconfigured root window. Explicit window and offscreen viewport selections remain independent. Enabled values require GPU support for the selected byte/half-float format and requested sample count; compatibility fails explicitly. See [canvas MSAA](../components/canvas-rendering.md#canvas-multisample-antialiasing).
 
 
+## Navigation topology defaults
+
+| Setting | Project key | Default |
+| --- | --- | --- |
+| `ProjectSetting<float> NavigationDefaultCellSize` | `navigation/2d/default_cell_size` | 1 |
+| `ProjectSetting<float> NavigationDefaultEdgeConnectionMargin` | `navigation/2d/default_edge_connection_margin` | 1 |
+| `ProjectSetting<float> NavigationDefaultLinkConnectionRadius` | `navigation/2d/default_link_connection_radius` | 4 |
+| `ProjectSetting<float> NavigationMergeRasterizerCellScale` | `navigation/2d/merge_rasterizer_cell_scale` | 1 |
+| `ProjectSetting<bool> NavigationUseEdgeConnections` | `navigation/2d/use_edge_connections` | true |
+
+These built-in descriptors support project files and feature overrides. A world captures the effective values when its map is first allocated. See [map initialization and effective bounds](../components/navigation-maps.md#project-topology-defaults).
+
 ## Project theme startup
 
 `GUIThemeCustom` and `GUIThemeCustomFont` are permanent typed `ProjectSetting<string>` definitions for `gui/theme/custom` and `gui/theme/custom_font`, both empty by default, basic and restart-required. Feature overrides and ordinary project path resolution apply. Engine.Start and windowed Engine.Run load the selected Theme/font before activating the main loop. Invalid files fail preparation and retain the previous selection. See [ThemeDB](ThemeDB.md#project-startup-theme) for ownership and lookup order.

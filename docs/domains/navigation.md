@@ -39,6 +39,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 
 ## Decisions
 
+- [Project topology defaults](../components/navigation-maps.md#project-topology-defaults) configure rasterization, margin connections and links for newly allocated world maps.
 - [0097: Typed planar navigation maps](../decisions/navigation.md#adr-0097)
 - [0052: Standalone typed AStar](../decisions/navigation.md#adr-0052)
 - [0053: Standalone typed 2D grid search](../decisions/navigation.md#adr-0053)

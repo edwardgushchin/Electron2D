@@ -156,6 +156,11 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(UseDebanding, isBasic: false);
         RegisterInternal(LCDSubpixelLayout, isBasic: false);
         _settings[LCDSubpixelLayout.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDefaultCellSize, isBasic: true);
+        RegisterInternal(NavigationDefaultEdgeConnectionMargin, isBasic: true);
+        RegisterInternal(NavigationDefaultLinkConnectionRadius, isBasic: true);
+        RegisterInternal(NavigationMergeRasterizerCellScale, isBasic: false);
+        RegisterInternal(NavigationUseEdgeConnections, isBasic: false);
         RegisterInternal(NavigationMapAsyncIterations, isBasic: false);
         RegisterInternal(NavigationRegionAsyncIterations, isBasic: false);
         RegisterInternal(WorkerPoolMaxThreads, isBasic: false);
@@ -485,6 +490,16 @@ public partial class ProjectSettingsRegistry : ElectronObject
                 })
                 .ToArray();
         }
+    }
+
+    internal (float CellSize, float EdgeMargin, float LinkRadius, float RasterScale, bool UseEdgeConnections) ReadWorldNavigationDefaults()
+    {
+        lock (_gate)
+            return (GetWithOverrideCore(NavigationDefaultCellSize),
+                GetWithOverrideCore(NavigationDefaultEdgeConnectionMargin),
+                GetWithOverrideCore(NavigationDefaultLinkConnectionRadius),
+                GetWithOverrideCore(NavigationMergeRasterizerCellScale),
+                GetWithOverrideCore(NavigationUseEdgeConnections));
     }
 
     internal T GetCore<T>(ProjectSetting<T> setting)

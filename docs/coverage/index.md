@@ -1,3 +1,5 @@
+[World navigation defaults](../components/navigation-maps.md#project-topology-defaults) apply typed project values and feature overrides to the topology of newly allocated world maps. Five Blocked rows move to Implemented. Coverage is **14,019/18,898 (74.18%)**, with 1,122 Partial, 268 Unimplemented, 3,489 Blocked, 8,395 Excluded and zero unmapped.
+
 [Global C# class discovery](../components/scripting.md#global-class-discovery) publishes project-scoped typed source metadata from the compiled registration catalog. One Unimplemented row moves to Implemented. Coverage is **14,014/18,898 (74.16%)**, with 1,122 Partial, 268 Unimplemented, 3,494 Blocked, 8,395 Excluded and zero unmapped.
 
 [Windows system menu](../components/window-runtime.md#windows-system-menu) connects the Alt+Space startup policy to real Win32 menus. One Blocked row moves to Implemented. Coverage is **14,013/18,898 (74.15%)**, with 1,122 Partial, 269 Unimplemented, 3,494 Blocked, 8,395 Excluded and zero unmapped.

@@ -1449,6 +1449,31 @@
       "godot": "ProjectSettings::property:debug/shapes/navigation/2d/agent_path_point_size",
       "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugAgentPathPointSize()",
       "reason": "Typed retained agent-path default consumed by the canvas producer; first-use feature override sampling, finite/nonnegative validation, saved project restoration and real geometry tested."
+    },
+    {
+      "godot": "ProjectSettings::property:navigation/2d/default_cell_size",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDefaultCellSize()",
+      "reason": "Typed project descriptor for world navigation map initialization."
+    },
+    {
+      "godot": "ProjectSettings::property:navigation/2d/default_edge_connection_margin",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDefaultEdgeConnectionMargin()",
+      "reason": "Typed project descriptor for world navigation map initialization."
+    },
+    {
+      "godot": "ProjectSettings::property:navigation/2d/default_link_connection_radius",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDefaultLinkConnectionRadius()",
+      "reason": "Typed project descriptor for world navigation map initialization."
+    },
+    {
+      "godot": "ProjectSettings::property:navigation/2d/merge_rasterizer_cell_scale",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationMergeRasterizerCellScale()",
+      "reason": "Typed project descriptor for world navigation map initialization."
+    },
+    {
+      "godot": "ProjectSettings::property:navigation/2d/use_edge_connections",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationUseEdgeConnections()",
+      "reason": "Typed project descriptor for world navigation map initialization."
     }
   ],
   "extras": [
@@ -2276,6 +2301,62 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0014/0097/0104: independent region/map WorkerThreadPool jobs over captured immutable inputs, nonblocking scene synchronization, committed-query retention, stale input coalescing, owner failure/publication, version/callback timing and owned task retirement. Explicit Synchronize preserves the deterministic host transaction. Browser enablement requires its threaded runtime; global debug/query-budget completeness remain independent prerequisites. NavigationIterationTests and separate-process IterationRoutes exercise actual queued frames and changed route pixels on GPU/compatibility."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:navigation/2d/default_cell_size"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0097. Typed project values and feature overrides are captured at first access to a world map. Caller-created maps keep independent defaults. Finite input is clamped at the existing map cell-size floor before the first topology build."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:navigation/2d/default_edge_connection_margin"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0097. Typed project values and feature overrides are captured at first access to a world map. Caller-created maps keep independent defaults. The finite nonnegative margin determines whether nearby free region edges connect."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:navigation/2d/default_link_connection_radius"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0097. Typed project values and feature overrides are captured at first access to a world map. Caller-created maps keep independent defaults. The finite nonnegative radius controls strict endpoint attachment to eligible polygons."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:navigation/2d/merge_rasterizer_cell_scale"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0097. Typed project values and feature overrides are captured at first access to a world map. Caller-created maps keep independent defaults. The stored default is one; the map scale clamp yields 0.1 by default and bounds finite input to 0.0001 through 0.1."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:navigation/2d/use_edge_connections"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0097. Typed project values and feature overrides are captured at first access to a world map. Caller-created maps keep independent defaults. This flag controls optional margin connections; shared raster edges remain connected."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:navigation/2d/navigation_engine"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: an accepted navigation backend registration and startup-selection contract that governs map/region/link/agent operations, with a deliberate disabled mode and real provider execution. ADR 0097 currently defines the shared built-in kernel."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:navigation/2d/warnings/navmesh_cell_size_mismatch"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: a committed navigation diagnostic for cell-size mismatches. The current generated-region compatibility check rejects a mismatched cell size transactionally; warning visibility must be independent of that validation."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:navigation/2d/warnings/navmesh_edge_merge_errors"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: detect surplus raster-edge owners in region and map builds and publish their diagnostics on the owner lane. The current two-owner raster merge discards surplus owners without recording a diagnostic."
     },
     {
       "state": "Implemented",

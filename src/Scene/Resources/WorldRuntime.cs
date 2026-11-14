@@ -9,7 +9,19 @@ internal sealed class WorldRuntime
     internal SceneTree? SceneOwner { get; private set; }
     internal PhysicsSpace? ExistingSpace { get; private set; }
     private RID _spaceRID, _navigationMap;
-    internal RID NavigationMap { get { lock (_gate) { EnsureAlive(); if (!_navigationMap.IsValid()) { _navigationMap = NavigationServer.Service.CreateMap(this); NavigationServer.MapSetActive(_navigationMap, true); } return _navigationMap; } } }
+    internal RID NavigationMap
+    {
+        get
+        {
+            lock (_gate)
+            {
+                EnsureAlive();
+                if (!_navigationMap.IsValid())
+                    _navigationMap = NavigationServer.Service.CreateMap(this);
+                return _navigationMap;
+            }
+        }
+    }
     internal readonly RenderingCanvasRuntime Canvas;
     internal bool Alive => Volatile.Read(ref _alive);
     internal PhysicsServer.Backend RequestedBackend { get; }

@@ -10,6 +10,8 @@ Last updated: 2026-10-18
 
 ## Description
 
+`MapCreate()` starts an inactive caller-owned map with built-in topology defaults. [World maps](../components/navigation-maps.md#project-topology-defaults) start active and capture project topology settings on first access.
+
 Permanent retained navigation service with static map/region/link/agent lifecycle, staged settings, committed queries and MapChanged publication.
 
 The [navigation contract](../components/navigation-maps.md) defines staged versus committed state, world coordinates and ownership. Static server operations serialize configuration; scene node mutations follow the scene owner thread. Resource arrays and returned paths are copied. The current topology/query profile has explicit coverage limits.

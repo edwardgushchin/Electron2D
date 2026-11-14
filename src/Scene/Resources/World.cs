@@ -69,7 +69,7 @@ public sealed class World : Resource
     /// <exception cref="ObjectDisposedException">This wrapper is disposed.</exception>
     public PhysicsDirectSpaceState DirectSpaceState { get { ThrowIfDisposed(); return PhysicsServer.SpaceGetDirectState(_runtime.SpaceRID); } }
     /// <summary>Gets this world's stable borrowed active navigation-map identity.</summary>
-    /// <remarks>Allocated on first access and shared by every wrapper/view selecting this runtime.</remarks>
+    /// <remarks>Captures project navigation topology defaults with active feature overrides on first access. Every wrapper and viewport selecting this runtime shares the resulting map.</remarks>
     /// <value>The real active map shared by all viewports selecting this world.</value>
     /// <exception cref="ArgumentException">The scene-owned world expired.</exception>
     /// <exception cref="ObjectDisposedException">This wrapper is disposed.</exception>

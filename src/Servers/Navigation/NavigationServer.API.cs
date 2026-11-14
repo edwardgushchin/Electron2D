@@ -3,7 +3,8 @@ namespace Electron2D;
 public sealed partial class NavigationServer
 {
     /// <summary>Creates a caller-owned, initially inactive navigation map.</summary>
-    /// <returns>Creates a caller-owned, initially inactive navigation map.</returns>
+    /// <remarks>Topology starts with a cell size and edge margin of one, link radius of four, raster scale of 0.1, and margin connections enabled. See <see cref="World.NavigationMap"/> for project defaults.</remarks>
+    /// <returns>The caller-owned map RID.</returns>
     public static RID MapCreate() => Shared.CreateMap();
     /// <summary>Creates a caller-owned enabled navigation region with no map or geometry.</summary>
     /// <returns>Creates a caller-owned enabled navigation region with no map or geometry.</returns>
