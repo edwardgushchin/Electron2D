@@ -76,7 +76,7 @@ Run `ELECTRON2D_TEST_IMAGE_STORAGE=1` to check all raw format sizes, odd compres
 
 `GetPixel` and `SetPixel` use zero-based base-level coordinates. Scalar and vector overloads share the same bounds checks. `SetPixel` leaves the authored mip bytes intact. `Fill` writes the same encoded color to every stored pixel, including all lower levels.
 
-Unsigned channels clamp before truncating. Normalized channels scale in single precision so decoding and re-encoding a stored sample preserves its code. Byte luminance stores the maximum of RGB. Half-float writes truncate the significand, flush half subnormals and signed zero to zero, and retain the sign of overflow and canonical NaN. Raw half buffers can still contain subnormals and signed zeros. Full floats retain their component bits. RGB9E5 uses a shared exponent and ignores alpha.
+Unsigned channels clamp before truncating. Normalized channels scale in single precision so decoding and re-encoding a stored sample preserves its code. Byte luminance stores the maximum of RGB. For half formats, `SetPixel` and `Fill` truncate the significand, flush half subnormals and signed zero to zero, and retain the sign of overflow and canonical NaN. Raw buffers, conversion and mip filtering support half subnormals. Full floats retain their component bits. RGB9E5 uses a shared exponent and ignores alpha.
 
 Flips and rotations permute the stored base pixels byte for byte. Quarter turns swap width and height. Every orientation change regenerates an existing mip chain from the result, including when a one-pixel axis makes the base permutation an identity. Images with only a base level stay base-only.
 
@@ -88,7 +88,7 @@ Run `ELECTRON2D_TEST_IMAGE_PIXELS` with `managed`, `gpu`, and `compatibility` in
 
 `ShrinkX2` promotes the first stored mip and keeps the remaining bytes in order. It works on uncompressed pixels and complete block-compressed chains. When the promoted base is 1×1, the image reports no lower levels. Base-only uncompressed images halve through the generation filter and stay base-only.
 
-`GenerateMIPMaps` averages 2×2 samples in storage space. Odd extents truncate and one-pixel axes repeat their sample. Byte and unsigned 16-bit channels round to the nearest value. Normal renormalization applies to byte, float, half and unsigned 16-bit RGB/RGBA layouts. It normalizes the averaged RGB and preserves the averaged alpha. Packed and one- or two-channel formats use ordinary averaging.
+`GenerateMIPMaps` averages 2×2 samples in storage space. Odd extents truncate and one-pixel axes repeat their sample. Byte and unsigned 16-bit channels round to the nearest value. RGB565 and RGBA4444 sum each stored channel exactly and truncate the mean, so reordering a block leaves its mip pixel unchanged. Normal renormalization applies to byte, float, half and unsigned 16-bit RGB/RGBA layouts. It normalizes the averaged RGB and preserves the averaged alpha.
 
 `ClearMIPMaps` retains the base bytes, including compressed blocks. ImageTexture captures the resulting format, base extent and exact remaining mip chain. The image-storage profile checks authored BC1 colors, odd and one-pixel axes, integer and half-float values, base edits, and observer failure after commit.
 

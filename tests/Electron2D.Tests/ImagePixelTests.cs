@@ -69,6 +69,8 @@ internal static class ImagePixelTests
         {
             half.Fill(new Color(1.00075f, -0f, -.00005f, 65520f));
             Equal(half, 1, 1, Convert.FromHexString("003C00000000FF7B"), "half truncation and underflow");
+            half.SetPixel(Vector2i.Zero, new Color(1.00075f, -0f, -.00005f, 65520f));
+            Equal(half, 1, 1, Convert.FromHexString("003C00000000FF7B"), "half pixel write follows fill encoding");
         }
         using (var clamped = Image.CreateEmpty(1, 1, false, Format.Rgba8))
         {
@@ -90,8 +92,45 @@ internal static class ImagePixelTests
             packed.Rotate90(ClockDirection.Clockwise);
             Equal(packed, 2, 2, [0, 8, 0, 8, 0, 8, 0, 8, 0, 8], "uniform RGB565 retains the first red step in its regenerated mip");
         }
+        VerifyPackedAndHalfMips();
         VerifyFailures();
         Console.WriteLine("Image pixels: 25 format vectors, authored and regenerated mips, narrow and rectangular extents, copies, events and rollback passed.");
+    }
+
+    private static void VerifyPackedAndHalfMips()
+    {
+        (Format Format, byte[] Input, byte[] Mip)[] packed =
+        [
+            (Format.Rgb565, [0, 0, 0, 16, 0, 32, 0, 240, 255, 255], [0, 72]),
+            (Format.Rgba4444, [0, 0, 0x33, 0x33, 0xee, 0xee, 255, 255, 0, 0], [0x88, 0x88]),
+        ];
+        Action<Image>[] transforms =
+        [
+            image => image.GenerateMIPMaps(), image => image.FlipX(), image => image.FlipY(), image => image.Rotate180(),
+            image => image.Rotate90(ClockDirection.Clockwise),
+            image => image.Rotate90(ClockDirection.CounterClockwise),
+        ];
+        foreach (var sample in packed)
+            foreach (var transform in transforms)
+            {
+                using var image = Image.CreateFromData(2, 2, true, sample.Format, sample.Input);
+                transform(image);
+                Check(image.GetData().AsSpan(image.GetMIPMapOffset(1)).SequenceEqual(sample.Mip),
+                    $"Exact {sample.Format} mip average after {transform.Method.Name}");
+            }
+
+        using var converted = Image.CreateFromData(1, 1, false, Format.Rf, [0, 0, 0x80, 0x33]);
+        converted.Convert(Format.Rh);
+        Equal(converted, 1, 1, [1, 0], "Rf to Rh preserves the smallest half subnormal");
+
+        using var generated = Image.CreateFromData(2, 2, false, Format.Rh, [1, 0, 1, 0, 1, 0, 1, 0]);
+        using var shrunk = Image.CreateFromData(2, 2, false, Format.Rh, generated.GetData());
+        generated.GenerateMIPMaps();
+        Equal(generated, 2, 2, [1, 0, 1, 0, 1, 0, 1, 0, 1, 0], "generated half mip preserves a uniform subnormal");
+        generated.Rotate90(ClockDirection.Clockwise);
+        Equal(generated, 2, 2, [1, 0, 1, 0, 1, 0, 1, 0, 1, 0], "rotated half mip preserves a uniform subnormal");
+        shrunk.ShrinkX2();
+        Equal(shrunk, 1, 1, [1, 0], "half-size filter preserves a uniform subnormal");
     }
 
     internal static void RunNative(string backend)

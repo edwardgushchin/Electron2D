@@ -145,7 +145,7 @@ public sealed partial class Image
             RequireReadablePixels(state);
             var bytes = GetBytesPerPixel(state.Format);
             var data = new byte[state.Data.Length];
-            WriteColor(data, 0, state.Format, color);
+            WriteColor(data, 0, state.Format, color, pixelWrite: true);
             for (var written = bytes; written < data.Length;)
             {
                 var count = Math.Min(written, data.Length - written);
@@ -1015,6 +1015,11 @@ public sealed partial class Image
                         WriteUInt16(destination, write + channel, (ushort)((ReadUInt16(source, a + channel) + ReadUInt16(source, b + channel) +
                             ReadUInt16(source, c + channel) + ReadUInt16(source, d + channel) + 2) >> 2));
                 }
+                else if (format is Format.Rgb565 or Format.Rgba4444)
+                {
+                    WriteUInt16(destination, write, AveragePackedPixel(format,
+                        ReadUInt16(source, a), ReadUInt16(source, b), ReadUInt16(source, c), ReadUInt16(source, d)));
+                }
                 else
                 {
                     var color = Average(ReadColor(source, a, format), ReadColor(source, b, format),
@@ -1025,6 +1030,19 @@ public sealed partial class Image
                 if (normalize)
                     NormalizeMIPPixel(destination, write, format, byteChannels, ushortChannels);
             }
+    }
+
+    // For normalized packed channels, averaging their integer codes avoids
+    // floating-point error at the truncation boundary.
+    private static ushort AveragePackedPixel(Format format, ushort a, ushort b, ushort c, ushort d)
+    {
+        int AverageChannel(int shift, int mask) =>
+            (((a >> shift) & mask) + ((b >> shift) & mask) + ((c >> shift) & mask) + ((d >> shift) & mask)) / 4;
+
+        return format == Format.Rgb565
+            ? (ushort)((AverageChannel(11, 31) << 11) | (AverageChannel(5, 63) << 5) | AverageChannel(0, 31))
+            : (ushort)((AverageChannel(12, 15) << 12) | (AverageChannel(8, 15) << 8) |
+                (AverageChannel(4, 15) << 4) | AverageChannel(0, 15));
     }
 
     private static State RebuildMIPMapsIfNeeded(State state) => state.HasMIPMaps ? BuildMIPMaps(state, false) : state;

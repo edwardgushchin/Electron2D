@@ -426,7 +426,7 @@ public sealed partial class Image : Resource
                 ThrowIfDisposed();
                 var state = CaptureState(copyData: false);
                 ValidatePixelAccess(state, x, y);
-                WriteColor(_data, ((y * _width) + x) * GetBytesPerPixel(_format), _format, color);
+                WriteColor(_data, ((y * _width) + x) * GetBytesPerPixel(_format), _format, color, pixelWrite: true);
             }
         }
 
@@ -775,7 +775,7 @@ public sealed partial class Image : Resource
         return new Color(r, g, b, a);
     }
 
-    internal static void WriteColor(byte[] data, int offset, Format format, Color color)
+    internal static void WriteColor(byte[] data, int offset, Format format, Color color, bool pixelWrite = false)
     {
         switch (format)
         {
@@ -830,10 +830,10 @@ public sealed partial class Image : Resource
             case Format.Rgh:
             case Format.Rgbh:
             case Format.Rgbah:
-                WriteImageHalf(data, offset, color.R);
-                if (format >= Format.Rgh) WriteImageHalf(data, offset + 2, color.G);
-                if (format >= Format.Rgbh) WriteImageHalf(data, offset + 4, color.B);
-                if (format == Format.Rgbah) WriteImageHalf(data, offset + 6, color.A);
+                WriteHalf(data, offset, color.R, pixelWrite);
+                if (format >= Format.Rgh) WriteHalf(data, offset + 2, color.G, pixelWrite);
+                if (format >= Format.Rgbh) WriteHalf(data, offset + 4, color.B, pixelWrite);
+                if (format == Format.Rgbah) WriteHalf(data, offset + 6, color.A, pixelWrite);
                 return;
             case Format.Rgbe9995:
                 BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan(offset), ToRGBE9995(color));
@@ -875,8 +875,13 @@ public sealed partial class Image : Resource
     private static float ReadHalf(byte[] data, int offset) =>
         (float)BitConverter.UInt16BitsToHalf(ReadUInt16(data, offset));
 
-    private static void WriteHalf(byte[] data, int offset, float value) =>
-        WriteUInt16(data, offset, BitConverter.HalfToUInt16Bits((Half)value));
+    private static void WriteHalf(byte[] data, int offset, float value, bool pixelWrite = false)
+    {
+        if (pixelWrite)
+            WriteImageHalf(data, offset, value);
+        else
+            WriteUInt16(data, offset, BitConverter.HalfToUInt16Bits((Half)value));
+    }
 
     private static void WriteImageHalf(byte[] data, int offset, float value)
     {
