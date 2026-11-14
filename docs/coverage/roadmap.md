@@ -4,7 +4,7 @@ Last updated: 2026-11-14
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1005 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 968 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 136 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking. Advance the self-hosted editor through the dependency stages below rather than waiting for the whole runtime backlog. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -34,9 +34,9 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [OS](classes/OS.md) | 13 | 22 |
 | [Engine](classes/Engine.md) | 5 | 4 |
 | [AccessibilityServer](classes/AccessibilityServer.md) | 4 | 2 |
-| [FileAccess](classes/FileAccess.md) | 2 | 57 |
 | [Window](classes/Window.md) | 2 | 56 |
 | [ProjectSettings](classes/ProjectSettings.md) | 2 | 44 |
+| [FileAccess](classes/FileAccess.md) | 2 | 31 |
 | [Performance](classes/Performance.md) | 2 | 2 |
 | [DirAccess](classes/DirAccess.md) | 1 | 39 |
 | [Input](classes/Input.md) | 1 | 34 |
@@ -53,14 +53,12 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [RDSamplerState](classes/RDSamplerState.md) | 0 | 8 |
 | [Translation](classes/Translation.md) | 0 | 8 |
 | [NativeMenu](classes/NativeMenu.md) | 0 | 7 |
-| [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [RDTextureFormat](classes/RDTextureFormat.md) | 0 | 7 |
 | [SceneTree](classes/SceneTree.md) | 0 | 6 |
 | [ImageTexture](classes/ImageTexture.md) | 0 | 5 |
 | [ResourceLoader](classes/ResourceLoader.md) | 0 | 4 |
 | [InputEventMouseMotion](classes/InputEventMouseMotion.md) | 0 | 3 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 3 |
-| [ParallaxLayer](classes/ParallaxLayer.md) | 0 | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | 0 | 3 |
 | [Animation](classes/Animation.md) | 0 | 2 |
 | [AudioStreamPlayback](classes/AudioStreamPlayback.md) | 0 | 2 |
@@ -77,6 +75,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [CameraFeed](classes/CameraFeed.md) | 0 | 1 |
 | [CanvasLayer](classes/CanvasLayer.md) | 0 | 1 |
 | [FileDialog](classes/FileDialog.md) | 0 | 1 |
+| [Parallax2D](classes/Parallax2D.md) | 0 | 1 |
 | [RichTextLabel](classes/RichTextLabel.md) | 0 | 1 |
 | [Texture2DRD](classes/TextureRD.md) | 0 | 1 |
 | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | 0 | 1 |

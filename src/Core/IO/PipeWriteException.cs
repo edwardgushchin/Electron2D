@@ -7,6 +7,6 @@ public sealed class PipeWriteException : IOException
 {
     internal PipeWriteException(int bytesWritten, string message) : base(message) { BytesWritten = bytesWritten; }
     /// <summary>Gets the byte count already delivered by the failed write operation.</summary>
-    /// <value>A nonnegative prefix length of the supplied buffer.</value>
+    /// <value>A nonnegative prefix length of the supplied bytes or encoded value.</value>
     public int BytesWritten { get; }
 }
