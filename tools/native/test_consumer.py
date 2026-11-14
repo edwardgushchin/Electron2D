@@ -44,7 +44,7 @@ var points = new Vector2[(cells + 1) * (cells + 1)];
 for (var y = 0; y <= cells; y++) for (var x = 0; x <= cells; x++) points[y * (cells + 1) + x] = new(x, y);
 var triangles = new List<int>();
 for (var y = 0; y < cells; y++) for (var x = 0; x < cells; x++) { var a = y * (cells + 1) + x; triangles.AddRange(new[] { a, a + 1, a + cells + 2, a, a + cells + 2, a + cells + 1 }); }
-importer.AddSurface(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = points, Indices = triangles.ToArray() });
+importer.AddSurface(MeshPrimitiveType.Triangles, new MeshSurfaceData { Vertices = points, Indices = triangles.ToArray() });
 importer.GenerateLODs(60);
 using var compiledMesh = importer.GetMesh() ?? throw new Exception("Importer did not compile a mesh");
 if (compiledMesh.SurfaceGetLODs(0).Count == 0) throw new Exception("Native mesh simplification failed");
