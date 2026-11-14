@@ -6,6 +6,7 @@ internal static class WindowContentScaleTests
     {
         using var window = new Window { Size = new(240, 160) };
         Check(window.ContentScaleMode == ContentScaleMode.Disabled && window.ContentScaleAspect == ContentScaleAspect.Ignore && window.ContentScaleStretch == ContentScaleStretch.Fractional && window.ContentScaleSize == Vector2i.Zero && window.ContentScaleFactor == 1, "Content defaults.");
+        Check(window.GetStretchTransform() == Transform.Identity, "Unscaled window stretch defaults to identity.");
         window.ContentScaleSize = new(80, 80);
         var logical = new[] { new Vector2(80, 80), new(80, 80), new(80, 80), new(120, 80), new(120, 80) };
         var screen = new[] { new Rect2i(0, 0, 240, 160), new(40, 0, 160, 160), new(40, 0, 160, 160), new(0, 0, 240, 160), new(0, 0, 240, 160) };
@@ -19,6 +20,8 @@ internal static class WindowContentScaleTests
                 Check(window.GetTexture().GetSize() == (mode == ContentScaleMode.CanvasItems ? (Vector2)screen[i].Size : logical[i]), "Canvas and viewport raster sizes differ.");
                 var point = window.GetFinalTransform() * new Vector2(10, 10);
                 var scale = (Vector2)screen[i].Size / logical[i];
+                var rasterScale = mode == ContentScaleMode.CanvasItems ? scale : Vector2.One;
+                Check(window.GetStretchTransform() == new Transform(0, rasterScale, 0, Vector2.Zero), "Public stretch maps to raster pixels before fitting margins or viewport-mode enlargement.");
                 Check(point == (Vector2)screen[i].Position + new Vector2(10, 10) * scale && window.GetScreenTransform() == window.GetFinalTransform(), "Public client transform includes fitting and scale.");
             }
         }
@@ -35,9 +38,9 @@ internal static class WindowContentScaleTests
         window.Size = new(32, 24);
         Check(window.ContentLayout.ScreenRect == new Rect2i(0, 0, 80, 80), "Small integer clients clip rather than downscale.");
         window.ContentScaleStretch = ContentScaleStretch.Fractional; window.ContentScaleFactor = 1000;
-        Check(window.GetVisibleRect().Size == Vector2.Zero && window.GetTexture().GetSize() == Vector2.Zero, "A zero-sized logical raster remains observable.");
+        Check(window.GetVisibleRect().Size == Vector2.Zero && window.GetTexture().GetSize() == Vector2.Zero && window.GetStretchTransform() == Transform.Identity, "A zero-sized logical raster remains observable.");
         window.ContentScaleMode = ContentScaleMode.Disabled; window.ContentScaleFactor = 2;
-        Check(window.GetVisibleRect().Size == new Vector2(16, 12) && window.GetTexture().GetSize() == new Vector2(32, 24), "Disabled resolution fitting still executes the scale factor.");
+        Check(window.GetVisibleRect().Size == new Vector2(16, 12) && window.GetTexture().GetSize() == new Vector2(32, 24) && window.GetStretchTransform().Scale == new Vector2(2, 2), "Disabled resolution fitting still executes the scale factor.");
         window.ContentScaleSize = new(0, 80); window.ContentScaleMode = ContentScaleMode.Viewport;
         Check(window.GetVisibleRect().Size == new Vector2(16, 12), "Either zero desired axis disables fitting.");
         var before = window.ContentLayout;
@@ -53,7 +56,7 @@ internal static class WindowContentScaleTests
         using var packed = new PackedScene(); packed.Pack(window); using var copy = (Window)packed.Instantiate();
         Check(copy.Size == window.Size && copy.ContentScaleSize == window.ContentScaleSize && copy.ContentScaleMode == window.ContentScaleMode && copy.ContentScaleAspect == window.ContentScaleAspect && copy.ContentLayout == window.ContentLayout, "Scene packing restores executable content policy.");
         var allocations = GC.GetAllocatedBytesForCurrentThread();
-        for (var i = 0; i < 128; i++) { _ = window.GetFinalTransform(); _ = window.GetVisibleRect(); _ = window.ContentLayout; }
+        for (var i = 0; i < 128; i++) { _ = window.GetStretchTransform(); _ = window.GetFinalTransform(); _ = window.GetVisibleRect(); _ = window.ContentLayout; }
         Check(GC.GetAllocatedBytesForCurrentThread() == allocations, "Warmed content queries allocate no managed bytes.");
         var notifications = 0; window.SizeChanged += () => notifications++; window.ContentScaleFactor = window.ContentScaleFactor;
         Check(notifications == 0, "Equal writes are silent.");
@@ -75,8 +78,13 @@ internal static class WindowContentScaleTests
         using var click = new InputEventMouseButton { Position = new(50, 50), GlobalPosition = new(50, 50), ButtonIndex = MouseButton.Left, Pressed = true };
         root.PushInput(click, true); click.Pressed = false; root.PushInput(click, true);
         Check(count == 1 && point == new Vector2(5, 5), "Embedded input localizes through the content transform before GUI hit testing.");
-        Task.Run(() => Reject<InvalidOperationException>(() => popup.ContentScaleFactor = 2)).GetAwaiter().GetResult();
+        Task.Run(() =>
+        {
+            Reject<InvalidOperationException>(() => popup.ContentScaleFactor = 2);
+            Reject<InvalidOperationException>(() => popup.GetStretchTransform());
+        }).GetAwaiter().GetResult();
         popup.ContentScaleMode = ContentScaleMode.CanvasItems; popup.ContentScaleFactor = 2;
+        Check(popup.GetStretchTransform().Scale == new Vector2(4, 4) && popup.GetStretchTransform().Origin == Vector2.Zero, "Embedded canvas stretch uses the window's factor and excludes placement.");
         using var layer = new CanvasLayer { FollowViewportEnabled = true, FollowViewportScale = 2 };
         Check(popup.GetCanvasRenderTransform(layer).Origin == new Vector2(-80, -40), "Follow scaling pivots on the raster center, rather than the smaller logical center.");
     }

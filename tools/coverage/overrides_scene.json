@@ -2210,6 +2210,11 @@
       "reason": "Pinned canvas_item.cpp, viewport.cpp, window.cpp and control.cpp coordinate formulas are audited as one family. Canvas/final/canvas-layer/global composition, visible bounds, defaults/runtime descriptors, positional-event copies and inverse/owner/lifetime guards retain their existing executable contracts. Item screen projection now uses popup-base semantics: an embedding viewport stops before its own final transform; other windows prepend their local/native position and final transform through the embedder; offscreen containers prepend the container item screen transform, StretchShrink and child final transform. Standalone offscreen items need no desktop lookup. Control.GetScreenPosition is the same origin. Viewport.GetScreenTransform and warp retain the complete client chain; native desktop lookup and physical warp reject explicitly on Wayland under ADR 0040. Public CPU/software-Vulkan/registered serial/separate JIT and strict NativeAOT fixtures verify nonuniform bases, root/nearest/standalone/container boundaries, live point-derived popup placement, physical click/shape ownership and two 128-step complete-frame intervals at strict 0/0 owner/all-thread managed bytes. Native software Wayland/dummy checks independent red body and blue popup pixels, native-client pointer projection and conditional desktop capability. Popup UI uses an independent CanvasLayer within the deliberately shared World. Evidence: bin/physics-popup-coordinates/2026-10-18/validation.json. Physical pointer movement, other platform execution and whole-goal GPU/FPS acceptance are separate gates; this does not certify manual widget popup producers."
     },
     {
+      "electron2d": "method:Electron2D.Viewport.GetStretchTransform()",
+      "godot": "Viewport::method:get_stretch_transform()",
+      "reason": "ADRs 0008/0028: GetStretchTransform returns the raster scale used in canvas composition. Window CanvasItems and Disabled include the content factor; Viewport-mode enlargement belongs to presentation. SubViewport uses its own per-axis override with no inherited window factor. Live resize, zero and negative overrides, owner/lifetime guards and native Window/SubViewport readback verify the contract."
+    },
+    {
       "electron2d": "method:Electron2D.Viewport.GetFinalTransform()",
       "godot": "Viewport::method:get_final_transform()",
       "reason": "Pinned canvas_item.cpp, viewport.cpp, window.cpp and control.cpp coordinate formulas are audited as one family. Canvas/final/canvas-layer/global composition, visible bounds, defaults/runtime descriptors, positional-event copies and inverse/owner/lifetime guards retain their existing executable contracts. Item screen projection now uses popup-base semantics: an embedding viewport stops before its own final transform; other windows prepend their local/native position and final transform through the embedder; offscreen containers prepend the container item screen transform, StretchShrink and child final transform. Standalone offscreen items need no desktop lookup. Control.GetScreenPosition is the same origin. Viewport.GetScreenTransform and warp retain the complete client chain; native desktop lookup and physical warp reject explicitly on Wayland under ADR 0040. Public CPU/software-Vulkan/registered serial/separate JIT and strict NativeAOT fixtures verify nonuniform bases, root/nearest/standalone/container boundaries, live point-derived popup placement, physical click/shape ownership and two 128-step complete-frame intervals at strict 0/0 owner/all-thread managed bytes. Native software Wayland/dummy checks independent red body and blue popup pixels, native-client pointer projection and conditional desktop capability. Popup UI uses an independent CanvasLayer within the deliberately shared World. Evidence: bin/physics-popup-coordinates/2026-10-18/validation.json. Physical pointer movement, other platform execution and whole-goal GPU/FPS acceptance are separate gates; this does not certify manual widget popup producers."
@@ -10545,7 +10550,6 @@
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_MAX",
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_ONCE",
         "Viewport::method:get_positional_shadow_atlas_quadrant_subdiv(int:)",
-        "Viewport::method:get_stretch_transform()",
         "Viewport::method:set_positional_shadow_atlas_quadrant_subdiv(int:,int:Viewport.PositionalShadowAtlasQuadrantSubdiv)",
         "Viewport::property:debug_draw",
         "Viewport::property:disable_3d",
@@ -12230,6 +12234,13 @@
       ],
       "state": "Implemented",
       "reason": "Pinned section-root mouse queries execute through the root native pointer, headless/emulated global Input fallback or the disconnected viewport's own last localized hover point. Section resolution follows embedded Windows and SubViewportContainers. Hover publishes before Node input and propagates to hovered container/window descendants even when input is consumed; direct attached PushInput cannot replace the section pointer. Touch/key/disabled input preserve it. Later singular screen transforms do not re-transform disconnected cached points; CanvasItem queries still remove their current canvas/node matrices. Runtime state follows reattachment/cross-tree identity, is absent from reconstructed scenes and survives observer failure. Public CPU/software-Vulkan/registered serial/separate JIT and strict NativeAOT fixture checks Node/GUI/physical callbacks, owned queued input, guards and two 128-step full-frame intervals at strict 0/0 owner/all-thread managed bytes per headless profile. Native software Wayland/dummy verifies root polling/projection and isolated-section selection. Evidence: bin/physics-offscreen-pointer/2026-10-18/validation.json. Physical warp and broader screen/platform APIs keep their separate gates."
+    },
+    {
+      "godot": [
+        "Viewport::method:get_stretch_transform()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028: GetStretchTransform returns the raster scale used in canvas composition. Window CanvasItems and Disabled include the content factor; Viewport-mode enlargement belongs to presentation. SubViewport uses its own per-axis override with no inherited window factor. Live resize, zero and negative overrides, owner/lifetime guards and native Window/SubViewport readback verify the contract."
     },
     {
       "godot": [

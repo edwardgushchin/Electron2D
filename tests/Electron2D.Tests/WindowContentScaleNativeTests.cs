@@ -3,13 +3,20 @@ using IOPath = System.IO.Path;
 
 internal static class WindowContentScaleNativeTests
 {
-    internal static void Run()
+    internal static void Run(bool stretchOnly = false)
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTENT_BACKEND") ?? "compatibility";
         var method = ProjectSettings.Get(ProjectSettings.RenderingMethod);
-        try { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); Pixels(backend); EdgePixels(backend); }
+        try
+        {
+            ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+            if (!stretchOnly) Pixels(backend);
+            EdgePixels(backend);
+        }
         finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, method); }
-        Console.WriteLine($"Window content pixels, GUI input, embedded target, raster policy and warmed frames passed: {backend}.");
+        Console.WriteLine(stretchOnly
+            ? $"Window stretch, cropped presentation and zero raster passed: {backend}."
+            : $"Window content pixels, GUI input, embedded target, raster policy and warmed frames passed: {backend}.");
     }
     private static void Pixels(string backend)
     {
@@ -68,6 +75,7 @@ internal static class WindowContentScaleNativeTests
         window.Ready += _ =>
         {
             Check(RenderingServer.GetCurrentRenderingMethod() == backend, "Edge profile uses the requested backend.");
+            RenderingServer.SetDefaultClearColor(Colors.Black);
             var renderer = RenderingServer.Service!;
             RenderingServer.FramePostDraw += () =>
             {
@@ -77,7 +85,24 @@ internal static class WindowContentScaleNativeTests
                 {
                     var origin = window.ContentLayout.ScreenRect.Position;
                     Red(image, origin.X + 5, origin.Y + 5); Red(image, origin.X + 10, Math.Min(image.Height - 1, origin.Y + 23));
-                    window.ContentScaleStretch = ContentScaleStretch.Fractional; window.ContentScaleFactor = 1000;
+                    Check(window.GetStretchTransform() == Transform.Identity, "Viewport mode keeps its unscaled raster during cropped presentation.");
+                    window.ContentScaleStretch = ContentScaleStretch.Fractional;
+                    window.ContentScaleMode = ContentScaleMode.CanvasItems;
+                    window.ContentScaleAspect = ContentScaleAspect.Ignore;
+                    window.ContentScaleSize = new(16, 8);
+                    box.SetBegin(new(4, 2)); box.SetEnd(new(12, 6));
+                }
+                else if (frame == 2)
+                {
+                    var stretch = window.GetStretchTransform();
+                    Check(stretch.Scale == (Vector2)window.Size / new Vector2(16, 8) && stretch.Origin == Vector2.Zero, "Canvas stretch matches the fitted raster size.");
+                    var pixel = (Vector2i)(stretch * new Vector2(8, 4));
+                    using var raster = window.GetTexture().GetImage();
+                    Check(raster is not null, "The fitted canvas publishes its native raster.");
+                    Red(raster!, pixel.X, pixel.Y);
+                    Check(raster!.GetPixel(1, 1) == Colors.Black, "A point outside the scaled control stays clear.");
+                    window.ContentScaleMode = ContentScaleMode.Viewport;
+                    window.ContentScaleFactor = 1000;
                 }
                 else
                 {

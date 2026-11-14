@@ -58,7 +58,7 @@ public static partial class BackendChecks
             Check(own == 0 && all == 0, $"Grouped coordinates/full physics/query frames allocated {own}/{all} B");
             using var done = new ManualResetEventSlim(); var task = WorkerThreadPool.AddTask(() =>
             {
-                try { Reject<InvalidOperationException>(() => left.GetCanvasTransform()); Reject<InvalidOperationException>(() => left.GetScreenTransform()); Reject<InvalidOperationException>(() => root.GetVisibleRect()); Reject<InvalidOperationException>(() => nested.GetVisibleRect()); Reject<InvalidOperationException>(() => root.GetFinalTransform()); Reject<InvalidOperationException>(() => layer.GetFinalTransform()); }
+                try { Reject<InvalidOperationException>(() => left.GetCanvasTransform()); Reject<InvalidOperationException>(() => left.GetScreenTransform()); Reject<InvalidOperationException>(() => root.GetVisibleRect()); Reject<InvalidOperationException>(() => nested.GetVisibleRect()); Reject<InvalidOperationException>(() => root.GetFinalTransform()); Reject<InvalidOperationException>(() => root.GetStretchTransform()); Reject<InvalidOperationException>(() => layer.GetFinalTransform()); }
                 finally { done.Set(); }
             }, highPriority: true);
             Check(done.Wait(TimeSpan.FromSeconds(5)), "Ordinary worker guards finish before owner assistance"); WorkerThreadPool.WaitForTaskCompletion(task);
@@ -72,6 +72,9 @@ public static partial class BackendChecks
                 if (cold && !together.SignalAndWait(TimeSpan.FromSeconds(10))) throw new TimeoutException("Coordinate groups did not overlap");
                 Check(coldWindow.GetVisibleRect().Size == coldSize && coldWindow.GetFinalTransform() == Transform.Identity, "Concurrent cold Window layout publishes coherent visible/final coordinates");
                 Check(root.GetVisibleRect().Size == new Vector2(80, 60) && root.GlobalCanvasTransform == Transform.Identity && root.GetFinalTransform() == twice && layer.GetFinalTransform() == layerCanvas, "Logical root/layer reads preserve scale and following");
+                Check(coldWindow.GetStretchTransform() == Transform.Identity && root.GetStretchTransform() == twice &&
+                    nested.GetStretchTransform() == Transform.Identity && inner.GetStretchTransform() == twice,
+                    "Active groups read local raster stretch without container shrink or embedding.");
                 Check((inner.GetScreenTransform() * new Vector2(1, 1)).DistanceTo(viewportScreen * new Vector2(1, 1)) < .002f, "Nested screen chain includes container, shrink and window transforms once");
                 for (var i = 0; i < items.Length; i++)
                 {

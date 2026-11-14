@@ -127,7 +127,7 @@ System.InvalidOperationException: Mutation occurs off-owner or during native sub
 
 `public System.Boolean Size2DOverrideStretch { get; set; }`
 
-Gets or sets whether positive logical override axes scale rendering to native dimensions.
+Gets or sets whether positive logical override axes scale rendering to native dimensions. [GetStretchTransform](Viewport.md#getstretchtransform) reports the current per-axis scale.
 
 Value: False initially.
 

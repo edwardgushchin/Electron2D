@@ -1,3 +1,5 @@
+[Viewport stretch queries](../classes/Viewport.md#getstretchtransform) expose the canvas-to-raster scale for windows and offscreen viewports. One Blocked row moves to Implemented. Coverage is **14,002/18,898 (74.09%)**, with 1,122 Partial, 269 Unimplemented, 3,505 Blocked, 8,395 Excluded and zero unmapped.
+
 [Application image icons](../components/window-runtime.md#application-image-icons) connect the project setting to native window startup, including packed images and child inheritance. The setting moves from Blocked to Partial pending exporter fallback. Coverage is **14,001/18,898 (74.09%)**, with 1,122 Partial, 269 Unimplemented, 3,506 Blocked, 8,395 Excluded and zero unmapped.
 
 [Windows native ICO icons](../components/window-runtime.md#windows-native-icons) apply size-specific images to running windows and connect the Windows project startup path. The setting moves to Implemented and the shared native-icon method moves to Partial pending Cocoa ICNS support. Coverage is **14,001/18,898 (74.09%)**, with 1,121 Partial, 269 Unimplemented, 3,507 Blocked, 8,395 Excluded and zero unmapped.

@@ -118,6 +118,7 @@ Source: [Viewport.Transforms.cs](../../src/Scene/Main/Viewport.Transforms.cs).
 | --- | --- |
 | `public Transform CanvasTransform { get; set; }` | [Default canvas placement](#canvastransform) |
 | `public Transform GlobalCanvasTransform { get; set; }` | [Outer canvas placement](#globalcanvastransform) |
+| `public Transform GetStretchTransform()` | [Logical-to-raster scale](#getstretchtransform) |
 | `public Transform GetFinalTransform()` | [Viewport-to-client transform](#getfinaltransform) |
 | `public Transform GetScreenTransform()` | [Viewport-to-window transform](#getscreentransform) |
 | `public Vector2 GetMousePosition()` | [Native pointer in viewport units](#getmouseposition) |
@@ -144,11 +145,19 @@ When a current camera uses physics interpolation, this property still returns it
 
 Identity by default. Maps viewport coordinates into the native client area after CanvasTransform. Its inverse localizes incoming window input; use CanvasItem.MakeInputLocal separately for canvas/node conversion. Both transform properties accept finite singular values for rendering. They are typed runtime descriptors, not stored by PackedScene; reconstructed windows start at identity. Nonfinite assignment throws ArgumentException; mutation during capture or off the attached owner thread throws InvalidOperationException. Logical transform queries permit the owner or active processing groups with caller coordination; disposed access throws ObjectDisposedException.
 
+### GetStretchTransform
+
+`public Transform GetStretchTransform()`
+
+Returns the per-axis scale from logical viewport units to its raster target with a zero origin. Window CanvasItems scaling includes the content factor and fitted raster size. Disabled mode applies the factor to the client-sized target. In Viewport mode the stretch is identity and the client enlargement belongs to window presentation. SubViewport uses its own raster size divided by a positive logical override when override stretch is enabled. With stretch disabled or an override axis at zero or below, SubViewport returns identity.
+
+Use the returned `Scale` to compensate for raster stretch when sizing a pixel-aligned overlay. Canvas transforms, embedding, window presentation and framebuffer density are separate. The query works detached, and attached reads are available on the owner or in active processing groups. Disposed reads throw ObjectDisposedException.
+
 ### GetFinalTransform
 
 `public Transform GetFinalTransform()`
 
-Returns window presentation, then StretchTransform and GlobalCanvasTransform. Window presentation includes content fitting margins/image enlargement; CanvasTransform, desktop position and framebuffer density are excluded. Attached reads outside the owner/active processing groups throw InvalidOperationException; disposed access throws ObjectDisposedException.
+Returns window presentation, then GetStretchTransform and GlobalCanvasTransform. Window presentation includes content fitting margins/image enlargement; CanvasTransform, desktop position and framebuffer density are excluded. Attached reads outside the owner/active processing groups throw InvalidOperationException; disposed access throws ObjectDisposedException.
 
 ### GetScreenTransform
 

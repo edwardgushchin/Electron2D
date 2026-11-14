@@ -829,7 +829,7 @@ if (args.Length == 3 && args[0] == "--os-environment-child") { OSEnvironmentTest
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_ENVIRONMENT") == "1") { OSEnvironmentTests.Run(); return; }
 if (OSOpenWithProgramTests.TryRunChild(args)) return;
 if (args.Length > 1 && args[0] == "--os-process-child") { OSProcessTests.Child(args); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT_NATIVE") == "1") { WindowContentScaleNativeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT_NATIVE") is ("1" or "stretch") and { } contentNative) { WindowContentScaleNativeTests.Run(contentNative == "stretch"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT") == "1") { WindowContentScaleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_LAYOUT_NATIVE") == "1") { ProjectLayoutDirectionNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_LAYOUT") == "1") { ProjectLayoutDirectionTests.Run(); return; }

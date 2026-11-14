@@ -253230,6 +253230,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GetStretchTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetStretchTransform",
+    "signature": "public Electron2D.Transform GetStretchTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetTexture()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
