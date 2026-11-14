@@ -11,7 +11,8 @@ internal static class AudioFileDecoder
     internal static AudioDecodedPCM DecodeMP3(byte[] data)
     {
         using var memory = new MemoryStream(data, writable: false); var reader = new MP3.Decoder.MpegStreamReader(memory); var decoder = new MP3.MpegFrameDecoder();
-        var channels = reader.Channels; var rate = reader.SampleRate; ValidateFormat(channels, rate);
+        var channels = reader.Channels; var rate = reader.SampleRate;
+        if (channels is < 1 or > 2 || rate <= 0) throw new FormatException("MP3 requires positive-rate mono/stereo audio.");
         var samples = ReadAll(buffer =>
         {
             var frame = reader.NextFrame(); if (frame is null) return 0;
@@ -54,7 +55,7 @@ internal static class AudioFileDecoder
         var headers = snapshot.Pages.SelectMany(page => page).Take(3).ToArray();
         if (headers.Length != 3 || headers.Where((header, index) => header.Length < 7 || header[0] != index * 2 + 1 || !header.AsSpan(1, 6).SequenceEqual("vorbis"u8)).Any()) throw new FormatException("Vorbis requires three complete ordered headers.");
         using var decoder = new NV.StreamDecoder(new PacketProvider(sequence.InstantiatePlayback())) { ClipSamples = false };
-        ValidateFormat(decoder.Channels, decoder.SampleRate);
+        if (decoder.Channels == 0 || decoder.SampleRate <= 0) throw new FormatException("Vorbis requires channels and a positive sampling rate.");
         var encodedBytes = snapshot.Pages.Sum(page => page.Sum(packet => (long)packet.Length));
         var samples = ReadAll(buffer => decoder.Read(buffer, 0, buffer.Length), decoder.Channels, encodedBytes);
         if (sequence.Version != snapshot.Version) throw new InvalidOperationException("Vorbis packets changed during decoding.");
@@ -63,7 +64,6 @@ internal static class AudioFileDecoder
         foreach (var comment in decoder.Tags.All) if (comment.Value.Count > 0) tags[comment.Key.ToLowerInvariant()] = comment.Value[^1];
         return (new(samples, decoder.Channels, decoder.SampleRate), tags, snapshot.Version);
     }
-    private static void ValidateFormat(int channels, int rate) { if (channels is < 1 or > 2 || rate <= 0) throw new FormatException("Only positive-rate mono/stereo compressed audio is supported."); }
     private static float[] ReadAll(Func<float[], int> read, int channels, long encodedBytes)
     {
         var chunks = new List<float[]>(); var scratch = new float[4096 * channels]; long total = 0;

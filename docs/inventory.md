@@ -978,7 +978,7 @@ This assembly row records the build and package contract. CharacterMovement is r
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStreamPlayer.MixTarget](classes/AudioStreamPlayer.MixTarget.md) | [AudioStreamPlayer.cs](../src/Scene/Audio/AudioStreamPlayer.cs) | Current | Typed numeric selector |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | FAudioStreamVoice, FAudioSampleVoice, AudioPCMCodec, AudioFileDecoder, AudioFileCursor, AudioDecodedPCM, AudioMusicLoop, OggVorbisImport | [`src/Servers/Audio/`](../src/Servers/Audio/) | [Internal ownership](components/audio-playback.md#runtime-flow-and-invariants) | Internal native lifetime, bounded stream/lookahead/transition PCM and cold codecs |
 
-Pinned NVorbis/NLayer sources now execute mono/stereo Ogg/MP3 inside Electron2D.dll; multichannel Vorbis retains the tested decoder prerequisite. Box2D.NET is already integrated internally in the physics component; FAudio and qoa-fu are integrated internally in audio. Backend/vendor helper types are implementation details and never exported.
+Pinned NVorbis/NLayer sources execute multichannel Ogg Vorbis and mono/stereo MP3 inside Electron2D.dll. Box2D.NET is already integrated internally in the physics component; FAudio and qoa-fu are integrated internally in audio. Backend/vendor helper types are implementation details and never exported.
 
 ## Rendering
 
