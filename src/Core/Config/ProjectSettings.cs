@@ -205,7 +205,8 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <summary>Gets the main-loop class selector for configured project runs.</summary>
     /// <value>SceneTree by default. An empty value also selects SceneTree.</value>
     /// <remarks>Custom names select a registered extension class identity or a compiled C# global class
-    /// with an exact ordinal name and a default factory. The owned host samples the effective feature override once at startup.</remarks>
+    /// with an exact ordinal name and a default factory. Use <see cref="Engine.RegisterMainLoop{TLoop}"/> for compiled
+    /// startup without source files. The owned host samples the effective feature override once at startup.</remarks>
     public static ProjectSetting<string> MainLoopType { get; } = new("application/run/main_loop_type", nameof(SceneTree),
         value => value is not null && (value.Length == 0 || !string.IsNullOrWhiteSpace(value) && !value.Any(char.IsControl)));
 

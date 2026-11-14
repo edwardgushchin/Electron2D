@@ -53,6 +53,18 @@ public sealed partial class Engine
     /// <exception cref="Exception">A startup, frame or platform operation fails after owned cleanup.</exception>
     public static Task<int> RunAsync(Window window) => Service.RunAsyncCore(window);
 
+    /// <summary>Registers a compiled global class for configured project startup.</summary>
+    /// <typeparam name="TLoop">Exact concrete, nongeneric project MainLoop marked with GlobalClassAttribute.</typeparam>
+    /// <param name="factory">A single static method that constructs a fresh instance of the exact class.</param>
+    /// <remarks>Call before running the project. MainLoopType selects the exact CLR class name. The registration
+    /// lasts for the process and works in trimmed and NativeAOT builds. Registered extension identities keep
+    /// precedence. This factory registration provides runtime construction independently of source asset registration.</remarks>
+    /// <exception cref="ArgumentNullException">The factory is null.</exception>
+    /// <exception cref="ArgumentException">The class or factory is invalid.</exception>
+    /// <exception cref="InvalidOperationException">A startup factory is already registered for the name.</exception>
+    public static void RegisterMainLoop<TLoop>(Func<TLoop> factory) where TLoop : MainLoop =>
+        Script.RegisterMainLoop(factory);
+
     /// <summary>Runs the configured project loop under a caller-configured window.</summary>
     /// <param name="window">The live detached window, owned by the runtime after successful reservation.</param>
     /// <returns>The scene's quit code, or zero for a custom loop, after owned cleanup.</returns>

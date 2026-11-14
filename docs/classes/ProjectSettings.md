@@ -27,7 +27,7 @@ Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Conf
 
 `MainScene` supplies the packed-scene path or resource UID for [configured project startup](../components/engine-runtime.md#project-main-scene). The default is empty.
 
-`public static ProjectSetting<string> MainLoopType { get; }` is the permanent nonbasic selector `application/run/main_loop_type`. `SceneTree` is the default, and an empty string selects the same host. A custom value names an extension class identity or an exact compiled C# global class with a registered default factory. Whitespace-only names and control characters are invalid. Configured project runs sample the effective value once after reservation.
+`public static ProjectSetting<string> MainLoopType { get; }` is the permanent nonbasic selector `application/run/main_loop_type`. `SceneTree` is the default, and an empty string selects the same host. A custom value names an extension class identity or an exact compiled C# global class with a registered default factory. Register a typed startup factory with Engine.RegisterMainLoop for source-free trimmed and NativeAOT builds. Whitespace-only names and control characters are invalid. Configured project runs sample the effective value once after reservation.
 
 `MaxFPS` sets the initial window cadence cap, `FrameDelayMsec` adds a fixed delay after each continuing real-time window frame, and `PrintFPS` enables periodic rate diagnostics. These typed startup settings accept feature overrides. [PrintGPUProfile](../components/gpu-timestamps.md#window-frame-profiling) enables periodic frame and stage timings on the supported Vulkan window renderer.
 

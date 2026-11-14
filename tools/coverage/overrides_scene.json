@@ -6248,6 +6248,11 @@
   ],
   "extras": [
     {
+      "electron2d": "method:Electron2D.Engine.RegisterMainLoop`1(Func<TLoop>)",
+      "adr": "adr-0016",
+      "reason": "Typed host registration roots a fresh exact compiled MainLoop factory for trimmed and NativeAOT startup without a runtime assembly scan or Script source asset."
+    },
+    {
       "electron2d": "method:Electron2D.Node.SetPropertyPinned(Electron2D.PropertyDescriptor,System.Boolean)",
       "adr": "adr-0023",
       "reason": "Typed authoring operation preserves an explicit value in the current packed layer and emits selected editor state after commitment. Main restores saved pins."
@@ -8802,8 +8807,8 @@
     },
     {
       "godot": ["ProjectSettings::property:application/run/main_loop_type"],
-      "state": "Partial",
-      "reason": "ADRs 0015/0016/0019/0027: SceneTree, registered extension identities and exact global C# script names select actual owned loops. Custom loops drive the native event pump, scheduling and RenderingServer canvas without activating a tree, including the explicit fixed-cadence movie overloads. Global scripts currently require the file-backed compiled catalog and matching portable PDB; generated registration and source delivery are needed for stripped and AOT hosts. See docs/components/engine-runtime.md#project-main-scene."
+      "state": "Implemented",
+      "reason": "ADRs 0015/0016/0019/0027: SceneTree, registered extension identities and exact global C# class names select actual owned loops. Typed startup factories run on Windows x64 JIT and full-trim NativeAOT with Vulkan and Direct3D 11, through both ordinary and fixed-cadence project runs. File-backed Script registration remains available for source-aware hosts. Other platform qualification is separate under ADR 0021. See docs/components/engine-runtime.md#project-main-scene."
     },
     {
       "godot": ["ProjectSettings::property:application/run/main_scene"],

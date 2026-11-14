@@ -58,6 +58,7 @@ public sealed partial class Script
     private static readonly Dictionary<string, ScriptRegistration> ByID = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, ScriptRegistration> ByPath = new(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     private static readonly Dictionary<Type, ScriptRegistration> ByType = [];
+    private static readonly Dictionary<string, ResourceFileType> MainLoopFactories = new(StringComparer.Ordinal);
     private static readonly Guid TypeDocuments = new("932E74BC-DBA9-4478-8D46-0F32A7BAB3D3");
     private static readonly Guid SHA256ID = new("8829D00F-11B8-4213-878B-770E8597AC16");
     private static readonly Guid SHA1ID = new("FF1816EC-AA5E-4D10-87F7-6F4963833460");
@@ -180,21 +181,43 @@ public sealed partial class Script
     }
     internal static ScriptRegistration? FindPath(string path) { lock (CatalogGate) return ByPath.GetValueOrDefault(System.IO.Path.GetFullPath(ResourceArchive.Absolute(path))); }
     private static ScriptRegistration? FindType(Type type) { lock (CatalogGate) return ByType.GetValueOrDefault(type); }
-    internal static Script LoadGlobalClass(string name)
+    internal static void RegisterMainLoop<TLoop>(Func<TLoop> factory) where TLoop : MainLoop
     {
-        ScriptRegistration? match = null;
+        ArgumentNullException.ThrowIfNull(factory);
+        var type = typeof(TLoop);
+        if (type.IsAbstract || type.IsGenericType || type.Assembly == typeof(Script).Assembly ||
+            type.Name == nameof(SceneTree) || ExtensionBindings.IsExtensionRole(type) ||
+            !type.IsDefined(typeof(GlobalClassAttribute), inherit: false))
+            throw new ArgumentException("A project loop must be a concrete nongeneric global class.", nameof(TLoop));
+        if (factory.Target is not null || factory.GetInvocationList().Length != 1)
+            throw new ArgumentException("A project loop factory must be a single static method.", nameof(factory));
         lock (CatalogGate)
         {
+            if (!MainLoopFactories.TryAdd(type.Name, new(type.Name, type, () => factory())))
+                throw new InvalidOperationException($"A project loop factory for '{type.Name}' is already registered.");
+        }
+    }
+
+    internal static MainLoop CreateGlobalMainLoop(string name, out Script? source)
+    {
+        ScriptRegistration? match = null;
+        ResourceFileType? compiled;
+        source = null;
+        lock (CatalogGate)
+        {
+            compiled = MainLoopFactories.GetValueOrDefault(name);
             foreach (var record in ByType.Values)
             {
                 if (record.Type.Name != name || !record.Type.IsDefined(typeof(GlobalClassAttribute), inherit: false))
                     continue;
-                if (match is not null) throw new InvalidOperationException($"The global class name '{name}' is ambiguous.");
+                if (match is not null || compiled is not null && compiled.Type != record.Type) throw new InvalidOperationException($"The global class name '{name}' is ambiguous.");
                 match = record;
             }
         }
+        if (compiled is not null) return (MainLoop)compiled.Factory();
         if (match is null) throw new InvalidOperationException($"No global class named '{name}' is registered.");
-        return LoadSource(match.Path);
+        source = LoadSource(match.Path);
+        return source.New<MainLoop>();
     }
     private static ScriptRegistration FindID(string id) { lock (CatalogGate) return ByID.GetValueOrDefault(id) ?? throw new InvalidDataException("Unknown compiled script identity: " + id); }
     internal static byte[] ReadSource(ScriptDocument document)

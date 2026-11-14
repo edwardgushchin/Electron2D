@@ -73,6 +73,7 @@ int exitCode = Engine.Run(window);
 | --- | --- |
 | [`public static int Run(Window window)`](#m-electron2d-engine-run-electron2d-window) | Consumes a validated detached root Window after reserving the idle engine. |
 | [`public static Task<int> RunAsync(Window window)`](#m-electron2d-engine-runasync-electron2d-window) | Owns a yielding root-window lifecycle on the platform application thread. |
+| [`public static void RegisterMainLoop<TLoop>(Func<TLoop> factory)`](../components/engine-runtime.md#custom-project-loop) | Registers a compiled global loop factory for configured startup, including trimmed and NativeAOT builds. |
 | [`public static int RunProject(Window window)`](../components/engine-runtime.md#project-main-scene) | Runs the configured scene or custom application loop under the supplied window. |
 | [`public static Task<int> RunProjectAsync(Window window)`](../components/engine-runtime.md#project-main-scene) | Runs the configured scene or custom application loop on the yielding application host. |
 | [`public static int RunProject(Window window, string moviePath, int fps = 60)`](#recording-the-configured-project) | Records the selected project scene or custom loop. |

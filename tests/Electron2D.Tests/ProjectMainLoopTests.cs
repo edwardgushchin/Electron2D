@@ -73,6 +73,17 @@ internal static class ProjectMainLoopTests
         explicitWindow.Ready += _ => explicitWindow.Tree!.Quit(27);
         Check(Engine.Run(explicitWindow) == 27, "Explicit Run retains its ordinary tree with a configured custom selector.");
         CheckRetired(explicitWindow);
+        ProjectSettings.Set(setting, nameof(ProjectLoopProbe));
+        Engine.RegisterMainLoop(CreateScriptLoop);
+        using var compiledWindow = NewWindow();
+        ProjectLoopProbe.Reset(compiledWindow);
+        Check(Engine.RunProject(compiledWindow) == 0 && ProjectLoopProbe.Last is { IsDisposed: true, Source: null },
+            "A compiled startup factory takes precedence over the same type's source asset.");
+        CheckRetired(compiledWindow);
+        Script.RegisterObject("test:ambiguous-project-loop", OtherLoop.SourcePath, CreateOtherLoop);
+        using var ambiguousWindow = NewWindow();
+        Reject<InvalidOperationException>(() => Engine.RunProject(ambiguousWindow));
+        CheckRetired(ambiguousWindow);
         ProjectSettings.Set(setting, "");
         ProjectSettings.Reset(ProjectSettings.MainScene);
         using var sceneWindow = NewWindow();
@@ -81,7 +92,20 @@ internal static class ProjectMainLoopTests
         Console.WriteLine($"Configured MainLoop {backend}: selection, native canvas pixels, lifecycle failures and recovery passed.");
     }
 
-    private static ProjectLoopProbe CreateScriptLoop() => new();
+    private static global::ProjectLoopProbe CreateScriptLoop() => new();
+    private static OtherLoop.ProjectLoopProbe CreateOtherLoop() => new();
+
+    private static class OtherLoop
+    {
+        internal static string SourcePath => GetSourcePath();
+        private static string GetSourcePath([System.Runtime.CompilerServices.CallerFilePath] string path = "") => path;
+
+        [GlobalClass]
+        internal sealed class ProjectLoopProbe : MainLoop
+        {
+            protected override bool OnProcess(double delta) => true;
+        }
+    }
     private static ProjectLoopWrongType CreateWrongType() => new();
     private static ExtensionLoop CreateExtensionLoop() => new();
     private static ExtensionInitialization? OpenExtension(Extension module) =>

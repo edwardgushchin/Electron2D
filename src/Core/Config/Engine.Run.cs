@@ -180,8 +180,7 @@ public sealed partial class Engine
                 }
                 else
                 {
-                    loopSource = Script.LoadGlobalClass(loopType);
-                    customLoop = loopSource.New<MainLoop>();
+                    customLoop = Script.CreateGlobalMainLoop(loopType, out loopSource);
                 }
             }
             var loop = (MainLoop?)tree ?? customLoop!;
@@ -252,15 +251,7 @@ public sealed partial class Engine
             Volatile.Write(ref _runtimeState, RuntimeStopping);
             try { movie?.Dispose(); }
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
-            try { customLoop?.FinishOwnedRun(); }
-            catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
-            try
-            {
-                customLoop?.Dispose();
-                if (customLoop is { IsDisposed: false })
-                    throw new InvalidOperationException("The owned MainLoop did not complete disposal.");
-            }
-            catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
+            RetireProjectLoop(customLoop, failures);
             try { if (tree is not null) tree.Dispose(); else window.Dispose(); }
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { if (customLoop is null or { IsDisposed: true }) loopSource?.Dispose(); }
@@ -281,5 +272,19 @@ public sealed partial class Engine
         if (failures.Count > 1)
             throw new AggregateException("Window run or cleanup failed.", failures);
         return tree?.ExitCode ?? 0;
+    }
+
+    private static void RetireProjectLoop(MainLoop? loop, List<Exception> failures)
+    {
+        if (loop is null) return;
+        try { loop.FinishOwnedRun(); }
+        catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
+        try
+        {
+            loop.Dispose();
+            if (!loop.IsDisposed)
+                throw new InvalidOperationException("The owned MainLoop did not complete disposal.");
+        }
+        catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
     }
 }
