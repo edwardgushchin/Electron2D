@@ -4601,6 +4601,38 @@
   "statusGroups": [
     {
       "state": "Implemented",
+      "godot": [
+        "RDTextureFormat::property:array_layers",
+        "RDTextureFormat::property:height",
+        "RDTextureFormat::property:width"
+      ],
+      "reason": "ADR 0028. Positive unsigned texel counts and layers retain their defaults of one. Creation validates Vulkan device limits or Direct3D 12 texture limits. The public texture description consumer verifies maximum axes and layers, one-past-limit refusal, metadata and native readback. See docs/components/local-compute.md#texture-description-verification."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RDTextureFormat::property:mipmaps",
+        "RDTextureFormat::property:texture_type"
+      ],
+      "reason": "ADRs 0004/0028. Ordinary 2D images require one layer; arrays retain their type at one layer. MIPMaps includes the base level and is bounded by the extent and allocation role. The public Vulkan and Direct3D 12 profiles verify the full odd-sized mip chain, rejected excess levels and view-local type and extent. See docs/components/local-compute.md#texture-description-verification."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RDTextureFormat::property:format",
+        "RDTextureFormat::property:usage_bits"
+      ],
+      "reason": "ADR 0028. Defaults are R8UNORM and zero usage. The setters validate concrete formats and defined flags; creation requires nonzero usage and a supported native format/role combination. Public Vulkan and Direct3D 12 profiles verify copied flags, linear/sRGB allocation and view metadata, exact bytes and refusal. Format-specific shader and native adapter limits retain their own gates. See docs/components/local-compute.md#texture-description-verification."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::method:texture_get_format(RID:)"
+      ],
+      "reason": "ADR 0028. Returns a fresh caller-owned description with the stored encoding, copied shareable formats and selected view extent, layer count and mip count. Stale, foreign and wrong-kind RIDs throw. The public Vulkan and Direct3D 12 profiles verify source mutation and disposal, independent snapshots, distinct native view formats, shared data and original-owner retirement. See docs/components/local-compute.md#texture-description-verification."
+    },
+    {
+      "state": "Implemented",
       "godot": ["RenderingDevice::enum:PipelineDynamicStateFlags"],
       "reason": "ADR 0028: all seven dynamic graphics roles execute on Vulkan through the blend, stencil and raster draw-list paths."
     },

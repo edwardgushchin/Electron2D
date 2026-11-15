@@ -184,13 +184,20 @@ public sealed unsafe partial class RenderingDevice
     /// Every explicitly shareable format must support the declared native roles.
     /// Storage-image descriptors, input attachments and framebuffer attachments require identity mappings.</remarks>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">Image extents or layers exceed the effective device limits.</exception>
+    /// <exception cref="ArgumentException">The usage mask is empty, or the description, view or initial data is inconsistent.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Image extents, layers or transfer sizes exceed the applicable limits.</exception>
     public RID TextureCreate(RDTextureFormat format, RDTextureView view, ReadOnlySpan<byte[]> data = default)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(format); ArgumentNullException.ThrowIfNull(view);
         var shareable = format.ShareableFormats;
         var kind = format.TextureType; var layers = format.ArrayLayers; var width = format.Width; var height = format.Height; var mips = format.MIPMaps; var pixelFormat = format.Format; var usage = format.UsageBits;
-        if (ValidationLimits is { } limits && (width > limits[12] || height > limits[12] || layers > limits[10])) throw new ArgumentOutOfRangeException(nameof(format), "Texture dimensions exceed device limits.");
+        if (usage == 0) throw new ArgumentException("Specify at least one texture usage bit.", nameof(format));
+        if (ValidationLimits is { } limits &&
+            (width > limits[(int)Limit.MaxTextureSize2D] || height > limits[(int)Limit.MaxTextureSize2D] || layers > limits[(int)Limit.MaxTextureArrayLayers]))
+            throw new ArgumentOutOfRangeException(nameof(format), "Texture dimensions exceed device limits.");
+        // D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION and D3D12_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION.
+        if (TextureDriver == "direct3d12" && (width > 16384 || height > 16384 || layers > 2048))
+            throw new ArgumentOutOfRangeException(nameof(format), "Texture dimensions exceed Direct3D 12 limits.");
         if (kind == TextureType.Texture && layers != 1) throw new ArgumentException("An ordinary image has one layer.", nameof(format));
         if (mips > 1 + System.Numerics.BitOperations.Log2(Math.Max(width, height))) throw new ArgumentException("The mip count exceeds this image.", nameof(format));
 
@@ -345,7 +352,12 @@ public sealed unsafe partial class RenderingDevice
     public bool TextureIsValid(RID texture) { Access(); return _entries.TryGetValue(texture, out var entry) && entry.Kind == Kind.Texture && entry.Alive; }
     /// <summary>Copies stored format metadata and the selected view dimensions, layers and mip interval.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
-    /// <returns>A caller-owned description independent of the allocation.</returns>
+    /// <returns>A new caller-owned description, including a copy of the permitted view formats.</returns>
+    /// <remarks>Format reports the allocation encoding even when the view uses a different encoding.
+    /// The description remains usable after the texture is freed.</remarks>
+    /// <exception cref="ArgumentException">The RID is stale, foreign or of the wrong resource kind.</exception>
+    /// <exception cref="InvalidOperationException">The caller cannot access the rendering device from the current thread or operation.</exception>
+    /// <exception cref="ObjectDisposedException">The rendering device is disposed.</exception>
     public RDTextureFormat TextureGetFormat(RID texture)
     {
         var info = Get(texture, Kind.Texture).Texture!;
