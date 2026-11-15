@@ -146,7 +146,7 @@ internal static partial class ControlLayoutTests
         child.Reparent(animated, keepGlobalTransform: false);
         Check(child.Size == new Vector2(40, 24), "The active animation frame supplies the anchor size.");
         animated.SpriteFrames = null;
-        Check(child.GetParentAreaSize() == Vector2.Zero, "An absent animation frame supplies an empty area.");
+        VerifyClearedArea(new(40, 24));
         child.Reparent(copyArea, keepGlobalTransform: false);
         Check(child.Size == new Vector2(32, 16), "BackBufferCopy supplies its authored rectangle.");
         copyArea.Rect = new(1, 2, 30, 14);
@@ -155,8 +155,12 @@ internal static partial class ControlLayoutTests
         Check(child.Size == new Vector2(20, 12), "Point light supplies its scaled mask bounds.");
         light.TextureScale = 2;
         Check(child.Size == new Vector2(80, 48), "Changing the light's texture scale reflows the child.");
+        light.Texture = null;
+        VerifyClearedArea(new(80, 48));
         child.Reparent(touch, keepGlobalTransform: false);
         Check(child.Size == new Vector2(40, 24), "TouchScreenButton supplies its normal texture size.");
+        touch.TextureNormal = null;
+        VerifyClearedArea(new(40, 24));
         child.Reparent(plain, keepGlobalTransform: false);
         Check(child.GetParentControl() is null && child.GetParentAreaSize() == Vector2.Zero && child.Size == Vector2.Zero,
             "A plain canvas parent supplies a zero-size area.");
@@ -174,6 +178,15 @@ internal static partial class ControlLayoutTests
         Reject<ObjectDisposedException>(() => child.GetParentControl());
         Reject<ObjectDisposedException>(() => child.GetParentAreaSize());
         Reject<ObjectDisposedException>(() => child.GetGlobalRect());
+
+        void VerifyClearedArea(Vector2 previousSize)
+        {
+            Check(child.GetParentAreaSize() == Vector2.Zero && child.Size == previousSize,
+                "Resource clearing publishes the live area and keeps the resolved size until reflow.");
+            child.AnchorRight = .5f;
+            Check(child.Size == Vector2.Zero, "A later anchor edit reflows against the empty area.");
+            child.AnchorRight = 1;
+        }
     }
 
     private static void VerifyResizeDelivery()
@@ -223,6 +236,26 @@ internal static partial class ControlLayoutTests
         control.Size = new(60, 10);
         Check(control.IsDisposed && order.SequenceEqual(new[] { "rect" }),
             "Disposal from ItemRectChanged prevents notification on the released control.");
+
+        VerifyTransformDisposal(node => node.Size = new(20, 10));
+        VerifyTransformDisposal(node => node.Rotation = .5f);
+        VerifyTransformDisposal(node => node.Scale = new(2, 3));
+        VerifyTransformDisposal(node => node.PivotOffset = new(2, 1));
+        VerifyTransformDisposal(node => node.PivotOffsetRatio = new(.5f, .5f));
+        VerifyTransformDisposal(node => node.OffsetTransformEnabled = true);
+        VerifyTransformDisposal(node => node.OffsetTransformPosition = new(3, 4), offsetTransformEnabled: true);
+
+        void VerifyTransformDisposal(Action<Control> mutate, bool offsetTransformEnabled = false)
+        {
+            using var node = new Control { Size = new(10, 10), OffsetTransformEnabled = offsetTransformEnabled };
+            viewport.AddChild(node);
+            node.NotifyLocalTransformChanges = true;
+            node.LocalTransformChanged += _ => node.Dispose();
+            node.ItemRectChanged += _ => throw new InvalidOperationException("A disposed control must not publish its rectangle.");
+            node.Resized += () => throw new InvalidOperationException("A disposed control must not publish a resize.");
+            mutate(node);
+            Check(node.IsDisposed && node.Parent is null, "Local transform callbacks can dispose the control during geometry edits.");
+        }
     }
 
     private sealed class GeometryReadProbe : Node

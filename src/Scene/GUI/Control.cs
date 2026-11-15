@@ -289,7 +289,7 @@ public partial class Control : CanvasItem
     public float Rotation
     {
         get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _rotation; }
-        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_rotation == value) return; _rotation = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_rotation == value) return; _rotation = value; NotifyLocalTransformChangedAndQueueRedraw(); }
     }
 
     /// <summary>Gets or sets <see cref="Rotation"/> in degrees.</summary>
@@ -311,7 +311,7 @@ public partial class Control : CanvasItem
             EnsureMutable(); EnsureFinite(value, nameof(value));
             if (value == _scale) return;
             _scale = new(value.X == 0 ? 0.00001f : value.X, value.Y == 0 ? 0.00001f : value.Y);
-            NotifyLocalTransformChanged(); QueueRedraw();
+            NotifyLocalTransformChangedAndQueueRedraw();
         }
     }
 
@@ -321,14 +321,14 @@ public partial class Control : CanvasItem
     public Vector2 PivotOffset
     {
         get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _pivotOffset; }
-        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffset == value) return; _pivotOffset = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffset == value) return; _pivotOffset = value; NotifyLocalTransformChangedAndQueueRedraw(); }
     }
 
     /// <summary>Gets or sets the portion of the current size added to PivotOffset.</summary>
     public Vector2 PivotOffsetRatio
     {
         get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _pivotOffsetRatio; }
-        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffsetRatio == value) return; _pivotOffsetRatio = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffsetRatio == value) return; _pivotOffsetRatio = value; NotifyLocalTransformChangedAndQueueRedraw(); }
     }
 
     /// <summary>Gets the absolute pivot plus its current size-relative component.</summary>
@@ -346,7 +346,7 @@ public partial class Control : CanvasItem
     public bool OffsetTransformEnabled
     {
         get { ThrowIfDisposed(); return _offsetTransformEnabled; }
-        set { EnsureMutable(); if (_offsetTransformEnabled == value) return; _offsetTransformEnabled = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+        set { EnsureMutable(); if (_offsetTransformEnabled == value) return; _offsetTransformEnabled = value; NotifyLocalTransformChangedAndQueueRedraw(); }
     }
 
     /// <summary>Gets or sets the absolute translation of the additional transform.</summary>
@@ -401,8 +401,13 @@ public partial class Control : CanvasItem
     private void NotifyOffsetTransformChanged()
     {
         if (!_offsetTransformEnabled) return;
+        NotifyLocalTransformChangedAndQueueRedraw();
+    }
+
+    private void NotifyLocalTransformChangedAndQueueRedraw()
+    {
         NotifyLocalTransformChanged();
-        QueueRedraw();
+        if (!IsDisposed) QueueRedraw();
     }
 
     private Transform GetOffsetTransform()
@@ -678,7 +683,8 @@ public partial class Control : CanvasItem
     }
 
     /// <summary>Returns the size used to resolve anchors, or zero while detached.</summary>
-    /// <returns>The direct canvas parent's anchorable size, or the viewport's visible size for a canvas root.</returns>
+    /// <returns>The direct canvas parent's current anchorable size, or the viewport's visible size for a canvas root.</returns>
+    /// <remarks>The query reads the current area. Parent and viewport notifications or layout edits resolve <see cref="Size"/>.</remarks>
     /// <exception cref="InvalidOperationException">An attached query is outside the owner/processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The control or a borrowed parent resource is disposed.</exception>
     public Vector2 GetParentAreaSize()
@@ -894,6 +900,7 @@ public partial class Control : CanvasItem
         var notifyPosition = !LayoutEqualApprox(rect.Position, _position);
         _position = rect.Position; _size = rect.Size;
         NotifyLocalTransformChanged();
+        if (IsDisposed) return;
         if (IsInsideTree && (notifySize || notifyPosition))
         {
             NotifyItemRectChanged(sizeChanged);

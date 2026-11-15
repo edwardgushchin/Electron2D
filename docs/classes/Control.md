@@ -12,7 +12,7 @@ Last updated: 2026-11-15
 
 ## Description
 
-Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. An attached control resolves anchors against its immediate canvas parent's anchorable rectangle. At a canvas root, including a neutral Node or TopLevel boundary, it uses the containing viewport's visible size. Detached controls use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands. Attached rendering also consumes its viewport's separate GUISnapControlsToPixels policy; logical geometry stays fractional.
+Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. An attached control resolves anchors against its immediate canvas parent's anchorable rectangle. At a canvas root, including a neutral Node or TopLevel boundary, it uses the containing viewport's visible size. Detached controls use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. The parent’s ItemRectChanged event or the root viewport’s SizeChanged event reflows an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands. Attached rendering also consumes its viewport's separate GUISnapControlsToPixels policy; logical geometry stays fractional.
 
 Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and pointer hit regions normally use the current pose. Assign `On` explicitly to interpolate a Control and its inheriting canvas children while the tree enables physics interpolation. The displayed transform may then differ from current logical layout coordinates until the next physics tick; `ResetPhysicsInterpolation` removes that history.
 
@@ -267,7 +267,7 @@ GetOffset returns the stored local distance from the selected anchor. SetOffset 
 
 ### `GetParentControl()`, `GetParentAreaSize()`
 
-GetParentControl returns the direct node parent if it is a Control, including while detached or TopLevel. GetParentAreaSize returns zero while detached. While attached, it uses the direct canvas parent's anchorable rectangle or the containing viewport's visible area at a canvas root, including across a neutral Node or TopLevel boundary. Control supplies its layout size. Sprite and AnimatedSprite supply frame bounds, BackBufferCopy supplies its authored rectangle, PointLight supplies scaled mask bounds, and TouchScreenButton supplies its normal texture size. Other canvas parents supply zero. Reflow uses the same rectangle and listens for ItemRectChanged on the current canvas parent or SizeChanged on the viewport.
+GetParentControl returns the direct node parent if it is a Control, including while detached or TopLevel. GetParentAreaSize returns zero while detached. While attached, it uses the direct canvas parent's anchorable rectangle or the containing viewport's visible area at a canvas root, including across a neutral Node or TopLevel boundary. Control supplies its layout size. Sprite and AnimatedSprite supply frame bounds, BackBufferCopy supplies its authored rectangle, PointLight supplies scaled mask bounds, and TouchScreenButton supplies its normal texture size. Other canvas parents supply zero. Reflow uses the same rectangle and listens for ItemRectChanged on the current canvas parent or SizeChanged on the viewport. Clearing AnimatedSprite.SpriteFrames, PointLight.Texture, or TouchScreenButton.TextureNormal immediately makes the queried area zero. The child keeps its resolved Size until the next reflow, such as an anchor edit.
 
 ### `GetRect()`, `GetGlobalRect()`, `GetTransform()`
 
@@ -283,7 +283,7 @@ OnNotification subscribes to the direct canvas parent's geometry or containing v
 
 ### `Resized`, `NotificationResized`
 
-The constant is 40. After a significant size change while attached, ItemRectChanged observes the committed geometry first, then notification 40 raises Resized synchronously from Control.OnNotification. A handler that changes size again causes nested delivery. A throwing handler sees committed geometry and stops later synchronous handlers. Disposing the control during ItemRectChanged ends the outer resize delivery.
+The constant is 40. After a significant size change while attached, ItemRectChanged observes the committed geometry first, then notification 40 raises Resized synchronously from Control.OnNotification. A handler that changes size again causes nested delivery. A throwing handler sees committed geometry and stops later synchronous handlers. Disposing the control during LocalTransformChanged ends the current layout or transform update before redraw. Disposing it during ItemRectChanged ends the outer resize delivery.
 
 ## Lifecycle and invariants
 
