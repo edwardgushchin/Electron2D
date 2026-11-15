@@ -12,13 +12,13 @@ Its production source lives under `src/Core/String/`, matching its low-level eng
 
 | Component | Responsibility | State |
 | --- | --- | --- |
-| [Translation](../components/localization.md) | Thread-safe direct and resource-backed translation registration and resolution | Implemented for in-memory lookup; locale-rule and asset gaps remain |
+| [Translation](../components/localization.md) | Thread-safe direct and resource-backed translation registration and resolution | In-memory lookup, configured asset remaps and active-loop notifications |
 
 Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), [`Translation`](../classes/Translation.md), and [`OptimizedTranslation`](../classes/OptimizedTranslation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled. Scene-owned [`Node`](../classes/Node.md) adds inherited domains and automatic translation policy. [`Control`](../classes/Control.md) consults the selected culture and registered catalog for locale-derived rectangle direction; application culture and pseudolocalization changes now refresh the active MainLoop synchronously after state commits. ResourceLoader now selects and refreshes typed localized files before the application notification. Runtime CultureInfo assignment is the accepted locale boundary; exact string-alias conversion in startup settings remains a separate gap.
 
 ## Public surface
 
-`TranslationServer` exposes the culture, locale comparison, tool-locale selection, direct singular/plural registration, named domain registry, main-domain resource queries, lookup, pseudolocalization, typed project-option reload and catalog clearing. `TranslationDomain` manages borrowed catalogs, locale override, enablement and singular pseudolocalization options. `Translation` stores contextual messages and plural forms. `OptimizedTranslation` generates, persists and resolves compressed singular values without retaining source keys. Both support Resource duplication. `ElectronObject` supplies per-instance translation enablement and lookup entry points from Core. `Node` exposes `AutoTranslateMode`, `CanAutoTranslate`, `Atr`, `AtrN` and `SetTranslationDomainInherited`. The service's global enabled flag is internal.
+`TranslationServer` exposes the culture, locale comparison, tool-locale selection, direct singular/plural registration, named domain registry, main-domain resource queries, lookup, pseudolocalization, typed project-option reload and catalog clearing. `TranslationDomain` manages borrowed catalogs, locale override, enablement and singular pseudolocalization options. `Translation` stores contextual messages and plural forms. `OptimizedTranslation` generates, persists and resolves compressed singular values without retaining source keys. Both support Resource duplication. `ElectronObject` supplies per-instance translation enablement and lookup entry points from Core. `Node` exposes `AutoTranslateMode`, `CanAutoTranslate`, `Atr`, `AtrN` and `SetTranslationDomainInherited`. Engine retains the service object across application loops. The object exposes typed culture and pseudolocalization descriptors through Core property inspection. The service's global enabled flag is internal.
 
 ## Dependency direction
 
@@ -29,7 +29,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 ## Invariants
 
-- Catalog access and culture changes are lock-protected.
+- Catalog access and culture changes are lock-protected. The first state access before startup captures the managed UI culture. Engine registry lookup and descriptor discovery leave that capture to the first state access.
 - Catalogs compete against the selected locale using default-aware scores, then the configured fallback is tried. Direct selected/parent entries share those scores and win ties; only explicit invariant direct entries form a universal fallback.
 - Domains, contexts, and messages are ordinal and case-sensitive.
 - Missing singular translations return the source message.

@@ -10,7 +10,7 @@ internal static class EngineRegistryChecks
         nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool),
         nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver),
         nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer),
-        nameof(PhysicsServer), nameof(Performance)
+        nameof(PhysicsServer), nameof(Performance), nameof(TranslationServer)
     ];
 
     internal static void Run()
@@ -75,7 +75,7 @@ internal static class EngineRegistryChecks
         }
         Check(!other.IsDisposed && Engine.GetSingletonList().SequenceEqual(baseline), "Removal restores names and leaves ownership with the caller.");
         VerifyConcurrent(baseline);
-        Console.WriteLine("Engine registry managed checks passed for all 18 permanent names, name/type errors, snapshots, disposal and concurrent operations.");
+        Console.WriteLine($"Engine registry managed checks passed for all {PermanentNames.Length} permanent names, name/type errors, snapshots, disposal and concurrent operations.");
     }
 
     private static void VerifyConcurrent(IReadOnlyList<string> baseline)
@@ -139,12 +139,15 @@ internal static class EngineRegistryChecks
         using var shared = new Probe();
         var baseline = Engine.GetSingletonList();
         var manager = Engine.GetSingleton<TextServerManager>(nameof(TextServerManager));
+        var translation = Engine.GetSingleton<TranslationServer>(nameof(TranslationServer));
         Engine.RegisterSingleton(Primary, shared);
         try
         {
             for (var pass = 1; pass <= 2; pass++)
             {
                 using var root = new Window { Size = new(96, 80), Borderless = true };
+                root.Ready += _ => Check(ReferenceEquals(Engine.GetSingleton(nameof(TranslationServer)), translation),
+                    "The window loop observes the same permanent translation service.");
                 var scene = new RegistryScene(root, shared, backend);
                 root.AddChild(scene);
                 Check(Engine.Run(root) == 0 && scene.Rendered && scene.Exited && root.IsDisposed,
@@ -152,7 +155,8 @@ internal static class EngineRegistryChecks
                 Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable && Engine.MainLoop is null,
                       "Each run retires display, renderer and scene loop.");
                 Check(!Engine.HasSingleton(Alias) && ReferenceEquals(Engine.GetSingleton<Probe>(Primary), shared) && !shared.IsDisposed &&
-                      ReferenceEquals(Engine.GetSingleton<TextServerManager>(nameof(TextServerManager)), manager),
+                      ReferenceEquals(Engine.GetSingleton<TextServerManager>(nameof(TextServerManager)), manager) &&
+                      ReferenceEquals(Engine.GetSingleton<TranslationServer>(nameof(TranslationServer)), translation),
                       "Shutdown preserves caller-owned and permanent process registrations.");
                 Console.WriteLine($"Run {pass}: {backend} / {scene.Driver} / {scene.Adapter}; red pixel read back; scene and renderer retired.");
             }
