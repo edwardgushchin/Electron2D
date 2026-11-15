@@ -24,6 +24,15 @@ static bool HasDevice(ID3D12DeviceChild* child, ID3D12Device* device)
     return SUCCEEDED(child->GetDevice(IID_PPV_ARGS(&owner))) && owner.Get() == device;
 }
 
+extern "C" __declspec(dllexport) HRESULT __cdecl CheckAnisotropicPointMip(uint64_t deviceBits, int* supported)
+{
+    D3D12_FEATURE_DATA_D3D12_OPTIONS19 options{};
+    auto* device = Object<ID3D12Device>(deviceBits);
+    const HRESULT status = device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS19, &options, sizeof(options));
+    *supported = SUCCEEDED(status) && options.AnisoFilterWithPointMipSupported;
+    return status;
+}
+
 static bool CopyDescriptor(ID3D12Device* device, uint64_t descriptor, D3D12_DESCRIPTOR_HEAP_TYPE type)
 {
     D3D12_DESCRIPTOR_HEAP_DESC description{};

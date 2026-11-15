@@ -267,7 +267,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_COPIES") is { } msCop
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEPTH_TRANSFERS") is { } depthTransfers) { DepthTransfersTests.Run(depthTransfers == "1" ? null : depthTransfers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_STORAGE") is { } msStorage) { MultisampleStorageTests.Run(msStorage == "1" ? null : msStorage); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_SAMPLING") is { } msSampling) { MultisampleSamplingTests.Run(msSampling == "1" ? null : msSampling); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else if (deviceSamplers == "depth") RenderingDeviceSamplerTests.RunDepth(); else if (deviceSamplers == "lod") RenderingDeviceSamplerTests.RunLOD(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_MULTIVIEW") is { } multiviewProfile) { if (multiviewProfile == "canvas") RenderingDeviceMultiviewTests.Canvas(); else RenderingDeviceMultiviewTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SPARSE") is { } sparseProfile) { try { if (sparseProfile == "canvas") RenderingDeviceSparseTests.Canvas(); else RenderingDeviceSparseTests.Run(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_PASSES") is { } devicePassProfile)
@@ -945,7 +945,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS_SRGB") is 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MIXED_TEXTURE_REPLACEMENT") == "1") { MixedTextureReplacementTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS") == "1") { RenderingDeviceCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") == "1") { RenderingDeviceTextureTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") is { } deviceTextures && deviceTextures is "1" or "sampling") { RenderingDeviceTextureTests.Run(deviceTextures == "sampling"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == "1") { PhysicsRegisteredBackendTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RIGID_CONTRACT") == "1") { BackendChecks.RunRigidBodyContract(threaded: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_GIZMOS") == "1") { SkeletonGizmoTests.Run(PhysicsServer.Backend.CPU, false, "compatibility"); return; }
