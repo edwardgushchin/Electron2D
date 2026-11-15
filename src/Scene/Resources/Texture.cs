@@ -95,8 +95,8 @@ public abstract class Texture : Resource
 
     /// <summary>Returns a caller-owned copy of the texture's original image.</summary>
     /// <returns>An independent image, or null when the texture has no readable pixels.</returns>
-    /// <remarks>The base implementation represents an uninitialized texture. A renderable custom implementation
-    /// must return readable image data and notify Changed when that data changes.</remarks>
+    /// <remarks>A custom implementation backed by pixels returns a fresh image on every call. The caller
+    /// may modify or dispose it. The default metadata queries and renderer cache a separate copy until Changed.</remarks>
     public virtual Image? GetImage() { ThrowIfDisposed(); return null; }
 
     /// <summary>Draws this texture at its logical size during the target item's canvas recording.</summary>

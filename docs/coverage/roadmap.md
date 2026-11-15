@@ -4,8 +4,8 @@ Last updated: 2026-11-14
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 758 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 136 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
+1. Close 681 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 133 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking. Advance the self-hosted editor through the dependency stages below rather than waiting for the whole runtime backlog. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 [External text providers](../components/text-server.md#external-provider-prerequisite) first require a provider-aware consumer layout/font-cache boundary, callback-safe read lifetimes, coherent glyph/run/paragraph metadata, primary-selection invalidation and real drawing. Registry methods and virtual facades alone do not supply those native consumers.
@@ -31,28 +31,25 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 63 | 50 |
 | [RenderingDevice](classes/RenderingDevice.md) | 39 | 47 |
-| [OS](classes/OS.md) | 14 | 22 |
+| [OS](classes/OS.md) | 13 | 22 |
 | [Engine](classes/Engine.md) | 5 | 4 |
 | [AccessibilityServer](classes/AccessibilityServer.md) | 4 | 2 |
 | [Window](classes/Window.md) | 2 | 56 |
-| [ProjectSettings](classes/ProjectSettings.md) | 2 | 44 |
-| [FileAccess](classes/FileAccess.md) | 2 | 17 |
+| [ProjectSettings](classes/ProjectSettings.md) | 2 | 36 |
 | [Performance](classes/Performance.md) | 2 | 2 |
 | [Input](classes/Input.md) | 1 | 19 |
 | [Environment](classes/Environment.md) | 0 | 40 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 34 |
 | [DirAccess](classes/DirAccess.md) | 0 | 26 |
 | [Control](classes/Control.md) | 0 | 21 |
+| [FileAccess](classes/FileAccess.md) | 0 | 17 |
 | [Image](classes/Image.md) | 0 | 16 |
-| [Texture2D](classes/Texture.md#godot-texture2d) | 0 | 16 |
-| [Polygon2D](classes/Polygon2D.md) | 0 | 13 |
 | [Viewport](classes/Viewport.md) | 0 | 12 |
 | [InputEventKey](classes/InputEventKey.md) | 0 | 10 |
 | [TranslationServer](classes/TranslationServer.md) | 0 | 9 |
 | [NativeMenu](classes/NativeMenu.md) | 0 | 7 |
 | [RDTextureFormat](classes/RDTextureFormat.md) | 0 | 7 |
 | [SceneTree](classes/SceneTree.md) | 0 | 6 |
-| [ImageTexture](classes/ImageTexture.md) | 0 | 5 |
 | [ResourceLoader](classes/ResourceLoader.md) | 0 | 4 |
 | [InputEventMouseMotion](classes/InputEventMouseMotion.md) | 0 | 3 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 3 |
@@ -83,14 +80,13 @@ These classes already have an Electron2D type. The counts scope work; they do no
 
 | Exact trigger | Classes |
 | --- | ---: |
-| Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
+| Trigger: first self-hosted editor executable slice under ADR 0027. | 64 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 5 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 3 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes. | 2 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
-| Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |
 | Trigger: complete typed thread start/result, priority and join/retirement after the implemented OS identity/native-name foundation, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation. | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |

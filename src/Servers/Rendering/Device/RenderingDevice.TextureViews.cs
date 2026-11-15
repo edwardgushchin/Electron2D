@@ -193,7 +193,7 @@ public sealed unsafe partial class RenderingDevice
         return info with { DownloadOffsets = downloads, DownloadSize = (uint)downloadSize };
     }
     // Storage-only multisample and input-only depth images retain private targets for zero initialization.
-    private static SDL.GPUTextureCreateInfo NativeTextureInfo(TextureInfo info) => new()
+    private SDL.GPUTextureCreateInfo NativeTextureInfo(TextureInfo info) => new()
     {
         Type = info.Type == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray,
         Format = NativeFormat(info.Format),
@@ -202,7 +202,7 @@ public sealed unsafe partial class RenderingDevice
         LayerCountOrDepth = info.Layers,
         NumLevels = info.Mips,
         SampleCount = (SDL.GPUSampleCount)info.Samples,
-        Usage = NativeUsage((info.Usage | (info.Samples != TextureSamples.Samples1 && (info.Usage & TextureUsageBits.Storage) != 0 ? TextureUsageBits.ColorAttachment : 0) | (DepthFormat(info.Format) && (info.Usage & TextureUsageBits.InputAttachment) != 0 ? TextureUsageBits.DepthStencilAttachment : 0)) & ~(info.Type == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0))
+        Usage = GPUTexture.SampledUsage(Device, NativeFormat(info.Format), NativeUsage((info.Usage | (info.Samples != TextureSamples.Samples1 && (info.Usage & TextureUsageBits.Storage) != 0 ? TextureUsageBits.ColorAttachment : 0) | (DepthFormat(info.Format) && (info.Usage & TextureUsageBits.InputAttachment) != 0 ? TextureUsageBits.DepthStencilAttachment : 0)) & ~(info.Type == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)))
     };
     private RenderHandle CreateTextureStorage(Entry entry, in SDL.GPUTextureCreateInfo create, DataFormat[] shareable, DataFormat viewedFormat)
     {

@@ -16,9 +16,9 @@ Linux/macOS extended-attribute calls use [tracked UTF8 path/name storage](../cov
 
 ## Description
 
-`FileAccess` supplies binary and text I/O for seekable file streams and decoded in-memory views, including mounted resources. It also wraps [non-seekable process pipes](#process-pipe-streams) in blocking or nonblocking mode. Each instance owns its stream until [`Close`](#m-electron2d-fileaccess-close) or disposal. File operations include virtual-path resolution, metadata, hashing, extended attributes, and temporary files.
+`FileAccess` supplies binary and text I/O for seekable file streams and decoded in-memory views, including mounted resources. It also wraps [non-seekable process pipes](#process-pipe-streams) in blocking or nonblocking mode. Each instance owns its stream until [`Close`](#m-electron2d-fileaccess-close) or disposal. File operations include virtual-path resolution, metadata, hashing, extended attributes, and temporary files. [File and directory access](../components/file-access.md#operation-failures-and-eof) describes errors and EOF.
 
-FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard use the matching native file-codec bridge. Configured Zstandard options use its updated exports; an older bundle fails before file effects. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
+FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard check base codec availability in every open mode, including `Write` and `WriteRead`. Decoding nonempty Zstandard containers with a configured window requires the updated native bundle. Reading an empty container skips the block decoder. Encoding pending data with a configured level or window can raise `PlatformNotSupportedException` at [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) before the destination is created or replaced. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
 callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
 
 ## Examples
@@ -38,7 +38,7 @@ file.WriteString("ready");
 | [`public string Path { get; }`](#p-electron2d-fileaccess-path) | Gets the path supplied when this file was opened. |
 | [`public string AbsolutePath { get; }`](#p-electron2d-fileaccess-absolutepath) | Gets the physical operating-system path, including staging when save and swap is enabled. |
 | [`public bool IsOpen { get; }`](#p-electron2d-fileaccess-isopen) | Gets whether the owned stream is still open. |
-| [`public bool EOFReached { get; }`](#p-electron2d-fileaccess-eofreached) | Gets whether a read has attempted to move beyond the end of the file. |
+| [`public bool EOFReached { get; }`](#p-electron2d-fileaccess-eofreached) | Gets whether a read encountered end of stream. |
 | [`public long Position { get; }`](#p-electron2d-fileaccess-position) | Gets the current byte offset. |
 | [`public long Length { get; }`](#p-electron2d-fileaccess-length) | Gets the decoded file length in bytes. |
 | [`public bool Hidden { get; set; }`](#p-electron2d-fileaccess-hidden) | Gets or sets whether the physical file has the hidden attribute. |
@@ -148,11 +148,11 @@ Gets whether the owned stream is still open.
 <a id="p-electron2d-fileaccess-eofreached"></a>
 ### `public bool EOFReached { get; }`
 
-Gets whether a read has attempted to move beyond the end of the file.
+Gets whether a read encountered end of stream.
 
-**Value:** `true` after an incomplete file read or when a process pipe reports EOF.
+**Value:** `true` after a read detects end of stream. A live nonblocking pipe that is temporarily empty leaves the flag clear.
 
-**Remarks:** Successful seeks, writes and resizes clear file EOF. Zero-length reads preserve it. A nonblocking pipe with no data yet has not reached EOF.
+A read that stops as soon as it has the requested bytes can reach the end with the flag clear. [`ReadCSVLine`](#m-electron2d-fileaccess-readcsvline-system-char) can detect EOF while returning a complete final record without a line terminator. A zero-length read preserves the flag. A successful seek, resize or write clears the seekable file's EOF flag.
 
 **Exceptions**
 
@@ -248,17 +248,21 @@ Writable opens check mounted file and directory precedence against one mount sna
 
 **Parameters**
 
-- `path`: A nonempty ordinary, `res://`, or `user://` path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 - `mode`: The required read, write, truncation, and creation behavior.
 
 **Returns:** A new owner of the opened file stream.
 
 **Exceptions**
 
+- `IO.FileNotFoundException`: The requested mode requires an existing file and it is missing.
+- `IO.DirectoryNotFoundException`: A parent directory in the path is missing.
+
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or `mode` is invalid.
 - `IO.IOException`: The file cannot be opened.
 - `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 <a id="m-electron2d-fileaccess-createtemp-electron2d-fileaccessmode-system-string-system-string-system-boolean"></a>
@@ -289,7 +293,7 @@ Opens a whole-file compressed container.
 
 **Parameters**
 
-- `path`: A nonempty ordinary or supported virtual path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 - `mode`: The required access mode.
 - `compressionMode`: The codec used to decode or encode the container.
 
@@ -300,13 +304,15 @@ Opens a whole-file compressed container.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or the mode is invalid.
 - `ArgumentOutOfRangeException`: `compressionMode` is unknown.
-- `PlatformNotSupportedException`: The selected native codec is unavailable in the packaged bridge.
+- `PlatformNotSupportedException`: The native bundle lacks the selected native codec in any open mode, or lacks configured-window support when decoding a nonempty Zstandard container.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
 - `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
-- `IO.IOException`: The physical file cannot be read or replaced.
+- `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
+- `NotSupportedException`: The path uses an unsupported virtual scheme.
 
-**Remarks:** Writable opens check mount precedence in one lookup. Changes are atomically encoded to the destination by [`FileAccess.Flush`](FileAccess.md#m-electron2d-fileaccess-flush) or [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close).
+**Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. Writable opens check mount precedence in one lookup. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encodes pending data and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte"></a>
 ### `public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)`
@@ -315,7 +321,7 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 
 **Parameters**
 
-- `path`: A nonempty ordinary or supported virtual path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 - `mode`: The required access mode.
 - `key`: Exactly 32 key bytes.
 
@@ -328,11 +334,13 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses password mode.
 - `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
-- `IO.IOException`: The physical file cannot be read or replaced.
+- `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
+- `NotSupportedException`: The path uses an unsupported virtual scheme.
 
-**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable opens check mount precedence in one lookup. A fresh random nonce is used each time changes are committed to the captured destination.
+**Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. Writable opens check mount precedence in one lookup. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data for the captured destination with a fresh random nonce and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string"></a>
 ### `public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`
@@ -341,7 +349,7 @@ Opens a whole-file container protected by a password and authenticated encryptio
 
 **Parameters**
 
-- `path`: A nonempty ordinary or supported virtual path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 - `mode`: The required access mode.
 - `password`: A nonempty password.
 
@@ -354,11 +362,13 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses raw-key mode.
 - `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
-- `IO.IOException`: The physical file cannot be read or replaced.
+- `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
 - `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
+- `NotSupportedException`: The path uses an unsupported virtual scheme.
 
-**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable opens check mount precedence in one lookup. A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.
+**Remarks:** A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. Writable opens check mount precedence in one lookup. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data for the captured destination with a fresh nonce and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-close"></a>
 ### `public void Close()`
@@ -367,6 +377,8 @@ Closes the file, committing transformed data or completed save-and-swap output w
 
 **Exceptions**
 
+- `IO.DirectoryNotFoundException`: Pending transformed data cannot be committed because the destination parent directory is missing.
+- `PlatformNotSupportedException`: The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.
 - `IO.IOException`: A pending write cannot be committed or a temporary file cannot be deleted.
 - `UnauthorizedAccessException`: The caller cannot replace or delete the physical file.
 - `AggregateException`: Both a primary close operation and cleanup fail.
@@ -382,6 +394,8 @@ Flushes pending data to the physical file.
 **Exceptions**
 
 - `InvalidOperationException`: The file is closed or was opened read-only.
+- `IO.DirectoryNotFoundException`: Pending transformed data cannot be committed because the destination parent directory is missing.
+- `PlatformNotSupportedException`: The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.
 - `IO.IOException`: The data cannot be persisted.
 - `UnauthorizedAccessException`: The caller cannot replace the physical file.
 - `ObjectDisposedException`: The instance is disposing or disposed.
@@ -619,9 +633,9 @@ Reads a length-prefixed UTF-8 string.
 
 **Exceptions**
 
-- `IO.EndOfStreamException`: The prefix or payload is incomplete.
+- `IO.EndOfStreamException`: The stream ended before the complete prefix or payload was read.
 - `Text.DecoderFallbackException`: The payload is not valid UTF-8.
-- `IO.IOException`: The declared length exceeds the supported managed array length.
+- `IO.IOException`: The declared length exceeds the supported managed array length, or a live nonblocking pipe runs out of available bytes before the prefix or payload is complete. In the latter case `EOFReached` stays clear.
 - `InvalidOperationException`: The file is closed or not readable.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
@@ -783,6 +797,7 @@ Writes bytes at the current cursor.
 
 **Exceptions**
 
+- [`PipeWriteException`](PipeWriteException.md): A process pipe stopped accepting bytes. `BytesWritten` gives the consumed prefix of this write.
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
 - [`PipeWriteException`](PipeWriteException.md): A process pipe write failed after accepting zero or more bytes. For a retryable write, pass the unwritten suffix starting at `error.BytesWritten` in the supplied span.
@@ -804,6 +819,7 @@ Writes UTF-8 text without a length prefix or terminator.
 - `ArgumentNullException`: `value` is `null`.
 - `Text.EncoderFallbackException`: The string contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
+- [`PipeWriteException`](PipeWriteException.md): A pipe write failed after accepting zero or more bytes of the UTF-8 bytes. If retryable, send the suffix starting at `BytesWritten` with [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Repeating the operation can duplicate the accepted prefix.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
@@ -821,6 +837,7 @@ Writes UTF-8 text followed by LF.
 - `ArgumentNullException`: `value` is `null`.
 - `Text.EncoderFallbackException`: The string contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
+- [`PipeWriteException`](PipeWriteException.md): A pipe write failed after accepting zero or more bytes of the UTF-8 bytes including the appended LF. If retryable, send the suffix starting at `BytesWritten` with [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Repeating the operation can duplicate the accepted prefix.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
@@ -840,6 +857,7 @@ Writes one CSV record followed by LF.
 - `ArgumentException`: `delimiter` is a line terminator, a double quote, or a UTF-16 surrogate.
 - `Text.EncoderFallbackException`: A field contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
+- [`PipeWriteException`](PipeWriteException.md): A pipe write failed after accepting zero or more bytes of the UTF-8 CSV record including CSV escaping and the appended LF. If retryable, send the suffix starting at `BytesWritten` with [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Repeating the operation can duplicate the accepted prefix.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
@@ -857,6 +875,7 @@ Writes a UTF-8 string preceded by its unsigned 32-bit byte count in the selected
 - `ArgumentNullException`: `value` is `null`.
 - `Text.EncoderFallbackException`: The string contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
+- [`PipeWriteException`](PipeWriteException.md): A pipe write failed after accepting zero or more bytes of the complete Pascal frame including its length prefix. If retryable, send the suffix starting at `BytesWritten` with [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Repeating the operation can duplicate the accepted prefix. Encode the prefix with the original `BigEndian` setting.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 

@@ -550,8 +550,8 @@
     {
       "electron2d": "property:Electron2D.Polygon.Vertices()",
       "godot": "Polygon2D::property:polygon",
-      "state": "Partial",
-      "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, inverted fill and packed state execute; full skeletal geometry remains absent."
+      "state": "Implemented",
+      "reason": "ADR 0004 maps the copied vertex array to Vertices because C# forbids a member named Polygon on Polygon. Finite local vertices feed default and indexed contours, inversion, retained skin deformation and typed scene storage."
     },
     {
       "electron2d": "method:Electron2D.Line.GetPointCount()",
@@ -9027,7 +9027,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0016/0095: all 18 permanent entries reject removal, matching the pinned user-created guard. Missing and permanent names throw managed exceptions. Removing a user name leaves the object and its other registrations with their owner.",
+      "reason": "ADR 0016/0095: all 19 permanent entries reject removal, matching the pinned user-created guard. Missing and permanent names throw managed exceptions. Removing a user name leaves the object and its other registrations with their owner.",
       "godot": [
         "Engine::method:unregister_singleton(StringName:)"
       ]
@@ -10692,10 +10692,17 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Polygon : Entity draws filled, inverted, colored and textured contours and stores typed scene state on tested Linux backends. Antialiasing and skeletal deformation remain separate member gaps under ADR 0004. Weighted Skeleton/Bone skinning now executes; antialiasing and the stated inversion/geometry parity limits remain.",
+      "state": "Implemented",
+      "reason": "Polygon : Entity implements all applicable own runtime properties and methods for geometry, texture, edge smoothing and borrowed skeletal deformation under ADRs 0004/0008/0028/0092. Contour, UV, pivot and weight editing tools belong to the separate editor under ADR 0027. Platform qualification follows ADR 0021.",
       "godot": [
         "class:Polygon2D"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0004 maps the copied vertex array to Vertices because C# forbids a member named Polygon on Polygon. Finite local vertices feed default and indexed contours, inversion, retained skin deformation and typed scene storage.",
+      "godot": [
+        "Polygon2D::property:polygon"
       ]
     },
     {
@@ -10735,14 +10742,13 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Executable retained contour rendering, copied typed state and Linux pixel checks exist. Pinned polygon_2d.cpp was audited for defaults, UV/color fallback, index contours and inverted fill; antialiasing and skeleton integration remain separate, and edge-case geometry parity remains to audit.",
+      "state": "Implemented",
+      "reason": "Pinned Polygon draw contract: explicit indices address all vertices, default and inverted contours omit trailing internal vertices, and UV and color channels use the complete selected draw count. The UV transform rotates, adds offset, scales output axes and normalizes by texture size. Typed copy, scene storage and finite/invalid-index guards follow ADR 0004. Internal-count edits request redraw and invalidate the relevant prepared skin selection.",
       "godot": [
         "Polygon2D::property:color",
         "Polygon2D::property:internal_vertex_count",
         "Polygon2D::property:offset",
         "Polygon2D::property:polygons",
-        "Polygon2D::property:texture",
         "Polygon2D::property:texture_offset",
         "Polygon2D::property:texture_rotation",
         "Polygon2D::property:texture_scale",
@@ -10751,8 +10757,15 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "InvertEnabled and InvertBorder use the pinned seven-point outer-contour bridge and retained polygon triangulation, ignoring explicit index contours during inversion. Managed square/concave and winding checks, packed-state checks and Linux native square pixels execute; degenerate/self-intersecting geometry and other backends need parity audit.",
+      "state": "Implemented",
+      "reason": "The borrowed texture supplies logical dimensions and sampled pixels; an atlas uses the full backing image through the node path. Changed invalidates retained geometry, reassignment and disposal remove the subscription, and scene storage follows the normal resource policy. Invalid dimensions and disposed textures use typed errors under ADR 0004.",
+      "godot": [
+        "Polygon2D::property:texture"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "InvertEnabled and InvertBorder use the pinned seven-point bridge to the enlarged rectangle, suppress explicit index contours and skinning, and persist typed state. Both windings and concave contours use retained triangulation; zero signed area, unexpandable borders and triangulation failure report typed errors. Prepared redraw reuses the bridge storage.",
       "godot": [
         "Polygon2D::property:invert_border",
         "Polygon2D::property:invert_enabled"

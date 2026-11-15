@@ -14,6 +14,10 @@ This Localization component stores and resolves domain/context translations for 
 
 Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Two typed project settings select the startup test culture and fallback locale; nine further settings supply pseudolocalization enablement and main-domain transforms. A twelfth setting selects the initial scene-root auto-translate mode. `TranslationServer.ReloadPseudolocalization` reapplies the eight transforms during a run without toggling enablement. Resource duplication copies independent message containers. Optimized catalogs generate hash-keyed, optionally Brotli-compressed values, skip contextual entries, keep only the first plural form, hide source keys, and duplicate their lookup maps. Typed Translation archives now execute through ResourceLoader; UTF-8 PO/MO catalogs import through ResourceLoader; operating-system locale discovery remains unimplemented.
 
+## Retained service
+
+The static translation API addresses one process-lifetime [translation service](../classes/TranslationServer.md). Engine registers it before any loop and keeps the same identity through startup and shutdown. The first access to service state before startup captures the current managed UI culture, including a read-only `HasDomain` call. Engine samples the project locale or current managed UI culture at startup. The writable culture and pseudolocalization descriptors inspect and update the facade's live state. Fresh processes in the [public consumer](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.Retained.cs) distinguish registry and descriptor discovery from `HasDomain`, then check singular and plural translations before startup. The managed profile also covers notification reentry, borrowed catalog lifetime and prepared reads across an Engine loop.
+
 <a id="catalog-queries"></a>
 ## Catalog queries
 

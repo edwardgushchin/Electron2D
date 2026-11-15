@@ -1,4 +1,6 @@
-if (args.Length > 1 && args[0] == "--os-process-child") OSProcessTests.Child(args);
+if (args.Length == 1 && args[0] == "--os-crash") OSCrashTests.Run();
+else if (args.Length == 2 && args[0] == "--os-crash-child") OSCrashTests.Child(args[1]);
+else if (args.Length > 1 && args[0] == "--os-process-child") OSProcessTests.Child(args);
 else OSProcessTests.Run();
 
 internal static class TextureArrayTests

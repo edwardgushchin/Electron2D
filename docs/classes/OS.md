@@ -187,6 +187,8 @@ Runtime messages now use [diagnostic delivery](../components/diagnostics.md). En
 
 `AddLogger(Logger)`/`RemoveLogger(Logger)` retain registration identity. `LogMessage(string, bool)` and `LogError(string, LoggerErrorType, string, string, string, int)` provide typed message/error ingress with compiler caller metadata.
 
+`Crash(string message)` reports a fatal error and terminates the current process from the calling thread. It accepts empty text and throws `ArgumentNullException` for null. A fatal call bypasses exception unwinding and ordinary managed shutdown. See [fatal process termination](../components/diagnostics.md#fatal-process-termination).
+
 
 ## Keyboard names
 

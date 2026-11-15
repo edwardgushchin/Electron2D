@@ -11,6 +11,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import time
 import xml.etree.ElementTree as ET
 
 import package as native_package
@@ -200,6 +201,13 @@ def read_manifests(feed):
     return manifests
 
 
+def seed_foreign_native(output, rid, names):
+    directory = output / "runtimes" / rid / "native"
+    directory.mkdir(parents=True, exist_ok=True)
+    for name in names:
+        (directory / name).write_bytes(b"previous RID engine")
+
+
 def check(feed, rid, managed=False):
     manifests = read_manifests(feed)
     if rid not in manifests:
@@ -304,7 +312,48 @@ def check(feed, rid, managed=False):
                 '<ImplicitUsings>enable</ImplicitUsings></PropertyGroup><ItemGroup>' + reference +
                 f'<PackageReference Include="Electron2D.{platform}" Version="[{version}]" />' + '</ItemGroup></Project>', encoding="utf-8")
             (app / "Program.cs").write_text(PROGRAM, encoding="utf-8")
+            application_native = platform == "Windows" and kind == "package"
+            if application_native:
+                foreign_rid = next(candidate for candidate in reversed(native_package.PLATFORMS["Windows"]) if candidate != rid)
+                selected_common = f"runtimes/{foreign_rid}/native/libElectron2D.dll"
+                with ZipFile(engine_feed / f"Electron2D.{platform}.{version}.nupkg") as archive:
+                    (app / "application-font.bin").write_bytes(archive.read(f"runtimes/{rid}/native/harfbuzz.dll"))
+                    (app / "application-common.bin").write_bytes(archive.read(f"runtimes/{rid}/native/libElectron2D.dll"))
+                project = app / "Consumer.csproj"
+                project.write_text(project.read_text().replace('</PropertyGroup>',
+                    '<SelfContained>true</SelfContained></PropertyGroup>').replace('</ItemGroup>',
+                    '<None Include="application-font.bin" Link="libHarfBuzzSharp.dll" '
+                    'CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />'
+                    f'<Content Include="application-common.bin" Link="{selected_common}" '
+                    'CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>'))
+                (app / "Program.cs").write_text(PROGRAM.replace('sealed class ConsumerMovieWriter', '''var applicationFont = System.Runtime.InteropServices.NativeLibrary.Load(
+    System.IO.Path.Combine(AppContext.BaseDirectory, "libHarfBuzzSharp.dll"));
+System.Runtime.InteropServices.NativeLibrary.GetExport(applicationFont, "hb_version_string");
+System.Runtime.InteropServices.NativeLibrary.Free(applicationFont);
+Console.WriteLine("Project-owned libHarfBuzzSharp.dll loaded.");
+sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
             environment["RestoreAdditionalProjectSources"] = str(engine_feed)
+            if application_native:
+                build_output = app / "bin/Release/net10.0" / rid
+                foreign_names = {"Electron2DWebRTC.dll", "libElectron2D.dll"}
+                seed_foreign_native(build_output, foreign_rid, foreign_names)
+                run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--nologo"], app, environment)
+                build_audit = [sys.executable, "-B", str(ROOT / "tools/check_native_publish.py"), rid, str(build_output), "Consumer"]
+                run(build_audit, app, environment)
+                run([str(build_output / "Consumer.exe")], work, environment)
+                foreign_names.update(path.name for path in (build_output / "runtimes" / rid / "native").iterdir()
+                                     if path.is_file())
+                selected = build_output / "libHarfBuzzSharp.dll"
+                selected.write_bytes(b"x" * selected.stat().st_size)
+                future = time.time() + 864000
+                os.utime(selected, (future, future))
+                seed_foreign_native(build_output, foreign_rid, foreign_names)
+                run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--no-restore", "--nologo"], app, environment)
+                if selected.read_bytes() != (app / "application-font.bin").read_bytes():
+                    raise RuntimeError("Repeated build retained a stale project-owned native file")
+                run(build_audit, app, environment)
+                run([str(build_output / "Consumer.exe")], work, environment)
+                print(f"Repeated build restored the future-dated project-owned DLL and removed {len(foreign_names)} foreign payloads.", flush=True)
             if os.name != "nt":
                 run([dotnet, "run", "-c", "Release", "--project", "Consumer.csproj"], app, environment)
             if kind == "generic":
@@ -313,15 +362,37 @@ def check(feed, rid, managed=False):
                 if {path.name for path in selected.iterdir()} != {rid}:
                     raise RuntimeError("A desktop build without an explicit RID copied foreign native assets")
             output = work / (kind + "-publish")
+            application_files = set()
             publish = [dotnet, "publish", "Consumer.csproj", "-c", "Release", "-o", str(output), "--nologo"]
             if kind != "generic":
                 publish += ["-r", rid, "--self-contained", "true"]
+            if application_native:
+                application_files.add(output / selected_common)
+                seed_foreign_native(output, foreign_rid, foreign_names)
             run(publish, app, environment)
+            if application_native:
+                audit = [sys.executable, "-B", str(ROOT / "tools/check_native_publish.py"), rid, str(output), "Consumer"]
+                run(audit, app, environment)
+                selected = output / "libHarfBuzzSharp.dll"
+                if selected.read_bytes() != (app / "application-font.bin").read_bytes():
+                    raise RuntimeError("Project-owned native file changed during publication")
+                for selected in (selected, output / selected_common):
+                    selected.write_bytes(b"x" * selected.stat().st_size)
+                    future = time.time() + 864000
+                    os.utime(selected, (future, future))
+                    refused = subprocess.run(audit, cwd=app, env=environment, text=True, capture_output=True)
+                    if refused.returncode == 0 or "Application native checksum mismatch" not in refused.stdout + refused.stderr:
+                        raise RuntimeError("Publish audit accepted a replaced application native file")
+                    print(f"Publish audit refused the replaced project-owned DLL: {selected.relative_to(output)}", flush=True)
+                    seed_foreign_native(output, foreign_rid, foreign_names)
+                    run(publish + ["--no-restore"], app, environment)
+                    run(audit, app, environment)
             for name in manifests[rid]["files"]:
                 if (output / name).exists() or not (output / "runtimes" / rid / "native" / name).is_file():
                     raise RuntimeError(f"Private native directory lost: {kind}/{name}")
             run([str(output / ("Consumer.exe" if os.name == "nt" else "Consumer"))], work, environment)
-            foreign = [path for path in (output / "runtimes").glob("*") if path.name != rid]
+            foreign = [path for path in (output / "runtimes").glob("*")
+                       if path.name != rid and any(file.is_file() and file not in application_files for file in path.rglob("*"))]
             if foreign:
                 raise RuntimeError(f"Foreign native runtime directories shipped: {foreign}")
         print("Managed-only source/package, explicit platform project/NuGet consumers and target-only builds/publishes passed with native tools blocked (explicit RID and default host)")

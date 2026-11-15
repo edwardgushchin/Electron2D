@@ -455,6 +455,7 @@ public sealed partial class ThemeDB
         ["TouchScreenButton"] = ["TouchScreenButton", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Translation"] = ["Translation", "Resource", "ElectronObject"],
         ["TranslationDomain"] = ["TranslationDomain", "ElectronObject"],
+        ["TranslationServer"] = ["TranslationServer", "ElectronObject"],
         ["Tree"] = ["Tree", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["TreeItem"] = ["TreeItem", "ElectronObject"],
         ["Tween"] = ["Tween", "ElectronObject"],

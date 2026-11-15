@@ -49,10 +49,16 @@ internal static class ProjectSettingsContractTests
         registry.Get(setting)[0] = 0;
         Check(registry.Get(setting) is [3], "Writes and reads must not expose mutable stored values.");
 
+        var guardedLateRegistration = false;
         var late = new ProjectSetting<int>("contract/late", 1, number =>
         {
             if (number == 2)
+            {
+                Reject<InvalidOperationException>(() => registry.Reset(setting));
+                Reject<InvalidOperationException>(() => registry.Unregister(setting));
+                guardedLateRegistration = true;
                 registry.Set(setting, [99]);
+            }
             return true;
         });
         using var file = new ConfigFile();
@@ -66,6 +72,7 @@ internal static class ProjectSettingsContractTests
         version = registry.Version;
         var nextOrder = registry.GetOrder(setting) + 1;
         Reject<InvalidOperationException>(() => registry.Register(late));
+        Check(guardedLateRegistration, "Reset and Unregister must reject mutation during registration validation.");
         var valid = new ProjectSetting<int>(late.Name, 1);
         Reject<InvalidDataException>(() => registry.Register(valid));
         Check(!registry.HasSetting(late) && registry.Version == version && registry.Get(setting) is [3] &&

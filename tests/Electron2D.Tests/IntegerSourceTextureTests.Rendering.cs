@@ -97,6 +97,10 @@ internal static partial class IntegerSourceTextureTests
             {
                 Check(RenderingServer.GetCurrentRenderingMethod() == "gpu" && RenderingServer.GetCurrentRenderingDriverName() != "software", "Actual GPU backend selected.");
                 RenderingServer.SetDefaultClearColor(Colors.Black); var device = RenderingServer.GetRenderingDevice()!;
+                var driver = RenderingServer.GetCurrentRenderingDriverName();
+                var adapter = RenderingServer.GetVideoAdapterName();
+                var sampling = device.TextureIsFormatSupportedForUsage(RenderingDevice.DataFormat.R16G16B16A16UINT, RenderingDevice.TextureUsageBits.Sampling);
+                Console.WriteLine($"Integer sources driver: {driver}, adapter: {adapter}, public RD Sampling: {sampling}.");
                 for (var row = 0; row < groups.Count; ++row)
                 {
                     var group = groups[row]; using var first = Source(group.Format); using var second = Source(group.Format, 1);
@@ -117,12 +121,29 @@ internal static partial class IntegerSourceTextureTests
                     {
                         var storage = RenderingServer.TextureGetRDTexture(value.GetRID()); using var native = device.TextureGetFormat(storage);
                         Check(native.Format == RenderingDevice.DataFormat.R16G16B16A16UINT && native.MIPMaps == 3 && native.Width == 7 && native.Height == 5, "Actual uploaded integer storage and full mip count.");
+                        const RenderingDevice.TextureUsageBits transfers = RenderingDevice.TextureUsageBits.CanCopyFrom | RenderingDevice.TextureUsageBits.CanCopyTo | RenderingDevice.TextureUsageBits.CanUpdate;
+                        Check((native.UsageBits & transfers) == transfers, "The borrowed descriptor exposes raw transfers.");
+                        if (driver == "direct3d12")
+                        {
+                            Check(((native.UsageBits & RenderingDevice.TextureUsageBits.Sampling) != 0) == sampling, "The D3D12 SRV advertises sampling only when the device reports integer sampling support.");
+                            if (!sampling && value is Texture)
+                                Reject<ArgumentException>(() => RenderingServer.TextureRDCreate(storage));
+                        }
                         Check(device.TextureGetData(storage, 0).AsSpan().SequenceEqual(group.Primary.CapturePixels()!.Upload.Data), "Uploaded original integer bits include every mip.");
                         if (value is TextureLayered) Check(device.TextureGetData(storage, 1).AsSpan().SequenceEqual(group.Array.CaptureLayers()!.Layers[1].Upload.Data), "Actual second layer integer bits.");
                     }
                     group.Storage = RenderingServer.TextureGetRDTexture(group.Primary.GetRID());
+                    if (driver == "direct3d12")
+                    {
+                        var beforeClear = device.TextureGetData(group.Storage, 0);
+                        Reject<NotSupportedException>(() => device.TextureClear(group.Storage, Colors.Black, 0, 3, 0, 1));
+                        Check(device.TextureIsValid(group.Storage) && device.TextureGetData(group.Storage, 0).AsSpan().SequenceEqual(beforeClear),
+                            $"Rejected Clear preserves {group.Format} storage and every mip.");
+                    }
                     RenderingServer.TextureGetRDTexture(group.Server); RenderingServer.TextureGetRDTexture(group.ServerArray);
                 }
+                if (driver == "direct3d12")
+                    Console.WriteLine("D3D12 TextureClear rejected all four UInt16 exports and preserved every mip byte.");
                 root.Tree!.ProcessFrameStarted += _ => before = GC.GetAllocatedBytesForCurrentThread();
                 RenderingServer.FramePreDraw += () =>
                 {

@@ -20,6 +20,7 @@ MIDI_INPUT_TRIGGER = "Trigger: missing WinMM/CoreMIDI/Android/Web MIDI producers
 ALIASES = Path(__file__).with_name("type_aliases.json")
 OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "midi", "extensions", "file_save_swap", "byte_buffers", "host_delta", "movie_writing", "video_playback", "camera_feeds", "diagnostics", "zip", "resource_packs", "jobs", "display", "hdr_output", "accessibility", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "render_memory", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "device_limits", "device_caches", "navigation", "navigation_diagnostics", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "native_menus", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles", "error_contracts")]
 OVERRIDES.append(Path(__file__).with_name("overrides_control_geometry.json"))
+OVERRIDES.append(Path(__file__).with_name("overrides_global_services.json"))
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -250,6 +251,8 @@ def reason_for_type(item, lookup):
         return "Excluded", "3D/XR product scope is excluded by ADR 0004; no implementation trigger."
     if name == "@GlobalScope":
         return "Partial", "Global functions/constants/enums are distributed across typed C# declarations; audit each row."
+    if name == "EditorExportPlatformVisionOS":
+        return "Excluded", "visionOS game export is outside the runtime target matrix ([ADR 0021](../../decisions/product.md#adr-0021))."
     if item.get("api_type") == "editor" or name.startswith("Editor") or "Editor" in ancestors:
         return "Blocked", "Trigger: first self-hosted editor executable slice under ADR 0027."
     accepted_slices = (
@@ -470,6 +473,10 @@ def special_reason(item, member):
                 or re.search(r"(?:^|_)3d(?:$|_)", name)):
             return "Excluded", "3D scene, lighting or texture API is outside ADR 0004; canvas and shared 2D resources are audited separately."
     if item["name"] == "ProjectSettings" and member["kind"] == "property":
+        if name == "display/display_server/driver.visionos":
+            return "Excluded", "The visionOS startup display-driver override targets a host outside the runtime matrix ([ADR 0021](../../decisions/product.md#adr-0021))."
+        if name == "rendering/rendering_device/driver.visionos":
+            return "Excluded", "The visionOS startup rendering-device driver override targets a host outside the runtime matrix ([ADR 0021](../../decisions/product.md#adr-0021))."
         root = name.split("/", 1)[0]
         if re.search(r"(?:^|[/_])3d(?:$|[/_])", name) or root in {"xr", "collada"}:
             return "Excluded", "3D/XR or 3D asset-setting family is outside the 2D product (ADR 0004)."
@@ -745,6 +752,8 @@ def render():
             updated = "2026-11-06"
         if name in {"@GlobalScope", "ParallaxBackground", "ParallaxLayer", "ProjectSettings", "RenderingServer", "TranslationDomain", "TranslationServer"}:
             updated = "2026-11-14"
+        if name in {"EditorExportPlatformVisionOS", "ProjectSettings"}:
+            updated = "2026-11-15"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

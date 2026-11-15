@@ -1,6 +1,6 @@
 # Unsigned image texture sources
 
-Last updated: 2026-10-16
+Last updated: 2026-11-15
 
 ## Scope and storage
 
@@ -26,6 +26,16 @@ whole replacement retires the old borrowed storage. Writing the borrowed device
 image does not rewrite the authored CPU snapshot; later source publication
 replaces its native contents according to the existing lifetime contract.
 
+On Direct3D 12 the renderer queries SDL's graphics storage-read support for
+`R16G16B16A16_UINT` for each texture shape. This allocates a typed shader-resource
+view in the shader-resource state even when SDL's sampler query rejects the
+format. The canvas uses that view for nearest sampling or explicit loads.
+`TextureGetRDTexture` exposes the actual UInt16 allocation with raw readback,
+copy and update roles and any supported storage role. The borrowed descriptor
+includes `Sampling` when the Direct3D 12 device confirms Shader Model 6.7 and
+Advanced Texture Operations. Device-owned signed and unsigned integer color
+textures use the same typed SRV path when these capabilities are available.
+
 ## Sampling and consumers
 
 Default canvas rendering uses the existing unsigned shader. Samples expose raw
@@ -44,6 +54,13 @@ programmable lighting consumes raw diffuse, normal and specular channel values.
 Opacity tests use raw sampled alpha above 0.1, including integer alpha one.
 Image's CPU alpha blending/detection arithmetic retains its separate full-range
 alpha normalization contract.
+
+Direct3D 12 compiles shaders that sample signed or unsigned textures to DXIL
+Shader Model 6.7. Hardware sampling requires Advanced Texture Operations. The
+runtime checks both capabilities when the native bridge exposes the logical
+device. With older bridges, Direct3D 12 validates the shader at graphics
+pipeline creation. Explicit integer texel loads continue to use the standard
+DXIL profile.
 
 Compatibility cannot preserve integer sampling and rejects drawing before
 submission. CPU creation/loading, metadata, copies and archives remain usable
@@ -78,11 +95,20 @@ GLSL/HLSL and server materials fetch original integer ordinary/array mip values.
 Actual format/all-mip/all-layer readback, device writes, source updates,
 replacement expiration, prepared custom producer reads, invalid linear filtering,
 scalar mutation and Compatibility rejection execute on Linux Wayland/Vulkan.
+The ordinary and layered source, transfer, lifetime, linear-filter rejection and
+scalar rejection checks also execute on Windows x64 with Direct3D 12 and Vulkan.
+An RTX 3090 Ti with driver 32.0.16.2114 reports Shader Model 6.8 and Advanced
+Texture Operations. For this UINT format it reports shader-load support,
+while the legacy shader-sample format bit is clear.
 Twenty-four warmup plus sixty-four active frames allocate zero managed bytes on
 the owner thread. [IntegerLightingTests](../../tests/Electron2D.Tests/IntegerLightingTests.cs)
 also substitutes ordinary UInt16 sources into all twenty-seven scalar channel
 combinations for built-in and programmable lighting, with independent float
-references and zero owner-thread bytes after warmup.
+references and zero owner-thread bytes after warmup on Windows x64 Direct3D 12
+and Vulkan.
+Direct3D 12 integer texture clears remain a separate capability. The lighting
+fixture prepares and updates its standalone integer RD textures with exact
+texel bytes on Direct3D 12 and uses integer clears on Vulkan.
 
 A local NuGet consumer using only public APIs verifies all four source formats,
 complete ordinary/layered imports and embedded archives. Separate CoreCLR and

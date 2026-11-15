@@ -19,7 +19,7 @@ its imported logical drawing size is independent from GetImage's physical pixels
 
 AtlasTexture overrides metadata queries with its view defaults (unspecified format and no own mipmaps); rendering still uses the full source storage. See [AtlasTexture metadata](AtlasTexture.md#pixelformat).
 
-Nodes, materials and shaders borrow textures. ImageTexture and the curve/gradient textures own managed pixel data, while AtlasTexture borrows its source; the renderer owns native allocations. Creating or reading a texture does not require an active window. Disposing a node, material or renderer does not dispose borrowed textures.
+Nodes, materials and shaders borrow textures. ImageTexture and the curve/gradient textures own managed pixel data, while AtlasTexture borrows its source. The renderer owns native allocations. Disposing a borrower leaves its textures available to their owners. Creating a CPU-backed texture or reading its image works before a window opens. A custom pixel-backed texture returns a fresh caller-owned Image on each query and emits Changed when its source changes. See [image texture data](../components/images.md#image-texture-data).
 
 ## Example
 

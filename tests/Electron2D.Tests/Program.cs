@@ -10,6 +10,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (args.Length == 2 && args[0] == "--os-crash-child") { OSCrashTests.Child(args[1]); return; }
+if (args.Length == 1 && args[0] == "--os-crash") { OSCrashTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCALAR_MATH") == "1")
 {
     VerifyMathF();
@@ -500,6 +503,7 @@ if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_PIXELS") is { } pixelProfile) { if (pixelProfile == "managed") ImagePixelTests.RunManaged(); else ImagePixelTests.RunNative(pixelProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_TEXTURE_DATA") is { } textureDataProfile) { if (textureDataProfile == "managed") ImageTextureDataTests.RunManaged(); else ImageTextureDataTests.RunNative(textureDataProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); VerifyImageResize(); VerifyImageRegions(); VerifyImageConversion(); RenderingRuntimeTests.VerifyAtlasResources(); Console.WriteLine("Image storage, processing and archive snapshots passed."); return; }
 if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
@@ -2135,6 +2139,7 @@ SubtreeResourceAuthoringTests.Run();
 IndexedPropertyTests.Run();
 StaticServiceTests.Run();
 SceneDiagnosticsTests.Run();
+OSCrashTests.Run();
 GeometryTests.Run();
 PathTests.Run();
 CurveTests.Run();
@@ -2501,6 +2506,7 @@ VerifyImages();
 VerifyImageStorage();
 VerifyImageMIPChains();
 ImagePixelTests.RunManaged();
+ImageTextureDataTests.RunManaged();
 VerifyImageResize();
 VerifyImageRegions();
 VerifyImageConversion();
@@ -6992,6 +6998,20 @@ static void VerifyFileAccess()
         "Unknown resource identities fail explicitly.");
     Expect<NotSupportedException>(() => EngineFileAccess.FileExists("pipe://channel"),
         "Pipe paths must remain explicit until their platform backend exists.");
+    Func<string, EngineFileAccess>[] openForWrite =
+    [
+        path => EngineFileAccess.Open(path, FileAccessModeFlags.Write),
+        path => EngineFileAccess.OpenCompressed(path, FileAccessModeFlags.Write, FileCompressionMode.Deflate),
+        path => EngineFileAccess.OpenEncrypted(path, FileAccessModeFlags.Write, new byte[32]),
+        path => EngineFileAccess.OpenEncryptedWithPassword(path, FileAccessModeFlags.Write, "password")
+    ];
+    foreach (var open in openForWrite)
+    {
+        Expect<KeyNotFoundException>(() => open("uid://missing"),
+            "File factories must reject an unregistered UID during open, even in Write mode.");
+        Expect<NotSupportedException>(() => open("pipe://channel"),
+            "File factories must reject an unsupported scheme during open, even in Write mode.");
+    }
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(prefix: "bad/name"),
         "Temporary-file prefixes must reject directory separators.");
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(extension: "bad/name"),
@@ -7090,8 +7110,17 @@ static void VerifyFileAccess()
             Expect<InvalidOperationException>(() => readOnly.WriteByte(1),
                 "Read-only files must reject writes.");
             Require(readOnly.ReadString(6) == "abcdef", "Raw UTF-8 strings must round-trip.");
-            Require(readOnly.ReadBytes(1).Length == 0 && readOnly.EOFReached,
-                "A short buffer read must return available bytes and mark EOF.");
+            Require(!readOnly.EOFReached && readOnly.ReadBytes(0).Length == 0 && !readOnly.EOFReached,
+                "Reading to the exact end and requesting zero bytes must leave EOF clear.");
+            readOnly.SeekEnd(-2);
+            Require(readOnly.ReadBytes(3).SequenceEqual("ef"u8.ToArray()) && readOnly.EOFReached,
+                "A short buffer read must return the available prefix and mark EOF.");
+            readOnly.SeekEnd(-2);
+            Require(!readOnly.EOFReached, "Seeking must clear EOF before another read.");
+            Expect<EndOfStreamException>(() => readOnly.ReadUInt32(),
+                "A truncated fixed-width read must fail after consuming the prefix.");
+            Require(readOnly.Position == readOnly.Length && readOnly.EOFReached,
+                "An exact read must consume the available prefix and mark EOF.");
             readOnly.Close();
             readOnly.Close();
             Require(!readOnly.IsOpen, "Closing must be idempotent and publish the closed state.");
@@ -7345,7 +7374,9 @@ static void VerifyDirAccess(bool listingOnly = false)
     Expect<DirectoryNotFoundException>(() => DirAccess.Open(IOPath.Combine(IOPath.GetTempPath(), Guid.NewGuid().ToString("N"))),
         "Directory opening must reject missing directories.");
     Expect<KeyNotFoundException>(() => DirAccess.Open("uid://missing"),
-        "Directory opening must reject unknown virtual schemes.");
+        "Directory opening must reject an unregistered UID.");
+    Expect<NotSupportedException>(() => DirAccess.Open("pipe://channel"),
+        "Directory opening must reject an unsupported virtual scheme.");
     Expect<ArgumentException>(() => DirAccess.GetFilesAt("relative"),
         "Static directory operations must reject relative paths.");
     Expect<ArgumentException>(() => DirAccess.CreateTemp("../invalid"),
@@ -10152,7 +10183,7 @@ static void VerifyEngine()
             ReferenceEquals(Engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Service) &&
             ReferenceEquals(Engine.GetSingleton<AudioServer>(nameof(AudioServer)), AudioServer.Service) &&
             ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), nameof(TranslationServer)]),
         "All built-in process services must be present in the global singleton registry.");
     Require(ReferenceEquals(Engine.GetSingleton<CameraServer>(nameof(CameraServer)), CameraServer.Service), "Camera service retains its registered process identity.");
     Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(CameraServer)), "The built-in camera service cannot be unregistered.");
@@ -10207,7 +10238,7 @@ static void VerifyEngine()
                 ReferenceEquals(Engine.GetSingleton("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<TestObject>("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), "tests.primary"]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), nameof(TranslationServer), "tests.primary"]),
             "Engine singleton lookup must preserve identity, type, and registration order.");
         Expect<InvalidOperationException>(() => Engine.RegisterSingleton("tests.primary", registered),
             "Engine singleton names must be unique.");
@@ -10240,7 +10271,7 @@ static void VerifyEngine()
         instance.Dispose();
     });
     Require(ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), nameof(TranslationServer)]),
         "Concurrent singleton removal must preserve only the built-in registry entries.");
 
     Engine.PhysicsTicksPerSecond = 10;

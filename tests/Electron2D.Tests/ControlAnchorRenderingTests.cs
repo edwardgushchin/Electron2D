@@ -90,10 +90,17 @@ internal static class ControlAnchorRenderingTests
         var sprite = new Sprite { Texture = texture, Position = new(4, 3), SelfModulate = Colors.Transparent };
         var panel = new ColorRect
         {
-            AnchorRight = .5f, AnchorBottom = .5f,
-            OffsetLeft = 30, OffsetTop = 30, OffsetRight = 30, OffsetBottom = 30,
-            PivotOffset = new(2, 3), PivotOffsetRatio = new(.5f, .25f),
-            RotationDegrees = 90, Scale = new(2, 1), Color = Colors.Red
+            AnchorRight = .5f,
+            AnchorBottom = .5f,
+            OffsetLeft = 30,
+            OffsetTop = 30,
+            OffsetRight = 30,
+            OffsetBottom = 30,
+            PivotOffset = new(2, 3),
+            PivotOffsetRatio = new(.5f, .25f),
+            RotationDegrees = 90,
+            Scale = new(2, 1),
+            Color = Colors.Red
         };
         window.AddChild(parent);
         parent.AddChild(sprite);

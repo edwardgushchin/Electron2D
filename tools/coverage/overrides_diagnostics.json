@@ -155,6 +155,11 @@
       "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
     },
     {
+      "godot": "OS::method:crash(String:)",
+      "electron2d": "method:Electron2D.OS.Crash(System.String)",
+      "reason": "Retained static OS fatal diagnostic and runtime fail-fast."
+    },
+    {
       "godot": "OS::method:add_logger(Logger:)",
       "electron2d": "method:Electron2D.OS.AddLogger(Electron2D.Logger)",
       "reason": "ADR 0108: retained static OS registration, copied dispatch snapshots, synchronous typed callbacks, all four exact categories, reentry/failure isolation, physical output flags, lazy native SDL interception/restoration and C# runtime error boundaries execute. Managed/native/concurrent/GC/host and NativeAOT verification limits are recorded in diagnostics.md; no host Console replacement or universal payload."
@@ -181,6 +186,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["OS::method:crash(String:)"],
+      "state": "Implemented",
+      "reason": "The pinned [OS::crash](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/core_bind.cpp#L348-L350) is [registered as crash(message)](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/core_bind.cpp#L763) and uses the [crash macro](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/error/error_macros.h) to send a structured error with the supplied message before trapping. Under ADRs 0015/0095/0108 the static retained OS uses the normal logger stream and CLR fail-fast, with typed null validation and no lifecycle/thread-owner dependency. The [desktop crash handler](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/linuxbsd/crash_handler_linuxbsd.cpp) owns conditional main-loop crash notification. [Child-process checks and platform limits](../../components/diagnostics.md#fatal-process-termination)."
+    },
     {
       "godot": [
         "ProjectSettings::property:debug/canvas_items/debug_redraw_color",
