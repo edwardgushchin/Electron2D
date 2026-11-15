@@ -9521,8 +9521,8 @@
       "godot": [
         "Control::method:update_maximum_size()"
       ],
-      "state": "Partial",
-      "reason": "Refreshes this control and direct child controls with deferred visible reflow and coalesced signals. Desired-size cache, future Container relayout and wrapping-window integration are absent."
+      "state": "Implemented",
+      "reason": "ADR 0008: invalidates descendant container allocation bounds, coalesces visible maximum changes and reflows before notifying Container and wrapped Window consumers. ControlLayoutTests covers intrinsic/custom bounds, hidden/show, stale-tree work, callback failures and disposal; WindowContentFitTests and ControlSize.Consumer verify nested bounds, native geometry and pixels on Windows Direct3D 12/11. Desired-size resource producers and foreign-platform qualification remain separate."
     },
     {
       "godot": [
@@ -9546,16 +9546,16 @@
         "Control::property:custom_minimum_size",
         "Control::signal:minimum_size_changed()"
       ],
-      "state": "Partial",
-      "reason": "Attached visible controls coalesce changes through SceneTree.Defer, reflow and emit after changed combined minima; detached and hidden controls defer until attachment/visibility. Upward container invalidation and wrapping-window integration are absent."
+      "state": "Implemented",
+      "reason": "ADR 0008: intrinsic/custom minima combine immediately; visible updates coalesce and notify after reflow, including after resize callback failure. Hidden changes apply on show, entry resolves detached bounds, and generation guards discard stale-tree callbacks. ControlLayoutTests covers values, lifecycle, disposal and errors; direct parent Container invalidation and Window.WrapControls execute in WindowContentFitTests and the public ControlSize.Consumer (Windows Direct3D 12/11 pixels). Foreign-platform qualification remains separate."
     },
     {
       "godot": [
         "Control::property:grow_horizontal",
         "Control::property:grow_vertical"
       ],
-      "state": "Partial",
-      "reason": "All three numeric modes shift the relevant rectangle edge for minimum growth and maximum shrinkage before RTL mirroring; full locale policy and container sizing remain absent."
+      "state": "Implemented",
+      "reason": "ADR 0008: all three modes independently shift each axis for minimum growth and maximum shrinkage before horizontal RTL mirroring. ControlLayoutTests checks all nine horizontal/vertical combinations for each bound, invalid values and packed state. Container fitting owns allocated rectangles; locale policy is tracked by LayoutDirection rather than these edge policies."
     },
     {
       "godot": [

@@ -36,6 +36,7 @@ public partial class Control : CanvasItem
     private bool _minimumSizeUpdatePending;
     private bool _maximumSizeUpdatePending;
     private Action? _minimumSizeUpdateAction, _maximumSizeUpdateAction;
+    private ulong _sizeUpdateGeneration;
     private LayoutDirection _layoutDirection;
     private CanvasItem? _layoutParent;
     private Viewport? _layoutViewport;
@@ -169,14 +170,14 @@ public partial class Control : CanvasItem
         return LayoutDirectionPolicy.Resolve(this, _layoutDirection);
     }
 
-    /// <summary>Gets or sets which horizontal edge stays fixed when the minimum width grows.</summary>
+    /// <summary>Gets or sets which horizontal edge stays fixed for minimum growth or maximum shrinkage.</summary>
     public GrowDirection GrowHorizontal
     {
         get { ThrowIfDisposed(); return _growHorizontal; }
         set { EnsureMutable(); ValidateGrowDirection(value); if (_growHorizontal == value) return; _growHorizontal = value; Reflow(); }
     }
 
-    /// <summary>Gets or sets which vertical edge stays fixed when the minimum height grows.</summary>
+    /// <summary>Gets or sets which vertical edge stays fixed for minimum growth or maximum shrinkage.</summary>
     public GrowDirection GrowVertical
     {
         get { ThrowIfDisposed(); return _growVertical; }
@@ -254,15 +255,19 @@ public partial class Control : CanvasItem
     }
 
     /// <summary>Requests a coalesced minimum-size update after an intrinsic minimum changes.</summary>
+    /// <remarks>Visible attached controls reflow before notifying the wrapping window and size subscribers.
+    /// Required notifications continue after layout callback failures; errors are reported by the deferred flush.
+    /// Hidden controls refresh when shown; detached controls resolve their bounds on entry.</remarks>
     public void UpdateMinimumSize()
     {
         EnsureMutable();
         if (!IsInsideTree || !IsVisibleInTree || _minimumSizeUpdatePending) return;
         _minimumSizeUpdatePending = true;
-        Tree!.Defer(_minimumSizeUpdateAction ??= ApplyMinimumSizeUpdate);
+        Tree!.Defer(_minimumSizeUpdateAction!);
     }
 
     /// <summary>Requests a coalesced maximum-size update, invalidates child allocation caches and refreshes child bounds.</summary>
+    /// <remarks>Uses the same deferred visibility and callback-failure policy as <see cref="UpdateMinimumSize"/>.</remarks>
     public void UpdateMaximumSize()
     {
         EnsureMutable();
@@ -274,7 +279,7 @@ public partial class Control : CanvasItem
             }
         if (!IsInsideTree || !IsVisibleInTree || _maximumSizeUpdatePending) return;
         _maximumSizeUpdatePending = true;
-        Tree!.Defer(_maximumSizeUpdateAction ??= ApplyMaximumSizeUpdate);
+        Tree!.Defer(_maximumSizeUpdateAction!);
     }
 
     /// <summary>Supplies the intrinsic minimum size; the base control has none.</summary>
@@ -824,28 +829,52 @@ public partial class Control : CanvasItem
         _layoutParent = null; _layoutViewport = null;
     }
 
-    private void ApplyMinimumSizeUpdate()
+    private void ApplyMinimumSizeUpdate(SceneTree expectedTree, ulong generation)
     {
+        if (generation != _sizeUpdateGeneration || !ReferenceEquals(Tree, expectedTree)) return;
         _minimumSizeUpdatePending = false;
         if (IsDisposed || !IsInsideTree || !IsVisibleInTree) return;
         var minimum = GetCombinedMinimumSize();
         if (minimum == _lastMinimumSize) return;
         _lastMinimumSize = minimum;
-        Reflow();
-        if (Parent is Window { WrapControls: true } window) window.ChildControlsChanged();
-        BeginEventEmission(_publisherMinimumSizeChanged.Handlers)?.Invoke();
+        List<Exception>? errors = null;
+        try { Reflow(); } catch (Exception error) { CollectException(ref errors, error); }
+        if (!IsDisposed)
+        {
+            try
+            {
+                if (Parent is Container { IsDisposed: false } container) container.ChildSizeChanged();
+                else if (Parent is Window { IsDisposed: false, WrapControls: true } window) window.ChildControlsChanged();
+            }
+            catch (Exception error) { CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherMinimumSizeChanged.Handlers)?.Invoke(); }
+            catch (Exception error) { CollectException(ref errors, error); }
+        }
+        ThrowCollected("Control minimum-size update callbacks failed.", errors);
     }
 
-    private void ApplyMaximumSizeUpdate()
+    private void ApplyMaximumSizeUpdate(SceneTree expectedTree, ulong generation)
     {
+        if (generation != _sizeUpdateGeneration || !ReferenceEquals(Tree, expectedTree)) return;
         _maximumSizeUpdatePending = false;
         if (IsDisposed || !IsInsideTree || !IsVisibleInTree) return;
         var maximum = GetCombinedMaximumSize();
         if (maximum == _lastMaximumSize) return;
         _lastMaximumSize = maximum;
-        Reflow();
-        if (Parent is Window { WrapControls: true } window) window.ChildControlsChanged();
-        BeginEventEmission(_publisherMaximumSizeChanged.Handlers)?.Invoke();
+        List<Exception>? errors = null;
+        try { Reflow(); } catch (Exception error) { CollectException(ref errors, error); }
+        if (!IsDisposed)
+        {
+            try
+            {
+                if (Parent is Container { IsDisposed: false } container) container.ChildSizeChanged();
+                else if (Parent is Window { IsDisposed: false, WrapControls: true } window) window.ChildControlsChanged();
+            }
+            catch (Exception error) { CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherMaximumSizeChanged.Handlers)?.Invoke(); }
+            catch (Exception error) { CollectException(ref errors, error); }
+        }
+        ThrowCollected("Control maximum-size update callbacks failed.", errors);
     }
 
     private void Reflow() => ApplyLayout(ResolveLayout(GetParentAnchorRect(), _anchors, _offsets));

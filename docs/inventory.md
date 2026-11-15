@@ -2564,3 +2564,5 @@ The retained [DisplayServer](classes/DisplayServer.md) includes owner-thread [Wi
 [DisplayServer.Icons.Windows.cs](../src/Servers/Display/DisplayServer.Icons.Windows.cs) extends the existing display and project-settings types with [Windows native icons](components/window-runtime.md#windows-native-icons).
 
 [DisplayServer.Icons.cs](../src/Servers/Display/DisplayServer.Icons.cs) applies the typed [application image icon](components/window-runtime.md#application-image-icons) through the display's existing default icon lifetime. The Wayland registry tracks the compositor icon capability.
+
+Control minimum/maximum propagation and stale-tree/callback-failure handling are checked by `ControlLayoutTests`; the public `tests/ControlSize.Consumer` verifies nested-container/window geometry and pixels on Windows Direct3D 12/11. See [Control](classes/Control.md) for the contract and remaining target limits.
