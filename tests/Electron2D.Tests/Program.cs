@@ -6987,6 +6987,20 @@ static void VerifyFileAccess()
         "Unknown resource identities fail explicitly.");
     Expect<NotSupportedException>(() => EngineFileAccess.FileExists("pipe://channel"),
         "Pipe paths must remain explicit until their platform backend exists.");
+    Func<string, EngineFileAccess>[] openForWrite =
+    [
+        path => EngineFileAccess.Open(path, FileAccessModeFlags.Write),
+        path => EngineFileAccess.OpenCompressed(path, FileAccessModeFlags.Write, FileCompressionMode.Deflate),
+        path => EngineFileAccess.OpenEncrypted(path, FileAccessModeFlags.Write, new byte[32]),
+        path => EngineFileAccess.OpenEncryptedWithPassword(path, FileAccessModeFlags.Write, "password")
+    ];
+    foreach (var open in openForWrite)
+    {
+        Expect<KeyNotFoundException>(() => open("uid://missing"),
+            "File factories must reject an unregistered UID during open, even in Write mode.");
+        Expect<NotSupportedException>(() => open("pipe://channel"),
+            "File factories must reject an unsupported scheme during open, even in Write mode.");
+    }
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(prefix: "bad/name"),
         "Temporary-file prefixes must reject directory separators.");
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(extension: "bad/name"),
@@ -7085,8 +7099,17 @@ static void VerifyFileAccess()
             Expect<InvalidOperationException>(() => readOnly.WriteByte(1),
                 "Read-only files must reject writes.");
             Require(readOnly.ReadString(6) == "abcdef", "Raw UTF-8 strings must round-trip.");
-            Require(readOnly.ReadBytes(1).Length == 0 && readOnly.EOFReached,
-                "A short buffer read must return available bytes and mark EOF.");
+            Require(!readOnly.EOFReached && readOnly.ReadBytes(0).Length == 0 && !readOnly.EOFReached,
+                "Reading to the exact end and requesting zero bytes must leave EOF clear.");
+            readOnly.SeekEnd(-2);
+            Require(readOnly.ReadBytes(3).SequenceEqual("ef"u8.ToArray()) && readOnly.EOFReached,
+                "A short buffer read must return the available prefix and mark EOF.");
+            readOnly.SeekEnd(-2);
+            Require(!readOnly.EOFReached, "Seeking must clear EOF before another read.");
+            Expect<EndOfStreamException>(() => readOnly.ReadUInt32(),
+                "A truncated fixed-width read must fail after consuming the prefix.");
+            Require(readOnly.Position == readOnly.Length && readOnly.EOFReached,
+                "An exact read must consume the available prefix and mark EOF.");
             readOnly.Close();
             readOnly.Close();
             Require(!readOnly.IsOpen, "Closing must be idempotent and publish the closed state.");
@@ -7340,7 +7363,9 @@ static void VerifyDirAccess(bool listingOnly = false)
     Expect<DirectoryNotFoundException>(() => DirAccess.Open(IOPath.Combine(IOPath.GetTempPath(), Guid.NewGuid().ToString("N"))),
         "Directory opening must reject missing directories.");
     Expect<KeyNotFoundException>(() => DirAccess.Open("uid://missing"),
-        "Directory opening must reject unknown virtual schemes.");
+        "Directory opening must reject an unregistered UID.");
+    Expect<NotSupportedException>(() => DirAccess.Open("pipe://channel"),
+        "Directory opening must reject an unsupported virtual scheme.");
     Expect<ArgumentException>(() => DirAccess.GetFilesAt("relative"),
         "Static directory operations must reject relative paths.");
     Expect<ArgumentException>(() => DirAccess.CreateTemp("../invalid"),

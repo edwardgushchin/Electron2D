@@ -92,13 +92,14 @@ public sealed partial class DirAccess : ElectronObject
     }
 
     /// <summary>Opens an existing filesystem, user-data, or mounted or directory-backed resource directory.</summary>
-    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <returns>A new directory owner positioned at <paramref name="path"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="DirectoryNotFoundException">The resolved directory does not exist.</exception>
     /// <exception cref="IOException">The directory metadata cannot be read.</exception>
     /// <exception cref="UnauthorizedAccessException">A virtual path escapes its configured root or access is denied.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unsupported virtual scheme.</exception>
     public static DirAccess Open(string path)
     {

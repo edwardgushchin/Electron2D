@@ -126,9 +126,9 @@ Opens an existing filesystem, user-data, or mounted or directory-backed resource
 
 **Parameters**
 
-- `path`: A nonempty ordinary, `res://`, or `user://` path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 
-**Returns:** A new directory owner positioned at `path`.
+**Returns:** A new directory owner positioned at `path` on success. The call reports a failure directly through an exception.
 
 **Exceptions**
 
@@ -137,6 +137,7 @@ Opens an existing filesystem, user-data, or mounted or directory-backed resource
 - `IO.DirectoryNotFoundException`: The resolved directory does not exist.
 - `IO.IOException`: The directory metadata cannot be read.
 - `UnauthorizedAccessException`: A virtual path escapes its configured root or access is denied.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
 - `NotSupportedException`: `path` uses an unsupported virtual scheme.
 
 <a id="m-electron2d-diraccess-createtemp-system-string-system-boolean"></a>

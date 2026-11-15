@@ -14,9 +14,11 @@ namespace Electron2D;
 /// pipes serialize each read/write direction independently. A
 /// multi-call seek/read/write sequence is not atomic. File operations may block and are unsuitable for real-time frame
 /// callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
-/// Process pipes from OS.ExecuteWithPipe are non-seekable. Nonblocking ReadBytes returns currently available bytes;
-/// temporary emptiness is not EOF. Exact reads may consume a partial value before raising IOException. Nonblocking
-/// writes may raise PipeWriteException with an exact consumed prefix. Closing a pipe does not terminate its child.
+/// Open, read and write failures are reported by exceptions from the operation. Fixed-width reads can consume a
+/// prefix before throwing <see cref="EndOfStreamException"/>. Process pipes from OS.ExecuteWithPipe are non-seekable.
+/// A nonblocking <see cref="ReadBytes"/> returns the available prefix, and temporary emptiness leaves EOF clear.
+/// An incomplete exact read on a live nonblocking pipe throws <see cref="IOException"/>. A failed pipe write may
+/// throw <see cref="PipeWriteException"/> with the consumed byte count. Closing a pipe leaves its child running.
 /// </remarks>
 public sealed partial class FileAccess : ElectronObject
 {
@@ -123,10 +125,12 @@ public sealed partial class FileAccess : ElectronObject
         }
     }
 
-    /// <summary>Gets whether a read has attempted to move beyond the end of the file.</summary>
-    /// <value><see langword="true"/> after an incomplete file read or when a process pipe reports EOF.</value>
-    /// <remarks>A successful seek, write, or resize clears the file state. A zero-length read preserves it.
-    /// Temporary emptiness on a nonblocking pipe does not indicate EOF.</remarks>
+    /// <summary>Gets whether a read encountered end of stream.</summary>
+    /// <value><see langword="true"/> after a read detects end of stream. A live nonblocking pipe that is
+    /// temporarily empty leaves the flag clear.</value>
+    /// <remarks>A read that stops as soon as it has the requested bytes can reach the end with the flag clear.
+    /// <see cref="ReadCSVLine"/> can detect EOF while returning a complete final record without a line terminator.
+    /// A zero-length read preserves the flag. A successful seek, resize or write clears the seekable file's EOF flag.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public bool EOFReached
@@ -265,7 +269,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Opens a file with the requested access mode.</summary>
-    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <param name="mode">The required read, write, truncation, and creation behavior.</param>
     /// <returns>A new owner of the opened file stream.</returns>
     /// <remarks>OS.SetUseFileAccessSaveAndSwap selects staging for the exact Write mode at open. Path retains the
@@ -280,6 +284,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
     /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a writable path ends in a directory separator, or access is denied.</exception>
+    /// <exception cref="FileNotFoundException">The requested mode requires an existing file and it is missing.</exception>
+    /// <exception cref="DirectoryNotFoundException">A parent directory in the path is missing.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess Open(string path, FileAccessModeFlags mode)
     {
@@ -358,19 +365,22 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Opens a whole-file compressed container.</summary>
-    /// <param name="path">A nonempty ordinary or supported virtual path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <param name="mode">The required access mode.</param>
     /// <param name="compressionMode">The codec used to decode or encode the container.</param>
     /// <returns>A seekable view of the decoded bytes.</returns>
-    /// <remarks>Changes are atomically encoded by <see cref="Flush"/> or <see cref="Close"/>. Writable opens check mount precedence in one lookup. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
+    /// <remarks><see cref="FileAccessModeFlags.Write"/> and <see cref="FileAccessModeFlags.WriteRead"/> start with an empty memory stream. Writable opens check mount precedence in one lookup.
+    /// <see cref="Flush"/> or <see cref="Close"/> encodes pending data and atomically creates or replaces the destination. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard check base codec availability in every open mode. Reading an empty Zstandard container skips the block decoder, including the configured-window check. Native codecs use bounded, checksummed blocks. Compression is not authentication.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or the mode is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="compressionMode"/> is unknown.</exception>
-    /// <exception cref="PlatformNotSupportedException">The selected native codec is unavailable in the packaged bridge.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native bundle lacks the selected native codec in any open mode, or lacks configured-window support when decoding a nonempty Zstandard container.</exception>
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
     /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
-    /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
+    /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a writable path ends in a directory separator, or access is denied.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
+    /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess OpenCompressed(
         string path,
         FileAccessModeFlags mode,
@@ -387,20 +397,22 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Opens a whole-file container protected by a 256-bit key and authenticated encryption.</summary>
-    /// <param name="path">A nonempty ordinary or supported virtual path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <param name="mode">The required access mode.</param>
     /// <param name="key">Exactly 32 key bytes.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
-    /// <remarks>Read and ReadWrite authenticate existing data. Write and WriteRead start empty.
-    /// Writable opens check mount precedence in one lookup. A fresh random nonce is used each time changes are committed to the captured destination.</remarks>
+    /// <remarks><see cref="FileAccessModeFlags.Write"/> and <see cref="FileAccessModeFlags.WriteRead"/> start with an empty memory stream. Writable opens check mount precedence in one lookup.
+    /// <see cref="Flush"/> or <see cref="Close"/> encrypts pending data for the captured destination with a fresh random nonce and atomically creates or replaces the destination.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="key"/> is not exactly 32 bytes or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses password mode.</exception>
     /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
-    /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
+    /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a writable path ends in a directory separator, or access is denied.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
+    /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)
     {
         ValidateEncryptionKey(key);
@@ -424,20 +436,23 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Opens a whole-file container protected by a password and authenticated encryption.</summary>
-    /// <param name="path">A nonempty ordinary or supported virtual path.</param>
+    /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path, or a registered <c>uid://</c> that resolves to one.</param>
     /// <param name="mode">The required access mode.</param>
     /// <param name="password">A nonempty password.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
-    /// <remarks>Read and ReadWrite authenticate existing data. Write and WriteRead start empty.
-    /// Writable opens check mount precedence in one lookup. A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.</remarks>
+    /// <remarks>A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key.
+    /// <see cref="FileAccessModeFlags.Write"/> and <see cref="FileAccessModeFlags.WriteRead"/> start with an empty memory stream. Writable opens check mount precedence in one lookup.
+    /// <see cref="Flush"/> or <see cref="Close"/> encrypts pending data for the captured destination with a fresh nonce and atomically creates or replaces the destination.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> or <paramref name="password"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="password"/> is empty or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses raw-key mode.</exception>
     /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
-    /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
+    /// <exception cref="IOException">The existing container cannot be read in a mode that preserves its contents.</exception>
     /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a writable path ends in a directory separator, or access is denied.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
+    /// <exception cref="KeyNotFoundException">The <c>uid://</c> is not registered.</exception>
+    /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)
     {
         ArgumentNullException.ThrowIfNull(password);
@@ -488,6 +503,8 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Closes the file, committing transformed data or completed save-and-swap output when necessary.</summary>
     /// <remarks>The method is idempotent. Owned buffers and key material are released even when commit or deletion fails.</remarks>
+    /// <exception cref="DirectoryNotFoundException">Pending transformed data cannot be committed because the destination parent directory is missing.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.</exception>
     /// <exception cref="IOException">A pending write cannot be committed or a temporary file cannot be deleted.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller cannot replace or delete the physical file.</exception>
     /// <exception cref="AggregateException">Both a primary close operation and cleanup fail.</exception>
@@ -507,6 +524,8 @@ public sealed partial class FileAccess : ElectronObject
     /// retains its pending data and cursor so the caller can retry. Save-and-swap streams flush staging without
     /// publishing it. Ordinary streams flush to disk.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed or was opened read-only.</exception>
+    /// <exception cref="DirectoryNotFoundException">Pending transformed data cannot be committed because the destination parent directory is missing.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.</exception>
     /// <exception cref="IOException">The data cannot be persisted.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller cannot replace the physical file.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
@@ -726,9 +745,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <summary>Reads a length-prefixed UTF-8 string.</summary>
     /// <returns>The decoded string whose byte count is stored as an unsigned 32-bit prefix.</returns>
     /// <remarks>The prefix uses <see cref="BigEndian"/>. An incomplete read consumes the available prefix or payload.</remarks>
-    /// <exception cref="EndOfStreamException">The prefix or payload is incomplete.</exception>
+    /// <exception cref="EndOfStreamException">The stream ended before the complete prefix or payload was read.</exception>
     /// <exception cref="DecoderFallbackException">The payload is not valid UTF-8.</exception>
-    /// <exception cref="IOException">The declared length exceeds the supported managed array length.</exception>
+    /// <exception cref="IOException">The declared length exceeds the supported managed array length, or a live nonblocking pipe runs out of available bytes before the prefix or payload is complete. In the latter case <see cref="EOFReached"/> stays clear.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public string ReadPascalString()
@@ -989,6 +1008,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
+    /// <exception cref="PipeWriteException">A pipe write failed after accepting zero or more bytes of the UTF-8 bytes.
+    /// If the failure is retryable, send the suffix starting at <see cref="PipeWriteException.BytesWritten"/> with
+    /// <see cref="WriteBytes"/>. Repeating the operation can duplicate the accepted prefix.</exception>
     public void WriteString(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -1002,6 +1024,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
+    /// <exception cref="PipeWriteException">A pipe write failed after accepting zero or more bytes of the UTF-8 bytes including the appended LF.
+    /// If the failure is retryable, send the suffix starting at <see cref="PipeWriteException.BytesWritten"/> with
+    /// <see cref="WriteBytes"/>. Repeating the operation can duplicate the accepted prefix.</exception>
     public void WriteLine(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -1017,6 +1042,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
+    /// <exception cref="PipeWriteException">A pipe write failed after accepting zero or more bytes of the UTF-8 CSV record including CSV escaping and the appended LF.
+    /// If the failure is retryable, send the suffix starting at <see cref="PipeWriteException.BytesWritten"/> with
+    /// <see cref="WriteBytes"/>. Repeating the operation can duplicate the accepted prefix.</exception>
     public void WriteCSVLine(IEnumerable<string> values, char delimiter = ',')
     {
         ArgumentNullException.ThrowIfNull(values);
@@ -1033,6 +1061,9 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="InvalidOperationException">The file is closed or not writable.</exception>
     /// <exception cref="IOException">Writing fails.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
+    /// <exception cref="PipeWriteException">A pipe write failed after accepting zero or more bytes of the complete Pascal frame including its length prefix.
+    /// If the failure is retryable, send the suffix starting at <see cref="PipeWriteException.BytesWritten"/> with
+    /// <see cref="WriteBytes"/>. Repeating the operation can duplicate the accepted prefix. Encode the prefix with the original BigEndian setting.</exception>
     public void WritePascalString(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
