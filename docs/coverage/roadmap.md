@@ -80,7 +80,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 
 | Exact trigger | Classes |
 | --- | ---: |
-| Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
+| Trigger: first self-hosted editor executable slice under ADR 0027. | 64 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 5 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 3 |
