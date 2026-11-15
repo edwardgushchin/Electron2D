@@ -310,7 +310,8 @@ def check(feed, rid, managed=False):
                 with ZipFile(engine_feed / f"Electron2D.{platform}.{version}.nupkg") as archive:
                     (app / "application-font.bin").write_bytes(archive.read(f"runtimes/{rid}/native/harfbuzz.dll"))
                 project = app / "Consumer.csproj"
-                project.write_text(project.read_text().replace('</ItemGroup>',
+                project.write_text(project.read_text().replace('</PropertyGroup>',
+                    '<SelfContained>true</SelfContained></PropertyGroup>').replace('</ItemGroup>',
                     '<None Include="application-font.bin" Link="libHarfBuzzSharp.dll" '
                     'CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>'))
                 (app / "Program.cs").write_text(PROGRAM.replace('sealed class ConsumerMovieWriter', '''var applicationFont = System.Runtime.InteropServices.NativeLibrary.Load(
@@ -322,6 +323,20 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
             environment["RestoreAdditionalProjectSources"] = str(engine_feed)
             if application_native:
                 run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--nologo"], app, environment)
+                build_output = app / "bin/Release/net10.0" / rid
+                build_audit = [sys.executable, "-B", str(ROOT / "tools/check_native_publish.py"), rid, str(build_output), "Consumer"]
+                run(build_audit, app, environment)
+                run([str(build_output / "Consumer.exe")], work, environment)
+                selected = build_output / "libHarfBuzzSharp.dll"
+                selected.write_bytes(b"x" * selected.stat().st_size)
+                future = time.time() + 864000
+                os.utime(selected, (future, future))
+                run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--no-restore", "--nologo"], app, environment)
+                if selected.read_bytes() != (app / "application-font.bin").read_bytes():
+                    raise RuntimeError("Repeated build retained a stale project-owned native file")
+                run(build_audit, app, environment)
+                run([str(build_output / "Consumer.exe")], work, environment)
+                print("Repeated build restored the future-dated project-owned DLL.", flush=True)
             if os.name != "nt":
                 run([dotnet, "run", "-c", "Release", "--project", "Consumer.csproj"], app, environment)
             if kind == "generic":

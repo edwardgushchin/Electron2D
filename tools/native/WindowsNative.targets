@@ -37,8 +37,31 @@
       <_Electron2DLegacyWindowsBuildFile Include="@(_Electron2DLegacyWindowsFile->'$(TargetDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(TargetDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
       <_Electron2DLegacyWindowsBuildFile Remove="@(NativeCopyLocalItems->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)');@(RuntimeTargetsCopyLocalItems->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />
       <_Electron2DLegacyWindowsBuildFile Remove="@(AllItemsFullPathWithTargetPath->'$(TargetDir)%(TargetPath)')" />
+      <_Electron2DLegacyWindowsBuildPath Include="@(_Electron2DLegacyWindowsFile);@(_Electron2DLegacyWindowsFile->'runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
+      <_Electron2DLegacyWindowsBuildPath Update="@(_Electron2DLegacyWindowsBuildPath)">
+        <TargetPath>%(Identity)</TargetPath>
+      </_Electron2DLegacyWindowsBuildPath>
+      <_Electron2DNativeBuildSource Include="@(NativeCopyLocalItems);@(RuntimeTargetsCopyLocalItems)">
+        <TargetPath>%(DestinationSubDirectory)%(Filename)%(Extension)</TargetPath>
+      </_Electron2DNativeBuildSource>
+      <_Electron2DBuildSource Include="@(_Electron2DNativeBuildSource);@(AllItemsFullPathWithTargetPath)" />
+      <_Electron2DUnrelatedBuildSource Include="@(_Electron2DBuildSource)" />
+      <_Electron2DUnrelatedBuildSource Remove="@(_Electron2DLegacyWindowsBuildPath)" MatchOnMetadata="TargetPath" MatchOnMetadataOptions="PathLike" />
+      <_Electron2DApplicationNativeBuildFile Include="@(_Electron2DBuildSource)" />
+      <_Electron2DApplicationNativeBuildFile Remove="@(_Electron2DUnrelatedBuildSource)" MatchOnMetadata="TargetPath" MatchOnMetadataOptions="PathLike" />
     </ItemGroup>
     <Delete Files="@(_Electron2DLegacyWindowsBuildFile)" />
+    <Copy SourceFiles="@(_Electron2DApplicationNativeBuildFile)" DestinationFiles="@(_Electron2DApplicationNativeBuildFile->'$(TargetDir)%(TargetPath)')" SkipUnchangedFiles="false" Condition="'@(_Electron2DApplicationNativeBuildFile)' != ''">
+      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
+    </Copy>
+    <GetFileHash Files="@(_Electron2DApplicationNativeBuildFile)" Algorithm="SHA256" Condition="'@(_Electron2DApplicationNativeBuildFile)' != ''">
+      <Output TaskParameter="Items" ItemName="_Electron2DApplicationNativeBuildHash" />
+    </GetFileHash>
+    <WriteLinesToFile File="$(TargetDir)Electron2D.application-native.sha256" Lines="@(_Electron2DApplicationNativeBuildHash->'%(FileHash)  %(TargetPath)')" Overwrite="true" Encoding="UTF-8" Condition="'@(_Electron2DApplicationNativeBuildFile)' != ''" />
+    <Delete Files="$(TargetDir)Electron2D.application-native.sha256" Condition="'@(_Electron2DApplicationNativeBuildFile)' == ''" />
+    <ItemGroup Condition="'@(_Electron2DApplicationNativeBuildFile)' != ''">
+      <FileWrites Include="$(TargetDir)Electron2D.application-native.sha256" />
+    </ItemGroup>
   </Target>
   <Target Name="CleanElectron2DLegacyWindowsPublish" AfterTargets="Publish" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(PublishDir)' != ''">
     <ItemGroup>

@@ -3,6 +3,8 @@
 from pathlib import Path
 import os
 import hashlib
+import json
+from itertools import product
 import shutil
 import subprocess
 import tempfile
@@ -15,42 +17,76 @@ import package
 
 class WindowsDeliveryTests(unittest.TestCase):
     def test_project_copy_items_are_preserved(self):
-        for item, mode, publish_mode, relative in (("None", "PreserveNewest", "PreserveNewest", ""),
-                                     ("Content", "PreserveNewest", "PreserveNewest", "runtimes/win-x64/native/"),
-                                     ("Content", "Always", "Always", "runtimes/win-x64/native/"),
-                                     ("None", "IfDifferent", "PreserveNewest", "")):
-            with self.subTest(item=item, mode=mode), tempfile.TemporaryDirectory(prefix="project native ") as temporary:
+        sdk = subprocess.check_output(["dotnet", "--version"], text=True).strip()
+        sdk_path = subprocess.check_output(["dotnet", "msbuild", str(package.ROOT / "Electron2D.csproj"),
+            "-nologo", "-getProperty:MSBuildSDKsPath"], text=True).strip()
+        publish_targets = Path(sdk_path) / "Microsoft.NET.Sdk/targets/Microsoft.NET.Publish.targets"
+        publish_if_different = "_CopyResolvedFilesToPublishIfDifferent" in publish_targets.read_text(encoding="utf-8")
+        for item, relative, mode in product(("None", "Content"), ("", "runtimes/win-x64/native/"),
+                                           ("PreserveNewest", "Always", "IfDifferent")):
+            with self.subTest(item=item, mode=mode, relative=relative), tempfile.TemporaryDirectory(prefix="project native ") as temporary:
                 root = Path(temporary)
                 source = root / "application-harfbuzz.bin"
                 source.write_bytes(b"application-owned native file")
+                checksum = hashlib.sha256(source.read_bytes()).hexdigest()
                 project = root / "Consumer.csproj"
                 project.write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
+                    '<OutputType>Exe</OutputType><ImplicitUsings>enable</ImplicitUsings>'
                     '<TargetFramework>net10.0</TargetFramework><RuntimeIdentifier>win-x64</RuntimeIdentifier>'
                     '</PropertyGroup><ItemGroup>'
                     f'<{item} Include="{source.name}" Link="{relative}libHarfBuzzSharp.dll" '
-                    f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="{publish_mode}" />'
+                    f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="{mode}" />'
                     '</ItemGroup>'
                     f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" /></Project>')
-                command = ["dotnet", "publish", str(project), "-c", "Release", "--nologo", "-o", str(root / "publish")]
-                result = subprocess.run(command, capture_output=True, text=True)
-                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-                for output in (root / "bin/Release/net10.0/win-x64", root / "publish"):
-                    self.assertEqual((output / relative / "libHarfBuzzSharp.dll").read_bytes(), source.read_bytes())
-                receipt = root / "publish/Electron2D.application-native.sha256"
-                self.assertEqual(receipt.read_text(encoding="utf-8-sig").split(),
-                    [hashlib.sha256(source.read_bytes()).hexdigest().upper(), relative + "libHarfBuzzSharp.dll"])
-                selected = root / "publish" / relative / "libHarfBuzzSharp.dll"
-                selected.write_bytes(b"x" * len(source.read_bytes()))
-                future = time.time() + 864000
-                os.utime(selected, (future, future))
-                result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
-                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-                self.assertEqual(selected.read_bytes(), source.read_bytes())
-                project.write_text(project.read_text().replace(f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="{publish_mode}"', ''))
-                result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
-                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-                self.assertFalse(receipt.exists())
-                self.assertFalse((root / "publish" / relative / "libHarfBuzzSharp.dll").exists())
+                (root / "Program.cs").write_text(
+                    f'var file = Path.Combine(AppContext.BaseDirectory, "{relative}libHarfBuzzSharp.dll");'
+                    'if (!File.ReadAllBytes(file).AsSpan().SequenceEqual("application-owned native file"u8)) '
+                    'throw new Exception("Selected application file mismatch");'
+                    'Console.WriteLine("Selected application file matched.");')
+                record = dict(sdk=sdk, item=item, relative=relative, mode=mode, sourceSHA256=checksum)
+                stages = [("build", root / "bin/Release/net10.0/win-x64")]
+                if mode != "IfDifferent" or publish_if_different:
+                    stages.append(("publish", root / "publish"))
+                else:
+                    record["publish"] = "unsupported by SDK"
+                for stage, output in stages:
+                    command = ["dotnet", stage, str(project), "-c", "Release", "--nologo"]
+                    if stage == "publish":
+                        command += ["-o", str(output)]
+                    result = subprocess.run(command, capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    selected = output / relative / "libHarfBuzzSharp.dll"
+                    self.assertEqual(selected.read_bytes(), source.read_bytes())
+                    clean_run = subprocess.run(["dotnet", str(output / "Consumer.dll")], capture_output=True, text=True)
+                    self.assertEqual(clean_run.returncode, 0, clean_run.stdout + clean_run.stderr)
+                    selected.write_bytes(b"x" * len(source.read_bytes()))
+                    future = time.time() + 864000
+                    os.utime(selected, (future, future))
+                    result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    self.assertEqual(selected.read_bytes(), source.read_bytes())
+                    repeated_run = subprocess.run(["dotnet", str(output / "Consumer.dll")], capture_output=True, text=True)
+                    self.assertEqual(repeated_run.returncode, 0, repeated_run.stdout + repeated_run.stderr)
+                    record[stage] = dict(cleanSHA256=checksum, repeatedSHA256=hashlib.sha256(selected.read_bytes()).hexdigest(),
+                                         cleanRun=clean_run.returncode, repeatedRun=repeated_run.returncode)
+                    receipt = output / "Electron2D.application-native.sha256"
+                    values = receipt.read_text(encoding="utf-8-sig").split()
+                    self.assertEqual([values[0], values[1].replace("\\", "/")],
+                        [checksum.upper(), relative + "libHarfBuzzSharp.dll"])
+                    record[stage]["receipt"] = receipt.read_text(encoding="utf-8-sig").strip()
+                project.write_text(project.read_text().replace(
+                    f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="{mode}"', ''))
+                removed = subprocess.run(["dotnet", "build", str(project), "-c", "Release", "--no-restore"], capture_output=True, text=True)
+                self.assertEqual(removed.returncode, 0, removed.stdout + removed.stderr)
+                self.assertFalse((stages[0][1] / relative / "libHarfBuzzSharp.dll").exists())
+                self.assertFalse((stages[0][1] / "Electron2D.application-native.sha256").exists())
+                if len(stages) == 2:
+                    removed = subprocess.run(["dotnet", "publish", str(project), "-c", "Release", "--no-restore",
+                        "-o", str(root / "publish")], capture_output=True, text=True)
+                    self.assertEqual(removed.returncode, 0, removed.stdout + removed.stderr)
+                    self.assertFalse((root / "publish" / relative / "libHarfBuzzSharp.dll").exists())
+                    self.assertFalse((root / "publish/Electron2D.application-native.sha256").exists())
+                print("MATRIX " + json.dumps(record), flush=True)
 
     def test_publish_replaces_future_dated_package_native_files(self):
         with tempfile.TemporaryDirectory(prefix="native publish ") as temporary:
@@ -122,7 +158,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                     for output in ("build", "publish"):
                         files = {path.relative_to(root / output).as_posix(): path.read_bytes()
                                  for path in (root / output).rglob("*") if path.is_file()}
-                        if output == "publish":
+                        if "Electron2D.application-native.sha256" in files:
                             receipt = files.pop("Electron2D.application-native.sha256").decode("utf-8-sig")
                             self.assertEqual({tuple(line.split()) for line in receipt.splitlines()},
                                 {(hashlib.sha256(b"application dependency").hexdigest().upper(), relative + name) for name in selected})
