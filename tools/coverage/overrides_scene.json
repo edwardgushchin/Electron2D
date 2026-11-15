@@ -1281,14 +1281,12 @@
     {
       "electron2d": "method:Electron2D.SceneState.GetNodeCount()",
       "godot": "SceneState::method:get_node_count()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "ADR 0023: zero for empty data, otherwise the count of stored records in capture order, excluding implicit linked content."
     },
     {
       "electron2d": "method:Electron2D.SceneState.GetPath()",
       "godot": "SceneState::method:get_path()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "ADR 0023: observes the resource path through path updates and archive loading, with the last committed path retained after source disposal."
     },
     {
       "electron2d": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action<Electron2D.Node>,Electron2D.GroupCallFlags)",
@@ -9146,6 +9144,44 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0023: live typed metadata exposes captured state and the immediate base for in-memory and archived scenes. Concrete scenes return an absent base. Repacking and archive reload retain the documented view and file ownership."
+    },
+    {
+      "godot": ["class:SceneState"],
+      "state": "Implemented",
+      "reason": "ADR 0023: PackedScene creates a live read-only ElectronObject view with managed disposal. Each query reads one published state. A retained view preserves the final data and its file graph after source disposal."
+    },
+    {
+      "godot": [
+        "SceneState::method:get_node_name(int:)",
+        "SceneState::method:get_node_path(int:,bool:)",
+        "SceneState::method:get_node_owner_path(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0023: zero-based records expose captured names and root-relative string paths. The root is '.', an absent parent or owner is empty, and forParent defaults to false. Indexed queries throw on invalid indices."
+    },
+    {
+      "godot": ["SceneState::method:get_node_groups(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0023: persistent group names are captured in ordinal order, with only added groups stored for inherited overrides. The C# read-only list preserves stored order and cannot mutate the packed record."
+    },
+    {
+      "godot": ["SceneState::method:get_node_count()"],
+      "state": "Implemented",
+      "reason": "ADR 0023: zero for empty data, otherwise the count of stored records in capture order, excluding implicit linked content."
+    },
+    {
+      "godot": ["SceneState::method:get_path()"],
+      "state": "Implemented",
+      "reason": "ADR 0023: observes the resource path through path updates and archive loading, with the last committed path retained after source disposal."
+    },
+    {
+      "godot": [
+        "SceneState::method:get_node_property_count(int:)",
+        "SceneState::method:get_node_property_name(int:,int:)",
+        "SceneState::method:get_node_property_value(int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0023: stored descriptor and deferred values expose zero-based names and values in application order. Typed reads return compatible values, copy array containers, borrow resources and project node references as paths. Bad indices and incompatible types raise C# exceptions."
     },
     {
       "godot": [

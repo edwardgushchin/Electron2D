@@ -747,7 +747,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RootMotionView](classes/RootMotionView.md) | VisualInstance3D | Excluded | 5 |
 | [SceneMultiplayer](classes/SceneMultiplayer.md) | MultiplayerAPI | Implemented | 17 |
 | [SceneReplicationConfig](classes/SceneReplicationConfig.md) | Resource | Implemented | 17 |
-| [SceneState](classes/SceneState.md) | RefCounted | Partial | 28 |
+| [SceneState](classes/SceneState.md) | RefCounted | Implemented | 28 |
 | [SceneTree](classes/SceneTree.md) | MainLoop | Partial | 51 |
 | [SceneTreeTimer](classes/SceneTreeTimer.md) | RefCounted | Implemented | 2 |
 | [Script](classes/Script.md) | Resource | Partial | 18 |

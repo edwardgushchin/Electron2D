@@ -18,7 +18,7 @@ Last updated: 2026-11-12
 
 Inherited records whose target does not exist under the placeholder are skipped, as are records under missing parents. Ordinary locally added children with a surviving parent remain ordinary placeholder children. Skipped inherited-child overrides do not become deferred replay instructions. Strongly typed authored connections must accept the real placeholder type; a deferred object cannot stand in for an unconstructed subtype.
 
-SceneState exposes the late path and placeholder marker, an empty node type for a deferred root and typed raw field queries. Ordinary and reused linked records keep their established meanings. Empty manually authored placeholders can be captured without inventing a path.
+SceneState exposes the late path and placeholder marker, an empty node type for a deferred root and typed raw field queries. A null node reference reads as an empty string before and after an archive round trip. Ordinary and reused linked records keep their established meanings. Empty manually authored placeholders can be captured without inventing a path.
 
 ## Explicit creation
 
