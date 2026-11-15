@@ -1,5 +1,8 @@
 {
   "mappings": [
+    {"godot": "ProjectSettings::method:check_changed_settings_in_group(String:)", "electron2d": "method:Electron2D.ProjectSettings.CheckChangedSettingsInGroup(System.String)", "reason": "ADRs 0019/0095: Uses the same pending and in-flight names as GetChangedSettings, with ordinal prefix matching."},
+    {"godot": "ProjectSettings::method:has_setting(String:)", "electron2d": "method:Electron2D.ProjectSettings.HasSetting`1(ProjectSetting<T>)", "reason": "ADRs 0019/0095: Tests exact registered definition identity in the selected registry."},
+    {"godot": "ProjectSettings::signal:settings_changed()", "electron2d": "event:Electron2D.ProjectSettings.SettingsChanged()", "reason": "ADRs 0019/0095: Synchronously delivers one coalesced batch after a successful process callback or an explicit flush, with the exact registry sender. Concurrent and reentrant edits remain pending after delivery or failure."},
     {
       "godot": "@GlobalScope::property:TranslationServer",
       "electron2d": "T:Electron2D.TranslationServer",
@@ -543,32 +546,32 @@
     {
       "electron2d": "method:Electron2D.ProjectSettings.GetChangedSettings()",
       "godot": "ProjectSettings::method:get_changed_settings()",
-      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+      "reason": "ADR 0019: Returns an immutable, ordinally sorted union of queued and in-flight names, with each name appearing once."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.Get`1(ProjectSetting<T>)",
       "godot": "ProjectSettings::method:get_setting(String:,Variant:)",
-      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+      "reason": "ADR 0019: Exact typed definition lookup returns a snapshot of the explicit base or current initial value. Missing and mismatched definitions use typed exceptions."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.Set`1(ProjectSetting<T>,T)",
       "godot": "ProjectSettings::method:set_setting(String:,Variant:)",
-      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+      "reason": "ADR 0019: Exact typed definition writes validate serialized snapshots before publication and coalesce equal or repeated writes."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.Reset`1(ProjectSetting<T>)",
       "godot": "ProjectSettings::method:clear(String:)",
-      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+      "reason": "ADR 0019: Reset removes explicit base storage and exposes the registry initial value while retaining overrides."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.Unregister`1(ProjectSetting<T>)",
       "godot": "ProjectSettings::method:clear(String:)",
-      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+      "reason": "ADR 0019: Unregister removes a custom definition and its base and override storage. Built-in definitions remain registered."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.Register`1(ProjectSetting<T>)",
       "godot": "ProjectSettings::method:set_initial_value(String:,Variant:)",
-      "reason": "Typed ProjectSetting<T> key replaces string/Variant access; verify semantics (ADR 0019)."
+      "reason": "ADR 0019: Registration establishes typed identity and validates preloaded base and override values before publication."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.GetWithOverride`1(ProjectSetting<T>)",
@@ -746,7 +749,7 @@
     {
       "electron2d": "method:Electron2D.ProjectSettings.SetInitialValue`1(ProjectSetting<T>,T)",
       "godot": "ProjectSettings::method:set_initial_value(String:,Variant:)",
-      "reason": "Typed setting-key identity and value replace name/Variant parameters (ADR 0019)."
+      "reason": "ADR 0019: The validated per-registry initial value preserves the observable current value and does not queue a change."
     },
     {
       "electron2d": "method:Electron2D.RegEx.Compile(System.String)",
@@ -1973,6 +1976,14 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["ProjectSettings::method:check_changed_settings_in_group(String:)"], "state": "Implemented", "reason": "ADRs 0019/0095: Uses the same pending and in-flight names as GetChangedSettings, with ordinal prefix matching."},
+    {"godot": ["ProjectSettings::method:has_setting(String:)"], "state": "Implemented", "reason": "ADRs 0019/0095: Tests exact registered definition identity in the selected registry."},
+    {"godot": ["ProjectSettings::signal:settings_changed()"], "state": "Implemented", "reason": "ADRs 0019/0095: Synchronously delivers one coalesced batch after a successful process callback or an explicit flush, with the exact registry sender. Concurrent and reentrant edits remain pending after delivery or failure."},
+    {"godot": ["ProjectSettings::method:get_changed_settings()"], "state": "Implemented", "reason": "ADR 0019: Returns an immutable, ordinally sorted union of queued and in-flight names, with each name appearing once."},
+    {"godot": ["ProjectSettings::method:get_setting(String:,Variant:)"], "state": "Implemented", "reason": "ADR 0019: Exact typed definition lookup returns a snapshot of the explicit base or current initial value. Missing and mismatched definitions use typed exceptions."},
+    {"godot": ["ProjectSettings::method:set_setting(String:,Variant:)"], "state": "Implemented", "reason": "ADR 0019: Exact typed definition writes validate serialized snapshots before publication and coalesce equal or repeated writes."},
+    {"godot": ["ProjectSettings::method:clear(String:)"], "state": "Implemented", "reason": "ADR 0019: Reset removes explicit base storage and exposes the registry initial value while retaining overrides. ADR 0019: Unregister removes a custom definition and its base and override storage. Built-in definitions remain registered."},
+    {"godot": ["ProjectSettings::method:set_initial_value(String:,Variant:)"], "state": "Implemented", "reason": "ADR 0019: Registration establishes typed identity and validates preloaded base and override values before publication. ADR 0019: The validated per-registry initial value preserves the observable current value and does not queue a change."},
     {
       "godot": [
         "@GlobalScope::property:TranslationServer"

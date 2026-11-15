@@ -1,3 +1,4 @@
+using System.Text;
 using Electron2D;
 using static TextureArrayTests;
 using IOPath = System.IO.Path;
@@ -55,8 +56,12 @@ internal static class ProjectOverrideTests
 
             projectFile.SetValue(disableKey, false);
             projectFile.Save(registry.ProjectFilePath);
-            File.WriteAllText(customPath, "[application]\nconfig/name=2");
             registry.Set(ProjectSettings.ApplicationName, "unsaved");
+            File.WriteAllText(customPath, "[application]\nconfig/name=\"utf16\"", Encoding.Unicode);
+            Reject<DecoderFallbackException>(registry.Load);
+            Check(registry.Get(ProjectSettings.ApplicationName) == "unsaved" &&
+                registry.GetChangedSettings().Contains(ProjectSettings.ApplicationName.Name), "A decoding failure preserves values and pending changes.");
+            File.WriteAllText(customPath, "[application]\nconfig/name=2");
             Reject<InvalidDataException>(registry.Load);
             Check(registry.Get(ProjectSettings.ApplicationName) == "unsaved" &&
                 registry.GetChangedSettings().Contains(ProjectSettings.ApplicationName.Name), "A failed layer preserves values and pending changes.");
@@ -99,7 +104,7 @@ internal static class ProjectOverrideTests
         using (var pack = new PCKPacker())
         {
             pack.PCKStart(archive);
-            pack.AddFileFromBuffer(resourcePath, System.Text.Encoding.UTF8.GetBytes(config.EncodeToText()));
+            pack.AddFileFromBuffer(resourcePath, Encoding.UTF8.GetBytes("\uFEFF" + config.EncodeToText()));
             pack.Flush();
         }
         var oldProject = ProjectSettings.ProjectRoot;

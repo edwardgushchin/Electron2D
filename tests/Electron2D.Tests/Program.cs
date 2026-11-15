@@ -455,6 +455,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCAL_RESOURCE_CONSUMERS
     ThemeResourceTests.Run(); ShortcutTests.Run(); AudioSynchronizedTests.Run(); return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_USER_DATA") == "1") { ProjectUserDataTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_SETTINGS") == "1")
+{
+    ProjectSettingsContractTests.Run();
+    VerifyProjectSettings();
+    Console.WriteLine("ProjectSettings persistence and registry regressions passed.");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_OVERRIDES") == "1") { VerifyProjectSettings(); ProjectOverrideTests.Run(packed: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_MUTATIONS") == "1") { DirAccessMutationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_LISTING") == "1")
@@ -7813,7 +7820,7 @@ static void VerifyProjectSettings()
             "Typed property reversion must store the current initial value.");
         settings.Reset(score);
         Require(settings.Get(score) == 7,
-            "Reset must retain a non-default initial value as the effective explicit value.");
+            "Reset must expose the current initial value without an explicit base value.");
 
         settings.SetOrder(score, -10);
         settings.SetAsBasic(score, true);
