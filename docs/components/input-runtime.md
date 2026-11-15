@@ -52,9 +52,9 @@ The component reads typed versioned action records from `ProjectSettings` only d
 - An emulated press owns a matching release even if its setting is disabled while held. Mouse-button masks remain per device so an emulated release cannot clear a physical hold.
 - SDL-originated touch-to-mouse and mouse-to-touch duplicates are filtered before `Input`, so each native source produces one configured emulation path.
 - Multiple bindings contribute independently; action strength is the maximum live contribution.
-- Editing or copying a registered binding synchronously invalidates cached contributions for every action using that reference before fallible public change observers run.
-- Disposing a registered binding outside matching removes it from every affected action and clears its contributions before public disposal observers run.
-- Exact matching filters extra modifiers and analog direction; releases remove their mapped source.
+- Editing or copying a registered binding synchronously invalidates cached manual and parsed contributions for every action using that reference before fallible public change observers run.
+- Disposing a registered binding outside matching removes it from every affected action and clears their manual and parsed contributions before public disposal observers run.
+- Exact matching filters extra modifiers and analog direction. A release removes or updates its parsed source.
 - Synthetic action descriptions skip synthetic bindings during lookup and fall back to the action name, so cyclic description lookup cannot recurse.
 - Node ordering and handled semantics are deterministic; callback exceptions are aggregated.
 - Event resources remain caller-owned. Input neither disposes nor stores submitted event objects after transition identity expires.
@@ -110,6 +110,16 @@ Native rumble and LED calls use device capabilities. Weak/strong magnitudes are 
 ## Native window observation
 
 [DisplayWindowEvents.Input](../classes/DisplayWindowEvents.md) adds a native-window observation phase to the existing parser. It sees committed raw/action state before scene dispatch for native, manually parsed and emulated events. Tagged events select their ID; untagged events broadcast to the captured live cohort. Active native-window observers require the display owner thread before mutation. A failing observer cannot suppress other publishers or scene delivery; stopping the loop skips stale scene input. Source disposal and registration affect subsequent recipient snapshots. Prepared success-path dispatch retains zero managed allocation; native SDL event construction remains a separate allocation gap.
+
+## Action state and delivery
+
+Action polling aggregates the strongest effective and raw contributions independently. An analog sample below the action deadzone retains raw strength without pressing the action. GetAxis subtracts effective strengths. GetVector subtracts raw strengths and applies one circular deadzone, using the mean of the four action deadzones by default. Opposing bindings updated by a single event settle before either aggregate edge is recorded.
+
+ActionPress sets a finite clamped manual contribution without invoking callbacks. A mapped event whose first binding reports a release clears the manual contribution. ActionRelease clears manual and parsed action state while preserving raw device polling and independent virtual control holds. It records a release with no event identity when the action is no longer held. A virtual control retires only its own hold. Binding edits invalidate manual and parsed contributions even when an observer throws. Removing the action or replacing the entire project map discards the previous state.
+
+Exact and permissive polling track their own aggregate edges. Process and physics each consume their window at completion, including callback failures. A by-event query identifies the original parsed object that caused the latest applicable edge. An equal copy and a manual release carry different identities.
+
+ParseInputEvent resolves mapping and owner/lifecycle eligibility, commits state, then delivers synchronously under ADR 0038. Native window observers precede scene routing. UseAccumulatedInput defaults to true and combines consecutive SDL mouse motions from the same window and device. The display drains motion at queue boundaries and pump completion. FlushBufferedEvents drains pending native motion and pumps MIDI on the eligible owner. Calls during input delivery fail before draining. Pointer emulation and positional viewport localization allocate temporary resources.
 
 ## Verification
 

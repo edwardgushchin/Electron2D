@@ -34,6 +34,8 @@ public sealed partial class InputMap : ElectronObject
 
     internal static InputMap Service => SharedInstance;
 
+    internal object SyncRoot => _gate;
+
     internal event Action? ProjectSettingsLoadedCore { add => _publisherProjectSettingsLoadedCore.Add(value); remove => _publisherProjectSettingsLoadedCore.Remove(value); }
     private EventPublisher<Action> _publisherProjectSettingsLoadedCore;
 
@@ -44,13 +46,14 @@ public sealed partial class InputMap : ElectronObject
         ArgumentNullException.ThrowIfNull(settings);
         var candidates = BuildProjectActions(settings);
 
-        string[] previousActions;
         lock (_gate)
         {
-            previousActions = _actionOrder.ToArray();
             foreach (var action in _actionOrder)
+            {
                 foreach (var binding in _actions[action].Events)
                     DetachBindingUnderLock(action, binding);
+                Input.Service.OnActionMapChanged(action, removed: true);
+            }
 
             _actions.Clear();
             _actionOrder.Clear();
@@ -63,8 +66,6 @@ public sealed partial class InputMap : ElectronObject
             }
         }
 
-        foreach (var action in previousActions.Concat(candidates.Select(static item => item.Name)).Distinct(StringComparer.Ordinal))
-            Input.Service.OnActionMapChanged(action, removed: false);
         BeginEventEmission(_publisherProjectSettingsLoadedCore.Handlers)?.Invoke();
     }
 
@@ -132,7 +133,6 @@ public sealed partial class InputMap : ElectronObject
             _actionOrder.Add(action);
         }
 
-        Input.Service.OnActionMapChanged(action, removed: false);
     }
 
     internal void EraseActionCore(string action)
@@ -145,9 +145,8 @@ public sealed partial class InputMap : ElectronObject
             foreach (var binding in definition.Events)
                 DetachBindingUnderLock(action, binding);
             _actionOrder.Remove(action);
+            Input.Service.OnActionMapChanged(action, removed: true);
         }
-
-        Input.Service.OnActionMapChanged(action, removed: true);
     }
 
     internal float ActionGetDeadzoneCore(string action)
@@ -162,9 +161,10 @@ public sealed partial class InputMap : ElectronObject
         InputEvent.ValidateActionName(action, nameof(action));
         ValidateDeadzone(deadzone, nameof(deadzone));
         lock (_gate)
+        {
             GetActionUnderLock(action).Deadzone = deadzone;
-
-        Input.Service.OnActionMapChanged(action, removed: false);
+            Input.Service.OnActionMapChanged(action, removed: false);
+        }
     }
 
     internal void ActionAddEventCore(string action, InputEvent @event)
@@ -184,9 +184,8 @@ public sealed partial class InputMap : ElectronObject
                 throw new InvalidOperationException("An input action cannot contain more than 32 bindings.");
             definition.Events.Add(@event);
             AttachBindingUnderLock(action, @event);
+            Input.Service.OnActionMapChanged(action, removed: false);
         }
-
-        Input.Service.OnActionMapChanged(action, removed: false);
     }
 
     internal bool ActionHasEventCore(string action, InputEvent @event)
@@ -203,7 +202,6 @@ public sealed partial class InputMap : ElectronObject
         InputEvent.ValidateActionName(action, nameof(action));
         ArgumentNullException.ThrowIfNull(@event);
         @event.EnsureUsable();
-        var removed = false;
         lock (_gate)
         {
             var definition = GetActionUnderLock(action);
@@ -213,12 +211,9 @@ public sealed partial class InputMap : ElectronObject
                 var binding = definition.Events[index];
                 definition.Events.RemoveAt(index);
                 DetachBindingUnderLock(action, binding);
-                removed = true;
+                Input.Service.OnActionMapChanged(action, removed: false);
             }
         }
-
-        if (removed)
-            Input.Service.OnActionMapChanged(action, removed: false);
     }
 
     internal void ActionEraseEventsCore(string action)
@@ -230,8 +225,8 @@ public sealed partial class InputMap : ElectronObject
             foreach (var binding in definition.Events)
                 DetachBindingUnderLock(action, binding);
             definition.Events.Clear();
+            Input.Service.OnActionMapChanged(action, removed: false);
         }
-        Input.Service.OnActionMapChanged(action, removed: false);
     }
 
     internal IReadOnlyList<InputEvent> ActionGetEventsCore(string action)
@@ -417,24 +412,19 @@ public sealed partial class InputMap : ElectronObject
 
     private void OnBindingChanged(InputEvent resource)
     {
-        string[] actions;
         lock (_gate)
         {
-            if (!_bindingActions.TryGetValue((InputEvent)resource, out var affected))
-                return;
-            actions = affected.ToArray();
+            if (_bindingActions.TryGetValue(resource, out var actions))
+                foreach (var action in actions)
+                    Input.Service.OnActionMapChanged(action, removed: false);
         }
-
-        foreach (var action in actions)
-            Input.Service.OnActionMapChanged(action, removed: false);
     }
 
     private void OnBindingDisposed(InputEvent binding)
     {
-        HashSet<string> actions;
         lock (_gate)
         {
-            if (!_bindingActions.Remove(binding, out actions!))
+            if (!_bindingActions.Remove(binding, out var actions))
                 return;
 
             foreach (var action in actions)
@@ -446,15 +436,13 @@ public sealed partial class InputMap : ElectronObject
                         if (ReferenceEquals(definition.Events[index], binding))
                             definition.Events.RemoveAt(index);
                     }
+                    Input.Service.OnActionMapChanged(action, removed: false);
                 }
             }
 
             binding.BindingChanged -= OnBindingChanged;
             binding.BindingDisposed -= OnBindingDisposed;
         }
-
-        foreach (var action in actions)
-            Input.Service.OnActionMapChanged(action, removed: false);
     }
 
     private static void ValidateDeadzone(float deadzone, string parameterName)

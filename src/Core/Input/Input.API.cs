@@ -167,7 +167,8 @@ public sealed partial class Input
 
     /// <summary>Gets or sets whether the native host combines consecutive pointer-motion events.</summary>
     /// <value><see langword="true"/> by default; the setting has no effect without a native host.</value>
-    /// <remarks>Changes take effect on the next native event. Keyboard, button, and touch events retain queue order.</remarks>
+    /// <remarks>The display combines consecutive mouse motions from the same window and device. Changes take
+    /// effect on the next native event. <see cref="ParseInputEvent"/> always delivers synchronously.</remarks>
     public static bool UseAccumulatedInput
     {
         get => Service.UseAccumulatedInputCore;
@@ -192,8 +193,9 @@ public sealed partial class Input
         set => Service.EmulateTouchFromMouseCore = value;
     }
 
-    /// <summary>Delivers any native pointer motion currently held by the display adapter.</summary>
-    /// <remarks>This is a no-op when no native host is active or its event batch has no pending motion.</remarks>
+    /// <summary>Delivers pending native mouse motion, then pumps the active MIDI input session.</summary>
+    /// <remarks>The display normally drains pending motion at input boundaries and at the end of its event pump.</remarks>
+    /// <exception cref="InvalidOperationException">Delivery is active, or the caller cannot dispatch input on the active loop or display.</exception>
     public static void FlushBufferedEvents() => Service.FlushBufferedEventsCore();
 
     /// <summary>Gets the non-wheel mouse buttons currently held.</summary>
@@ -315,10 +317,10 @@ public sealed partial class Input
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
     public static float GetActionStrength(string action, bool exactMatch = false) => Service.GetActionStrengthCore(action, exactMatch);
 
-    /// <summary>Gets an action's strength before deadzone remapping.</summary>
+    /// <summary>Gets an action's strength before deadzone remapping, including motion below the deadzone.</summary>
     /// <param name="action">The registered, case-sensitive action name.</param>
     /// <param name="exactMatch">Whether only exact contributions are considered.</param>
-    /// <returns>The greatest matching raw strength from zero through one.</returns>
+    /// <returns>The greatest matching raw strength. Native normalized sources use the range from zero through one.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
@@ -354,14 +356,17 @@ public sealed partial class Input
     /// <summary>Presses a registered action without producing an input event.</summary>
     /// <param name="action">The registered, case-sensitive action name.</param>
     /// <param name="strength">A finite strength clamped to zero through one.</param>
-    /// <remarks>A zero-strength source is still pressed but contributes zero analog strength. Call <see cref="ActionRelease"/> to remove it.</remarks>
+    /// <remarks>A zero-strength source is still pressed. A parsed event that reports an action release clears
+    /// the manual press. Release of a virtual control retires that control's own contribution.</remarks>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="strength"/> is NaN or infinite.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
     public static void ActionPress(string action, float strength = 1f) => Service.ActionPressCore(action, strength);
 
-    /// <summary>Releases the synthetic source of a registered action without producing an input event.</summary>
+    /// <summary>Clears a registered action's manual and parsed contributions without producing an input event.</summary>
+    /// <remarks>Raw device state and virtual control contributions are retained. If no virtual contribution
+    /// keeps the action pressed, the request records a release with no originating event.</remarks>
     /// <param name="action">The registered, case-sensitive action name.</param>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>

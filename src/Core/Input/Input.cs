@@ -72,6 +72,16 @@ public sealed partial class Input : ElectronObject
 
     internal void FlushBufferedEventsCore()
     {
+        if (!Monitor.TryEnter(_parseGate))
+            throw new InvalidOperationException("Input cannot be flushed during event delivery.");
+        try
+        {
+            if (_isParsing)
+                throw new InvalidOperationException("Input cannot be flushed during event delivery.");
+            Engine.MainLoop?.ValidateInputEventDispatch();
+        }
+        finally { Monitor.Exit(_parseGate); }
+
         Action? flush;
         lock (_gate)
             flush = _flushBufferedEvents;
@@ -236,27 +246,37 @@ public sealed partial class Input : ElectronObject
 
     internal void ActionPressCore(string action, float strength = 1f)
     {
-        EnsureRegisteredAction(action);
-        if (!float.IsFinite(strength))
-            throw new ArgumentOutOfRangeException(nameof(strength), strength, "Action strength must be finite.");
+        lock (InputMap.Service.SyncRoot)
+        {
+            EnsureRegisteredAction(action);
+            if (!float.IsFinite(strength))
+                throw new ArgumentOutOfRangeException(nameof(strength), strength, "Action strength must be finite.");
 
-        lock (_gate)
-            UpdateContribution(action, SyntheticSource, new InputActionMatch(true, Mathf.Clamp(strength, 0f, 1f), Mathf.Clamp(strength, 0f, 1f)), exact: true, eventId: 0);
+            strength = Mathf.Clamp(strength, 0f, 1f);
+            lock (_gate)
+                UpdateContribution(action, SyntheticSource, new InputActionMatch(true, strength, strength), exact: true);
+        }
     }
 
     internal void ActionReleaseCore(string action)
     {
-        EnsureRegisteredAction(action);
-        lock (_gate)
-            UpdateContribution(action, SyntheticSource, default, exact: true, eventId: 0);
+        lock (InputMap.Service.SyncRoot)
+        {
+            EnsureRegisteredAction(action);
+            lock (_gate)
+            {
+                var state = GetOrAddActionState(action);
+                ClearNonVirtualSources(state);
+                Recalculate(state, forceRelease: true);
+            }
+        }
     }
 
     internal void ParseInputEventCore(InputEvent @event)
     {
         ArgumentNullException.ThrowIfNull(@event);
         @event.EnsureUsable();
-        var mainLoop = Engine.MainLoop;
-        mainLoop?.ValidateInputEventDispatch();
+        Engine.MainLoop?.ValidateInputEventDispatch();
         var windowSources = DisplayServer.CaptureWindowInputSources();
 
         lock (_parseGate)
@@ -264,6 +284,8 @@ public sealed partial class Input : ElectronObject
             if (_isParsing)
                 throw new InvalidOperationException("Input parsing cannot be re-entered.");
 
+            var mainLoop = Engine.MainLoop;
+            mainLoop?.ValidateInputEventDispatch();
             _isParsing = true;
             try
             {
@@ -317,16 +339,31 @@ public sealed partial class Input : ElectronObject
     {
         try
         {
-            InputMap.Service.CollectMatches(@event, _matches);
-            lock (_gate)
+            lock (InputMap.Service.SyncRoot)
             {
-                UpdateRawState(@event);
-                if (!@event.IsCanceled() || @event is InputEventMouseButton { Pressed: false })
+                InputMap.Service.CollectMatches(@event, _matches);
+                lock (_gate)
                 {
-                    foreach (var match in _matches)
+                    UpdateRawState(@event);
+                    if (@event.IsCanceled() && @event is not InputEventMouseButton { Pressed: false })
+                        return;
+
+                    // Apply all matches for an action before recording its aggregate edge.
+                    var index = 0;
+                    while (index < _matches.Count)
                     {
-                        UpdateContribution(match.Action, new ActionSource(@event.Device, match.SourceIndex),
-                            match.Status, match.Exact, @event.InstanceID);
+                        var action = _matches[index].Action;
+                        var state = GetOrAddActionState(action);
+                        // The first registered match supplies the event's action status.
+                        if (!_matches[index].Status.Pressed)
+                            state.Contributions.Remove(SyntheticSource);
+                        do
+                        {
+                            var match = _matches[index++];
+                            SetContribution(state, new ActionSource(@event.Device, match.SourceIndex), match.Status, match.Exact);
+                        }
+                        while (index < _matches.Count && _matches[index].Action == action);
+                        Recalculate(state, @event.InstanceID);
                     }
                 }
             }
@@ -447,27 +484,8 @@ public sealed partial class Input : ElectronObject
 
             foreach (var state in _actions.Values)
             {
-                if (state.Pressed)
-                {
-                    state.ProcessJustReleased = true;
-                    state.PhysicsJustReleased = true;
-                    state.LastReleasedEventId = 0;
-                }
-
-                if (state.ExactPressed)
-                {
-                    state.ExactProcessJustReleased = true;
-                    state.ExactPhysicsJustReleased = true;
-                    state.ExactLastReleasedEventId = 0;
-                }
-
                 state.Contributions.Clear();
-                state.Pressed = false;
-                state.ExactPressed = false;
-                state.Strength = 0f;
-                state.RawStrength = 0f;
-                state.ExactStrength = 0f;
-                state.ExactRawStrength = 0f;
+                Recalculate(state);
             }
         }
     }
@@ -486,7 +504,22 @@ public sealed partial class Input : ElectronObject
     internal void OnActionMapChanged(string action, bool removed)
     {
         lock (_gate)
-            _actions.Remove(action);
+        {
+            if (removed)
+            {
+                _actions.Remove(action);
+                return;
+            }
+
+            if (!_actions.TryGetValue(action, out var state))
+                return;
+
+            ClearNonVirtualSources(state);
+            if (state.Contributions.Count == 0)
+                _actions.Remove(action);
+            else
+                Recalculate(state);
+        }
     }
 
     internal void CompleteFrame(bool physics)
@@ -519,23 +552,26 @@ public sealed partial class Input : ElectronObject
 
     private ActionSnapshot GetActionSnapshot(string action, bool exactMatch)
     {
-        EnsureRegisteredAction(action);
-        lock (_gate)
-        {
-            if (!_actions.TryGetValue(action, out var state))
-                return default;
+        lock (InputMap.Service.SyncRoot)
+            lock (_gate)
+            {
+                EnsureRegisteredAction(action);
+                if (!_actions.TryGetValue(action, out var state))
+                    return default;
 
-            return new ActionSnapshot(
-                exactMatch ? state.ExactPressed : state.Pressed,
-                exactMatch ? state.ExactStrength : state.Strength,
-                exactMatch ? state.ExactRawStrength : state.RawStrength,
-                exactMatch
-                    ? (_queryingPhysicsLane ? state.ExactPhysicsJustPressed : state.ExactProcessJustPressed)
-                    : (_queryingPhysicsLane ? state.PhysicsJustPressed : state.ProcessJustPressed),
-                exactMatch
-                    ? (_queryingPhysicsLane ? state.ExactPhysicsJustReleased : state.ExactProcessJustReleased)
-                    : (_queryingPhysicsLane ? state.PhysicsJustReleased : state.ProcessJustReleased));
-        }
+                return new ActionSnapshot(
+                    exactMatch ? state.ExactPressed : state.Pressed,
+                    exactMatch ? state.ExactStrength : state.Strength,
+                    exactMatch ? state.ExactRawStrength : state.RawStrength,
+                    exactMatch
+                        ? (_queryingPhysicsLane ? state.ExactPhysicsJustPressed : state.ExactProcessJustPressed)
+                        : (_queryingPhysicsLane ? state.PhysicsJustPressed : state.ProcessJustPressed),
+                    exactMatch
+                        ? (_queryingPhysicsLane ? state.ExactPhysicsJustReleased : state.ExactProcessJustReleased)
+                        : (_queryingPhysicsLane ? state.PhysicsJustReleased : state.ProcessJustReleased),
+                    exactMatch ? state.ExactLastPressedEventId : state.LastPressedEventId,
+                    exactMatch ? state.ExactLastReleasedEventId : state.LastReleasedEventId);
+            }
     }
 
     private bool IsActionTransitionByEvent(string action, InputEvent @event, bool exactMatch, bool pressed)
@@ -543,19 +579,9 @@ public sealed partial class Input : ElectronObject
         ArgumentNullException.ThrowIfNull(@event);
         @event.EnsureUsable();
         var snapshot = GetActionSnapshot(action, exactMatch);
-        if (pressed ? !snapshot.JustPressed : !snapshot.JustReleased)
-            return false;
-
-        lock (_gate)
-        {
-            if (!_actions.TryGetValue(action, out var state))
-                return false;
-
-            var eventId = exactMatch
-                ? (pressed ? state.ExactLastPressedEventId : state.ExactLastReleasedEventId)
-                : (pressed ? state.LastPressedEventId : state.LastReleasedEventId);
-            return eventId == @event.InstanceID;
-        }
+        return pressed
+            ? snapshot.JustPressed && snapshot.PressedEventId == @event.InstanceID
+            : snapshot.JustReleased && snapshot.ReleasedEventId == @event.InstanceID;
     }
 
     private void UpdateRawState(InputEvent @event)
@@ -617,12 +643,7 @@ public sealed partial class Input : ElectronObject
             _mouseButtonMask |= deviceMask;
     }
 
-    private void UpdateContribution(
-        string action,
-        ActionSource source,
-        InputActionMatch match,
-        bool exact,
-        ulong eventId)
+    private ActionState GetOrAddActionState(string action)
     {
         if (!_actions.TryGetValue(action, out var state))
         {
@@ -630,15 +651,54 @@ public sealed partial class Input : ElectronObject
             _actions.Add(action, state);
         }
 
-        var wasPressed = state.Pressed;
-        var wasExactPressed = state.ExactPressed;
+        return state;
+    }
 
-        if (match.Pressed)
-            state.Contributions[source] = new ActionContribution(match.Strength, match.RawStrength, exact);
+    private void UpdateContribution(string action, ActionSource source, InputActionMatch match, bool exact)
+    {
+        var state = GetOrAddActionState(action);
+        SetContribution(state, source, match, exact);
+        Recalculate(state);
+    }
+
+    private static void SetContribution(ActionState state, ActionSource source, InputActionMatch match, bool exact)
+    {
+        if (match.Pressed || match.RawStrength > 0f)
+            state.Contributions[source] = new ActionContribution(match, exact);
         else
             state.Contributions.Remove(source);
+    }
 
-        Recalculate(state);
+    private static void ClearNonVirtualSources(ActionState state)
+    {
+        foreach (var source in state.Contributions.Keys)
+            if (source.Owner == 0)
+                state.Contributions.Remove(source);
+    }
+
+    private static void Recalculate(ActionState state, ulong eventId = 0, bool forceRelease = false)
+    {
+        var wasPressed = state.Pressed;
+        var wasExactPressed = state.ExactPressed;
+        state.Pressed = false;
+        state.ExactPressed = false;
+        state.Strength = 0f;
+        state.RawStrength = 0f;
+        state.ExactStrength = 0f;
+        state.ExactRawStrength = 0f;
+
+        foreach (var (match, exact) in state.Contributions.Values)
+        {
+            state.Pressed |= match.Pressed;
+            state.Strength = Mathf.Max(state.Strength, match.Strength);
+            state.RawStrength = Mathf.Max(state.RawStrength, match.RawStrength);
+            if (exact)
+            {
+                state.ExactPressed |= match.Pressed;
+                state.ExactStrength = Mathf.Max(state.ExactStrength, match.Strength);
+                state.ExactRawStrength = Mathf.Max(state.ExactRawStrength, match.RawStrength);
+            }
+        }
 
         if (!wasPressed && state.Pressed)
         {
@@ -646,7 +706,7 @@ public sealed partial class Input : ElectronObject
             state.PhysicsJustPressed = true;
             state.LastPressedEventId = eventId;
         }
-        else if (wasPressed && !state.Pressed)
+        else if (!state.Pressed && (wasPressed || forceRelease))
         {
             state.ProcessJustReleased = true;
             state.PhysicsJustReleased = true;
@@ -659,40 +719,12 @@ public sealed partial class Input : ElectronObject
             state.ExactPhysicsJustPressed = true;
             state.ExactLastPressedEventId = eventId;
         }
-        else if (wasExactPressed && !state.ExactPressed)
+        else if (!state.ExactPressed && (wasExactPressed || forceRelease))
         {
             state.ExactProcessJustReleased = true;
             state.ExactPhysicsJustReleased = true;
             state.ExactLastReleasedEventId = eventId;
         }
-    }
-
-    private static void Recalculate(ActionState state)
-    {
-        var strength = 0f;
-        var rawStrength = 0f;
-        var exactStrength = 0f;
-        var exactRawStrength = 0f;
-        var exactPressed = false;
-
-        foreach (var contribution in state.Contributions.Values)
-        {
-            strength = Mathf.Max(strength, contribution.Strength);
-            rawStrength = Mathf.Max(rawStrength, contribution.RawStrength);
-            if (contribution.Exact)
-            {
-                exactPressed = true;
-                exactStrength = Mathf.Max(exactStrength, contribution.Strength);
-                exactRawStrength = Mathf.Max(exactRawStrength, contribution.RawStrength);
-            }
-        }
-
-        state.Strength = strength;
-        state.RawStrength = rawStrength;
-        state.ExactStrength = exactStrength;
-        state.ExactRawStrength = exactRawStrength;
-        state.Pressed = state.Contributions.Count != 0;
-        state.ExactPressed = exactPressed;
     }
 
     private static void UpdateSet(HashSet<Key> set, Key key, bool pressed)
@@ -736,8 +768,9 @@ public sealed partial class Input : ElectronObject
     private readonly record struct JoyButtonState(int Device, JoyButton Button);
     private readonly record struct JoyAxisState(int Device, JoyAxis Axis);
     private readonly record struct ActionSource(int Device, int EventIndex, ulong Owner = 0);
-    private readonly record struct ActionContribution(float Strength, float RawStrength, bool Exact);
-    private readonly record struct ActionSnapshot(bool Pressed, float Strength, float RawStrength, bool JustPressed, bool JustReleased);
+    private readonly record struct ActionContribution(InputActionMatch Match, bool Exact);
+    private readonly record struct ActionSnapshot(bool Pressed, float Strength, float RawStrength, bool JustPressed, bool JustReleased,
+        ulong PressedEventId, ulong ReleasedEventId);
 
     private sealed class ActionState
     {

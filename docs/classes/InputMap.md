@@ -220,7 +220,7 @@ Gets whether an action contains an exact event binding.
 <a id="m-electron2d-inputmap-actioneraseevent-system-string-electron2d-inputevent"></a>
 ### `public static void ActionEraseEvent(string action, InputEvent event)`
 
-Removes the first exact matching binding from an action, if present. An absent binding leaves the action and its pressed state unchanged; removing one invalidates cached action contributions. Existing binding snapshots retain their original event references.
+Removes the first exact matching binding from an action, if present. An absent binding leaves the action and its pressed state unchanged; removing one invalidates cached manual and parsed contributions. Attached virtual controls retain their own contributions. Existing binding snapshots retain their original event references.
 
 **Parameters**
 
