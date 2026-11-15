@@ -4,11 +4,13 @@ public sealed partial class Input
 {
     internal static bool SetVirtualContribution(ulong owner, int slot, string action, float strength)
     {
-        if (action.Length == 0 || !InputMap.HasAction(action)) return false;
-        lock (SharedInstance._gate)
+        lock (InputMap.Service.SyncRoot)
         {
-            SharedInstance.UpdateContribution(action, new ActionSource(InputEvent.DeviceIdInternal, MaxEventsPerAction + 1 + slot, owner),
-                strength > 0 ? new InputActionMatch(true, strength, strength) : default, exact: true, eventId: 0);
+            if (action.Length == 0 || !InputMap.HasAction(action))
+                return false;
+            lock (SharedInstance._gate)
+                SharedInstance.UpdateContribution(action, new ActionSource(InputEvent.DeviceIdInternal, MaxEventsPerAction + 1 + slot, owner),
+                    strength > 0 ? new InputActionMatch(true, strength, strength) : default);
         }
         return true;
     }

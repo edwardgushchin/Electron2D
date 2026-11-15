@@ -1892,6 +1892,19 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACTION_INPUT") is { } actionInputProfile)
+{
+    if (actionInputProfile == "windows")
+        InputActionNativeTests.Run();
+    else
+    {
+        VerifyInput();
+        VerifyInputEmulation();
+        InputActionSettingsTests.Run();
+    }
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GAMEPAD") == "1")
 {
     InputGamepadNativeTests.Run();

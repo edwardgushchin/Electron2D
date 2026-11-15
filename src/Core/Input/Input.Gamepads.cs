@@ -199,15 +199,9 @@ public sealed partial class Input
             foreach (var axis in _joyAxes.Keys.Where(axis => axis.Device == device).ToArray()) _joyAxes.Remove(axis);
             foreach (var state in _actions.Values)
             {
-                var wasPressed = state.Pressed;
-                var wasExactPressed = state.ExactPressed;
                 foreach (var source in state.Contributions.Keys.Where(source => source.Device == device).ToArray())
                     state.Contributions.Remove(source);
                 Recalculate(state);
-                if (wasPressed && !state.Pressed)
-                { state.ProcessJustReleased = true; state.PhysicsJustReleased = true; state.LastReleasedEventId = 0; }
-                if (wasExactPressed && !state.ExactPressed)
-                { state.ExactProcessJustReleased = true; state.ExactPhysicsJustReleased = true; state.ExactLastReleasedEventId = 0; }
             }
         }
         if (notify) BeginEventEmission(_publisherJoyConnectionChangedCore.Handlers)?.Invoke(device, false);
