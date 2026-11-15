@@ -59,7 +59,7 @@ public sealed partial class FileAccess : ElectronObject
     {
         _packed = packed;
         _path = path;
-        _absolutePath = packed ? "res://" + PCKFormat.Normalize(ResourceUID.EnsurePath(path)) : absolutePath;
+        _absolutePath = absolutePath;
         _physicalPath = stream is SaveAndSwapStream staged ? staged.PhysicalPath : _absolutePath;
         _mode = mode;
         _stream = stream;
@@ -99,11 +99,12 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Gets the path supplied when this file was opened.</summary>
-    /// <value>The original virtual or ordinary path.</value>
+    /// <value>The original virtual or ordinary path, retained after closing.</value>
     public string Path => _path;
 
-    /// <summary>Gets the current physical file path or mounted resource identity.</summary>
-    /// <value>The staging path for save-and-swap writes, resolved native path otherwise, or res:// identity for a mounted read-only file.</value>
+    /// <summary>Gets the file identity captured at open.</summary>
+    /// <value>The staging path for save-and-swap writes, the normalized <c>res://</c> identity for mounted reads,
+    /// or the resolved native path for ordinary files. Closing preserves this value.</value>
     public string AbsolutePath => _physicalPath;
 
     /// <summary>Gets whether the owned stream is still open.</summary>
@@ -272,7 +273,7 @@ public sealed partial class FileAccess : ElectronObject
     /// An open physical read-only stream can finish reading its original file after a staged replacement.
     /// Subsequent opens of the path see the replacement. I/O write failure aborts staging. A failed final
     /// replacement retains completed staging for recovery. A mounted directory at a resource path masks
-    /// any physical file at that path.</remarks>
+    /// any physical file at that path. An open instance keeps its stream and identity when project roots or mounts change.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
@@ -280,20 +281,22 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess Open(string path, FileAccessModeFlags mode)
     {
-        var absolutePath = ResolvePath(path);
         ValidateMode(mode);
-        if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
-        if (mode == FileAccessModeFlags.Read && ResourcePacks.Runtime.TryOpen(path, out var packed))
-            return new FileAccess(path, "res://" + PCKFormat.Normalize(ResourceUID.EnsurePath(path)), mode, packed, packed: true);
-        var stream = OpenPhysical(absolutePath, mode);
-        return new FileAccess(path, absolutePath, mode, stream);
+        if (mode == FileAccessModeFlags.Read)
+        {
+            var stream = ResourcePacks.Runtime.OpenRead(path, out var identity, out var packed);
+            return new FileAccess(path, identity, mode, stream, packed: packed);
+        }
+
+        var absolutePath = ResolveWritablePath(path);
+        return new FileAccess(path, absolutePath, mode, OpenPhysical(absolutePath, mode));
     }
 
     /// <summary>Creates a uniquely named temporary file and opens it.</summary>
     /// <param name="mode">The permitted operations.</param>
     /// <param name="prefix">An optional filename prefix without directory separators. A hyphen separates it from the random name.</param>
     /// <param name="extension">An optional extension, with or without a leading period.</param>
-    /// <param name="keep">Whether closing the returned instance preserves the file.</param>
+    /// <param name="keep">Whether closing or disposing the returned instance preserves the file.</param>
     /// <returns>An open temporary file owner.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="prefix"/> or <paramref name="extension"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">A filename part is invalid or the mode is invalid.</exception>
@@ -371,11 +374,8 @@ public sealed partial class FileAccess : ElectronObject
         FileCompressionMode compressionMode = FileCompressionMode.FastLz)
     {
         ValidateCompressionMode(compressionMode);
-        var absolutePath = ResolvePath(path);
-        ValidateMode(mode);
-        if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
-        var packed = false;
-        var data = Truncates(mode) ? [] : DecodeCompressed(ResourcePacks.ReadBytes(path, out packed), compressionMode);
+        var input = ReadTransformedInput(path, mode, out var absolutePath, out var packed);
+        var data = Truncates(mode) ? [] : DecodeCompressed(input, compressionMode);
         var stream = CreateMemoryStream(data);
         if (mode == FileAccessModeFlags.Read)
             return new FileAccess(path, absolutePath, mode, stream, packed: packed);
@@ -388,7 +388,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="mode">The required access mode.</param>
     /// <param name="key">Exactly 32 key bytes.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
-    /// <remarks>Writing uses a fresh random nonce for every atomic commit.</remarks>
+    /// <remarks>Read and ReadWrite authenticate existing data. Write and WriteRead start empty.
+    /// Writable instances commit to the destination captured at open, using a fresh random nonce for each commit.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="key"/> is not exactly 32 bytes or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
@@ -400,11 +401,8 @@ public sealed partial class FileAccess : ElectronObject
     {
         ValidateEncryptionKey(key);
         EnsureEncryptionSupported();
-        var absolutePath = ResolvePath(path);
-        ValidateMode(mode);
-        if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
-        var packed = false;
-        var data = Truncates(mode) ? [] : Decrypt(ResourcePacks.ReadBytes(path, out packed), key, RawKeyEncryption, out _);
+        var input = ReadTransformedInput(path, mode, out var absolutePath, out var packed);
+        var data = Truncates(mode) ? [] : Decrypt(input, key, RawKeyEncryption, out _);
         var stream = CreateMemoryStream(data);
         CryptographicOperations.ZeroMemory(data);
         if (mode == FileAccessModeFlags.Read)
@@ -426,7 +424,8 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="mode">The required access mode.</param>
     /// <param name="password">A nonempty password.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
-    /// <remarks>A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key; commits use fresh nonces.</remarks>
+    /// <remarks>Read and ReadWrite authenticate existing data. Write and WriteRead start empty.
+    /// A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> or <paramref name="password"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="password"/> is empty or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
@@ -440,11 +439,7 @@ public sealed partial class FileAccess : ElectronObject
         if (password.Length == 0)
             throw new ArgumentException("An encryption password cannot be empty.", nameof(password));
         EnsureEncryptionSupported();
-        var absolutePath = ResolvePath(path);
-        ValidateMode(mode);
-        if (CanWrite(mode)) ResourcePacks.Runtime.EnsureWritable(path);
-
-        var packed = false;
+        var envelope = ReadTransformedInput(path, mode, out var absolutePath, out var packed);
         byte[] salt;
         byte[] data;
         if (Truncates(mode))
@@ -454,7 +449,6 @@ public sealed partial class FileAccess : ElectronObject
         }
         else
         {
-            var envelope = ResourcePacks.ReadBytes(path, out packed);
             ParseEncryptionEnvelope(envelope, PasswordEncryption, out _, out var saltOffset, out var saltLength);
             salt = envelope.AsSpan(saltOffset, saltLength).ToArray();
             var readKey = DeriveKey(password, salt);
@@ -504,9 +498,12 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Flushes pending data to the physical file.</summary>
-    /// <remarks>Transformed data atomically replaces the destination. Save-and-swap streams flush staging without publishing it; ordinary streams flush to disk.</remarks>
+    /// <remarks>Transformed data atomically replaces the destination. If replacement fails, the instance
+    /// retains its pending data and cursor so the caller can retry. Save-and-swap streams flush staging without
+    /// publishing it. Ordinary streams flush to disk.</remarks>
     /// <exception cref="InvalidOperationException">The file is closed or was opened read-only.</exception>
     /// <exception cref="IOException">The data cannot be persisted.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller cannot replace the physical file.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public void Flush()
     {
@@ -1059,7 +1056,11 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="UnauthorizedAccessException">A virtual path escapes its configured root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static bool FileExists(string path) => ResourcePacks.Runtime.TrySize(path, out _) || !ResourcePacks.Runtime.BlocksPhysicalFile(path) && File.Exists(ResolvePath(path));
+    public static bool FileExists(string path)
+    {
+        var size = ResourcePacks.Runtime.GetFileSize(path, out var absolutePath, out var blocked);
+        return size.HasValue || !blocked && File.Exists(absolutePath);
+    }
 
     /// <summary>Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack.</summary>
     /// <param name="path">The file path.</param>
@@ -1073,7 +1074,7 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack.</summary>
     /// <param name="path">The file path.</param>
-    /// <returns>The decoded text.</returns>
+    /// <returns>An immutable snapshot of the decoded text, retaining a leading BOM, embedded NULs, and carriage returns.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="DecoderFallbackException">The file is not valid UTF-8.</exception>
@@ -1104,15 +1105,28 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Gets a file's length without opening a persistent instance.</summary>
     /// <param name="path">The file path.</param>
-    /// <returns>The physical byte count.</returns>
+    /// <returns>The byte count of the physical file or mounted entry. A symbolic link reports its target size.
+    /// For a transformed container this is its encoded size.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="FileNotFoundException">The file does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static long GetSize(string path) => ResourcePacks.Runtime.TrySize(path, out var size) ? size : GetFileInfo(path).Length;
+    public static long GetSize(string path)
+    {
+        var size = ResourcePacks.Runtime.GetFileSize(path, out var absolutePath, out var blocked);
+        if (blocked)
+            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
+        if (size.HasValue)
+            return size.Value;
 
-    /// <summary>Computes a file's MD5 digest.</summary>
+        var file = new FileInfo(absolutePath);
+        if (file.Exists && (file.Attributes & FileAttributes.ReparsePoint) != 0)
+            file = file.ResolveLinkTarget(returnFinalTarget: true) as FileInfo ?? file;
+        return file.Length;
+    }
+
+    /// <summary>Computes the MD5 digest of the selected physical file or mounted entry bytes.</summary>
     /// <param name="path">The file path.</param>
     /// <returns>A lowercase hexadecimal digest.</returns>
     /// <remarks>MD5 is provided for compatibility and integrity checks, not security decisions.</remarks>
@@ -1123,7 +1137,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static string GetMD5(string path) => ComputeHash(path, MD5.Create());
 
-    /// <summary>Computes a file's SHA-256 digest.</summary>
+    /// <summary>Computes the SHA-256 digest of the selected physical file or mounted entry bytes.</summary>
     /// <param name="path">The file path.</param>
     /// <returns>A lowercase hexadecimal digest.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -1885,6 +1899,32 @@ public sealed partial class FileAccess : ElectronObject
             throw new ArgumentException("A file path cannot be empty.", nameof(path));
         ResourcePacks.Runtime.EnsureFilePath(path);
         return ProjectSettings.GlobalizePath(path);
+    }
+
+    private static string ResolveWritablePath(string path)
+    {
+        var resolved = ResourceUID.EnsurePath(path);
+        var absolutePath = ResolvePath(resolved);
+        ResourcePacks.Runtime.EnsureWritable(resolved);
+        return absolutePath;
+    }
+
+    private static byte[] ReadTransformedInput(string path, FileAccessModeFlags mode, out string absolutePath, out bool packed)
+    {
+        ValidateMode(mode);
+        if (mode == FileAccessModeFlags.Read)
+        {
+            using var stream = ResourcePacks.Runtime.OpenRead(path, out absolutePath, out packed);
+            return ResourcePacks.ReadSnapshot(stream);
+        }
+
+        packed = false;
+        absolutePath = ResolveWritablePath(path);
+        if (Truncates(mode))
+            return [];
+
+        using var physical = OpenPhysicalRead(absolutePath);
+        return ResourcePacks.ReadSnapshot(physical);
     }
 
     private static void ValidateCompressionMode(FileCompressionMode mode)

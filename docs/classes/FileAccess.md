@@ -130,9 +130,9 @@ Gets the path supplied when this file was opened.
 <a id="p-electron2d-fileaccess-absolutepath"></a>
 ### `public string AbsolutePath { get; }`
 
-Gets the physical operating-system path, including staging when save and swap is enabled.
+Gets the file identity captured at open.
 
-**Value:** The staging path for save-and-swap writes, the resolved native path otherwise, or the mounted res:// identity.
+**Value:** The staging path for save-and-swap writes, the normalized `res://` identity for mounted reads, or the resolved native path for ordinary files. Closing preserves this value.
 
 <a id="p-electron2d-fileaccess-isopen"></a>
 ### `public bool IsOpen { get; }`
@@ -269,7 +269,7 @@ Creates a uniquely named temporary file and opens it.
 - `mode`: The permitted operations.
 - `prefix`: An optional filename prefix without directory separators. A hyphen separates it from the random name.
 - `extension`: An optional extension, with or without a leading period.
-- `keep`: Whether closing the returned instance preserves the file.
+- `keep`: Whether closing or disposing the returned instance preserves the file.
 
 **Returns:** An open temporary file owner.
 
@@ -328,7 +328,7 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
-**Remarks:** Writing uses a fresh random nonce for every atomic commit.
+**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable instances commit to the destination captured at open, using a fresh random nonce for each commit.
 
 <a id="m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string"></a>
 ### `public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`
@@ -353,7 +353,7 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
-**Remarks:** A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key; commits use fresh nonces.
+**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.
 
 <a id="m-electron2d-fileaccess-close"></a>
 ### `public void Close()`
@@ -378,9 +378,10 @@ Flushes pending data to the physical file.
 
 - `InvalidOperationException`: The file is closed or was opened read-only.
 - `IO.IOException`: The data cannot be persisted.
+- `UnauthorizedAccessException`: The caller cannot replace the physical file.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** Transformed data atomically replaces the destination. Save-and-swap streams persist staging without publishing it; ordinary streams flush to disk.
+**Remarks:** Transformed data atomically replaces the destination. If replacement fails, the instance retains its pending data and cursor so the caller can retry. Save-and-swap streams flush staging without publishing it. Ordinary streams flush to disk.
 
 <a id="m-electron2d-fileaccess-seek-system-int64"></a>
 ### `public void Seek(long position)`
@@ -902,7 +903,7 @@ Reads a complete file as strict UTF-8 from a physical path, a directory-backed v
 
 - `path`: The file path.
 
-**Returns:** The decoded text.
+**Returns:** An immutable snapshot of the decoded text, retaining a leading BOM, embedded NULs, and carriage returns.
 
 **Exceptions**
 
@@ -960,7 +961,7 @@ Gets a file's length without opening a persistent instance.
 
 - `path`: The file path.
 
-**Returns:** The physical byte count.
+**Returns:** The byte count of the physical file or mounted entry. A symbolic link reports its target size. For a transformed container this is its encoded size.
 
 **Exceptions**
 
@@ -973,7 +974,7 @@ Gets a file's length without opening a persistent instance.
 <a id="m-electron2d-fileaccess-getmd5-system-string"></a>
 ### `public static string GetMD5(string path)`
 
-Computes a file's MD5 digest.
+Computes the MD5 digest of the selected physical file or mounted entry bytes.
 
 **Parameters**
 
@@ -994,7 +995,7 @@ Computes a file's MD5 digest.
 <a id="m-electron2d-fileaccess-getsha256-system-string"></a>
 ### `public static string GetSHA256(string path)`
 
-Computes a file's SHA-256 digest.
+Computes the SHA-256 digest of the selected physical file or mounted entry bytes.
 
 **Parameters**
 
@@ -1262,7 +1263,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Lifecycle and state transitions
 
-1. A static open validates path, exact mode, codec/key/password, and existing-file requirements before returning ownership.
+1. A static open validates path, exact mode, codec/key/password, and existing-file requirements before returning ownership. The owner keeps its file identity when project roots or mounts change.
 2. Raw files operate directly. Compressed/encrypted files decode fully into a seekable memory stream before the instance is published.
 3. Writes mark transformed state dirty. `Flush` encodes a complete snapshot and atomically replaces the physical destination; the in-memory cursor is restored.
 4. `Close` commits when writable, releases/zeroes memory, removes a disposable temporary file, and enters the closed state. `Dispose` then enters the inherited terminal state.
