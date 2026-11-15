@@ -8,7 +8,7 @@ internal static class LinkButtonTests
 {
     internal static void Run()
     {
-        DefaultsAndStorage(); LayoutAndResources(); Routing(); CaptureGuard(); FreshProcess(); WarmFrames();
+        DefaultsAndStorage(); StructuredParserValidation(); LayoutAndResources(); Routing(); CaptureGuard(); FreshProcess(); WarmFrames();
         Console.WriteLine("LinkButton: defaults/storage, shaping/RTL/ellipsis/BIDI, input, borrowed font lifecycle, fresh file/isolated URI launch and 64 warm active/idle frames passed.");
     }
     private static void DefaultsAndStorage()
@@ -27,6 +27,14 @@ internal static class LinkButtonTests
         using var scene = new PackedScene(); scene.Pack(link); using var copy = (LinkButton)scene.Instantiate();
         Check(copy.Text == link.Text && copy.URI == link.URI && copy.EllipsisChar == "😀" && copy.Underline == link.Underline && copy.Language == "ar" && copy.TextDirection == TextDirection.RTL && copy.TextOverrunBehavior == link.TextOverrunBehavior && copy.StructuredTextBIDIOverride == StructuredTextParser.List && copy.StructuredTextBIDIOverrideOptions[0] == "/" && copy.FocusMode == FocusMode.Accessibility, "Every authored field survives packing with concrete defaults.");
         link.Dispose(); Reject<ObjectDisposedException>(() => _ = link.URI);
+    }
+    private static void StructuredParserValidation()
+    {
+        var server = TextServerManager.GetPrimaryInterface();
+        foreach (var parser in Enum.GetValues<StructuredTextParser>())
+            _ = server.ParseStructuredText(parser, new[] { "/" }, "ab/אב");
+        foreach (var value in new[] { int.MinValue, -1, 5, 7, int.MaxValue })
+            Reject<ArgumentOutOfRangeException>(() => server.ParseStructuredText((StructuredTextParser)value, Array.Empty<string>(), "text"));
     }
     private static void LayoutAndResources()
     {
@@ -242,7 +250,9 @@ internal static class LinkButtonTests
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 64; i++) { link.Text = (i & 1) == 0 ? "warm A" : "warm V"; link.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(link, vertices, batches); }
         var active = GC.GetAllocatedBytesForCurrentThread() - before; Check(active == 0, "Warm link layout/recording bytes=" + active);
-        before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) tree.ProcessFrame(0); Check(GC.GetAllocatedBytesForCurrentThread() - before == 0, "Idle font polling allocates zero.");
+        before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) tree.ProcessFrame(0);
+        var idle = GC.GetAllocatedBytesForCurrentThread() - before; Check(idle == 0, "Idle font polling allocates zero.");
+        Console.WriteLine($"LinkButton warm frames: 64 active bytes={active}, 64 idle bytes={idle}.");
     }
     private static void Click(Viewport root) { using var down = new InputEventMouseButton { Position = new(20, 20), ButtonIndex = MouseButton.Left, Pressed = true }; using var up = new InputEventMouseButton { Position = new(20, 20), ButtonIndex = MouseButton.Left }; root.PushInput(down, true); root.PushInput(up, true); }
     private static void ActionInput(Viewport root) { using var down = new InputEventAction { Action = "ui_accept", Pressed = true }; using var up = new InputEventAction { Action = "ui_accept" }; root.PushInput(down, true); root.PushInput(up, true); }
