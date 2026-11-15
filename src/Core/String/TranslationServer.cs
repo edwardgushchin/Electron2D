@@ -6,27 +6,56 @@ namespace Electron2D;
 
 /// <summary>Stores and resolves process-wide in-memory translations for the selected UI culture.</summary>
 /// <remarks>
+/// Static operations use the process-lifetime object registered with <see cref="Engine"/>.
+/// The object supports typed property inspection and rejects caller disposal.
 /// Lookups use exact, case-sensitive domain, context, and source-message keys. Default-aware locale scores rank
 /// selected/parent direct entries and borrowed resource catalogs before the configured fallback. Direct entries win
 /// score ties; later resource registrations win equal resource scores. Parsed locale identities are weakly retained
 /// independently of live message results. Fixed locale metadata and integer plural rules support resource catalogs.
 /// </remarks>
-public static partial class TranslationServer
+public sealed partial class TranslationServer : ElectronObject
 {
     private sealed record LocaleParts(string Language, string Script, string Region, string Variant);
     private static readonly ConditionalWeakTable<string, LocaleParts> LocaleIdentities = new();
-    private static readonly object Gate = new();
-    private static readonly Dictionary<(string Culture, string Domain, string Context, string Message), string> Messages = new();
-    private static readonly Dictionary<(string Culture, string Domain, string Context, string Singular, string Plural), Func<long, string>> Plurals = new();
-    private static readonly Dictionary<string, TranslationDomain> Domains = new(StringComparer.Ordinal);
+    private static readonly PropertyDescriptor[] TranslationProperties =
+    [
+        new PropertyDescriptor<TranslationServer, CultureInfo>(nameof(Culture),
+            server => server.CultureCore, (server, value) => server.CultureCore = value),
+        new PropertyDescriptor<TranslationServer, bool>(nameof(PseudolocalizationEnabled),
+            server => server.PseudolocalizationEnabledCore, (server, value) => server.PseudolocalizationEnabledCore = value),
+    ];
 
-    private static CultureInfo _culture = CultureInfo.CurrentUICulture;
-    private static CultureInfo? _fallbackCulture = CultureInfo.GetCultureInfo("en");
-    private static int _enabled = 1;
+    internal static TranslationServer Service { get; } = new();
+
+    private readonly object _gate = new();
+    private readonly Dictionary<(string Culture, string Domain, string Context, string Message), string> _messages = new();
+    private readonly Dictionary<(string Culture, string Domain, string Context, string Singular, string Plural), Func<long, string>> _plurals = new();
+    private readonly Dictionary<string, TranslationDomain> _domains = new(StringComparer.Ordinal);
+
+    private CultureInfo _culture = CultureInfo.CurrentUICulture;
+    private CultureInfo? _fallbackCulture = CultureInfo.GetCultureInfo("en");
+    private int _enabled = 1;
+
+    private TranslationServer() { }
+
+    /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
+        base.GetPropertyDescriptors().Concat(TranslationProperties);
+
+    /// <inheritdoc />
+    /// <remarks>The process-wide translation service has process lifetime and cannot be disposed.</remarks>
+    protected override void ValidateDisposal() =>
+        throw new InvalidOperationException("The process-wide TranslationServer service cannot be disposed.");
 
     /// <summary>Gets or sets whether translation lookup is enabled globally.</summary>
     /// <value><see langword="true"/> by default. When false, lookup returns source text without consulting the catalogs.</value>
     internal static bool Enabled
+    {
+        get => Service.EnabledCore;
+        set => Service.EnabledCore = value;
+    }
+
+    private bool EnabledCore
     {
         get => Volatile.Read(ref _enabled) != 0;
         set => Volatile.Write(ref _enabled, value ? 1 : 0);
@@ -44,16 +73,22 @@ public static partial class TranslationServer
     /// <exception cref="Exception">The active application loop rejects notification or an observer fails after commitment.</exception>
     public static CultureInfo Culture
     {
+        get => Service.CultureCore;
+        set => Service.CultureCore = value;
+    }
+
+    private CultureInfo CultureCore
+    {
         get
         {
-            lock (Gate)
+            lock (_gate)
                 return _culture;
         }
         set
         {
             ArgumentNullException.ThrowIfNull(value);
             bool changed;
-            lock (Gate)
+            lock (_gate)
             {
                 changed = !string.Equals(_culture.Name, value.Name, StringComparison.Ordinal);
                 _culture = value;
@@ -64,8 +99,14 @@ public static partial class TranslationServer
 
     internal static CultureInfo? FallbackCulture
     {
-        get { lock (Gate) return _fallbackCulture; }
-        set { lock (Gate) _fallbackCulture = value; }
+        get => Service.FallbackCultureCore;
+        set => Service.FallbackCultureCore = value;
+    }
+
+    private CultureInfo? FallbackCultureCore
+    {
+        get { lock (_gate) return _fallbackCulture; }
+        set { lock (_gate) _fallbackCulture = value; }
     }
 
     /// <summary>Scores how closely two default-aware catalog locale identities match.</summary>
@@ -92,12 +133,15 @@ public static partial class TranslationServer
     /// <summary>Gets the best loaded main-domain catalog locale for the selected culture, or the configured fallback.</summary>
     /// <returns>The matching catalog locale, the current culture for an exact match, or the fallback locale.</returns>
     /// <remarks>Reuses the domain's internal catalog snapshot and compares prepared default-aware locale identities without allocating after preparation. Catalog locale changes are observed on every lookup.</remarks>
-    public static string GetToolLocale()
+    public static string GetToolLocale() =>
+        Service.GetToolLocaleCore();
+
+    private string GetToolLocaleCore()
     {
-        var requested = Culture.Name;
+        var requested = CultureCore.Name;
         var bestScore = 0;
         string? best = null;
-        foreach (var translation in GetOrAddDomain(string.Empty).GetLookupSnapshot())
+        foreach (var translation in GetOrAddDomainCore(string.Empty).GetLookupSnapshot())
         {
             try
             {
@@ -110,7 +154,7 @@ public static partial class TranslationServer
             }
             catch (ObjectDisposedException) when (translation.IsDisposed) { }
         }
-        return best ?? FallbackCulture?.Name ?? string.Empty;
+        return best ?? FallbackCultureCore?.Name ?? string.Empty;
     }
 
     private static LocaleParts ParseLocale(string locale) => LocaleIdentities.GetValue(locale, static key =>
@@ -134,17 +178,20 @@ public static partial class TranslationServer
         string domain,
         string message,
         string translation,
-        string? context = null)
+        string? context = null) =>
+        Service.AddTranslationCore(culture, domain, message, translation, context);
+
+    private void AddTranslationCore(CultureInfo culture, string domain, string message, string translation, string? context)
     {
         ArgumentNullException.ThrowIfNull(culture);
         ArgumentNullException.ThrowIfNull(domain);
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(translation);
 
-        lock (Gate)
+        lock (_gate)
         {
             EnsureDomainUnderLock(domain);
-            Messages[(culture.Name, domain, context ?? string.Empty, message)] = translation;
+            _messages[(culture.Name, domain, context ?? string.Empty, message)] = translation;
         }
     }
 
@@ -165,7 +212,10 @@ public static partial class TranslationServer
         string singular,
         string plural,
         Func<long, string> selector,
-        string? context = null)
+        string? context = null) =>
+        Service.AddPluralTranslationCore(culture, domain, singular, plural, selector, context);
+
+    private void AddPluralTranslationCore(CultureInfo culture, string domain, string singular, string plural, Func<long, string> selector, string? context)
     {
         ArgumentNullException.ThrowIfNull(culture);
         ArgumentNullException.ThrowIfNull(domain);
@@ -173,10 +223,10 @@ public static partial class TranslationServer
         ArgumentNullException.ThrowIfNull(plural);
         ArgumentNullException.ThrowIfNull(selector);
 
-        lock (Gate)
+        lock (_gate)
         {
             EnsureDomainUnderLock(domain);
-            Plurals[(culture.Name, domain, context ?? string.Empty, singular, plural)] = selector;
+            _plurals[(culture.Name, domain, context ?? string.Empty, singular, plural)] = selector;
         }
     }
 
@@ -186,24 +236,30 @@ public static partial class TranslationServer
     /// <remarks>The most recently registered resource wins within one locale. Disposing the resource removes it.</remarks>
     /// <exception cref="ArgumentNullException">An argument is null.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
-    public static void AddTranslation(Translation translation, string domain = "")
+    public static void AddTranslation(Translation translation, string domain = "") =>
+        Service.AddTranslationCore(translation, domain);
+
+    private void AddTranslationCore(Translation translation, string domain)
     {
         ArgumentNullException.ThrowIfNull(translation);
         ArgumentNullException.ThrowIfNull(domain);
         if (translation.IsDisposed) throw new ObjectDisposedException(nameof(translation));
-        GetOrAddDomain(domain).AddTranslation(translation);
+        GetOrAddDomainCore(domain).AddTranslation(translation);
     }
 
     /// <summary>Unregisters a translation resource from a domain without disposing it.</summary>
     /// <param name="translation">The resource to remove.</param>
     /// <param name="domain">The registration domain.</param>
     /// <exception cref="ArgumentNullException">An argument is null.</exception>
-    public static void RemoveTranslation(Translation translation, string domain = "")
+    public static void RemoveTranslation(Translation translation, string domain = "") =>
+        Service.RemoveTranslationCore(translation, domain);
+
+    private void RemoveTranslationCore(Translation translation, string domain)
     {
         ArgumentNullException.ThrowIfNull(translation);
         ArgumentNullException.ThrowIfNull(domain);
         TranslationDomain? registered;
-        lock (Gate) Domains.TryGetValue(domain, out registered);
+        lock (_gate) _domains.TryGetValue(domain, out registered);
         if (registered is not null)
         {
             try { registered.RemoveTranslation(translation); }
@@ -214,30 +270,39 @@ public static partial class TranslationServer
     /// <summary>Returns a registered translation domain, creating it if necessary.</summary>
     /// <param name="name">The exact case-sensitive domain name; empty selects the main domain.</param>
     /// <returns>A caller-visible borrowed domain; disposing it removes its registration.</returns>
-    public static TranslationDomain GetOrAddDomain(string name)
+    public static TranslationDomain GetOrAddDomain(string name) =>
+        Service.GetOrAddDomainCore(name);
+
+    private TranslationDomain GetOrAddDomainCore(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
-        lock (Gate) return EnsureDomainUnderLock(name);
+        lock (_gate) return EnsureDomainUnderLock(name);
     }
 
     /// <summary>Reports whether a named domain is registered.</summary>
     /// <param name="name">The exact domain name.</param>
     /// <returns>True for the main domain or a live custom domain.</returns>
-    public static bool HasDomain(string name)
+    public static bool HasDomain(string name) =>
+        Service.HasDomainCore(name);
+
+    private bool HasDomainCore(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
-        lock (Gate) return name.Length == 0 || Domains.TryGetValue(name, out var domain) && !domain.IsDisposed;
+        lock (_gate) return name.Length == 0 || _domains.TryGetValue(name, out var domain) && !domain.IsDisposed;
     }
 
     /// <summary>Removes a custom domain and its direct entries without disposing the domain or its catalogs.</summary>
     /// <param name="name">A nonempty exact domain name.</param>
-    public static void RemoveDomain(string name)
+    public static void RemoveDomain(string name) =>
+        Service.RemoveDomainCore(name);
+
+    private void RemoveDomainCore(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
         if (name.Length == 0) throw new ArgumentException("The main translation domain cannot be removed.", nameof(name));
-        lock (Gate)
+        lock (_gate)
         {
-            if (Domains.Remove(name, out var removed))
+            if (_domains.Remove(name, out var removed))
             {
                 removed.Disposed -= OnDomainDisposed;
                 if (!removed.IsDisposed) removed.SetRegisteredName(null);
@@ -296,8 +361,14 @@ public static partial class TranslationServer
     /// <exception cref="Exception">Resource refresh or application notification fails after the switch is committed.</exception>
     public static bool PseudolocalizationEnabled
     {
-        get => GetOrAddDomain(string.Empty).PseudolocalizationEnabled;
-        set { GetOrAddDomain(string.Empty).PseudolocalizationEnabled = value; NotifyTranslationChanged(); }
+        get => Service.PseudolocalizationEnabledCore;
+        set => Service.PseudolocalizationEnabledCore = value;
+    }
+
+    private bool PseudolocalizationEnabledCore
+    {
+        get => GetOrAddDomainCore(string.Empty).PseudolocalizationEnabled;
+        set { GetOrAddDomainCore(string.Empty).PseudolocalizationEnabled = value; NotifyTranslationChanged(); }
     }
 
     /// <summary>Pseudolocalizes text using the main domain's options.</summary>
@@ -311,7 +382,10 @@ public static partial class TranslationServer
     /// Associated localized resources reload before that notification. Active scene delivery requires its owner
     /// thread. Configured file reloads allocate and may block; errors preserve completed changes.</remarks>
     /// <exception cref="Exception">Option preparation or application notification fails; committed options remain visible.</exception>
-    public static void ReloadPseudolocalization()
+    public static void ReloadPseudolocalization() =>
+        Service.ReloadPseudolocalizationCore();
+
+    private void ReloadPseudolocalizationCore()
     {
         ApplyProjectPseudolocalization();
         NotifyTranslationChanged();
@@ -328,10 +402,10 @@ public static partial class TranslationServer
         if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
     }
 
-    private static void ApplyProjectPseudolocalization()
+    private void ApplyProjectPseudolocalization()
     {
         var settings = ProjectSettings.Service;
-        var domain = GetOrAddDomain(string.Empty);
+        var domain = GetOrAddDomainCore(string.Empty);
         domain.PseudolocalizationAccentsEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationReplaceWithAccents);
         domain.PseudolocalizationDoubleVowelsEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationDoubleVowels);
         domain.PseudolocalizationFakeBIDIEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationFakeBIDI);
@@ -342,7 +416,10 @@ public static partial class TranslationServer
         domain.PseudolocalizationSkipPlaceholdersEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationSkipPlaceholders);
     }
 
-    internal static void LoadProjectLocalization()
+    internal static void LoadProjectLocalization() =>
+        Service.LoadProjectLocalizationCore();
+
+    private void LoadProjectLocalizationCore()
     {
         var settings = ProjectSettings.Service;
         var test = settings.GetWithOverrideCore(ProjectSettings.LocaleTest).Trim();
@@ -350,12 +427,12 @@ public static partial class TranslationServer
         var culture = test.Length == 0 ? CultureInfo.CurrentUICulture : CultureInfo.GetCultureInfo(test.Replace('_', '-'));
         var fallbackCulture = fallback.Length == 0 ? null : CultureInfo.GetCultureInfo(fallback.Replace('_', '-'));
         ApplyProjectPseudolocalization();
-        lock (Gate)
+        lock (_gate)
         {
             _culture = culture;
             _fallbackCulture = fallbackCulture;
         }
-        GetOrAddDomain(string.Empty).PseudolocalizationEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationEnabled);
+        GetOrAddDomainCore(string.Empty).PseudolocalizationEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationEnabled);
         NotifyTranslationChanged();
     }
 
@@ -365,20 +442,23 @@ public static partial class TranslationServer
     /// <param name="context">An optional disambiguation context. Null is equivalent to an empty string.</param>
     /// <returns>The highest-ranked direct or resource translation, or <paramref name="message"/> when none exists or translation is disabled.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="domain"/> or <paramref name="message"/> is <see langword="null"/>.</exception>
-    public static string Translate(string domain, string message, string? context = null)
+    public static string Translate(string domain, string message, string? context = null) =>
+        Service.TranslateCore(domain, message, context);
+
+    private string TranslateCore(string domain, string message, string? context)
     {
         ArgumentNullException.ThrowIfNull(domain);
         ArgumentNullException.ThrowIfNull(message);
 
-        if (!Enabled)
+        if (!EnabledCore)
             return message;
 
         CultureInfo culture;
         TranslationDomain? catalogDomain;
-        lock (Gate)
+        lock (_gate)
         {
             culture = _culture;
-            Domains.TryGetValue(domain, out catalogDomain);
+            _domains.TryGetValue(domain, out catalogDomain);
         }
         if (catalogDomain is not null)
         {
@@ -390,7 +470,7 @@ public static partial class TranslationServer
             catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { catalogDomain = null; }
         }
         var translated = FindSingular(culture, domain, message, context ?? string.Empty, catalogDomain);
-        if (translated is null && FallbackCulture is { } fallback)
+        if (translated is null && FallbackCultureCore is { } fallback)
             translated = FindSingular(fallback, domain, message, context ?? string.Empty, catalogDomain);
         try { return catalogDomain is null ? translated ?? message : catalogDomain.ApplyPseudo(translated ?? message); }
         catch (ObjectDisposedException) when (catalogDomain?.IsDisposed == true) { return translated ?? message; }
@@ -417,21 +497,24 @@ public static partial class TranslationServer
         string singular,
         string plural,
         long count,
-        string? context = null)
+        string? context = null) =>
+        Service.TranslatePluralCore(domain, singular, plural, count, context);
+
+    private string TranslatePluralCore(string domain, string singular, string plural, long count, string? context)
     {
         ArgumentNullException.ThrowIfNull(domain);
         ArgumentNullException.ThrowIfNull(singular);
         ArgumentNullException.ThrowIfNull(plural);
 
-        if (!Enabled)
+        if (!EnabledCore)
             return count == 1 ? singular : plural;
 
         CultureInfo culture;
         TranslationDomain? catalogDomain;
-        lock (Gate)
+        lock (_gate)
         {
             culture = _culture;
-            Domains.TryGetValue(domain, out catalogDomain);
+            _domains.TryGetValue(domain, out catalogDomain);
         }
         if (catalogDomain is not null)
         {
@@ -443,19 +526,19 @@ public static partial class TranslationServer
             catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { catalogDomain = null; }
         }
         var translated = FindPlural(culture, domain, singular, plural, count, context ?? string.Empty, catalogDomain);
-        if (translated is null && FallbackCulture is { } fallback)
+        if (translated is null && FallbackCultureCore is { } fallback)
             translated = FindPlural(fallback, domain, singular, plural, count, context ?? string.Empty, catalogDomain);
         return translated ?? (count == 1 ? singular : plural);
     }
 
-    private static string? FindSingular(CultureInfo culture, string domain, string message, string context, TranslationDomain? catalogDomain)
+    private string? FindSingular(CultureInfo culture, string domain, string message, string context, TranslationDomain? catalogDomain)
     {
         string? direct = null;
         var bestScore = 0;
-        foreach (var cultureName in TranslationDomain.CultureChain(culture))
+        foreach (var cultureName in global::Electron2D.TranslationDomain.CultureChain(culture))
         {
             string? candidate;
-            lock (Gate) Messages.TryGetValue((cultureName, domain, context, message), out candidate);
+            lock (_gate) _messages.TryGetValue((cultureName, domain, context, message), out candidate);
             if (candidate is null) continue;
             var score = cultureName.Length == 0 && culture.Name.Length != 0 ? 1 : CompareLocales(culture.Name, cultureName);
             if (score <= bestScore) continue;
@@ -474,14 +557,14 @@ public static partial class TranslationServer
         return direct;
     }
 
-    private static string? FindPlural(CultureInfo culture, string domain, string singular, string plural, long count, string context, TranslationDomain? catalogDomain)
+    private string? FindPlural(CultureInfo culture, string domain, string singular, string plural, long count, string context, TranslationDomain? catalogDomain)
     {
         Func<long, string>? selector = null;
         var bestScore = 0;
-        foreach (var cultureName in TranslationDomain.CultureChain(culture))
+        foreach (var cultureName in global::Electron2D.TranslationDomain.CultureChain(culture))
         {
             Func<long, string>? candidate;
-            lock (Gate) Plurals.TryGetValue((cultureName, domain, context, singular, plural), out candidate);
+            lock (_gate) _plurals.TryGetValue((cultureName, domain, context, singular, plural), out candidate);
             if (candidate is null) continue;
             var score = cultureName.Length == 0 && culture.Name.Length != 0 ? 1 : CompareLocales(culture.Name, cultureName);
             if (score <= bestScore) continue;
@@ -498,18 +581,21 @@ public static partial class TranslationServer
             catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { }
         }
         if (selector is null) return null;
-        lock (Gate) return selector(count) ?? throw new InvalidOperationException("A plural translation selector returned null.");
+        lock (_gate) return selector(count) ?? throw new InvalidOperationException("A plural translation selector returned null.");
     }
 
     /// <summary>Removes all direct translations and borrowed resource registrations without disposing resources.</summary>
     /// <remarks>The selected <see cref="Culture"/> and <see cref="Enabled"/> state are not changed.</remarks>
-    public static void Clear()
+    public static void Clear() =>
+        Service.ClearCore();
+
+    private void ClearCore()
     {
-        lock (Gate)
+        lock (_gate)
         {
-            Messages.Clear();
-            Plurals.Clear();
-            foreach (var domain in Domains.Values)
+            _messages.Clear();
+            _plurals.Clear();
+            foreach (var domain in _domains.Values)
             {
                 try { domain.Clear(); }
                 catch (ObjectDisposedException) when (domain.IsDisposed) { }
@@ -517,31 +603,31 @@ public static partial class TranslationServer
         }
     }
 
-    private static TranslationDomain EnsureDomainUnderLock(string name)
+    private TranslationDomain EnsureDomainUnderLock(string name)
     {
-        if (Domains.TryGetValue(name, out var domain) && !domain.IsDisposed) return domain;
+        if (_domains.TryGetValue(name, out var domain) && !domain.IsDisposed) return domain;
         domain = new TranslationDomain();
         domain.SetRegisteredName(name);
         domain.Disposed += OnDomainDisposed;
-        Domains[name] = domain;
+        _domains[name] = domain;
         return domain;
     }
 
-    private static void OnDomainDisposed(ElectronObject resource)
+    private void OnDomainDisposed(ElectronObject resource)
     {
-        lock (Gate)
+        lock (_gate)
         {
-            foreach (var name in Domains.Where(pair => ReferenceEquals(pair.Value, resource)).Select(pair => pair.Key).ToArray())
+            foreach (var name in _domains.Where(pair => ReferenceEquals(pair.Value, resource)).Select(pair => pair.Key).ToArray())
             {
-                Domains.Remove(name);
+                _domains.Remove(name);
                 RemoveDirectEntriesUnderLock(name);
             }
         }
     }
 
-    private static void RemoveDirectEntriesUnderLock(string name)
+    private void RemoveDirectEntriesUnderLock(string name)
     {
-        foreach (var key in Messages.Keys.Where(key => key.Domain == name).ToArray()) Messages.Remove(key);
-        foreach (var key in Plurals.Keys.Where(key => key.Domain == name).ToArray()) Plurals.Remove(key);
+        foreach (var key in _messages.Keys.Where(key => key.Domain == name).ToArray()) _messages.Remove(key);
+        foreach (var key in _plurals.Keys.Where(key => key.Domain == name).ToArray()) _plurals.Remove(key);
     }
 }

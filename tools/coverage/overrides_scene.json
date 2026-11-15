@@ -9027,7 +9027,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0016/0095: all 18 permanent entries reject removal, matching the pinned user-created guard. Missing and permanent names throw managed exceptions. Removing a user name leaves the object and its other registrations with their owner.",
+      "reason": "ADR 0016/0095: all 19 permanent entries reject removal, matching the pinned user-created guard. Missing and permanent names throw managed exceptions. Removing a user name leaves the object and its other registrations with their owner.",
       "godot": [
         "Engine::method:unregister_singleton(StringName:)"
       ]

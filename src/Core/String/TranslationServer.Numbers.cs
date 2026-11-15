@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Electron2D;
 
-public static partial class TranslationServer
+public sealed partial class TranslationServer
 {
     private readonly record struct NumeralSystem(string[] Digits, string Percent, string LowerExponent, string UpperExponent);
     private static readonly Dictionary<string, NumeralSystem> NumeralSystems = CreateNumeralSystems();

@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public static partial class TranslationServer
+public sealed partial class TranslationServer
 {
     /// <summary>Gets all supported language codes in catalog order.</summary>
     /// <returns>A caller-owned ordered array.</returns>

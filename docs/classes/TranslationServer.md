@@ -2,13 +2,13 @@
 
 Last updated: 2026-11-13
 
-**Inherits:** —
+**Inherits:** [ElectronObject](ElectronObject.md)
 
 **Inherited By:** —
 
 - **Source:** [`src/Core/String/TranslationServer.cs`](../../src/Core/String/TranslationServer.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public static class TranslationServer`
+- **Declaration:** `public sealed class TranslationServer : ElectronObject`
 
 > Stores and resolves process-wide in-memory translations for the selected UI culture.
 
@@ -17,6 +17,8 @@ Last updated: 2026-11-13
 Stores and resolves process-wide in-memory translations for the selected UI culture.
 
 `TranslationServer` is the process-wide in-memory translation registry. It owns named [`TranslationDomain`](TranslationDomain.md) instances and resolves direct entries and borrowed [`Translation`](Translation.md) resources by ordinal domain/context keys for the selected UI culture and a configured fallback. The empty name selects the main domain.
+
+Service operations use the static API. [Engine](Engine.md) permanently registers the object under `nameof(TranslationServer)`. Typed and untyped lookups return the same object throughout the process. Caller disposal and unregistration throw `InvalidOperationException`. The inherited `GetPropertyList()` exposes writable `PropertyDescriptor<TranslationServer, CultureInfo>` and `PropertyDescriptor<TranslationServer, bool>` entries for `Culture` and `PseudolocalizationEnabled`, respectively. Their setters use the same validation and synchronous notification path as static assignments.
 
 Lookups use exact, case-sensitive domain, context and source-message keys. Resource catalogs compete against the selected locale using fixed default-aware scores before project fallback. Selected/parent direct entries share those scores and win ties; explicit invariant direct entries are the lowest-priority universal fallback. The most recently registered resource wins an equal resource score. ResourceLoader imports supported catalog files; fixed integer plural rules do not imply decimal CLDR category support.
 
