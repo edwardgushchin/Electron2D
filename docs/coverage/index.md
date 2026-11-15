@@ -1,3 +1,5 @@
+[DirAccess filesystem mutations](classes/DirAccess.md) move ten rows to Implemented under ADRs 0020 and 0022. The register has **14,368/18,344 (78.33%)** implemented applicable rows, 671 Partial, 133 Unimplemented, 3,172 Blocked, 8,949 Excluded and zero unmapped declarations. The compiled snapshot contains 18,332 declarations.
+
 [Project settings values and notifications](classes/ProjectSettings.md) move eight rows to Implemented under ADRs 0019 and 0095. The register has **14,358/18,344 (78.27%)** implemented applicable rows, with 681 Partial, 133 Unimplemented, 3,172 Blocked, 8,949 Excluded and zero unmapped Electron2D declarations. The [compiled snapshot](data/electron2d.json) contains 18,332 exported declarations.
 
 [Fatal process termination](../components/diagnostics.md#fatal-process-termination) moves `OS.Crash` to Implemented after isolated Windows x64 CLR consumer checks.

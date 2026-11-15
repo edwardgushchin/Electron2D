@@ -48,7 +48,7 @@ The Android application host supplies [system back navigation](../components/win
 
 [Native permission results](../components/main-loop.md#native-permission-results) now enter the exact Android window's loop through an owner-thread FIFO before its next frame hook. Terminal lifetime discards pending results; listener errors preserve unread results and the original exception. Platform request/query APIs remain separate.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -132,7 +132,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - `ConfigFile`: concurrent in-memory configuration, strict UTF-8 input with an optional UTF-8 BOM, transactional parse/merge, deterministic text encoding, atomic file replacement, and raw-key/password authenticated encryption.
 - `JSON`: document-scoped JSON tree parsing, formatting, diagnostics, source retention and explicitly typed model conversion.
 - `FileAccess`: [captured file ownership, mount-aware writes, and static snapshots](../components/file-access.md#file-ownership-and-snapshots), [typed binary I/O](../components/file-access.md#binary-io) and [strict UTF-8 text I/O](../components/file-access.md#text-framing), mounted or directory-backed virtual paths, process pipes, metadata/hashes, native attributes, temporary files, compression, and authenticated encryption.
-- `DirAccess`: scoped current-directory state, [cursor and sorted snapshot enumeration](../components/file-access.md#directory-enumeration) over physical and mounted paths, mount-aware existence and link queries, file/directory mutation, temporary-directory ownership, drive/capacity/type/case/identity queries, and static absolute helpers.
+- `DirAccess`: scoped current-directory state, [cursor and sorted snapshot enumeration](../components/file-access.md#directory-enumeration) over physical and mounted paths, mount-aware existence and link queries, [scoped file and directory mutations](../components/file-access.md#directory-mutations), temporary-directory ownership, drive/capacity/type/case/identity queries, and static absolute helpers.
 - [File and directory I/O failures](../components/file-access.md#operation-failures-and-eof) are reported by typed exceptions. `FileAccess` additionally reports stream exhaustion through `EOFReached` and pipe write progress through `PipeWriteException.BytesWritten`.
 - `FileAccessModeFlags`, `FileCompressionMode`, and `UnixPermissionFlags`: exact typed mode, codec, and Unix mode-bit identities.
 - `ProjectSetting<T>`: immutable typed setting identity, default snapshot, and optional validator.

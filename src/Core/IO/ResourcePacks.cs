@@ -274,14 +274,18 @@ internal sealed class ResourcePacks
 
     internal static Stream OpenRead(string path) => Runtime.OpenRead(path, out _, out _);
 
-    internal Stream OpenRead(string path, out string absolutePath, out bool packed)
+    internal Stream OpenRead(string path, out string absolutePath, out bool packed, string? physicalPath = null)
     {
-        var entry = ResolveFile(path, out absolutePath, out var mountedPath, out var mountedDirectory, out var maskedByFileAncestor);
+        var entry = ResolveFile(path, out absolutePath, out var mountedPath, out var mountedDirectory, out var maskedByFileAncestor, physicalPath: physicalPath);
         if (mountedDirectory || maskedByFileAncestor)
             throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
         packed = entry is not null;
         if (entry is null)
+        {
+            if (physicalPath is not null && Directory.Exists(physicalPath))
+                throw new FileNotFoundException("The source is a directory.", path);
             return FileAccess.OpenPhysicalRead(absolutePath);
+        }
 
         absolutePath = "res://" + mountedPath;
         return entry.Open();
@@ -313,10 +317,10 @@ internal sealed class ResourcePacks
     }
 
     private Entry? ResolveFile(string path, out string absolutePath, out string? name,
-        out bool mountedDirectory, out bool maskedByFileAncestor, bool writing = false)
+        out bool mountedDirectory, out bool maskedByFileAncestor, bool writing = false, string? physicalPath = null)
     {
         path = ResourceUID.EnsurePath(path);
-        absolutePath = ProjectSettings.GlobalizePath(path);
+        absolutePath = physicalPath ?? ProjectSettings.GlobalizePath(path);
         name = null;
         mountedDirectory = false;
         maskedByFileAncestor = false;

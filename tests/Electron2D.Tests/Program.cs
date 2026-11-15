@@ -463,6 +463,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_SETTINGS") == "1
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_OVERRIDES") == "1") { VerifyProjectSettings(); ProjectOverrideTests.Run(packed: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_MUTATIONS") == "1") { DirAccessMutationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_LISTING") == "1")
 {
     VerifyDirAccess(listingOnly: true);
