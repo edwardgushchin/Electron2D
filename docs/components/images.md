@@ -92,6 +92,16 @@ Run `ELECTRON2D_TEST_IMAGE_PIXELS` with `managed`, `gpu`, and `compatibility` in
 
 `ClearMIPMaps` retains the base bytes, including compressed blocks. ImageTexture captures the resulting format, base extent and exact remaining mip chain. The image-storage profile checks authored BC1 colors, odd and one-pixel axes, integer and half-float values, base edits, and observer failure after commit.
 
+## Image texture data
+
+ImageTexture copies the original format, physical dimensions and all stored mips. GetImage returns a fresh snapshot in that format. Source format, alpha presence and mip count are available before the renderer starts. The uninitialized resource has zero logical size, format L8, no alpha, no mips and no image. A custom pixel-backed Texture implements the required logical width and height queries and returns a fresh GetImage copy. Its derived metadata refreshes on Changed.
+
+SetSizeOverride changes logical dimensions and retains an axis when its input is zero. Opacity uses the corresponding physical texel and tests alpha above 0.1. Update matches the original physical dimensions, format and mip configuration. SetImage accepts a new configuration and resets the logical size. Validation failures preserve the previous state. Changed follows a successful publication. The texture RID stays stable across these mutations. Update reuses compatible native storage and SetImage replaces it. Scene-local ImageTexture copies retain original mip bytes and logical size and receive distinct RIDs after loading and instantiating the scene.
+
+GPU sampling uses the prepared upload or supported native block storage, with complete mip chains. Windows/D3D12 and Windows/Vulkan support sampling the four [UInt16 formats](integer-textures.md), including the ordinary Sprite path and RenderingDevice export. RenderingDevice also reads BC3 blocks on both drivers. Compatibility samples the base mip of supported formats, uses decoded block pixels and rejects unsigned integer sampling. Its floating-point path requires a driver that preserves HDR precision.
+
+The `ELECTRON2D_TEST_IMAGE_TEXTURE_DATA` profiles exercise managed data and scene archives, plus Sprite output and native lifetime with byte formats on D3D12 and D3D11. Readback from a rendered viewport verifies the sampled output independently from GetImage's source snapshot. Full package and host qualification follows ADR 0021.
+
 ## Image resizing
 
 `Resize` and `ResizeToPowerOfTwo` run the same CPU filters and retain the original pixel format, including packed, integer and HDR layouts. Nearest copies the stored sample exactly. Bilinear and cubic sample around destination pixel centers with clamped source coordinates. Trilinear uses the mean destination/source scale to select the two mip levels and blends their bilinear samples before encoding the output. Temporary levels used to filter a base-only image stay private. An existing chain is rebuilt at the new size.
