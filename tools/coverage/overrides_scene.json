@@ -869,8 +869,7 @@
     {
       "electron2d": "method:Electron2D.Input.GetActionRawStrength(System.String,System.Boolean)",
       "godot": "Input::method:get_action_raw_strength(StringName:,bool:)",
-      "state": "Implemented",
-      "reason": "Retains directional magnitudes below the deadzone and above one for programmatic samples. The latest mapped event supplies exact eligibility for parsed state, with independent virtual contributions under ADR 0038."
+      "reason": "Maps the typed action name and optional exact-match flag."
     },
     {
       "electron2d": "method:Electron2D.InputEvent.Accumulate(Electron2D.InputEvent)",
@@ -8914,11 +8913,29 @@
     },
     {
       "state": "Implemented",
-      "reason": "Public consumer verifies aggregate effective and sub-deadzone raw strength, signed cancellation, circular deadzone, exact contribution filtering and unit length.",
+      "reason": "Returns aggregate deadzone-adjusted strength. With exactMatch enabled, an exact action state returns the aggregate strength. An inexact action state returns only the virtual controls' strength under ADR 0038.",
       "godot": [
-        "Input::method:get_action_strength(StringName:,bool:)",
-        "Input::method:get_action_raw_strength(StringName:,bool:)",
-        "Input::method:get_axis(StringName:,StringName:)",
+        "Input::method:get_action_strength(StringName:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Keeps directional magnitudes below the action deadzone and above one for programmatic samples. With exactMatch enabled, an exact action state returns the aggregate raw strength. An inexact action state returns only the virtual controls' strength under ADR 0038.",
+      "godot": [
+        "Input::method:get_action_raw_strength(StringName:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Subtracts the negative action's effective strength from the positive action's effective strength, using default action matching. The public consumer verifies signed cancellation.",
+      "godot": [
+        "Input::method:get_axis(StringName:,StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Subtracts opposing raw strengths using default action matching, applies a circular deadzone and limits length to one. The public consumer verifies raw motion below the action deadzone, circular deadzone and unit length.",
+      "godot": [
         "Input::method:get_vector(StringName:,StringName:,StringName:,StringName:,float:)"
       ]
     },
