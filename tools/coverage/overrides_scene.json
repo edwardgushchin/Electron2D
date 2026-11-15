@@ -9370,7 +9370,7 @@
         "ProjectSettings::property:internationalization/rendering/force_right_to_left_layout_direction"
       ],
       "state": "Implemented",
-      "reason": "ProjectLayoutDirectionTests verifies all four root modes, permanent typed defaults/validation/persistence/feature overrides, independent SceneTree startup snapshots, same-domain Window/Control inheritance through ordinary nodes, domain boundaries, forced inherited/application/system modes with explicit LTR/RTL overrides, translation/layout notification reflow, packing, owner/disposal guards and zero managed bytes in 128 warmed direction queries. Native GUI/text output is verified by ProjectLayoutDirectionNativeTests on Linux Wayland GPU/compatibility. Global locale/catalog edits still require explicit translation notifications; other targets and owner visual acceptance remain unverified."
+      "reason": "ProjectLayoutDirectionTests verifies all four root modes, permanent typed defaults/validation/persistence/feature overrides, independent SceneTree startup snapshots, same-domain Window/Control inheritance through ordinary nodes, domain boundaries, forced inherited/application/system modes with explicit LTR/RTL overrides, translation/layout notification reflow, packing, owner/disposal guards and zero managed bytes in 128 warmed direction queries. Native GUI/text output is verified by ProjectLayoutDirectionNativeTests on Linux Wayland GPU/compatibility. Global culture changes notify Engine.MainLoop; independent trees and local catalog/domain edits require explicit notification. Windows GPU/compatibility also verify live culture-change pixels; other targets and owner visual acceptance remain unverified."
     },
     {
       "godot": [
@@ -9492,8 +9492,8 @@
         "Control::method:is_layout_rtl()",
         "Control::property:layout_direction"
       ],
-      "state": "Partial",
-      "reason": "Explicit LTR/RTL and same-domain Control inheritance mirror live rectangles, and locale modes use active or system .NET culture with a matching registered catalog. ControlLayoutTests covers notification order, physical position/size setters, domain boundaries and packing. Root/forced layout settings, Window inheritance, native locale aliases and automatic scene updates on global locale changes remain absent (ADRs 0007 and 0008)."
+      "state": "Implemented",
+      "reason": "ADRs 0007/0008: shared Window/Control policy resolves all five modes, root/forced settings and SceneTree snapshots, same-domain ancestry through plain Nodes, regional catalogs and fallback language under the accepted CultureInfo boundary. ProjectLayoutDirectionTests and ControlLayoutTests verify defaults, validation, persistence, feature overrides, rectangles, notification order, hidden reentry, catalog disposal, owner guards and warmed allocation-free queries. Global culture changes notify Engine.MainLoop; independent trees and local catalog/domain edits require explicit notification. ProjectLayoutDirectionNativeTests verifies root, forced and live culture-change GUI/text pixels on Windows GPU/compatibility. Foreign host/package conformance and owner visual acceptance remain unverified under ADR 0021; native locale acquisition beyond CurrentUICulture is outside the accepted managed culture boundary."
     },
     {
       "godot": [

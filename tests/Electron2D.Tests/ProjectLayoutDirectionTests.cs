@@ -14,6 +14,7 @@ internal static class ProjectLayoutDirectionTests
         try
         {
             Persistence();
+            Fallback();
             TranslationServer.Culture = CultureInfo.GetCultureInfo("en");
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("ar");
             var domain = TranslationServer.GetOrAddDomain(domainName);
@@ -73,6 +74,23 @@ internal static class ProjectLayoutDirectionTests
             domain.LocaleOverride = "en"; viewport.PropagateNotification(Node.NotificationTranslationChanged);
             leaf.LayoutDirection = LayoutDirection.ApplicationLocale;
             Check(!leaf.IsLayoutRTL(), "Application locale resolves the node's domain override.");
+            parent.LayoutDirection = LayoutDirection.Inherited;
+            parent.Hide(); domain.LocaleOverride = "ar";
+            viewport.PropagateNotification(Node.NotificationTranslationChanged);
+            Check(parent.Position.X == 90 && leaf.Position.X == 75, "Hidden controls still reflow after local locale notification.");
+            parent.Show();
+            viewport.RemoveChild(parent); domain.LocaleOverride = "en";
+            viewport.AddChild(parent);
+            Check(parent.Position.X == 10 && leaf.Position.X == 5, "Reentry resolves the current locale rather than stale hidden geometry.");
+            domain.RemoveTranslation(catalog); domain.LocaleOverride = "ar";
+            viewport.PropagateNotification(Node.NotificationTranslationChanged);
+            Check(!leaf.IsLayoutRTL(), "Removing the only RTL catalog removes locale mirroring.");
+            domain.AddTranslation(catalog);
+            viewport.PropagateNotification(Node.NotificationTranslationChanged);
+            Check(leaf.IsLayoutRTL(), "Registering the catalog and notifying restores locale mirroring.");
+            catalog.Dispose(); viewport.PropagateNotification(Node.NotificationTranslationChanged);
+            Check(!leaf.IsLayoutRTL(), "Disposed catalogs no longer enable RTL layout.");
+            Console.WriteLine("Project layout modes, policies, inheritance, catalog lifetime and hidden reentry passed.");
         }
         finally
         {
@@ -106,6 +124,47 @@ internal static class ProjectLayoutDirectionTests
             Check(loaded.GetWithOverride(ProjectSettings.RootNodeLayoutDirection, ["layout-test"]) == 3 && !loaded.GetWithOverride(ProjectSettings.ForceRightToLeftLayoutDirection, ["layout-test"]), "Both settings retain feature overrides.");
         }
         finally { Directory.Delete(directory, true); }
+    }
+
+    private static void Fallback()
+    {
+        var locale = ProjectSettings.Get(ProjectSettings.LocaleTest);
+        var fallback = ProjectSettings.Get(ProjectSettings.LocaleFallback);
+        var savedFallback = TranslationServer.FallbackCulture;
+        const string name = "layout-fallback-tests";
+        try
+        {
+            ProjectSettings.Set(ProjectSettings.RootNodeLayoutDirection, 0);
+            ProjectSettings.Set(ProjectSettings.ForceRightToLeftLayoutDirection, false);
+            ProjectSettings.Set(ProjectSettings.LocaleTest, "ar-EG");
+            foreach (var value in new[] { "", "en", "ar" })
+            {
+                ProjectSettings.Set(ProjectSettings.LocaleFallback, value);
+                using var root = new TestViewport { TranslationDomain = name };
+                var control = new Control(); root.AddChild(control);
+                using var tree = new SceneTree(root);
+                Engine.Start(tree);
+                try
+                {
+                    Check(control.LayoutDirection == LayoutDirection.Inherited && control.IsLayoutRTL() == (value == "ar"), "Without catalogs only a matching fallback language enables RTL.");
+                    using var catalog = new Translation { Locale = "ar-SA" };
+                    var domain = TranslationServer.GetOrAddDomain(name); domain.AddTranslation(catalog);
+                    root.PropagateNotification(Node.NotificationTranslationChanged);
+                    Check(control.IsLayoutRTL(), "A same-language regional catalog enables RTL independently of fallback.");
+                    using var window = new Window { Visible = false }; var bridge = new Node(); control.AddChild(bridge); bridge.AddChild(window);
+                    Check(window.LayoutDirection == LayoutDirection.Inherited && window.IsLayoutRTL(), "Window inherits Control direction through a plain Node.");
+                    window.TranslationDomain = name + "-boundary";
+                    Check(window.IsLayoutRTL() == (value == "ar"), "Window domain boundaries use the same catalog/fallback rule.");
+                }
+                finally { Engine.Stop(); }
+            }
+        }
+        finally
+        {
+            ProjectSettings.Set(ProjectSettings.LocaleTest, locale); ProjectSettings.Set(ProjectSettings.LocaleFallback, fallback);
+            TranslationServer.FallbackCulture = savedFallback;
+            TranslationServer.RemoveDomain(name); TranslationServer.RemoveDomain(name + "-boundary");
+        }
     }
 
     private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(Vector2.Zero, new(200, 100)); }
