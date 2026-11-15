@@ -53,6 +53,23 @@
   "statusGroups": [
     {
       "godot": [
+        "DirAccess::method:dir_exists(String:)",
+        "DirAccess::method:dir_exists_absolute(String:)",
+        "DirAccess::method:file_exists(String:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0020/0022: each query selects the mounted kind, masked descendant or physical attributes from one mount state. Windows and Linux checks cover exact entries, file ancestors and physical fallback. Wider platform qualification remains open."
+    },
+    {
+      "godot": [
+        "DirAccess::method:is_link(String:)",
+        "DirAccess::method:read_link(String:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0020/0022: one mount snapshot masks physical reparse flags and link targets. Live file/directory replacement is checked with a Windows junction and a Linux symbolic link. Other link backends and full platform qualification remain open."
+    },
+    {
+      "godot": [
         "class:PCKPacker",
         "PCKPacker::method:add_file(String:,String:,bool:)",
         "PCKPacker::method:add_file_from_buffer(String:,PackedByteArray:,bool:)",
