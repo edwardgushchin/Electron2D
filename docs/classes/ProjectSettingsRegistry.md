@@ -1,6 +1,6 @@
 # ProjectSettingsRegistry
 
-Last updated: 2026-10-26
+Last updated: 2026-11-14
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -127,9 +127,9 @@ Initializes an isolated registry with explicit project and user-data directories
 <a id="member-c4f40772e01d"></a>
 ### `public event System.Action<Electron2D.ProjectSettingsRegistry> SettingsChanged`
 
-Occurs after one or more settings change and Electron2D.ProjectSettingsRegistry.FlushChanges is called.
+Occurs when this registry flushes a batch of setting changes.
 
-**Remarks:** Delivery is synchronous on the flushing thread and is coalesced to one invocation per flush. A change made by a handler is retained for the next flush. The process-wide Electron2D.Engine flushes at the end of each successfully processed frame. Handler exceptions propagate after the pending invocation has been consumed.
+**Remarks:** Delivery is synchronous on the flushing thread. Changes queued during delivery are retained for the next flush. Engine flushes the process-wide registry after a successful process callback. Handler exceptions propagate and consume only the batch being delivered.
 
 <a id="member-8435da80d470"></a>
 ### `public System.Boolean AddCustomFeature(System.String feature)`
@@ -155,7 +155,7 @@ Checks whether any changed setting starts with a category prefix.
 
 **Returns:** true when at least one changed setting starts with prefix.
 
-**Parameter `prefix`:** The case-sensitive prefix to inspect.
+**Parameter `prefix`:** The ordinal, case-sensitive prefix to inspect. An empty prefix matches any changed name.
 
 **Exception `T:System.ArgumentNullException`:** prefix is null.
 
@@ -213,9 +213,9 @@ Changes the project and user-data roots and clears all loaded or explicitly stor
 
 Raises one coalesced Electron2D.ProjectSettingsRegistry.SettingsChanged notification when changes are pending.
 
-**Returns:** true when an event invocation was consumed; otherwise false.
+**Returns:** true when a pending batch was consumed, even without listeners; otherwise false.
 
-**Remarks:** The callback runs without the registry lock, so handlers may read or modify settings.
+**Remarks:** Callbacks run outside the registry lock. A flush during delivery returns false and leaves new edits queued. A validator cannot consume a pending batch while validating a load or registration.
 
 **Exception `T:System.ObjectDisposedException`:** The registry is disposing or disposed.
 
@@ -235,7 +235,7 @@ Gets all active platform, build, architecture, and custom features.
 
 Gets setting names included in the pending or currently delivered change notification.
 
-**Returns:** An immutable ordinally sorted snapshot, cleared after the notification finishes.
+**Returns:** An immutable, distinct, ordinally sorted snapshot of pending and in-flight names. Delivered names without a new edit disappear from later queries when the flush finishes.
 
 **Exception `T:System.ObjectDisposedException`:** The registry is disposing or disposed.
 
@@ -477,6 +477,8 @@ Loads the project file and applies the enabled conventional and configured overr
 
 **Exception `T:System.UnauthorizedAccessException`:** A file cannot be read by the caller.
 
+**Exception `T:System.Text.DecoderFallbackException`:** A file contains invalid UTF-8 bytes.
+
 **Exception `T:System.FormatException`:** A document is malformed.
 
 **Exception `T:System.IO.InvalidDataException`:** A registered value has the wrong type.
@@ -503,6 +505,8 @@ Merges a custom configuration file into the current settings after full validati
 **Exception `T:System.IO.IOException`:** The file cannot be read.
 
 **Exception `T:System.UnauthorizedAccessException`:** The file cannot be read by the caller.
+
+**Exception `T:System.Text.DecoderFallbackException`:** The file contains invalid UTF-8 bytes.
 
 **Exception `T:System.FormatException`:** The document is malformed.
 
@@ -536,7 +540,7 @@ Converts an ordinary path inside a configured root to a virtual project or user 
 
 Registers a setting definition for typed access and tooling discovery.
 
-**Remarks:** If a matching value was loaded before registration, it and all matching feature overrides are validated before the registry changes. Registration does not mark the setting as modified.
+**Remarks:** If a matching value was loaded before registration, it and all matching feature overrides are validated before the registry changes. Validators may inspect the registry during registration. The registry rejects reentrant mutations. Registration does not mark a setting as modified.
 
 **Type parameter `T`:** The non-null setting value type.
 
@@ -544,7 +548,7 @@ Registers a setting definition for typed access and tooling discovery.
 
 **Exception `T:System.ArgumentNullException`:** setting is null.
 
-**Exception `T:System.InvalidOperationException`:** The name is already registered or a load is running.
+**Exception `T:System.InvalidOperationException`:** The name is already registered or a load or registration is being validated.
 
 **Exception `T:System.IO.InvalidDataException`:** A loaded value cannot be decoded as T.
 
@@ -586,7 +590,7 @@ Removes an explicit base value so the setting returns its current initial value.
 
 **Exception `T:System.Collections.Generic.KeyNotFoundException`:** setting is not registered.
 
-**Exception `T:System.InvalidOperationException`:** A different definition owns the same name or a load is running.
+**Exception `T:System.InvalidOperationException`:** A different definition owns the same name or a load or registration is being validated.
 
 **Exception `T:System.ObjectDisposedException`:** The registry is disposing or disposed.
 
@@ -595,7 +599,7 @@ Removes an explicit base value so the setting returns its current initial value.
 
 Saves the current document to Electron2D.ProjectSettingsRegistry.ProjectFilePath using atomic replacement.
 
-**Remarks:** A successful save clears internal unsaved-value tracking. Change-notification names remain until Electron2D.ProjectSettingsRegistry.FlushChanges completes; a failed save preserves both states.
+**Remarks:** A successful save applies the saved document and clears internal unsaved-value tracking. Change-notification names remain until Electron2D.ProjectSettingsRegistry.FlushChanges completes; a failed save preserves both states.
 
 **Exception `T:System.IO.IOException`:** The file cannot be written or replaced.
 
@@ -610,7 +614,7 @@ Saves the current document to Electron2D.ProjectSettingsRegistry.ProjectFilePath
 
 Saves the current document to an explicit file using atomic replacement.
 
-**Remarks:** A successful save clears internal unsaved-value tracking. Change-notification names remain until Electron2D.ProjectSettingsRegistry.FlushChanges completes; a failed save preserves both states.
+**Remarks:** A successful save applies the saved document and clears internal unsaved-value tracking. Change-notification names remain until Electron2D.ProjectSettingsRegistry.FlushChanges completes; a failed save preserves both states.
 
 **Parameter `path`:** An operating-system, `res://`, or `user://` file path.
 
@@ -800,7 +804,7 @@ Unregisters a setting and removes its stored base value and feature overrides.
 
 **Exception `T:System.Collections.Generic.KeyNotFoundException`:** setting is not registered.
 
-**Exception `T:System.InvalidOperationException`:** The setting is built in, a different definition owns its name, or a load is running.
+**Exception `T:System.InvalidOperationException`:** The setting is built in, a different definition owns its name, or a load or registration is being validated.
 
 **Exception `T:System.ObjectDisposedException`:** The registry is disposing or disposed.
 
