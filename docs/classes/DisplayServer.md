@@ -576,6 +576,8 @@ Gets the last successfully selected standard pointer shape.
 
 Selects a standard pointer shape from the native cursor theme.
 
+The display lazily caches standard cursors until disposal. Custom-image removal uses the same factory and retains its active image if restoration fails. Windows uses native move/arrow/no-drop and directional resize equivalents for drag/drop and splits, and copies the OS Help artwork into an SDL-owned color cursor. See [cursor ownership](../components/display-server.md).
+
 - `shape`: Shape to apply.
 
 **Errors:** `ArgumentOutOfRangeException` — `shape` is unknown..

@@ -522,20 +522,17 @@
     {
       "electron2d": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)",
       "godot": "Control::method:_gui_input(InputEvent:)",
-      "state": "Partial",
-      "reason": "Routed GUI input follows Node input, GUIInput subscribers, current live Script and the native CLR hook. Acceptance, detachment or disposal stops later stages. ControlInputTests proves signal-first rejection; ControlScriptTests covers replacement/retirement and native derived hooks. Internal refresh/capture events preserve native housekeeping. Other routing dependencies retain their own open rows."
+      "reason": "ControlInputTests and ControlScriptTests verify signal/Script/native hook order, acceptance, temporary local copies, callback errors and retirement. Public ControlTargetContracts exercises transformed routing, Stop/Pass/Ignore, wheel propagation and touch capture; native Windows GPU/compatibility profiles verify actual nested input, cursor and pixels. Foreign host, native heap and physical-device acceptance remain separate."
     },
     {
       "electron2d": "method:Electron2D.Control.HasPoint(Electron2D.Vector2)",
       "godot": "Control::method:_has_point(Vector2:)",
-      "state": "Partial",
-      "reason": "A virtual half-open local rectangle test is used for root viewport pointer targeting; custom shapes work. Clipping and full draw order remain to audit."
+      "reason": "The local half-open rectangle and virtual/script override drive viewport-local GUI targeting and ancestor clipping. Public ControlTargetContracts verifies custom shapes, clipping, TopLevel boundaries, ordered callback short-circuit and failure recovery independently of draw Z/Y. Native Windows GPU/compatibility checks confirm scaled nested geometry; foreign native qualification remains separate."
     },
     {
       "electron2d": "method:Electron2D.Control.OnGetCursorShape(Electron2D.Vector2)",
       "godot": "Control::method:_get_cursor_shape(Vector2:)",
-      "state": "Partial",
-      "reason": "Typed virtual cursor lookup receives control-local coordinates. Root viewport hover and native cursor selection are executable; clipping, overlapping canvas ordering and nested viewport behavior remain to audit."
+      "reason": "Typed control-local cursor overrides execute through ancestor fallback and embedded viewport native refresh. ControlTargetContracts native Windows GPU/compatibility checks Stop/Pass, TopLevel, property changes, stationary geometry/visibility, reentry and callback failure. ControlCursorFactoryTests verifies all 17 system/custom slots, failure atomicity and owned handle retirement; foreign native qualification remains separate."
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetGUIFocusOwner()",
@@ -10597,8 +10594,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "All 17 cursor identities and the typed local-position override are executable. Root viewport hover selects the native cursor on Linux Wayland; clipping, overlapping canvas ordering and nested viewport behavior remain to audit.",
+      "state": "Implemented",
+      "reason": "All 17 cursor identities and local overrides execute. Public ControlTargetContracts verifies Windows GPU/compatibility nested input, pixels, ancestor fallback and immediate cursor refresh. ControlCursorFactoryTests checks every system/custom slot, creation/restoration failures and 35 owned cursor lifetimes. Windows drag/drop/split aliases and OS Help artwork retain the pinned platform contract; foreign native qualification and native heap accounting remain separate.",
       "godot": [
         "Control::enum:CursorShape",
         "Control::method:get_cursor_shape(Vector2:)",
@@ -10606,8 +10603,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Root viewport pointer motion, MouseFilter changes and window exit deliver hover transitions in ancestor order; managed and native Wayland checks execute. Clipping, overlapping canvas ordering, stationary-pointer geometry changes and nested viewports remain to audit.",
+      "state": "Implemented",
+      "reason": "Public ControlTargetContracts verifies ordered hover, stationary geometry/visibility, disposal/replacement, reentrant hiding and callback failure recovery; managed and native Windows GPU/compatibility run 128 prepared active and idle process frames each at zero owner/all-thread managed bytes. Existing hover, cursor refresh, pointer, SubViewportContainer and drag profiles pass. Physical devices, native heaps and foreign hosts retain separate qualification.",
       "godot": [
         "Control::signal:mouse_entered()",
         "Control::signal:mouse_exited()"
@@ -10629,8 +10626,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Root viewport pointer routing executes Stop, Pass, Ignore, default wheel pass and hover notifications with ControlInputTests and ControlHoverTests. Content clipping, exact renderer order, touch and nested viewport semantics remain absent.",
+      "state": "Implemented",
+      "reason": "Public ControlTargetContracts verifies Stop/Pass/Ignore, default and disabled wheel force-pass combinations, transformed local GUI input, custom HasPoint clipping, CanvasLayer/GUI-root scene order independent of draw Z/Y, TopLevel and viewport isolation, touch capture/outside release and hiding. ControlInput/Hover/Pointer/Clip/SubViewportContainer/ScrollContainer/drag regressions pass; Windows GPU/compatibility validates actual nested pointer/cursor/pixels. Foreign native qualification remains separate.",
       "godot": [
         "Control::enum:MouseFilter",
         "Control::property:mouse_filter",
@@ -12852,6 +12849,15 @@
         "Viewport::property:texture_mipmap_bias"
       ],
       "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ControlTargetContracts public routing/native Windows GPU and compatibility profiles verify local HasPoint/GUIInput/cursor overrides, clipping, scene-order callback short-circuit, hover reentry/errors and nested cursor refresh; ControlInputTests and ControlScriptTests verify signal/Script/native dispatch, replacement and retirement. ControlCursorFactoryTests verifies all 17 standard/custom slots, failure atomicity and owned handle release. Physical devices, native heaps and foreign hosts retain separate qualification.",
+      "godot": [
+        "Control::method:_gui_input(InputEvent:)",
+        "Control::method:_has_point(Vector2:)",
+        "Control::method:_get_cursor_shape(Vector2:)"
+      ]
     }
   ]
 }

@@ -14,8 +14,10 @@ internal sealed class ViewportGUIState(Viewport? viewport)
     internal Vector2 GuiHoverPosition;
     internal bool GuiHoverKnown;
     internal bool UpdatingGUIHover;
+    internal bool UpdatingGUICursor;
     internal bool GuiHoverRefreshPending;
     internal readonly List<Node> InputTraversal = [];
+    internal readonly List<Control> GuiRoots = [];
     internal Control? GuiFocus;
     internal Control? GuiMouseCapture;
     internal uint GuiMouseCaptureMask;

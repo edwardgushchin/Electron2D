@@ -9,7 +9,7 @@ public sealed partial class DisplayServer
     private DisplayServer? _mouseModeWindow;
     private Vector2 _lastClientMousePosition;
     private CursorShape _cursorShape;
-    private SdlCursorHandle? _cursor;
+    private readonly SdlCursorHandle?[] _systemCursors = new SdlCursorHandle?[(int)CursorShape.Max];
     private readonly SdlCursorHandle?[] _customCursors = new SdlCursorHandle?[(int)CursorShape.Max];
 
     internal MouseMode MouseGetModeCore()
@@ -114,30 +114,29 @@ public sealed partial class DisplayServer
     internal void CursorSetShapeCore(CursorShape shape)
     {
         EnsureOwner();
-        var native = MapCursorShape(shape);
+        _ = MapCursorShape(shape);
         if (_customCursors[(int)shape] is { } custom)
         {
             if (!SDL.SetCursor(custom.DangerousGetHandle()))
                 throw SDLFailure("set the custom cursor");
             _cursorShape = shape;
-            _cursor?.Dispose();
-            _cursor = null;
             return;
         }
-        var handle = SDL.CreateSystemCursor(native);
-        if (handle == 0)
-            throw SDLFailure("create a native cursor");
-        var replacement = new SdlCursorHandle(handle);
-        GC.SuppressFinalize(replacement);
-        if (!SDL.SetCursor(handle))
-        {
-            replacement.Dispose();
+        var replacement = GetSystemCursor(shape);
+        if (!SDL.SetCursor(replacement.DangerousGetHandle()))
             throw SDLFailure("set the native cursor");
-        }
-        var previous = _cursor;
-        _cursor = replacement;
         _cursorShape = shape;
-        previous?.Dispose();
+    }
+
+    private SdlCursorHandle GetSystemCursor(CursorShape shape)
+    {
+        if (_systemCursors[(int)shape] is { } cached) return cached;
+        var handle = OperatingSystem.IsWindows() && shape == CursorShape.Help
+            ? CreateWindowsHelpCursor() : SDL.CreateSystemCursor(MapCursorShape(shape));
+        if (handle == 0) throw SDLFailure("create a native cursor");
+        var cursor = new SdlCursorHandle(handle);
+        GC.SuppressFinalize(cursor);
+        return _systemCursors[(int)shape] = cursor;
     }
 
     internal void CursorSetCustomImageCore(Resource? image, CursorShape shape = CursorShape.Arrow,
@@ -183,30 +182,14 @@ public sealed partial class DisplayServer
         {
             if (replacement is null)
             {
-                var system = SDL.CreateSystemCursor(MapCursorShape(shape));
-                if (system == 0)
-                    throw SDLFailure("create a native cursor");
-                replacement = new SdlCursorHandle(system);
-                GC.SuppressFinalize(replacement);
-                if (!SDL.SetCursor(system))
-                {
-                    replacement.Dispose();
+                var system = GetSystemCursor(shape);
+                if (!SDL.SetCursor(system.DangerousGetHandle()))
                     throw SDLFailure("restore the system cursor");
-                }
-                var oldSystem = _cursor;
-                _cursor = replacement;
-                oldSystem?.Dispose();
-                replacement = null;
             }
             else if (!SDL.SetCursor(replacement.DangerousGetHandle()))
             {
                 replacement.Dispose();
                 throw SDLFailure("set the custom cursor");
-            }
-            else
-            {
-                _cursor?.Dispose();
-                _cursor = null;
             }
         }
 
@@ -223,16 +206,16 @@ public sealed partial class DisplayServer
         CursorShape.Cross => SDL.SystemCursor.Crosshair,
         CursorShape.Wait => SDL.SystemCursor.Progress,
         CursorShape.Busy => SDL.SystemCursor.Wait,
-        CursorShape.Drag => SDL.SystemCursor.Grabbing,
-        CursorShape.CanDrop => SDL.SystemCursor.Copy,
-        CursorShape.Forbidden => SDL.SystemCursor.NoDrop,
+        CursorShape.Drag => OperatingSystem.IsWindows() ? SDL.SystemCursor.Move : SDL.SystemCursor.Grabbing,
+        CursorShape.CanDrop => OperatingSystem.IsWindows() ? SDL.SystemCursor.Default : SDL.SystemCursor.Copy,
+        CursorShape.Forbidden => OperatingSystem.IsWindows() ? SDL.SystemCursor.NotAllowed : SDL.SystemCursor.NoDrop,
         CursorShape.VSize => SDL.SystemCursor.NSResize,
         CursorShape.HSize => SDL.SystemCursor.EWResize,
         CursorShape.BDiagSize => SDL.SystemCursor.NESWResize,
         CursorShape.FDiagSize => SDL.SystemCursor.NWSEResize,
         CursorShape.Move => SDL.SystemCursor.Move,
-        CursorShape.VSplit => SDL.SystemCursor.RowResize,
-        CursorShape.HSplit => SDL.SystemCursor.ColResize,
+        CursorShape.VSplit => OperatingSystem.IsWindows() ? SDL.SystemCursor.NSResize : SDL.SystemCursor.RowResize,
+        CursorShape.HSplit => OperatingSystem.IsWindows() ? SDL.SystemCursor.EWResize : SDL.SystemCursor.ColResize,
         CursorShape.Help => SDL.SystemCursor.Help,
         _ => throw new ArgumentOutOfRangeException(nameof(shape), shape, "Unknown cursor shape."),
     };
@@ -264,8 +247,8 @@ public sealed partial class DisplayServer
         _mouseModeWindow = null;
         _ = SDL.ShowCursor();
         _ = SDL.SetCursor(SDL.GetDefaultCursor());
-        _cursor?.Dispose();
-        _cursor = null;
+        foreach (var cursor in _systemCursors)
+            cursor?.Dispose();
         foreach (var cursor in _customCursors)
             cursor?.Dispose();
     }

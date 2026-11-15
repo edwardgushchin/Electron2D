@@ -34,7 +34,7 @@ The display-owned [per-window observation phase](../components/input-runtime.md#
 - Base event state uses independent pressed/canceled flags; canceled matching events can report an action release through the map. Non-positional transforms return the original event, while positional conversions own disposable copies.
 - Touch and drag events store signed contact indexes; the native display source generates indexes for physical contacts.
 - Input enums: complete key identifiers/modifier masks, key location, mouse buttons/mask, and standardized/raw controller axes/buttons.
-- `Node`/`SceneTree` integration: explicit opt-in callbacks, root viewport Control targeting, hover, focus ownership/notification, action navigation and handled propagation.
+- `Node`/`SceneTree` integration: explicit opt-in callbacks, viewport-local Control targeting by canvas layer and scene order independently of draw Z/Y order, local HasPoint clipping, hover, focus ownership/notification, action navigation and handled propagation.
 - Native committed text and IME composition: DisplayServer supplies the independent full-string/preedit stream; Window bridges it to root SceneTree; focused Control virtual hooks/events consume it after scene-wide composition notification, without altering key/action state.
 - `Control`/`Viewport` GUI drag: typed payload production/acceptance/delivery and forwarding, threshold and forced starts, temporary preview ownership, cancel/drop result, drag notifications and native cursor feedback in the root viewport.
 

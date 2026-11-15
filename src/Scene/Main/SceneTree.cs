@@ -1488,6 +1488,7 @@ public sealed partial class SceneTree : MainLoop
             if (!physics) ProcessGUITooltips(unscaledDelta, ref errors);
             ProcessTweens(delta, unscaledDelta, physics, ref errors);
             FlushDeferredCore(ref errors, flushTransforms: true);
+            if (!physics) try { RefreshAllGUI(hover: true); } catch (Exception error) { CollectException(ref errors, error); }
             if (!physics) try { SynchronizeAccessibility(); } catch (Exception error) { CollectException(ref errors, error); }
             if (captureInterpolation) CapturePhysicsInterpolation(start: false, ref errors);
         }
@@ -1862,29 +1863,48 @@ public sealed partial class SceneTree : MainLoop
 
     private Control? FindMouseControl(Viewport viewport, Vector2 point, ref List<Exception>? errors)
     {
-        Control? best = null;
-        var bestLayer = int.MinValue;
-        var bestZ = int.MinValue;
-        for (var index = _gui.InputTraversal.Count - 1; index >= 0; index--)
+        var roots = _gui.GuiRoots;
+        roots.Clear();
+        try
         {
-            if (_gui.InputTraversal[index] is not Control control || control.IsDisposed || !ReferenceEquals(control.Tree, this) ||
-                !control.IsVisibleInTree || control.EffectiveMouseFilter == MouseFilter.Ignore || !ReferenceEquals(control.GetViewport(), viewport)) continue;
-            try
+            foreach (var node in _gui.InputTraversal)
+                if (node is Control control && !control.IsDisposed && ReferenceEquals(control.Tree, this) &&
+                    ReferenceEquals(control.GetViewport(), viewport) && ReferenceEquals(GUIRoot(control), control)) roots.Add(control);
+            roots.Sort(static (left, right) =>
             {
-                var clipped = false;
-                for (var ancestor = control.GetParentItem(); ancestor is not null; ancestor = ancestor.GetParentItem())
-                    if (ancestor is Control { ClipContents: true } parent && !parent.ContainsClipPoint(point))
-                    { clipped = true; break; }
-                if (clipped) continue;
-                if (!control.HitTest(point)) continue;
-                var layer = control.GetCanvasLayerNode()?.Layer ?? 0;
-                var z = control.EffectiveZIndex;
-                if (best is null || layer > bestLayer || layer == bestLayer && z > bestZ)
-                { best = control; bestLayer = layer; bestZ = z; }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
+                if (ReferenceEquals(left, right)) return 0;
+                var layer = (left.GetCanvasLayerNode()?.Layer ?? 0).CompareTo(right.GetCanvasLayerNode()?.Layer ?? 0);
+                return layer != 0 ? layer : left.IsGreaterThanCore(right) ? 1 : -1;
+            });
+            for (var rootIndex = roots.Count - 1; rootIndex >= 0; rootIndex--)
+                for (var index = _gui.InputTraversal.Count - 1; index >= 0; index--)
+                {
+                    if (_gui.InputTraversal[index] is not Control control || control.IsDisposed || !ReferenceEquals(control.Tree, this) ||
+                        !control.IsVisibleInTree || control.EffectiveMouseFilter == MouseFilter.Ignore || !ReferenceEquals(control.GetViewport(), viewport) ||
+                        !ReferenceEquals(GUIRoot(control), roots[rootIndex])) continue;
+                    try
+                    {
+                        var clipped = false;
+                        for (var ancestor = control.GetParentItem(); ancestor is not null; ancestor = ancestor.GetParentItem())
+                            if (ancestor is Control { ClipContents: true } parent && !parent.HitTest(point))
+                            { clipped = true; break; }
+                        if (clipped || !control.HitTest(point)) continue;
+                        if (!control.IsDisposed && ReferenceEquals(control.Tree, this) && control.IsVisibleInTree &&
+                            control.EffectiveMouseFilter != MouseFilter.Ignore && ReferenceEquals(control.GetViewport(), viewport)) return control;
+                    }
+                    catch (Exception error) { CollectException(ref errors, error); }
+                }
+            return null;
         }
-        return best;
+        finally { roots.Clear(); }
+    }
+
+    private static Control GUIRoot(Control control)
+    {
+        var root = control;
+        for (var ancestor = control.GetParentItem(); ancestor is not null; ancestor = ancestor.GetParentItem())
+            if (ancestor is Control parent) root = parent;
+        return root;
     }
 
     private void FlushDeferredCore(ref List<Exception>? errors, bool flushTransforms = false)

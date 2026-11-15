@@ -10,6 +10,17 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_TARGET") is { } targetProfile)
+{
+    if (targetProfile == "managed")
+    {
+        ControlInputTests.Run(); ControlHoverTests.Run(); ControlClipTests.Run(); ControlPointerTests.Run();
+        CursorRefreshTests.Run(); SubViewportContainerTests.Run(); ScrollContainerTests.Run(); GUIDragTests.Run();
+    }
+    else { ControlTargetContracts.RunNative(targetProfile); ControlCursorFactoryTests.Run(); }
+    return;
+}
+
 if (args.Length == 2 && args[0] == "--os-crash-child") { OSCrashTests.Child(args[1]); return; }
 if (args.Length == 1 && args[0] == "--os-crash") { OSCrashTests.Run(); return; }
 
