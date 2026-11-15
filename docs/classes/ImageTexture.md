@@ -5,7 +5,7 @@ Last updated: 2026-10-16
 - Declaration: `public sealed class ImageTexture : Texture`
 - Source: [ImageTexture.cs](../../src/Scene/Resources/ImageTexture.cs)
 - Inherits: [Texture](Texture.md), [Resource](Resource.md)
-- Component: [Shader materials](../components/shader-materials.md)
+- Components: [Image texture data](../components/images.md#image-texture-data), [Shader materials](../components/shader-materials.md)
 
 ## Description
 
@@ -86,6 +86,8 @@ Maps logical coordinates into the original image, clamps to its edges and tests 
 
 CreateDuplicateInstance creates an empty ImageTexture. CopyCustomStateTo copies logical size and shares only immutable internal snapshots; later pixel replacement is independent in each copy. GetImage never exposes those snapshots. Dispose(bool) clears managed pixel references and logical size, then delegates Texture and Resource cleanup. It does not dispose source images, materials, shaders or another copy.
 
+ResourceLocalToScene defaults to false. With the flag enabled, an archived packed scene restores the original image and logical size, and each instance owns its own ImageTexture and RID.
+
 ## Formats, verification and remaining work
 
 Byte formats upload as RGBA8. Other accepted uncompressed normalized/float formats upload as RGBA32Float, retaining HDR values. Original image bytes remain available unchanged. BC1–BC7 sources retain their original format, complete mip chain and exact block bytes. Prepared CPU sampling decodes BC1–BC5/BC7 to RGBA8 and signed/unsigned BC6 to RGB floating point. GPU allocates native BC storage when the device supports it; otherwise it uploads prepared decoded pixels. Compatibility uses the decoded snapshot; BC6 requires an HDR-capable driver and the current Linux driver rejects that role. The RA-as-RG role uses decoded upload to preserve channel semantics. ETC/EAC/ASTC use the shared decoded upload path; signed EAC and ASTC HDR retain floating-point precision. [Unsigned image sampling](../components/integer-textures.md) now executes through prepared RGBA16 integer storage. Backend support is checked before native allocation. Canvas sampling is selected by CanvasItem and Viewport; the resource stores no sampler state. Named material textures use fixed linear filtering, clamp-to-edge coordinates and base-level LOD. Ordinary canvas drawing is implemented; other platforms remain unverified.
@@ -94,4 +96,4 @@ Byte formats upload as RGBA8. Other accepted uncompressed normalized/float forma
 
 Prepared video frames use private mutable RGBA storage and increment a pixel revision without replacing the Texture identity. Duplicate/save capture independent current pixels; compatible public image updates preserve subsequent video publication. See [video playback](../components/video-playback.md).
 
-[UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
+[UInt16 image texture sources](../components/integer-textures.md) retain all four original layouts and mip chains. Verified GPU sampling uses raw unsigned RGBA16 storage. See [backend verification and format limits](../components/images.md#image-texture-data).
