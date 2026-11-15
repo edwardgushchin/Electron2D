@@ -189,8 +189,12 @@ public sealed partial class Engine
     /// <summary>Gets the most recently measured process-frame rate.</summary>
     /// <value>
     /// Completed process frames per unscaled host second, updated after each accumulated second. The value is zero
-    /// until the first measurement window completes and is reset by <see cref="Start"/>.
+    /// until the first measurement window completes and is reset by a successful loop attachment.
     /// </value>
+    /// <remarks>Each window includes whole successful process iterations and their unscaled elapsed intervals.
+    /// It closes at one second or later; both its count and elapsed time then reset together. Zero-duration
+    /// iterations count, but cannot close a window alone. Failed callbacks do not contribute. Owned hosts use
+    /// measured time, including during fixed-cadence recording, independently of callback time scaling.</remarks>
     public static double FramesPerSecond
     {
         get => Service.FramesPerSecondCore;

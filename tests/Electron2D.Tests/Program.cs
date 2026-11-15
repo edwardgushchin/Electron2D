@@ -509,6 +509,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRELOADER") is { } prelo
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JSON") == "1") { JsonTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JSONRPC") == "1") { JSONRPCTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IP") == "1") { IPTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENGINE_OBSERVATIONS") is { } observations) { if (observations == "1") { VerifyEngine(); EngineObservationTests.Run(); } else EngineObservationTests.Native(observations); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENGINE_REGISTRY") == "1") { VerifyEngine(); return; }
 if (args.Length == 2 && args[0] == "--touch-archive") { TouchControlTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOUCH") is { } touchProfile) { if (touchProfile == "managed") TouchControlTests.RunManaged(); else TouchControlNativeTests.Run(touchProfile); return; }

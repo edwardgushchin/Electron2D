@@ -140,6 +140,12 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, Trans
 
 ## Invariants
 
+Frame-rate windows retire their complete elapsed interval together with their completed-process count.
+An overshooting interval is not carried into a window whose count starts at zero. Owned hosts measure
+wall time even when movie simulation uses a fixed delta; manual hosts supply their own unscaled time.
+Callback failures do not commit process completion or the FPS sample. Observation getters publish atomic
+individual values; reading several getters is not a transaction over a concurrently advancing frame.
+
 - Exactly one `Engine` instance exists and cannot be disposed.
 - At most one loop lifecycle is active.
 - One owner thread runs startup, frames, and shutdown.
