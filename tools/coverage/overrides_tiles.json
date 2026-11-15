@@ -1601,6 +1601,94 @@
   "statusGroups": [
     {
       "godot": [
+        "class:TileMap",
+        "TileMap::enum:VisibilityMode",
+        "TileMap::enum_value:VisibilityMode.VISIBILITY_MODE_DEFAULT",
+        "TileMap::enum_value:VisibilityMode.VISIBILITY_MODE_FORCE_HIDE",
+        "TileMap::enum_value:VisibilityMode.VISIBILITY_MODE_FORCE_SHOW",
+        "TileMap::method:_tile_data_runtime_update(int:,Vector2i:,TileData:)",
+        "TileMap::method:_use_tile_data_runtime_update(int:,Vector2i:)",
+        "TileMap::method:add_layer(int:)",
+        "TileMap::method:clear()",
+        "TileMap::method:clear_layer(int:)",
+        "TileMap::method:erase_cell(int:,Vector2i:)",
+        "TileMap::method:fix_invalid_tiles()",
+        "TileMap::method:get_cell_alternative_tile(int:,Vector2i:,bool:)",
+        "TileMap::method:get_cell_atlas_coords(int:,Vector2i:,bool:)",
+        "TileMap::method:get_cell_source_id(int:,Vector2i:,bool:)",
+        "TileMap::method:get_cell_tile_data(int:,Vector2i:,bool:)",
+        "TileMap::method:get_coords_for_body_rid(RID:)",
+        "TileMap::method:get_layer_for_body_rid(RID:)",
+        "TileMap::method:get_layer_modulate(int:)",
+        "TileMap::method:get_layer_name(int:)",
+        "TileMap::method:get_layer_navigation_map(int:)",
+        "TileMap::method:get_layer_y_sort_origin(int:)",
+        "TileMap::method:get_layer_z_index(int:)",
+        "TileMap::method:get_layers_count()",
+        "TileMap::method:get_neighbor_cell(Vector2i:,int:TileSet.CellNeighbor)",
+        "TileMap::method:get_pattern(int:,Vector2i[]:)",
+        "TileMap::method:get_surrounding_cells(Vector2i:)",
+        "TileMap::method:get_used_cells(int:)",
+        "TileMap::method:get_used_cells_by_id(int:,int:,Vector2i:,int:)",
+        "TileMap::method:get_used_rect()",
+        "TileMap::method:is_cell_flipped_h(int:,Vector2i:,bool:)",
+        "TileMap::method:is_cell_flipped_v(int:,Vector2i:,bool:)",
+        "TileMap::method:is_cell_transposed(int:,Vector2i:,bool:)",
+        "TileMap::method:is_layer_enabled(int:)",
+        "TileMap::method:is_layer_navigation_enabled(int:)",
+        "TileMap::method:is_layer_y_sort_enabled(int:)",
+        "TileMap::method:local_to_map(Vector2:)",
+        "TileMap::method:map_pattern(Vector2i:,Vector2i:,TileMapPattern:)",
+        "TileMap::method:map_to_local(Vector2i:)",
+        "TileMap::method:move_layer(int:,int:)",
+        "TileMap::method:notify_runtime_tile_data_update(int:)",
+        "TileMap::method:remove_layer(int:)",
+        "TileMap::method:set_cell(int:,Vector2i:,int:,Vector2i:,int:)",
+        "TileMap::method:set_cells_terrain_connect(int:,Vector2i[]:,int:,int:,bool:)",
+        "TileMap::method:set_cells_terrain_path(int:,Vector2i[]:,int:,int:,bool:)",
+        "TileMap::method:set_layer_enabled(int:,bool:)",
+        "TileMap::method:set_layer_modulate(int:,Color:)",
+        "TileMap::method:set_layer_name(int:,String:)",
+        "TileMap::method:set_layer_navigation_enabled(int:,bool:)",
+        "TileMap::method:set_layer_navigation_map(int:,RID:)",
+        "TileMap::method:set_layer_y_sort_enabled(int:,bool:)",
+        "TileMap::method:set_layer_y_sort_origin(int:,int:)",
+        "TileMap::method:set_layer_z_index(int:,int:)",
+        "TileMap::method:set_pattern(int:,Vector2i:,TileMapPattern:)",
+        "TileMap::method:update_internals()",
+        "TileMap::property:collision_animatable",
+        "TileMap::property:collision_visibility_mode",
+        "TileMap::property:navigation_visibility_mode",
+        "TileMap::property:rendering_quadrant_size",
+        "TileMap::property:tile_set",
+        "TileMap::signal:changed()"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: doc/classes/TileMap.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use multiple [TileMapLayer] nodes instead. To convert a TileMap to a set of TileMapLayer nodes, open the TileMap bottom panel with the node selected, click the toolbox icon in the top-right corner and choose 'Extract TileMap layers as individual TileMapLayer nodes'.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Use the current [TileMapLayer](TileMapLayer.md) under [ADR 0101](../../decisions/tiles.md#adr-0101). No implementation trigger."
+    },
+    {
+      "godot": [
+        "TileMap::method:force_update(int:)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: doc/classes/TileMap.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use multiple [TileMapLayer] nodes instead. To convert a TileMap to a set of TileMapLayer nodes, open the TileMap bottom panel with the node selected, click the toolbox icon in the top-right corner and choose 'Extract TileMap layers as individual TileMapLayer nodes'.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Member deprecated=\"Use [method notify_runtime_tile_data_update] and/or [method update_internals] instead.\". Use the current [TileMapLayer](TileMapLayer.md) under [ADR 0101](../../decisions/tiles.md#adr-0101). No implementation trigger."
+    },
+    {
+      "godot": [
+        "TileMap::method:get_navigation_map(int:)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: doc/classes/TileMap.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use multiple [TileMapLayer] nodes instead. To convert a TileMap to a set of TileMapLayer nodes, open the TileMap bottom panel with the node selected, click the toolbox icon in the top-right corner and choose 'Extract TileMap layers as individual TileMapLayer nodes'.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Member deprecated=\"Use [method get_layer_navigation_map] instead.\". Use the current [TileMapLayer](TileMapLayer.md) under [ADR 0101](../../decisions/tiles.md#adr-0101). No implementation trigger."
+    },
+    {
+      "godot": [
+        "TileMap::method:set_navigation_map(int:,RID:)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: doc/classes/TileMap.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use multiple [TileMapLayer] nodes instead. To convert a TileMap to a set of TileMapLayer nodes, open the TileMap bottom panel with the node selected, click the toolbox icon in the top-right corner and choose 'Extract TileMap layers as individual TileMapLayer nodes'.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Member deprecated=\"Use [method set_layer_navigation_map] instead.\". Use the current [TileMapLayer](TileMapLayer.md) under [ADR 0101](../../decisions/tiles.md#adr-0101). No implementation trigger."
+    },
+    {
+      "godot": [
         "class:TileData"
       ],
       "state": "Partial",

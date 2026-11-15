@@ -872,7 +872,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ThemeDB](classes/ThemeDB.md) | Object | Partial | 8 |
 | [Thread](classes/Thread.md) | RefCounted | Blocked | 11 |
 | [TileData](classes/TileData.md) | Object | Partial | 44 |
-| [TileMap](classes/TileMap.md) | Node2D | Blocked | 63 |
+| [TileMap](classes/TileMap.md) | Node2D | Excluded | 63 |
 | [TileMapLayer](classes/TileMapLayer.md) | Node2D | Partial | 50 |
 | [TileMapPattern](classes/TileMapPattern.md) | Resource | Implemented | 10 |
 | [TileSet](classes/TileSet.md) | Resource | Partial | 121 |
