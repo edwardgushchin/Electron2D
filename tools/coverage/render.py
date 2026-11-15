@@ -251,6 +251,8 @@ def reason_for_type(item, lookup):
         return "Excluded", "3D/XR product scope is excluded by ADR 0004; no implementation trigger."
     if name == "@GlobalScope":
         return "Partial", "Global functions/constants/enums are distributed across typed C# declarations; audit each row."
+    if name == "EditorExportPlatformVisionOS":
+        return "Excluded", "visionOS game export is outside the runtime target matrix ([ADR 0021](../../decisions/product.md#adr-0021))."
     if item.get("api_type") == "editor" or name.startswith("Editor") or "Editor" in ancestors:
         return "Blocked", "Trigger: first self-hosted editor executable slice under ADR 0027."
     accepted_slices = (
@@ -471,6 +473,10 @@ def special_reason(item, member):
                 or re.search(r"(?:^|_)3d(?:$|_)", name)):
             return "Excluded", "3D scene, lighting or texture API is outside ADR 0004; canvas and shared 2D resources are audited separately."
     if item["name"] == "ProjectSettings" and member["kind"] == "property":
+        if name == "display/display_server/driver.visionos":
+            return "Excluded", "The visionOS startup display-driver override targets a host outside the runtime matrix ([ADR 0021](../../decisions/product.md#adr-0021))."
+        if name == "rendering/rendering_device/driver.visionos":
+            return "Excluded", "The visionOS startup rendering-device driver override targets a host outside the runtime matrix ([ADR 0021](../../decisions/product.md#adr-0021))."
         root = name.split("/", 1)[0]
         if re.search(r"(?:^|[/_])3d(?:$|[/_])", name) or root in {"xr", "collada"}:
             return "Excluded", "3D/XR or 3D asset-setting family is outside the 2D product (ADR 0004)."
@@ -746,6 +752,8 @@ def render():
             updated = "2026-11-06"
         if name in {"@GlobalScope", "ParallaxBackground", "ParallaxLayer", "ProjectSettings", "RenderingServer", "TranslationDomain", "TranslationServer"}:
             updated = "2026-11-14"
+        if name in {"EditorExportPlatformVisionOS", "ProjectSettings"}:
+            updated = "2026-11-15"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

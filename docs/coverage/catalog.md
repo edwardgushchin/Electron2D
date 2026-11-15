@@ -241,7 +241,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [EditorExportPlatformLinuxBSD](classes/EditorExportPlatformLinuxBSD.md) | EditorExportPlatformPC | Blocked | 15 |
 | [EditorExportPlatformMacOS](classes/EditorExportPlatformMacOS.md) | EditorExportPlatform | Blocked | 237 |
 | [EditorExportPlatformPC](classes/EditorExportPlatformPC.md) | EditorExportPlatform | Blocked | 0 |
-| [EditorExportPlatformVisionOS](classes/EditorExportPlatformVisionOS.md) | EditorExportPlatformAppleEmbedded | Blocked | 189 |
+| [EditorExportPlatformVisionOS](classes/EditorExportPlatformVisionOS.md) | EditorExportPlatformAppleEmbedded | Excluded | 189 |
 | [EditorExportPlatformWeb](classes/EditorExportPlatformWeb.md) | EditorExportPlatform | Blocked | 23 |
 | [EditorExportPlatformWindows](classes/EditorExportPlatformWindows.md) | EditorExportPlatformPC | Blocked | 38 |
 | [EditorExportPlugin](classes/EditorExportPlugin.md) | RefCounted | Blocked | 47 |
