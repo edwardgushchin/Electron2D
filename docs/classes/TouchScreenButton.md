@@ -1,6 +1,6 @@
 # TouchScreenButton
 
-Last updated: 2026-10-25
+Last updated: 2026-11-15
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class TouchScreenButton : Entity`. **Source:** [runtime](../../src/Scene/2D/TouchScreenButton.cs), [storage](../../src/Scene/2D/TouchScreenButton.Storage.cs). **Inherits:** [Entity](Entity.md). **Component:** [Touch game controls](../components/touch-game-controls.md).
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-25
 A scene-space touch button with one signed contact, independent action ownership and normal/pressed texture drawing. Viewport coordinates transform through the global canvas inverse. Shape and bitmap regions form a union; a texture rectangle is used only without either mask. The unit-pixel shape query tests pixel area, and ShapeCentered offsets the shape by half the normal texture. ShapeVisible draws the actual shape only during collision debugging or authoring. TouchscreenOnly hides decoration and input when the display service reports no touchscreen; selected authoring nodes remain drawable. Resources are borrowed and texture residency is retained while attached. Entry enables inherited InputEnabled. Exit releases silently; normal cancellation emits Released. Generated InputEventAction transitions are delivered through the containing viewport after the current traversal, with committed action state.
 
 Attached getters and mutations use the scene owner. Mutation rejects scene capture and disposal; undefined enum values, nonfinite geometry and disposed borrowed resources reject. Unknown or empty actions publish no contribution; configuration warnings identify nonempty unknown names. Lifecycle hide, pause, disable, focus loss, exit and disposal retire only owned contributions. Discrete button action events allocate; prepared joystick motion and ordinary drawing reuse retained storage. Selected authoring-subtree input produces no gameplay actions.
+
+An attached child [Control](Control.md) uses the normal texture size as its anchor area. A missing normal texture supplies an empty area.
 
 ## Example
 
