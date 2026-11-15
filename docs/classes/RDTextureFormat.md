@@ -8,13 +8,17 @@ Last updated: 2026-11-06
 
 ## Description
 
-A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; MIPMaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. A nonempty shareable list includes the exact allocation format; compatible alternate formats execute through [shared texture views](../components/shared-texture-views.md). ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color or depth/stencil resolve destination. Multisample images require empty single-mip target or color-storage allocations, including arrays; explicit per-sample shader access executes while raw readback requires resolve. See [multisample storage](../components/graphics-storage-images.md#multisample-storage-images). Discardable lifetime hints retain their last-use prerequisite.
+A caller-owned allocation description copied during `TextureCreate`. Width and height are in texels. The four unsigned counts accept 1 through `Int32.MaxValue`. The setters reject undefined format, type and usage values before changing the description. An ordinary image requires exactly one layer. A single-layer array retains the array role.
+
+`TextureCreate` checks the full description against device limits, format/usage support and the mip-chain length. Select at least one usage bit before creating a texture. Supply one tightly packed encoded mip chain per layer, or omit data to initialize every layer and mip to zero. A nonempty shareable list includes the exact allocation format. Compatible alternate formats execute through [shared texture views](../components/shared-texture-views.md).
+
+`Samples` defaults to `Samples1`. `IsResolveBuffer` defaults to false and marks a single-sample color or depth/stencil resolve destination. Multisample images require empty single-mip target or color-storage allocations, including arrays. Explicit per-sample shader access executes through the [multisample storage contract](../components/graphics-storage-images.md#multisample-storage-images). CPU readback requires resolving first. Discardable lifetime hints require last-use analysis.
 
 InputAttachment supports single-mip color and depth images and arrays, including exact multisample targets. An input array or combining it with Sampling retains a private readonly single-layer GPU snapshot for the input pass; see [ordered framebuffer inputs](../components/local-compute.md#ordered-framebuffer-passes-and-inputs). [Depth framebuffer inputs](../components/depth-inputs.md) execute through the ABI2 aspect/view adapter. Input-only depth retains private initialization targets without gaining public render/copy roles.
 
 ## Example
 
-Device examples require a live caller-owned RenderingDevice; view examples also require an allocation format. See the [complete executable consumer](../../tests/Electron2D.Tests/RenderingDeviceTextureTests.cs).
+Device examples require a live caller-owned RenderingDevice. See the [public consumer](../../tests/TextureFormat.Consumer/Program.cs).
 
 ```csharp
 using var format = new RDTextureFormat
@@ -98,6 +102,8 @@ Gets or sets the number of independent image layers.
 
 Initially 1; copied when the device creates its resource.
 
+An ordinary image requires one layer. Arrays use the selected device's layer limit.
+
 <a id="member-5cbfd47c39ec"></a>
 ### Format
 
@@ -108,6 +114,8 @@ public Electron2D.RenderingDevice.DataFormat Format { get; set; }
 Gets or sets the encoded pixel or compressed-block format.
 
 Initially RenderingDevice.DataFormat.R8UNORM; copied when the device creates its resource.
+
+Allocation requires native support for the format, usage and sample count.
 
 <a id="member-0a014c720327"></a>
 ### Height
@@ -131,6 +139,8 @@ Gets or sets the mip count, including the base level.
 
 Initially 1; copied when the device creates its resource.
 
+The full chain has `1 + floor(log2(max(Width, Height)))` levels. Input, resolve and multisample roles require a single mip.
+
 <a id="member-23a6baee3262"></a>
 ### TextureType
 
@@ -153,6 +163,8 @@ Gets or sets required allocation, sampling and transfer roles.
 
 Initially 0; copied when the device creates its resource.
 
+`TextureCreate` requires at least one usage bit. Transfer-only textures retain exactly the public roles specified here.
+
 <a id="member-4a857a4857e4"></a>
 ### Width
 
@@ -166,9 +178,9 @@ Initially 1; copied when the device creates its resource.
 
 ## Lifetime and verification
 
-Configurations are independent caller-owned ElectronObject values; disposing a description does not free an already-created RID. Device identities belong to the creating thread/device and are freed through FreeRID or device disposal. Borrowed sampler/image bindings expire when either identity is freed. Enum values own no native state.
+Disposing a description leaves the texture RID live. `TextureGetFormat` returns a new description that retains the stored allocation format, shareable formats and the selected view's dimensions, layers and mip count. The returned description stays usable after the RID is freed. Freeing the allocation owner retires its dependent views.
 
-Native GLSL/HLSL and image/filter/mip tests run through ELECTRON2D_TEST_DEVICE_TEXTURES on Linux/Vulkan. Other backends, native allocator measurements, implicit LOD-bias/anisotropy calibration and canvas/device sharing remain unverified. See [Local compute](../components/local-compute.md) and [ADR 0028](../decisions/rendering.md#adr-0028).
+See [Texture description verification](../components/local-compute.md#texture-description-verification) and [ADR 0028](../decisions/rendering.md#adr-0028).
 
 Depth/stencil formats accept queried attachment/input/resolve roles and independent Sampling and transfer permissions. [Stencil-only S8UINT](../components/stencil-textures.md) uses one byte per texel and unsigned sampling. Empty data initializes every depth layer/mip to zero through native passes. Single-sample native aspect transfers execute through the [depth transfer adapter](../components/depth-texture-transfers.md); copied depth-bound state uses the [native depth/stencil feature](../components/depth-stencil-state.md). See [depth/stencil behavior](../components/local-compute.md#depthstencil-graphics-and-sampling).
 

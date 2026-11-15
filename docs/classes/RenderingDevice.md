@@ -522,10 +522,12 @@ A texture RID belonging to this device.
 | Parameter | Contract |
 | --- | --- |
 | `format` | Allocation description copied before returning. |
-| `view` | Copied initial sampled component mapping; alternate pixel formats require a shared native format view. |
+| `view` | Copied initial format and sampled component mapping. Alternate formats must be declared shareable. |
 | `data` | One tightly packed mip chain per layer, or empty for zero initialization. Single-sample depth/stencil uses the documented portable aspect encoding; empty depth images initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears. |
 
 - `T:System.NotSupportedException`: The requested format, view or allocation role is not supported.
+- `T:System.ArgumentException`: The usage mask is empty, or the description, view or initial data is inconsistent.
+- `T:System.ArgumentOutOfRangeException`: The image extents, layer count or transfer footprint exceed the applicable limits.
 <a id="member-a3f596fd4b89"></a>
 ### TextureGetData(Electron2D.RID, System.UInt32)
 
@@ -597,9 +599,13 @@ public Electron2D.RDTextureFormat TextureGetFormat(Electron2D.RID texture)
 
 Copies stored format metadata and the selected view dimensions, layers and mip interval.
 
-A caller-owned description independent of the allocation.
+A new caller-owned description, including a copy of the permitted view formats. Format reports the allocation encoding even when the view uses a different encoding. The description remains usable after the texture is freed.
 
 `texture`: Live texture owned by this device.
+
+- `T:System.ArgumentException`: The RID is stale, foreign or of the wrong resource kind.
+- `T:System.InvalidOperationException`: The caller cannot access the device from the current thread or operation.
+- `T:System.ObjectDisposedException`: The rendering device is disposed.
 <a id="member-1c2cef0b1c48"></a>
 ### TextureIsFormatSupportedForUsage(Electron2D.RenderingDevice.DataFormat, Electron2D.RenderingDevice.TextureUsageBits)
 

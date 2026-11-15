@@ -7,31 +7,38 @@ public sealed class RDTextureFormat : ElectronObject
     public RDTextureFormat() { }
     private uint _arrayLayers = 1;
     /// <summary>Gets or sets the number of independent image layers.</summary>
+    /// <remarks>An ordinary image requires one layer. Arrays use the selected device's layer limit.</remarks>
     /// <value>Initially 1; copied when the device creates its resource.</value>
     public uint ArrayLayers { get { ThrowIfDisposed(); return _arrayLayers; } set { ThrowIfDisposed(); _arrayLayers = RDTextureConfiguration.Positive(value); } }
     private uint _width = 1;
     /// <summary>Gets or sets the base mip width in texels.</summary>
+    /// <remarks>The value is positive. Texture creation validates the device's extent and transfer limits.</remarks>
     /// <value>Initially 1; copied when the device creates its resource.</value>
     public uint Width { get { ThrowIfDisposed(); return _width; } set { ThrowIfDisposed(); _width = RDTextureConfiguration.Positive(value); } }
     private uint _height = 1;
     /// <summary>Gets or sets the base mip height in texels.</summary>
+    /// <remarks>The value is positive. Texture creation validates the device's extent and transfer limits.</remarks>
     /// <value>Initially 1; copied when the device creates its resource.</value>
     public uint Height { get { ThrowIfDisposed(); return _height; } set { ThrowIfDisposed(); _height = RDTextureConfiguration.Positive(value); } }
     private uint _mipmaps = 1;
     /// <summary>Gets or sets the mip count, including the base level.</summary>
+    /// <remarks>For single-sample color images without input attachment or resolve roles, the count can cover the full chain down to one texel per axis. Texture creation validates the selected allocation role.</remarks>
     /// <value>Initially 1; copied when the device creates its resource.</value>
     public uint MIPMaps { get { ThrowIfDisposed(); return _mipmaps; } set { ThrowIfDisposed(); _mipmaps = RDTextureConfiguration.Positive(value); } }
     private RenderingDevice.DataFormat _format = RenderingDevice.DataFormat.R8UNORM;
     /// <summary>Gets or sets the encoded pixel or compressed-block format.</summary>
+    /// <remarks>The format must be a concrete enum member. Allocation requires native support for the format, usage and sample count.</remarks>
     /// <value>Initially RenderingDevice.DataFormat.R8UNORM; copied when the device creates its resource.</value>
     public RenderingDevice.DataFormat Format { get { ThrowIfDisposed(); return _format; } set { ThrowIfDisposed(); _format = RDTextureConfiguration.FormatValue(value); } }
     private RenderingDevice.TextureType _textureType = RenderingDevice.TextureType.Texture;
     /// <summary>Gets or sets ordinary-image or independently sampled array storage.</summary>
+    /// <remarks>A single-layer array retains the array role.</remarks>
     /// <value>Initially RenderingDevice.TextureType.Texture; copied when the device creates its resource.</value>
     public RenderingDevice.TextureType TextureType { get { ThrowIfDisposed(); return _textureType; } set { ThrowIfDisposed(); _textureType = RDTextureConfiguration.TextureKind(value); } }
     private RenderingDevice.TextureUsageBits _usageBits = 0;
     /// <summary>Gets or sets required allocation, sampling and transfer roles.</summary>
-    /// <remarks>Single-sample depth/stencil targets may add upload/copy/readback roles when the native aspect adapter supports the format. S8UINT uses one unsigned stencil byte per texel, stencil state and unsigned sampled/input reads; depth state requires a depth aspect.</remarks>
+    /// <remarks>Only defined usage bits are accepted. Texture creation requires at least one bit.
+    /// Single-sample depth/stencil targets may add upload/copy/readback roles when the native aspect adapter supports the format. S8UINT uses one unsigned stencil byte per texel, stencil state and unsigned sampled/input reads; depth state requires a depth aspect.</remarks>
     /// <value>Initially 0; copied when the device creates its resource.</value>
     public RenderingDevice.TextureUsageBits UsageBits { get { ThrowIfDisposed(); return _usageBits; } set { ThrowIfDisposed(); _usageBits = RDTextureConfiguration.Usage(value); } }
     private RenderingDevice.TextureSamples _samples = RenderingDevice.TextureSamples.Samples1;
