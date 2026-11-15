@@ -141,6 +141,8 @@ All three settings default to false. The permission is sampled at startup and ma
 
 ## Description
 
+The [metadata and persistence contract](../components/project-settings.md#metadata-and-persistence) defines ordering ties, discovery filters, synchronous metadata notifications and transactional text saves.
+
 Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
 Stores globally accessible, strongly typed project settings and resolves project virtual paths.

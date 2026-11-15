@@ -56,6 +56,12 @@ internal static class ProjectSettingsContractTests
             {
                 Reject<InvalidOperationException>(() => registry.Reset(setting));
                 Reject<InvalidOperationException>(() => registry.Unregister(setting));
+                Reject<InvalidOperationException>(() => registry.SetOrder(setting, 0));
+                Reject<InvalidOperationException>(() => registry.SetAsBasic(setting, true));
+                Reject<InvalidOperationException>(() => registry.SetAsInternal(setting, true));
+                Reject<InvalidOperationException>(() => registry.SetRestartIfChanged(setting, true));
+                Reject<InvalidOperationException>(registry.Save);
+                Reject<InvalidOperationException>(() => registry.SaveCustom(registry.ProjectFilePath));
                 guardedLateRegistration = true;
                 registry.Set(setting, [99]);
             }

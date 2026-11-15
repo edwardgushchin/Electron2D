@@ -262,7 +262,7 @@ public partial class ProjectSettingsRegistry
     /// <summary>Gets the persistence order assigned to a registered setting.</summary>
     /// <typeparam name="T">The non-null setting value type.</typeparam>
     /// <param name="setting">The exact registered definition.</param>
-    /// <returns>The signed ordering value; lower values appear first.</returns>
+    /// <returns>The signed ordering value; lower values appear first and ties use ordinal names.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
     /// <exception cref="InvalidOperationException">A different definition owns the same name.</exception>
@@ -270,6 +270,8 @@ public partial class ProjectSettingsRegistry
     public int GetOrder<T>(ProjectSetting<T> setting) where T : notnull => GetOrderCore<T>(setting);
 
     /// <summary>Changes the persistence and tooling order of a registered setting.</summary>
+    /// <remarks>Metadata is registry-local and is not persisted. Actual changes synchronously notify property-list listeners
+    /// after commitment; repeated values are silent. Value versions and pending value notifications are unaffected.</remarks>
     /// <typeparam name="T">The non-null setting value type.</typeparam>
     /// <param name="setting">The exact registered definition.</param>
     /// <param name="order">The signed ordering value.</param>
@@ -392,6 +394,8 @@ public partial class ProjectSettingsRegistry
 
     /// <summary>Saves the current document to <see cref="ProjectFilePath"/> using atomic replacement.</summary>
     /// <remarks>
+    /// Known entries use order/name order within sections and stored override precedence. Unknown entries survive.
+    /// Base values equal to their current initial value are omitted; metadata is not serialized.
     /// A successful save applies the saved document and clears internal unsaved-value tracking. Change-notification names remain until
     /// <see cref="FlushChanges"/> completes; a failed save preserves both states.
     /// </remarks>
@@ -404,6 +408,8 @@ public partial class ProjectSettingsRegistry
     /// <summary>Saves the current document to an explicit file using atomic replacement.</summary>
     /// <param name="path">An operating-system, <c>res://</c>, or <c>user://</c> file path.</param>
     /// <remarks>
+    /// Known entries use order/name order within sections and stored override precedence. Unknown entries survive.
+    /// Base values equal to their current initial value are omitted; metadata is not serialized.
     /// A successful save applies the saved document and clears internal unsaved-value tracking. Change-notification names remain until
     /// <see cref="FlushChanges"/> completes; a failed save preserves both states.
     /// </remarks>

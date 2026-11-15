@@ -469,6 +469,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_USER_DATA") == "1") { Pr
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_SETTINGS") == "1")
 {
     ProjectSettingsContractTests.Run();
+    ProjectSettingsMetadataTests.Run();
     VerifyProjectSettings();
     Console.WriteLine("ProjectSettings persistence and registry regressions passed.");
     return;

@@ -145,6 +145,8 @@ CanvasItem TopLevel rebinding now connects to the existing recursive presentatio
 
 Last updated: 2026-11-15
 
+Project-settings metadata and atomic text saves share the [registry contract](components/project-settings.md#metadata-and-persistence), verified by the public metadata/persistence fixture. Target-host qualification remains separate.
+
 [Window content fitting](components/window-runtime.md#fitting-child-controls) connects Window and Control to the existing deferred scene queue and native resize path.
 
 [Window drawability](components/window-runtime.md#window-drawability) extends the existing Window and DisplayServer types and is consumed by native presentation.
