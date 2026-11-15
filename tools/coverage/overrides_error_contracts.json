@@ -117,7 +117,7 @@
         "@GlobalScope::enum_value:Error.ERR_FILE_UNRECOGNIZED"
       ],
       "state": "Excluded",
-      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2703). [ADR 0013](../../decisions/resources.md#adr-0013) exposes loader selection through [`ResourceLoader.Load`](../../classes/ResourceLoader.md#load); an unsupported requested resource type with no matching format loader throws `NotSupportedException`."
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2703). Under [ADR 0039](../../decisions/resources.md#adr-0039), [the reference image decoder hook](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ImageFormatLoaderExtension.xml) projects unrecognized contents to `false` from [`ImageFormatLoaderExtension.LoadImage`](../../classes/ImageFormatLoaderExtension.md#construction-and-extension-hooks). [`Image.Load`](../../classes/Image.md#load) discards temporary pixels and tries the next decoder at offset zero. A typed exception propagates and ends the load immediately. Exhausting the matching decoders yields `NotSupportedException`. Under [ADR 0013](../../decisions/resources.md#adr-0013), [`ResourceLoader.Load`](../../classes/ResourceLoader.md#load) also throws `NotSupportedException` for an unsupported requested resource type with no matching loader."
     },
     {
       "godot": [
@@ -222,7 +222,7 @@
         "@GlobalScope::enum_value:Error.ERR_INVALID_DATA"
       ],
       "state": "Excluded",
-      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2748). [ADR 0018](../../decisions/core-data-io.md#adr-0018) distinguishes invalid configuration encoding (`DecoderFallbackException`) from malformed text (`FormatException`) at [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string). Resource and protocol boundaries retain their own invalid-data contracts."
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2748). [ADR 0018](../../decisions/core-data-io.md#adr-0018) distinguishes invalid configuration encoding (`DecoderFallbackException`) from malformed text (`FormatException`) at [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string). The pinned [PackedDataContainer.pack declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PackedDataContainer.xml) explicitly declares return code 30. Its [owning coverage row](PackedDataContainer.md) is `Blocked` pending the first typed packed-asset container and loader slice under [ADR 0013](../../decisions/resources.md#adr-0013) and [ADR 0023](../../decisions/packed-scenes.md#adr-0023)."
     },
     {
       "godot": [
