@@ -118,7 +118,7 @@ internal static class DirAccessPackMetadataTests
 
     private static void Mount(string pack) => Check(ProjectSettings.LoadResourcePack(pack), "Mount the PCK fixture.");
 
-    private static void CreateDirectoryLink(string root, string link, string relativeTarget)
+    internal static void CreateDirectoryLink(string root, string link, string relativeTarget)
     {
         var path = Path.Combine(root, link);
         if (!OperatingSystem.IsWindows())

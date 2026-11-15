@@ -377,7 +377,7 @@ public sealed partial class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            MakeSingleDirectory(ResolveLocked(path));
+            MakeSingleDirectory(ResolveMutationLocked(path));
         }
     }
 
@@ -389,12 +389,13 @@ public sealed partial class DirAccess : ElectronObject
     /// <exception cref="DirectoryNotFoundException">The parent directory does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">The virtual path escapes its root or access is denied.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unsupported virtual scheme.</exception>
-    public static void MakeDirAbsolute(string path) => MakeSingleDirectory(ResolveStaticAbsolute(path));
+    public static void MakeDirAbsolute(string path) => MakeSingleDirectory(ResolveAbsoluteMutation(path, ProjectSettings.Service.GetPathRootsSnapshot()));
 
     /// <summary>Creates a directory and every missing parent in its path.</summary>
     /// <param name="path">A relative path or an absolute path in this instance's scope.</param>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
+    /// <remarks>An existing writable directory satisfies the operation.</remarks>
     /// <exception cref="IOException">The directory tree cannot be created.</exception>
     /// <exception cref="UnauthorizedAccessException">The path escapes a virtual root or access is denied.</exception>
     /// <exception cref="InvalidOperationException"><paramref name="path"/> belongs to another access scope.</exception>
@@ -406,7 +407,7 @@ public sealed partial class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            Directory.CreateDirectory(WritablePhysical(ResolveLocked(path)));
+            Directory.CreateDirectory(WritableMutation(ResolveMutationLocked(path)));
         }
     }
 
@@ -414,10 +415,11 @@ public sealed partial class DirAccess : ElectronObject
     /// <param name="path">A fully qualified native path, <c>res://</c> path, or <c>user://</c> path.</param>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty, invalid, or relative.</exception>
+    /// <remarks>An existing writable directory satisfies the operation.</remarks>
     /// <exception cref="IOException">The directory tree cannot be created.</exception>
     /// <exception cref="UnauthorizedAccessException">The virtual path escapes its root or access is denied.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unsupported virtual scheme.</exception>
-    public static void MakeDirRecursiveAbsolute(string path) => Directory.CreateDirectory(WritablePhysical(ResolveStaticAbsolute(path)));
+    public static void MakeDirRecursiveAbsolute(string path) => Directory.CreateDirectory(WritableMutation(ResolveAbsoluteMutation(path, ProjectSettings.Service.GetPathRootsSnapshot())));
 
     /// <summary>Reports whether a file exists at a relative or in-scope absolute path.</summary>
     /// <param name="path">The file path to test.</param>
@@ -490,7 +492,10 @@ public sealed partial class DirAccess : ElectronObject
     /// <param name="source">A relative or in-scope absolute source file path.</param>
     /// <param name="destination">A relative or in-scope absolute destination file path.</param>
     /// <param name="permissions">Optional Unix mode bits applied after a successful copy.</param>
-    /// <remarks>The destination file is overwritten. Its parent directory is never created implicitly.</remarks>
+    /// <remarks>
+    /// An existing writable destination file is overwritten. Its parent must exist. A mounted file can be copied out.
+    /// A physical source and destination that refer to the same file are rejected before writing.
+    /// </remarks>
     /// <exception cref="ArgumentNullException">A path is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">A path is empty, invalid, or resolves to the same path as the other argument.</exception>
     /// <exception cref="FileNotFoundException">The source file does not exist.</exception>
@@ -508,7 +513,7 @@ public sealed partial class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            CopyPhysical(ResolveLocked(source), ResolveLocked(destination), permissions);
+            CopyPhysical(ResolveMutationLocked(source), ResolveMutationLocked(destination), permissions);
         }
     }
 
@@ -516,7 +521,10 @@ public sealed partial class DirAccess : ElectronObject
     /// <param name="source">A fully qualified native path, <c>res://</c> path, or <c>user://</c> path.</param>
     /// <param name="destination">A fully qualified native path, <c>res://</c> path, or <c>user://</c> path.</param>
     /// <param name="permissions">Optional Unix mode bits applied after a successful copy.</param>
-    /// <remarks>The two paths may belong to different virtual scopes. The destination parent is not created.</remarks>
+    /// <remarks>
+    /// The paths may belong to different virtual scopes. The destination parent must exist.
+    /// A mounted file can be copied to a writable destination. An existing writable destination file is overwritten.
+    /// </remarks>
     /// <exception cref="ArgumentNullException">A path is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">A path is empty, invalid, relative, or resolves to the same path as the other argument.</exception>
     /// <exception cref="FileNotFoundException">The source file does not exist.</exception>
@@ -528,19 +536,20 @@ public sealed partial class DirAccess : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="permissions"/> contains unknown mode bits.</exception>
     public static void CopyAbsolute(string source, string destination, UnixPermissionFlags? permissions = null)
     {
-        ValidateAbsolutePath(source);
-        ValidateAbsolutePath(destination);
         var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         CopyPhysical(
-            ResolveStaticAbsolute(source, roots),
-            ResolveStaticAbsolute(destination, roots),
+            ResolveAbsoluteMutation(source, roots),
+            ResolveAbsoluteMutation(destination, roots),
             permissions);
     }
 
     /// <summary>Renames or moves one file or directory within this instance's access scope.</summary>
     /// <param name="source">A relative or in-scope absolute source path.</param>
     /// <param name="destination">A relative or in-scope absolute destination path.</param>
-    /// <remarks>Files replace existing files. Directories may replace only an existing empty directory.</remarks>
+    /// <remarks>
+    /// Files replace existing files. Directories may replace an existing empty directory.
+    /// Renaming moves the entry on its filesystem and retains the stored target of a symbolic link.
+    /// </remarks>
     /// <exception cref="ArgumentNullException">A path is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">A path is empty, invalid, or resolves to the same path as the other argument.</exception>
     /// <exception cref="FileNotFoundException">The source entry does not exist.</exception>
@@ -555,14 +564,17 @@ public sealed partial class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            MovePhysical(ResolveLocked(source), ResolveLocked(destination));
+            MovePhysical(ResolveMutationLocked(source), ResolveMutationLocked(destination));
         }
     }
 
     /// <summary>Renames or moves one file or directory between absolute native or virtual paths.</summary>
     /// <param name="source">A fully qualified native path, <c>res://</c> path, or <c>user://</c> path.</param>
     /// <param name="destination">A fully qualified native path, <c>res://</c> path, or <c>user://</c> path.</param>
-    /// <remarks>Files replace existing files. Directories may replace only an existing empty directory.</remarks>
+    /// <remarks>
+    /// Files replace existing files. Directories may replace an existing empty directory.
+    /// Renaming moves the entry on its filesystem and retains the stored target of a symbolic link.
+    /// </remarks>
     /// <exception cref="ArgumentNullException">A path is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">A path is empty, invalid, relative, or resolves to the same path as the other argument.</exception>
     /// <exception cref="FileNotFoundException">The source entry does not exist.</exception>
@@ -571,13 +583,11 @@ public sealed partial class DirAccess : ElectronObject
     /// <exception cref="NotSupportedException">A path uses an unsupported virtual scheme.</exception>
     public static void RenameAbsolute(string source, string destination)
     {
-        ValidateAbsolutePath(source);
-        ValidateAbsolutePath(destination);
         var roots = ProjectSettings.Service.GetPathRootsSnapshot();
-        MovePhysical(ResolveStaticAbsolute(source, roots), ResolveStaticAbsolute(destination, roots));
+        MovePhysical(ResolveAbsoluteMutation(source, roots), ResolveAbsoluteMutation(destination, roots));
     }
 
-    /// <summary>Permanently removes a file, symbolic link, or empty directory.</summary>
+    /// <summary>Permanently removes a file, link, or empty directory.</summary>
     /// <param name="path">A relative or in-scope absolute path.</param>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
@@ -593,11 +603,11 @@ public sealed partial class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            RemovePhysical(ResolveLocked(path));
+            RemovePhysical(ResolveMutationLocked(path));
         }
     }
 
-    /// <summary>Permanently removes a file, symbolic link, or empty directory at an absolute path.</summary>
+    /// <summary>Permanently removes a file, link, or empty directory at an absolute path.</summary>
     /// <param name="path">A fully qualified native path, <c>res://</c> path, or <c>user://</c> path.</param>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty, invalid, or relative.</exception>
@@ -605,7 +615,7 @@ public sealed partial class DirAccess : ElectronObject
     /// <exception cref="IOException">A directory is nonempty or removal otherwise fails.</exception>
     /// <exception cref="UnauthorizedAccessException">The virtual path escapes its root or access is denied.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unsupported virtual scheme.</exception>
-    public static void RemoveAbsolute(string path) => RemovePhysical(ResolveStaticAbsolute(path));
+    public static void RemoveAbsolute(string path) => RemovePhysical(ResolveAbsoluteMutation(path, ProjectSettings.Service.GetPathRootsSnapshot()));
 
     /// <summary>Reports whether a path identifies a symbolic link or platform reparse point.</summary>
     /// <param name="path">A relative or in-scope absolute path.</param>
@@ -1014,84 +1024,165 @@ public sealed partial class DirAccess : ElectronObject
         return entries.ToArray();
     }
 
-    private static void MakeSingleDirectory(string path)
+    private (string Physical, string? Mounted) ResolveMutationLocked(string path)
     {
-        if (TryGetAttributes(path, out _))
-            throw new IOException($"An entry already exists at '{path}'.");
-        var parent = path.StartsWith("res://", StringComparison.Ordinal) ? ResourcePacks.CombineRelative(path, ".") : IOPath.GetDirectoryName(IOPath.TrimEndingDirectorySeparator(path));
-        if (string.IsNullOrEmpty(parent) || !IsExistingDirectory(parent))
-            throw new DirectoryNotFoundException($"Parent directory '{parent}' does not exist.");
-        Directory.CreateDirectory(WritablePhysical(path));
+        var physical = ResolvePhysicalLocked(path);
+        return (physical, MountedPath(physical));
     }
 
-    private static void CopyPhysical(string source, string destination, UnixPermissionFlags? permissions)
+    private static (string Physical, string? Mounted) ResolveAbsoluteMutation(
+        string path, (string ProjectRoot, string UserDataRoot) roots)
     {
-        EnsureDistinct(source, destination);
+        ValidatePath(path);
+        path = ResourceUID.EnsurePath(path);
+        ValidateAbsolutePath(path);
+        var (physical, scope, root) = ResolveOpenPath(path, roots);
+        return (physical, scope == AccessScope.Resources ? ResourcePath(physical, root!) : null);
+    }
+
+    private static string WritableMutation((string Physical, string? Mounted) path)
+    {
+        if (path.Mounted is not null)
+            ResourcePacks.Runtime.EnsureWritable(path.Mounted, descendants: true);
+        return path.Physical;
+    }
+
+    private static void MakeSingleDirectory((string Physical, string? Mounted) path)
+    {
+        var physical = IOPath.TrimEndingDirectorySeparator(WritableMutation(path));
+        if (OperatingSystem.IsWindows())
+        {
+            if (!CreateDirectoryWindows(WindowsMutationPath(physical), IntPtr.Zero))
+                throw MutationError("create directory", physical);
+        }
+        else if (CreateDirectoryUnix(physical, 0x1FF) != 0)
+        {
+            throw MutationError("create directory", physical);
+        }
+    }
+
+    private static void CopyPhysical(
+        (string Physical, string? Mounted) source,
+        (string Physical, string? Mounted) destination,
+        UnixPermissionFlags? permissions)
+    {
         if (permissions.HasValue)
             FileAccess.ValidateUnixPermissions(permissions.Value);
-        if (!TryGetAttributes(source, out var sourceAttributes) ||
-            (sourceAttributes & FileAttributes.Directory) != 0)
+        var outputPath = WritableMutation(destination);
+        if (IOPath.EndsInDirectorySeparator(source.Physical))
+            throw new FileNotFoundException("The source must identify a file.", source.Physical);
+        if (IOPath.EndsInDirectorySeparator(outputPath))
+            throw new UnauthorizedAccessException("The destination must identify a file.");
+        using var input = ResourcePacks.Runtime.OpenRead(source.Mounted ?? source.Physical, out _, out var packed, source.Physical);
+        if (!packed)
         {
-            throw new FileNotFoundException("The source file does not exist.", source);
+            EnsureDistinct(source.Physical, outputPath);
+            if (OperatingSystem.IsWindows() ||
+                Environment.Is64BitProcess && (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ||
+                    OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsMacCatalyst() ||
+                    OperatingSystem.IsFreeBSD()))
+            {
+                var identity = GetFileIdentity(source.Physical);
+                if (identity.HasValue && identity == GetFileIdentity(outputPath))
+                    throw new ArgumentException("Source and destination refer to the same file.", nameof(destination));
+            }
         }
-        using (var input = ResourcePacks.OpenRead(source))
-        using (var output = new FileStream(WritablePhysical(destination), FileMode.Create, System.IO.FileAccess.Write, FileShare.None)) input.CopyTo(output);
-        if (permissions.HasValue)
-            FileAccess.SetUnixPermissions(destination, permissions.Value);
+
+        using var output = new FileStream(outputPath, FileMode.Create, System.IO.FileAccess.Write, FileShare.None);
+        input.CopyTo(output);
+        if (permissions.HasValue && !OperatingSystem.IsWindows())
+        {
+            output.Flush();
+            File.SetUnixFileMode(output.SafeFileHandle, (UnixFileMode)(int)permissions.Value);
+        }
     }
 
-    private static void MovePhysical(string source, string destination)
+    private static void MovePhysical(
+        (string Physical, string? Mounted) sourcePath, (string Physical, string? Mounted) destinationPath)
     {
-        source = WritablePhysical(source, descendants: true); destination = WritablePhysical(destination, descendants: true);
+        var source = IOPath.TrimEndingDirectorySeparator(WritableMutation(sourcePath));
+        var destination = IOPath.TrimEndingDirectorySeparator(WritableMutation(destinationPath));
         EnsureDistinct(source, destination);
         var attributes = GetExistingAttributes(source);
-        if ((attributes & FileAttributes.Directory) == 0)
+        if (!OperatingSystem.IsWindows())
         {
-            File.Move(source, destination, overwrite: true);
+            if (RenameUnix(source, destination) != 0)
+                throw MutationError("rename entry", destination);
             return;
         }
 
-        var removedEmptyDestination = false;
-        if (TryGetAttributes(destination, out var destinationAttributes))
+        var directory = (attributes & FileAttributes.Directory) != 0;
+        // MoveFileEx without COPY_ALLOWED preserves rename semantics across volume boundaries.
+        // Windows requires the destination directory to be absent, except for case-only renames.
+        if (!directory || !TryGetAttributes(destination, out var destinationAttributes) ||
+            StringComparer.OrdinalIgnoreCase.Equals(source, destination) &&
+            GetWindowsFileIdentity(source) == GetWindowsFileIdentity(destination))
         {
-            if ((destinationAttributes & FileAttributes.Directory) == 0)
-                throw new IOException("A directory cannot replace a file.");
-            if ((destinationAttributes & FileAttributes.ReparsePoint) == 0 &&
-                Directory.EnumerateFileSystemEntries(destination).Any())
-            {
-                throw new IOException("A directory cannot replace a nonempty directory.");
-            }
-            Directory.Delete(destination);
-            removedEmptyDestination = true;
+            if (!MoveFileWindows(WindowsMutationPath(source), WindowsMutationPath(destination), directory ? 0u : 1u))
+                throw MutationError("rename entry", destination);
+            return;
         }
+
+        if ((destinationAttributes & (FileAttributes.Directory | FileAttributes.ReparsePoint)) != FileAttributes.Directory ||
+            IsWithin(destination, source) || IsWithin(source, destination) ||
+            Directory.EnumerateFileSystemEntries(destination).Any() ||
+            (attributes & FileAttributes.ReparsePoint) == 0 && GetWindowsFileIdentity(source) == GetWindowsFileIdentity(destination))
+        {
+            throw new IOException("A directory can replace only a distinct empty directory.");
+        }
+
+        var sourceVolume = GetWindowsFileIdentity(IOPath.GetDirectoryName(source)!)?.Volume;
+        var destinationVolume = GetWindowsFileIdentity(IOPath.GetDirectoryName(destination)!)?.Volume;
+        if (sourceVolume != destinationVolume)
+            throw new IOException("A directory cannot be renamed across volumes.");
+
+        Directory.Delete(destination, recursive: false);
+        if (MoveFileWindows(WindowsMutationPath(source), WindowsMutationPath(destination), 0))
+            return;
+
+        var moveError = MutationError("rename entry", destination);
         try
         {
-            Directory.Move(source, destination);
+            if (!TryGetAttributes(destination, out _))
+            {
+                Directory.CreateDirectory(destination);
+                File.SetAttributes(destination, destinationAttributes);
+            }
         }
-        catch (Exception moveError) when (removedEmptyDestination)
+        catch (Exception restoreError)
         {
-            try
-            {
-                if (!TryGetAttributes(destination, out _))
-                    Directory.CreateDirectory(destination);
-            }
-            catch (Exception restoreError)
-            {
-                throw new AggregateException("The directory move and destination restoration both failed.", moveError, restoreError);
-            }
-            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(moveError).Throw();
-            throw;
+            throw new AggregateException("The directory move and destination restoration both failed.", moveError, restoreError);
         }
+        throw moveError;
     }
 
-    private static void RemovePhysical(string path)
+    private static string WindowsMutationPath(string path)
     {
-        path = WritablePhysical(path, descendants: true);
-        var attributes = GetExistingAttributes(path);
+        if (path.Length < 248 || path.StartsWith(@"\\?\", StringComparison.Ordinal) || path.StartsWith(@"\\.\", StringComparison.Ordinal))
+            return path;
+        return path.StartsWith(@"\\", StringComparison.Ordinal) ? @"\\?\UNC\" + path[2..] : @"\\?\" + path;
+    }
+
+    private static Exception MutationError(string operation, string path)
+    {
+        var code = Marshal.GetLastPInvokeError();
+        var error = new Win32Exception(code);
+        var message = $"Cannot {operation} '{path}': {error.Message}";
+        if (OperatingSystem.IsWindows() ? code is 2 or 3 : code is 2 or 20)
+            return new DirectoryNotFoundException(message, error);
+        if (OperatingSystem.IsWindows() ? code is 5 or 19 : code is 1 or 13 or 30)
+            return new UnauthorizedAccessException(message, error);
+        return new IOException(message, error);
+    }
+
+    private static void RemovePhysical((string Physical, string? Mounted) path)
+    {
+        var physical = IOPath.TrimEndingDirectorySeparator(WritableMutation(path));
+        var attributes = GetExistingAttributes(physical);
         if ((attributes & FileAttributes.Directory) != 0)
-            Directory.Delete(path, recursive: false);
+            Directory.Delete(physical, recursive: false);
         else
-            File.Delete(path);
+            File.Delete(physical);
     }
 
     private static FileAttributes GetExistingAttributes(string path)
@@ -1274,36 +1365,31 @@ public sealed partial class DirAccess : ElectronObject
         if (!Environment.Is64BitProcess)
             throw new PlatformNotSupportedException("Filesystem object identity requires a 64-bit runtime.");
 
-        var buffer = (nint)NativeAllocation.Alloc(512);
-        try
+        // Both supported stat layouts fit here. Use aligned stack storage so basic I/O only needs libc.
+        ulong* storage = stackalloc ulong[64];
+        var buffer = (nint)storage;
+        var result = appleLayout ? StatApple(path, buffer) : StatUnix(path, buffer);
+        if (result == 0)
         {
-            var result = appleLayout ? StatApple(path, buffer) : StatUnix(path, buffer);
-            if (result == 0)
-            {
-                var device = appleLayout
-                    ? unchecked((uint)Marshal.ReadInt32(buffer, 0))
-                    : unchecked((ulong)Marshal.ReadInt64(buffer, 0));
-                var inode = unchecked((ulong)Marshal.ReadInt64(buffer, 8));
-                return new FileIdentity(device, inode);
-            }
+            var device = appleLayout
+                ? unchecked((uint)Marshal.ReadInt32(buffer, 0))
+                : unchecked((ulong)Marshal.ReadInt64(buffer, 0));
+            var inode = unchecked((ulong)Marshal.ReadInt64(buffer, 8));
+            return new FileIdentity(device, inode);
+        }
 
-            var error = Marshal.GetLastPInvokeError();
-            if (error is 2 or 20)
-                return null;
-            if (error is 1 or 13)
-                throw new UnauthorizedAccessException(new Win32Exception(error).Message);
-            throw new IOException(new Win32Exception(error).Message, new Win32Exception(error));
-        }
-        finally
-        {
-            NativeAllocation.Free((void*)buffer);
-        }
+        var error = new Win32Exception(Marshal.GetLastPInvokeError());
+        if (error.NativeErrorCode is 2 or 20)
+            return null;
+        if (error.NativeErrorCode is 1 or 13)
+            throw new UnauthorizedAccessException(error.Message, error);
+        throw new IOException(error.Message, error);
     }
 
     private static FileIdentity? GetWindowsFileIdentity(string path)
     {
         using var handle = CreateFile(
-            path,
+            WindowsMutationPath(path),
             desiredAccess: 0,
             shareMode: 1 | 2 | 4,
             securityAttributes: IntPtr.Zero,
@@ -1570,6 +1656,20 @@ public sealed partial class DirAccess : ElectronObject
         internal uint Flags;
     }
 
+    [LibraryImport("libc", EntryPoint = "mkdir", SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial int CreateDirectoryUnix(string path, uint mode);
+
+    [LibraryImport("libc", EntryPoint = "rename", SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+    private static partial int RenameUnix(string source, string destination);
+
+    [LibraryImport("kernel32.dll", EntryPoint = "CreateDirectoryW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool CreateDirectoryWindows(string path, IntPtr securityAttributes);
+
+    [LibraryImport("kernel32.dll", EntryPoint = "MoveFileExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool MoveFileWindows(string source, string destination, uint flags);
+
     [LibraryImport("libc", EntryPoint = "open", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
     private static partial int OpenUnix(
         string path,
@@ -1626,12 +1726,12 @@ public sealed partial class DirAccess : ElectronObject
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_autoreleasePoolPop")]
     private static extern void ObjCAutoreleasePoolPop(IntPtr pool);
 
-    [LibraryImport("libc", EntryPoint = "stat", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    [LibraryImport("libc", EntryPoint = "stat", SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     private static partial int StatUnix(
         string path,
         IntPtr buffer);
 
-    [LibraryImport("libSystem.B.dylib", EntryPoint = "stat", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    [LibraryImport("libSystem.B.dylib", EntryPoint = "stat", SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     private static partial int StatApple(
         string path,
         IntPtr buffer);

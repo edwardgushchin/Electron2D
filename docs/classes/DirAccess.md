@@ -28,6 +28,14 @@ serialized per instance, may block, and are unsuitable for real-time callbacks.
 
 On `res://` paths, `FileExists`, `DirExists`, `DirExistsAbsolute`, `IsLink` and `ReadLink` each select the current mounted entry, a mounted file ancestor or the physical path from one view of the mounts. A mounted file or directory supplies the entry kind and has no link target. A mounted file ancestor hides all physical metadata below it. Each call can observe a different mount after a replacement. Physical metadata is read after the mount lookup and follows the host filesystem's usual race semantics.
 
+## Filesystem mutations
+
+`MakeDir` creates one new directory and requires its parent to exist. `MakeDirRecursive` creates missing parents and accepts an existing writable directory. Instance methods resolve relative names from the current directory. Static helpers accept fully qualified native paths, `res://`, `user://` and UIDs that resolve to one of those forms. Two-path helpers take both current roots from the same snapshot.
+
+`Copy` reads one file, including a mounted file, and overwrites an existing writable destination without creating its parent. The default `permissions: null` leaves mode changes to the filesystem. Explicit `UnixPermissionFlags` apply after the copy on Unix and throw before writing on Windows. On Windows and 64-bit Unix identity backends, a second name for the same physical file, including a hard link or symbolic link, is rejected before truncation.
+
+`Rename` moves entries on one filesystem and preserves the stored target of a symbolic link. A file can replace a file, and a directory can replace an empty directory. On Windows, replacement of an empty directory uses a separate removal step. Public `Remove` removes the named file, link/reparse point or empty directory. Resource-path mutations reject mounted entries and their protected descendants. An absolute physical path addresses the physical entry even when an overlay masks its resource name.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
@@ -77,8 +85,8 @@ foreach (string fileName in directory.GetFiles())
 | [`public static void CopyAbsolute(string source, string destination, UnixPermissionFlags? permissions = null)`](#m-electron2d-diraccess-copyabsolute-system-string-system-string-system-nullable-electron2d-unixpermissionflags) | Copies a file between absolute native or virtual paths. |
 | [`public void Rename(string source, string destination)`](#m-electron2d-diraccess-rename-system-string-system-string) | Renames or moves one file or directory within this instance's access scope. |
 | [`public static void RenameAbsolute(string source, string destination)`](#m-electron2d-diraccess-renameabsolute-system-string-system-string) | Renames or moves one file or directory between absolute native or virtual paths. |
-| [`public void Remove(string path)`](#m-electron2d-diraccess-remove-system-string) | Permanently removes a file, symbolic link, or empty directory. |
-| [`public static void RemoveAbsolute(string path)`](#m-electron2d-diraccess-removeabsolute-system-string) | Permanently removes a file, symbolic link, or empty directory at an absolute path. |
+| [`public void Remove(string path)`](#m-electron2d-diraccess-remove-system-string) | Permanently removes a file, link, or empty directory. |
+| [`public static void RemoveAbsolute(string path)`](#m-electron2d-diraccess-removeabsolute-system-string) | Permanently removes a file, link, or empty directory at an absolute path. |
 | [`public bool IsLink(string path)`](#m-electron2d-diraccess-islink-system-string) | Reports whether a path identifies a symbolic link or platform reparse point. |
 | [`public string ReadLink(string path)`](#m-electron2d-diraccess-readlink-system-string) | Reads the stored target of a symbolic link. |
 | [`public void CreateLink(string source, string target)`](#m-electron2d-diraccess-createlink-system-string-system-string) | Creates a symbolic link to a file or directory path. |
@@ -441,6 +449,8 @@ Creates a directory and every missing parent in its path.
 - `NotSupportedException`: `path` uses an unsupported virtual scheme.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
+**Remarks:** An existing writable directory satisfies the operation.
+
 <a id="m-electron2d-diraccess-makedirrecursiveabsolute-system-string"></a>
 ### `public static void MakeDirRecursiveAbsolute(string path)`
 
@@ -457,6 +467,8 @@ Creates an absolute directory and every missing parent in its path.
 - `IO.IOException`: The directory tree cannot be created.
 - `UnauthorizedAccessException`: The virtual path escapes its root or access is denied.
 - `NotSupportedException`: `path` uses an unsupported virtual scheme.
+
+**Remarks:** An existing writable directory satisfies the operation.
 
 <a id="m-electron2d-diraccess-fileexists-system-string"></a>
 ### `public bool FileExists(string path)`
@@ -557,7 +569,7 @@ Copies a file and optionally replaces its Unix permission bits.
 - `ArgumentOutOfRangeException`: `permissions` contains unknown mode bits.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** The destination file is overwritten. Its parent directory is never created implicitly.
+**Remarks:** An existing writable destination file is overwritten. Its parent must exist. A mounted file can be copied out. A physical source and destination that refer to the same file are rejected before writing on hosts with native identity checks.
 
 <a id="m-electron2d-diraccess-copyabsolute-system-string-system-string-system-nullable-electron2d-unixpermissionflags"></a>
 ### `public static void CopyAbsolute(string source, string destination, UnixPermissionFlags? permissions = null)`
@@ -582,7 +594,7 @@ Copies a file between absolute native or virtual paths.
 - `PlatformNotSupportedException`: `permissions` is supplied on a platform without Unix modes.
 - `ArgumentOutOfRangeException`: `permissions` contains unknown mode bits.
 
-**Remarks:** The two paths may belong to different virtual scopes. The destination parent is not created.
+**Remarks:** The paths may belong to different virtual scopes. The destination parent must exist. A mounted file can be copied to a writable destination. An existing writable destination file is overwritten.
 
 <a id="m-electron2d-diraccess-rename-system-string-system-string"></a>
 ### `public void Rename(string source, string destination)`
@@ -605,7 +617,7 @@ Renames or moves one file or directory within this instance's access scope.
 - `NotSupportedException`: A path uses an unsupported virtual scheme.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** Files replace existing files. Directories may replace only an existing empty directory.
+**Remarks:** Files replace existing files. Directories may replace an existing empty directory. Renaming moves the entry on its filesystem and retains the stored target of a symbolic link.
 
 <a id="m-electron2d-diraccess-renameabsolute-system-string-system-string"></a>
 ### `public static void RenameAbsolute(string source, string destination)`
@@ -626,12 +638,12 @@ Renames or moves one file or directory between absolute native or virtual paths.
 - `UnauthorizedAccessException`: A virtual path escapes its root or access is denied.
 - `NotSupportedException`: A path uses an unsupported virtual scheme.
 
-**Remarks:** Files replace existing files. Directories may replace only an existing empty directory.
+**Remarks:** Files replace existing files. Directories may replace an existing empty directory. Renaming moves the entry on its filesystem and retains the stored target of a symbolic link.
 
 <a id="m-electron2d-diraccess-remove-system-string"></a>
 ### `public void Remove(string path)`
 
-Permanently removes a file, symbolic link, or empty directory.
+Permanently removes a file, link, or empty directory.
 
 **Parameters**
 
@@ -651,7 +663,7 @@ Permanently removes a file, symbolic link, or empty directory.
 <a id="m-electron2d-diraccess-removeabsolute-system-string"></a>
 ### `public static void RemoveAbsolute(string path)`
 
-Permanently removes a file, symbolic link, or empty directory at an absolute path.
+Permanently removes a file, link, or empty directory at an absolute path.
 
 **Parameters**
 
@@ -867,8 +879,8 @@ Filesystem state remains external and can change between validation and mutation
 
 - Inherits `ElectronObject` for deterministic disposal and disposed-state ordering.
 - Uses `ProjectSettings` for current virtual roots and an internal atomic root-pair snapshot.
-- Reuses `UnixPermissionFlags` and `FileAccess.SetUnixPermissions` for optional copy permissions.
-- Uses `System.IO` for paths, directory/file mutations, links, temporary ownership, ordinary mount metadata, and Windows logical drives.
+- Reuses `UnixPermissionFlags` validation and applies explicit copy permissions to the open destination handle.
+- Uses native single-directory creation and same-filesystem rename, plus `System.IO` for recursive creation, streams, removal, links, temporary ownership, ordinary mount metadata and Windows logical drives.
 - Uses native Win32/NT metadata for filesystem identity, directory case flags, and UNC capacity; Unix `stat` and Linux file flags for identity and case folding; and macOS Foundation/AppKit metadata for mounted volumes and file-package classification.
 - Shares mounted path resolution with `FileAccess` for entry attributes and link queries.
 - Has no SDL, Scene, renderer, asset loader, scripting, editor, physics, or external package dependency.
@@ -876,6 +888,8 @@ Filesystem state remains external and can change between validation and mutation
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` covers null/empty/missing/relative/unknown paths, ordinary and virtual scopes, lexical traversal, current-directory changes, hidden/navigational filters, unspecified streaming versus sorted snapshots, concurrent listing consumption, single/recursive creation, copy overwrite, pre-mutation permission validation and self-copy rejection, instance/static file and directory rename with failed-move destination restoration, nonrecursive removal, relative and dangling symlink targets, hard-link and symlink equivalence on Linux, native case metadata, drive/capacity/filesystem queries, absolute helpers, temporary keep/delete ownership, current-directory changes before temporary disposal, and disposed access.
+
+The [mutation profile](../../tests/Electron2D.Tests/DirAccessMutationTests.cs) exercises all ten public entry points on Windows x64 and Linux x64 under WSL. It covers captured roots, physical and mounted paths, permission handling, replacement, links and nonrecursive removal. Copy can leave a partial destination after a write error. Compound operations and hostile filesystem races are outside the contract.
 
 The `DIR_PACK_METADATA` profile exercises mounted file and directory replacement over a physical link, a masked descendant, and physical fallback. It covers Windows x64 NTFS junctions and Linux x64 symbolic links. Below a mounted file, `IsLink` returns `false` on Windows and throws `FileNotFoundException` on Unix link backends. `ReadLink` throws `FileNotFoundException` on both. Other Windows link types and macOS link behavior require native-host verification. Android/iOS identity code is compiled but awaits device verification; their link and drive-enumeration APIs throw until platform host/storage integration is implemented. Web browser directory/storage behavior belongs to the first Web host slice.
 

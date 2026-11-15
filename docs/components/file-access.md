@@ -1,6 +1,6 @@
 # File and directory access component
 
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 ## Scope
 
@@ -90,6 +90,10 @@ Each resource existence or link query selects the mounted file, mounted director
 `GetFiles` and `GetDirectories` return independent, ordinally sorted, read-only snapshots and leave any active cursor intact. The static `At` methods accept fully qualified native or virtual paths and use the default filters. A missing directory, a mounted file masking the directory, or denied physical enumeration raises a standard exception.
 
 See the [coverage audit](../coverage/dir-access-listing.md) for the pinned source comparison and verification limits.
+
+## Directory mutations
+
+The [DirAccess contract](../classes/DirAccess.md#filesystem-mutations) defines copy, rename, single and recursive directory creation, and nonrecursive removal. Name resolution keeps the physical path bound to the selected roots while applying read-only PCK/ZIP overlay checks to resource names. Copy can export mounted files. Rename uses a native same-filesystem operation for files and directories. On Windows an empty destination directory is removed before the native rename.
 
 ## Binary I/O
 

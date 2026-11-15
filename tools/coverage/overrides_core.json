@@ -2015,6 +2015,26 @@
       "reason": "ADRs 0020/0022: non-null scoped owner, captured physical roots and live resource overlays, native or virtual current paths, drive included by default, and transactional directory changes. Windows public regressions."
     },
     {
+      "godot": ["DirAccess::method:copy(String:,String:,int:)", "DirAccess::method:copy_absolute(String:,String:,int:)"],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: file overwrite, packed read and writable destinations, nullable UnixPermissionFlags maps the -1 default, and typed exceptions replace Error. Relative instance paths and rooted static paths share the copy backend."
+    },
+    {
+      "godot": ["DirAccess::method:make_dir(String:)", "DirAccess::method:make_dir_absolute(String:)", "DirAccess::method:make_dir_recursive(String:)", "DirAccess::method:make_dir_recursive_absolute(String:)"],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: single-directory creation requires an existing parent, recursive creation is idempotent for writable directories, and typed exceptions reject invalid paths, collisions and mounted writes."
+    },
+    {
+      "godot": ["DirAccess::method:rename(String:,String:)", "DirAccess::method:rename_absolute(String:,String:)"],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: native same-filesystem rename replaces files or empty directories, preserves links, and reports missing, incompatible, protected or cross-volume entries through exceptions."
+    },
+    {
+      "godot": ["DirAccess::method:remove(String:)", "DirAccess::method:remove_absolute(String:)"],
+      "state": "Implemented",
+      "reason": "ADRs 0020/0022: permanently removes one file, link or empty directory, with typed exceptions for missing, nonempty and protected entries."
+    },
+    {
       "godot": [
         "DirAccess::property:include_hidden",
         "DirAccess::property:include_navigational"
