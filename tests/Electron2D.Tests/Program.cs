@@ -770,6 +770,7 @@ if (args.Length == 3 && args[0] == "--file-compression-child") { FileCompression
 if (args.Length == 2 && args[0] == "--file-text-child") { FileTextTests.Child(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_TEXT") == "1") { FileTextTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_BINARY") == "1") { FileBinaryTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_LIFECYCLE") == "1") { FileAccessLifecycleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSION_LEVELS") == "1") { FileCompressionTests.Levels(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ZSTANDARD_OPTIONS") is { } zstandardProfile) { FileCompressionTests.ZstandardOptions(zstandardProfile == "legacy"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_COMPRESSION_NATIVE") is { } fileBackend) { FileCompressionTests.RunNative(fileBackend); return; }

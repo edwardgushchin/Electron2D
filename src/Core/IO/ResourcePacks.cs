@@ -277,17 +277,74 @@ internal sealed class ResourcePacks
         lock (_gate)
         {
             if (_entries.ContainsKey(name) || descendants && _directories.Contains(name)) throw new UnauthorizedAccessException("Mounted resource entries are read-only.");
-            var slash = name.IndexOf('/');
-            while (slash >= 0) { if (_entries.ContainsKey(name[..slash])) throw new UnauthorizedAccessException("A mounted file occupies a parent path."); slash = name.IndexOf('/', slash + 1); }
+            EnsureWritableAncestorsLocked(name);
         }
     }
 
-    internal static Stream OpenRead(string path) => OpenRead(path, out _);
-    private static Stream OpenRead(string path, out bool packed)
+    private void EnsureWritableAncestorsLocked(string name)
     {
-        Runtime.EnsureFilePath(path);
-        packed = Runtime.TryOpen(path, out var stream);
-        return packed ? stream : FileAccess.OpenPhysicalRead(ProjectSettings.GlobalizePath(ResourceUID.EnsurePath(path)));
+        for (var slash = name.IndexOf('/'); slash >= 0; slash = name.IndexOf('/', slash + 1))
+        {
+            var parent = name[..slash];
+            if (_entries.ContainsKey(parent))
+                throw new UnauthorizedAccessException("A mounted file occupies a parent path.");
+            if (_directories.Contains(parent))
+                throw new UnauthorizedAccessException("Mounted resource directories are read-only.");
+        }
+    }
+
+    internal static Stream OpenRead(string path) => Runtime.OpenRead(path, out _, out _);
+
+    internal Stream OpenRead(string path, out string absolutePath, out bool packed)
+    {
+        var entry = ResolveFile(path, out absolutePath, out var mountedPath, out var blocked);
+        if (blocked)
+            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
+        packed = entry is not null;
+        if (entry is null)
+            return FileAccess.OpenPhysicalRead(absolutePath);
+
+        absolutePath = "res://" + mountedPath;
+        return entry.Open();
+    }
+
+    internal (string AbsolutePath, long? MountedSize, bool Blocked) ResolveFileLocation(string path, bool writing = false)
+    {
+        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked, writing);
+        return (absolutePath, entry?.Length, blocked);
+    }
+
+    internal string ResolveWritableFile(string path)
+    {
+        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked, writing: true);
+        if (blocked)
+            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
+        if (entry is not null)
+            throw new UnauthorizedAccessException("Mounted resource entries are read-only.");
+        if (System.IO.Path.EndsInDirectorySeparator(absolutePath) || Directory.Exists(absolutePath))
+            throw new UnauthorizedAccessException("The path identifies a directory.");
+
+        return absolutePath;
+    }
+
+    private Entry? ResolveFile(string path, out string absolutePath, out string? name, out bool blocked, bool writing = false)
+    {
+        path = ResourceUID.EnsurePath(path);
+        absolutePath = ProjectSettings.GlobalizePath(path);
+        name = null;
+        blocked = false;
+        if (!path.StartsWith("res://", StringComparison.Ordinal))
+            return null;
+
+        name = PCKFormat.Normalize(path, directory: true);
+        lock (_gate)
+        {
+            var entry = _entries.GetValueOrDefault(name);
+            blocked = entry is null && (_directories.Contains(name) || HasFileAncestorLocked(name));
+            if (writing && entry is null && !blocked)
+                EnsureWritableAncestorsLocked(name);
+            return entry;
+        }
     }
     internal static string CombineRelative(string path, string relative)
     {
@@ -298,10 +355,14 @@ internal sealed class ResourcePacks
         }
         return System.IO.Path.GetFullPath(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(ProjectSettings.GlobalizePath(path))!, relative.Replace('\\', System.IO.Path.DirectorySeparatorChar)));
     }
-    internal static byte[] ReadBytes(string path) => ReadBytes(path, out _);
-    internal static byte[] ReadBytes(string path, out bool packed)
+    internal static byte[] ReadBytes(string path)
     {
-        using var stream = OpenRead(path, out packed);
+        using var stream = OpenRead(path);
+        return ReadSnapshot(stream);
+    }
+
+    internal static byte[] ReadSnapshot(Stream stream)
+    {
         if (stream.Length > Array.MaxLength) throw new IOException("The file exceeds the managed byte array limit.");
         var result = new byte[(int)stream.Length]; stream.ReadExactly(result); return result;
     }
