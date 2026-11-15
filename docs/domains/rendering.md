@@ -462,6 +462,8 @@ Type 1 PFB/PFA outlines and paired PFM/AFM native metrics now execute through Fo
 
 [BC/DDS images](../components/image-bcn.md) now execute S3TC/BPTC CPU authoring, exact DDS/raw/full-mip source archives, native BC1–BC7 GPU textures/arrays and decoded Compatibility sampling. Imported RenderingDevice texture descriptors use the actual native BC format, with exact block readback and existing ownership. Compatibility BC6 retains its driver-dependent HDR precision gate; the exercised driver rejects it. [ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared ordinary/array sampling, preserving signed/HDR precision. UInt16 sources execute raw unsigned GPU sampling; foreign-platform/native allocator acceptance remains separate.
 
+[BC3 device readback](../components/local-compute.md#device-images-and-samplers) on Direct3D 12 preserves exact blocks at each mip edge for both owned and renderer-borrowed textures.
+
 ## Themed numeric progress
 
 [ProgressBar](../classes/ProgressBar.md) connects shared Range state with actual background/fill styles, centered localized percentage text and outline, four physical/RTL directions and clipped indeterminate animation. The existing EditedSceneRoot selection scopes static or animated authoring preview. Exact scene factories restore settings in a fresh process. GPU/Compatibility pixel masks and 64 prepared active frames verify current Linux rendering and zero managed owner-thread allocation; authored Theme archive, native semantics and foreign platforms retain their separate dependencies. See [ADR 0080](../decisions/rendering.md#adr-0080).

@@ -30,6 +30,15 @@ internal static partial class ImageBCnTests
         {
             RenderingServer.SetDefaultClearColor(Colors.Black);
             if (backend == "gpu") CheckNativeStorage(compressed, image);
+            if (backend == "gpu" && format == Image.Format.Dxt5)
+            {
+                var driver = RenderingServer.GetCurrentRenderingDriverName();
+                var requested = Environment.GetEnvironmentVariable("SDL_GPU_DRIVER");
+                Check(string.IsNullOrEmpty(requested) || driver == requested, $"Expected GPU driver {requested}, got {driver}.");
+                Console.WriteLine($"BC3 GPU driver: {driver}.");
+                using var local = RenderingServer.GetRenderingDevice()!.CreateLocalDevice();
+                CheckBC3Readback(local);
+            }
             RenderingServer.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); if (frames < 96) painter.QueueRedraw(); };
             RenderingServer.FramePostDraw += () =>
             {
@@ -52,6 +61,46 @@ internal static partial class ImageBCnTests
         };
         Check(Engine.Run(window) == 0 && phase == 2, "Native compressed sampling and update finish."); Console.WriteLine($"BC textures {backend}/{format}: source/region/mip/update pixels; 64 active/64 idle managed bytes {active}/{idle}.");
     }
+
+    private static void CheckBC3Readback(RenderingDevice device)
+    {
+        using var view = new RDTextureView();
+        using var format = new RDTextureFormat
+        {
+            TextureType = RenderingDevice.TextureType.TextureArray,
+            ArrayLayers = 2,
+            UsageBits = RenderingDevice.TextureUsageBits.CPURead | RenderingDevice.TextureUsageBits.CanUpdate
+        };
+        foreach (var encoding in new[] { RenderingDevice.DataFormat.BC3UNORMBLOCK, RenderingDevice.DataFormat.BC3SRGBBLOCK })
+            foreach (var (width, height, mips, blockCount) in new (uint, uint, uint, int)[] { (7, 5, 3, 6), (1, 3, 2, 2), (69, 13, 1, 72) })
+            {
+                format.Format = encoding;
+                format.Width = width; format.Height = height; format.MIPMaps = mips;
+                // Count blocks independently of the runtime and give each block, row and layer distinct bytes.
+                var first = Enumerable.Range(0, blockCount * 16).Select(i => (byte)(i * 13 + i / 16)).ToArray();
+                var second = first.Select(value => (byte)~value).ToArray();
+                var texture = device.TextureCreate(format, view, [first, second]);
+                var destination = new byte[second.Length];
+                Reject<ArgumentOutOfRangeException>(() => device.TextureGetData(texture, 2));
+                Reject<ArgumentException>(() => device.TextureGetData(texture, 1, destination.AsSpan(1)));
+                Check(device.TextureGetData(texture, 0).SequenceEqual(first), "BC3 array read preserves every source block of layer zero.");
+                device.TextureGetData(texture, 1, destination.AsSpan());
+                Check(destination.SequenceEqual(second), "BC3 span read removes native padding and selects layer one.");
+
+                byte[]? previous = null;
+                var callbacks = 0;
+                device.TextureGetDataAsync(texture, 1, bytes => { Check(!device.TextureIsValid(texture) && callbacks++ == 0, "The first snapshot is delivered after RID retirement."); previous = bytes; });
+                device.TextureUpdate(texture, 1, first);
+                device.TextureGetDataAsync(texture, 1, destination.AsMemory(), () => Check(callbacks++ == 1, "The caller-owned snapshot follows the array callback."));
+                device.FreeRID(texture);
+                Reject<ArgumentException>(() => device.TextureGetData(texture, 1));
+                device.Submit(); device.Sync();
+                Check(previous is not null && previous.SequenceEqual(second) && callbacks == 2 && destination.SequenceEqual(first),
+                    "Queued BC3 reads preserve request order and survive texture retirement.");
+                Console.WriteLine($"BC3 readback {encoding} {width}x{height}, {mips} mips, {blockCount} independent blocks per layer: sync, queued, guards and retirement passed.");
+            }
+    }
+
     private static void CheckNativeStorage(ImageTexture texture, Image image)
     {
         var device = RenderingServer.GetRenderingDevice()!; var ordinary = RenderingServer.TextureGetRDTexture(texture.GetRID());
