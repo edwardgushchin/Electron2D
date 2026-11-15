@@ -159,7 +159,7 @@ public sealed partial class Image : Resource
         None = 0,
         /// <summary>Every transparent pixel is either fully transparent or fully opaque.</summary>
         Bit = 1,
-        /// <summary>The image contains fractional alpha.</summary>
+        /// <summary>The image contains blended alpha, subject to the byte thresholds of DetectAlpha.</summary>
         Blend = 2,
     }
 
@@ -185,7 +185,7 @@ public sealed partial class Image : Resource
     {
         /// <summary>Treats the image as ordinary color or data.</summary>
         Generic = 0,
-        /// <summary>Treats the image as nonlinear sRGB color.</summary>
+        /// <summary>Treats the image as nonlinear sRGB color, promoting detected red/red-green color to RGB.</summary>
         Srgb = 1,
         /// <summary>Treats the image as a tangent-space normal map whose red and green channels are sufficient.</summary>
         Normal = 2,

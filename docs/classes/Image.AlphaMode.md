@@ -14,7 +14,7 @@ Last updated: 2026-09-21
 
 ## Description
 
-The classification is derived from decoded base-level pixels. It describes actual values, not merely whether the storage format declares an alpha channel.
+The classification is derived from decoded base-level pixels. LA8/RGBA8 use byte thresholds 2 and 254; other decoded formats use exact endpoints, including 65535 for RGBA16I. It describes actual values, not merely whether the storage format declares an alpha channel.
 
 ## Examples
 
@@ -43,12 +43,12 @@ Every decoded base-level pixel is fully opaque, or the format has no alpha chann
 <a id="bit"></a>
 ### `Bit = 1`
 
-At least one base-level pixel is fully transparent and every other alpha is either zero or one.
+At least one base-level pixel is classified transparent and none is classified blended. Byte alpha 0–1 is transparent; other decoded formats use zero as the endpoint.
 
 <a id="blend"></a>
 ### `Blend = 2`
 
-At least one base-level alpha lies strictly between zero and one, so ordinary alpha blending may be required.
+At least one base-level alpha is blended: bytes 2–253, or a fractional value between the exact endpoints of another decoded format.
 
 ## Invariants and errors
 

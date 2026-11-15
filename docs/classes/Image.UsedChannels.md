@@ -14,7 +14,7 @@ Last updated: 2026-09-21
 
 ## Description
 
-The result is an analysis hint for storage and future compression choices. It does not change the image and does not promise that a renderer supports a corresponding texture format.
+The result selects the channel role used by Image compression. See [analysis thresholds and source policies](../components/images.md#image-analysis). It does not change the image and does not promise that a renderer supports a corresponding texture format.
 
 ## Examples
 

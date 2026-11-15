@@ -142,6 +142,18 @@ The loader bounds the text header to 64 KiB and encoded and decoded pixel storag
 
 When the source has mipmaps, the result generates every lower level from the new RGB8 base with the byte mip filter. A base-only source yields a base-only result. The image-storage test checks an authored HDR mip that differs from the regenerated value, an odd-width base, exact transfer and clamp bytes, and the independent ImageTexture snapshot.
 
+## Image analysis
+
+All four queries read an owned snapshot and ignore authored mip levels. They never publish pixels or emit `Changed`. Empty images return `DetectAlpha.None` and `IsInvisible = true`; channel and bounds queries reject empty or compressed storage with `InvalidOperationException`. Disposed images reject every query.
+
+`DetectAlpha` uses byte thresholds in LA8/RGBA8: 0–1 selects Bit, 2–253 selects Blend, and 254–255 selects None unless another pixel needs transparency. Blend takes precedence. Other decoded alpha layouts use exact endpoints, with 65535 opaque for RGBA16I. This extends detection to packed, float, half and UInt16 storage. Compressed metadata reports Blend only for DXT3/DXT5 and None for every other block role; it does not certify decoded opacity.
+
+`DetectUsedChannels` defaults to Generic (0); Srgb is 1 and Normal is 2. Normal returns RedGreen after storage validation. L8 and single-red formats retain their storage identity. Other formats use exact RGB equality for luminance, color components above 0.001, and alpha below 0.999 (below 65535 for RGBA16I). Non-gray color falls back to Red even below the component threshold. Srgb promotes detected Red/RedGreen color to RGB, except for the single-red storage shortcut. BCn calls this same analysis before selecting its block role. PNG uses the same alpha analysis on its export snapshot; its four direct byte layouts retain their channels.
+
+`IsInvisible` requires every decoded alpha to equal zero; signed zero qualifies, negative and nonfinite alpha do not. `GetUsedRect` includes only pixels with alpha greater than zero, excludes NaN, and returns exact half-open bounds. Alpha-free layouts occupy the complete rectangle. These exact visibility queries intentionally differ from alpha classification thresholds.
+
+The public `tests/ImageAnalysis.Consumer` exercises all 47 storage formats, enum identities/defaults, thresholds, authored mips, query purity, disposal and PNG/BCn integration. Host results and remaining platform limits are recorded in `.tasks/qa/T-0062` at the board root. This managed slice does not qualify native delivery or other platforms.
+
 ## Alpha-edge repair and premultiplication
 
 Both operations edit the RGBA8 base level and preserve all authored mip bytes. Edge repair copies the nearest RGB whose alpha byte is at least 20 into each pixel below that threshold. It searches up to four pixels on each axis, measures squared distance, and visits candidates in top-to-bottom, left-to-right order. Repaired pixels remain below the threshold and cannot become sources. Premultiplication applies integer `(component * alpha + 255) >> 8` to each base RGB byte. Both operations keep alpha values.
