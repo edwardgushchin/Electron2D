@@ -15,9 +15,9 @@ internal static class NativeMenuChecks
         using (var display = DisplayServer.Open("Native menu qualification", new(320, 240)))
         {
             Check(NativeMenu.HasFeature(NativeMenu.Feature.PopupMenu) && NativeMenu.HasFeature(NativeMenu.Feature.OpenCloseCallback) && NativeMenu.HasFeature(NativeMenu.Feature.HoverCallback), "Windows native capabilities.");
-            Check(!NativeMenu.HasFeature(NativeMenu.Feature.GlobalMenu) && !NativeMenu.HasFeature(NativeMenu.Feature.KeyCallback), "Unsupported producers are not advertised.");
+            Check(!NativeMenu.HasFeature(NativeMenu.Feature.GlobalMenu) && NativeMenu.HasFeature(NativeMenu.Feature.KeyCallback), "Key callback support is real; global menus remain unavailable.");
             Reject<ArgumentOutOfRangeException>(() => NativeMenu.HasFeature((NativeMenu.Feature)99));
-            Model(); stale = NativeMenu.CreateMenu();
+            Model(); Keyboard(); KeyboardMatrix(); stale = NativeMenu.CreateMenu();
             var child = NativeMenu.CreateMenu(); NativeMenu.AddSubmenuItem(stale, "Retire parent and child", child); Native(display);
         }
         Check(!NativeMenu.IsAvailable, "Display retirement clears service.");
@@ -56,6 +56,155 @@ internal static class NativeMenuChecks
         NativeMenu.SetItemSubmenu(menu, 7, default); NativeMenu.AddSubmenuItem(other, "reattach", child); NativeMenu.FreeMenu(other); Check(NativeMenu.HasMenu(child), "Freeing a parent detaches independently owned submenus."); NativeMenu.FreeMenu(child);
         var offThread = Task.Run(() => { try { NativeMenu.GetItemCount(menu); return false; } catch (InvalidOperationException) { return true; } }).GetAwaiter().GetResult(); Check(offThread, "Owner-thread enforcement.");
         NativeMenu.Clear(menu); Check(NativeMenu.GetItemCount(menu) == 0, "Native clear."); NativeMenu.FreeMenu(menu); Check(!NativeMenu.HasMenu(menu), "Explicit free."); Reject<ArgumentException>(() => NativeMenu.FreeMenu(menu));
+    }
+    private static void Keyboard()
+    {
+        var menu = NativeMenu.CreateMenu();
+        var normal = 0; var keys = 0;
+        Action<int> ordinary = value => normal += value;
+        Action<int> keyboard = value => { Check(!NativeMenu.IsOpened(menu), "Accelerator callback follows native closure."); keys += value; };
+        var index = NativeMenu.AddCheckItem(menu, "Accelerator", 3, ordinary, keyCallback: keyboard, accelerator: Key.F8);
+        Check(ReferenceEquals(NativeMenu.GetItemKeyCallback<int>(menu, index), keyboard) && NativeMenu.GetItemAccelerator(menu, index) == Key.F8, "Exact accelerator delegate and key.");
+        Reject<ArgumentException>(() => NativeMenu.SetItemTag(menu, index, "wrong"));
+        Reject<ArgumentException>(() => NativeMenu.SetItemKeyCallback<string>(menu, index, _ => { }));
+        var dump = Present(() => NativeMenu.Popup(menu, new(240, 180)), "accel:119");
+        Check(keys == 3 && normal == 0 && dump.Contains("F8"), "Real native F8 accelerator invokes only typed key callback and displays its shortcut.");
+        NativeMenu.SetItemAccelerator(menu, index, Key.F9);
+        Present(() => NativeMenu.Popup(menu, new(240, 180)), "miss:119");
+        Check(keys == 3, "Replaced accelerator no longer executes.");
+        Present(() => NativeMenu.Popup(menu, new(240, 180)), "accel:120");
+        Check(keys == 6 && normal == 0, "Replacement executes through native keyboard input.");
+        NativeMenu.SetItemDisabled(menu, index, true);
+        Present(() => NativeMenu.Popup(menu, new(240, 180)), "miss:120");
+        Check(keys == 6, "Disabled accelerator cannot activate.");
+        NativeMenu.SetItemDisabled(menu, index, false);
+        NativeMenu.SetItemAccelerator(menu, index, Key.None);
+        Present(() => NativeMenu.Popup(menu, new(240, 180)), "miss:120");
+        Check(keys == 6, "Removed accelerator cannot activate.");
+        Present(() => NativeMenu.Popup(menu, new(240, 180)), "0");
+        Check(normal == 3 && keys == 6, "Ordinary selection keeps its distinct callback.");
+        NativeMenu.SetItemAccelerator(menu, index, Key.F8);
+        var prefix = System.IO.Path.Combine(_output, "closed");
+        var start = new ProcessStartInfo(_oracle) { UseShellExecute = false, CreateNoWindow = true };
+        foreach (var value in new[] { Environment.ProcessId.ToString(), "closed:119", prefix + ".txt", prefix + ".bmp" }) start.ArgumentList.Add(value);
+        using (var driver = Process.Start(start)!)
+        {
+            var timeout = Stopwatch.StartNew();
+            while (!driver.HasExited && timeout.ElapsedMilliseconds < 10000) { DisplayServer.ProcessEvents(); Thread.Sleep(10); }
+            if (!driver.HasExited) { driver.Kill(); throw new Exception("Closed-menu keyboard driver timed out."); }
+            DisplayServer.ProcessEvents();
+            Check(driver.ExitCode == 0 && keys == 9 && normal == 3, "Closed native owner input uses the distinct key callback.");
+        }
+        var inputKeys = new List<bool>();
+        Action<InputEvent> observe = value => { if (value is InputEventKey { Keycode: Key.F8 } key) inputKeys.Add(key.Pressed); };
+        var events = DisplayServer.GetWindowEvents(); events.Input += observe;
+        NativeMenu.SetItemKeyCallback<int>(menu, index, null);
+        NativeMenu.SetPopupCloseCallback(menu, DisplayServer.ProcessEvents);
+        Present(() => NativeMenu.Popup(menu, new(240, 180)), "accel:119");
+        DisplayServer.ProcessEvents(); events.Input -= observe;
+        Check(inputKeys.SequenceEqual(new[] { true, false }) && !Input.IsKeyPressed(Key.F8) && keys == 9 && normal == 3, "Forwarded input: " + string.Join(",", inputKeys) + "; held=" + Input.IsKeyPressed(Key.F8) + "; keys=" + keys + "; ordinary=" + normal);
+        NativeMenu.FreeMenu(menu);
+    }
+    private static void KeyboardMatrix()
+    {
+        using var image = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8); image.Fill(Colors.Red);
+        using var icon = ImageTexture.CreateFromImage(image);
+        for (var family = 0; family < 7; family++)
+        {
+            var menu = NativeMenu.CreateMenu(); var keys = 0; var ordinary = 0;
+            Action<int> normal = value => ordinary += value;
+            Action<int> keyboard = value => keys += value;
+            var index = family switch
+            {
+                0 => NativeMenu.AddItem(menu, "Plain", 7, normal, keyCallback: keyboard, accelerator: Key.F8),
+                1 => NativeMenu.AddCheckItem(menu, "Check", 7, normal, keyCallback: keyboard, accelerator: Key.F8),
+                2 => NativeMenu.AddRadioCheckItem(menu, "Radio", 7, normal, keyCallback: keyboard, accelerator: Key.F8),
+                3 => NativeMenu.AddIconItem(menu, icon, "Icon", 7, normal, keyCallback: keyboard, accelerator: Key.F8),
+                4 => NativeMenu.AddIconCheckItem(menu, icon, "Icon check", 7, normal, keyCallback: keyboard, accelerator: Key.F8),
+                5 => NativeMenu.AddIconRadioCheckItem(menu, icon, "Icon radio", 7, normal, keyCallback: keyboard, accelerator: Key.F8),
+                _ => NativeMenu.AddMultistateItem(menu, "State", 3, 2, 7, normal, keyCallback: keyboard, accelerator: Key.F8)
+            };
+            Check(ReferenceEquals(NativeMenu.GetItemKeyCallback<int>(menu, index), keyboard), "Family retains exact key delegate: " + family);
+            Present(() => NativeMenu.Popup(menu, new(240, 180)), "accel:119");
+            NativeMenu.SetItemAccelerator(menu, index, Key.F9);
+            Present(() => NativeMenu.Popup(menu, new(240, 180)), "accel:120");
+            NativeMenu.SetItemAccelerator(menu, index, Key.None);
+            Present(() => NativeMenu.Popup(menu, new(240, 180)), "miss:120");
+            Present(() => NativeMenu.Popup(menu, new(240, 180)), "0");
+            Check(keys == 14 && ordinary == 7 && (family != 6 || NativeMenu.GetItemState(menu, index) == 2), "Family executes separate callbacks and explicit state: " + family);
+            NativeMenu.FreeMenu(menu);
+        }
+        var root = NativeMenu.CreateMenu(); var child = NativeMenu.CreateMenu(); var result = 0;
+        NativeMenu.AddItem(child, "nested", () => throw new Exception("Wrong ordinary callback"), keyCallback: () => result = 1, accelerator: Key.F8);
+        var parent = NativeMenu.AddSubmenuItem(root, "child", child);
+        NativeMenu.AddItem(root, "later duplicate", keyCallback: () => result = 2, accelerator: Key.F8);
+        Present(() => NativeMenu.Popup(root, new(240, 180)), "accel:119"); Check(result == 1, "Recursive logical order resolves duplicates.");
+        NativeMenu.SetItemDisabled(root, parent, true);
+        Present(() => NativeMenu.Popup(root, new(240, 180)), "accel:119"); Check(result == 2, "Disabled ancestor excludes submenu accelerators.");
+        NativeMenu.SetItemDisabled(root, parent, false); NativeMenu.SetItemHidden(root, parent, true); result = 0;
+        Present(() => NativeMenu.Popup(root, new(240, 180)), "accel:119"); Check(result == 2, "Hidden ancestor excludes submenu accelerators.");
+        NativeMenu.SetItemHidden(root, parent, false); NativeMenu.SetItemIndex(root, 1, 0); result = 0;
+        Present(() => NativeMenu.Popup(root, new(240, 180)), "accel:119"); Check(result == 2, "Reorder updates accelerator priority without changing identity.");
+        NativeMenu.SetItemHidden(root, 0, true); NativeMenu.SetItemHidden(child, 0, true); result = 0;
+        Present(() => NativeMenu.Popup(root, new(240, 180)), "miss:119"); Check(result == 0, "Hidden leaf accelerators are suppressed.");
+        NativeMenu.FreeMenu(root); NativeMenu.FreeMenu(child);
+
+        var lifetime = NativeMenu.CreateMenu(); var selected = 0;
+        NativeMenu.AddItem(lifetime, "snapshot", 7, null, keyCallback: value => selected += value, accelerator: Key.F8);
+        NativeMenu.SetPopupCloseCallback(lifetime, () => { NativeMenu.SetItemKeyCallback<int>(lifetime, 0, null); NativeMenu.SetItemTag(lifetime, 0, "changed"); NativeMenu.SetItemKeyCallback<string>(lifetime, 0, _ => throw new Exception("Retargeted callback")); });
+        Present(() => NativeMenu.Popup(lifetime, new(240, 180)), "accel:119"); Check(selected == 7, "Selected callback and exact tag are captured before close mutation.");
+        NativeMenu.SetItemKeyCallback<string>(lifetime, 0, _ => throw new ApplicationException("key failure")); NativeMenu.SetPopupCloseCallback(lifetime, () => throw new InvalidOperationException("close failure"));
+        Present(() => Reject<AggregateException>(() => NativeMenu.Popup(lifetime, new(240, 180))), "accel:119");
+        NativeMenu.SetPopupCloseCallback(lifetime, () => NativeMenu.FreeMenu(lifetime));
+        Present(() => NativeMenu.Popup(lifetime, new(240, 180)), "accel:119"); Check(!NativeMenu.HasMenu(lifetime), "Close retirement suppresses captured keyboard callback.");
+
+        var injected = NativeMenu.CreateMenu(); var injectedCount = 0;
+        NativeMenu.AddItem(injected, "Injected", keyCallback: () => injectedCount++, accelerator: Key.F8);
+        Present(() => NativeMenu.Popup(injected, new(240, 180)), "inject:0:119"); DisplayServer.ProcessEvents();
+        Check(injectedCount == 1, "SendInput keyboard activation executes once across modal and ordinary pumps.");
+        NativeMenu.SetItemAccelerator(injected, 0, Key.F8 | (Key)KeyModifierMask.Control);
+        Present(() => NativeMenu.Popup(injected, new(240, 180)), "inject:1:119"); DisplayServer.ProcessEvents();
+        Check(injectedCount == 2, "Native Control modifier matches the accelerator.");
+        foreach (var (modifiers, flags) in new[] { (2, KeyModifierMask.Shift), (4, KeyModifierMask.Alt), (3, KeyModifierMask.Control | KeyModifierMask.Shift), (5, KeyModifierMask.Control | KeyModifierMask.Alt), (7, KeyModifierMask.Control | KeyModifierMask.Alt | KeyModifierMask.Shift), (1, KeyModifierMask.CommandOrControl) })
+        {
+            var before = injectedCount;
+            NativeMenu.SetItemAccelerator(injected, 0, Key.F8 | (Key)flags);
+            Present(() => NativeMenu.Popup(injected, new(240, 180)), "inject:" + modifiers + ":119"); DisplayServer.ProcessEvents();
+            Check(injectedCount == before + 1, "Native modifier combination matches once: " + flags + "; before=" + before + "; after=" + injectedCount);
+        }
+        NativeMenu.SetItemAccelerator(injected, 0, Key.F8 | (Key)KeyModifierMask.Control);
+        var beforeMismatch = injectedCount;
+        Present(() => NativeMenu.Popup(injected, new(240, 180)), "injectmiss:3:119"); DisplayServer.ProcessEvents();
+        Check(injectedCount == beforeMismatch, "Extra native Shift does not match Control-only accelerator.");
+        NativeMenu.FreeMenu(injected);
+
+        var altOnly = NativeMenu.CreateMenu(); var altCount = 0;
+        NativeMenu.AddItem(altOnly, "Alt key", keyCallback: () => altCount++, accelerator: Key.Alt);
+        NativeMenu.AddItem(altOnly, "Alt chord", keyCallback: () => throw new Exception("Wrong Alt priority"), accelerator: Key.F8 | (Key)KeyModifierMask.Alt);
+        Present(() => NativeMenu.Popup(altOnly, new(240, 180)), "inject:0:18"); DisplayServer.ProcessEvents();
+        Check(altCount == 1, "A matching Alt-only accelerator precedes the Alt chord guard.");
+        NativeMenu.FreeMenu(altOnly);
+
+        var heldMenu = NativeMenu.CreateMenu(); NativeMenu.AddItem(heldMenu, "Held input", accelerator: Key.F8);
+        var heldTrace = new List<bool>(); var heldAtClose = false;
+        Action<InputEvent> heldObserver = value => { if (value is InputEventKey { Keycode: Key.F8 } key) heldTrace.Add(key.Pressed); };
+        var heldEvents = DisplayServer.GetWindowEvents(); heldEvents.Input += heldObserver;
+        var releaseGate = System.IO.Path.Combine(_output, (_popup + 1) + ".txt.release");
+        if (File.Exists(releaseGate)) File.Delete(releaseGate);
+        NativeMenu.SetPopupCloseCallback(heldMenu, () => { DisplayServer.ProcessEvents(); heldAtClose = Input.IsKeyPressed(Key.F8); File.WriteAllText(releaseGate, "release"); });
+        Present(() => NativeMenu.Popup(heldMenu, new(240, 180)), "hold:119"); DisplayServer.ProcessEvents(); heldEvents.Input -= heldObserver;
+        Check(heldAtClose && heldTrace.SequenceEqual(new[] { true, false }) && !Input.IsKeyPressed(Key.F8), "Held SendInput remains down during close pump and releases exactly once on actual up.");
+        NativeMenu.FreeMenu(heldMenu);
+
+        foreach (var (keycode, vk) in new[] { (Key.Pause, 19), (Key.Menu, 93), (Key.Back, 166), (Key.Forward, 167), (Key.Refresh, 168), (Key.Stop, 169), (Key.Search, 170), (Key.Favorites, 171), (Key.HomePage, 172), (Key.VolumeMute, 173), (Key.VolumeDown, 174), (Key.VolumeUp, 175), (Key.MediaNext, 176), (Key.MediaPrevious, 177), (Key.MediaStop, 178), (Key.MediaPlay, 179) })
+        {
+            var menu = NativeMenu.CreateMenu(); var count = 0;
+            NativeMenu.AddItem(menu, keycode.ToString(), keyCallback: () => count++, accelerator: keycode);
+            Present(() => NativeMenu.Popup(menu, new(240, 180)), "accel:" + vk);
+            DriveClosed("closed:" + vk);
+            Check(count == 2, "Modal and closed Windows key identity agree: " + keycode + "; count=" + count);
+            NativeMenu.FreeMenu(menu);
+        }
     }
     private static void Native(DisplayServer display)
     {
@@ -99,6 +248,8 @@ internal static class NativeMenuChecks
         {
             var root = new Window { Title = "PopupMenu native integration", Size = new(320, 240), GUIEmbedSubwindows = true };
             var menu = new PopupMenu { PreferNativeMenu = true }; menu.AddCheckItem("Integrated 日本語", 42); menu.SetItemChecked(0, true); root.AddChild(menu);
+            using var echoShortcut = new Shortcut();
+            var echoMenu = new PopupMenu { PreferNativeMenu = true }; echoMenu.AddShortcut(echoShortcut, 66, allowEcho: true); echoMenu.SetItemShortcut(0, null); echoMenu.SetItemText(0, "Echo"); echoMenu.SetItemAccelerator(0, Key.F8); root.AddChild(echoMenu);
             var secondary = new Window { Title = "Secondary native host", Visible = false, ForceNative = true, GUIEmbedSubwindows = true, Size = new(200, 150) };
             var nested = new PopupMenu { PreferNativeMenu = true }; nested.AddItem("Secondary command"); secondary.AddChild(nested); root.AddChild(secondary);
             var button = new MenuButton("Commands") { Position = new(10, 70), Size = new(100, 25) }; button.GetPopup().PreferNativeMenu = true; button.GetPopup().AddItem("Command", 77); root.AddChild(button);
@@ -111,8 +262,22 @@ internal static class NativeMenuChecks
                 Present(() => menu.Popup(new(new(20, 30), new(100, 80))), "key:0");
                 Check(!menu.Visible && !menu.IsNativeMenu() && order.SequenceEqual(new[] { "about", "hide", "id:42", "index:0" }), "GUI selection shares hide/ID/index contract and retires native ownership: " + string.Join(",", order));
                 Check(focused.SequenceEqual(new[] { 42 }) && menu.GetFocusedItem() == 0, "Native keyboard-style focus precedes hover without duplicate or mouse IDFocused emission.");
+                menu.SetItemAccelerator(0, Key.F8); order.Clear();
+                Present(() => menu.Popup(new(new(20, 30), new(100, 80))), "accel:119");
+                Check(order.SequenceEqual(new[] { "about", "hide", "id:42", "index:0" }), "PopupMenu accelerator uses native owner and close/ID/index delivery.");
+                menu.SetItemShortcutDisabled(0, true); order.Clear();
+                Present(() => menu.Popup(new(new(20, 30), new(100, 80))), "miss:119");
+                Check(order.SequenceEqual(new[] { "about", "hide" }), "Disabled shortcut preserves native presentation without keyboard activation.");
+                order.Clear(); Present(() => menu.Popup(new(new(20, 30), new(100, 80))), "0");
+                Check(order.Contains("id:42"), "ShortcutDisabled preserves ordinary native selection.");
+                menu.SetItemShortcutDisabled(0, false); order.Clear();
+                Present(() => menu.Popup(new(new(20, 30), new(100, 80))), "repeatmiss:119");
+                Check(order.SequenceEqual(new[] { "about", "hide" }), "PopupMenu default AllowEcho rejects repeated native accelerators.");
+                var echoSelected = false; echoMenu.IDPressed += id => echoSelected = id == 66;
+                Present(() => echoMenu.Popup(), "repeat:119"); Check(echoSelected, "Authored AllowEcho survives the native bridge.");
+                menu.SetItemAccelerator(0, Key.None); order.Clear();
                 menu.PopupHide -= hidden;
-                Action<int> hideOnFocus = _ => menu.Hide(); menu.IDFocused += hideOnFocus; Present(() => menu.Popup(new(new(20, 30), new(100, 80))), "keycancel"); menu.IDFocused -= hideOnFocus; Check(!menu.IsNativeMenu() && !menu.Visible && order.Count(value => value == "id:42") == 1, "Hide cancels native tracking from a focused-item callback without activation.");
+                Action<int> hideOnFocus = _ => menu.Hide(); menu.IDFocused += hideOnFocus; Present(() => menu.Popup(new(new(20, 30), new(100, 80))), "keycancel"); menu.IDFocused -= hideOnFocus; Check(!menu.IsNativeMenu() && !menu.Visible && order.Count(value => value == "id:42") == 0, "Hide cancels native tracking from a focused-item callback without activation.");
                 menu.PreferNativeMenu = false; menu.Popup(); Check(menu.Visible && !menu.IsNativeMenu(), "Explicit canvas presentation."); menu.Hide();
                 menu.PreferNativeMenu = true; menu.SearchBarEnabled = true; menu.Popup(); Check(menu.Visible && !menu.IsNativeMenu(), "Unsupported native roles keep the canvas path."); menu.Hide(); var command = false; button.GetPopup().IDPressed += id => command = id == 77; Present(button.ShowPopup, "0"); Check(command && !button.ButtonPressed, "MenuButton consumes native selection and resets its pressed state."); Present(option.ShowPopup, "1"); Check(option.Selected == 1 && option.Text == "Two" && optionEvents == 1 && !option.ButtonPressed, "OptionButton consumes native selection once and resets its pressed state."); secondary.Show(); var secondaryDump = Present(() => nested.Popup(new(new(240, 180), new(100, 50))), "0"); Check(secondaryDump.Contains("menuowner_title=Secondary native host"), "Native popup uses its actual containing native window."); secondary.Hide(); root.Tree!.Quit();
             };
@@ -127,6 +292,17 @@ internal static class NativeMenuChecks
         using var driver = Process.Start(start) ?? throw new Exception("Native oracle did not start.");
         try { popup(); } finally { if (!driver.WaitForExit(15000)) { driver.Kill(); throw new Exception("Native oracle did not finish."); } }
         Check(driver.ExitCode == 0, "Independent native oracle completed: " + name); return File.ReadAllText(name + ".txt");
+    }
+    private static void DriveClosed(string action)
+    {
+        var prefix = System.IO.Path.Combine(_output, "closed-" + action.Replace(':', '-'));
+        var start = new ProcessStartInfo(_oracle) { UseShellExecute = false, CreateNoWindow = true };
+        foreach (var value in new[] { Environment.ProcessId.ToString(), action, prefix + ".txt", prefix + ".bmp" }) start.ArgumentList.Add(value);
+        using var driver = Process.Start(start) ?? throw new Exception("Closed keyboard driver did not start.");
+        var timeout = Stopwatch.StartNew();
+        while (!driver.HasExited && timeout.ElapsedMilliseconds < 10000) { DisplayServer.ProcessEvents(); Thread.Sleep(10); }
+        if (!driver.HasExited) { driver.Kill(); throw new Exception("Closed keyboard driver timed out."); }
+        DisplayServer.ProcessEvents(); Check(driver.ExitCode == 0, "Closed keyboard driver completed: " + action);
     }
     private static void Check(bool value, string reason) { _checks++; if (!value) throw new Exception(reason); }
     private static void Reject<T>(Action action) where T : Exception { _checks++; try { action(); } catch (T) { return; } throw new Exception("Expected " + typeof(T).Name); }

@@ -24,7 +24,7 @@ public sealed partial class NativeMenu
     /// <returns>Whether its native producer executes on this display.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static bool HasFeature(Feature feature) { var owner = Require(); owner.Check(); if ((uint)feature > 4) throw new ArgumentOutOfRangeException(nameof(feature)); return owner._display.SupportsNativeMenus && feature is Feature.PopupMenu or Feature.OpenCloseCallback or Feature.HoverCallback; }
+    public static bool HasFeature(Feature feature) { var owner = Require(); owner.Check(); if ((uint)feature > 4) throw new ArgumentOutOfRangeException(nameof(feature)); return owner._display.SupportsNativeMenus && feature is Feature.PopupMenu or Feature.OpenCloseCallback or Feature.HoverCallback or Feature.KeyCallback; }
     /// <summary>Creates a caller-owned, initially empty native popup menu.</summary>
     /// <returns>A stable menu identity until FreeMenu or display retirement.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
@@ -104,94 +104,86 @@ public sealed partial class NativeMenu
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddItem(RID rid, string label, Action? callback = null, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 0, false, null, default, 0, 0, index);
+    public static int AddItem(RID rid, string label, Action? callback = null, int index = -1, Action? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 0, false, null, default, 0, 0, index, keyCallback is null ? null : new Callback(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="tag">A borrowed typed callback value.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddItem<T>(RID rid, string label, T tag, Action<T>? callback, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 0, false, null, default, 0, 0, index);
+    public static int AddItem<T>(RID rid, string label, T tag, Action<T>? callback, int index = -1, Action<T>? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 0, false, null, default, 0, 0, index, keyCallback is null ? null : new Callback<T>(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddCheckItem(RID rid, string label, Action? callback = null, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 1, false, null, default, 0, 0, index);
-    /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
-    /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
-    /// <param name="rid">A live menu owned by the active display.</param>
-    /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
-    /// <param name="tag">A borrowed typed callback value.</param>
-    /// <param name="callback">The activation delegate, or null.</param>
-    /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
-    /// <returns>The inserted logical index.</returns>
-    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
-    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddCheckItem<T>(RID rid, string label, T tag, Action<T>? callback, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 1, false, null, default, 0, 0, index);
-    /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
-    /// <param name="rid">A live menu owned by the active display.</param>
-    /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
-    /// <param name="callback">The activation delegate, or null.</param>
-    /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
-    /// <returns>The inserted logical index.</returns>
-    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
-    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddRadioCheckItem(RID rid, string label, Action? callback = null, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 2, false, null, default, 0, 0, index);
+    public static int AddCheckItem(RID rid, string label, Action? callback = null, int index = -1, Action? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 1, false, null, default, 0, 0, index, keyCallback is null ? null : new Callback(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="tag">A borrowed typed callback value.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddRadioCheckItem<T>(RID rid, string label, T tag, Action<T>? callback, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 2, false, null, default, 0, 0, index);
+    public static int AddCheckItem<T>(RID rid, string label, T tag, Action<T>? callback, int index = -1, Action<T>? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 1, false, null, default, 0, 0, index, keyCallback is null ? null : new Callback<T>(keyCallback), accelerator);
+    /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
+    /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
+    /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
+    /// <returns>The inserted logical index.</returns>
+    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
+    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
+    public static int AddRadioCheckItem(RID rid, string label, Action? callback = null, int index = -1, Action? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 2, false, null, default, 0, 0, index, keyCallback is null ? null : new Callback(keyCallback), accelerator);
+    /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
+    /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
+    /// <param name="tag">A borrowed typed callback value.</param>
+    /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
+    /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
+    /// <returns>The inserted logical index.</returns>
+    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
+    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
+    public static int AddRadioCheckItem<T>(RID rid, string label, T tag, Action<T>? callback, int index = -1, Action<T>? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 2, false, null, default, 0, 0, index, keyCallback is null ? null : new Callback<T>(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="icon">A live borrowed image-readable texture.</param>
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddIconItem(RID rid, Texture icon, string label, Action? callback = null, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 0, false, icon, default, 0, 0, index);
-    /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
-    /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
-    /// <param name="rid">A live menu owned by the active display.</param>
-    /// <param name="icon">A live borrowed image-readable texture.</param>
-    /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
-    /// <param name="tag">A borrowed typed callback value.</param>
-    /// <param name="callback">The activation delegate, or null.</param>
-    /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
-    /// <returns>The inserted logical index.</returns>
-    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
-    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddIconItem<T>(RID rid, Texture icon, string label, T tag, Action<T>? callback, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 0, false, icon, default, 0, 0, index);
-    /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
-    /// <param name="rid">A live menu owned by the active display.</param>
-    /// <param name="icon">A live borrowed image-readable texture.</param>
-    /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
-    /// <param name="callback">The activation delegate, or null.</param>
-    /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
-    /// <returns>The inserted logical index.</returns>
-    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
-    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddIconCheckItem(RID rid, Texture icon, string label, Action? callback = null, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 1, false, icon, default, 0, 0, index);
+    public static int AddIconItem(RID rid, Texture icon, string label, Action? callback = null, int index = -1, Action? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 0, false, icon, default, 0, 0, index, keyCallback is null ? null : new Callback(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
     /// <param name="rid">A live menu owned by the active display.</param>
@@ -199,21 +191,25 @@ public sealed partial class NativeMenu
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="tag">A borrowed typed callback value.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddIconCheckItem<T>(RID rid, Texture icon, string label, T tag, Action<T>? callback, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 1, false, icon, default, 0, 0, index);
+    public static int AddIconItem<T>(RID rid, Texture icon, string label, T tag, Action<T>? callback, int index = -1, Action<T>? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 0, false, icon, default, 0, 0, index, keyCallback is null ? null : new Callback<T>(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="icon">A live borrowed image-readable texture.</param>
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddIconRadioCheckItem(RID rid, Texture icon, string label, Action? callback = null, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 2, false, icon, default, 0, 0, index);
+    public static int AddIconCheckItem(RID rid, Texture icon, string label, Action? callback = null, int index = -1, Action? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 1, false, icon, default, 0, 0, index, keyCallback is null ? null : new Callback(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
     /// <param name="rid">A live menu owned by the active display.</param>
@@ -221,22 +217,52 @@ public sealed partial class NativeMenu
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="tag">A borrowed typed callback value.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddIconRadioCheckItem<T>(RID rid, Texture icon, string label, T tag, Action<T>? callback, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 2, false, icon, default, 0, 0, index);
+    public static int AddIconCheckItem<T>(RID rid, Texture icon, string label, T tag, Action<T>? callback, int index = -1, Action<T>? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 1, false, icon, default, 0, 0, index, keyCallback is null ? null : new Callback<T>(keyCallback), accelerator);
+    /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="icon">A live borrowed image-readable texture.</param>
+    /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
+    /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
+    /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
+    /// <returns>The inserted logical index.</returns>
+    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
+    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
+    public static int AddIconRadioCheckItem(RID rid, Texture icon, string label, Action? callback = null, int index = -1, Action? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 2, false, icon, default, 0, 0, index, keyCallback is null ? null : new Callback(keyCallback), accelerator);
+    /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
+    /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="icon">A live borrowed image-readable texture.</param>
+    /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
+    /// <param name="tag">A borrowed typed callback value.</param>
+    /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
+    /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
+    /// <returns>The inserted logical index.</returns>
+    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
+    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
+    public static int AddIconRadioCheckItem<T>(RID rid, Texture icon, string label, T tag, Action<T>? callback, int index = -1, Action<T>? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 2, false, icon, default, 0, 0, index, keyCallback is null ? null : new Callback<T>(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="label">Nonnull native UTF16 label, without embedded zero characters.</param>
     /// <param name="maxStates">Application state-count metadata.</param>
     /// <param name="defaultState">Initial application state; selection does not cycle it automatically.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddMultistateItem(RID rid, string label, int maxStates, int defaultState, Action? callback = null, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 0, false, null, default, maxStates, defaultState, index);
+    public static int AddMultistateItem(RID rid, string label, int maxStates, int defaultState, Action? callback = null, int index = -1, Action? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback(callback), null, 0, false, null, default, maxStates, defaultState, index, keyCallback is null ? null : new Callback(keyCallback), accelerator);
     /// <summary>Inserts a native menu item and retains its exact typed callback state.</summary>
     /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
     /// <param name="rid">A live menu owned by the active display.</param>
@@ -245,11 +271,13 @@ public sealed partial class NativeMenu
     /// <param name="defaultState">Initial application state; selection does not cycle it automatically.</param>
     /// <param name="tag">A borrowed typed callback value.</param>
     /// <param name="callback">The activation delegate, or null.</param>
+    /// <param name="keyCallback">The accelerator delegate; absence forwards input without ordinary activation.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to remove the shortcut.</param>
     /// <param name="index">Insertion position; -1 appends and other values clamp to the current bounds.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
-    public static int AddMultistateItem<T>(RID rid, string label, int maxStates, int defaultState, T tag, Action<T>? callback, int index = -1) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 0, false, null, default, maxStates, defaultState, index);
+    public static int AddMultistateItem<T>(RID rid, string label, int maxStates, int defaultState, T tag, Action<T>? callback, int index = -1, Action<T>? keyCallback = null, Key accelerator = Key.None) => Require().Add(rid, label, callback is null ? null : new Callback<T>(callback), new TagValue<T>(tag), 0, false, null, default, maxStates, defaultState, index, keyCallback is null ? null : new Callback<T>(keyCallback), accelerator);
     /// <summary>Inserts a native separator.</summary>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="index">Insertion position; -1 appends.</param>
@@ -514,4 +542,42 @@ public sealed partial class NativeMenu
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
     public static void SetItemHoverCallbacks<T>(RID rid, int index, Action<T>? callback) { var owner = Require(); owner.Writable(); var item = owner.At(rid, index); ICallback? value = callback is null ? null : new Callback<T>(callback); ValidateCallback(item, value); item.Hover = value; }
+    /// <summary>Returns the original delegate with its exact signature.</summary>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="index">A nonnegative logical item index, including hidden items.</param>
+    /// <returns>The accelerator delegate, or null.</returns>
+    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
+    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
+    public static Action? GetItemKeyCallback(RID rid, int index) { var callback = Require().At(rid, index).KeyCallback; return callback is null ? null : callback is Callback typed ? typed.Value : throw new InvalidOperationException("The registered callback has another signature."); }
+    /// <summary>Registers an accelerator callback with exact tag validation.</summary>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="index">The logical item index.</param>
+    /// <param name="callback">The delegate, or null to forward input without ordinary activation.</param>
+    public static void SetItemKeyCallback(RID rid, int index, Action? callback) { var owner = Require(); owner.Writable(); var item = owner.At(rid, index); ICallback? value = callback is null ? null : new Callback(callback); ValidateCallback(item, value); item.KeyCallback = value; }
+    /// <summary>Returns the original delegate with its exact signature.</summary>
+    /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="index">A nonnegative logical item index, including hidden items.</param>
+    /// <returns>The accelerator delegate, or null.</returns>
+    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
+    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
+    public static Action<T>? GetItemKeyCallback<T>(RID rid, int index) { var callback = Require().At(rid, index).KeyCallback; return callback is null ? null : callback is Callback<T> typed ? typed.Value : throw new InvalidOperationException("The registered callback has another signature."); }
+    /// <summary>Registers a native owner-thread callback with exact tag validation.</summary>
+    /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="index">A nonnegative logical item index, including hidden items.</param>
+    /// <param name="callback">The delegate, or null to clear it.</param>
+    /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
+    /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
+    public static void SetItemKeyCallback<T>(RID rid, int index, Action<T>? callback) { var owner = Require(); owner.Writable(); var item = owner.At(rid, index); ICallback? value = callback is null ? null : new Callback<T>(callback); ValidateCallback(item, value); item.KeyCallback = value; }
+    /// <summary>Returns the logical accelerator, including modifier masks.</summary>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="index">The logical item index.</param>
+    /// <returns>The assigned accelerator, or None.</returns>
+    public static Key GetItemAccelerator(RID rid, int index) => Require().At(rid, index).Accelerator;
+    /// <summary>Updates native shortcut text and accelerator dispatch atomically.</summary>
+    /// <param name="rid">A live menu owned by the active display.</param>
+    /// <param name="index">The logical item index.</param>
+    /// <param name="accelerator">A logical key with modifier masks, or None to clear.</param>
+    public static void SetItemAccelerator(RID rid, int index, Key accelerator) => Require().SetAccelerator(rid, index, accelerator);
 }

@@ -72,7 +72,9 @@ public sealed partial class NativeMenu : ElectronObject
         internal Action<Resource>? Changed;
         internal Action<ElectronObject>? Disposed;
         internal object? Tag;
-        internal ICallback? Callback, Hover;
+        internal ICallback? Callback, Hover, KeyCallback;
+        internal Key Accelerator;
+        internal bool AllowEcho = true, ShortcutDisabled;
         internal Action? Focus;
     }
     private interface ITag { Type Type { get; } }
@@ -84,7 +86,7 @@ public sealed partial class NativeMenu : ElectronObject
     { public Type? TagType => typeof(T); public void Invoke(object? tag) => Value(((TagValue<T>)tag!).Value); }
     private static void ValidateTag(Item item, Type? type)
     {
-        if (item.Callback?.TagType is { } first && first != type || item.Hover?.TagType is { } second && second != type)
+        if (item.Callback?.TagType is { } first && first != type || item.Hover?.TagType is { } second && second != type || item.KeyCallback?.TagType is { } third && third != type)
             throw new ArgumentException("The tag must preserve its callbacks' exact generic type.");
     }
     private static void ValidateCallback(Item item, ICallback? callback)
@@ -96,13 +98,13 @@ public sealed partial class NativeMenu : ElectronObject
         try { var rid = RID.Allocate(); _menus.Add(rid, new(rid, handle)); return rid; }
         catch { Win.DestroyMenu(handle); throw; }
     }
-    private int Add(RID rid, string text, ICallback? callback, object? tag, int checkable, bool separator, Texture? icon, RID submenu, int states, int state, int index)
+    private int Add(RID rid, string text, ICallback? callback, object? tag, int checkable, bool separator, Texture? icon, RID submenu, int states, int state, int index, ICallback? keyCallback = null, Key accelerator = Key.None)
     {
         Writable(); Text(text); if (icon is { IsDisposed: true }) throw new ObjectDisposedException(nameof(icon));
         var menu = Get(rid); var child = submenu.IsValid() ? Get(submenu) : null; ValidateChild(menu, child, null);
         var target = index == -1 ? menu.Items.Count : Math.Clamp(index, 0, menu.Items.Count);
         if (_nextCommand == uint.MaxValue) throw new InvalidOperationException("Native menu command identities are exhausted.");
-        var item = new Item(menu, ++_nextCommand) { Text = text, Callback = callback, Tag = tag, Checkable = checkable, Separator = separator, Submenu = child, State = state, MaxStates = states };
+        var item = new Item(menu, ++_nextCommand) { Text = text, Callback = callback, KeyCallback = keyCallback, Accelerator = accelerator, Tag = tag, Checkable = checkable, Separator = separator, Submenu = child, State = state, MaxStates = states };
         menu.Items.EnsureCapacity(menu.Items.Count + 1);
         try { SetIconSource(item, icon); InsertNative(menu, item, VisibleIndex(menu, target)); }
         catch { RetireItem(item); throw; }
@@ -198,7 +200,7 @@ public sealed partial class NativeMenu : ElectronObject
     private static void Unwatch(Item item)
     { if (item.Icon is { } icon) { icon.Changed -= item.Changed; icon.Disposed -= item.Disposed; } item.Changed = null; item.Disposed = null; }
     private static void RetireItem(Item item)
-    { item.Alive = false; Unwatch(item); if (item.Bitmap != 0) Win.DeleteObject(item.Bitmap); item.Bitmap = 0; item.Icon = null; item.Callback = item.Hover = null; item.Focus = null; item.Tag = null; }
+    { item.Alive = false; Unwatch(item); if (item.Bitmap != 0) Win.DeleteObject(item.Bitmap); item.Bitmap = 0; item.Icon = null; item.Callback = item.Hover = item.KeyCallback = null; item.Focus = null; item.Tag = null; }
     private void IconCore(RID rid, int index, Texture? icon)
     {
         Writable(); if (icon is { IsDisposed: true }) throw new ObjectDisposedException(nameof(icon)); var item = At(rid, index);

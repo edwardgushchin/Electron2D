@@ -1012,7 +1012,12 @@ def main():
     assert "native-menu service" in class_rows["NativeMenu"]
     native_rows = [row for row in pages[CLASS_PAGES / "NativeMenu.md"].splitlines() if row.startswith("| [`")]
     assert sum(" | Implemented | " in row for row in native_rows) >= 40
-    assert all(" | Partial | " in row for row in native_rows if "[`method add_item" in row)
+    native_keyboard = ("add_item", "add_check_item", "add_radio_check_item", "add_icon_item",
+                       "add_icon_check_item", "add_icon_radio_check_item", "add_multistate_item",
+                       "get_item_key_callback", "set_item_key_callback", "get_item_accelerator", "set_item_accelerator")
+    for name in native_keyboard:
+        row = next(row for row in native_rows if row.startswith("| [`method " + name + "("))
+        assert " | Implemented | " in row and "NativeAOT" in row, name
     assert any(" | Blocked | " in row and "get_system_menu" in row for row in native_rows)
     packed_types = [item["name"] for item in upstream["types"]
                     if item["name"].startswith("Packed") and item["name"].endswith("Array")]

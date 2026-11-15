@@ -7,7 +7,7 @@ public partial class PopupMenu
     /// <summary>Gets or sets whether eligible popup trees prefer the operating-system menu.</summary>
     /// <value>False initially; stored in scenes.</value>
     /// <remarks>The Windows adapter supports plain, check/radio, icon, separator and submenu items.
-    /// Search controls, shortcuts, nonclosing selection policies and custom item presentation use the canvas path.</remarks>
+    /// Search controls, shortcut resources, nonclosing selection policies and custom item presentation use the canvas path.</remarks>
     public bool PreferNativeMenu { get { CheckMenu(); return _preferNativeMenu; } set { EnsureMutable(); _preferNativeMenu = value; } }
     /// <summary>Reports whether this popup currently participates in an operating-system menu presentation.</summary>
     /// <returns>True during the modal native call, including its close notification.</returns>
@@ -23,7 +23,7 @@ public partial class PopupMenu
         if (!visited.Add(this) || Visible || _searchEnabled || GraphScaleFromOwner() != 1) return false;
         foreach (var item in _items)
         {
-            if (item.Text.Contains('\0') || item.Separator && item.Text.Length != 0 || !item.Separator && !HidePolicy(item) || item.Shortcut is not null || item.Accelerator != Key.None || item.Indent != 0 || item.Tooltip.Length != 0 || item.IconMaxWidth != 0 || item.IconModulate != Colors.White || item.Language.Length != 0 || item.Direction != TextDirection.Auto) return false;
+            if (item.Text.Contains('\0') || item.Separator && item.Text.Length != 0 || !item.Separator && !HidePolicy(item) || item.Shortcut is not null || item.Indent != 0 || item.Tooltip.Length != 0 || item.IconMaxWidth != 0 || item.IconModulate != Colors.White || item.Language.Length != 0 || item.Direction != TextDirection.Auto) return false;
             if (item.Submenu is { } child && (child.IsDisposed || !child.CanUseNativeMenu(visited))) return false;
         }
         foreach (var child in GetChildren()) if (child is not PopupMenu submenu || !_items.Any(item => item.Submenu == submenu)) return false;
@@ -63,7 +63,12 @@ public partial class PopupMenu
             if (item.Separator) index = NativeMenu.AddSeparator(rid);
             else if (item.Submenu is { } child) index = NativeMenu.AddSubmenuItem(rid, label, child.BuildNativeMenu(menus));
             else index = NativeMenu.AddItem(rid, label, () => { if (IsDisposed) return; var current = _items.IndexOf(item); if (current >= 0 && Eligible(current)) Activate(current); });
-            NativeMenu.ObserveItemFocus(rid, index, () => NativeItemFocus(item, true));
+            if (!item.Separator && item.Submenu is null && item.Accelerator != Key.None)
+            {
+                NativeMenu.SetItemAccelerator(rid, index, item.Accelerator);
+                NativeMenu.SetItemKeyCallback(rid, index, NativeMenu.GetItemCallback(rid, index));
+            }
+            NativeMenu.ConfigurePopupItem(rid, index, () => NativeItemFocus(item, true), item.AllowEcho, item.ShortcutDisabled);
             NativeMenu.SetItemHoverCallbacks(rid, index, () => NativeItemFocus(item, false));
             NativeMenu.SetItemCheckable(rid, index, item.Checkable == 1);
             if (item.Checkable == 2) NativeMenu.SetItemRadioCheckable(rid, index, true);

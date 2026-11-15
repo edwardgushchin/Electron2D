@@ -226,3 +226,5 @@ foreign runtime execution and actual keyboard layouts remain separate platform c
 [Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.
 
 [Contextual native navigation](../classes/AccessibilityServer.md#contextual-navigation) connects custom container position/help, direct keybinding metadata from real button/menu sources, class names and role descriptions. The owning contract defines override, lifecycle and verification boundaries.
+
+Windows native-menu accelerators share the display logical-key conversion. Browser, media, application and system-key aliases resolve to the existing Key identities before accelerator matching. The modal adapter uses the pinned SDL Windows scancode map and current SDL layout rather than a second virtual-key identity policy; see [native menus](native-menus.md#keyboard-producer).

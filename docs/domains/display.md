@@ -210,3 +210,5 @@ Native Wayland verification uses an isolated compositor and external producer.
 [Native speech](../components/text-to-speech.md) adds real Windows and Linux Speech Dispatcher synthesis/playback, typed voice snapshots, queue/control operations and owner-pump utterance callbacks. Provider capacity, source-coordinate and actual audio/platform receipts remain in the owning component.
 
 [Windows keyboard layouts](../components/display-server.md#native-keyboard-layouts) provide live input-locale listing, names, language codes, activation and synchronized SDL key mapping. The operations require the display owner. The [X11 adapter](../components/display-server.md#x11-keyboard-layouts) enumerates and locks native XKB groups and synchronizes SDL. Wayland still requires compositor layout management, and macOS requires an input-source provider.
+
+NativeMenu keyboard accelerators now execute in the display keyboard pump and native modal menu loop, with a separate typed callback and PopupMenu bridge. Source, fresh-package CLR and strict NativeAOT profiles execute; see [the component](../components/native-menus.md#keyboard-producer).

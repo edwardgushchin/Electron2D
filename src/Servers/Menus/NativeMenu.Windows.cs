@@ -42,12 +42,12 @@ public sealed unsafe partial class NativeMenu
     private static void InsertNative(Menu menu, Item item, int index)
     {
         var info = Describe(item);
-        fixed (char* text = item.Text) { info.Text = (nint)text; if (Win.InsertMenuItem(menu.Handle, (uint)index, 1, in info) == 0) throw Failure("insert a native menu item"); }
+        fixed (char* text = item.Accelerator == Key.None ? item.Text : item.Text + "\t" + KeyCodeNames.Format(item.Accelerator)) { info.Text = (nint)text; if (Win.InsertMenuItem(menu.Handle, (uint)index, 1, in info) == 0) throw Failure("insert a native menu item"); }
     }
     private static void SetNative(Menu menu, Item item, int index)
     {
         var info = Describe(item); info.Mask &= ~4u;
-        fixed (char* text = item.Text) { info.Text = (nint)text; if (Win.SetMenuItemInfo(menu.Handle, (uint)index, 1, in info) == 0) throw Failure("update a native menu item"); }
+        fixed (char* text = item.Accelerator == Key.None ? item.Text : item.Text + "\t" + KeyCodeNames.Format(item.Accelerator)) { info.Text = (nint)text; if (Win.SetMenuItemInfo(menu.Handle, (uint)index, 1, in info) == 0) throw Failure("update a native menu item"); }
     }
     internal static nint CopyNativeBitmap(Texture texture)
     {
@@ -124,13 +124,15 @@ public sealed unsafe partial class NativeMenu
     }
     internal static void CancelPopup(RID rid)
     { var owner = Require(); var menu = owner.Get(rid); if (owner._tracking && menu.Opened && Win.EndMenu() == 0) throw Failure("cancel the native popup tree"); }
-    internal static void ObserveItemFocus(RID rid, int index, Action callback) { var owner = Require(); owner.Writable(); owner.At(rid, index).Focus = callback; }
+    internal static void ConfigurePopupItem(RID rid, int index, Action focus, bool allowEcho, bool shortcutDisabled)
+    { var owner = Require(); owner.Writable(); var item = owner.At(rid, index); item.Focus = focus; item.AllowEcho = allowEcho; item.ShortcutDisabled = shortcutDisabled; }
     internal static void PopupForDisplay(RID rid, Vector2i position, DisplayServer display) => Require().Present(rid, position, display);
     private void Present(RID rid, Vector2i position, DisplayServer? display = null)
     {
         Supported(); if (_tracking) throw new InvalidOperationException("Native menu presentation cannot reenter.");
         var menu = Get(rid); if (menu.Parent is not null) throw new InvalidOperationException("Present the root of a native menu tree.");
         display ??= _display; var window = _display.BeginNativeMenu(display);
+        nint keyboardHook = 0;
         var pin = default(GCHandle); var hooked = false; uint command = 0; Exception? failure = null;
         _tracking = true; _callbackFailure = null; _opened.Clear(); _closed.Clear();
         try
@@ -139,12 +141,18 @@ public sealed unsafe partial class NativeMenu
             pin = GCHandle.Alloc(this);
             if (Win.SetWindowSubclass(window, &Subclass, SubclassID, (nuint)GCHandle.ToIntPtr(pin)) == 0) throw Failure("observe the native menu loop");
             hooked = true; Win.SetForegroundWindow(window);
+            _keyboardRoot = menu; _keyboardSelection = null; _forwardKey = null; _keyboardOwner = this;
+            keyboardHook = Win.SetWindowsHookEx(-1, &FilterKeyboard, 0, Win.GetCurrentThreadID());
+            if (keyboardHook == 0) throw Failure("observe native menu keyboard input");
             command = Win.TrackPopupMenuEx(menu.Handle, 0x100u | (menu.RTL ? 0x8000u : 0), position.X, position.Y, window, 0);
             Win.PostMessage(window, 0, 0, 0);
         }
         catch (Exception error) { failure = error; }
         finally
         {
+            if (keyboardHook != 0 && Win.UnhookWindowsHookEx(keyboardHook) == 0)
+                failure = failure is null ? Failure("detach native menu keyboard input") : new AggregateException(failure, Failure("detach native menu keyboard input"));
+            _keyboardOwner = null; _keyboardRoot = null;
             var detached = !hooked || Win.RemoveWindowSubclass(window, &Subclass, SubclassID) != 0;
             if (detached) { if (pin.IsAllocated) pin.Free(); }
             else failure = failure is null ? Failure("detach the native menu observer") : new AggregateException(failure, Failure("detach the native menu observer"));
@@ -154,15 +162,34 @@ public sealed unsafe partial class NativeMenu
         }
         var callbacks = _closed.ToArray(); _closed.Clear(); _opened.Clear(); var nativeError = _callbackFailure; _callbackFailure = null;
         if (nativeError is not null) failure = failure is null ? nativeError : new AggregateException(failure, nativeError);
-        Item? selected = null;
+        var keyboardSelected = _keyboardSelection; _keyboardSelection = null;
+        var forwardKey = _forwardKey; _forwardKey = null;
+        Item? selected = keyboardSelected;
         if (command != 0) foreach (var candidate in _menus.Values) foreach (var item in candidate.Items) if (item.Command == command) selected = item;
+        var selectedCallback = keyboardSelected is null ? selected?.Callback : selected?.KeyCallback;
+        var selectedTag = selected?.Tag;
+        // Queue the original down before a close callback can pump its pending up.
+        if (forwardKey is { } key && !IsDisposed && !display.IsDisposed && Win.IsWindow(window) != 0)
+        {
+            Win.SendMessage(window, key.Message, key.WParam, key.LParam);
+            // The OS menu may dequeue the up while unwinding EndMenu.
+            if (Win.GetKeyState((int)key.WParam) >= 0)
+                Win.SendMessage(window, key.Message + 1, key.WParam, key.LParam | unchecked((nint)0xc0000000));
+        }
         foreach (var callback in callbacks) try { callback(); } catch (Exception error) { failure = failure is null ? error : new AggregateException(failure, error); }
-        if (selected is { Alive: true, Disabled: false, Separator: false } && selected.Owner.Alive)
-            try { selected.Callback?.Invoke(selected.Tag); } catch (Exception error) { failure = failure is null ? error : new AggregateException(failure, error); }
+        if (selected is not null && IsLiveSelection(selected))
+            try
+            {
+                if (keyboardSelected is null) selected.Callback?.Invoke(selected.Tag);
+                else selectedCallback?.Invoke(selectedTag);
+            }
+            catch (Exception error) { failure = failure is null ? error : new AggregateException(failure, error); }
         if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
     }
     private static partial class Win
     {
+        [LibraryImport("user32.dll")][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial int IsWindow(nint window);
+        [LibraryImport("user32.dll", EntryPoint = "SendMessageW")][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial nint SendMessage(nint window, uint message, nuint wParam, nint lParam);
         [LibraryImport("user32.dll", SetLastError = true)][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial nint CreatePopupMenu();
         [LibraryImport("user32.dll", SetLastError = true)][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial int DestroyMenu(nint menu);
         [LibraryImport("user32.dll", EntryPoint = "InsertMenuItemW", SetLastError = true)][DefaultDllImportSearchPaths(DllImportSearchPath.System32)] internal static partial int InsertMenuItem(nint menu, uint index, int byPosition, in MenuInfo item);
