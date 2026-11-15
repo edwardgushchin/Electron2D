@@ -4657,7 +4657,7 @@
         "RDSamplerState::property:anisotropy_max"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0004/0028: the sealed ElectronObject description exposes typed writable properties with pinned defaults and copied snapshots. Native RIDs own sampler lifetime and uniform sets borrow them. Windows x64 Vulkan and Direct3D 12 match 50 GLSL/HLSL canvas pixels for distinct min/mag and mip filters, LOD clamps and signed bias, and anisotropic mip selection. The Direct3D 12 adapter preserves nearest min/mag combinations and requires OPTIONS19 for anisotropic point mip. Managed tests exercise both capability branches. Device checks cover format refusal, scalar and comparison binding roles, and stale sampler dependencies. See docs/components/local-compute.md#sampler-filtering-and-lod for backend limits."
+      "reason": "ADRs 0004/0028: the sealed ElectronObject description exposes typed writable properties with pinned defaults and copied snapshots. Native RIDs own sampler lifetime and uniform sets borrow them. Windows x64 Vulkan and Direct3D 12 match 50 GLSL/HLSL canvas pixels for distinct min/mag and mip filters, LOD clamps and signed bias, and anisotropic mip selection. An additional 14 sampler RID pixel references verify signed bias and mip selection with anisotropy on both backends. Direct3D 12 requires linear min/mag and uses the live OPTIONS19 result to select anisotropic point mip. Managed tests exercise both capability branches. Device checks cover format refusal, scalar and comparison binding roles, and stale sampler dependencies. See docs/components/local-compute.md#sampler-filtering-and-lod for backend limits."
     },
     {
       "godot": [
