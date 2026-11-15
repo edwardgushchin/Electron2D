@@ -366,15 +366,32 @@ public class AnimatedSprite : Entity
         }
     }
 
+    internal override Rect2 GetAnchorableRect()
+    {
+        if (_frames?.TryRead(_animation, _frame, out _, out _, out _, out var texture, out _) != true || texture is null)
+            return default;
+
+        var rect = GetFrameRect(texture);
+        if (rect.Size == Vector2.Zero) rect.Size = Vector2.One;
+        return rect;
+    }
+
+    private Rect2 GetFrameRect(Texture texture)
+    {
+        var size = texture.GetSize();
+        if (!size.IsFinite() || size.X < 0 || size.Y < 0) throw new InvalidOperationException("Animation texture dimensions must be finite and nonnegative.");
+        return new(_centered ? _offset - size / 2 : _offset, size);
+    }
+
     /// <inheritdoc />
     /// <remarks>Draws the current non-null frame through its texture's virtual region hook. Calls to base.OnDraw
     /// preserve the animation image in derived classes. Transform snapping rounds only the local drawing offset.</remarks>
     protected override void OnDraw()
     {
         if (_frames?.TryRead(_animation, _frame, out _, out _, out _, out var texture, out _) != true || texture is null) return;
-        var size = texture.GetSize();
-        if (!size.IsFinite() || size.X < 0 || size.Y < 0) throw new InvalidOperationException("Animation texture dimensions must be finite and nonnegative.");
-        var offset = _centered ? _offset - size / 2 : _offset;
+        var rect = GetFrameRect(texture);
+        var size = rect.Size;
+        var offset = rect.Position;
         if (IsInsideTree && GetViewport()?.SnapTransformsToPixel == true) offset = CanvasGeometry.Snap(offset);
         DrawTextureRectRegion(texture, new Rect2(offset, new Vector2(_flipH ? -size.X : size.X, _flipV ? -size.Y : size.Y)), new Rect2(Vector2.Zero, size));
     }

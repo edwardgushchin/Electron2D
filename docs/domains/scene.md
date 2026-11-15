@@ -12,7 +12,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -120,7 +120,7 @@ The root Window/SceneTree boundary now forwards native committed text and IME co
 
 ## Public surface
 
-[Control layout](../components/scene-hierarchy.md) resolves single-side anchors and offsets against the direct canvas parent or containing viewport. Typed endpoint authoring and layout presets use the same geometry.
+[Control layout](../components/scene-hierarchy.md) resolves single-side anchors and offsets against the direct canvas parent’s anchorable rectangle or the containing viewport. Typed endpoint authoring and layout presets use the same geometry.
 
 The Control branch uses shared [`RecursiveBehavior`](../classes/RecursiveBehavior.md) values for its focus and pointer subtree policies; [ControlRecursiveBehaviorTests](../../tests/Electron2D.Tests/ControlRecursiveBehaviorTests.cs) checks their root viewport behavior.
 

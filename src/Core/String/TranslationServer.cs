@@ -32,7 +32,7 @@ public sealed partial class TranslationServer : ElectronObject
     private readonly Dictionary<(string Culture, string Domain, string Context, string Singular, string Plural), Func<long, string>> _plurals = new();
     private readonly Dictionary<string, TranslationDomain> _domains = new(StringComparer.Ordinal);
 
-    private CultureInfo _culture = CultureInfo.CurrentUICulture;
+    private CultureInfo? _culture;
     private CultureInfo? _fallbackCulture = CultureInfo.GetCultureInfo("en");
     private int _enabled = 1;
 
@@ -62,7 +62,8 @@ public sealed partial class TranslationServer : ElectronObject
     }
 
     /// <summary>Gets or sets the culture used for subsequent translation lookups.</summary>
-    /// <value>The process-wide lookup culture, initialized from <see cref="CultureInfo.CurrentUICulture"/> and sampled again at Engine startup unless a project test locale is configured.</value>
+    /// <value>The process-wide lookup culture. Before Engine startup, the first use of the selected culture captures
+    /// <see cref="CultureInfo.CurrentUICulture"/>. Engine startup samples it again unless a project test locale is configured.</value>
     /// <remarks>A different culture name reloads associated localized resources, then synchronously notifies
     /// <see cref="Engine.MainLoop"/> after commitment and release of the setter's catalog lock. Equal-name assignment
     /// retains the supplied managed culture without another reload or notification. Configured file reloads allocate
@@ -82,7 +83,7 @@ public sealed partial class TranslationServer : ElectronObject
         get
         {
             lock (_gate)
-                return _culture;
+                return GetOrCaptureCultureUnderLock();
         }
         set
         {
@@ -90,12 +91,14 @@ public sealed partial class TranslationServer : ElectronObject
             bool changed;
             lock (_gate)
             {
-                changed = !string.Equals(_culture.Name, value.Name, StringComparison.Ordinal);
+                changed = !string.Equals(GetOrCaptureCultureUnderLock().Name, value.Name, StringComparison.Ordinal);
                 _culture = value;
             }
             if (changed) NotifyTranslationChanged();
         }
     }
+
+    private CultureInfo GetOrCaptureCultureUnderLock() => _culture ??= CultureInfo.CurrentUICulture;
 
     internal static CultureInfo? FallbackCulture
     {
@@ -457,7 +460,7 @@ public sealed partial class TranslationServer : ElectronObject
         TranslationDomain? catalogDomain;
         lock (_gate)
         {
-            culture = _culture;
+            culture = GetOrCaptureCultureUnderLock();
             _domains.TryGetValue(domain, out catalogDomain);
         }
         if (catalogDomain is not null)
@@ -513,7 +516,7 @@ public sealed partial class TranslationServer : ElectronObject
         TranslationDomain? catalogDomain;
         lock (_gate)
         {
-            culture = _culture;
+            culture = GetOrCaptureCultureUnderLock();
             _domains.TryGetValue(domain, out catalogDomain);
         }
         if (catalogDomain is not null)

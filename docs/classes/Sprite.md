@@ -1,6 +1,6 @@
 # Sprite
 
-Last updated: 2026-10-04
+Last updated: 2026-11-15
 
 - Declaration: `public class Sprite : Entity`
 - Source: [Sprite.cs](../../src/Scene/2D/Sprite.cs)
@@ -14,6 +14,8 @@ Displays a borrowed [Texture](Texture.md), a selected sheet frame or a rectangul
 The node owns its subscription to Texture.Changed and releases that subscription on replacement/disposal. It never disposes an ordinary borrowed texture. PackedScene separately owns any resource it duplicates for an instance through ResourceLocalToScene. Texture content changes request redraw without emitting TextureChanged or ItemRectChanged; replacing the reference emits TextureChanged, then inherited ItemRectChanged. A resource notification from a worker thread only atomically requests redraw; drawing stays on the scene owner thread.
 
 All properties and queries reject a disposed Sprite. Setters also reject scene capture and mutation off the attached tree's owner thread. Detached nodes require caller coordination. Synchronous event handlers observe committed state; a throwing handler stops later subscribers and subsequent event stages for that mutation, leaving the new value and pending redraw intact. Disposal from a handler suppresses subsequent stages. Resource.Changed retains its own documented delivery behavior, including failures in earlier subscribers.
+
+An attached child [Control](Control.md) uses these local frame bounds for its anchors. Frame and offset edits that raise ItemRectChanged reflow the child.
 
 ## Example
 

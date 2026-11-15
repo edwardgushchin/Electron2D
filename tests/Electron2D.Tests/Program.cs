@@ -459,6 +459,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_LISTING") == "1")
     Console.WriteLine("Physical directory listing and cursor regressions passed.");
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_PACK_METADATA") == "1") { DirAccessPackMetadataTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
@@ -1672,6 +1673,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_HOST") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_ANCHORS") is { } anchorProfile)
 {
     if (anchorProfile == "managed") ControlLayoutTests.Run();
+    else if (anchorProfile.StartsWith("geometry-", StringComparison.Ordinal)) ControlAnchorRenderingTests.RunGeometry(anchorProfile["geometry-".Length..]);
     else ControlAnchorRenderingTests.Run(anchorProfile);
     return;
 }

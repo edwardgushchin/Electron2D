@@ -1,0 +1,29 @@
+{
+  "statusGroups": [
+    {
+      "godot": [
+        "Control::property:pivot_offset",
+        "Control::property:rotation",
+        "Control::property:rotation_degrees",
+        "Control::property:scale"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0008: finite signed scale and radian/degree access, exact-zero scale normalization, default and packed state, and the combined absolute/size-relative pivot participate in the logical and visual transform. ControlLayoutTests checks the public local/global rectangles, reflection, validation, parent changes and warmed reads. See the scene hierarchy component for verification limits."
+    },
+    {
+      "godot": [
+        "Control::method:get_parent_control()",
+        "Control::method:get_parent_area_size()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0008: the nullable direct Control parent follows node ancestry. Anchor layout and the public area query use the immediate canvas rectangle or the viewport at a canvas root, with zero while detached. ControlLayoutTests covers each rectangle provider, mixed ancestry, and reparenting. Clearing a frame library, light texture, or normal touch texture changes the live query immediately. The resolved size updates on the next reflow."
+    },
+    {
+      "godot": [
+        "Control::signal:resized()"
+      ],
+      "state": "Implemented",
+      "reason": "Action delivery follows committed layout, ItemRectChanged and notification 40. ControlLayoutTests covers synchronous reentry, fail-fast observers, detachment, disposal from local transform and rectangle callbacks, and insignificant changes."
+    }
+  ]
+}

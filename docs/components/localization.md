@@ -16,7 +16,7 @@ Direct registration and contextual, mutable resource catalogs execute through th
 
 ## Retained service
 
-The static translation API addresses one process-lifetime [translation service](../classes/TranslationServer.md). Engine registers it before any loop and keeps the same identity through startup and shutdown. The writable culture and pseudolocalization descriptors inspect and update the facade's live state. The managed [public consumer](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.Retained.cs) exercises the registry, descriptors, notification reentry, borrowed catalog lifetime and prepared reads across an Engine loop.
+The static translation API addresses one process-lifetime [translation service](../classes/TranslationServer.md). Engine registers it before any loop and keeps the same identity through startup and shutdown. The first operation that uses the selected culture before startup captures the current managed UI culture. Engine samples the project locale or current managed UI culture at startup. The writable culture and pseudolocalization descriptors inspect and update the facade's live state. The managed [public consumer](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.Retained.cs) exercises the registry, descriptors, notification reentry, borrowed catalog lifetime and prepared reads across an Engine loop.
 
 <a id="catalog-queries"></a>
 ## Catalog queries
