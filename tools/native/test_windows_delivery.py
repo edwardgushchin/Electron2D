@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import os
+import hashlib
 import shutil
 import subprocess
 import tempfile
@@ -34,6 +35,14 @@ class WindowsDeliveryTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                 for output in (root / "bin/Release/net10.0/win-x64", root / "publish"):
                     self.assertEqual((output / relative / "libHarfBuzzSharp.dll").read_bytes(), source.read_bytes())
+                receipt = root / "publish/Electron2D.application-native.sha256"
+                self.assertEqual(receipt.read_text(encoding="utf-8-sig").split(),
+                    [hashlib.sha256(source.read_bytes()).hexdigest().upper(), relative + "libHarfBuzzSharp.dll"])
+                project.write_text(project.read_text().replace(f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="Always"', ''))
+                result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertFalse(receipt.exists())
+                self.assertFalse((root / "publish" / relative / "libHarfBuzzSharp.dll").exists())
 
     def test_publish_replaces_future_dated_package_native_files(self):
         with tempfile.TemporaryDirectory(prefix="native publish ") as temporary:
@@ -80,6 +89,9 @@ class WindowsDeliveryTests(unittest.TestCase):
                 with self.subTest(item=item, relative=relative), tempfile.TemporaryDirectory() as temporary:
                     root = Path(temporary)
                     selected = {"libHarfBuzzSharp.dll", "libHarfBuzzSharp.pdb"}
+                    (root / "package").mkdir()
+                    for name in selected:
+                        (root / "package" / name).write_bytes(b"application dependency")
                     for output in ("build", "publish"):
                         for directory in (root / output, root / output / "runtimes/win-x64/native"):
                             directory.mkdir(parents=True, exist_ok=True)
@@ -87,8 +99,8 @@ class WindowsDeliveryTests(unittest.TestCase):
                                 (directory / name).write_bytes(b"retired")
                         for name in selected:
                             (root / output / relative / name).write_bytes(b"application dependency")
-                    assets = ''.join(f'<{item} Include="package/{name}" NuGetPackageId="HarfBuzzSharp.NativeAssets.Win32" DestinationSubDirectory="{relative}" />'
-                        f'<ResolvedFileToPublish Include="package/{name}" RelativePath="{relative}{name}" />' for name in selected)
+                    assets = ''.join(f'<{item} Include="{escape(str(root / "package" / name))}" NuGetPackageId="HarfBuzzSharp.NativeAssets.Win32" DestinationSubDirectory="{relative}" />'
+                        f'<ResolvedFileToPublish Include="{escape(str(root / "package" / name))}" RelativePath="{relative}{name}" />' for name in selected)
                     project = root / "Consumer.proj"
                     project.write_text('<Project><PropertyGroup><RuntimeIdentifier>win-x64</RuntimeIdentifier>'
                         f'<TargetDir>{escape(str(root / "build"))}/</TargetDir>'
@@ -102,6 +114,10 @@ class WindowsDeliveryTests(unittest.TestCase):
                     for output in ("build", "publish"):
                         files = {path.relative_to(root / output).as_posix(): path.read_bytes()
                                  for path in (root / output).rglob("*") if path.is_file()}
+                        if output == "publish":
+                            receipt = files.pop("Electron2D.application-native.sha256").decode("utf-8-sig")
+                            self.assertEqual({tuple(line.split()) for line in receipt.splitlines()},
+                                {(hashlib.sha256(b"application dependency").hexdigest().upper(), relative + name) for name in selected})
                         self.assertEqual(files, {relative + name: b"application dependency" for name in selected})
 
     def test_build_replaces_future_dated_manifest(self):

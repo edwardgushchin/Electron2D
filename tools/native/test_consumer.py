@@ -304,7 +304,23 @@ def check(feed, rid, managed=False):
                 '<ImplicitUsings>enable</ImplicitUsings></PropertyGroup><ItemGroup>' + reference +
                 f'<PackageReference Include="Electron2D.{platform}" Version="[{version}]" />' + '</ItemGroup></Project>', encoding="utf-8")
             (app / "Program.cs").write_text(PROGRAM, encoding="utf-8")
+            application_native = platform == "Windows" and kind == "package"
+            if application_native:
+                with ZipFile(engine_feed / f"Electron2D.{platform}.{version}.nupkg") as archive:
+                    (app / "application-font.bin").write_bytes(archive.read(f"runtimes/{rid}/native/harfbuzz.dll"))
+                project = app / "Consumer.csproj"
+                project.write_text(project.read_text().replace('</ItemGroup>',
+                    '<None Include="application-font.bin" Link="libHarfBuzzSharp.dll" '
+                    'CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" /></ItemGroup>'))
+                (app / "Program.cs").write_text(PROGRAM.replace('sealed class ConsumerMovieWriter', '''var applicationFont = System.Runtime.InteropServices.NativeLibrary.Load(
+    System.IO.Path.Combine(AppContext.BaseDirectory, "libHarfBuzzSharp.dll"));
+System.Runtime.InteropServices.NativeLibrary.GetExport(applicationFont, "hb_version_string");
+System.Runtime.InteropServices.NativeLibrary.Free(applicationFont);
+Console.WriteLine("Project-owned libHarfBuzzSharp.dll loaded.");
+sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
             environment["RestoreAdditionalProjectSources"] = str(engine_feed)
+            if application_native:
+                run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--nologo"], app, environment)
             if os.name != "nt":
                 run([dotnet, "run", "-c", "Release", "--project", "Consumer.csproj"], app, environment)
             if kind == "generic":
@@ -317,6 +333,19 @@ def check(feed, rid, managed=False):
             if kind != "generic":
                 publish += ["-r", rid, "--self-contained", "true"]
             run(publish, app, environment)
+            if application_native:
+                audit = [sys.executable, "-B", str(ROOT / "tools/check_native_publish.py"), rid, str(output), "Consumer"]
+                run(audit, app, environment)
+                selected = output / "libHarfBuzzSharp.dll"
+                if selected.read_bytes() != (app / "application-font.bin").read_bytes():
+                    raise RuntimeError("Project-owned native file changed during publication")
+                selected.write_bytes(b"retired file")
+                refused = subprocess.run(audit, cwd=app, env=environment, text=True, capture_output=True)
+                if refused.returncode == 0 or "Application native checksum mismatch" not in refused.stdout + refused.stderr:
+                    raise RuntimeError("Publish audit accepted a replaced application native file")
+                print("Publish audit refused the replaced project-owned DLL.", flush=True)
+                run(publish + ["--no-restore"], app, environment)
+                run(audit, app, environment)
             for name in manifests[rid]["files"]:
                 if (output / name).exists() or not (output / "runtimes" / rid / "native" / name).is_file():
                     raise RuntimeError(f"Private native directory lost: {kind}/{name}")
