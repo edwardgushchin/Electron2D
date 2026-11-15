@@ -229,12 +229,6 @@ internal sealed class ResourcePacks
         }
     }
 
-    internal bool HasFileAncestor(string path)
-    {
-        var name = Name(path); if (name is null) return false;
-        lock (_gate) return HasFileAncestorLocked(name);
-    }
-
     private bool HasFileAncestorLocked(string name)
     {
         var slash = name.IndexOf('/');
@@ -246,21 +240,6 @@ internal sealed class ResourcePacks
         }
         return false;
     }
-    internal bool BlocksPhysicalFile(string path)
-    {
-        var name = Name(path);
-        if (name is null)
-            return false;
-        lock (_gate)
-            return _directories.Contains(name) || HasFileAncestorLocked(name);
-    }
-
-    internal void EnsureFilePath(string path)
-    {
-        if (BlocksPhysicalFile(path))
-            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
-    }
-
     internal bool IsSameFile(string first, string second, out bool packed)
     {
         var a = Name(first); var b = Name(second);
@@ -297,8 +276,8 @@ internal sealed class ResourcePacks
 
     internal Stream OpenRead(string path, out string absolutePath, out bool packed)
     {
-        var entry = ResolveFile(path, out absolutePath, out var mountedPath, out var blocked);
-        if (blocked)
+        var entry = ResolveFile(path, out absolutePath, out var mountedPath, out var mountedDirectory, out var maskedByFileAncestor);
+        if (mountedDirectory || maskedByFileAncestor)
             throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
         packed = entry is not null;
         if (entry is null)
@@ -310,14 +289,20 @@ internal sealed class ResourcePacks
 
     internal (string AbsolutePath, long? MountedSize, bool Blocked) ResolveFileLocation(string path, bool writing = false)
     {
-        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked, writing);
-        return (absolutePath, entry?.Length, blocked);
+        var (absolutePath, size, mountedDirectory, maskedByFileAncestor) = ResolvePathLocation(path, writing);
+        return (absolutePath, size, mountedDirectory || maskedByFileAncestor);
+    }
+
+    internal (string AbsolutePath, long? MountedSize, bool MountedDirectory, bool MaskedByFileAncestor) ResolvePathLocation(string path, bool writing = false)
+    {
+        var entry = ResolveFile(path, out var absolutePath, out _, out var mountedDirectory, out var maskedByFileAncestor, writing);
+        return (absolutePath, entry?.Length, mountedDirectory, maskedByFileAncestor);
     }
 
     internal string ResolveWritableFile(string path)
     {
-        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked, writing: true);
-        if (blocked)
+        var entry = ResolveFile(path, out var absolutePath, out _, out var mountedDirectory, out var maskedByFileAncestor, writing: true);
+        if (mountedDirectory || maskedByFileAncestor)
             throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
         if (entry is not null)
             throw new UnauthorizedAccessException("Mounted resource entries are read-only.");
@@ -327,12 +312,14 @@ internal sealed class ResourcePacks
         return absolutePath;
     }
 
-    private Entry? ResolveFile(string path, out string absolutePath, out string? name, out bool blocked, bool writing = false)
+    private Entry? ResolveFile(string path, out string absolutePath, out string? name,
+        out bool mountedDirectory, out bool maskedByFileAncestor, bool writing = false)
     {
         path = ResourceUID.EnsurePath(path);
         absolutePath = ProjectSettings.GlobalizePath(path);
         name = null;
-        blocked = false;
+        mountedDirectory = false;
+        maskedByFileAncestor = false;
         if (!path.StartsWith("res://", StringComparison.Ordinal))
             return null;
 
@@ -340,9 +327,13 @@ internal sealed class ResourcePacks
         lock (_gate)
         {
             var entry = _entries.GetValueOrDefault(name);
-            blocked = entry is null && (_directories.Contains(name) || HasFileAncestorLocked(name));
-            if (writing && entry is null && !blocked)
-                EnsureWritableAncestorsLocked(name);
+            if (entry is null)
+            {
+                mountedDirectory = _directories.Contains(name);
+                maskedByFileAncestor = !mountedDirectory && HasFileAncestorLocked(name);
+                if (writing && !mountedDirectory && !maskedByFileAncestor)
+                    EnsureWritableAncestorsLocked(name);
+            }
             return entry;
         }
     }

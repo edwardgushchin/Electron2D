@@ -70,6 +70,8 @@ Transformed `ReadWrite` reads and later commits at the same captured physical de
 
 An open [DirAccess](../classes/DirAccess.md) holds its captured physical root. Resource accessors also see the live PCK/ZIP overlay while that root is the configured project root. Mounted entries take precedence at an exact-name collision. A mounted file masks a physical directory and its descendants. A mounted directory masks a physical file. Explicit ZIP directories appear even when empty. Physical absolute paths and `user://` use the filesystem.
 
+Each resource existence or link query selects the mounted file, mounted directory, masked descendant or physical path from a single mount snapshot. An exact mounted entry supplies its own kind and has no physical link flags or target. Unmasked reads below a mounted directory still use the filesystem. The snapshot covers mount selection for one call. Physical metadata reads remain subject to external filesystem changes.
+
 `ListDirBegin` captures immediate names and kinds. Both include flags default to false and apply when `GetNext` advances. Windows physical hidden entries carry the Hidden attribute. Unix-family hosts also hide dot names. Mounted dot names are hidden. The navigational names `.` and `..` are governed by `IncludeNavigational`, including at virtual roots, where changing to an escaping path still fails.
 
 `CurrentIsDir` describes the last returned entry and is false before the first entry and after EOF, end, restart, or a successful directory change. A failed begin or directory change preserves the current path and cursor. Disposal closes the listing. Calls on one owner are serialized, so concurrent advances consume distinct entries. Use caller synchronization to read a name and its kind as a pair.

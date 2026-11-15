@@ -11,6 +11,8 @@ namespace Electron2D;
 /// <c>res://</c> and <c>user://</c> instances cannot leave their captured root or switch scopes.
 /// Registered UID notation resolves through ResourceUID before applying these scope rules; unknown UIDs fail.
 /// Operations are serialized per instance, may block, and are unsuitable for real-time callbacks.
+/// Each resource existence or link query selects a mounted entry, a masked descendant, or the physical
+/// path from one mount snapshot. Physical metadata reads remain subject to external filesystem changes.
 /// </remarks>
 public sealed partial class DirAccess : ElectronObject
 {
@@ -609,6 +611,7 @@ public sealed partial class DirAccess : ElectronObject
     /// <returns><see langword="true"/> for a Windows reparse point or a symbolic link on other supported platforms.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
+    /// <exception cref="FileNotFoundException">A mounted file masks this descendant on a Unix link backend.</exception>
     /// <exception cref="UnauthorizedAccessException">The path escapes a virtual root or access is denied.</exception>
     /// <exception cref="InvalidOperationException"><paramref name="path"/> belongs to another access scope.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unsupported virtual scheme.</exception>
@@ -1099,12 +1102,25 @@ public sealed partial class DirAccess : ElectronObject
 
     private static bool TryGetAttributes(string path, out FileAttributes attributes)
     {
-        if (ResourcePacks.Runtime.TrySize(path, out _)) { attributes = FileAttributes.ReadOnly; return true; }
-        if (ResourcePacks.Runtime.IsDirectory(path)) { attributes = FileAttributes.Directory | FileAttributes.ReadOnly; return true; }
-        if (ResourcePacks.Runtime.HasFileAncestor(path)) { attributes = default; return false; }
+        var (absolutePath, mountedSize, mountedDirectory, maskedByFileAncestor) = ResourcePacks.Runtime.ResolvePathLocation(path);
+        if (mountedSize.HasValue)
+        {
+            attributes = FileAttributes.ReadOnly;
+            return true;
+        }
+        if (mountedDirectory)
+        {
+            attributes = FileAttributes.Directory | FileAttributes.ReadOnly;
+            return true;
+        }
+        if (maskedByFileAncestor)
+        {
+            attributes = default;
+            return false;
+        }
         try
         {
-            attributes = File.GetAttributes(Physical(path));
+            attributes = File.GetAttributes(absolutePath);
             return true;
         }
         catch (FileNotFoundException)
@@ -1145,11 +1161,13 @@ public sealed partial class DirAccess : ElectronObject
 
     private static string? GetLinkTarget(string path)
     {
-        if (ResourcePacks.Runtime.TrySize(path, out _) || ResourcePacks.Runtime.IsDirectory(path)) return null;
-        ResourcePacks.Runtime.EnsureFilePath(path);
-        path = Physical(path);
-        var fileTarget = new FileInfo(path).LinkTarget;
-        return fileTarget ?? new DirectoryInfo(path).LinkTarget;
+        var (absolutePath, mountedSize, mountedDirectory, maskedByFileAncestor) = ResourcePacks.Runtime.ResolvePathLocation(path);
+        if (mountedSize.HasValue || mountedDirectory)
+            return null;
+        if (maskedByFileAncestor)
+            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
+        var fileTarget = new FileInfo(absolutePath).LinkTarget;
+        return fileTarget ?? new DirectoryInfo(absolutePath).LinkTarget;
     }
 
     private static bool ProbeCaseSensitivity(string path)
