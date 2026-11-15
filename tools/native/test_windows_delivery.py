@@ -239,6 +239,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                     self.assertEqual((directory / "application-plugin.dll").read_bytes(), b"unrelated file")
                 entries = self.assert_application_receipt(output)
                 self.assertEqual(entries[relative], hashlib.sha256(source.read_bytes()).hexdigest())
+                self.assertEqual(entries[selected_common], hashlib.sha256(source.read_bytes()).hexdigest())
                 print("SELECTION " + json.dumps(dict(case="foreign-runtime", hostRID=rid, foreignRID=foreign,
                     checkedRIDs=[*package.PLATFORMS["Windows"], "linux-x64"],
                     stage=stage, retired="removed", selected="preserved", unrelated="preserved")), flush=True)
@@ -428,7 +429,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                 for name in package.LIBRARIES["Windows"]:
                     (root / "package" / name).write_bytes(name.encode())
                 assets = ''.join(f'<NativeCopyLocalItems Include="{escape(str(root / "package" / name))}" NuGetPackageId="Electron2D.Windows" />'
-                    f'<ReferenceCopyLocalPaths Include="{escape(str(root / "package" / name))}" DestinationSubDirectory="runtimes/{rid}/native/" />'
+                    f'<ReferenceCopyLocalPaths Include="{escape(str(root / "package" / name))}" NuGetPackageId="Electron2D.Windows" DestinationSubDirectory="runtimes/{rid}/native/" />'
                     f'<ResolvedFileToPublish Include="{escape(str(root / "package" / name))}" NuGetPackageId="Electron2D.Windows" AssetType="native" RelativePath="runtimes/{rid}/native/{name}" />'
                     for name in package.LIBRARIES["Windows"])
                 project.write_text('<Project><PropertyGroup>'

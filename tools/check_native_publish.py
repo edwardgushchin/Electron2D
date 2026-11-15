@@ -101,8 +101,8 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     assert re.fullmatch(r"10\.0\.\d+", version) and f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/{version}" in packages, "Missing self-contained runtime pack"
     native = publish / "runtimes" / rid / "native"
     assert all((native / name).is_file() for name in names), f"Missing native render/text files: {names}"
-    assert not any((publish / name).exists() for name in names), "Native render/text files must retain their RID directory"
     if platform != "Windows":
+        assert not any((publish / name).exists() for name in names), "Native render/text files must retain their RID directory"
         assert {path.name for path in (publish / "runtimes").iterdir()} == {rid}, "Foreign RID assets leaked into the game"
     platform_packages = {name.split("/")[0] for name, library in packages.items() if name.startswith("Electron2D.") and library["type"] == "package"}
     assert platform_packages == {f"Electron2D.{platform}"}, f"Wrong engine platform packages: {platform_packages}"
@@ -115,12 +115,21 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         native_directories = [directory for directory in (publish / "runtimes").glob("*/native") if directory.is_dir()]
         retired_files = {directory / name for directory in (publish, *native_directories)
                          for name in native_package.retired_windows_files()}
+        cleanup_names = set(native_package.retired_windows_files()) | set(receipt["files"])
+        for target in dependencies["targets"].values():
+            for owner, assets in target.items():
+                if owner.startswith("SDL3-CS.Windows"):
+                    cleanup_names.update(Path(path).name for path in assets.get("native", {}))
+                    cleanup_names.update(Path(path).name for path, metadata in assets.get("runtimeTargets", {}).items()
+                                         if metadata.get("assetType") == "native")
+        application_candidates = {directory / name for directory in (publish, *native_directories)
+                                  for name in cleanup_names}
         application_receipt = publish / "Electron2D.application-native.sha256"
         if application_receipt.is_file():
             for line in application_receipt.read_text(encoding="utf-8-sig").splitlines():
                 checksum, relative = line.split(maxsplit=1)
                 path = publish / relative.replace("\\", "/")
-                assert path in retired_files and re.fullmatch(r"[0-9A-Fa-f]{64}", checksum), "Invalid application native receipt entry"
+                assert path in application_candidates and re.fullmatch(r"[0-9A-Fa-f]{64}", checksum), "Invalid application native receipt entry"
                 assert path not in application_files, "Duplicate application native receipt entry"
                 assert path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == checksum.lower(), f"Application native checksum mismatch: {relative}"
                 application_files.add(path)
@@ -133,6 +142,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
                                                 if metadata.get("assetType") == "native" and metadata.get("rid") == rid)
             application_files.intersection_update({native / "libHarfBuzzSharp.dll", native / "libHarfBuzzSharp.pdb"})
         assert not any(path.is_file() and path not in application_files for path in retired_files), "Retired Windows payload leaked into publish"
+        assert not any((publish / name).exists() and publish / name not in application_files for name in names), "Native render/text files must retain their RID directory"
         assert not any(path.is_file() and path not in application_files
                        for directory in (publish / "runtimes").iterdir() if directory.name != rid
                        for path in directory.rglob("*")), "Foreign RID assets leaked into the game"
@@ -145,7 +155,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
             if name == "libElectron2D.dll":
                 assert exports == required, "Unified Windows native ABI mismatch"
     engine = native / ("libElectron2D.dll" if platform == "Windows" else "libElectron2D.dylib" if platform == "MacOS" else "libElectron2D.so")
-    assert engine.is_file() and not (publish / engine.name).exists(), "Unified native engine must retain its RID directory"
+    assert engine.is_file(), "Unified native engine must retain its RID directory"
     required = native_package.required_exports(engine.name)
     if platform == "Linux":
         actual = native_package.elf_exports(engine)

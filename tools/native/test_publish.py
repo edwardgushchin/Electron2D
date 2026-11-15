@@ -21,7 +21,9 @@ class PublishTests(unittest.TestCase):
         libraries = dict.fromkeys(("SDL3-CS.Windows/3.4.18", "SDL3-CS.Windows.Image/3.4.6.12",
             "SDL3-CS.Windows.Shadercross/3.0.0.13", "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/10.0.1"), {})
         libraries["Electron2D.Windows/0.2.0-alpha"] = dict(type="package")
-        (publish / "Consumer.deps.json").write_text(json.dumps(dict(libraries=libraries, targets={})))
+        targets = {"net10.0/win-x64": {"SDL3-CS.Windows/3.4.18": dict(native={"runtimes/win-x64/native/SDL3.dll": {}}),
+            "SDL3-CS.Windows.Image/3.4.6.12": dict(runtimeTargets={"runtimes/win-x64/native/aom.dll": dict(assetType="native", rid="win-x64")})}}
+        (publish / "Consumer.deps.json").write_text(json.dumps(dict(libraries=libraries, targets=targets)))
         (publish / "Consumer.runtimeconfig.json").write_text(json.dumps(dict(runtimeOptions=dict(
             includedFrameworks=[dict(name="Microsoft.NETCore.App", version="10.0.1")]))))
         native = publish / "runtimes/win-x64/native"
@@ -67,6 +69,40 @@ class PublishTests(unittest.TestCase):
             (publish / "Electron2D.application-native.sha256").write_text(line + line)
             with mock.patch.object(package, "windows_exports", side_effect=RuntimeError("Reached PE audit")):
                 with self.assertRaisesRegex(AssertionError, "Duplicate application native receipt entry"):
+                    check("win-x64", publish, "Consumer")
+
+    def test_selected_common_module_is_verified_and_stale_copy_is_rejected(self):
+        for relative in ("libElectron2D.dll", "runtimes/win-x86/native/libElectron2D.dll",
+                         "SDL3.dll", "runtimes/win-x86/native/aom.dll"):
+            with self.subTest(relative=relative), tempfile.TemporaryDirectory() as directory:
+                publish = Path(directory)
+                self.make_windows_publish(publish)
+                selected = publish / relative
+                selected.parent.mkdir(parents=True, exist_ok=True)
+                selected.write_bytes(b"application common module")
+                checksum = hashlib.sha256(selected.read_bytes()).hexdigest()
+                receipt = publish / "Electron2D.application-native.sha256"
+                receipt.write_text(f"{checksum}  {relative}\n")
+                with mock.patch.object(package, "windows_exports", side_effect=lambda path, rid, name: package.required_exports(name)):
+                    check("win-x64", publish, "Consumer")
+                    selected.write_bytes(b"stale common module")
+                    with self.assertRaisesRegex(AssertionError, "Application native checksum mismatch"):
+                        check("win-x64", publish, "Consumer")
+                    receipt.unlink()
+                    with self.assertRaisesRegex(AssertionError, "Native render/text files must retain|Foreign RID assets leaked"):
+                        check("win-x64", publish, "Consumer")
+
+    def test_selected_current_module_cannot_override_engine_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            publish = Path(directory)
+            self.make_windows_publish(publish)
+            relative = "runtimes/win-x64/native/libElectron2D.dll"
+            selected = publish / relative
+            selected.write_bytes(b"application common module")
+            checksum = hashlib.sha256(selected.read_bytes()).hexdigest()
+            (publish / "Electron2D.application-native.sha256").write_text(f"{checksum}  {relative}\n")
+            with mock.patch.object(package, "windows_exports", side_effect=lambda path, rid, name: package.required_exports(name)):
+                with self.assertRaisesRegex(AssertionError, "Native manifest checksum mismatch"):
                     check("win-x64", publish, "Consumer")
 
     def test_runtime_pack_matches_the_self_contained_framework(self):

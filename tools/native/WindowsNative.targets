@@ -35,8 +35,13 @@
   </Target>
   <Target Name="RecordElectron2DWindowsBuildFiles" AfterTargets="CopyFilesToOutputDirectory" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(TargetDir)' != ''">
     <ItemGroup>
-      <_Electron2DApplicationNativeBuildFile Include="$(TargetDir)%(_Electron2DLegacyWindowsFile.Identity)" Condition="Exists('$(TargetDir)%(_Electron2DLegacyWindowsFile.Identity)')" />
-      <_Electron2DApplicationNativeBuildFile Include="$(TargetDir)runtimes/*/native/%(_Electron2DLegacyWindowsFile.Identity)" />
+      <_Electron2DApplicationNativeBuildCopy Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != 'Electron2D.Windows' and !$([System.String]::Copy('%(ReferenceCopyLocalPaths.NuGetPackageId)').StartsWith('SDL3-CS.Windows'))" />
+      <_Electron2DApplicationNativeBuildSelectedFile Include="@(_Electron2DApplicationNativeBuildCopy->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)');@(AllItemsFullPathWithTargetPath->'$(TargetDir)%(TargetPath)')" />
+      <_Electron2DApplicationNativeBuildFile Include="$(TargetDir)%(_Electron2DWindowsCleanupFile.Identity)" Condition="Exists('$(TargetDir)%(_Electron2DWindowsCleanupFile.Identity)')" />
+      <_Electron2DApplicationNativeBuildFile Include="$(TargetDir)runtimes/*/native/%(_Electron2DWindowsCleanupFile.Identity)" />
+      <_Electron2DUnselectedNativeBuildFile Include="@(_Electron2DApplicationNativeBuildFile)" />
+      <_Electron2DUnselectedNativeBuildFile Remove="@(_Electron2DApplicationNativeBuildSelectedFile)" MatchOnMetadata="FullPath" MatchOnMetadataOptions="PathLike" />
+      <_Electron2DApplicationNativeBuildFile Remove="@(_Electron2DUnselectedNativeBuildFile)" />
       <_Electron2DApplicationNativeBuildFile Update="@(_Electron2DApplicationNativeBuildFile)">
         <RelativePath>$([MSBuild]::MakeRelative('$(TargetDir)', '%(_Electron2DApplicationNativeBuildFile.FullPath)'))</RelativePath>
       </_Electron2DApplicationNativeBuildFile>
@@ -60,8 +65,13 @@
   </Target>
   <Target Name="RecordElectron2DWindowsPublishFiles" AfterTargets="Publish" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(PublishDir)' != ''">
     <ItemGroup>
-      <_Electron2DApplicationNativePublishFile Include="$(PublishDir)%(_Electron2DLegacyWindowsFile.Identity)" Condition="Exists('$(PublishDir)%(_Electron2DLegacyWindowsFile.Identity)')" />
-      <_Electron2DApplicationNativePublishFile Include="$(PublishDir)runtimes/*/native/%(_Electron2DLegacyWindowsFile.Identity)" />
+      <_Electron2DApplicationNativePublishCopy Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.NuGetPackageId)' != 'Electron2D.Windows' and !$([System.String]::Copy('%(ResolvedFileToPublish.NuGetPackageId)').StartsWith('SDL3-CS.Windows'))" />
+      <_Electron2DApplicationNativePublishSelectedFile Include="@(_Electron2DApplicationNativePublishCopy->'$(PublishDir)%(RelativePath)')" />
+      <_Electron2DApplicationNativePublishFile Include="$(PublishDir)%(_Electron2DWindowsCleanupFile.Identity)" Condition="Exists('$(PublishDir)%(_Electron2DWindowsCleanupFile.Identity)')" />
+      <_Electron2DApplicationNativePublishFile Include="$(PublishDir)runtimes/*/native/%(_Electron2DWindowsCleanupFile.Identity)" />
+      <_Electron2DUnselectedNativePublishFile Include="@(_Electron2DApplicationNativePublishFile)" />
+      <_Electron2DUnselectedNativePublishFile Remove="@(_Electron2DApplicationNativePublishSelectedFile)" MatchOnMetadata="FullPath" MatchOnMetadataOptions="PathLike" />
+      <_Electron2DApplicationNativePublishFile Remove="@(_Electron2DUnselectedNativePublishFile)" />
       <_Electron2DApplicationNativePublishFile Update="@(_Electron2DApplicationNativePublishFile)">
         <RelativePath>$([MSBuild]::MakeRelative('$(PublishDir)', '%(_Electron2DApplicationNativePublishFile.FullPath)'))</RelativePath>
       </_Electron2DApplicationNativePublishFile>

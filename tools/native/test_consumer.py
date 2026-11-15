@@ -314,12 +314,17 @@ def check(feed, rid, managed=False):
             (app / "Program.cs").write_text(PROGRAM, encoding="utf-8")
             application_native = platform == "Windows" and kind == "package"
             if application_native:
+                foreign_rid = next(candidate for candidate in reversed(native_package.PLATFORMS["Windows"]) if candidate != rid)
+                selected_common = f"runtimes/{foreign_rid}/native/libElectron2D.dll"
                 with ZipFile(engine_feed / f"Electron2D.{platform}.{version}.nupkg") as archive:
                     (app / "application-font.bin").write_bytes(archive.read(f"runtimes/{rid}/native/harfbuzz.dll"))
+                    (app / "application-common.bin").write_bytes(archive.read(f"runtimes/{rid}/native/libElectron2D.dll"))
                 project = app / "Consumer.csproj"
                 project.write_text(project.read_text().replace('</PropertyGroup>',
                     '<SelfContained>true</SelfContained></PropertyGroup>').replace('</ItemGroup>',
                     '<None Include="application-font.bin" Link="libHarfBuzzSharp.dll" '
+                    'CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />'
+                    f'<Content Include="application-common.bin" Link="{selected_common}" '
                     'CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>'))
                 (app / "Program.cs").write_text(PROGRAM.replace('sealed class ConsumerMovieWriter', '''var applicationFont = System.Runtime.InteropServices.NativeLibrary.Load(
     System.IO.Path.Combine(AppContext.BaseDirectory, "libHarfBuzzSharp.dll"));
@@ -330,7 +335,6 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
             environment["RestoreAdditionalProjectSources"] = str(engine_feed)
             if application_native:
                 build_output = app / "bin/Release/net10.0" / rid
-                foreign_rid = next(candidate for candidate in reversed(native_package.PLATFORMS["Windows"]) if candidate != rid)
                 foreign_names = {"Electron2DWebRTC.dll", "libElectron2D.dll"}
                 seed_foreign_native(build_output, foreign_rid, foreign_names)
                 run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--nologo"], app, environment)
@@ -358,10 +362,12 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
                 if {path.name for path in selected.iterdir()} != {rid}:
                     raise RuntimeError("A desktop build without an explicit RID copied foreign native assets")
             output = work / (kind + "-publish")
+            application_files = set()
             publish = [dotnet, "publish", "Consumer.csproj", "-c", "Release", "-o", str(output), "--nologo"]
             if kind != "generic":
                 publish += ["-r", rid, "--self-contained", "true"]
             if application_native:
+                application_files.add(output / selected_common)
                 seed_foreign_native(output, foreign_rid, foreign_names)
             run(publish, app, environment)
             if application_native:
@@ -370,22 +376,23 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
                 selected = output / "libHarfBuzzSharp.dll"
                 if selected.read_bytes() != (app / "application-font.bin").read_bytes():
                     raise RuntimeError("Project-owned native file changed during publication")
-                selected.write_bytes(b"x" * selected.stat().st_size)
-                future = time.time() + 864000
-                os.utime(selected, (future, future))
-                refused = subprocess.run(audit, cwd=app, env=environment, text=True, capture_output=True)
-                if refused.returncode == 0 or "Application native checksum mismatch" not in refused.stdout + refused.stderr:
-                    raise RuntimeError("Publish audit accepted a replaced application native file")
-                print("Publish audit refused the replaced project-owned DLL.", flush=True)
-                seed_foreign_native(output, foreign_rid, foreign_names)
-                run(publish + ["--no-restore"], app, environment)
-                run(audit, app, environment)
+                for selected in (selected, output / selected_common):
+                    selected.write_bytes(b"x" * selected.stat().st_size)
+                    future = time.time() + 864000
+                    os.utime(selected, (future, future))
+                    refused = subprocess.run(audit, cwd=app, env=environment, text=True, capture_output=True)
+                    if refused.returncode == 0 or "Application native checksum mismatch" not in refused.stdout + refused.stderr:
+                        raise RuntimeError("Publish audit accepted a replaced application native file")
+                    print(f"Publish audit refused the replaced project-owned DLL: {selected.relative_to(output)}", flush=True)
+                    seed_foreign_native(output, foreign_rid, foreign_names)
+                    run(publish + ["--no-restore"], app, environment)
+                    run(audit, app, environment)
             for name in manifests[rid]["files"]:
                 if (output / name).exists() or not (output / "runtimes" / rid / "native" / name).is_file():
                     raise RuntimeError(f"Private native directory lost: {kind}/{name}")
             run([str(output / ("Consumer.exe" if os.name == "nt" else "Consumer"))], work, environment)
             foreign = [path for path in (output / "runtimes").glob("*")
-                       if path.name != rid and any(file.is_file() for file in path.rglob("*"))]
+                       if path.name != rid and any(file.is_file() and file not in application_files for file in path.rglob("*"))]
             if foreign:
                 raise RuntimeError(f"Foreign native runtime directories shipped: {foreign}")
         print("Managed-only source/package, explicit platform project/NuGet consumers and target-only builds/publishes passed with native tools blocked (explicit RID and default host)")
