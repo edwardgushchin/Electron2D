@@ -369,6 +369,7 @@ public sealed partial class ProjectSettings
     /// <exception cref="FileNotFoundException">The project file does not exist.</exception>
     /// <exception cref="IOException">A file cannot be read.</exception>
     /// <exception cref="UnauthorizedAccessException">A file cannot be read by the caller.</exception>
+    /// <exception cref="System.Text.DecoderFallbackException">A file contains invalid UTF-8 bytes.</exception>
     /// <exception cref="FormatException">A document is malformed.</exception>
     /// <exception cref="InvalidDataException">A registered value has the wrong type.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A registered validator rejects a loaded value.</exception>
@@ -386,6 +387,7 @@ public sealed partial class ProjectSettings
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="IOException">The file cannot be read.</exception>
     /// <exception cref="UnauthorizedAccessException">The file cannot be read by the caller.</exception>
+    /// <exception cref="System.Text.DecoderFallbackException">The file contains invalid UTF-8 bytes.</exception>
     /// <exception cref="FormatException">The document is malformed.</exception>
     /// <exception cref="InvalidDataException">A registered value has the wrong type.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A registered validator rejects a loaded value.</exception>

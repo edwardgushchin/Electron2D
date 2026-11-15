@@ -1,6 +1,6 @@
 # SceneState
 
-Last updated: 2026-11-12
+Last updated: 2026-11-14
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -22,7 +22,9 @@ Provides read-only typed metadata for the current contents of a [`PackedScene`](
 
 `SceneState` is the read-only typed metadata view returned by [`PackedScene.GetState()`](PackedScene.md). It exposes node, property, group, path, owner, placeholder, nested-instance, and connection metadata without a dynamic value container or string-based mutation.
 
-Stored `Vector2[]`, `Color[]`, and nested `int[][]` contour properties are returned as independent copies on each typed read. Resource values remain borrowed references.
+Node indices address stored records in parent-first depth-first capture order. Implicit nodes supplied by linked templates have no record in the enclosing state. Each query reads one published state. Repacks and path changes can update the view between successive calls.
+
+Groups are read-only and retain the stored order. Packing selects persistent names in ordinal order. Typed reads copy stored arrays, including nested contour arrays, and borrow resource values. Read node references as relative strings, with an empty string for null.
 
 Callers cannot construct a state directly. The object owns no nodes and cannot instantiate or mutate a scene. An exported file-backed view privately retains its underlying resource graph; returned resource values remain borrowed. It retains the immutable packed-data reference currently published to it; resource-valued properties are borrowed references governed by normal [`Resource`](Resource.md) ownership.
 
@@ -36,7 +38,7 @@ The following focused snippet uses the current public API. Names not declared in
 ```csharp
 using var scene = new PackedScene();
 scene.Pack(root);
-SceneState state = scene.GetState();
+using SceneState state = scene.GetState();
 int nodeCount = state.GetNodeCount();
 ```
 
@@ -90,7 +92,7 @@ Gets the number of persistent connections stored in this state.
 
 Gets the number of stored nodes.
 
-**Returns:** Zero for an empty state; otherwise the captured node count.
+**Returns:** The stored record count, or zero for an empty state.
 
 **Exceptions**
 
@@ -105,7 +107,7 @@ Gets the persistent groups stored for a node.
 
 - `nodeIndex`: The zero-based node index.
 
-**Returns:** An immutable group-name snapshot in ordinal order.
+**Returns:** A read-only group list in stored order.
 
 **Exceptions**
 
@@ -185,7 +187,7 @@ Gets the path of a stored node's owner.
 
 - `nodeIndex`: The zero-based node index.
 
-**Returns:** `.` for nodes owned by the root, or an empty string when no owner is stored.
+**Returns:** The owner's root-relative path, `.` for the root owner, or an empty string for an absent owner.
 
 **Exceptions**
 
@@ -202,7 +204,7 @@ Gets a stored node path or its parent's path.
 - `nodeIndex`: The zero-based node index.
 - `forParent`: `true` to return the stored parent path.
 
-**Returns:** A relative scene path; the root is represented by `.`.
+**Returns:** A root-relative path. The root's own path is `.` and its parent path is empty.
 
 **Exceptions**
 
@@ -235,7 +237,7 @@ Gets the name of a stored node property.
 - `nodeIndex`: The zero-based node index.
 - `propertyIndex`: The zero-based property index.
 
-**Returns:** The property name.
+**Returns:** The property name in stored application order.
 
 **Exceptions**
 
@@ -273,7 +275,7 @@ Gets a stored node's runtime type name.
 
 - `nodeIndex`: The zero-based node index.
 
-**Returns:** The unqualified type name for a fresh local node; an empty string for a linked root or reused override.
+**Returns:** The unqualified type name for a fresh local node. Linked roots, deferred placeholders and reused overrides return an empty string.
 
 **Exceptions**
 
@@ -315,7 +317,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 A newly constructed `PackedScene` owns one empty live state. The same state object observes packed-data replacement, reset/copy, and resource-path changes. Disposing it makes that object terminal but does not affect the packed scene; the source creates a replacement on its next state access or update.
 
-Disposing the source packed scene does not dispose externally held states. Such a state stops receiving updates and remains a readable final snapshot until the caller disposes it. Disposing a state never disposes stored resource references.
+Disposing the source packed scene leaves externally held states readable as final snapshots. Disposing a file-backed state releases its lease. The last lease disposes the resources owned by the file graph, including any the caller borrowed through the state. Resources supplied by the caller keep their original ownership.
 
 ## Invariants and threading
 
@@ -327,13 +329,13 @@ Disposing the source packed scene does not dispose externally held states. Such 
 
 ## Dependencies and interactions
 
-`SceneState` depends on `ElectronObject`, the internal immutable packed-scene records, `Type`, and standard read-only collections. It refers to `PackedScene` and stored `Resource` values but owns neither. It has no `SceneTree`, SDL, renderer, loader/saver, editor, or native dependency.
+`SceneState` depends on `ElectronObject`, the internal immutable packed-scene records, `Type`, and standard read-only collections. It borrows the source `PackedScene` and stored `Resource` values and holds a lease when there is a file graph. It has no `SceneTree`, SDL, renderer, loader/saver, editor, or native dependency.
 
 ## Verification and limitations
 
 The executable harness verifies empty/live state identity, path propagation, node ordering and paths, owner/group metadata, registered connections and metadata for concrete, inherited and deferred scenes, typed property name/type/value access including Timer configuration, invalid indices/casts, successful repack observation, concurrent cached-state disposal and path updates, and survival after source disposal.
 
-Registered connection accessors and typed captured Node authoring fields execute. Linked template identity, inserted sibling positions and reused-node type omission execute; deferred path/marker and typed pending queries execute through [deferred scenes](../components/deferred-scenes.md); inherited base state remains absent; file-format internals stay private. `GetNodeType()` is a diagnostic unqualified name, not a reflection-based factory key.
+The view exposes the immediate base state of a derived scene, linked template identity and sibling positions. See [deferred scenes](../components/deferred-scenes.md) for placeholder paths and pending values. `GetNodeType()` returns an unqualified name for diagnostics.
 
 ## Decision
 

@@ -267,7 +267,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_COPIES") is { } msCop
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEPTH_TRANSFERS") is { } depthTransfers) { DepthTransfersTests.Run(depthTransfers == "1" ? null : depthTransfers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_STORAGE") is { } msStorage) { MultisampleStorageTests.Run(msStorage == "1" ? null : msStorage); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_SAMPLING") is { } msSampling) { MultisampleSamplingTests.Run(msSampling == "1" ? null : msSampling); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else if (deviceSamplers == "depth") RenderingDeviceSamplerTests.RunDepth(); else if (deviceSamplers == "lod") RenderingDeviceSamplerTests.RunLOD(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_MULTIVIEW") is { } multiviewProfile) { if (multiviewProfile == "canvas") RenderingDeviceMultiviewTests.Canvas(); else RenderingDeviceMultiviewTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SPARSE") is { } sparseProfile) { try { if (sparseProfile == "canvas") RenderingDeviceSparseTests.Canvas(); else RenderingDeviceSparseTests.Run(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_PASSES") is { } devicePassProfile)
@@ -466,6 +466,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_LISTING") == "1")
     Console.WriteLine("Physical directory listing and cursor regressions passed.");
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_PACK_METADATA") == "1") { DirAccessPackMetadataTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
@@ -777,6 +778,7 @@ if (args.Length == 3 && args[0] == "--file-compression-child") { FileCompression
 if (args.Length == 2 && args[0] == "--file-text-child") { FileTextTests.Child(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_TEXT") == "1") { FileTextTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_BINARY") == "1") { FileBinaryTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_LIFECYCLE") == "1") { FileAccessLifecycleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSION_LEVELS") == "1") { FileCompressionTests.Levels(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ZSTANDARD_OPTIONS") is { } zstandardProfile) { FileCompressionTests.ZstandardOptions(zstandardProfile == "legacy"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_COMPRESSION_NATIVE") is { } fileBackend) { FileCompressionTests.RunNative(fileBackend); return; }
@@ -810,7 +812,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER") == "1"
 if (args.Length == 3 && args[0] == "--node-duplication") { NodeDuplicationTests.Child(args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DUPLICATION") == "managed") { NodeDuplicationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DUPLICATION") is { } duplicationBackend) { NodeDuplicationTests.Render(duplicationBackend); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCAL_SCENES") == "1") { VerifyResources(); VerifyPackedScenes(); NodeReplacementTests.Run(); SubtreeResourceAuthoringTests.Run(); Console.WriteLine("Resource/local scene base, packed graph, root replacement and isolated authoring passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCAL_SCENES") == "1") { VerifyResources(); VerifyPackedScenes(); VerifySceneStateArchive(); NodeReplacementTests.Run(); SubtreeResourceAuthoringTests.Run(); Console.WriteLine("Resource/local scene base, packed graph, scene state archive, root replacement and isolated authoring passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_BASE") == "1") { VerifyResources(); Console.WriteLine("Resource base: copying/reset/errors, path/scene identity, graph duplication and lifetime passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY_CHILD") is { Length: > 0 } resourceDirectory) { ResourceDirectoryTests.RunChild(resourceDirectory); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY") == "1") { ResourceDirectoryTests.Run(); return; }
@@ -952,7 +954,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS_SRGB") is 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MIXED_TEXTURE_REPLACEMENT") == "1") { MixedTextureReplacementTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS") == "1") { RenderingDeviceCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") == "1") { RenderingDeviceTextureTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") is { } deviceTextures && deviceTextures is "1" or "sampling") { RenderingDeviceTextureTests.Run(deviceTextures == "sampling"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == "1") { PhysicsRegisteredBackendTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RIGID_CONTRACT") == "1") { BackendChecks.RunRigidBodyContract(threaded: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_GIZMOS") == "1") { SkeletonGizmoTests.Run(PhysicsServer.Backend.CPU, false, "compatibility"); return; }
@@ -1534,6 +1536,29 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_RENDER") is { } linkBackend) { LinkButtonRenderingTests.Run(linkBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_CHILD") is { } linkPath) { LinkButtonTests.RunChild(linkPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK") == "1") { LinkButtonTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_GUI") == "1")
+{
+    Environment.SetEnvironmentVariable("ELECTRON2D_TEST_LINK_GUI", null);
+    ControlLayoutTests.Run();
+    ControlInputTests.Run();
+    ControlFocusNavigationTests.Run();
+    ControlRecursiveBehaviorTests.Run();
+    ControlClipTests.Run();
+    ScrollInternalNodeTests.Run();
+    ScrollBarTests.Run();
+    ScrollContainerTests.Run();
+    ScrollThemeTests.Run();
+    ItemListTests.Run();
+    TabBarTests.Run();
+    TabContainerTests.Run();
+    ColorPickerTests.Run();
+    SpinBoxTests.Run();
+    FileDialogTests.Run();
+    MenuBarTests.Run();
+    MenuButtonTests.Run();
+    LinkButtonTests.Run();
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_CHILD") is { } menuButtonPath) { MenuButtonTests.RunChild(menuButtonPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
@@ -1655,6 +1680,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_HOST") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_ANCHORS") is { } anchorProfile)
 {
     if (anchorProfile == "managed") ControlLayoutTests.Run();
+    else if (anchorProfile.StartsWith("geometry-", StringComparison.Ordinal)) ControlAnchorRenderingTests.RunGeometry(anchorProfile["geometry-".Length..]);
     else ControlAnchorRenderingTests.Run(anchorProfile);
     return;
 }
@@ -1873,6 +1899,19 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOUCH_INPUT") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
 {
     InputPointerNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACTION_INPUT") is { } actionInputProfile)
+{
+    if (actionInputProfile == "windows")
+        InputActionNativeTests.Run();
+    else
+    {
+        VerifyInput();
+        VerifyInputEmulation();
+        InputActionSettingsTests.Run();
+    }
     return;
 }
 
@@ -2483,6 +2522,7 @@ VerifyProjectSettings();
 ProjectOverrideTests.Run();
 VerifyResources();
 VerifyPackedScenes();
+VerifySceneStateArchive();
 VerifyInputMapConfiguration();
 VerifyInputMapMatching();
 VerifyInputEventActionValues();
@@ -14975,6 +15015,7 @@ static void VerifyPackedScenes()
     Require(scene.CanInstantiate() && liveState.GetNodeCount() == 3 &&
             liveState.GetNodeName(0) == "Root" && liveState.GetNodeName(1) == "Child" &&
             liveState.GetNodeName(2) == "Grandchild" && liveState.GetNodePath(0) == "." &&
+            liveState.GetNodePath(0, forParent: true) == "" && liveState.GetNodePath(1, forParent: true) == "." &&
             liveState.GetNodePath(2) == "Child/Grandchild" && liveState.GetNodePath(2, forParent: true) == "Child" &&
             liveState.GetNodeOwnerPath(0).Length == 0 && liveState.GetNodeOwnerPath(1) == "." &&
             liveState.GetNodeGroups(1).SequenceEqual(["persistent"]) && liveState.GetNodeIndex(1) == -1 &&
@@ -14994,6 +15035,18 @@ static void VerifyPackedScenes()
         "Scene state must reject an invalid node index.");
     Expect<ArgumentOutOfRangeException>(() => liveState.GetNodePropertyName(1, 999),
         "Scene state must reject an invalid property index.");
+    Expect<ArgumentOutOfRangeException>(() => liveState.GetNodePropertyValue<int>(1, -1),
+        "Scene state must reject a negative property index.");
+    Expect<ArgumentOutOfRangeException>(() => liveState.GetNodeGroups(-1),
+        "Scene state must reject a negative node index.");
+    var dataIndex = Enumerable.Range(0, liveState.GetNodePropertyCount(1))
+        .Single(index => liveState.GetNodePropertyName(1, index) == nameof(PackedTestNode.Data));
+    Require(dataIndex == valuePropertyIndex + 1 && ReferenceEquals(liveState.GetNodePropertyValue<Resource>(1, dataIndex), local),
+        "Scene state must preserve property order and borrow resource values through compatible types.");
+    Parallel.For(0, 64, _ =>
+        Require(liveState.GetNodeCount() == 3 && liveState.GetNodeName(2) == "Grandchild" &&
+                liveState.GetNodePropertyValue<int>(1, valuePropertyIndex) == 11 && liveState.GetPath() == scene.ResourcePath,
+            "Concurrent readers must see the same published capture."));
 
     Expect<ArgumentNullException>(() => scene.Pack(null!),
         "Packing a null root must be rejected.");
@@ -15187,9 +15240,75 @@ static void VerifyPackedScenes()
     scene.ResourcePath = $"{prefix}/final.scene";
     var survivingState = scene.GetState();
     scene.Dispose();
-    Require(survivingState.GetNodeCount() == 1 && survivingState.GetPath() == $"{prefix}/final.scene",
+    Require(survivingState.GetNodeCount() == 1 && survivingState.GetNodeName(0) == "RaceRoot" &&
+            survivingState.GetPath() == $"{prefix}/final.scene",
         "An external scene-state reference must survive disposal of its packed-scene resource.");
     survivingState.Dispose();
+    Expect<ObjectDisposedException>(() => survivingState.GetPath(), "A disposed state must reject path reads.");
+    Expect<ObjectDisposedException>(() => survivingState.GetNodeName(0), "A disposed state must reject node reads.");
+}
+
+static void VerifySceneStateArchive()
+{
+    var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-state-{Guid.NewGuid():N}");
+    Directory.CreateDirectory(folder);
+    try
+    {
+        var path = System.IO.Path.Combine(folder, "metadata.e2dscene");
+        using var texture = new ImageTexture();
+        using var scene = new PackedScene();
+        using var beforeSave = scene.GetState();
+        using (var root = new Polygon
+        {
+            Name = "PolygonRoot",
+            Vertices = [new(0, 0), new(2, 0), new(0, 2)],
+            Polygons = [[0, 1, 2]],
+            Texture = texture
+        })
+        {
+            root.AddToGroup("Zulu", persistent: true);
+            root.AddToGroup("Alpha", persistent: true);
+            root.AddToGroup("RuntimeOnly");
+            scene.Pack(root);
+            root.Name = "Edited";
+            root.RemoveFromGroup("Alpha");
+        }
+
+        ResourceSaver.Save(scene, path, SaverFlags.BundleResources | SaverFlags.ChangePath);
+        Require(beforeSave.GetPath() == "" && beforeSave.GetNodeName(0) == "PolygonRoot",
+            "Saving restores the live state's path and ignores changes to the original node.");
+        using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore);
+        using var state = loaded.GetState();
+        Require(state.GetNodeCount() == 1 && state.GetNodeType(0) == nameof(Polygon) &&
+                state.GetNodeName(0) == "PolygonRoot" && state.GetNodePath(0) == "." &&
+                state.GetNodePath(0, forParent: true) == "" && state.GetNodeOwnerPath(0) == "" &&
+                state.GetNodeGroups(0).SequenceEqual(["Alpha", "Zulu"]) && state.GetPath() == loaded.ResourcePath &&
+                state.GetPath().Length > 0,
+            "The archive preserves stored node metadata and publishes its loaded resource path.");
+        Expect<NotSupportedException>(() => ((IList<string>)state.GetNodeGroups(0))[0] = "Injected",
+            "Archive groups must be read-only even through the mutable list interface.");
+
+        var names = Enumerable.Range(0, state.GetNodePropertyCount(0)).Select(i => state.GetNodePropertyName(0, i)).ToArray();
+        Require(names.SequenceEqual(Enumerable.Range(0, beforeSave.GetNodePropertyCount(0)).Select(i => beforeSave.GetNodePropertyName(0, i))),
+            "The archive must preserve property order.");
+        var contourIndex = Array.IndexOf(names, nameof(Polygon.Polygons));
+        var textureIndex = Array.IndexOf(names, nameof(Polygon.Texture));
+        var borrowed = state.GetNodePropertyValue<Texture>(0, textureIndex);
+        Require(ReferenceEquals(beforeSave.GetNodePropertyValue<Texture>(0, textureIndex), texture) &&
+                ReferenceEquals(borrowed, state.GetNodePropertyValue<Texture>(0, textureIndex)),
+            "Each view borrows its scene's stored resource identity.");
+        state.GetNodePropertyValue<int[][]>(0, contourIndex)[0][0] = 2;
+        loaded.Dispose();
+        Require(!borrowed.IsDisposed && state.GetNodePropertyValue<int[][]>(0, contourIndex)[0][0] == 0 &&
+                state.GetPath().Length > 0,
+            "A retained state protects the file graph after source disposal and each read copies nested arrays.");
+        state.Dispose();
+        Require(borrowed.IsDisposed && !texture.IsDisposed, "Disposing the state releases its last file graph lease.");
+    }
+    finally
+    {
+        Directory.Delete(folder, recursive: true);
+    }
 }
 
 static void Require(bool condition, string message)

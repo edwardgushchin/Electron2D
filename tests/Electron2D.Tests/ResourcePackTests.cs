@@ -50,7 +50,10 @@ internal static class ResourcePackTests
                 var names = directory.GetFiles(); Check(names.Contains("physical.txt") && names.Contains("текст😀.bin") && !names.Contains(".hidden") && names.Contains("Case") && names.Contains("case"), "Merged ordinal directory listing.");
                 directory.IncludeHidden = true; Check(directory.GetFiles().Contains(".hidden"), "Packed hidden listing.");
                 Check(directory.FileExists("owned") && directory.DirExists(".") && directory.GetCurrentDir() == "res://assets", "Relative access remains resource scoped.");
-                directory.Copy("owned", "copied"); Check(File.ReadAllBytes(Path.Combine(folder, "assets", "copied")).SequenceEqual(bytes), "Copy packed source out.");
+                Reject<UnauthorizedAccessException>(() => directory.Copy("owned", "copied"));
+                var copied = Path.Combine(folder, "copied");
+                directory.Copy("owned", copied);
+                Check(File.ReadAllBytes(copied).SequenceEqual(bytes), "Copy packed source out of the mounted directory.");
                 Reject<UnauthorizedAccessException>(() => directory.Remove("owned")); Reject<UnauthorizedAccessException>(() => directory.Rename("owned", "renamed"));
                 Reject<UnauthorizedAccessException>(() => directory.Remove("res://assets"));
             }

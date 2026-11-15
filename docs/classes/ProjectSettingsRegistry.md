@@ -477,6 +477,8 @@ Loads the project file and applies the enabled conventional and configured overr
 
 **Exception `T:System.UnauthorizedAccessException`:** A file cannot be read by the caller.
 
+**Exception `T:System.Text.DecoderFallbackException`:** A file contains invalid UTF-8 bytes.
+
 **Exception `T:System.FormatException`:** A document is malformed.
 
 **Exception `T:System.IO.InvalidDataException`:** A registered value has the wrong type.
@@ -503,6 +505,8 @@ Merges a custom configuration file into the current settings after full validati
 **Exception `T:System.IO.IOException`:** The file cannot be read.
 
 **Exception `T:System.UnauthorizedAccessException`:** The file cannot be read by the caller.
+
+**Exception `T:System.Text.DecoderFallbackException`:** The file contains invalid UTF-8 bytes.
 
 **Exception `T:System.FormatException`:** The document is malformed.
 

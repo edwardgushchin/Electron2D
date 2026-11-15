@@ -5,6 +5,12 @@ using static TextureArrayTests;
 
 internal static partial class RenderingDeviceSamplerTests
 {
+    internal static void RunDepth()
+    {
+        using var device = RenderingServer.CreateLocalRenderingDevice();
+        Depth(device);
+    }
+
     private static void Depth(RenderingDevice device)
     {
         using var format = new RDTextureFormat { Format = DataFormat.D32SFLOAT, UsageBits = TextureUsageBits.Sampling | TextureUsageBits.DepthStencilAttachment }; using var view = new RDTextureView(); var depth = device.TextureCreate(format, view); var framebuffer = device.FramebufferCreate([depth]); device.DrawListBegin(framebuffer, DrawFlags.ClearDepth, clearDepthValue: .5f); device.DrawListEnd();

@@ -1200,6 +1200,7 @@ Loads the project file and applies the enabled conventional and configured overr
 - `IO.FileNotFoundException`: The project file does not exist.
 - `IO.IOException`: A file cannot be read.
 - `UnauthorizedAccessException`: A file cannot be read by the caller.
+- `Text.DecoderFallbackException`: A file contains invalid UTF-8 bytes.
 - `FormatException`: A document is malformed.
 - `IO.InvalidDataException`: A registered value has the wrong type.
 - `ArgumentOutOfRangeException`: A registered validator rejects a loaded value.
@@ -1224,6 +1225,7 @@ Merges a custom configuration file into the current settings after full validati
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The file cannot be read.
 - `UnauthorizedAccessException`: The file cannot be read by the caller.
+- `Text.DecoderFallbackException`: The file contains invalid UTF-8 bytes.
 - `FormatException`: The document is malformed.
 - `IO.InvalidDataException`: A registered value has the wrong type.
 - `ArgumentOutOfRangeException`: A registered validator rejects a loaded value.

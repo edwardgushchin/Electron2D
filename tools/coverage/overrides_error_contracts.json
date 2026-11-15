@@ -1,0 +1,361 @@
+{
+  "statusGroups": [
+    {
+      "godot": [
+        "@GlobalScope::enum:Error"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned enum](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/error/error_list.h#L43-L93). [ADR 0018](../../decisions/core-data-io.md#adr-0018), [ADR 0020](../../decisions/core-data-io.md#adr-0020), [ADR 0022](../../decisions/core-data-io.md#adr-0022) and [ADR 0094](../../decisions/networking.md#adr-0094) adapt shared error integers to C# exceptions. [ADR 0048](../../decisions/core-data-io.md#adr-0048), [ADR 0049](../../decisions/core-data-io.md#adr-0049), [ADR 0013](../../decisions/resources.md#adr-0013) and [ADR 0094](../../decisions/networking.md#adr-0094) retain operation-specific results such as [`JSON.Parse`](../../classes/JSON.md), [`XMLParser.Read`](../../classes/XMLParser.md#read), [`ResourceLoader.ThreadLoadStatus`](../../classes/ResourceLoader.ThreadLoadStatus.md) and [`PacketReadStatus`](../../classes/PacketReadStatus.md). Open operation gaps remain on their owning coverage rows. The global transport has no implementation trigger."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.OK"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2647). [ADR 0018](../../decisions/core-data-io.md#adr-0018) exposes successful [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string) as normal return; [ADR 0048](../../decisions/core-data-io.md#adr-0048) exposes successful [`JSON.Parse`](../../classes/JSON.md) as true, including a valid JSON null. The global zero status is unnecessary."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.FAILED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2661). [ADR 0013](../../decisions/resources.md#adr-0013) preserves the original request failure from [`ResourceLoader.LoadThreadedGet`](../../classes/ResourceLoader.md), alongside `ThreadLoadStatus.Failed` while retained. A general numeric failure would discard the cause."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_UNAVAILABLE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2664). [ADR 0094](../../decisions/networking.md#adr-0094) projects packet absence through [`PacketPeer.GetPacketError`](../../classes/PacketPeer.md#getpacketerror) ([`PacketReadStatus.Unavailable`](../../classes/PacketReadStatus.md)) with an `InvalidOperationException` from [`PacketPeer.GetPacket`](../../classes/PacketPeer.md#getpacket). Unsupported operations keep their domain exceptions."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_UNCONFIGURED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2667). [ADR 0049](../../decisions/core-data-io.md#adr-0049) gives [`XMLParser.Read`](../../classes/XMLParser.md#read) an `InvalidOperationException` before opening input. An unopened object is distinct from normal EOF."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_UNAUTHORIZED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2670). [ADR 0018](../../decisions/core-data-io.md#adr-0018) propagates `UnauthorizedAccessException` from [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string) when caller permissions prohibit reading. Authentication of encrypted configuration has its own `CryptographicException`."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_PARAMETER_RANGE_ERROR"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2673). [ADR 0049](../../decisions/core-data-io.md#adr-0049) uses `ArgumentOutOfRangeException` with the byte position for an invalid [`XMLParser.Seek`](../../classes/XMLParser.md#seek) offset."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_OUT_OF_MEMORY"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2676). [ADR 0112](../../decisions/text-patterns.md#adr-0112) preserves `OutOfMemoryException` when [`RegEx.Compile`](../../classes/RegEx.md#compile) cannot allocate native pattern storage. The CLR reports its managed allocation failures separately."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_NOT_FOUND"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2679). [ADR 0018](../../decisions/core-data-io.md#adr-0018) preserves `FileNotFoundException` from [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string) for a missing file in an existing directory."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_BAD_DRIVE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2682). [ADR 0022](../../decisions/core-data-io.md#adr-0022) passes drive/path failures from [`DirAccess.Open`](../../classes/DirAccess.md) through filesystem exceptions. Drive enumeration remains a domain query through [`DirAccess.GetDriveCount`](../../classes/DirAccess.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_BAD_PATH"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2685). [ADR 0022](../../decisions/core-data-io.md#adr-0022) reports an unavailable directory through the filesystem exception from [`DirAccess.Open`](../../classes/DirAccess.md); its argument and virtual-root validation remains separate."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_NO_PERMISSION"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2688). [ADR 0020](../../decisions/core-data-io.md#adr-0020) preserves filesystem access errors from [`FileAccess.Open`](../../classes/FileAccess.md); callers can catch `UnauthorizedAccessException` when the operating system denies permission."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_ALREADY_IN_USE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2691). [ADR 0020](../../decisions/core-data-io.md#adr-0020) preserves sharing violations from [`FileAccess.Open`](../../classes/FileAccess.md) as `IOException` with the operating-system reason where the filesystem enforces exclusive access."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_CANT_OPEN"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2694). [ADR 0018](../../decisions/core-data-io.md#adr-0018) adapts [the declared ConfigFile open error](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ConfigFile.xml#L153-L160) to the original filesystem exception from [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string), distinguishing missing, inaccessible and otherwise unreadable input."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_CANT_WRITE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2697). [ADR 0018](../../decisions/core-data-io.md#adr-0018) preserves the write/replace failure from [`ConfigFile.Save`](../../classes/ConfigFile.md#m-electron2d-configfile-save-system-string); atomic replacement keeps the preceding destination on pre-replacement failure."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_CANT_READ"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2700). [ADR 0020](../../decisions/core-data-io.md#adr-0020) preserves file read failures from [`FileAccess.ReadBytes`](../../classes/FileAccess.md). Byte counts and EOF remain stream results, independent of a native read failure."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_UNRECOGNIZED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2703). Under [ADR 0039](../../decisions/resources.md#adr-0039), [the reference image decoder hook](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ImageFormatLoaderExtension.xml) projects unrecognized contents to `false` from [`ImageFormatLoaderExtension.LoadImage`](../../classes/ImageFormatLoaderExtension.md#construction-and-extension-hooks). [`Image.Load`](../../classes/Image.md#load) discards temporary pixels and tries the next decoder at offset zero. A typed exception propagates and ends the load immediately. Exhausting the matching decoders yields `NotSupportedException`. Under [ADR 0013](../../decisions/resources.md#adr-0013), [`ResourceLoader.Load`](../../classes/ResourceLoader.md#load) also throws `NotSupportedException` for an unsupported requested resource type with no matching loader."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_CORRUPT"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2706). [ADR 0013](../../decisions/resources.md#adr-0013) rejects malformed archive payloads from [`ResourceLoader.Load`](../../classes/ResourceLoader.md#load) with format-specific exceptions such as `InvalidDataException`. This differs from a missing or unsupported file."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_MISSING_DEPENDENCIES"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2709). [ADR 0013](../../decisions/resources.md#adr-0013) retains missing dependency policy in [`ResourceLoader.SetAbortOnMissingResources`](../../classes/ResourceLoader.md#setabortonmissingresources) and propagates the failed dependency through [`ResourceLoader.Load`](../../classes/ResourceLoader.md#load) when abort is enabled."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_FILE_EOF"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2712). [ADR 0049](../../decisions/core-data-io.md#adr-0049) returns false from [`XMLParser.Read`](../../classes/XMLParser.md#read) at input exhaustion; [ADR 0020](../../decisions/core-data-io.md#adr-0020) uses [`FileAccess.EOFReached`](../../classes/FileAccess.md) and a separate exact-read exception for truncated binary values."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_CANT_OPEN"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2715). [ADR 0039](../../decisions/resources.md#adr-0039) exposes open/decoding failures at [`Image.Load`](../../classes/Image.md) through filesystem or codec exceptions. [ADR 0094](../../decisions/networking.md#adr-0094) preserves socket errors at their transport boundary."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_CANT_CREATE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2718). [ADR 0022](../../decisions/core-data-io.md#adr-0022) leaves directory creation failures from [`DirAccess.MakeDir`](../../classes/DirAccess.md) as filesystem exceptions. The actual creation API retains its own coverage."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_QUERY_FAILED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2721). [ADR 0013](../../decisions/resources.md#adr-0013) preserves a typed dependency query in [`ResourceLoader.GetDependencies`](../../classes/ResourceLoader.md#getdependencies). Loader failures propagate from the selected loader, and the empty collection represents an absent dependency list. No common query-failure identity is exposed."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_ALREADY_IN_USE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2724). [ADR 0094](../../decisions/networking.md#adr-0094) rejects a second active [`StreamPeerTCP.ConnectToHost`](../../classes/StreamPeerTCP.md#connecttohost) with `InvalidOperationException`. This state guard is independent of a file-sharing failure."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_LOCKED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2727). [ADR 0018](../../decisions/core-data-io.md#adr-0018) distinguishes an operating-system lock/sharing failure through the original `IOException` from [`ConfigFile.Save`](../../classes/ConfigFile.md#m-electron2d-configfile-save-system-string). Engine object phase guards belong to their own API."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_TIMEOUT"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2730). [ADR 0094](../../decisions/networking.md#adr-0094) publishes deadlines through the request-specific [`HTTPRequestResult.Timeout`](../../classes/HTTPRequestResult.md) result from [`HTTPRequest.RequestCompleted`](../../classes/HTTPRequest.md#requestcompleted)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_CANT_CONNECT"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2733). [ADR 0094](../../decisions/networking.md#adr-0094) exposes HTTP connection failure as `HTTPStatus.CantConnect` at [`HTTPClient.GetStatus`](../../classes/HTTPClient.md#getstatus). When its address attempts are exhausted, the client throws a SocketException with SocketError.HostUnreachable."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_CANT_RESOLVE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2736). [ADR 0094](../../decisions/networking.md#adr-0094) exposes name lookup failure as `HTTPStatus.CantResolve` at [`HTTPClient.GetStatus`](../../classes/HTTPClient.md#getstatus). Poll rethrows the DNS resolution exception."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_CONNECTION_ERROR"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2739). [ADR 0094](../../decisions/networking.md#adr-0094) exposes connection failure after progress through `HTTPStatus.ConnectionError` at [`HTTPClient.GetStatus`](../../classes/HTTPClient.md#getstatus). Packet, stream and HTTP request completion statuses remain distinct."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_CANT_ACQUIRE_RESOURCE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2742). [ADR 0013](../../decisions/resources.md#adr-0013) publishes a background acquisition failure through `ThreadLoadStatus.Failed` and rethrows the stored exception from [`ResourceLoader.LoadThreadedGet`](../../classes/ResourceLoader.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_CANT_FORK"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2745). [ADR 0020](../../decisions/core-data-io.md#adr-0020) uses the original process launch failure (for example `IOException`) from [`OS.CreateProcess`](../../classes/OS.md#independent-process-operations). The successful PID and child exit code are process data."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_INVALID_DATA"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2748). [ADR 0018](../../decisions/core-data-io.md#adr-0018) distinguishes invalid configuration encoding (`DecoderFallbackException`) from malformed text (`FormatException`) at [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string). The pinned [PackedDataContainer.pack declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PackedDataContainer.xml) explicitly declares return code 30. Its [owning coverage row](PackedDataContainer.md) is `Blocked` pending the first typed packed-asset container and loader slice under [ADR 0013](../../decisions/resources.md#adr-0013) and [ADR 0023](../../decisions/packed-scenes.md#adr-0023)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_INVALID_PARAMETER"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2751). [ADR 0028](../../decisions/rendering.md#adr-0028) exposes invalid ports or connections as `ArgumentException` from [`VisualShader.ConnectNodes`](../../classes/VisualShader.md); a general error integer loses the operation context."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_ALREADY_EXISTS"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2754). [ADR 0093](../../decisions/scene-animation.md#adr-0093) makes [`AnimationLibrary.AddAnimation`](../../classes/AnimationLibrary.md) an add-or-replace operation with committed notifications. Rejected occupied rename targets use `ArgumentException` from `RenameAnimation`."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_DOES_NOT_EXIST"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2757). [ADR 0093](../../decisions/scene-animation.md#adr-0093) exposes a missing entry as `KeyNotFoundException` from [`AnimationLibrary.GetAnimation`](../../classes/AnimationLibrary.md) and a separate boolean membership query through `HasAnimation`."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_DATABASE_CANT_READ"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2760). [ADR 0001](../../decisions/product.md#adr-0001) keeps failures with the owning typed operation. [ADR 0018](../../decisions/core-data-io.md#adr-0018) supplies [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string) for configuration files; the product exposes no database read API corresponding to this generic reference code."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_DATABASE_CANT_WRITE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2763). [ADR 0001](../../decisions/product.md#adr-0001) keeps failures with the owning typed operation. [ADR 0018](../../decisions/core-data-io.md#adr-0018) supplies [`ConfigFile.Save`](../../classes/ConfigFile.md#m-electron2d-configfile-save-system-string) for configuration files; the product exposes no database write API corresponding to this generic reference code."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_COMPILATION_FAILED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2766). [ADR 0112](../../decisions/text-patterns.md#adr-0112) exposes a malformed pattern as `ArgumentException` from [`RegEx.Compile`](../../classes/RegEx.md#compile) with compiler diagnostics. [ADR 0028](../../decisions/rendering.md#adr-0028) keeps shader compilation at its own authoring boundary."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_METHOD_NOT_FOUND"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2769). [ADR 0002](../../decisions/product.md#adr-0002) binds methods through typed C# delegates and events (e.g. [`ElectronObject.PropertyListChanged`](../../classes/ElectronObject.md)). The string-dispatched missing-method status has no corresponding public call; independent protocol codes belong to [`JSONRPCErrorCode`](../../classes/JSONRPCErrorCode.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_LINK_FAILED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2772). [ADR 0091](../../decisions/scripting.md#adr-0091) uses compiled C# factories and assemblies for [`Script`](../../classes/Script.md). Compilation/link failures belong to the build or the shader import boundary under [ADR 0028](../../decisions/rendering.md#adr-0028); no generic runtime link status is exposed."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_SCRIPT_FAILED"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2775). [ADR 0091](../../decisions/scripting.md#adr-0091) uses compiled C# behavior through [`Script.New`](../../classes/Script.md); invocation failures are ordinary exceptions. Dynamic script reload readiness is tracked on its own coverage rows."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_CYCLIC_LINK"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2778). [ADR 0013](../../decisions/resources.md#adr-0013) rejects an external resource dependency cycle with `InvalidDataException` at [`ResourceLoader.Load`](../../classes/ResourceLoader.md#load); bundled graphs retain their own supported reference rules."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_INVALID_DECLARATION"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2781). [ADR 0091](../../decisions/scripting.md#adr-0091) leaves invalid C# declarations to compile diagnostics. The runtime [`Script`](../../classes/Script.md) represents compiled source/type metadata and has no generic declaration-state error."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_DUPLICATE_SYMBOL"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2784). [ADR 0091](../../decisions/scripting.md#adr-0091) leaves duplicate C# symbols to compile diagnostics. The runtime [`Script`](../../classes/Script.md) does not compile user source at runtime."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_PARSE_ERROR"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2787). [ADR 0048](../../decisions/core-data-io.md#adr-0048) preserves failed [`JSON.Parse`](../../classes/JSON.md) with an error line and message; [ADR 0018](../../decisions/core-data-io.md#adr-0018) throws `FormatException` from [`ConfigFile.Parse`](../../classes/ConfigFile.md#m-electron2d-configfile-parse-system-string) with the failed line."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_BUSY"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2790). [ADR 0094](../../decisions/networking.md#adr-0094) rejects a new [`HTTPClient.Request`](../../classes/HTTPClient.md#request) outside the idle connected phase with `InvalidOperationException`; callers observe the independent HTTP phase via [`HTTPClient.GetStatus`](../../classes/HTTPClient.md#getstatus)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_SKIP"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2793). [ADR 0001](../../decisions/product.md#adr-0001) leaves skip/no-value results to the operation; for example [ADR 0049](../../decisions/core-data-io.md#adr-0049) makes [`XMLParser.SkipSection`](../../classes/XMLParser.md#skipsection) a cursor operation with no returned numeric skip status."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_HELP"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2796). [ADR 0004](../../decisions/product.md#adr-0004) and [ADR 0016](../../decisions/core-object-runtime.md#adr-0016) expose a hosted [`Engine.Run`](../../classes/Engine.md) entry point. Executable help/version CLI dispatch is internal to the reference executable and has no equivalent in the game runtime API."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_BUG"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2799). [ADR 0108](../../decisions/diagnostics.md#adr-0108) delivers diagnostic records through [`Logger`](../../classes/Logger.md) and the originating exception when one propagates. An internal invariant failure has no stable public numeric branch."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:Error.ERR_PRINTER_ON_FIRE"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned value](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2803). [ADR 0004](../../decisions/product.md#adr-0004) has no product API for this documented easter egg. No built-in reference operation returns the value."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:error_string(int:)"
+      ],
+      "state": "Excluded",
+      "reason": "[Pinned lookup](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/variant/variant_utility.cpp#L899-L904). [ADR 0018](../../decisions/core-data-io.md#adr-0018) preserves exception messages at [`ConfigFile.Load`](../../classes/ConfigFile.md#m-electron2d-configfile-load-system-string); [ADR 0048](../../decisions/core-data-io.md#adr-0048) exposes [`JSON.GetErrorMessage`](../../classes/JSON.md), and [ADR 0108](../../decisions/diagnostics.md#adr-0108) keeps typed log records on [`Logger`](../../classes/Logger.md). The reference function formats its own enum and supplies fallback text for invalid codes. These public boundaries carry operation-specific diagnostics, so the global lookup has no implementation trigger."
+    }
+  ]
+}

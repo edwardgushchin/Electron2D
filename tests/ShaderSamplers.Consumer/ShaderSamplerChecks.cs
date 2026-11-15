@@ -18,6 +18,7 @@ internal static partial class ShaderSamplerChecks
         if (args.Length > 0 && args[0] == "compatibility") { Compatibility(); return; }
         if (args.Length > 0 && args[0] == "screen") { Screen(args[1]); return; }
         if (args.Length > 0 && args[0] == "native") { Native(args[1]); return; }
+        if (args.Length > 0 && args[0] == "filtering") { Native("", args[1]); return; }
         if (args.Length > 0 && args[0] == "archive-child") { ArchiveChild(args[1]); return; }
         using var shader = new Shader();
         Check(shader.GetTextureSamplerState("TEXTURE") is null, "Unset binding retains its original policy.");

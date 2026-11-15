@@ -12,7 +12,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -120,7 +120,7 @@ The root Window/SceneTree boundary now forwards native committed text and IME co
 
 ## Public surface
 
-[Control layout](../components/scene-hierarchy.md) resolves single-side anchors and offsets against the direct canvas parent or containing viewport. Typed endpoint authoring and layout presets use the same geometry.
+[Control layout](../components/scene-hierarchy.md) resolves single-side anchors and offsets against the direct canvas parent’s anchorable rectangle or the containing viewport. Typed endpoint authoring and layout presets use the same geometry.
 
 The Control branch uses shared [`RecursiveBehavior`](../classes/RecursiveBehavior.md) values for its focus and pointer subtree policies; [ControlRecursiveBehaviorTests](../../tests/Electron2D.Tests/ControlRecursiveBehaviorTests.cs) checks their root viewport behavior.
 
@@ -149,7 +149,7 @@ The Control branch uses shared [`RecursiveBehavior`](../classes/RecursiveBehavio
 - `Animation`, `AnimationLibrary`, `AnimationMixer` and `AnimationPlayer`: reusable typed property keys, relative node bindings, named playback, reverse/seek/queues/sections and automatic phases. [Scene animation](../components/scene-animation.md) records managed and rendered checks; typed weighted mixing/capture, RESET and postprocessing now execute; other track families and persistence remain separate.
 - `Tween` and tweeners: typed SceneTree-driven sequential/parallel interpolation, callbacks, waits, nested timelines, looping, pause/lane/time-scale policy, and completion events. Every own Tween and Tweener member and type row now has a pinned semantic audit, including 96 easing samples and near-limit Int64. Inherited lifetime roles, native cadence and other domains retain their separate coverage status.
 - `PackedScene`: `Resource` that captures any reusable typed owned-node hierarchy, from one composed game object through a complete level, and reconstructs independent detached instances.
-- `SceneState`: live read-only typed metadata view for current packed data.
+- `SceneState`: live read-only view of stored node records, persistent groups and typed properties. A retained view preserves the final metadata and the file graph after source disposal.
 - `PackedSceneEditState`: instantiation policy with runtime `Disabled` and editor-context `Instance`, `Main` and `MainInherited`.
 
 The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape, CollisionPolygon and RayCast descendants on the existing Entity branch. An enabled RayCast samples through the internal physics callback before SceneTree steps the registered space; its result remains cached until another eligible frame or forced sample. SceneTree owns the space step before timers, tweens and interpolation end capture. Attached CanvasItems access the same space through [World](../classes/World.md); Physics owns RID/server/query behavior while Scene remains the scheduling and lifetime owner.

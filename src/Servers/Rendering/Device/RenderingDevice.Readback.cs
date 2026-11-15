@@ -71,7 +71,7 @@ public sealed unsafe partial class RenderingDevice
             request.Destination = destination; request.ArrayCallback = arrayCallback; request.Data = data; request.Callback = callback; request.Download = download; request.Texture = entry.Texture;
             if (download)
             {
-                var capacity = entry.Texture?.TransferSize ?? (uint)destination.Length;
+                var capacity = entry.Texture?.DownloadSize ?? (uint)destination.Length;
                 if (request.Transfer is null || request.Capacity < capacity)
                 {
                     var transfer = Transfer(capacity, SDL.GPUTransferBufferUsage.Download);

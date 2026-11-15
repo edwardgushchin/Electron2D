@@ -1,6 +1,6 @@
 # Development feedback and package qualification
 
-Last updated: 2026-11-05
+Last updated: 2026-11-15
 
 The [CI workflow](../.github/workflows/ci.yml) separates fast development feedback
 from complete package qualification. This preserves the configured platform
@@ -74,6 +74,16 @@ hot paths. The pipeline's own small checks are:
 python3 -B tools/ci/test_pipeline.py
 python3 -B tools/ci/test_checks.py
 dotnet run --project tests/Electron2D.FastTests -c Release
+```
+
+With no arguments, FastTests runs the shared managed contracts, engine metadata
+and canvas vertex layout checks without the native engine module. For native
+allocation accounting, supply a matching module and its runtime dependencies
+before selecting the allocation profile. `Electron2DNativeLibrary` can point to
+the module for a ProjectReference build.
+
+```bash
+dotnet run --project tests/Electron2D.FastTests -c Release -- --native-allocation
 ```
 
 Keep the existing commit checks in `AGENTS.md`. Every discovered release defect

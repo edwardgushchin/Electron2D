@@ -1,6 +1,6 @@
 # PointLight
 
-Last updated: 2026-10-11
+Last updated: 2026-11-15
 
 - Declaration: `public class PointLight : Light`
 - Source: [PointLight.cs](../../src/Scene/2D/PointLight.cs)
@@ -9,6 +9,8 @@ Last updated: 2026-10-11
 ## Description
 
 Transformed borrowed light mask, local center offset, texture scale and normal-mapping height. See the component for defaults, ownership, sampling, masks, persistence and renderer limits. Public members follow the attached scene's owner-thread rules; resources reject disposed inputs and preserve borrowed ownership. GPU lighting is executable; compatibility rejects affected lighting passes explicitly.
+
+An attached child [Control](Control.md) uses the texture size multiplied by TextureScale, with the rectangle centered at Offset. A missing texture supplies an empty area. Offset and TextureScale edits raise ItemRectChanged and reflow the child.
 
 ## Verification
 

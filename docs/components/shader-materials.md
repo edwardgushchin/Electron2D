@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-25
+Last updated: 2026-11-15
 
 [Visual shader graphs](visual-shaders.md) author typed numeric canvas programs and compile them through the same SPIR-V import/material pipeline. Resource archives carry both editable graphs and the last imported program; editing requires reimport.
 
@@ -419,7 +419,7 @@ All sampled roles use the same metadata: ordinary/layered/default/material image
 
 [Sampler texel coordinates](sampler-coordinates.md) connect copied UnnormalizedUVW settings to explicit native operations and single-mip ordinary views. Final derived canvas modules are validated after composition, including shared vertex/fragment and glyph requirements.
 
-The copied configuration controls minification, magnification, mip-nearest/linear, independent repeat/mirrored-repeat/clamp U/V, minimum/maximum LOD, LOD bias and effective anisotropy. Anisotropy at a maximum of one is disabled even when its switch is true. Integer images require all-nearest filters and no effective anisotropy. High-level comparison sampling rejects because this image family has no depth-comparison contract; device depth samplers retain their separate support. Border addressing requires the pinned Vulkan adapter and matching scalar class; mirror-clamp rejects; Metal rejects nonzero bias at native preparation, and relaxed devices can reject effective anisotropy. A stored state is valid authoring data even if the selected backend cannot execute it. Compatibility rejects shader execution and releases its host.
+The copied configuration controls minification, magnification, mip-nearest/linear, independent repeat/mirrored-repeat/clamp U/V, minimum/maximum LOD, LOD bias and effective anisotropy. Anisotropy at a maximum of one is disabled even when its switch is true. Integer images require all-nearest filters. A request with UseAnisotropy enabled and AnisotropyMax above one rejects during authoring, including when the native backend would use its ordinary filters. High-level comparison sampling rejects because this image family has no depth-comparison contract; device depth samplers retain their separate support. Border addressing requires the pinned Vulkan adapter and matching scalar class; mirror-clamp rejects; Metal rejects nonzero bias at native preparation, and relaxed devices can reject effective anisotropy. A stored state is valid authoring data even if the selected backend cannot execute it. Compatibility rejects shader execution and releases its host.
 
 Setters validate before replacing the table and emit Changed after publication; observer exceptions preserve the committed table. Getters allocate only during authoring. Duplication copies values, not borrowed RDSamplerState objects. Compatible program replacement retains settings by name, element and full sampled type; removed or differently typed bindings lose them. A private version-one SamplerSettings byte property stores a bounded table of at most 32 merged vertex/fragment elements and 16 MiB total; malformed names, flags, duplicates, truncation and trailing bytes reject atomically. New built-in Shader archives store an eight-byte identity/version rather than exposing its private varying interface; current legacy raw built-in archives remain readable.
 

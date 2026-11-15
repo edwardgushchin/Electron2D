@@ -6,7 +6,8 @@ namespace Electron2D;
 /// <remarks>Text is translated through the control's domain. Fonts and focus styles remain borrowed.
 /// Pointer, keyboard, touch, shortcut and toggle behavior are inherited from BaseButton.
 /// Attached access requires the scene owner thread; mutation is forbidden during scene capture.
-/// Text preparation allocates; prepared unchanged layout and drawing reuse retained buffers.</remarks>
+/// Initial text preparation allocates. Repeated caption updates within prepared capacity,
+/// font polling and canvas recording reuse retained buffers, including after garbage collection.</remarks>
 public partial class LinkButton : BaseButton
 {
     /// <summary>Selects when the text underline is visible.</summary>

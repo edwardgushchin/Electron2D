@@ -869,8 +869,7 @@
     {
       "electron2d": "method:Electron2D.Input.GetActionRawStrength(System.String,System.Boolean)",
       "godot": "Input::method:get_action_raw_strength(StringName:,bool:)",
-      "state": "Partial",
-      "reason": "Typed action-name/exact-match query; ADR 0038."
+      "reason": "Maps the typed action name and optional exact-match flag."
     },
     {
       "electron2d": "method:Electron2D.InputEvent.Accumulate(Electron2D.InputEvent)",
@@ -1281,14 +1280,12 @@
     {
       "electron2d": "method:Electron2D.SceneState.GetNodeCount()",
       "godot": "SceneState::method:get_node_count()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "ADR 0023: zero for empty data, otherwise the count of stored records in capture order, excluding implicit linked content."
     },
     {
       "electron2d": "method:Electron2D.SceneState.GetPath()",
       "godot": "SceneState::method:get_path()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "ADR 0023: observes the resource path through path updates and archive loading, with the last committed path retained after source disposal."
     },
     {
       "electron2d": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action<Electron2D.Node>,Electron2D.GroupCallFlags)",
@@ -8907,6 +8904,75 @@
   ],
   "statusGroups": [
     {
+      "state": "Implemented",
+      "reason": "Finite clamped manual press, mapped-release reset, and explicit clearing of manual and parsed state without callbacks. Virtual controls retain owner contributions under ADR 0038.",
+      "godot": [
+        "Input::method:action_press(StringName:,float:)",
+        "Input::method:action_release(StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Returns aggregate deadzone-adjusted strength. With exactMatch enabled, an exact action state returns the aggregate strength. An inexact action state returns only the virtual controls' strength under ADR 0038.",
+      "godot": [
+        "Input::method:get_action_strength(StringName:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Keeps directional magnitudes below the action deadzone and above one for programmatic samples. With exactMatch enabled, an exact action state returns the aggregate raw strength. An inexact action state returns only the virtual controls' strength under ADR 0038.",
+      "godot": [
+        "Input::method:get_action_raw_strength(StringName:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Subtracts the negative action's effective strength from the positive action's effective strength, using default action matching. The public consumer verifies signed cancellation.",
+      "godot": [
+        "Input::method:get_axis(StringName:,StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Subtracts opposing raw strengths using default action matching, applies a circular deadzone and limits length to one. The public consumer verifies raw motion below the action deadzone, circular deadzone and unit length.",
+      "godot": [
+        "Input::method:get_vector(StringName:,StringName:,StringName:,StringName:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The first matching binding in registration order supplies parsed state. The latest mapped event supplies exact eligibility. Anything combines raw logical keys, mouse and controller buttons with pressed actions.",
+      "godot": [
+        "Input::method:is_action_pressed(StringName:,bool:)",
+        "Input::method:is_anything_pressed()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Process and physics windows complete independently even on callback failure. Exact eligibility filters the same aggregate edge and preserves the originating event identity across later matches during a hold. Explicit releases carry no event identity and can mark an already released action.",
+      "godot": [
+        "Input::method:is_action_just_pressed(StringName:,bool:)",
+        "Input::method:is_action_just_released(StringName:,bool:)",
+        "Input::method:is_action_just_pressed_by_event(StringName:,InputEvent:,bool:)",
+        "Input::method:is_action_just_released_by_event(StringName:,InputEvent:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0038 uses synchronous delivery with pre-mutation owner, lifecycle and capacity validation. Window observers and SceneTree see committed state. Caller ownership and original transition identity survive dispatch.",
+      "godot": [
+        "Input::method:parse_input_event(InputEvent:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0038 keeps public parse synchronous. The SDL display combines compatible queued mouse motion by default, drains at pump boundaries and explicitly flushes on the eligible owner. MIDI keeps its own producer queue.",
+      "godot": [
+        "Input::method:flush_buffered_events()",
+        "Input::property:use_accumulated_input"
+      ]
+    },
+    {
       "state": "Excluded",
       "reason": "ADR 0004: doc/classes/ParallaxBackground.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use the [Parallax2D] node instead.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Use Electron2D Parallax. No implementation trigger.",
       "godot": [
@@ -9146,6 +9212,44 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0023: live typed metadata exposes captured state and the immediate base for in-memory and archived scenes. Concrete scenes return an absent base. Repacking and archive reload retain the documented view and file ownership."
+    },
+    {
+      "godot": ["class:SceneState"],
+      "state": "Implemented",
+      "reason": "ADR 0023: PackedScene creates a live read-only ElectronObject view with managed disposal. Each query reads one published state. A retained view preserves the final data and its file graph after source disposal."
+    },
+    {
+      "godot": [
+        "SceneState::method:get_node_name(int:)",
+        "SceneState::method:get_node_path(int:,bool:)",
+        "SceneState::method:get_node_owner_path(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0023: zero-based records expose captured names and root-relative string paths. The root is '.', an absent parent or owner is empty, and forParent defaults to false. Indexed queries throw on invalid indices."
+    },
+    {
+      "godot": ["SceneState::method:get_node_groups(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0023: persistent group names are captured in ordinal order, with only added groups stored for inherited overrides. The C# read-only list preserves stored order and cannot mutate the packed record."
+    },
+    {
+      "godot": ["SceneState::method:get_node_count()"],
+      "state": "Implemented",
+      "reason": "ADR 0023: zero for empty data, otherwise the count of stored records in capture order, excluding implicit linked content."
+    },
+    {
+      "godot": ["SceneState::method:get_path()"],
+      "state": "Implemented",
+      "reason": "ADR 0023: observes the resource path through path updates and archive loading, with the last committed path retained after source disposal."
+    },
+    {
+      "godot": [
+        "SceneState::method:get_node_property_count(int:)",
+        "SceneState::method:get_node_property_name(int:,int:)",
+        "SceneState::method:get_node_property_value(int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0023: stored descriptor and deferred values expose zero-based names and values in application order. Typed reads return compatible values, copy array containers, borrow resources and project node references as paths. Bad indices and incompatible types raise C# exceptions."
     },
     {
       "godot": [
