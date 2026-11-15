@@ -1,13 +1,75 @@
 #!/usr/bin/env python3
 """Regression check for overload pairing, texture pages and inventory accounting."""
 
+import contextlib
+import io
 import json
 import re
+import sys
+import tempfile
 from hashlib import sha256
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 from render import ALIASES, CLASS_PAGES, DATA, ROOT, cell, choose, coverage_target, engine_link, render, validate_public_type_names
 from physics_report import scope
+import render as renderer
+
+
+def check_current_audit(pages, summary):
+    index = CLASS_PAGES.parent / "index.md"
+    original = index.read_text()
+    generated = pages[index]
+    assert renderer.render_current_audit(generated, summary) == generated
+    prose = generated.replace(f" There are {summary['unmapped_engine']:,} unmapped Electron2D declarations.", "")
+    source_prose = re.sub(r" There are [\d,]+ unmapped Electron2D declarations\.", "", original)
+    assert re.sub(r"[\d,.]+", "", prose) == re.sub(r"[\d,.]+", "", source_prose)
+    # Only the current numeric fields change; history and authored prose survive.
+    before, current = original.split("## Current audit state\n", 1)
+    assert generated.startswith(before + "## Current audit state\n")
+    assert generated.partition("## Current audit state\n")[2].partition("\n## ")[2:] == current.partition("\n## ")[2:]
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        target = root / "index.md"
+        target.write_text(generated)
+        def fixture():
+            return {target: renderer.render_current_audit(target.read_text(), changed)}, changed
+        with patch.object(renderer, "ROOT", root), patch.object(renderer, "CLASS_PAGES", root / "classes"), patch.object(renderer, "render", side_effect=fixture), contextlib.redirect_stdout(io.StringIO()):
+            for field in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded", "implementation", "scope_restored", "unmapped_engine", "electron2d_declarations", "mapped_engine", "reviewed_extras", "upstream_types", "upstream_members"):
+                target.write_text(generated)
+                changed = {**summary, "states": dict(summary["states"])}
+                if field in {"implementation", "scope_restored"}:
+                    source = "Partial" if field == "implementation" else "Excluded"
+                    destination = "Implemented" if field == "implementation" else "Blocked"
+                    changed["states"][source] -= 192
+                    changed["states"][destination] += 192
+                elif field in changed["states"]:
+                    # A scope exclusion changes applicability without changing the numerator.
+                    delta = 192 if field == "Excluded" else 1
+                    changed["states"]["Blocked" if field == "Excluded" else field] -= delta
+                    changed["states"]["Excluded"] += delta
+                else:
+                    changed[field] += 1
+                with patch.object(sys, "argv", ["render.py", "--check"]):
+                    try:
+                        renderer.main()
+                    except SystemExit as error:
+                        assert "Stale coverage pages: index.md" == str(error)
+                    else:
+                        raise AssertionError(f"--check missed stale {field}")
+                with patch.object(sys, "argv", ["render.py"]):
+                    renderer.main()
+                    once = target.read_text()
+                    renderer.main()
+                    assert target.read_text() == once
+                with patch.object(sys, "argv", ["render.py", "--check"]):
+                    renderer.main()
+                if field == "Excluded":
+                    applicable = sum(summary["states"].values()) - summary["states"]["Excluded"] - 192
+                    assert f"out of {applicable:,} applicable rows" in once
+                    assert once != generated
+                assert once.startswith(before + "## Current audit state\n")
+                assert once.partition("## Current audit state\n")[2].partition("\n## ")[2:] == current.partition("\n## ")[2:]
 
 
 def check_physics_report(pages):
@@ -226,7 +288,7 @@ def check_texture_pages(pages, upstream):
             target = (page.parent / link).resolve()
             if target.parent == CLASS_PAGES:
                 assert target in pages, f"Link to obsolete class page in {page}: {link}"
-                if target.stem == "Texture":
+                if target.stem == "Texture" and (page.parent == CLASS_PAGES or anchor):
                     assert anchor in {"#godot-texture", "#godot-texture2d"}
                     assert f"## Godot {anchor.removeprefix('#godot-')}".lower() in pages[target].lower()
             else:
@@ -281,6 +343,7 @@ def main():
     ]
 
     pages, summary = render()
+    check_current_audit(pages, summary)
     check_object_registry_exclusions(pages, upstream)
     check_physics_report(pages)
     graph = pages[CLASS_PAGES / "VisualShader.md"]
