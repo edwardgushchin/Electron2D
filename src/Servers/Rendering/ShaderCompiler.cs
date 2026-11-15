@@ -46,15 +46,23 @@ internal static unsafe partial class ShaderCompiler
                 if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)
                     return ShaderCross.CompileComputePipelineFromSPIRV(device, in info, in metadata, 0);
                 // The native convenience path prefers FXC/DXBC even on DXIL-capable devices.
+                if (SDL.GetGPUDeviceDriver(device) == "direct3d12" && UsesIntegerSamples(code))
+                {
+                    var advanced = CompileIntegerDXIL(device, code, "cs_6_7");
+                    fixed (byte* bytes = advanced)
+                        return CreateDXIL((nint)bytes, (nuint)advanced.Length, (nint)entrypoint);
+                }
                 var compiled = ShaderCross.CompileDXILFromSPIRV(in info, out var size);
                 if (compiled == 0) return 0;
-                try
-                {
-                    var pipeline = new SDL.GPUComputePipelineCreateInfo
+                try { return CreateDXIL(compiled, size, (nint)entrypoint); }
+                finally { SDL.Free(compiled); }
+
+                nint CreateDXIL(nint bytes, nuint length, nint entry) =>
+                    SDL.CreateGPUComputePipeline(device, new SDL.GPUComputePipelineCreateInfo
                     {
-                        Code = compiled,
-                        CodeSize = size,
-                        Entrypoint = (nint)entrypoint,
+                        Code = bytes,
+                        CodeSize = length,
+                        Entrypoint = entry,
                         Format = SDL.GPUShaderFormat.DXIL,
                         NumSamplers = metadata.NumSamplers,
                         NumReadonlyStorageTextures = metadata.NumReadOnlyStorageTextures,
@@ -65,10 +73,7 @@ internal static unsafe partial class ShaderCompiler
                         ThreadcountX = metadata.ThreadCountX,
                         ThreadcountY = metadata.ThreadCountY,
                         ThreadcountZ = metadata.ThreadCountZ
-                    };
-                    return SDL.CreateGPUComputePipeline(device, in pipeline);
-                }
-                finally { SDL.Free(compiled); }
+                    });
             }
             finally { SDL.Free(reflection); }
         }
@@ -98,24 +103,29 @@ internal static unsafe partial class ShaderCompiler
                 };
                 if (driver != "direct3d12" || (SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)
                     return ShaderCross.CompileGraphicsShaderFromSPIRV(device, ref info, ref resources, 0);
+                if (UsesIntegerSamples(code))
+                {
+                    var advanced = CompileIntegerDXIL(device, code, fragment ? "ps_6_7" : "vs_6_7");
+                    fixed (byte* bytes = advanced)
+                        return CreateDXIL((nint)bytes, (nuint)advanced.Length);
+                }
                 var compiled = ShaderCross.CompileDXILFromSPIRV(in info, out var size);
                 if (compiled == 0) return 0;
-                try
-                {
-                    return SDL.CreateGPUShader(device, new SDL.GPUShaderCreateInfo
-                    {
-                        Code = compiled,
-                        CodeSize = size,
-                        Entrypoint = "main",
-                        Format = SDL.GPUShaderFormat.DXIL,
-                        Stage = fragment ? SDL.GPUShaderStage.Fragment : SDL.GPUShaderStage.Vertex,
-                        NumSamplers = resources.NumSamplers,
-                        NumStorageTextures = resources.NumStorageTextures,
-                        NumStorageBuffers = resources.NumStorageBuffers,
-                        NumUniformBuffers = resources.NumUniformBuffers
-                    });
-                }
+                try { return CreateDXIL(compiled, size); }
                 finally { SDL.Free(compiled); }
+
+                nint CreateDXIL(nint bytes, nuint length) => SDL.CreateGPUShader(device, new SDL.GPUShaderCreateInfo
+                {
+                    Code = bytes,
+                    CodeSize = length,
+                    Entrypoint = "main",
+                    Format = SDL.GPUShaderFormat.DXIL,
+                    Stage = fragment ? SDL.GPUShaderStage.Fragment : SDL.GPUShaderStage.Vertex,
+                    NumSamplers = resources.NumSamplers,
+                    NumStorageTextures = resources.NumStorageTextures,
+                    NumStorageBuffers = resources.NumStorageBuffers,
+                    NumUniformBuffers = resources.NumUniformBuffers
+                });
             }
             finally { SDL.Free(metadata); }
         }

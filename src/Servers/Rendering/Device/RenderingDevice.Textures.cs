@@ -142,6 +142,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="format">A concrete format to query.</param>
     /// <param name="usageFlags">Requested allocation and transfer roles.</param>
     /// <returns>False for formats or roles unavailable on this backend. StorageAtomic accepts native R32SINT/R32UINT and feature-enabled R32SFLOAT read-modify-write images. DepthResolveAttachment requires the enabled sample-zero modes for every stored aspect. Depth input attachments require the ABI2 aspect/view adapter and readonly sampled format capability.</returns>
+    /// <remarks>Direct3D 12 integer Sampling requires a shader-readable typed format, Shader Model 6.7 and Advanced Texture Operations. Integer sampler bindings require nearest filtering.</remarks>
     public bool TextureIsFormatSupportedForUsage(DataFormat format, TextureUsageBits usageFlags)
     {
         Access(); RDTextureConfiguration.FormatValue(format); RDTextureConfiguration.Usage(usageFlags);
@@ -164,6 +165,9 @@ public sealed unsafe partial class RenderingDevice
         if ((nativeUsage & SDL.GPUTextureUsageFlags.GraphicsStorageRead) != 0 &&
             (usageFlags & (TextureUsageBits.Storage | TextureUsageBits.StorageAtomic)) == 0)
             nativeUsage = (nativeUsage & ~SDL.GPUTextureUsageFlags.GraphicsStorageRead) | SDL.GPUTextureUsageFlags.Sampler;
+        if ((usageFlags & TextureUsageBits.Sampling) != 0 && GPUTexture.UsesD3D12IntegerSRV(Device, native) &&
+            ShaderCompiler.D3D12IntegerSampling(Device) != true) return false;
+        nativeUsage = GPUTexture.SampledUsage(Device, native, nativeUsage);
         return native != SDL.GPUTextureFormat.Invalid && SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, nativeUsage);
     }
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>
@@ -237,7 +241,7 @@ public sealed unsafe partial class RenderingDevice
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total };
         try
         {
-            entry.Handle = CreateTextureStorage(entry, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }, shareable, viewedFormat);
+            entry.Handle = CreateTextureStorage(entry, NativeTextureInfo(info with { Format = pixelFormat }), shareable, viewedFormat);
             PrepareInputShadow(entry);
             entry.Upload = Transfer(info.TransferSize, SDL.GPUTransferBufferUsage.Upload);
             var zero = data.IsEmpty ? new byte[info.Total] : null;

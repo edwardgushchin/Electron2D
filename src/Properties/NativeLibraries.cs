@@ -77,6 +77,7 @@ internal static partial class NativeLibraries
             }
             if (OperatingSystem.IsWindows())
             {
+                if (name == "dxcompiler") return LoadRuntime("dxcompiler.dll", assembly, path);
                 if (name == "HarfBuzzSharp") return LoadRuntime("harfbuzz.dll", assembly, path);
                 if (name == "freetype") return LoadRuntime("freetype.dll", assembly, path);
                 if (name == "Electron2DCrypto") return LoadRuntime("libcrypto-4.dll", assembly, path);
