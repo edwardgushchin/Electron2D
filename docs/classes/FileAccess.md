@@ -302,6 +302,7 @@ Opens a whole-file compressed container.
 - `ArgumentOutOfRangeException`: `compressionMode` is unknown.
 - `PlatformNotSupportedException`: The selected native codec is unavailable in the packaged bridge.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The physical file cannot be read or replaced.
 - `UnauthorizedAccessException`: The path identifies a directory or access is denied.
 
@@ -326,6 +327,7 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `ArgumentException`: `key` is not exactly 32 bytes or the mode is invalid.
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses password mode.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The physical file cannot be read or replaced.
 - `UnauthorizedAccessException`: The path identifies a directory or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
@@ -351,6 +353,7 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `ArgumentException`: `password` is empty or the mode is invalid.
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses raw-key mode.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The physical file cannot be read or replaced.
 - `UnauthorizedAccessException`: The path identifies a directory or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.

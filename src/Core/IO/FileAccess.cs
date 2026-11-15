@@ -367,6 +367,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="compressionMode"/> is unknown.</exception>
     /// <exception cref="PlatformNotSupportedException">The selected native codec is unavailable in the packaged bridge.</exception>
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
+    /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
     /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
     public static FileAccess OpenCompressed(
@@ -395,6 +396,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="key"/> is not exactly 32 bytes or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses password mode.</exception>
+    /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
     /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
@@ -431,6 +433,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="password"/> is empty or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses raw-key mode.</exception>
+    /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
     /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
@@ -1927,7 +1930,16 @@ public sealed partial class FileAccess : ElectronObject
         packed = false;
         absolutePath = ResourcePacks.Runtime.ResolveWritableFile(path);
         if (Truncates(mode))
+        {
+            for (var parent = System.IO.Path.GetDirectoryName(absolutePath);
+                 parent is not null && !Directory.Exists(parent);
+                 parent = System.IO.Path.GetDirectoryName(parent))
+            {
+                if (File.Exists(parent))
+                    throw new DirectoryNotFoundException($"A physical file occupies the parent path '{parent}'.");
+            }
             return [];
+        }
 
         using var physical = OpenPhysicalRead(absolutePath);
         return ResourcePacks.ReadSnapshot(physical);

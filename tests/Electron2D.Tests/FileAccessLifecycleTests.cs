@@ -25,6 +25,7 @@ internal static class FileAccessLifecycleTests
             VerifySnapshots(directory.FullName, project, user);
             VerifyMountedFileProtection(directory.FullName, project);
             VerifyPhysicalDirectoryRejection(project, user);
+            VerifyInvalidWriteParent(project, user);
             if (OperatingSystem.IsLinux())
                 VerifyLinkedSize(project);
             VerifyTransformed(project, user, other);
@@ -321,6 +322,34 @@ internal static class FileAccessLifecycleTests
                 "Rejected opens must leave the directory intact and empty.");
         }
         Console.WriteLine("Writable FileAccess factories and metadata setters reject physical directories.");
+    }
+
+    private static void VerifyInvalidWriteParent(string project, string user)
+    {
+        const string name = "existing-file";
+        var projectFile = IOPath.Combine(project, name);
+        var userFile = IOPath.Combine(user, name);
+        File.WriteAllBytes(projectFile, TextBytes);
+        File.WriteAllBytes(userFile, TextBytes);
+        var key = new byte[32];
+        foreach (var path in new[]
+        {
+            IOPath.Combine(projectFile, "child"),
+            "res://" + name + "/child",
+            "user://" + name + "/nested/child",
+        })
+        {
+            foreach (var mode in new[] { FileAccessModeFlags.Write, FileAccessModeFlags.WriteRead })
+            {
+                Reject<IOException>(() => EFile.Open(path, mode));
+                Reject<DirectoryNotFoundException>(() => EFile.OpenCompressed(path, mode, FileCompressionMode.Gzip));
+                Reject<DirectoryNotFoundException>(() => EFile.OpenEncrypted(path, mode, key));
+                Reject<DirectoryNotFoundException>(() => EFile.OpenEncryptedWithPassword(path, mode, "fixture password"));
+            }
+        }
+        Check(File.ReadAllBytes(projectFile).SequenceEqual(TextBytes) && File.ReadAllBytes(userFile).SequenceEqual(TextBytes),
+            "Rejected opens must preserve files that block the destination.");
+        Console.WriteLine("Writable FileAccess factories reject physical file ancestors at open.");
     }
 
     private static void VerifyTransformed(string project, string user, string other)

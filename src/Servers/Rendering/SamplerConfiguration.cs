@@ -62,11 +62,19 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
         UnnormalizedUVW = UnnormalizedUVW
     };
 
-    internal SDL.GPUSamplerCreateInfo Native(string driver, bool anisotropyAvailable = true)
+    internal SDL.GPUSamplerCreateInfo Native(string driver, bool anisotropyAvailable = true, bool anisotropicPointMIP = false)
     {
         if ((HasBorder || HasMirrorClamp || UnnormalizedUVW) && driver != "vulkan") throw new NotSupportedException("Extended addressing requires the native Vulkan sampler adapter.");
         if (LODBias != 0 && driver == "metal") throw new NotSupportedException("This backend requires shader-applied LOD bias.");
-        if (Anisotropic && !anisotropyAvailable) throw new NotSupportedException("Anisotropic filtering is unavailable on this GPU device.");
+        var anisotropic = Anisotropic;
+        if (driver == "direct3d12")
+        {
+            if (LODBias is < -16f or > 15.99f) throw new NotSupportedException("Sampler LOD bias exceeds the Direct3D 12 device limit.");
+            // SDL adds the anisotropic bit to the basic filter encoding without checking these Direct3D requirements.
+            anisotropic &= MinFilter == RenderingDevice.SamplerFilter.Linear && MagFilter == RenderingDevice.SamplerFilter.Linear &&
+                (MIPFilter == RenderingDevice.SamplerFilter.Linear || anisotropicPointMIP);
+        }
+        if (anisotropic && !anisotropyAvailable) throw new NotSupportedException("Anisotropic filtering is unavailable on this GPU device.");
         return new()
         {
             MinFilter = (SDL.GPUFilter)MinFilter,
@@ -78,7 +86,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
             MipLodBias = LODBias,
             MinLod = MinLOD,
             MaxLod = MaxLOD,
-            EnableAnisotropy = Anisotropic,
+            EnableAnisotropy = anisotropic,
             MaxAnisotropy = AnisotropyMax,
             EnableCompare = EnableCompare,
             CompareOp = (SDL.GPUCompareOp)((int)CompareOp + 1)
@@ -87,10 +95,31 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
 
     internal nint Create(nint device, string driver, bool anisotropyAvailable = true)
     {
-        var info = Native(driver, anisotropyAvailable);
+        var pointMIP = driver == "direct3d12" && Anisotropic && MinFilter == RenderingDevice.SamplerFilter.Linear &&
+            MagFilter == RenderingDevice.SamplerFilter.Linear && MIPFilter == RenderingDevice.SamplerFilter.Nearest && SupportsAnisotropicPointMIP(device);
+        var info = Native(driver, anisotropyAvailable, pointMIP);
         if (HasMirrorClamp && !SDL.GetBooleanProperty(SDL.GetGPUDeviceProperties(device), GPUDeviceFactory.MirrorClampProperty, false))
             throw new NotSupportedException("Mirror-clamp sampling is unavailable on this GPU device.");
         return driver == "vulkan" ? CreateNative(device, 1, in info, (uint)RepeatU, (uint)RepeatV, (uint)BorderColor, UnnormalizedUVW ? 1u : 0u) : SDL.CreateGPUSampler(device, in info);
+    }
+
+    private static unsafe bool SupportsAnisotropicPointMIP(nint device)
+    {
+        ulong logical;
+        try
+        {
+            if (RenderingDevice.QueryDriverResource(device, 1, (uint)RenderingDevice.DriverResource.LogicalDevice, 0, out logical) != 1 || logical == 0)
+                return false;
+        }
+        catch (EntryPointNotFoundException) { return false; }
+
+        // ID3D12Device::CheckFeatureSupport with D3D12_FEATURE_D3D12_OPTIONS19.
+        const uint options19 = 48;
+        const int anisoFilterWithPointMIPSupported = 5;
+        uint* options = stackalloc uint[10];
+        var methods = *(nint**)logical;
+        var check = (delegate* unmanaged[Stdcall]<nint, uint, uint*, uint, int>)methods[13];
+        return check((nint)logical, options19, options, 10 * sizeof(uint)) >= 0 && options[anisoFilterWithPointMIPSupported] != 0;
     }
 
     internal static RenderingDevice.SamplerBorderColor Border(RenderingDevice.SamplerBorderColor value) =>
