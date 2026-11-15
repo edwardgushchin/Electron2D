@@ -26,7 +26,7 @@ ARCHIVES = ("libElectron2D.a", "libFAudio.a", "libwebp.a", "libsharpyuv.a", "lib
 LIBRARIES = {
     "Linux": ("libElectron2D.so", "libFAudio.so.0", "libElectron2DFreeType.so", "libHarfBuzzSharp.so", "libcrypto.so.4", "libssl.so.4"),
     "MacOS": ("libElectron2D.dylib", "libFAudio.0.dylib", "libElectron2DCrypto.4.dylib", "libElectron2DSSL.4.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib"),
-    "Windows": ("libElectron2D.dll", "FAudio.dll", "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll"),
+    "Windows": ("libElectron2D.dll", "FAudio.dll", "libcrypto-4.dll", "libssl-4.dll", "freetype.dll", "harfbuzz.dll"),
     "Android": ("libElectron2D.so", "libFAudio.so", "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so"),
     "iOS": ARCHIVES, "tvOS": ARCHIVES,
     "Web": (*ARCHIVES, "libSDL3.a", "libSDL3_image.a", "libwebpmux.a"),
@@ -46,7 +46,7 @@ def required_exports(name):
                 "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"}
     if "Electron2DWebP" in name:
         return WEBP_EXPORTS
-    if "FreeType" in name:
+    if "freetype" in name.lower():
         return {"FT_Init_FreeType", "FT_New_Library", "FT_Add_Default_Modules", "FT_Set_Default_Properties",
                 "FT_Done_Library", "FT_New_Memory_Face", "FT_Load_Glyph", "e2d_ft_hb_memory", "e2d_ft_hb_version"}
     if "Crypto" in name or "crypto" in name:
@@ -68,9 +68,9 @@ def required_exports(name):
     if "ENet" in name:
         return {"e2d_enet_" + item for item in ("memory", "callbacks", "create", "destroy", "connect", "service", "flush",
                                              "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode", "e2d_file_zstd_encode", "e2d_file_zstd_decode"} | {"e2d_gzip_" + name for name in ("create", "process", "reset", "destroy")} | {"e2d_memory_" + name for name in ("abi", "allocate", "reallocate", "release", "snapshot", "lock", "unlock", "managed_locked", "snapshot_locked", "ownership_locked", "failure_locked", "malloc", "calloc", "realloc", "free", "functions", "failure_epoch")}
-    if "HarfBuzz" in name:
+    if "harfbuzz" in name.lower():
         exports = {"hb_shape", "hb_buffer_create", "hb_font_create", "hb_version_string"}
-        return exports | {"e2d_shaping_memory"} if "HarfBuzzSharp" in name else exports
+        return exports | {"e2d_shaping_memory"} if "HarfBuzzSharp" in name or name == "harfbuzz.dll" else exports
     if name == "libSDL3.a":
         return {"SDL_Init", "SDL_OpenAudioDeviceStream", "SDL_PutAudioStreamData"}
     if name == "libSDL3_image.a":
@@ -121,9 +121,9 @@ def windows_exports(path, rid, name):
         raise ValueError(f"Unbundled private DLL dependency: {path}: {imports - system - private}")
     if name == "FAudio.dll" and "sdl3.dll" not in imports:
         raise ValueError("FAudio must share the packaged SDL3 core")
-    if name == "libssl-4-Electron2D.dll" and "libcrypto-4-electron2d.dll" not in imports:
+    if name == "libssl-4.dll" and "libcrypto-4.dll" not in imports:
         raise ValueError("Private OpenSSL must resolve its own bundled crypto library")
-    if "FreeType" in name and imports & (private - {name.lower()}):
+    if "freetype" in name.lower() and imports & (private - {name.lower()}):
         raise ValueError("Private FreeType codecs and auto-hinting dependencies must be statically linked")
     return exports
 
@@ -162,6 +162,10 @@ def configuration():
     return {"version": props.findtext(".//Electron2DVersion"),
             "minimumEngineVersion": props.findtext(".//Electron2DVersion"),
             "sdlVersion": props.findtext(".//Electron2DSDLVersion")}
+
+
+def retired_windows_files():
+    return ET.parse(ROOT / "tools/native/WindowsNative.targets").find(".//_Electron2DLegacyWindowsFile").attrib["Include"].split(";")
 
 
 def source_hash():

@@ -322,7 +322,7 @@ endif()
                  patch.object(build_windows.shutil, "copy2") as copy:
                 build_windows.build("win-x64", root / "SDL3.dll", root / "artifacts")
             sources = [call.args[0] for call in copy.call_args_list]
-            self.assertEqual([path.name for path in sources], ["libElectron2D.dll", "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll", "FAudio.dll", "libHarfBuzzSharp.dll", "Electron2DFreeType.dll"])
+            self.assertEqual([path.name for path in sources], ["libElectron2D.dll", "libcrypto-4.dll", "libssl-4.dll", "FAudio.dll", "harfbuzz.dll", "freetype.dll"])
 
     def test_default_elf_symbol_versions_resolve_but_nondefault_versions_do_not(self):
         symbols = "0001 T BIO_s_dgram_pair@@OPENSSL_3.2.0\n0002 T ERR_get_error@@OPENSSL_3.0.0\n0003 T TLS_method@LEGACY\n0004 T e2d_audio_select_output\n"

@@ -75,6 +75,7 @@
   <ItemGroup>
     <None Include="tools/package-readme.md" Pack="true" PackagePath="README.md" />
     <None Include="tools/managed-runtime.targets" Pack="true" PackagePath="buildTransitive/Electron2D.targets" />
+    <None Include="tools/native/WindowsNative.targets" Pack="true" PackagePath="buildTransitive/" />
     <None Include="$(BrowserManagedAssetDirectory)/Electron2D.dll;$(BrowserManagedAssetDirectory)/Electron2D.xml" Pack="true" PackagePath="runtimes/browser-wasm/lib/net10.0/" Condition="'$(BrowserManagedAssetDirectory)' != ''" />
     <None Remove="licence/*" />
     <None Include="licence/*" Exclude="licence/ReferenceData-LICENSE.txt" Pack="true" PackagePath="licence/" CopyToPublishDirectory="Never" />
@@ -98,6 +99,7 @@
   </Target>
   <Import Project="tools/audio-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/engine-native.targets" />
+  <Import Project="tools/native/WindowsNative.targets" />
   <Import Project="tools/tls-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/font-native.targets" />
   <Import Project="tools/shaping-native.targets" />

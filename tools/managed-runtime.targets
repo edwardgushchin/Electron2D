@@ -1,4 +1,6 @@
 <Project>
+  <Import Project="WindowsNative.targets" Condition="Exists('$(MSBuildThisFileDirectory)WindowsNative.targets')" />
+  <Import Project="native/WindowsNative.targets" Condition="!Exists('$(MSBuildThisFileDirectory)WindowsNative.targets')" />
   <!-- The selected SDL platform dependency supplies Java/JNI without another managed binding. -->
   <Target Name="Electron2DAndroidSDLArchive" BeforeTargets="Electron2DAndroidSDLLayout" Condition="'$(TargetPlatformIdentifier)' == 'android'">
     <ItemGroup>
