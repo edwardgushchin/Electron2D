@@ -7,6 +7,7 @@ namespace Electron2D;
 /// Instances are created by <see cref="PackedScene.GetState"/>. A live state object tracks every content and path
 /// transition of its source resource, while retaining its final snapshot if that resource is later disposed.
 /// A returned file-backed view retains its resource graph and must be disposed when finished.
+/// Releasing the last lease disposes the resources owned by that graph.
 /// Each query can run concurrently and reads one published state. Successive queries may see different states.
 /// </remarks>
 public sealed class SceneState : ElectronObject

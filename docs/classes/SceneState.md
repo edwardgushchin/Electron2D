@@ -317,7 +317,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 A newly constructed `PackedScene` owns one empty live state. The same state object observes packed-data replacement, reset/copy, and resource-path changes. Disposing it makes that object terminal but does not affect the packed scene; the source creates a replacement on its next state access or update.
 
-Disposing the source packed scene does not dispose externally held states. Such a state stops receiving updates and remains a readable final snapshot until the caller disposes it. Disposing a state never disposes stored resource references.
+Disposing the source packed scene leaves externally held states readable as final snapshots. Disposing a file-backed state releases its lease. The last lease disposes the resources owned by the file graph, including any the caller borrowed through the state. Resources supplied by the caller keep their original ownership.
 
 ## Invariants and threading
 
@@ -329,7 +329,7 @@ Disposing the source packed scene does not dispose externally held states. Such 
 
 ## Dependencies and interactions
 
-`SceneState` depends on `ElectronObject`, the internal immutable packed-scene records, `Type`, and standard read-only collections. It refers to `PackedScene` and stored `Resource` values but owns neither. It has no `SceneTree`, SDL, renderer, loader/saver, editor, or native dependency.
+`SceneState` depends on `ElectronObject`, the internal immutable packed-scene records, `Type`, and standard read-only collections. It borrows the source `PackedScene` and stored `Resource` values and holds a lease when there is a file graph. It has no `SceneTree`, SDL, renderer, loader/saver, editor, or native dependency.
 
 ## Verification and limitations
 
