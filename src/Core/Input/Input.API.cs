@@ -220,18 +220,24 @@ public sealed partial class Input
     }
 
     /// <summary>Gets whether a logical key is currently held.</summary>
-    /// <param name="keycode">A non-modifier logical key code.</param>
+    /// <param name="keycode">The exact logical key code; modifier flags are not stripped.</param>
     /// <returns><see langword="true"/> when held.</returns>
+    /// <remarks>Non-echo events update the state before callbacks. Modifier keys are ordinary identities;
+    /// modifier properties do not create extra pressed keys. Key.None is never held. Callback errors do not roll back state.</remarks>
     public static bool IsKeyPressed(Key keycode) => Service.IsKeyPressedCore(keycode);
 
     /// <summary>Gets whether a physical key position is currently held.</summary>
-    /// <param name="keycode">A non-modifier physical key code.</param>
+    /// <param name="keycode">The exact physical key code; modifier flags are not stripped.</param>
     /// <returns><see langword="true"/> when held.</returns>
+    /// <remarks>Non-echo events update the state before callbacks. Modifier keys are ordinary identities;
+    /// modifier properties do not create extra pressed keys. Key.None is never held. Callback errors do not roll back state.</remarks>
     public static bool IsPhysicalKeyPressed(Key keycode) => Service.IsPhysicalKeyPressedCore(keycode);
 
     /// <summary>Gets whether a localized key label is currently held.</summary>
-    /// <param name="keycode">A non-modifier key label.</param>
+    /// <param name="keycode">The exact key label; modifier flags are not stripped.</param>
     /// <returns><see langword="true"/> when held.</returns>
+    /// <remarks>Non-echo events update the state before callbacks. Modifier keys are ordinary identities;
+    /// modifier properties do not create extra pressed keys. Key.None is never held. Callback errors do not roll back state.</remarks>
     public static bool IsKeyLabelPressed(Key keycode) => Service.IsKeyLabelPressedCore(keycode);
 
     /// <summary>Gets whether a non-wheel mouse button is currently held.</summary>

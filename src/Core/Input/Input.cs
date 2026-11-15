@@ -125,19 +125,19 @@ public sealed partial class Input : ElectronObject
     internal bool IsKeyPressedCore(Key keycode)
     {
         lock (_gate)
-            return _keysPressed.Contains(NormalizeKey(keycode));
+            return _keysPressed.Contains(keycode);
     }
 
     internal bool IsPhysicalKeyPressedCore(Key keycode)
     {
         lock (_gate)
-            return _physicalKeysPressed.Contains(NormalizeKey(keycode));
+            return _physicalKeysPressed.Contains(keycode);
     }
 
     internal bool IsKeyLabelPressedCore(Key keycode)
     {
         lock (_gate)
-            return _keyLabelsPressed.Contains(NormalizeKey(keycode));
+            return _keyLabelsPressed.Contains(keycode);
     }
 
     internal bool IsMouseButtonPressedCore(MouseButton button)
@@ -581,10 +581,10 @@ public sealed partial class Input : ElectronObject
 
         switch (@event)
         {
-            case InputEventKey key:
-                UpdateSet(_keysPressed, NormalizeKey(key.Keycode), key.IsPressed() && key.Keycode != Key.None);
-                UpdateSet(_physicalKeysPressed, NormalizeKey(key.PhysicalKeycode), key.IsPressed() && key.PhysicalKeycode != Key.None);
-                UpdateSet(_keyLabelsPressed, NormalizeKey(key.KeyLabel), key.IsPressed() && key.KeyLabel != Key.None);
+            case InputEventKey { Echo: false } key:
+                UpdateSet(_keysPressed, key.Keycode, key.IsPressed() && key.Keycode != Key.None);
+                UpdateSet(_physicalKeysPressed, key.PhysicalKeycode, key.IsPressed() && key.PhysicalKeycode != Key.None);
+                UpdateSet(_keyLabelsPressed, key.KeyLabel, key.IsPressed() && key.KeyLabel != Key.None);
                 break;
 
             case InputEventMouseButton mouseButton:
@@ -710,9 +710,6 @@ public sealed partial class Input : ElectronObject
         else
             set.Remove(key);
     }
-
-    private static Key NormalizeKey(Key keycode) =>
-        (Key)((int)keycode & (int)KeyModifierMask.CodeMask);
 
     private static MouseButtonMask ToMask(MouseButton button) => button switch
     {

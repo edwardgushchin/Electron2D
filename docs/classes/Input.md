@@ -33,6 +33,8 @@ Native pointer controls use the active `DisplayServer` for the current mouse mod
 
 The SDL controller host discovers mapped gamepads and raw joysticks, assigns stable logical IDs while connected, forwards typed button/axis events into the same action and scene path, and closes native handles on removal or display shutdown. `Input` owns lock-serialized metadata, mapping overrides and vibration requests; `DisplayServer` owns native handles. A removed device releases only its own pressed state and action contributions. [JoypadInfo](JoypadInfo.md) is the typed projection of platform information; Steam Input and XInput indices remain outside the current projection.
 
+Keyboard polling distinguishes exact logical, physical and localized-label identities. Echo events do not update held state. See [keyboard state queries](../components/input-runtime.md#keyboard-state-queries) for modifier, reset and verification semantics.
+
 ## Examples
 
 The following focused snippet uses the current public static API. Names not declared in the snippet are supplied by the surrounding application or callback context.
