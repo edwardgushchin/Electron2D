@@ -32,6 +32,12 @@ A zero additional scale is accepted. When visual-only is false it makes the logi
 
 Each viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Keyboard and gamepad navigation use InputMap actions, scoped focus searches and stored paths. See [the focus navigation contract](#findnextvalidfocus-findprevvalidfocus-findvalidfocusneighborside-side) and [Control coverage](../coverage/classes/Control.md) for the remaining GUI members.
 
+GUI target selection ranks canvas layers, then GUI roots in scene order, then children in reverse scene order. A TopLevel control starts an independent GUI root. Drawing Z, Y sorting and ShowBehindParent do not change input priority. Clipping tests the ancestor's local HasPoint override; TopLevel and neutral parent boundaries end clipping inheritance. The same selector supplies mouse, touch, gestures, hover and drag targets in each viewport.
+
+At the end of each process frame, after tweens and deferred layout, known pointer positions are hit-tested again. Geometry changes therefore update stationary hover on the next process frame. Hiding, removing or disposing a hovered control releases its chain while retaining the viewport pointer position for later targeting. An actual viewport pointer exit forgets that position.
+
+Cursor changes in an embedded viewport update its containing native window immediately. An Arrow result falls back through eligible canvas ancestors until a non-Arrow cursor, Stop or TopLevel boundary; each query receives that control's local pointer position. Cursor lookup reentry coalesces with hover refresh, and callback errors are reported after the selection attempt. Native Windows GPU/compatibility checks and managed routing/allocation checks are selected by `ELECTRON2D_TEST_CONTROL_TARGET`; the public consumer uses the same contracts.
+
 [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md) and [AspectRatioContainer](AspectRatioContainer.md) now consume the same bound minimum, fill/shrink flags and deferred Container fitting; the margin and aspect variants also use maximum propagation and RTL alignment respectively.
 
 ## Example

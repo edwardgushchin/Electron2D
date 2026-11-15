@@ -14,6 +14,8 @@
 
 # Display domain
 
+Standard cursor selection and custom-image restoration share the display-owned [cursor factory](../components/display-server.md). Windows retains native drag/drop/split equivalents and OS Help artwork; creation failures preserve the previous selection, and shutdown releases cached handles.
+
 [Project startup geometry](../components/window-runtime.md#project-startup-geometry) supplies the configured root's initial size and stretch policy. [Project startup placement](../components/window-runtime.md#project-startup-placement) adds the effective display selector and native mode. [Project startup window flags](../components/window-runtime.md#project-startup-window-flags) apply configurable decoration, resize, stacking and focus policies. [Project window transparency](../components/window-runtime.md#main-window-native-transparency) selects the native alpha surface and viewport clear policy.
 
 [Window content fitting](../components/window-runtime.md#fitting-child-controls) schedules a bounded layout refresh from runtime GUI changes for native and embedded windows.

@@ -339,6 +339,9 @@ public sealed partial class DisplayServer
     public static CursorShape CursorGetShape() => RequireService().CursorGetShapeCore();
 
     /// <summary>Selects a standard pointer shape from the native cursor theme.</summary>
+    /// <remarks>System cursors are created lazily and retained until display disposal. Windows uses native
+    /// move/arrow/no-drop and directional resize equivalents for drag/drop and split shapes; Help copies
+    /// the Windows help artwork into an owned SDL cursor.</remarks>
     /// <param name="shape">Shape to apply.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="shape"/> is unknown.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

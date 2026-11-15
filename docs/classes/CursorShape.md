@@ -11,6 +11,8 @@ Last updated: 2026-10-02
 
 Identifies standard pointer shapes for controls, input defaults and the native display. Used by [Control](Control.md), [Input](Input.md), and [DisplayServer](DisplayServer.md). `Max` is a count marker and is rejected as a selected shape.
 
+Windows uses its native move shape for Drag, arrow for CanDrop, no-drop for Forbidden, and directional resize shapes for splits. Help retains the Windows help artwork and hotspot through an owned SDL cursor. Standard cursors are cached for the display lifetime; clearing a custom slot restores the same standard factory. Other platform mappings retain separate native qualification.
+
 ## Values
 
 | Value | Meaning |

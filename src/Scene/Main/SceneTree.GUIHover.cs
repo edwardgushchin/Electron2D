@@ -28,7 +28,11 @@ public sealed partial class SceneTree
         ReleaseGUITouchFocus(control);
         if (ReferenceEquals(control, _gui.TooltipControl) || ReferenceEquals(control, _gui.TooltipOwner)) CancelTooltip();
         if (!_gui.GuiHoverChain.Contains(control)) return;
-        ClearGUIHover();
+        if (_gui.UpdatingGUIHover) { _gui.GuiHoverRefreshPending = true; return; }
+        List<Exception>? errors = null;
+        ChangeGUIHover(null, null, ref errors);
+        ApplyGUICursor(ref errors);
+        ThrowCollected("GUI hover release callbacks failed.", errors);
     }
 
     internal void ClearGUIHover()
@@ -180,38 +184,39 @@ public sealed partial class SceneTree
 
     private void ApplyGUICursor(ref List<Exception>? errors)
     {
+        using var scope = SelectGUI(_gui.Section?.Viewport);
         if (_gui.GuiHoverViewport is not Window || DisplayServer.Service is not { } display) return;
-        var shape = Input.Service.DefaultCursorShape;
-        if (_gui.Section.GuiDragPayload is not null)
-            shape = _gui.Section.GuiDragPossible ? CursorShape.CanDrop : CursorShape.Forbidden;
-        else if (_gui.GuiHoverKnown && _gui.GuiHoverChain.Count != 0)
-        {
-            shape = CursorShape.Arrow;
-            if (_gui.Viewport is { } viewport && MouseTargetControl(viewport) is { } nested && !ReferenceEquals(nested.GetViewport(), viewport))
-            {
-                try { shape = nested.GetCursorShape(nested.MakeCanvasPositionLocal(PointInViewport(viewport, nested.GetViewport()!, _gui.GuiHoverPosition))); }
-                catch (Exception error) { CollectException(ref errors, error); }
-                try { if (display.CursorGetShapeCore() != shape) display.CursorSetShapeCore(shape); } catch (Exception error) { CollectException(ref errors, error); }
-                return;
-            }
-            for (var index = _gui.GuiHoverChain.Count - 1; index >= 0; index--)
-            {
-                var control = _gui.GuiHoverChain[index];
-                if (control.IsDisposed || !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree) continue;
-                try
-                {
-                    var local = control.MakeCanvasPositionLocal(_gui.GuiHoverPosition);
-                    shape = control.GetCursorShape(local);
-                    if (shape != CursorShape.Arrow || control.EffectiveMouseFilter == MouseFilter.Stop) break;
-                }
-                catch (Exception error) { CollectException(ref errors, error); }
-            }
-        }
+        if (_gui.UpdatingGUICursor) { _gui.GuiHoverRefreshPending = true; return; }
+        _gui.UpdatingGUICursor = true;
         try
         {
-            if (display.CursorGetShapeCore() != shape)
-                display.CursorSetShapeCore(shape);
+            var shape = Input.Service.DefaultCursorShape;
+            if (_gui.Section!.GuiDragPayload is not null)
+                shape = _gui.Section.GuiDragPossible ? CursorShape.CanDrop : CursorShape.Forbidden;
+            else if (_gui.GuiHoverKnown && _gui.GuiHoverChain.Count != 0)
+            {
+                shape = CursorShape.Arrow;
+                var target = MouseTargetControl(_gui.Viewport!) ?? _gui.GuiHoverTarget;
+                for (CanvasItem? item = target; item is not null; item = item.GetParentItem())
+                {
+                    if (item is not Control control) continue;
+                    if (control.IsDisposed || !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree) continue;
+                    try
+                    {
+                        var local = control.MakeCanvasPositionLocal(PointInViewport(_gui.Viewport!, control.GetViewport()!, _gui.GuiHoverPosition));
+                        shape = control.HasLocalPoint(local) ? control.GetCursorShape(local) : CursorShape.Arrow;
+                        if (shape != CursorShape.Arrow || control.EffectiveMouseFilter == MouseFilter.Stop) break;
+                    }
+                    catch (Exception error) { CollectException(ref errors, error); }
+                }
+            }
+            try
+            {
+                if (display.CursorGetShapeCore() != shape)
+                    display.CursorSetShapeCore(shape);
+            }
+            catch (Exception error) { CollectException(ref errors, error); }
         }
-        catch (Exception error) { CollectException(ref errors, error); }
+        finally { _gui.UpdatingGUICursor = false; }
     }
 }

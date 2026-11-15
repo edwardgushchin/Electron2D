@@ -65,7 +65,11 @@ The component reads typed versioned action records from `ProjectSettings` only d
 
 ## Current implementation status and exclusions
 
-`Control.ClipContents` now excludes pointer targets outside any direct canvas ancestor's local rectangle and refreshes hover when toggled. It does not alter a pressed control's normal outside-release capture. [ControlClipTests](../../tests/Electron2D.Tests/ControlClipTests.cs) verifies the root viewport path; nested viewport routing remains separate.
+The shared GUI target selector uses canvas layers and reverse scene order within ordered GUI roots, independently of drawing Z/Y order. TopLevel creates an independent root and ends clipping/bubbling inheritance. Clipping invokes the ancestor's local HasPoint contract. Mouse, touch, gestures, hover and drag use this selector in their own viewport.
+
+Process-frame completion reevaluates known pointer positions after tweens and deferred layout. Embedded cursor queries use the containing window's coordinates converted separately for each eligible ancestor; property changes update that native cursor immediately. Reentrant cursor lookup queues another hover refresh instead of recursing. Native system-cursor caching and Windows artwork ownership follow [the display adapter](display-server.md).
+
+`Control.ClipContents` excludes pointer targets outside any direct canvas ancestor's local HasPoint result, which defaults to its rectangle, and refreshes hover when toggled. It does not alter a pressed control's normal outside-release capture. [ControlClipTests](../../tests/Electron2D.Tests/ControlClipTests.cs) and the public ControlTargetContracts verify ordinary, custom-shape and TopLevel clipping; nested input and cursor geometry also execute in the native profile.
 
 Wheel events hit-test independently and never claim mouse-button capture; their momentary press therefore cannot redirect a later click. Touch-style left-button presses and motion can reach a ScrollContainer above a stopping child without delivering the event to intervening controls. After the configured deadzone, the container sends scroll-begin notification through its subtree so BaseButton cancels a pending press. [ScrollBarTests](../../tests/Electron2D.Tests/ScrollBarTests.cs) and [ScrollContainerTests](../../tests/Electron2D.Tests/ScrollContainerTests.cs) cover both routing paths. Native source touch emulation still follows the existing Input and DisplayServer policies.
 

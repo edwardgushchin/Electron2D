@@ -4,6 +4,7 @@ internal static class ControlInputTests
 {
     internal static void Run()
     {
+        ControlTargetContracts.Run();
         SignalBeforeNative();
         var root = new TestViewport();
         var parent = new Control { Name = "parent", Position = new(10, 10), Size = new(60, 50) };
@@ -83,7 +84,7 @@ internal static class ControlInputTests
         overlay.GUIInput += _ => order.Add("overlay");
         using var topPress = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Position = new(17, 18) };
         root.PushInput(topPress, inLocalCoordinates: true);
-        Check(order.SequenceEqual(["input", "overlay"]), "Higher Z control wins hit testing.");
+        Check(order.SequenceEqual(["input", "overlay"]), "Later sibling control wins hit testing.");
 
         overlay.MouseFilter = MouseFilter.Ignore;
         child.Visible = true;

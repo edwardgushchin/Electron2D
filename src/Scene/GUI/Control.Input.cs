@@ -76,6 +76,7 @@ public partial class Control
     private EventPublisher<Action> _publisherMouseExited;
 
     /// <summary>Gets or sets how pointer input reaches this control.</summary>
+    /// <remarks>GUI targets follow canvas layer and scene order independently of drawing Z and Y sorting.</remarks>
     /// <value><see cref="MouseFilter.Stop"/> by default.</value>
     public MouseFilter MouseFilter
     {
