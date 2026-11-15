@@ -66,6 +66,8 @@ The anisotropy flag and a maximum above one request anisotropy. Vulkan requires 
 
 Integer sampled-image bindings require nearest min, mag and mip filters and reject a request for anisotropy above one. Comparison bindings require an enabled comparison sampler and a depth image. Samplerless fetch and query operations bypass filtering. Device RIDs own native sampler lifetime. A uniform set borrows its sampler RID and becomes invalid when that RID retires. High-level canvas, particle and blit bindings use a separate value cache.
 
+The `ELECTRON2D_TEST_DEVICE_SAMPLERS=lod` profile samples a color-coded mip chain through a sampler RID in a fragment shader. It checks positive and negative bias and isotropic and anisotropic mip selection on Vulkan and Direct3D 12. On Direct3D 12, the Windows SDK [driver-resource fixture](../../tests/Electron2D.Tests/Fixtures/DriverResources/d3d12.cpp) queries OPTIONS19 on the live device. The test uses that result to select the expected nearest-mip pixel.
+
 ## Sampled component views
 
 `RDTextureView.SwizzleR/G/B/A` select R, G, B, A, Identity, Zero or One for each sampled output channel. `TextureCreate` captures them before returning; later description mutation/disposal changes no existing image. Constants are numeric zero/one for floating, signed and unsigned sampling. Format expansion, sRGB decoding and filtering precede mapping. Fetch maps its result; gather selects the requested mapped component. Depth comparison produces its comparison value before mapping the depth result's `(D, 0, 0, 1)` components. Size, level and LOD queries remain independent of the map.
