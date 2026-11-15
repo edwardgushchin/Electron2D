@@ -602,6 +602,30 @@ def choose(godot_type, member, candidates, used):
     return []
 
 
+def render_current_audit(text, summary):
+    before, heading, current = text.partition("## Current audit state\n")
+    if not heading:
+        raise ValueError("Missing Current audit state heading")
+    current, separator, after = current.partition("\n## ")
+    states = summary["states"]
+    applicable = sum(count for state, count in states.items() if state != "Excluded")
+    implemented = states.get("Implemented", 0)
+    percent = 100 * implemented / applicable if applicable else 0
+    replacements = [
+        (r"The pinned inventory contains [\d,]+ upstream classes and [\d,]+ declared members",
+         f"The pinned inventory contains {summary['upstream_types']:,} upstream classes and {summary['upstream_members']:,} declared members"),
+        (r"contains [\d,]+ public or protected declarations\. Of those, [\d,]+ pair with at least one upstream row and [\d,]+ are",
+         f"contains {summary['electron2d_declarations']:,} public or protected declarations. Of those, {summary['mapped_engine']:,} pair with at least one upstream row and {summary['reviewed_extras']:,} are"),
+        (r"The current classification has [\d,]+ `Implemented` rows out of [\d,]+ applicable rows \([\d.]+%\), with [\d,]+ `Partial`, [\d,]+ `Unimplemented`, [\d,]+ `Blocked` and [\d,]+ `Excluded`\.(?: There are [\d,]+ unmapped Electron2D declarations\.)?",
+         f"The current classification has {implemented:,} `Implemented` rows out of {applicable:,} applicable rows ({percent:.2f}%), with {states.get('Partial', 0):,} `Partial`, {states.get('Unimplemented', 0):,} `Unimplemented`, {states.get('Blocked', 0):,} `Blocked` and {states.get('Excluded', 0):,} `Excluded`. There are {summary['unmapped_engine']:,} unmapped Electron2D declarations."),
+    ]
+    for pattern, replacement in replacements:
+        current, count = re.subn(pattern, replacement, current)
+        if count != 1:
+            raise ValueError(f"Expected one current audit field: {pattern}")
+    return before + heading + current + separator + after
+
+
 def render():
     upstream = json.loads(UPSTREAM.read_text())
     engine = json.loads(ENGINE.read_text())
@@ -932,6 +956,8 @@ def render():
                "electron2d_declarations": len(engine), "mapped_engine": len(used_engine), "reviewed_extras": len(manual_extras),
                "unmapped_engine": len(engine_only) - len(manual_extras),
                "states": dict(sorted(counts.items()))}
+    index = COVERAGE / "index.md"
+    page_text[index] = render_current_audit(index.read_text(), summary)
     return page_text, summary
 
 
