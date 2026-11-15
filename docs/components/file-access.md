@@ -52,6 +52,20 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Callers synchronize compound operations such as seek followed by read, or a write followed by a retry on the same pipe.
 - The component is blocking and allocating, never a real-time hot-path service.
 
+## File ownership and snapshots
+
+`Open` captures the resolved file identity and returns a stream owner. An existing physical read handle can finish reading its original file after a save-and-swap replacement. An open mounted reader retains its selected PCK or ZIP entry when another pack is mounted. `Path` preserves the caller's string and `AbsolutePath` reports the resolved native path, normalized mounted path, or save-and-swap staging path.
+
+The static existence, size, text and digest queries each resolve the current path independently. A mounted directory or file ancestor masks physical fallback. `GetSize` reports the encoded container size for compressed or encrypted files, and the digest methods hash those same raw byte streams. `GetFileAsString` returns a strict UTF-8 snapshot that preserves BOM, NUL and CR. Independent calls can observe different versions after replacement.
+
+Writable opens and static metadata operations check mounted files, directories, and file ancestors against one mount snapshot. Replacing a mounted file with a directory keeps any physical file at that path masked. The lifecycle regression checks physical bytes, timestamps returned through the virtual path, Windows hidden/read-only attributes, Linux Unix mode bits, and extended attributes on Windows and Linux. Mounted file metadata queries return the [documented defaults](../classes/FileAccess.md#verification-and-known-limits); extended attribute operations reject mounted files.
+
+Writes through `res://` reject descendants of mounted directories, including explicit empty ZIP directories and directories derived from mounted files. The same protection applies to mutating file attributes, Unix permissions, and extended attributes. Reads still resolve physical entries below mounted directories when no mounted entry masks the file.
+
+Writable opens and the hidden, read-only, and Unix permission setters reject physical directories after resolving the mount. A writable path ending in a directory separator is rejected at open even if the directory does not exist. In `Write` and `WriteRead`, transformed factories reject paths through a physical file before returning an owner. If a parent is missing, a dirty transformed write still reports the error when it tries to publish. Extended attribute operations require an existing file.
+
+Transformed `ReadWrite` reads and later commits at the same captured physical destination. A failed atomic replacement leaves the previous file in place and permits a `Flush` retry. A failing `Close` still retires the stream and releases buffers. `CreateTemp` defaults to `ReadWrite` and deletes its file at close or disposal unless `keep` is true.
+
 ## Directory enumeration
 
 An open [DirAccess](../classes/DirAccess.md) holds its captured physical root. Resource accessors also see the live PCK/ZIP overlay while that root is the configured project root. Mounted entries take precedence at an exact-name collision. A mounted file masks a physical directory and its descendants. A mounted directory masks a physical file. Explicit ZIP directories appear even when empty. Physical absolute paths and `user://` use the filesystem.
@@ -91,6 +105,8 @@ Implemented for raw access, scoped directory navigation/enumeration/mutation, di
 FastLZ and Zstandard reuse the unchanged, accepted native dependencies via two private file-codec exports, without an ENet host or socket. The matching source-built native bundle is required; older published bundles lack this ABI. `Electron2DNativeLibrary` explicitly selects the target bridge and is copied after package assets for repository consumers. Native compression uses 64 KiB blocks, a compressed-length prefix and SHA-256 checksum; the decoder validates record structure before allocation and checks exact output and padding. BCL decoders consume only the declared decoded length and reject surplus output. The outer E2DCMP version-1 envelope and atomic whole-file commit remain unchanged. Compression is not authentication. Sparse/delta exported pack formats and arbitrary named `pipe://` connections retain their export-decoder/named-pipe dependencies. Ordinary PCK/ZIP mounts now share resource reads, hashes, transformed streams and directory lookup. Registered UID identities/imported resources use their existing loader/registry paths. OS-created process pipes now execute through the existing FileAccess methods; registered resources and UID paths retain their current loader/registry boundaries. Exact Android storage-volume discovery requires its future host integration. Universal-value storage and shared numeric/thread-local error slots are permanent typed-C# exclusions. No empty compatibility methods exist for these gaps.
 
 ## Verification
+
+[`FileAccessLifecycleTests`](../../tests/Electron2D.Tests/FileAccessLifecycleTests.cs) uses public APIs to check the physical, project, user, PCK and ZIP paths against fixed UTF-8 and digest vectors. It also exercises pack replacement, root capture, password and raw-key ownership, repeated close, temporary files and Windows sharing failures that preserve the previous encrypted file.
 
 [`FileTextTests`](../../tests/Electron2D.Tests/FileTextTests.cs) compares exact wire bytes and cursor/EOF transitions, including a fresh reader process and directory-backed and Gzip-backed files. [`OSProcessTests`](../../tests/Electron2D.Tests/OSProcessTests.cs) checks live pipe framing and verifies the SHA-256 of a Pascal frame delivered by partial-write retries.
 

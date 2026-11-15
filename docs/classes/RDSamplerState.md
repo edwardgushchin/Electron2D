@@ -1,6 +1,6 @@
 # RDSamplerState
 
-Last updated: 2026-10-29
+Last updated: 2026-11-15
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDSamplerState`. **Component:** [Local device](../components/local-compute.md#depthstencil-graphics-and-sampling). **Source:** [RDSamplerState.cs](../../src/Servers/Rendering/Device/RDSamplerState.cs).
 
@@ -10,7 +10,9 @@ Last updated: 2026-10-29
 
 Describes filtering, normalized or texel-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.
 
-The current profile supports repeat, mirrored repeat, clamp-to-edge, native Vulkan clamp-to-border and negotiated [mirror-clamp](../components/sampler-mirror-clamp.md). Unsupported native capabilities fail during creation. Integer image sampling requires nearest filters without effective anisotropy; a maximum of one disables anisotropy. Nonzero LOD bias fails on a backend that cannot apply it.
+The current profile supports repeat, mirrored repeat, clamp-to-edge, native Vulkan clamp-to-border and negotiated [mirror-clamp](../components/sampler-mirror-clamp.md). Integer images require nearest filters and no requested anisotropy above one. Depth comparison requires a depth-compatible comparison binding. See [filtering and LOD](../components/local-compute.md#sampler-filtering-and-lod) for backend limits.
+
+The eight filtering, LOD and anisotropy properties have typed, writable descriptors with the same revert values as a fresh instance. Sampler creation and shader binding capture these values. The caller can subsequently edit or dispose the description. A device sampler belongs to the creating device, and freeing its RID invalidates dependent uniform sets.
 
 `BorderColor` selects one of six predefined [floating-point or integer colors](RenderingDevice.SamplerBorderColor.md), initially FloatOpaqueBlack. It is copied with the rest of the configuration, appears in typed property descriptors and is ignored when neither axis uses ClampToBorder. The color scalar class must match the sampled image. See [native border sampling](../components/sampler-borders.md).
 
@@ -72,7 +74,7 @@ public System.Single AnisotropyMax { get; set; }
 
 Gets or sets the anisotropic filtering limit from one through sixteen.
 
-Initially 1; copied when a device sampler or shader binding is configured.
+Initially 1, which disables anisotropy. Direct3D 12 uses the integer part of a supported limit.
 
 <a id="member-d2dcf21fc847"></a>
 ### CompareOp
@@ -105,7 +107,7 @@ public System.Single LODBias { get; set; }
 
 Gets or sets the bias added to the implicit mip selection.
 
-Initially 0; copied when a device sampler or shader binding is configured.
+Initially 0. Must be finite and within the native backend's bias range when creating the sampler.
 
 <a id="member-116efb58d0d5"></a>
 ### MagFilter
@@ -127,7 +129,7 @@ public System.Single MaxLOD { get; set; }
 
 Gets or sets the maximum mip level used for sampling.
 
-Initially 1e20f; copied when a device sampler or shader binding is configured.
+Initially 1e20f. When captured, the finite interval must satisfy `0 <= MinLOD <= MaxLOD`.
 
 <a id="member-642eaeb354fb"></a>
 ### MinFilter
@@ -149,7 +151,7 @@ public System.Single MinLOD { get; set; }
 
 Gets or sets the minimum mip level, with zero identifying the base level.
 
-Initially 0; copied when a device sampler or shader binding is configured.
+Initially 0. When captured, the finite interval must satisfy `0 <= MinLOD <= MaxLOD`.
 
 <a id="member-a549b7947f32"></a>
 ### MIPFilter

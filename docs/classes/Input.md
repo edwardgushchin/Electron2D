@@ -81,7 +81,7 @@ if (Input.IsActionPressed("jump"))
 | [`public static bool IsAnythingPressed()`](#m-electron2d-input-isanythingpressed) | Gets whether any key, mouse button, controller button, or action is currently pressed. |
 | [`public static bool IsActionPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionpressed-system-string-system-boolean) | Gets whether an action is currently pressed. |
 | [`public static bool IsActionJustPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressed-system-string-system-boolean) | Gets whether an action transitioned from released to pressed since the current callback lane last completed. |
-| [`public static bool IsActionJustReleased(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleased-system-string-system-boolean) | Gets whether an action transitioned from pressed to released since the current callback lane last completed. |
+| [`public static bool IsActionJustReleased(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleased-system-string-system-boolean) | Gets whether a release was recorded since the current callback lane last completed. |
 | [`public static bool IsActionJustPressedByEvent(string action, InputEvent event, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressedbyevent-system-string-electron2d-inputevent-system-boolean) | Gets whether a specific event caused the action's current just-pressed transition. |
 | [`public static bool IsActionJustReleasedByEvent(string action, InputEvent event, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleasedbyevent-system-string-electron2d-inputevent-system-boolean) | Gets whether a specific event caused the action's current just-released transition. |
 | [`public static float GetActionStrength(string action, bool exactMatch = false)`](#m-electron2d-input-getactionstrength-system-string-system-boolean) | Gets an action's deadzone-adjusted strength. |
@@ -89,8 +89,8 @@ if (Input.IsActionPressed("jump"))
 | [`public static float GetAxis(string negativeAction, string positiveAction)`](#m-electron2d-input-getaxis-system-string-system-string) | Combines a negative and positive action into one signed axis. |
 | [`public static Vector2 GetVector(string negativeX, string positiveX, string negativeY, string positiveY, float deadzone = -1f)`](#m-electron2d-input-getvector-system-string-system-string-system-string-system-string-system-single) | Combines four actions into a circularly deadzoned two-dimensional input vector. |
 | [`public static void ActionPress(string action, float strength = 1f)`](#m-electron2d-input-actionpress-system-string-system-single) | Presses a registered action without producing an input event. |
-| [`public static void ActionRelease(string action)`](#m-electron2d-input-actionrelease-system-string) | Releases the synthetic source of a registered action without producing an input event. |
-| [`public static void FlushBufferedEvents()`](#m-electron2d-input-flushbufferedevents) | Delivers native pointer motion buffered by the display adapter. |
+| [`public static void ActionRelease(string action)`](#m-electron2d-input-actionrelease-system-string) | Clears a registered action's manual and parsed contributions without producing an input event. |
+| [`public static void FlushBufferedEvents()`](#m-electron2d-input-flushbufferedevents) | Delivers pending native mouse motion and pumps MIDI input. |
 | [`public static void ParseInputEvent(InputEvent event)`](#m-electron2d-input-parseinputevent-electron2d-inputevent) | Submits one typed input event, updates state, and synchronously routes it to the active main loop. |
 | [`public static void ReleasePressedEvents()`](#m-electron2d-input-releasepressedevents) | Releases every tracked key, mouse button, controller button, axis, and action source. |
 | [`public static CursorShape GetCurrentCursorShape()`](#m-electron2d-input-getcurrentcursorshape) | Gets the shape selected on the active display. |
@@ -346,7 +346,7 @@ Gets whether an action is currently pressed.
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether only contributions with exact modifiers or analog direction are considered.
+- `exactMatch`: Whether to use exact action matching for the current state.
 
 **Returns:** `true` when at least one matching source is pressed.
 
@@ -364,7 +364,7 @@ Gets whether an action transitioned from released to pressed since the current c
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether the transition must have been caused by an exact match.
+- `exactMatch`: Whether the action's current match must be exact.
 
 **Returns:** `true` during the current process and physics transition windows.
 
@@ -377,12 +377,12 @@ Gets whether an action transitioned from released to pressed since the current c
 <a id="m-electron2d-input-isactionjustreleased-system-string-system-boolean"></a>
 ### `public static bool IsActionJustReleased(string action, bool exactMatch = false)`
 
-Gets whether an action transitioned from pressed to released since the current callback lane last completed.
+Gets whether a release was recorded since the current callback lane last completed. Calling `ActionRelease` can record another release for an already released action.
 
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether only exact-match state is considered.
+- `exactMatch`: Whether the action's current match must be exact.
 
 **Returns:** `true` during the current process and physics transition windows.
 
@@ -401,7 +401,7 @@ Gets whether a specific event caused the action's current just-pressed transitio
 
 - `action`: The registered, case-sensitive action name.
 - `event`: The event reference previously submitted to [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent).
-- `exactMatch`: Whether the event must have matched exactly.
+- `exactMatch`: Whether the action's current match must be exact.
 
 **Returns:** `true` when the current transition was caused by `event`.
 
@@ -421,7 +421,7 @@ Gets whether a specific event caused the action's current just-released transiti
 
 - `action`: The registered, case-sensitive action name.
 - `event`: The event reference previously submitted to [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent).
-- `exactMatch`: Whether the event must have matched exactly.
+- `exactMatch`: Whether the action's current match must be exact.
 
 **Returns:** `true` when the current transition was caused by `event`.
 
@@ -440,7 +440,7 @@ Gets an action's deadzone-adjusted strength.
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether only exact contributions are considered.
+- `exactMatch`: Whether to use exact action matching for the current state.
 
 **Returns:** The greatest matching strength from zero through one.
 
@@ -458,9 +458,9 @@ Gets an action's strength before deadzone remapping.
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether only exact contributions are considered.
+- `exactMatch`: Whether to use exact action matching for the current state.
 
-**Returns:** The greatest matching raw strength from zero through one.
+**Returns:** The greatest matching raw strength. A programmatically submitted axis magnitude can exceed one.
 
 **Exceptions**
 
@@ -525,12 +525,12 @@ Presses a registered action without producing an input event.
 - `ArgumentOutOfRangeException`: `strength` is NaN or infinite.
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
-**Remarks:** A zero-strength source is still pressed but contributes zero analog strength. Call [`Input.ActionRelease(String)`](Input.md#m-electron2d-input-actionrelease-system-string) to remove it.
+**Remarks:** A zero-strength manual source still counts as pressed. A parsed event that reports an action release clears the manual contribution. A virtual control has its own contribution and retires it independently.
 
 <a id="m-electron2d-input-actionrelease-system-string"></a>
 ### `public static void ActionRelease(string action)`
 
-Releases the synthetic source of a registered action without producing an input event.
+Clears a registered action's manual and parsed contributions without producing an input event.
 
 **Parameters**
 
@@ -542,12 +542,12 @@ Releases the synthetic source of a registered action without producing an input 
 - `ArgumentNullException`: `action` is `null`.
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
+Raw device state and virtual control contributions survive a public release. If the action has no remaining virtual hold, the release is visible in both callback lanes and has no originating event.
+
 <a id="m-electron2d-input-flushbufferedevents"></a>
 ### `public static void FlushBufferedEvents()`
 
-Delivers pointer motion currently accumulated by the native display adapter, in event order, on the caller thread.
-This is a no-op if no native host is active or its pending batch contains no motion. A native host can reject calls
-outside its owner thread or while pumping events.
+Delivers pending native mouse motion, then pumps the active MIDI input session. Calls from inside input delivery and calls that cannot dispatch on the active loop or display owner throw `InvalidOperationException` before draining input.
 
 <a id="m-electron2d-input-parseinputevent-electron2d-inputevent"></a>
 ### `public static void ParseInputEvent(InputEvent event)`
@@ -739,6 +739,8 @@ Each process/physics callback sees its own transition latch. That lane clears in
 ## Threading and invariants
 
 State/configuration queries are lock-serialized. Event parsing is serialized and callback delivery runs on the caller thread; an active MainLoop therefore requires its owner thread and rejects calls made inside another loop callback. Returned value snapshots need no lifetime management. The warmed non-emulated mapped parse/traversal path is allocation-free; native pointer and controller adapters create short-lived typed event resources. A warmed dummy and Wayland virtual-button probe measured 28,672 managed bytes for 128 active native events (224 each) and zero for 128 idle event pumps; native driver allocations were not measured. The active native path remains an ADR 0014 allocation gap.
+
+For the interaction of raw strength, deadzone, exact matching, event identity and native accumulation, see [action state and delivery](../components/input-runtime.md#action-state-and-delivery).
 
 ## Dependencies, verification, and limitations
 

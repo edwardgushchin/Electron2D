@@ -2315,13 +2315,13 @@
       "godot": "RenderingDevice::method:texture_get_data(RID:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureGetData(Electron2D.RID,System.UInt32,System.Span<System.Byte>)",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. ADR 0028: single-sample depth/stencil creation, update, rectangular/self copy and synchronous/queued readback now execute native aspects with portable encoded bytes, selected views, exact format gates and SDL resource/allocation pins. DepthTransfers.Consumer checks five formats, GPU sampling/stencil tests, snapshots/lifetime, errors and prepared zero owner managed bytes on Linux/Vulkan. MS raw sample transfers, depth resolve and complete platform/native-heap acceptance remain separate. See docs/components/depth-texture-transfers.md."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. ADR 0028: single-sample depth/stencil creation, update, rectangular/self copy and synchronous/queued readback now execute native aspects with portable encoded bytes, selected views, exact format gates and SDL resource/allocation pins. DepthTransfers.Consumer checks five formats, GPU sampling/stencil tests, snapshots/lifetime, errors and prepared zero owner managed bytes on Linux/Vulkan. MS raw sample transfers, depth resolve and complete platform/native-heap acceptance remain separate. See docs/components/depth-texture-transfers.md. Direct3D 12 BC3 uses aligned block-row downloads and returns tight encoded mip/layer data through both synchronous and queued overloads. See docs/components/image-bcn.md."
     },
     {
       "godot": "RenderingDevice::method:texture_get_data_async(RID:,int:,Callable:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureGetDataAsync(Electron2D.RID,System.UInt32,System.Memory<System.Byte>,System.Action)",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. ADR 0028: single-sample depth/stencil creation, update, rectangular/self copy and synchronous/queued readback now execute native aspects with portable encoded bytes, selected views, exact format gates and SDL resource/allocation pins. DepthTransfers.Consumer checks five formats, GPU sampling/stencil tests, snapshots/lifetime, errors and prepared zero owner managed bytes on Linux/Vulkan. MS raw sample transfers, depth resolve and complete platform/native-heap acceptance remain separate. See docs/components/depth-texture-transfers.md."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. ADR 0028: single-sample depth/stencil creation, update, rectangular/self copy and synchronous/queued readback now execute native aspects with portable encoded bytes, selected views, exact format gates and SDL resource/allocation pins. DepthTransfers.Consumer checks five formats, GPU sampling/stencil tests, snapshots/lifetime, errors and prepared zero owner managed bytes on Linux/Vulkan. MS raw sample transfers, depth resolve and complete platform/native-heap acceptance remain separate. See docs/components/depth-texture-transfers.md. Direct3D 12 BC3 uses aligned block-row downloads and returns tight encoded mip/layer data through both synchronous and queued overloads. See docs/components/image-bcn.md."
     },
     {
       "godot": "RenderingDevice::method:texture_update(RID:,int:,PackedByteArray:)",
@@ -3238,13 +3238,13 @@
       "godot": "RenderingDevice::method:texture_get_data(RID:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureGetData(Electron2D.RID,System.UInt32)",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. ADR 0028: single-sample depth/stencil creation, update, rectangular/self copy and synchronous/queued readback now execute native aspects with portable encoded bytes, selected views, exact format gates and SDL resource/allocation pins. DepthTransfers.Consumer checks five formats, GPU sampling/stencil tests, snapshots/lifetime, errors and prepared zero owner managed bytes on Linux/Vulkan. MS raw sample transfers, depth resolve and complete platform/native-heap acceptance remain separate. See docs/components/depth-texture-transfers.md."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. ADR 0028: single-sample depth/stencil creation, update, rectangular/self copy and synchronous/queued readback now execute native aspects with portable encoded bytes, selected views, exact format gates and SDL resource/allocation pins. DepthTransfers.Consumer checks five formats, GPU sampling/stencil tests, snapshots/lifetime, errors and prepared zero owner managed bytes on Linux/Vulkan. MS raw sample transfers, depth resolve and complete platform/native-heap acceptance remain separate. See docs/components/depth-texture-transfers.md. Direct3D 12 BC3 uses aligned block-row downloads and returns tight encoded mip/layer data through both synchronous and queued overloads. See docs/components/image-bcn.md."
     },
     {
       "godot": "RenderingDevice::method:texture_get_data_async(RID:,int:,Callable:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureGetDataAsync(Electron2D.RID,System.UInt32,System.Action<System.Byte[]>)",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. ADR 0028: single-sample depth/stencil creation, update, rectangular/self copy and synchronous/queued readback now execute native aspects with portable encoded bytes, selected views, exact format gates and SDL resource/allocation pins. DepthTransfers.Consumer checks five formats, GPU sampling/stencil tests, snapshots/lifetime, errors and prepared zero owner managed bytes on Linux/Vulkan. MS raw sample transfers, depth resolve and complete platform/native-heap acceptance remain separate. See docs/components/depth-texture-transfers.md."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. ADR 0028: single-sample depth/stencil creation, update, rectangular/self copy and synchronous/queued readback now execute native aspects with portable encoded bytes, selected views, exact format gates and SDL resource/allocation pins. DepthTransfers.Consumer checks five formats, GPU sampling/stencil tests, snapshots/lifetime, errors and prepared zero owner managed bytes on Linux/Vulkan. MS raw sample transfers, depth resolve and complete platform/native-heap acceptance remain separate. See docs/components/depth-texture-transfers.md. Direct3D 12 BC3 uses aligned block-row downloads and returns tight encoded mip/layer data through both synchronous and queued overloads. See docs/components/image-bcn.md."
     },
     {
       "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_MAX",
@@ -4643,6 +4643,21 @@
       "godot": [
         "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_UNIFORM_SET"
       ]
+    },
+    {
+      "godot": [
+        "class:RDSamplerState",
+        "RDSamplerState::property:min_filter",
+        "RDSamplerState::property:mag_filter",
+        "RDSamplerState::property:mip_filter",
+        "RDSamplerState::property:min_lod",
+        "RDSamplerState::property:max_lod",
+        "RDSamplerState::property:lod_bias",
+        "RDSamplerState::property:use_anisotropy",
+        "RDSamplerState::property:anisotropy_max"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028: the sealed ElectronObject description exposes typed writable properties with pinned defaults and copied snapshots. Native RIDs own sampler lifetime and uniform sets borrow them. Windows x64 Vulkan and Direct3D 12 match 50 GLSL/HLSL canvas pixels for distinct min/mag and mip filters, LOD clamps and signed bias, and anisotropic mip selection. An additional 14 sampler RID pixel references verify signed bias and mip selection with anisotropy on both backends. Direct3D 12 requires linear min/mag and uses the live OPTIONS19 result to select anisotropic point mip. Managed tests exercise both capability branches. Device checks cover format refusal, scalar and comparison binding roles, and stale sampler dependencies. See docs/components/local-compute.md#sampler-filtering-and-lod for backend limits."
     },
     {
       "godot": [

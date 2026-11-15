@@ -4743,7 +4743,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0046/0107: executable typed protected callbacks, guarded public admission, native defaults and opaque font/buffer ownership. Shared Font/Line/Paragraph/GUI consumers use producer glyphs, formatting, runs, editing, inline metadata and drawing. Linux native and opaque consumer checks cover registry/source/scale retirement, duplication, thread/reentry, errors and prepared allocation; package/NativeAOT, foreign-platform, native allocator/performance and owner gates remain separate. Typed scalar TextBIDIRange and copied public snapshots preserve URI/file/email/list/default/custom parsing; the script-specific parser mode remains excluded.",
+      "reason": "ADR 0046/0107: executable typed protected callbacks, guarded public admission, native defaults and opaque font/buffer ownership. Shared Font/Line/Paragraph/GUI consumers use producer glyphs, formatting, runs, editing, inline metadata and drawing. Linux native and opaque consumer checks cover registry/source/scale retirement, duplication, thread/reentry, errors and prepared allocation; package/NativeAOT, foreign-platform, native allocator/performance and owner gates remain separate. Typed scalar TextBIDIRange and copied public snapshots preserve URI/file/email/list/default/custom parsing; the script-specific parser mode remains excluded. Prepared parser admission compares the six named kinds without reflection metadata and rejects the sparse value 5 and unknown numeric values.",
       "godot": [
         "TextServer::method:parse_structured_text(int:TextServer.StructuredTextParser,Array:,String:)",
         "TextServerExtension::method:_parse_structured_text(int:TextServer.StructuredTextParser,Array:,String:)"

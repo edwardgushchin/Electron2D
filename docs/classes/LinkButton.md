@@ -1,6 +1,6 @@
 # LinkButton
 
-Last updated: 2026-10-26
+Last updated: 2026-11-15
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class LinkButton : BaseButton`. **Inherits:** [BaseButton](BaseButton.md). **Inherited By:** —. **Source:** [API/storage](../../src/Scene/GUI/LinkButton.cs), [layout](../../src/Scene/GUI/LinkButton.Layout.cs). **Component:** [GUI buttons](../components/gui-buttons.md).
 
@@ -113,6 +113,8 @@ The fresh-process URI fixture registers a unique protocol for each run. Linux se
 LinkButtonTests covers concrete defaults, all stored fields, supplementary/malformed ellipsis, copying, real font geometry, RTL/clipping/BiDi/custom reentry, routed pointer/action/toggle/error states, worker edits, detach/reentry, borrowed disposal and fresh compressed big-endian file activation. Linux child isolation denies its session bus and supplies a private `xdg-open` fixture, proving the actual SDL URI handoff without opening the user's browser.
 
 The native rendering fixture checks real glyph/underline/state/RTL-ellipsis pixels and native pointer edges, with warmed frame allocation measured separately. See the component for completed backend evidence. Accessibility host integration, routed real desktop/browser acceptance, native allocator counts and other platforms retain their owning gates.
+
+The Windows x64 allocation regression came from `Enum.IsDefined` in the shared structured-text parser. Its first call after collection allocated 256 managed bytes during the deferred minimum-size update. Parser admission now compares the six named kinds directly and still rejects the unused value 5 and unknown values. `ELECTRON2D_TEST_LINK=1` retains the existing 64-frame warmup, blocking collection and 64 active/64 idle zero-byte assertions. `ELECTRON2D_TEST_LINK_GUI=1` runs the same fixture after the exact `ControlLayoutTests` through `MenuButtonTests` sequence used by the full runner. The allocation boundary covers the scene owner thread, alternating prepared captions/toggle states, layout, font polling and canvas recording. Native heaps and rendered output require their separate checks.
 
 The macOS fresh-process fixture owns a unique temporary app and URI scheme. It
 validates the native plist and signs/registers the app. Its [explicit scheme claims](https://developer.apple.com/documentation/coreservices/1443240-lscopyallhandlersforurlscheme)

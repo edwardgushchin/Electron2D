@@ -1,10 +1,12 @@
 # Binary buffers
 
-Last updated: 2026-10-27
+Last updated: 2026-11-15
 
 [ByteBuffer](../classes/ByteBuffer.md) supplies scalar byte-offset encoding, in-place byte swapping, strict text decoding, typed array conversion in both directions and compression over caller-owned spans. [ADR 0020](../decisions/core-data-io.md#caller-owned-binary-buffers) owns byte order, text and container adaptations. Existing arrays and lists remain the collection API.
 
 Numeric storage is little endian, independent of native alignment. Scalar/swap operations allocate no managed storage. Returned strings, arrays and compressed bytes are independent preparation snapshots. Invalid complete ranges fail before writes; array conversion requires a whole number of elements. Color uses four binary32 RGBA components. Numeric Vector3 remains ordinary data.
+
+Multibyte decoding accepts .NET encoding names. With an empty name, Windows resolves the current culture's ANSI code page by number. A Windows culture with no ANSI code page requires an explicit name. Other hosts use UTF-8 for an empty name. All paths reject malformed input, and the framework code-page provider is used locally without process-wide registration.
 
 Compression shares [FileAccess](file-access.md)'s E2DCMP container, including codec identity, declared length and native checksummed blocks. Always supply a suitable output limit for untrusted input. This container is not a raw external codec stream. Native FastLZ/Zstandard use the existing private codec bundle; no socket or new dependency is created. Other codecs use the framework. Empty compression returns empty bytes, which cannot be decoded as a container.
 

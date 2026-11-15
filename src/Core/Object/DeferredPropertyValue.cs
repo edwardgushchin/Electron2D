@@ -22,7 +22,7 @@ internal sealed class DeferredPropertyValue(MissingResourceData.Field field) : S
     {
         if (Field.Role == ResourceFieldRole.Node)
         {
-            if (typeof(TValue) == typeof(string)) { value = (TValue)(object?)ReadNodePath()!; return true; }
+            if (typeof(TValue) == typeof(string)) { value = (TValue)(object)(ReadNodePath() ?? string.Empty); return true; }
         }
         else if (Field.Role == ResourceFieldRole.Resource)
         {
