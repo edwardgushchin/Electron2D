@@ -11,6 +11,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import time
 import xml.etree.ElementTree as ET
 
 import package as native_package
@@ -311,7 +312,7 @@ def check(feed, rid, managed=False):
                 project = app / "Consumer.csproj"
                 project.write_text(project.read_text().replace('</ItemGroup>',
                     '<None Include="application-font.bin" Link="libHarfBuzzSharp.dll" '
-                    'CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" /></ItemGroup>'))
+                    'CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>'))
                 (app / "Program.cs").write_text(PROGRAM.replace('sealed class ConsumerMovieWriter', '''var applicationFont = System.Runtime.InteropServices.NativeLibrary.Load(
     System.IO.Path.Combine(AppContext.BaseDirectory, "libHarfBuzzSharp.dll"));
 System.Runtime.InteropServices.NativeLibrary.GetExport(applicationFont, "hb_version_string");
@@ -339,7 +340,9 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
                 selected = output / "libHarfBuzzSharp.dll"
                 if selected.read_bytes() != (app / "application-font.bin").read_bytes():
                     raise RuntimeError("Project-owned native file changed during publication")
-                selected.write_bytes(b"retired file")
+                selected.write_bytes(b"x" * selected.stat().st_size)
+                future = time.time() + 864000
+                os.utime(selected, (future, future))
                 refused = subprocess.run(audit, cwd=app, env=environment, text=True, capture_output=True)
                 if refused.returncode == 0 or "Application native checksum mismatch" not in refused.stdout + refused.stderr:
                     raise RuntimeError("Publish audit accepted a replaced application native file")

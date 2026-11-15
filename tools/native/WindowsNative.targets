@@ -19,6 +19,17 @@
       <ResolvedFileToPublish Update="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.NuGetPackageId)' == 'Electron2D.Windows' and '%(ResolvedFileToPublish.AssetType)' == 'native'">
         <CopyToPublishDirectory>Always</CopyToPublishDirectory>
       </ResolvedFileToPublish>
+      <_Electron2DLegacyWindowsPublishPath Include="@(_Electron2DLegacyWindowsFile);@(_Electron2DLegacyWindowsFile->'runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
+      <_Electron2DLegacyWindowsPublishPath Update="@(_Electron2DLegacyWindowsPublishPath)">
+        <RelativePath>%(Identity)</RelativePath>
+      </_Electron2DLegacyWindowsPublishPath>
+      <_Electron2DUnrelatedPublishFile Include="@(ResolvedFileToPublish)" />
+      <_Electron2DUnrelatedPublishFile Remove="@(_Electron2DLegacyWindowsPublishPath)" MatchOnMetadata="RelativePath" MatchOnMetadataOptions="PathLike" />
+      <_Electron2DApplicationNativePublishFile Include="@(ResolvedFileToPublish)" />
+      <_Electron2DApplicationNativePublishFile Remove="@(_Electron2DUnrelatedPublishFile)" MatchOnMetadata="RelativePath" MatchOnMetadataOptions="PathLike" />
+      <ResolvedFileToPublish Update="@(_Electron2DApplicationNativePublishFile)">
+        <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
   <Target Name="CleanElectron2DLegacyWindowsBuild" AfterTargets="CopyFilesToOutputDirectory" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(TargetDir)' != ''">
@@ -33,14 +44,6 @@
     <ItemGroup>
       <_Electron2DLegacyWindowsPublishFile Include="@(_Electron2DLegacyWindowsFile->'$(PublishDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(PublishDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
       <_Electron2DLegacyWindowsPublishFile Remove="@(ResolvedFileToPublish->'$(PublishDir)%(RelativePath)')" />
-      <_Electron2DLegacyWindowsPublishPath Include="@(_Electron2DLegacyWindowsFile);@(_Electron2DLegacyWindowsFile->'runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
-      <_Electron2DLegacyWindowsPublishPath Update="@(_Electron2DLegacyWindowsPublishPath)">
-        <RelativePath>%(Identity)</RelativePath>
-      </_Electron2DLegacyWindowsPublishPath>
-      <_Electron2DUnrelatedPublishFile Include="@(ResolvedFileToPublish)" />
-      <_Electron2DUnrelatedPublishFile Remove="@(_Electron2DLegacyWindowsPublishPath)" MatchOnMetadata="RelativePath" MatchOnMetadataOptions="PathLike" />
-      <_Electron2DApplicationNativePublishFile Include="@(ResolvedFileToPublish)" />
-      <_Electron2DApplicationNativePublishFile Remove="@(_Electron2DUnrelatedPublishFile)" MatchOnMetadata="RelativePath" MatchOnMetadataOptions="PathLike" />
     </ItemGroup>
     <Delete Files="@(_Electron2DLegacyWindowsPublishFile)" />
     <GetFileHash Files="@(_Electron2DApplicationNativePublishFile)" Algorithm="SHA256" Condition="'@(_Electron2DApplicationNativePublishFile)' != ''">

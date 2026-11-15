@@ -95,7 +95,10 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     if platform != "Windows":
         assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Shaping must use the selected source-built native payload"
     assert actual == expected, f"Wrong SDL packages: {actual}"
-    assert f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/10.0.1" in packages, "Missing self-contained runtime pack"
+    runtime = json.loads((publish / (app_name + ".runtimeconfig.json")).read_text())["runtimeOptions"]
+    version = next((framework["version"] for framework in runtime.get("includedFrameworks", [])
+                    if framework["name"] == "Microsoft.NETCore.App"), "")
+    assert re.fullmatch(r"10\.0\.\d+", version) and f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/{version}" in packages, "Missing self-contained runtime pack"
     native = publish / "runtimes" / rid / "native"
     assert all((native / name).is_file() for name in names), f"Missing native render/text files: {names}"
     assert not any((publish / name).exists() for name in names), "Native render/text files must retain their RID directory"

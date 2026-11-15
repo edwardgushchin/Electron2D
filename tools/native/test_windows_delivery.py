@@ -15,9 +15,10 @@ import package
 
 class WindowsDeliveryTests(unittest.TestCase):
     def test_project_copy_items_are_preserved(self):
-        for item, mode, relative in (("None", "PreserveNewest", ""),
-                                     ("Content", "Always", "runtimes/win-x64/native/"),
-                                     ("None", "IfDifferent", "")):
+        for item, mode, publish_mode, relative in (("None", "PreserveNewest", "PreserveNewest", ""),
+                                     ("Content", "PreserveNewest", "PreserveNewest", "runtimes/win-x64/native/"),
+                                     ("Content", "Always", "Always", "runtimes/win-x64/native/"),
+                                     ("None", "IfDifferent", "PreserveNewest", "")):
             with self.subTest(item=item, mode=mode), tempfile.TemporaryDirectory(prefix="project native ") as temporary:
                 root = Path(temporary)
                 source = root / "application-harfbuzz.bin"
@@ -27,7 +28,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                     '<TargetFramework>net10.0</TargetFramework><RuntimeIdentifier>win-x64</RuntimeIdentifier>'
                     '</PropertyGroup><ItemGroup>'
                     f'<{item} Include="{source.name}" Link="{relative}libHarfBuzzSharp.dll" '
-                    f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="Always" />'
+                    f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="{publish_mode}" />'
                     '</ItemGroup>'
                     f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" /></Project>')
                 command = ["dotnet", "publish", str(project), "-c", "Release", "--nologo", "-o", str(root / "publish")]
@@ -38,7 +39,14 @@ class WindowsDeliveryTests(unittest.TestCase):
                 receipt = root / "publish/Electron2D.application-native.sha256"
                 self.assertEqual(receipt.read_text(encoding="utf-8-sig").split(),
                     [hashlib.sha256(source.read_bytes()).hexdigest().upper(), relative + "libHarfBuzzSharp.dll"])
-                project.write_text(project.read_text().replace(f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="Always"', ''))
+                selected = root / "publish" / relative / "libHarfBuzzSharp.dll"
+                selected.write_bytes(b"x" * len(source.read_bytes()))
+                future = time.time() + 864000
+                os.utime(selected, (future, future))
+                result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(selected.read_bytes(), source.read_bytes())
+                project.write_text(project.read_text().replace(f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="{publish_mode}"', ''))
                 result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                 self.assertFalse(receipt.exists())
@@ -109,7 +117,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                         f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" />'
                         '<Target Name="CopyFilesToOutputDirectory" /><Target Name="Publish" /></Project>')
                     result = subprocess.run(["dotnet", "msbuild", str(project), "-nologo",
-                        "-target:CopyFilesToOutputDirectory;Publish"], capture_output=True, text=True)
+                        "-target:CopyFilesToOutputDirectory;Electron2DWindowsNativePublishCopy;Publish"], capture_output=True, text=True)
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                     for output in ("build", "publish"):
                         files = {path.relative_to(root / output).as_posix(): path.read_bytes()
@@ -169,7 +177,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                         for name in root_expected | (set(package.retired_windows_files()) if stale else set()):
                             (root / output / name).write_bytes(name.encode())
                     result = subprocess.run(["dotnet", "msbuild", str(project), "-nologo",
-                        "-target:CopyFilesToOutputDirectory;Publish"], capture_output=True, text=True)
+                        "-target:CopyFilesToOutputDirectory;Electron2DWindowsNativePublishCopy;Publish"], capture_output=True, text=True)
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                     for output in ("build", "publish"):
                         directory = root / output / "runtimes" / rid / "native"
