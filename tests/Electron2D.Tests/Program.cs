@@ -1671,6 +1671,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_HOST") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_ANCHORS") is { } anchorProfile)
 {
     if (anchorProfile == "managed") ControlLayoutTests.Run();
+    else if (anchorProfile.StartsWith("geometry-", StringComparison.Ordinal)) ControlAnchorRenderingTests.RunGeometry(anchorProfile["geometry-".Length..]);
     else ControlAnchorRenderingTests.Run(anchorProfile);
     return;
 }
