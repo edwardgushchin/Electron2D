@@ -26,6 +26,7 @@ internal static class FileAccessLifecycleTests
             VerifyMountedFileProtection(directory.FullName, project);
             VerifyMountedDirectoryWriteProtection(directory.FullName, project);
             VerifyPhysicalDirectoryRejection(project, user);
+            VerifyTrailingDirectorySeparatorRejection(project, user);
             VerifyInvalidWriteParent(project, user);
             if (OperatingSystem.IsLinux())
                 VerifyLinkedSize(project);
@@ -383,6 +384,28 @@ internal static class FileAccessLifecycleTests
                 "Rejected opens must leave the directory intact and empty.");
         }
         Console.WriteLine("Writable FileAccess factories and metadata setters reject physical directories.");
+    }
+
+    private static void VerifyTrailingDirectorySeparatorRejection(string project, string user)
+    {
+        const string name = "draft";
+        var projectPath = IOPath.Combine(project, name);
+        var userPath = IOPath.Combine(user, name);
+        var key = new byte[32];
+        foreach (var path in new[] { projectPath + IOPath.DirectorySeparatorChar, "res://draft/", "user://draft/" })
+        {
+            foreach (var mode in new[] { FileAccessModeFlags.Write, FileAccessModeFlags.WriteRead })
+            {
+                Reject<UnauthorizedAccessException>(() => EFile.OpenCompressed(path, mode, FileCompressionMode.Gzip));
+                Reject<UnauthorizedAccessException>(() => EFile.OpenEncrypted(path, mode, key));
+                Reject<UnauthorizedAccessException>(() => EFile.OpenEncryptedWithPassword(path, mode, "fixture password"));
+                Reject<UnauthorizedAccessException>(() => EFile.Open(path, mode));
+            }
+        }
+        Check(!File.Exists(projectPath) && !Directory.Exists(projectPath) &&
+              !File.Exists(userPath) && !Directory.Exists(userPath),
+            "Rejected opens with a trailing directory separator must leave the destination absent.");
+        Console.WriteLine("Writable FileAccess factories reject trailing directory separators at open.");
     }
 
     private static void VerifyInvalidWriteParent(string project, string user)

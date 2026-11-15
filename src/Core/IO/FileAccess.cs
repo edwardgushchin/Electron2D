@@ -279,7 +279,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
-    /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a writable path ends in a directory separator, or access is denied.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess Open(string path, FileAccessModeFlags mode)
     {
@@ -370,7 +370,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
     /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
-    /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a writable path ends in a directory separator, or access is denied.</exception>
     public static FileAccess OpenCompressed(
         string path,
         FileAccessModeFlags mode,
@@ -399,7 +399,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses password mode.</exception>
     /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
-    /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a writable path ends in a directory separator, or access is denied.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
     public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)
     {
@@ -436,7 +436,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses raw-key mode.</exception>
     /// <exception cref="DirectoryNotFoundException">A physical file occupies a parent path in Write or WriteRead mode.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
-    /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a writable path ends in a directory separator, or access is denied.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
     public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)
     {

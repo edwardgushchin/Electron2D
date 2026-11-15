@@ -62,7 +62,7 @@ Writable opens and static metadata operations check mounted files, directories, 
 
 Writes through `res://` reject descendants of mounted directories, including explicit empty ZIP directories and directories derived from mounted files. The same protection applies to mutating file attributes, Unix permissions, and extended attributes. Reads still resolve physical entries below mounted directories when no mounted entry masks the file.
 
-Writable opens and the hidden, read-only, and Unix permission setters reject physical directories after resolving the mount. In `Write` and `WriteRead`, transformed factories reject paths through a physical file before returning an owner. If a parent is missing, a dirty transformed write still reports the error when it tries to publish. Extended attribute operations require an existing file.
+Writable opens and the hidden, read-only, and Unix permission setters reject physical directories after resolving the mount. A writable path ending in a directory separator is rejected at open even if the directory does not exist. In `Write` and `WriteRead`, transformed factories reject paths through a physical file before returning an owner. If a parent is missing, a dirty transformed write still reports the error when it tries to publish. Extended attribute operations require an existing file.
 
 Transformed `ReadWrite` reads and later commits at the same captured physical destination. A failed atomic replacement leaves the previous file in place and permits a `Flush` retry. A failing `Close` still retires the stream and releases buffers. `CreateTemp` defaults to `ReadWrite` and deletes its file at close or disposal unless `keep` is true.
 
