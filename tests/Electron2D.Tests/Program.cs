@@ -1528,6 +1528,29 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_RENDER") is { } linkBackend) { LinkButtonRenderingTests.Run(linkBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_CHILD") is { } linkPath) { LinkButtonTests.RunChild(linkPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK") == "1") { LinkButtonTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_GUI") == "1")
+{
+    Environment.SetEnvironmentVariable("ELECTRON2D_TEST_LINK_GUI", null);
+    ControlLayoutTests.Run();
+    ControlInputTests.Run();
+    ControlFocusNavigationTests.Run();
+    ControlRecursiveBehaviorTests.Run();
+    ControlClipTests.Run();
+    ScrollInternalNodeTests.Run();
+    ScrollBarTests.Run();
+    ScrollContainerTests.Run();
+    ScrollThemeTests.Run();
+    ItemListTests.Run();
+    TabBarTests.Run();
+    TabContainerTests.Run();
+    ColorPickerTests.Run();
+    SpinBoxTests.Run();
+    FileDialogTests.Run();
+    MenuBarTests.Run();
+    MenuButtonTests.Run();
+    LinkButtonTests.Run();
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_CHILD") is { } menuButtonPath) { MenuButtonTests.RunChild(menuButtonPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }

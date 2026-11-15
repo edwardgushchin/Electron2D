@@ -50,6 +50,11 @@ internal static partial class ImageLoaderExtensionTests
             image.Load(path);
             Check(changes == 1 && image.GetPixel(0, 0) == Colors.Red && first.Calls == 1 && second.Calls == 1, "Decline rewinds, discards changes, ordered registration and one commit.");
             Check(first.BorrowedFile!.IsDisposed && first.BorrowedImage!.IsDisposed && second.BorrowedFile!.IsDisposed && second.BorrowedImage!.IsDisposed, "Borrowed callback arguments expire after loading.");
+            first.Decline = false;
+            first.Fail = true;
+            Reject<InvalidDataException>(() => image.Load(path));
+            Check(first.Calls == 2 && second.Calls == 1 && changes == 1 && image.GetPixel(0, 0) == Colors.Red,
+                "A decoder exception skips later decoders and preserves the destination.");
             first.RemoveFormatLoader(); first.RemoveFormatLoader();
             using (var later = new Decoder { Suffixes = [".invalid"] })
             {

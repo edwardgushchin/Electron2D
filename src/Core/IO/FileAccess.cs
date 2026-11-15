@@ -273,7 +273,8 @@ public sealed partial class FileAccess : ElectronObject
     /// An open physical read-only stream can finish reading its original file after a staged replacement.
     /// Subsequent opens of the path see the replacement. I/O write failure aborts staging. A failed final
     /// replacement retains completed staging for recovery. A mounted directory at a resource path masks
-    /// any physical file at that path. Writable opens check mounted files and directories against one mount snapshot.
+    /// any physical file at that path. Writable opens also reject descendants of mounted directories.
+    /// Both checks use the same mount snapshot.
     /// An open instance keeps its stream and identity when project roots or mounts change.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
@@ -1300,10 +1301,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="path"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">An argument is empty or the attribute name is invalid.</exception>
     /// <exception cref="IOException">The filesystem rejects the request.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="UnauthorizedAccessException">Access is denied or a mounted directory protects the destination.</exception>
     /// <exception cref="PlatformNotSupportedException">The platform has no implemented extended-attribute backend.</exception>
     public static void SetExtendedAttribute(string path, string name, ReadOnlySpan<byte> value) =>
-        ExtendedAttributes.Set(ResolveMetadataPath(path), name, value);
+        ExtendedAttributes.Set(ResolveMetadataPath(path, writing: true), name, value);
 
     /// <summary>Sets one extended attribute from UTF-8 text.</summary>
     /// <exception cref="NotSupportedException">The file is mounted or the virtual scheme is unsupported.</exception>
@@ -1314,7 +1315,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentException">An argument is empty or the attribute name is invalid.</exception>
     /// <exception cref="EncoderFallbackException"><paramref name="value"/> contains invalid UTF-16.</exception>
     /// <exception cref="IOException">The filesystem rejects the request.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="UnauthorizedAccessException">Access is denied or a mounted directory protects the destination.</exception>
     /// <exception cref="PlatformNotSupportedException">The platform has no implemented extended-attribute backend.</exception>
     public static void SetExtendedAttributeString(string path, string name, string value)
     {
@@ -1329,10 +1330,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentNullException">An argument is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">An argument is empty or the attribute name is invalid.</exception>
     /// <exception cref="IOException">The filesystem rejects the request.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="UnauthorizedAccessException">Access is denied or a mounted directory protects the destination.</exception>
     /// <exception cref="PlatformNotSupportedException">The platform has no implemented extended-attribute backend.</exception>
     public static void RemoveExtendedAttribute(string path, string name) =>
-        ExtendedAttributes.Remove(ResolveMetadataPath(path), name);
+        ExtendedAttributes.Remove(ResolveMetadataPath(path, writing: true), name);
 
     /// <inheritdoc/>
     protected override void Dispose(bool disposing)
@@ -1903,9 +1904,9 @@ public sealed partial class FileAccess : ElectronObject
             throw new EndOfStreamException("The stream ended unexpectedly.");
     }
 
-    private static string ResolveMetadataPath(string path)
+    private static string ResolveMetadataPath(string path, bool writing = false)
     {
-        var (absolutePath, mountedSize, blocked) = ResourcePacks.Runtime.ResolveFileLocation(path);
+        var (absolutePath, mountedSize, blocked) = ResourcePacks.Runtime.ResolveFileLocation(path, writing);
         if (mountedSize.HasValue)
             throw new NotSupportedException("Mounted files have no mutable operating-system metadata.");
         return RequireUnmaskedPath(path, absolutePath, blocked);

@@ -191,7 +191,6 @@
   "statusGroups": [
     {
       "godot": [
-        "class:LinkButton",
         "LinkButton::enum:UnderlineMode",
         "LinkButton::enum_value:UnderlineMode.UNDERLINE_MODE_ALWAYS",
         "LinkButton::enum_value:UnderlineMode.UNDERLINE_MODE_NEVER",
@@ -222,6 +221,13 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates."
+    },
+    {
+      "godot": [
+        "class:LinkButton"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0023/0038/0046/0083: executable distinct BaseButton text link with translated native font shaping, scalar ellipsis, typed structured BIDI, natural/trimmed/RTL layout, state/focus themes and underlines; stored concrete defaults and file factory; native input and isolated SDL URI handoff. Accessibility service, ordinary browser/native allocator/foreign-platform/owner acceptance retain their owning gates. Shared structured text parsing validates the six named kinds directly. Windows checks preserve zero managed bytes for 64 active caption/layout/recording frames and 64 idle frames after collection, both standalone and after preceding GUI tests."
     }
   ]
 }

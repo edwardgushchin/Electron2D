@@ -277,8 +277,19 @@ internal sealed class ResourcePacks
         lock (_gate)
         {
             if (_entries.ContainsKey(name) || descendants && _directories.Contains(name)) throw new UnauthorizedAccessException("Mounted resource entries are read-only.");
-            var slash = name.IndexOf('/');
-            while (slash >= 0) { if (_entries.ContainsKey(name[..slash])) throw new UnauthorizedAccessException("A mounted file occupies a parent path."); slash = name.IndexOf('/', slash + 1); }
+            EnsureWritableAncestorsLocked(name);
+        }
+    }
+
+    private void EnsureWritableAncestorsLocked(string name)
+    {
+        for (var slash = name.IndexOf('/'); slash >= 0; slash = name.IndexOf('/', slash + 1))
+        {
+            var parent = name[..slash];
+            if (_entries.ContainsKey(parent))
+                throw new UnauthorizedAccessException("A mounted file occupies a parent path.");
+            if (_directories.Contains(parent))
+                throw new UnauthorizedAccessException("Mounted resource directories are read-only.");
         }
     }
 
@@ -297,15 +308,15 @@ internal sealed class ResourcePacks
         return entry.Open();
     }
 
-    internal (string AbsolutePath, long? MountedSize, bool Blocked) ResolveFileLocation(string path)
+    internal (string AbsolutePath, long? MountedSize, bool Blocked) ResolveFileLocation(string path, bool writing = false)
     {
-        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked);
+        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked, writing);
         return (absolutePath, entry?.Length, blocked);
     }
 
     internal string ResolveWritableFile(string path)
     {
-        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked);
+        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked, writing: true);
         if (blocked)
             throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
         if (entry is not null)
@@ -316,7 +327,7 @@ internal sealed class ResourcePacks
         return absolutePath;
     }
 
-    private Entry? ResolveFile(string path, out string absolutePath, out string? name, out bool blocked)
+    private Entry? ResolveFile(string path, out string absolutePath, out string? name, out bool blocked, bool writing = false)
     {
         path = ResourceUID.EnsurePath(path);
         absolutePath = ProjectSettings.GlobalizePath(path);
@@ -330,6 +341,8 @@ internal sealed class ResourcePacks
         {
             var entry = _entries.GetValueOrDefault(name);
             blocked = entry is null && (_directories.Contains(name) || HasFileAncestorLocked(name));
+            if (writing && entry is null && !blocked)
+                EnsureWritableAncestorsLocked(name);
             return entry;
         }
     }

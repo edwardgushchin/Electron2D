@@ -24,6 +24,7 @@ internal static class FileAccessLifecycleTests
             ProjectSettings.ConfigurePaths(project, user);
             VerifySnapshots(directory.FullName, project, user);
             VerifyMountedFileProtection(directory.FullName, project);
+            VerifyMountedDirectoryWriteProtection(directory.FullName, project);
             VerifyPhysicalDirectoryRejection(project, user);
             VerifyInvalidWriteParent(project, user);
             if (OperatingSystem.IsLinux())
@@ -271,6 +272,66 @@ internal static class FileAccessLifecycleTests
                     "PCK replacements must preserve the masked physical extended attributes.");
             }
         }
+    }
+
+    private static void VerifyMountedDirectoryWriteProtection(string directory, string project)
+    {
+        var zip = IOPath.Combine(directory, "mounted-directories.zip");
+        using (var writer = new ZIPPacker())
+        {
+            writer.Open(zip);
+            writer.AddDirectory("lifecycle-empty");
+            writer.StartFile("lifecycle-derived/packed.txt");
+            writer.WriteFile(TextBytes);
+            writer.Close();
+        }
+        var files = new[] { "lifecycle-empty/notes.txt", "lifecycle-derived/nested/notes.txt" };
+        foreach (var name in files)
+        {
+            var physical = IOPath.Combine(project, name);
+            Directory.CreateDirectory(IOPath.GetDirectoryName(physical)!);
+            File.WriteAllBytes(physical, TextBytes);
+        }
+        Check(ProjectSettings.LoadResourcePack(zip), "Mount the empty and derived ZIP directories.");
+        var key = new byte[32];
+        foreach (var name in files)
+        {
+            var physical = IOPath.Combine(project, name);
+            var resource = "res://" + name;
+            Check(EFile.GetFileAsString(resource) == Text, "A mounted directory preserves physical fallback for reads.");
+            foreach (var mode in new[] { FileAccessModeFlags.Write, FileAccessModeFlags.WriteRead, FileAccessModeFlags.ReadWrite })
+            {
+                Reject<UnauthorizedAccessException>(() => { using var file = EFile.Open(resource, mode); });
+                Reject<UnauthorizedAccessException>(() => { using var file = EFile.OpenCompressed(resource, mode, FileCompressionMode.Gzip); });
+                Reject<UnauthorizedAccessException>(() => { using var file = EFile.OpenEncrypted(resource, mode, key); });
+                Reject<UnauthorizedAccessException>(() => { using var file = EFile.OpenEncryptedWithPassword(resource, mode, "fixture password"); });
+            }
+            if (OperatingSystem.IsWindows())
+            {
+                var flags = File.GetAttributes(physical);
+                Reject<UnauthorizedAccessException>(() => EFile.SetHidden(resource, true));
+                Reject<UnauthorizedAccessException>(() => EFile.SetReadOnly(resource, true));
+                Check(File.GetAttributes(physical) == flags, "Rejected setters preserve Windows attributes.");
+            }
+            else
+            {
+                var mode = File.GetUnixFileMode(physical);
+                Reject<UnauthorizedAccessException>(() => EFile.SetUnixPermissions(resource, (UnixPermissionFlags)(mode ^ UnixFileMode.UserExecute)));
+                Check(File.GetUnixFileMode(physical) == mode, "Rejected setters preserve Unix permissions.");
+            }
+            if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+            {
+                const string attribute = "lifecycle-sentinel";
+                EFile.SetExtendedAttributeString(physical, attribute, "original");
+                Reject<UnauthorizedAccessException>(() => EFile.SetExtendedAttribute(resource, attribute, "changed"u8));
+                Reject<UnauthorizedAccessException>(() => EFile.SetExtendedAttributeString(resource, attribute, "changed"));
+                Reject<UnauthorizedAccessException>(() => EFile.RemoveExtendedAttribute(resource, attribute));
+                Check(EFile.GetExtendedAttributeString(resource, attribute) == "original", "Rejected setters preserve xattrs and reads.");
+            }
+            Reject<UnauthorizedAccessException>(() => DirAccess.RemoveAbsolute(resource));
+            Check(File.ReadAllBytes(physical).SequenceEqual(TextBytes), "Rejected writes preserve physical data under a mounted directory.");
+        }
+        Console.WriteLine("Mounted ZIP directories protect physical descendants from writable opens and metadata changes.");
     }
 
     private static void VerifyPhysicalDirectoryRejection(string project, string user)

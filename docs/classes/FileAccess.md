@@ -244,7 +244,7 @@ On Windows, physical read-only streams allow staged replacement. An open reader 
 
 When a mounted directory and a physical file share a `res://` path, the directory takes precedence. `Open` throws `FileNotFoundException` for that resource path. The physical file remains accessible through its native absolute path.
 
-Writable opens check mounted file and directory precedence against one mount snapshot, including while a patch replaces one with the other. Physical directories are rejected at open, including in the transformed `Write` and `WriteRead` modes.
+Writable opens check mounted file and directory precedence against one mount snapshot, including while a patch replaces one with the other. They reject writes through `res://` to descendants of mounted directories. The same rule applies to file and extended attribute mutations. Physical directories are rejected at open, including in the transformed `Write` and `WriteRead` modes.
 
 **Parameters**
 

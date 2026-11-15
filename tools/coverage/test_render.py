@@ -500,6 +500,11 @@ def main():
     corner_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines()
                    if row.startswith("| [`") and ("enum Corner" in row or "[Corner]" in row)]
     assert len(corner_rows) == 5 and all(" | Implemented | " in row for row in corner_rows)
+    error_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines()
+                  if row.startswith(("| [`enum Error`", "| [`method error_string("))
+                  or row.startswith("| [`enum_value ") and " [Error] = " in row.split(" | ")[0]]
+    assert len(error_rows) == 51
+    assert all(" | — | Excluded | [Pinned " in row and "](../../decisions/" in row for row in error_rows)
     flag_rows = [row for row in pages[CLASS_PAGES / "Control.md"].splitlines() if row.startswith("| [`") and ("enum SizeFlags" in row or "[SizeFlags]" in row or "size_flags_" in row)]
     assert len(flag_rows) == 11 and all(" | Implemented | " in row for row in flag_rows)
     container_rows = [row for row in pages[CLASS_PAGES / "Container.md"].splitlines() if row.startswith("| [`")]
