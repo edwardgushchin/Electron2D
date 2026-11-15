@@ -12,6 +12,8 @@ Last updated: 2026-11-14
 
 ## Description
 
+The [metadata and persistence contract](../components/project-settings.md#metadata-and-persistence) defines ordering ties, discovery filters, synchronous metadata notifications and transactional text saves.
+
 Owns one typed project-settings registry, metadata, feature overrides, change notifications, virtual path roots and an in-memory ConfigFile. Caller-created registries are independent and disposable. The retained ProjectSettings runtime object derives from this implementation; its static operations address only the permanent registry and reject disposal. Public instance operations on ProjectSettingsRegistry are the explicit isolated-context API under [ADR 0095](../decisions/singleton-services.md#adr-0095).
 
 Each registry borrows ProjectSetting definitions, snapshots serialized values, owns its ConfigFile and never owns project/user directories. Unknown values are preserved until typed definitions claim them. Operations are lock-serialized and disk/serialization work is outside real-time callbacks. SettingsChanged is synchronous on the flushing thread, coalesced, and carries the exact registry as sender. Handler changes remain pending for a later flush; handler errors propagate after the pending delivery is consumed.

@@ -50,6 +50,8 @@ The Android application host supplies [system back navigation](../components/win
 
 Last updated: 2026-11-15
 
+Project-settings metadata and atomic text saves share the [registry contract](../components/project-settings.md#metadata-and-persistence), verified by the public metadata/persistence fixture. Target-host qualification remains separate.
+
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
 [Frame timing monitors](../components/frame-monitors.md) connect actual Engine process/presentation, fixed-step and navigation spans to four public Performance selectors. Window maxima, reset, headless/direct-host and failure boundaries remain explicit.

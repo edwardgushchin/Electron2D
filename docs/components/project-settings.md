@@ -58,6 +58,18 @@ Both changed-name queries inspect pending and in-flight names under the same loc
 
 Run the public registry and Engine frame checks with `ELECTRON2D_TEST_PROJECT_SETTINGS=1` in the Release test runner.
 
+## Metadata and persistence
+
+`GetOrder`, `SetOrder`, `SetAsBasic`, `SetAsInternal` and `SetRestartIfChanged` require the exact registered definition. Order accepts the full signed integer range; ties use ordinal names. Internal entries remain readable and persist normally but are omitted from ordinary name discovery and property descriptors. Basic and restart flags are host metadata; they do not change value validation or restart the host.
+
+An actual metadata change synchronously publishes `PropertyListChanged` after committing the flag/order and releasing the registry lock. Repeated values are silent. A callback can inspect or edit committed metadata; its exception propagates without rollback. Metadata changes leave the value version, unsaved-value tracking and `SettingsChanged` batch alone. Metadata belongs to the registry and is not serialized.
+
+`Save` and `SaveCustom` share the ConfigFile text writer: known settings are grouped by section in order/name order, each base followed by overrides in stored precedence order. Unknown keys follow known keys within each section, retaining their relative order; unknown sections retain their relative order after known sections. Base values equal to the current initial value are omitted; overrides are retained even when equal to an initial value. The receiver supplies its own definitions and initial values on reload. This is the accepted typed text format, irrespective of destination extension.
+
+The destination directory must exist. A same-directory temporary file is flushed and moved over the destination; failures preserve the live document, dirty names, pending notifications and previous destination bytes, with best-effort temporary cleanup. A successful custom save also clears dirty tracking; neither save delivers notifications. Physical, `res://` and `user://` paths use the registry's resolver.
+
+[`ProjectSettingsMetadataTests`](../../tests/Electron2D.Tests/ProjectSettingsMetadataTests.cs) and the existing registry/persistence checks cover this public contract on Windows x64 CLR. Locked-destination replacement is a Windows-specific failure control. Other target filesystems and runtime profiles remain unverified.
+
 ## Automatic override files
 
 Call `ProjectSettings.Load()` after configuring the project and user roots and before starting the project. `ProjectSettingsRegistry.Load()` applies the same policy against that registry's roots. The loader builds a candidate from `project.e2d`, then reads `res://override.cfg`, then the file named by `ProjectSettingsOverride`. The last file has precedence for matching keys. The configured path is selected once from the first two layers, including the first active feature override. A relative name resolves beneath the project root. Absolute paths, `res://`, `user://` and registered UIDs use the existing path resolver. Automatic resource paths in the process registry see mounted files. Independent registries use their own directory roots.
