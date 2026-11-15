@@ -72,6 +72,10 @@ internal static partial class ControlLayoutTests
         VerifyAnchorPresets();
         VerifyMinimumSize();
         VerifyMaximumSize();
+        VerifySizeUpdateFailures();
+        VerifySizeUpdateTreeTransfer();
+        VerifyIndependentGrowth();
+        VerifyPendingHiddenBounds();
         VerifyLayoutDirection();
         VerifyOffsetPresets();
         VerifyLayoutEditing();
@@ -210,6 +214,133 @@ internal static partial class ControlLayoutTests
         tree.FlushDeferred();
         Check(entering.Size == new Vector2(120, 20),
             "A minimum-size change during entry resize must survive the initial layout snapshot.");
+    }
+
+    private static void VerifySizeUpdateFailures()
+    {
+        foreach (var maximum in new[] { false, true })
+            foreach (var signalFailure in new[] { false, true })
+            {
+                using var viewport = new TestViewport();
+                var outer = new MarginContainer();
+                var inner = new MarginContainer();
+                var child = new Control { CustomMinimumSize = new(20, 10) };
+                Action failSignal = () => throw new InvalidOperationException("size signal failure");
+                if (signalFailure)
+                {
+                    if (maximum) child.MaximumSizeChanged += failSignal;
+                    else child.MinimumSizeChanged += failSignal;
+                }
+                viewport.AddChild(outer); outer.AddChild(inner); inner.AddChild(child);
+                using var tree = new SceneTree(viewport);
+                tree.FlushDeferred();
+                var signals = 0;
+                if (maximum) child.MaximumSizeChanged += () => signals++;
+                else child.MinimumSizeChanged += () => signals++;
+                Action fail = () => throw new InvalidOperationException("size update resize failure");
+                if (!signalFailure) child.Resized += fail;
+                if (maximum) child.CustomMaximumSize = new(8, 6);
+                else child.CustomMinimumSize = new(80, 60);
+                Reject<AggregateException>(() => tree.FlushDeferred());
+                child.Resized -= fail;
+                if (maximum) child.MaximumSizeChanged -= failSignal;
+                else child.MinimumSizeChanged -= failSignal;
+                tree.FlushDeferred();
+                var expected = maximum ? new Vector2(8, 6) : new Vector2(80, 60);
+                Check(signals == (signalFailure ? 0 : 1), "Resize errors preserve size delivery; signal handlers retain ordinary multicast ordering.");
+                Check(child.Size == expected && inner.GetCombinedMinimumSize() == expected
+                    && outer.GetCombinedMinimumSize() == expected,
+                    "Nested containers must observe committed bounds after resize callback failure.");
+                if (maximum) child.UpdateMaximumSize(); else child.UpdateMinimumSize();
+                tree.FlushDeferred();
+                Check(signals == (signalFailure ? 0 : 1), "Retrying unchanged bounds must not repeat a committed signal.");
+            }
+    }
+
+    private static void VerifySizeUpdateTreeTransfer()
+    {
+        foreach (var maximum in new[] { false, true })
+            foreach (var sameTree in new[] { false, true })
+            {
+                using var firstRoot = new TestViewport();
+                using var secondRoot = new TestViewport();
+                using var first = new SceneTree(firstRoot);
+                using var second = new SceneTree(secondRoot);
+                var child = new Control { Size = new(30, 20) };
+                firstRoot.AddChild(child);
+                var signals = 0;
+                if (maximum) child.MaximumSizeChanged += () => signals++;
+                else child.MinimumSizeChanged += () => signals++;
+                if (maximum) child.CustomMaximumSize = new(10, 8);
+                else child.CustomMinimumSize = new(40, 35);
+                firstRoot.RemoveChild(child);
+                var destination = sameTree ? firstRoot : secondRoot;
+                var receivingTree = sameTree ? first : second;
+                receivingTree.Defer(() => Check(signals == 0, "Old membership work must not precede the new update's queue position."));
+                destination.AddChild(child);
+                if (maximum) child.CustomMaximumSize = new(5, 4);
+                else child.CustomMinimumSize = new(50, 45);
+                first.FlushDeferred();
+                if (!sameTree) Check(signals == 0, "Old tree work must not apply a new tree's size update.");
+                receivingTree.FlushDeferred();
+                Check(signals == 1 && child.Size == (maximum ? new Vector2(5, 4) : new Vector2(50, 45)),
+                    "The new tree must retain its independent pending bounds.");
+                if (maximum) child.CustomMaximumSize = new(3, 2);
+                else child.CustomMinimumSize = new(70, 65);
+                child.Dispose();
+                receivingTree.FlushDeferred();
+                Check(signals == 1, "Disposed pending updates must not emit.");
+            }
+    }
+
+    private static void VerifyPendingHiddenBounds()
+    {
+        foreach (var maximum in new[] { false, true })
+        {
+            using var viewport = new TestViewport();
+            using var tree = new SceneTree(viewport);
+            var child = new Control { Size = new(30, 20) };
+            viewport.AddChild(child);
+            var signals = 0;
+            if (maximum) child.MaximumSizeChanged += () => signals++;
+            else child.MinimumSizeChanged += () => signals++;
+            if (maximum) child.CustomMaximumSize = new(8, 6);
+            else child.CustomMinimumSize = new(50, 40);
+            child.Visible = false;
+            tree.FlushDeferred();
+            Check(signals == 0 && child.Size == new Vector2(30, 20), "Hiding queued bounds cancels their visible commit.");
+            child.Visible = true;
+            tree.FlushDeferred();
+            Check(signals == 1 && child.Size == (maximum ? new Vector2(8, 6) : new Vector2(50, 40)),
+                "Showing must requeue bounds cancelled by a hidden flush.");
+        }
+    }
+
+    private static void VerifyIndependentGrowth()
+    {
+        using var viewport = new TestViewport();
+        using var tree = new SceneTree(viewport);
+        float[] shifts = [1, 0, .5f];
+        foreach (var maximum in new[] { false, true })
+            for (var horizontal = 0; horizontal < 3; horizontal++)
+                for (var vertical = 0; vertical < 3; vertical++)
+                {
+                    var child = new Control
+                    {
+                        Position = new(60, 50),
+                        Size = new(20, 10),
+                        GrowHorizontal = (GrowDirection)horizontal,
+                        GrowVertical = (GrowDirection)vertical
+                    };
+                    viewport.AddChild(child);
+                    if (maximum) child.CustomMaximumSize = new(8, 4);
+                    else child.CustomMinimumSize = new(40, 30);
+                    tree.FlushDeferred();
+                    var delta = maximum ? new Vector2(12, 6) : new Vector2(-20, -20);
+                    Check(child.Position == new Vector2(60 + delta.X * shifts[horizontal], 50 + delta.Y * shifts[vertical]),
+                        "Horizontal and vertical growth policies must apply independently.");
+                    child.Dispose();
+                }
     }
 
     private sealed class MinimumControl : Control

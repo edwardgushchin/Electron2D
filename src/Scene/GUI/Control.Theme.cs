@@ -250,6 +250,15 @@ public partial class Control
     }
     internal override void OnTreeMembershipChanged(bool entering)
     {
+        _sizeUpdateGeneration++;
+        _minimumSizeUpdatePending = false; _maximumSizeUpdatePending = false;
+        _minimumSizeUpdateAction = null; _maximumSizeUpdateAction = null;
+        if (entering)
+        {
+            var expectedTree = Tree!; var generation = _sizeUpdateGeneration;
+            _minimumSizeUpdateAction = () => ApplyMinimumSizeUpdate(expectedTree, generation);
+            _maximumSizeUpdateAction = () => ApplyMaximumSizeUpdate(expectedTree, generation);
+        }
         ThemeOwner.Membership(entering);
         base.OnTreeMembershipChanged(entering);
         if (Parent is Window { IsDisposed: false, WrapControls: true } window) window.ChildControlsChanged();

@@ -552,3 +552,5 @@ Window stores [accessible names and descriptions](../components/accessibility.md
 AnimationPlayer.MovieQuitOnFinish now connects authored finite playback to [actual movie completion](../components/movie-writing.md#animation-completion), including stored state, callback control and final endpoint publication.
 
 Custom AnimationNode clip blending now carries reported loop endpoints through method, audio and nested playback using [shared event ranges](../components/scene-animation.md#custom-clip-event-boundaries). Built-in unfolded timelines and ordinary scene scheduling retain their existing ownership.
+
+[Control size propagation](../classes/Control.md) now preserves nested-container and wrapped-window updates after layout callback failures and rejects deferred work from an earlier tree membership. Windows Direct3D 12/11 public-consumer evidence is bounded to those backends.

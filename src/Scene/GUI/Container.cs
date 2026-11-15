@@ -83,18 +83,18 @@ public class Container : Control
     private void ChildEntered(Node _, Node child)
     {
         if (child is not Control control) return;
-        control.SizeFlagsChanged += ChildSizeChanged; control.MinimumSizeChanged += ChildSizeChanged; control.MaximumSizeChanged += ChildSizeChanged; control.VisibilityChanged += ChildVisibility;
+        control.SizeFlagsChanged += ChildSizeChanged; control.VisibilityChanged += ChildVisibility;
         ChildSizeChanged();
     }
     private void ChildLeft(Node _, Node child)
     {
         if (child is not Control control) return;
-        control.SizeFlagsChanged -= ChildSizeChanged; control.MinimumSizeChanged -= ChildSizeChanged; control.MaximumSizeChanged -= ChildSizeChanged; control.VisibilityChanged -= ChildVisibility;
+        control.SizeFlagsChanged -= ChildSizeChanged; control.VisibilityChanged -= ChildVisibility;
         control.ContainerMaximum = null; ChildSizeChanged();
     }
     private void ChildOrder(Node _) { if (!IsDisposed) ChildSizeChanged(); }
     private void ChildVisibility(CanvasItem _) => ChildSizeChanged();
-    private void ChildSizeChanged() { if (IsDisposed) return; UpdateMinimumSize(); QueueSort(); }
+    internal void ChildSizeChanged() { if (IsDisposed) return; UpdateMinimumSize(); QueueSort(); }
     internal static bool Sortable(Node node, bool localVisibility = false) => node is Control { IsDisposed: false, TopLevel: false } control && (localVisibility ? control.Visible : control.IsVisibleInTree);
     /// <summary>Returns the available horizontal sizing choices for a host inspector.</summary>
     /// <returns>A caller-owned array. Choices are advisory and do not restrict stored flag bits.</returns>
@@ -176,7 +176,7 @@ public class Container : Control
     protected override void Dispose(bool disposing)
     {
         for (var index = 0; index < GetChildCount(includeInternal: true); index++) if (GetChild(index, includeInternal: true) is Control child)
-            { child.SizeFlagsChanged -= ChildSizeChanged; child.MinimumSizeChanged -= ChildSizeChanged; child.MaximumSizeChanged -= ChildSizeChanged; child.VisibilityChanged -= ChildVisibility; child.ContainerMaximum = null; }
+            { child.SizeFlagsChanged -= ChildSizeChanged; child.VisibilityChanged -= ChildVisibility; child.ContainerMaximum = null; }
         try { base.Dispose(disposing); }
         finally { _publisherPreSortChildren.Handlers = null; _publisherSortChildren.Handlers = null; }
     }
