@@ -6972,78 +6972,78 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
+      "state": "Implemented",
+      "reason": "Required abstract GetWidth supplies both the query and virtual hook. It returns logical pixels; ImageTexture starts at zero and changes logical width independently of its source image (ADRs 0004/0013).",
       "godot": [
         "Texture2D::method:get_width()",
         "Texture2D::method:_get_width()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
+      "state": "Implemented",
+      "reason": "Required abstract GetHeight supplies both the query and virtual hook. It returns logical pixels; ImageTexture starts at zero and changes logical height independently of its source image (ADRs 0004/0013).",
       "godot": [
         "Texture2D::method:get_height()",
         "Texture2D::method:_get_height()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Virtual GetSize and its synchronized ImageTexture override return logical dimensions as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028).",
+      "state": "Implemented",
+      "reason": "GetSize returns a Vector2 composed from the logical dimensions. A C# override lets ImageTexture read both axes under one lock. The custom texture and ImageTexture profiles exercise both routes (ADRs 0004/0013).",
       "godot": [
         "Texture2D::method:get_size()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039). Curve texture GetImage/PixelFormat expose generated CPU snapshots under ADR 0013: the pinned curve classes inherit the base null/FORMAT_MAX fallthrough, while the documented general query contract specifies copied image data and format. This implements that capability without GPU readback; it is not literal preservation of the inherited omission. Uninitialized curve textures return null/L8 and reject drawing rather than creating an opaque placeholder RID.",
+      "state": "Implemented",
+      "reason": "The typed virtual PixelFormat property projects the query and hook. An empty ImageTexture uses L8, as in the reference. The abstract C# default also uses L8 when no image is supplied, in place of the format-count sentinel. Copied and generated textures report their source format through the same metadata contract (ADRs 0004/0013/0039).",
       "godot": [
         "Texture2D::method:get_format()",
         "Texture2D::method:_get_format()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039).",
+      "state": "Implemented",
+      "reason": "The virtual HasAlpha property reports the source format channel, including normalized, floating-point and block formats with alpha. The C# default derives from GetImage and is false when no source image is supplied; the reference base assumes true and its ImageTexture recognizes LA8/RGBA8. Per-pixel opacity is queried separately (ADRs 0004/0013/0039).",
       "godot": [
         "Texture2D::method:has_alpha()",
         "Texture2D::method:_has_alpha()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039).",
+      "state": "Implemented",
+      "reason": "The virtual HasMIPMaps property projects the public query and hook. It defaults to false when there is no image. ImageTexture reports the stored source chain independent of backend sampling; the reference ImageTexture inherits the base query fallback (ADRs 0004/0013/0039).",
       "godot": [
         "Texture2D::method:has_mipmaps()",
         "Texture2D::method:_has_mipmaps()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039).",
+      "state": "Implemented",
+      "reason": "The virtual MIPMapCount property projects the query and hook. It defaults to zero and counts each stored level after the base. C# snapshot-backed textures report their stored chain, including ImageTexture where the reference inherits the base fallback (ADRs 0004/0013/0039).",
       "godot": [
         "Texture2D::method:get_mipmap_count()",
         "Texture2D::method:_get_mipmap_count()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Virtual GetImage and the ImageTexture override project the public query and extension hook. Results are caller-owned image copies; an uninitialized/unreadable texture returns null. GPU allocation is owned separately by the renderer. Additional texture kinds, compressed/integer formats and GPU-only readback remain pending (ADRs 0014/0028). Curve texture GetImage/PixelFormat expose generated CPU snapshots under ADR 0013: the pinned curve classes inherit the base null/FORMAT_MAX fallthrough, while the documented general query contract specifies copied image data and format. This implements that capability without GPU readback; it is not literal preservation of the inherited omission. Uninitialized curve textures return null/L8 and reject drawing rather than creating an opaque placeholder RID.",
+      "state": "Implemented",
+      "reason": "Nullable virtual GetImage projects the query and hook. CPU-backed textures return a caller-owned original-format snapshot with physical extent and complete mip bytes; absent pixels return null. A custom override supplies a fresh copy and Changed refreshes derived metadata. Generated curve textures expose their CPU snapshots where the reference inherits the null fallback (ADRs 0004/0013/0039).",
       "godot": [
         "Texture2D::method:get_image()",
         "Texture2D::method:_get_image()"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "The virtual query supplies the typed extension hook, including ImageTexture logical-to-source coordinate conversion, edge clamping and alpha > 0.1. Missing pixels are treated as opaque. RenderingTextureTests covers size overrides and pixel ownership; additional texture-family behavior remains pending (ADRs 0004/0028).",
+      "state": "Implemented",
+      "reason": "The virtual C# query exposes the internal reference hook. ImageTexture maps logical coordinates to the source, clamps safely and tests alpha above 0.1. With no image the default is true. A pixel-backed custom texture inherits source-based opacity or may override the query (ADRs 0004/0013).",
       "godot": [
         "Texture2D::method:_is_pixel_opaque(int:,int:)"
       ]
     },
     {
       "state": "Partial",
-      "reason": "The reference Texture/Texture2D hierarchy is consolidated as Texture : Resource; ImageTexture derives directly from Texture (ADR 0004). Copied image resources, metadata, duplication and retained drawing execute on the initial backends. Copied source textures now include complete BC/ETC/EAC/ASTC and UInt16 sampling. This aggregate type census retains the separately tracked external/native texture-family and complete target-backend integration gates; the current source-format slice does not claim those remaining families (ADRs 0028/0039 and ADR 0021 target matrix).",
+      "reason": "The reference Texture/Texture2D hierarchy is consolidated as Texture : Resource; ImageTexture derives directly from Texture (ADR 0004). Copied image resources, metadata, duplication and retained drawing execute on the initial backends. Copied CPU images retain BC/ETC/EAC/ASTC and UInt16 source data. Windows D3D12 and Vulkan cover UInt16 Sprite sampling, RenderingDevice export and BC3 RenderingDevice readback. T-0042 and T-0043 supplied the D3D12 fixes. Compatibility rejects UInt16 sampling and uses decoded base pixels for supported blocks. External/native texture families and full target-backend integration retain separate gates (ADRs 0028/0039 and ADR 0021).",
       "godot": [
         "class:Texture",
         "class:Texture2D",
@@ -7051,24 +7051,36 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Image inputs are copied; creation and SetImage replace pixel configuration, while Update requires matching dimensions/format/mipmap state and preserves the allocation identity. Validation precedes mutation and Changed is emitted after publication. Managed resource and Linux Wayland GPU/compatibility pixel checks exist. BC/ETC/EAC/ASTC and all four UInt16 source formats now execute through shared prepared storage, full-mip upload and matching native samplers. The broader target-backend verification gate remains under ADR 0021: Linux/Vulkan and local Compatibility are exercised, with explicit precision rejections; Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0014/0028/0039).",
+      "state": "Implemented",
+      "reason": "Static CreateFromImage requires a live nonempty Image. It copies original pixels before creating the texture and owns a stable borrowed RID. Typed exceptions replace the reference error return (ADRs 0004/0013/0039).",
       "godot": [
-        "ImageTexture::method:create_from_image(Image:)",
-        "ImageTexture::method:set_image(Image:)",
+        "ImageTexture::method:create_from_image(Image:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "SetImage validates and copies before publishing and emitting Changed. It resets logical size, replaces the upload allocation and keeps the resource RID. Validation throws a typed exception and preserves prior data. Sprite output and native lifetime checks are documented in docs/components/images.md#image-texture-data (ADRs 0013/0028/0039).",
+      "godot": [
+        "ImageTexture::method:set_image(Image:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Update validates physical dimensions, source format and mip configuration before replacing pixels. The physical size remains authoritative after a logical override. The resource RID and compatible allocation are retained. Changed follows publication; typed validation failures preserve the old state. See docs/components/images.md#image-texture-data (ADRs 0013/0028/0039).",
+      "godot": [
         "ImageTexture::method:update(Image:)"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Nonnegative logical dimensions are stored independently of source pixels; zero preserves the corresponding axis. Size, opacity and texture drawing use the override; SetImage resets it. Update retains source-image dimensions. Existing resource and canvas tests cover this profile; remaining texture/backend behavior requires the rendering integration (ADR 0028).",
+      "state": "Implemented",
+      "reason": "Zero preserves an axis; a negative axis throws before mutation. The C# method emits Changed only for a changed logical size. Pixel data, native allocation and RID survive the override. SetImage resets logical size; Update retains it (ADRs 0013/0028).",
       "godot": [
         "ImageTexture::method:set_size_override(Vector2i:)"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Inherited ResourceLocalToScene supplies the existing default-false scene-local duplication policy; no redundant ImageTexture property. Resource graph copying exists, but the complete texture serialization/import and scene-instantiation integration remains pending (ADRs 0013/0014/0028).",
+      "state": "Implemented",
+      "reason": "The inherited bool property supplies the default false. The typed packed-scene archive stores the flag, original image and logical size. Two loaded instances own separate local textures and RIDs, with independent updates and disposal (ADRs 0013/0014/0023).",
       "godot": [
         "ImageTexture::property:resource_local_to_scene"
       ]
