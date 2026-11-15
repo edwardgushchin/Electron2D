@@ -66,7 +66,7 @@ internal static class InputActionNativeTests
             {
                 if (value is InputEventMouseMotion { Position.Y: 31 } motion)
                 {
-                    Check(Input.LastMouseVelocity == motion.Velocity, "Native motion state precedes the scene callback.");
+                    Check(Input.MouseButtonMask == motion.ButtonMask, "Native motion button state precedes the scene callback.");
                     motions.Add(motion.Relative.X);
                 }
             };
@@ -111,11 +111,11 @@ internal static class InputActionNativeTests
             Input.FlushBufferedEvents();
             Input.FlushBufferedEvents();
             Check(motions.SequenceEqual([3f]), "Explicit flush delivers exactly one staged pending motion.");
-            var velocity = Input.LastMouseVelocity;
+            var position = Input.Service.GetLastMousePositionCore();
             motion.Motion.X = float.NaN;
             accumulate.Invoke(display, [motion.Motion]);
             Reject<ArgumentOutOfRangeException>(Input.FlushBufferedEvents);
-            Check(Input.LastMouseVelocity == velocity && motions.Count == 1, "Invalid native motion changes neither state nor callbacks.");
+            Check(Input.Service.GetLastMousePositionCore() == position && motions.Count == 1, "Invalid native motion changes neither position nor callbacks.");
             Input.FlushBufferedEvents();
             Console.WriteLine($"SDL {SDL.GetVersion()} windows: action callback order, accumulation on/off, flush owner/reentry and validation passed");
         }

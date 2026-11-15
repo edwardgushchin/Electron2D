@@ -2,6 +2,59 @@ namespace Electron2D;
 
 public sealed partial class Input
 {
+    private struct PointerVelocity
+    {
+        internal Vector2 Local, Screen;
+        private long _tick;
+        private Vector2 _localAccum, _screenAccum;
+        private float _time;
+
+        public PointerVelocity() { this = default; _tick = System.Diagnostics.Stopwatch.GetTimestamp(); }
+
+        internal void Update(Vector2 relative, Vector2 screenRelative)
+        {
+            var tick = System.Diagnostics.Stopwatch.GetTimestamp();
+            var elapsed = (float)System.Diagnostics.Stopwatch.GetElapsedTime(_tick, tick).TotalSeconds;
+            _tick = tick;
+            if (elapsed > 3f)
+            {
+                Local = Screen = Vector2.Zero;
+                _localAccum = relative;
+                _screenAccum = screenRelative;
+                _time = 0;
+                return;
+            }
+            _localAccum += relative;
+            _screenAccum += screenRelative;
+            _time += elapsed;
+            if (_time < 0.1f) return;
+            Local = _localAccum / _time;
+            Screen = _screenAccum / _time;
+            _localAccum = _screenAccum = Vector2.Zero;
+            _time = 0;
+        }
+    }
+
+    private InputEventScreenDrag? CalibrateTouchMotion(InputEvent source)
+    {
+        if (source is not InputEventScreenDrag drag) return null;
+        var copy = (InputEventScreenDrag)drag.Duplicate();
+        try
+        {
+            lock (_gate)
+            {
+                var key = (drag.Device, drag.Index);
+                if (!_touchVelocities.TryGetValue(key, out var velocity)) velocity = new PointerVelocity();
+                velocity.Update(drag.Relative, drag.ScreenRelative);
+                _touchVelocities[key] = velocity;
+                copy.Velocity = velocity.Local;
+                copy.ScreenVelocity = velocity.Screen;
+            }
+            return copy;
+        }
+        catch { copy.Dispose(); throw; }
+    }
+
     private int _defaultCursorShape;
 
     internal CursorShape DefaultCursorShape => (CursorShape)Volatile.Read(ref _defaultCursorShape);
@@ -24,7 +77,7 @@ public sealed partial class Input
         if (DefaultCursorShape == shape) return;
         display.CursorSetShapeCore(shape);
         Volatile.Write(ref _defaultCursorShape, (int)shape);
-        lock (_gate) _lastMouseVelocity = _lastMouseScreenVelocity = Vector2.Zero;
+        lock (_gate) _mouseVelocity = new PointerVelocity();
         if (Engine.MainLoop is SceneTree { Root: Window window } tree)
         {
             tree.RefreshGUICursor();
@@ -37,7 +90,7 @@ public sealed partial class Input
     {
         lock (_gate)
         {
-            _lastMouseVelocity = _lastMouseScreenVelocity = Vector2.Zero;
+            _mouseVelocity = new PointerVelocity();
             return new InputEventMouseMotion
             {
                 Device = InputEvent.DeviceIdInternal,
