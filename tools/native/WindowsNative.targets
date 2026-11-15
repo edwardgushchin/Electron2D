@@ -4,12 +4,15 @@
     <_Electron2DWindowsRID Condition="'$(_Electron2DWindowsRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</_Electron2DWindowsRID>
   </PropertyGroup>
   <ItemGroup>
-    <!-- Only retired engine payloads are removed; application and third-party files stay intact. -->
     <_Electron2DLegacyWindowsFile Include="Electron2DENet.dll;Electron2DKTX.dll;Electron2DMesh.dll;Electron2DOGV.dll;Electron2DTextBreak.dll;Electron2DWebP.dll;Electron2DWebRTC.dll;Electron2DRender.dll;Electron2DFreeType.dll;libHarfBuzzSharp.dll;libHarfBuzzSharp.pdb;libcrypto-3-Electron2D.dll;libssl-3-Electron2D.dll;libcrypto-4-Electron2D.dll;libssl-4-Electron2D.dll" />
+    <_Electron2DWindowsCleanupFile Include="@(_Electron2DLegacyWindowsFile);libElectron2D.dll" />
   </ItemGroup>
   <Target Name="RejectElectron2DLegacyWindowsPackage" AfterTargets="ResolvePackageAssets" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-'))">
     <ItemGroup>
       <_Electron2DWindowsPackageAsset Include="@(NativeCopyLocalItems);@(RuntimeTargetsCopyLocalItems)" Condition="'%(NuGetPackageId)' == 'Electron2D.Windows'" />
+      <_Electron2DWindowsCleanupAsset Include="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.NuGetPackageId)' == 'Electron2D.Windows' or $([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('SDL3-CS.Windows'))" />
+      <_Electron2DWindowsCleanupAsset Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeTargetsCopyLocalItems.AssetType)' == 'native' and ('%(RuntimeTargetsCopyLocalItems.NuGetPackageId)' == 'Electron2D.Windows' or $([System.String]::Copy('%(RuntimeTargetsCopyLocalItems.NuGetPackageId)').StartsWith('SDL3-CS.Windows')))" />
+      <_Electron2DWindowsCleanupFile Include="@(_Electron2DWindowsCleanupAsset->'%(Filename)%(Extension)')" />
       <_Electron2DLegacyWindowsAsset Include="@(_Electron2DWindowsPackageAsset)" Condition="'%(Filename)%(Extension)' == 'Electron2DENet.dll' or '%(Filename)%(Extension)' == 'Electron2DFreeType.dll' or '%(Filename)%(Extension)' == 'libHarfBuzzSharp.dll' or '%(Filename)%(Extension)' == 'libcrypto-3-Electron2D.dll' or '%(Filename)%(Extension)' == 'libcrypto-4-Electron2D.dll'" />
     </ItemGroup>
     <Error Condition="'@(_Electron2DLegacyWindowsAsset)' != ''" Text="Electron2D.Windows contains retired native modules. Restore a qualified package with libElectron2D.dll, freetype.dll, harfbuzz.dll and the OpenSSL 4 pair; deleting output files cannot upgrade this package." />
@@ -24,8 +27,8 @@
   <!-- Clear previous outputs before the SDK applies timestamps and content-copy ordering. -->
   <Target Name="PrepareElectron2DLegacyWindowsBuild" BeforeTargets="_CopyFilesMarkedCopyLocal;_CopySourceItemsToOutputDirectory" DependsOnTargets="GetCopyToOutputDirectoryItems" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(TargetDir)' != ''">
     <ItemGroup>
-      <_Electron2DLegacyWindowsBuildFile Include="$(TargetDir)%(_Electron2DLegacyWindowsFile.Identity)" Condition="Exists('$(TargetDir)%(_Electron2DLegacyWindowsFile.Identity)')" />
-      <_Electron2DLegacyWindowsBuildFile Include="$(TargetDir)runtimes/*/native/%(_Electron2DLegacyWindowsFile.Identity)" />
+      <_Electron2DLegacyWindowsBuildFile Include="$(TargetDir)%(_Electron2DWindowsCleanupFile.Identity)" Condition="Exists('$(TargetDir)%(_Electron2DWindowsCleanupFile.Identity)')" />
+      <_Electron2DLegacyWindowsBuildFile Include="$(TargetDir)runtimes/*/native/%(_Electron2DWindowsCleanupFile.Identity)" />
       <_Electron2DLegacyWindowsBuildFile Remove="@(ReferenceCopyLocalPaths);@(AllItemsFullPathWithTargetPath)" MatchOnMetadata="FullPath" MatchOnMetadataOptions="PathLike" />
     </ItemGroup>
     <Delete Files="@(_Electron2DLegacyWindowsBuildFile)" />
@@ -49,8 +52,8 @@
   </Target>
   <Target Name="PrepareElectron2DLegacyWindowsPublish" AfterTargets="_ComputeResolvedFilesToPublishTypes" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(PublishDir)' != ''">
     <ItemGroup>
-      <_Electron2DLegacyWindowsPublishFile Include="$(PublishDir)%(_Electron2DLegacyWindowsFile.Identity)" Condition="Exists('$(PublishDir)%(_Electron2DLegacyWindowsFile.Identity)')" />
-      <_Electron2DLegacyWindowsPublishFile Include="$(PublishDir)runtimes/*/native/%(_Electron2DLegacyWindowsFile.Identity)" />
+      <_Electron2DLegacyWindowsPublishFile Include="$(PublishDir)%(_Electron2DWindowsCleanupFile.Identity)" Condition="Exists('$(PublishDir)%(_Electron2DWindowsCleanupFile.Identity)')" />
+      <_Electron2DLegacyWindowsPublishFile Include="$(PublishDir)runtimes/*/native/%(_Electron2DWindowsCleanupFile.Identity)" />
       <_Electron2DLegacyWindowsPublishFile Remove="@(ResolvedFileToPublish)" MatchOnMetadata="FullPath" MatchOnMetadataOptions="PathLike" />
     </ItemGroup>
     <Delete Files="@(_Electron2DLegacyWindowsPublishFile)" />

@@ -201,6 +201,13 @@ def read_manifests(feed):
     return manifests
 
 
+def seed_foreign_native(output, rid, names):
+    directory = output / "runtimes" / rid / "native"
+    directory.mkdir(parents=True, exist_ok=True)
+    for name in names:
+        (directory / name).write_bytes(b"previous RID engine")
+
+
 def check(feed, rid, managed=False):
     manifests = read_manifests(feed)
     if rid not in manifests:
@@ -324,24 +331,25 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
             if application_native:
                 build_output = app / "bin/Release/net10.0" / rid
                 foreign_rid = next(candidate for candidate in reversed(native_package.PLATFORMS["Windows"]) if candidate != rid)
-                retired_build = build_output / "runtimes" / foreign_rid / "native/Electron2DWebRTC.dll"
-                retired_build.parent.mkdir(parents=True, exist_ok=True)
-                retired_build.write_bytes(b"retired foreign engine")
+                foreign_names = {"Electron2DWebRTC.dll", "libElectron2D.dll"}
+                seed_foreign_native(build_output, foreign_rid, foreign_names)
                 run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--nologo"], app, environment)
                 build_audit = [sys.executable, "-B", str(ROOT / "tools/check_native_publish.py"), rid, str(build_output), "Consumer"]
                 run(build_audit, app, environment)
                 run([str(build_output / "Consumer.exe")], work, environment)
+                foreign_names.update(path.name for path in (build_output / "runtimes" / rid / "native").iterdir()
+                                     if path.is_file())
                 selected = build_output / "libHarfBuzzSharp.dll"
                 selected.write_bytes(b"x" * selected.stat().st_size)
                 future = time.time() + 864000
                 os.utime(selected, (future, future))
-                retired_build.write_bytes(b"retired foreign engine")
+                seed_foreign_native(build_output, foreign_rid, foreign_names)
                 run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--no-restore", "--nologo"], app, environment)
                 if selected.read_bytes() != (app / "application-font.bin").read_bytes():
                     raise RuntimeError("Repeated build retained a stale project-owned native file")
                 run(build_audit, app, environment)
                 run([str(build_output / "Consumer.exe")], work, environment)
-                print("Repeated build restored the future-dated project-owned DLL.", flush=True)
+                print(f"Repeated build restored the future-dated project-owned DLL and removed {len(foreign_names)} foreign payloads.", flush=True)
             if os.name != "nt":
                 run([dotnet, "run", "-c", "Release", "--project", "Consumer.csproj"], app, environment)
             if kind == "generic":
@@ -354,9 +362,7 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
             if kind != "generic":
                 publish += ["-r", rid, "--self-contained", "true"]
             if application_native:
-                retired_publish = output / "runtimes" / foreign_rid / "native/Electron2DWebRTC.dll"
-                retired_publish.parent.mkdir(parents=True, exist_ok=True)
-                retired_publish.write_bytes(b"retired foreign engine")
+                seed_foreign_native(output, foreign_rid, foreign_names)
             run(publish, app, environment)
             if application_native:
                 audit = [sys.executable, "-B", str(ROOT / "tools/check_native_publish.py"), rid, str(output), "Consumer"]
@@ -371,7 +377,7 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
                 if refused.returncode == 0 or "Application native checksum mismatch" not in refused.stdout + refused.stderr:
                     raise RuntimeError("Publish audit accepted a replaced application native file")
                 print("Publish audit refused the replaced project-owned DLL.", flush=True)
-                retired_publish.write_bytes(b"retired foreign engine")
+                seed_foreign_native(output, foreign_rid, foreign_names)
                 run(publish + ["--no-restore"], app, environment)
                 run(audit, app, environment)
             for name in manifests[rid]["files"]:

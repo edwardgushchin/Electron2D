@@ -211,8 +211,10 @@ class WindowsDeliveryTests(unittest.TestCase):
             source = root / "application.bin"
             source.write_bytes(b"application-owned foreign file")
             relative = f"runtimes/{foreign}/native/libHarfBuzzSharp.dll"
+            selected_common = f"runtimes/{foreign}/native/libElectron2D.dll"
             project.write_text(project.read_text().replace('</ItemGroup>',
-                f'<None Include="application.bin" Link="{relative}" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>')
+                f'<None Include="application.bin" Link="{relative}" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />'
+                f'<Content Include="application.bin" Link="{selected_common}" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>')
                 .replace('</Project>', f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" /></Project>'))
             for stage, output in (("build", root / "bin/Release/net10.0"), ("publish", root / "publish")):
                 runtime_directories = [output / f"runtimes/{candidate}/native"
@@ -220,6 +222,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                 for directory in runtime_directories:
                     directory.mkdir(parents=True, exist_ok=True)
                     (directory / "Electron2DWebRTC.dll").write_bytes(b"retired engine")
+                    (directory / "libElectron2D.dll").write_bytes(b"previous RID engine")
                     (directory / "application-plugin.dll").write_bytes(b"unrelated file")
                 command = ["dotnet", stage, str(project), "-c", "Release", "--nologo"]
                 if stage == "publish":
@@ -229,6 +232,10 @@ class WindowsDeliveryTests(unittest.TestCase):
                 self.assertEqual((output / relative).read_bytes(), source.read_bytes())
                 for directory in runtime_directories:
                     self.assertFalse((directory / "Electron2DWebRTC.dll").exists())
+                    if directory.parent.name == foreign:
+                        self.assertEqual((directory / "libElectron2D.dll").read_bytes(), source.read_bytes())
+                    else:
+                        self.assertFalse((directory / "libElectron2D.dll").exists())
                     self.assertEqual((directory / "application-plugin.dll").read_bytes(), b"unrelated file")
                 entries = self.assert_application_receipt(output)
                 self.assertEqual(entries[relative], hashlib.sha256(source.read_bytes()).hexdigest())
@@ -417,13 +424,20 @@ class WindowsDeliveryTests(unittest.TestCase):
             with self.subTest(rid=rid), tempfile.TemporaryDirectory(prefix="native layout ") as temporary:
                 root = Path(temporary)
                 project = root / "Consumer.proj"
+                (root / "package").mkdir()
+                for name in package.LIBRARIES["Windows"]:
+                    (root / "package" / name).write_bytes(name.encode())
+                assets = ''.join(f'<NativeCopyLocalItems Include="{escape(str(root / "package" / name))}" NuGetPackageId="Electron2D.Windows" />'
+                    f'<ReferenceCopyLocalPaths Include="{escape(str(root / "package" / name))}" DestinationSubDirectory="runtimes/{rid}/native/" />'
+                    f'<ResolvedFileToPublish Include="{escape(str(root / "package" / name))}" NuGetPackageId="Electron2D.Windows" AssetType="native" RelativePath="runtimes/{rid}/native/{name}" />'
+                    for name in package.LIBRARIES["Windows"])
                 project.write_text('<Project><PropertyGroup>'
                     f'<RuntimeIdentifier>{rid}</RuntimeIdentifier>'
                     f'<TargetDir>{escape(str(root / "build"))}/</TargetDir>'
                     f'<PublishDir>{escape(str(root / "publish"))}/</PublishDir>'
-                    '</PropertyGroup>'
+                    f'</PropertyGroup><ItemGroup>{assets}</ItemGroup>'
                     f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" />'
-                    '<Target Name="GetCopyToOutputDirectoryItems" /><Target Name="CopyFilesToOutputDirectory"><Copy SourceFiles="@(ReferenceCopyLocalPaths)" DestinationFiles="@(ReferenceCopyLocalPaths->&apos;$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)&apos;)" /></Target><Target Name="Publish"><Copy SourceFiles="@(ResolvedFileToPublish)" DestinationFiles="@(ResolvedFileToPublish->&apos;$(PublishDir)%(RelativePath)&apos;)" /></Target></Project>')
+                    '<Target Name="ResolvePackageAssets" /><Target Name="GetCopyToOutputDirectoryItems" /><Target Name="CopyFilesToOutputDirectory"><Copy SourceFiles="@(ReferenceCopyLocalPaths)" DestinationFiles="@(ReferenceCopyLocalPaths->&apos;$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)&apos;)" /></Target><Target Name="Publish"><Copy SourceFiles="@(ResolvedFileToPublish)" DestinationFiles="@(ResolvedFileToPublish->&apos;$(PublishDir)%(RelativePath)&apos;)" /></Target></Project>')
                 expected = set(package.LIBRARIES["Windows"]) | {"application-plugin.dll", "SDL3.dll"}
                 root_expected = {"application-plugin.dll", "SDL3.dll", "Electron2D.dll"}
                 for stale in (False, True):
@@ -435,7 +449,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                         for name in root_expected | (set(package.retired_windows_files()) if stale else set()):
                             (root / output / name).write_bytes(name.encode())
                     result = subprocess.run(["dotnet", "msbuild", str(project), "-nologo",
-                        "-target:PrepareElectron2DLegacyWindowsBuild;CopyFilesToOutputDirectory;Electron2DWindowsNativePublishCopy;PrepareElectron2DLegacyWindowsPublish;Publish"], capture_output=True, text=True)
+                        "-target:ResolvePackageAssets;PrepareElectron2DLegacyWindowsBuild;CopyFilesToOutputDirectory;Electron2DWindowsNativePublishCopy;PrepareElectron2DLegacyWindowsPublish;Publish"], capture_output=True, text=True)
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                     for output in ("build", "publish"):
                         directory = root / output / "runtimes" / rid / "native"
