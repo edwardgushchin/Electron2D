@@ -129,7 +129,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - `PropertyDescriptor`: heterogeneous property metadata and compatibility checks.
 - `PropertyDescriptor<TOwner, TValue>`: typed access, validation, and revert behavior.
 - `ConfigKey<T>`: immutable typed identity for one sectioned configuration entry.
-- `ConfigFile`: concurrent in-memory configuration, transactional parse/merge, deterministic text encoding, atomic file replacement, and raw-key/password authenticated encryption.
+- `ConfigFile`: concurrent in-memory configuration, strict UTF-8 input with an optional UTF-8 BOM, transactional parse/merge, deterministic text encoding, atomic file replacement, and raw-key/password authenticated encryption.
 - `JSON`: document-scoped JSON tree parsing, formatting, diagnostics, source retention and explicitly typed model conversion.
 - `FileAccess`: seekable raw and transformed file ownership, [typed binary I/O](../components/file-access.md#binary-io) and [strict UTF-8 text I/O](../components/file-access.md#text-framing), mounted or directory-backed virtual paths, process pipes, metadata/hashes, native attributes, temporary files, compression, and authenticated encryption.
 - `DirAccess`: scoped current-directory state, [cursor and sorted snapshot enumeration](../components/file-access.md#directory-enumeration) over physical and mounted paths, file/directory mutation, links, temporary-directory ownership, drive/capacity/type/case/identity queries, and static absolute helpers.
