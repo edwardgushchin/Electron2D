@@ -278,7 +278,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static FileAccess Open(string path, FileAccessModeFlags mode)
     {
@@ -368,7 +368,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="PlatformNotSupportedException">The selected native codec is unavailable in the packaged bridge.</exception>
     /// <exception cref="InvalidDataException">An existing container is malformed or uses another codec.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
     public static FileAccess OpenCompressed(
         string path,
         FileAccessModeFlags mode,
@@ -396,7 +396,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="CryptographicException">Authentication fails.</exception>
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses password mode.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
     public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)
     {
@@ -432,7 +432,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="CryptographicException">Authentication fails.</exception>
     /// <exception cref="InvalidDataException">The encryption envelope is malformed or uses raw-key mode.</exception>
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory or access is denied.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
     public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)
     {
@@ -1166,7 +1166,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="IOException">The filesystem cannot change the attribute.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a virtual path escapes its root, or access is denied.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     /// <exception cref="PlatformNotSupportedException">The current platform does not expose this file attribute.</exception>
     public static void SetHidden(string path, bool hidden)
@@ -1193,7 +1193,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="IOException">The filesystem cannot change the attribute.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a virtual path escapes its root, or access is denied.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     /// <exception cref="PlatformNotSupportedException">The current platform does not expose this file attribute.</exception>
     public static void SetReadOnly(string path, bool readOnly)
@@ -1229,7 +1229,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="permissions"/> contains unknown bits.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="IOException">The filesystem cannot change the mode.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
+    /// <exception cref="UnauthorizedAccessException">The path identifies a directory, a virtual path escapes its root, or access is denied.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     /// <exception cref="PlatformNotSupportedException">The current platform does not expose Unix file modes.</exception>
     public static void SetUnixPermissions(string path, UnixPermissionFlags permissions)

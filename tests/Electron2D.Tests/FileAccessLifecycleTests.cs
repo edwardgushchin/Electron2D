@@ -24,6 +24,7 @@ internal static class FileAccessLifecycleTests
             ProjectSettings.ConfigurePaths(project, user);
             VerifySnapshots(directory.FullName, project, user);
             VerifyMountedFileProtection(directory.FullName, project);
+            VerifyPhysicalDirectoryRejection(project, user);
             if (OperatingSystem.IsLinux())
                 VerifyLinkedSize(project);
             VerifyTransformed(project, user, other);
@@ -269,6 +270,57 @@ internal static class FileAccessLifecycleTests
                     "PCK replacements must preserve the masked physical extended attributes.");
             }
         }
+    }
+
+    private static void VerifyPhysicalDirectoryRejection(string project, string user)
+    {
+        const string name = "physical-directory";
+        var projectDirectory = Directory.CreateDirectory(IOPath.Combine(project, name)).FullName;
+        var userDirectory = Directory.CreateDirectory(IOPath.Combine(user, name)).FullName;
+        var paths = new[]
+        {
+            (Path: projectDirectory, Physical: projectDirectory),
+            (Path: "res://" + name, Physical: projectDirectory),
+            (Path: "user://" + name, Physical: userDirectory),
+        };
+        var key = new byte[32];
+        foreach (var (path, physical) in paths)
+        {
+            foreach (var mode in new[] { FileAccessModeFlags.Write, FileAccessModeFlags.WriteRead })
+            {
+                Reject<UnauthorizedAccessException>(() => EFile.Open(path, mode));
+                Reject<UnauthorizedAccessException>(() => EFile.OpenCompressed(path, mode, FileCompressionMode.Gzip));
+                Reject<UnauthorizedAccessException>(() => EFile.OpenEncrypted(path, mode, key));
+                Reject<UnauthorizedAccessException>(() => EFile.OpenEncryptedWithPassword(path, mode, "fixture password"));
+            }
+
+            if (OperatingSystem.IsWindows())
+            {
+                var attributes = File.GetAttributes(physical);
+                try
+                {
+                    Reject<UnauthorizedAccessException>(() => EFile.SetHidden(path, (attributes & FileAttributes.Hidden) == 0));
+                    Reject<UnauthorizedAccessException>(() => EFile.SetReadOnly(path, (attributes & FileAttributes.ReadOnly) == 0));
+                    Check(File.GetAttributes(physical) == attributes, "FileAccess must preserve directory attributes.");
+                }
+                finally
+                {
+                    if (File.GetAttributes(physical) != attributes)
+                        File.SetAttributes(physical, attributes);
+                }
+            }
+            else
+            {
+                var permissions = File.GetUnixFileMode(physical);
+                Reject<UnauthorizedAccessException>(() => EFile.SetUnixPermissions(path, (UnixPermissionFlags)(permissions ^ UnixFileMode.OtherWrite)));
+                Check(File.GetUnixFileMode(physical) == permissions, "FileAccess must preserve directory permissions.");
+            }
+
+            Reject<FileNotFoundException>(() => EFile.SetExtendedAttributeString(path, "test", "value"));
+            Check(Directory.Exists(physical) && !Directory.EnumerateFileSystemEntries(physical).Any(),
+                "Rejected opens must leave the directory intact and empty.");
+        }
+        Console.WriteLine("Writable FileAccess factories and metadata setters reject physical directories.");
     }
 
     private static void VerifyTransformed(string project, string user, string other)

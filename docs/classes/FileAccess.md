@@ -244,7 +244,7 @@ On Windows, physical read-only streams allow staged replacement. An open reader 
 
 When a mounted directory and a physical file share a `res://` path, the directory takes precedence. `Open` throws `FileNotFoundException` for that resource path. The physical file remains accessible through its native absolute path.
 
-Writable opens check mounted file and directory precedence against one mount snapshot, including while a patch replaces one with the other.
+Writable opens check mounted file and directory precedence against one mount snapshot, including while a patch replaces one with the other. Physical directories are rejected at open, including in the transformed `Write` and `WriteRead` modes.
 
 **Parameters**
 
@@ -258,7 +258,7 @@ Writable opens check mounted file and directory precedence against one mount sna
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or `mode` is invalid.
 - `IO.IOException`: The file cannot be opened.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 <a id="m-electron2d-fileaccess-createtemp-electron2d-fileaccessmode-system-string-system-string-system-boolean"></a>
@@ -303,7 +303,7 @@ Opens a whole-file compressed container.
 - `PlatformNotSupportedException`: The selected native codec is unavailable in the packaged bridge.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
 - `IO.IOException`: The physical file cannot be read or replaced.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory or access is denied.
 
 **Remarks:** Writable opens check mount precedence in one lookup. Changes are atomically encoded to the destination by [`FileAccess.Flush`](FileAccess.md#m-electron2d-fileaccess-flush) or [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close).
 
@@ -327,7 +327,7 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses password mode.
 - `IO.IOException`: The physical file cannot be read or replaced.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
 **Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable opens check mount precedence in one lookup. A fresh random nonce is used each time changes are committed to the captured destination.
@@ -352,7 +352,7 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses raw-key mode.
 - `IO.IOException`: The physical file cannot be read or replaced.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
 **Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable opens check mount precedence in one lookup. A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.
@@ -1038,7 +1038,7 @@ Gets whether the filesystem marks a file as hidden.
 
 Changes a file's hidden attribute.
 
-Checks mount precedence in one lookup before changing physical attributes.
+Checks mount precedence in one lookup and rejects physical directories before changing attributes.
 
 **Parameters**
 
@@ -1050,7 +1050,7 @@ Checks mount precedence in one lookup before changing physical attributes.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the attribute.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose this file attribute.
 
@@ -1079,7 +1079,7 @@ Gets whether the filesystem marks a file as read-only.
 
 Changes a file's read-only attribute.
 
-Checks mount precedence in one lookup before changing physical attributes.
+Checks mount precedence in one lookup and rejects physical directories before changing attributes.
 
 **Parameters**
 
@@ -1091,7 +1091,7 @@ Checks mount precedence in one lookup before changing physical attributes.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the attribute.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose this file attribute.
 
@@ -1120,7 +1120,7 @@ Gets Unix mode bits for a file.
 
 Sets Unix mode bits for a file.
 
-Checks mount precedence in one lookup before changing physical permissions.
+Checks mount precedence in one lookup and rejects physical directories before changing permissions.
 
 **Parameters**
 
@@ -1133,7 +1133,7 @@ Checks mount precedence in one lookup before changing physical permissions.
 - `ArgumentOutOfRangeException`: `permissions` contains unknown bits.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the mode.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose Unix file modes.
 

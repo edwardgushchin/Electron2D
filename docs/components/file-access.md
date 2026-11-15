@@ -60,6 +60,8 @@ The static existence, size, text and digest queries each resolve the current pat
 
 Writable opens and static metadata operations check mounted files, directories, and file ancestors against one mount snapshot. Replacing a mounted file with a directory keeps any physical file at that path masked. The lifecycle regression checks physical bytes, timestamps returned through the virtual path, Windows hidden/read-only attributes, Linux Unix mode bits, and extended attributes on Windows and Linux. Mounted file metadata queries return the [documented defaults](../classes/FileAccess.md#verification-and-known-limits); extended attribute operations reject mounted files.
 
+Writable opens and the hidden, read-only, and Unix permission setters reject physical directories after resolving the mount. In `Write` and `WriteRead`, transformed factories reject a directory before returning an owner. Extended attribute operations require an existing file.
+
 Transformed `ReadWrite` reads and later commits at the same captured physical destination. A failed atomic replacement leaves the previous file in place and permits a `Flush` retry. A failing `Close` still retires the stream and releases buffers. `CreateTemp` defaults to `ReadWrite` and deletes its file at close or disposal unless `keep` is true.
 
 ## Directory enumeration

@@ -310,6 +310,8 @@ internal sealed class ResourcePacks
             throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
         if (entry is not null)
             throw new UnauthorizedAccessException("Mounted resource entries are read-only.");
+        if (Directory.Exists(absolutePath))
+            throw new UnauthorizedAccessException("The path identifies a directory.");
 
         return absolutePath;
     }
