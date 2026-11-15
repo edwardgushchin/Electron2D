@@ -322,8 +322,12 @@ Console.WriteLine("Project-owned libHarfBuzzSharp.dll loaded.");
 sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
             environment["RestoreAdditionalProjectSources"] = str(engine_feed)
             if application_native:
-                run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--nologo"], app, environment)
                 build_output = app / "bin/Release/net10.0" / rid
+                foreign_rid = next(candidate for candidate in reversed(native_package.PLATFORMS["Windows"]) if candidate != rid)
+                retired_build = build_output / "runtimes" / foreign_rid / "native/Electron2DWebRTC.dll"
+                retired_build.parent.mkdir(parents=True, exist_ok=True)
+                retired_build.write_bytes(b"retired foreign engine")
+                run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--nologo"], app, environment)
                 build_audit = [sys.executable, "-B", str(ROOT / "tools/check_native_publish.py"), rid, str(build_output), "Consumer"]
                 run(build_audit, app, environment)
                 run([str(build_output / "Consumer.exe")], work, environment)
@@ -331,6 +335,7 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
                 selected.write_bytes(b"x" * selected.stat().st_size)
                 future = time.time() + 864000
                 os.utime(selected, (future, future))
+                retired_build.write_bytes(b"retired foreign engine")
                 run([dotnet, "build", "Consumer.csproj", "-c", "Release", "--no-restore", "--nologo"], app, environment)
                 if selected.read_bytes() != (app / "application-font.bin").read_bytes():
                     raise RuntimeError("Repeated build retained a stale project-owned native file")
@@ -348,6 +353,10 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
             publish = [dotnet, "publish", "Consumer.csproj", "-c", "Release", "-o", str(output), "--nologo"]
             if kind != "generic":
                 publish += ["-r", rid, "--self-contained", "true"]
+            if application_native:
+                retired_publish = output / "runtimes" / foreign_rid / "native/Electron2DWebRTC.dll"
+                retired_publish.parent.mkdir(parents=True, exist_ok=True)
+                retired_publish.write_bytes(b"retired foreign engine")
             run(publish, app, environment)
             if application_native:
                 audit = [sys.executable, "-B", str(ROOT / "tools/check_native_publish.py"), rid, str(output), "Consumer"]
@@ -362,13 +371,15 @@ sealed class ConsumerMovieWriter''', 1), encoding="utf-8")
                 if refused.returncode == 0 or "Application native checksum mismatch" not in refused.stdout + refused.stderr:
                     raise RuntimeError("Publish audit accepted a replaced application native file")
                 print("Publish audit refused the replaced project-owned DLL.", flush=True)
+                retired_publish.write_bytes(b"retired foreign engine")
                 run(publish + ["--no-restore"], app, environment)
                 run(audit, app, environment)
             for name in manifests[rid]["files"]:
                 if (output / name).exists() or not (output / "runtimes" / rid / "native" / name).is_file():
                     raise RuntimeError(f"Private native directory lost: {kind}/{name}")
             run([str(output / ("Consumer.exe" if os.name == "nt" else "Consumer"))], work, environment)
-            foreign = [path for path in (output / "runtimes").glob("*") if path.name != rid]
+            foreign = [path for path in (output / "runtimes").glob("*")
+                       if path.name != rid and any(file.is_file() for file in path.rglob("*"))]
             if foreign:
                 raise RuntimeError(f"Foreign native runtime directories shipped: {foreign}")
         print("Managed-only source/package, explicit platform project/NuGet consumers and target-only builds/publishes passed with native tools blocked (explicit RID and default host)")

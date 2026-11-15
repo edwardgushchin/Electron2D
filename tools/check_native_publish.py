@@ -102,7 +102,8 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     native = publish / "runtimes" / rid / "native"
     assert all((native / name).is_file() for name in names), f"Missing native render/text files: {names}"
     assert not any((publish / name).exists() for name in names), "Native render/text files must retain their RID directory"
-    assert {path.name for path in (publish / "runtimes").iterdir()} == {rid}, "Foreign RID assets leaked into the game"
+    if platform != "Windows":
+        assert {path.name for path in (publish / "runtimes").iterdir()} == {rid}, "Foreign RID assets leaked into the game"
     platform_packages = {name.split("/")[0] for name, library in packages.items() if name.startswith("Electron2D.") and library["type"] == "package"}
     assert platform_packages == {f"Electron2D.{platform}"}, f"Wrong engine platform packages: {platform_packages}"
     sys.path.insert(0, str(Path(__file__).resolve().parent / "native"))
@@ -111,13 +112,16 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         receipt = json.loads((publish / "Electron2D.native-manifest.json").read_text())[rid]
         assert set(receipt["files"]) == set(native_package.LIBRARIES["Windows"]), "Wrong Windows native manifest"
         application_files = set()
+        native_directories = [directory for directory in (publish / "runtimes").glob("*/native") if directory.is_dir()]
+        retired_files = {directory / name for directory in (publish, *native_directories)
+                         for name in native_package.retired_windows_files()}
         application_receipt = publish / "Electron2D.application-native.sha256"
         if application_receipt.is_file():
-            allowed = {directory / name for directory in (publish, native) for name in native_package.retired_windows_files()}
             for line in application_receipt.read_text(encoding="utf-8-sig").splitlines():
                 checksum, relative = line.split(maxsplit=1)
                 path = publish / relative.replace("\\", "/")
-                assert path in allowed and re.fullmatch(r"[0-9A-Fa-f]{64}", checksum), "Invalid application native receipt entry"
+                assert path in retired_files and re.fullmatch(r"[0-9A-Fa-f]{64}", checksum), "Invalid application native receipt entry"
+                assert path not in application_files, "Duplicate application native receipt entry"
                 assert path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == checksum.lower(), f"Application native checksum mismatch: {relative}"
                 application_files.add(path)
         else:
@@ -128,8 +132,10 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
                         application_files.update(native / Path(path).name for path, metadata in assets.get("runtimeTargets", {}).items()
                                                 if metadata.get("assetType") == "native" and metadata.get("rid") == rid)
             application_files.intersection_update({native / "libHarfBuzzSharp.dll", native / "libHarfBuzzSharp.pdb"})
-        assert not any((directory / name).exists() and (directory / name) not in application_files for directory in (publish, native)
-                       for name in native_package.retired_windows_files()), "Retired Windows payload leaked into publish"
+        assert not any(path.is_file() and path not in application_files for path in retired_files), "Retired Windows payload leaked into publish"
+        assert not any(path.is_file() and path not in application_files
+                       for directory in (publish / "runtimes").iterdir() if directory.name != rid
+                       for path in directory.rglob("*")), "Foreign RID assets leaked into the game"
         for name, checksum in receipt["files"].items():
             library = native / name
             assert hashlib.sha256(library.read_bytes()).hexdigest() == checksum, f"Native manifest checksum mismatch: {name}"
