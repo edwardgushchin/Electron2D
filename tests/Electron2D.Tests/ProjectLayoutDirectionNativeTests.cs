@@ -1,4 +1,5 @@
 using Electron2D;
+using System.Globalization;
 using IOPath = System.IO.Path;
 
 internal static class ProjectLayoutDirectionNativeTests
@@ -10,11 +11,15 @@ internal static class ProjectLayoutDirectionNativeTests
         var mode = ProjectSettings.Get(ProjectSettings.RootNodeLayoutDirection);
         var force = ProjectSettings.Get(ProjectSettings.ForceRightToLeftLayoutDirection);
         var testLocale = ProjectSettings.Get(ProjectSettings.LocaleTest);
+        var culture = TranslationServer.Culture;
         try
         {
             ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
             ProjectSettings.Set(ProjectSettings.LocaleTest, "en");
             Pixels(backend, false); Pixels(backend, true);
+            using var catalog = new Translation { Locale = "ar" };
+            TranslationServer.GetOrAddDomain("layout-native-culture").AddTranslation(catalog);
+            Pixels(backend, false, true);
         }
         finally
         {
@@ -22,15 +27,18 @@ internal static class ProjectLayoutDirectionNativeTests
             ProjectSettings.Set(ProjectSettings.RootNodeLayoutDirection, mode);
             ProjectSettings.Set(ProjectSettings.ForceRightToLeftLayoutDirection, force);
             ProjectSettings.Set(ProjectSettings.LocaleTest, testLocale);
+            TranslationServer.RemoveDomain("layout-native-culture");
+            TranslationServer.Culture = culture;
         }
         Console.WriteLine($"Project layout GUI/text pixels passed: {backend}.");
     }
 
-    private static void Pixels(string backend, bool forced)
+    private static void Pixels(string backend, bool forced, bool locale = false)
     {
-        ProjectSettings.Set(ProjectSettings.RootNodeLayoutDirection, forced ? 1 : 2);
+        ProjectSettings.Set(ProjectSettings.RootNodeLayoutDirection, locale ? 0 : forced ? 1 : 2);
         ProjectSettings.Set(ProjectSettings.ForceRightToLeftLayoutDirection, forced);
         var window = new Window { Size = new(200, 100), LayoutDirection = forced ? LayoutDirection.LTR : LayoutDirection.Inherited };
+        if (locale) window.TranslationDomain = "layout-native-culture";
         var box = new Box { Position = new(10, 10), Size = new(20, 10) };
         var label = new Label { Text = "AA", Position = new(10, 40), Size = new(80, 30), LayoutDirection = forced ? LayoutDirection.LTR : LayoutDirection.Inherited };
         window.AddChild(box); window.AddChild(label);
@@ -39,6 +47,7 @@ internal static class ProjectLayoutDirectionNativeTests
         var frame = 0;
         window.Ready += _ =>
         {
+            if (locale) TranslationServer.Culture = CultureInfo.GetCultureInfo("ar");
             Check(box.Position.X == 170 && window.IsLayoutRTL() == !forced, $"Project policy resolves before ready: x={box.Position.X}, width={window.Size.X}, rootRTL={window.IsLayoutRTL()}, forced={forced}.");
             RenderingServer.SetDefaultClearColor(Colors.Black);
             var renderer = RenderingServer.Service!;
@@ -57,11 +66,12 @@ internal static class ProjectLayoutDirectionNativeTests
                 {
                     var directory = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LAYOUT_OUTPUT") ?? IOPath.GetTempPath();
                     Directory.CreateDirectory(directory);
-                    File.WriteAllBytes(IOPath.Combine(directory, $"layout-{backend}-{(forced ? "forced" : "root")}.png"), image.SavePNGToBuffer());
+                    File.WriteAllBytes(IOPath.Combine(directory, $"layout-{backend}-{(locale ? "culture" : forced ? "forced" : "root")}.png"), image.SavePNGToBuffer());
                     ProjectSettings.Set(ProjectSettings.RootNodeLayoutDirection, 1);
                     ProjectSettings.Set(ProjectSettings.ForceRightToLeftLayoutDirection, !forced);
                     Check(box.IsLayoutRTL(), "An active tree keeps its captured project settings.");
-                    window.LayoutDirection = LayoutDirection.LTR;
+                    if (locale) TranslationServer.Culture = CultureInfo.GetCultureInfo("en");
+                    else window.LayoutDirection = LayoutDirection.LTR;
                     if (forced) window.Tree!.Quit();
                 }
                 else window.Tree!.Quit();
