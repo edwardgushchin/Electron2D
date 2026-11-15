@@ -1,3 +1,5 @@
+[Image analysis](../components/images.md#image-analysis) moves seven rows to Implemented. The register has **14,383/18,344 (78.41%)** implemented applicable rows, 656 Partial, 133 Unimplemented, 3,172 Blocked, 8,949 Excluded and zero unmapped declarations. The compiled snapshot contains 18,332 declarations. Windows x64 managed and native codec checks retain the platform limits in the component.
+
 [RenderingDevice texture descriptions](classes/RDTextureFormat.md) move seven properties and [`TextureGetFormat`](classes/RenderingDevice.md) to Implemented under ADR 0028. The register has **14,376/18,344 (78.37%)** implemented applicable rows, 663 Partial, 133 Unimplemented, 3,172 Blocked, 8,949 Excluded and zero unmapped declarations. The compiled snapshot contains 18,332 declarations.
 
 [DirAccess filesystem mutations](classes/DirAccess.md) move ten rows to Implemented under ADRs 0020 and 0022. The register has **14,368/18,344 (78.33%)** implemented applicable rows, 671 Partial, 133 Unimplemented, 3,172 Blocked, 8,949 Excluded and zero unmapped declarations. The compiled snapshot contains 18,332 declarations.

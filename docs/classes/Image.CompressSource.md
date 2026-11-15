@@ -14,7 +14,7 @@ Last updated: 2026-09-21
 
 ## Description
 
-The current CPU image component uses this enum only in [`Image.DetectUsedChannels`](Image.md#detectusedchannels). Compression itself is deliberately absent until a renderer/editor toolchain is approved.
+Both [`Image.DetectUsedChannels`](Image.md#detectusedchannels) and `Image.Compress` use this policy through the same base-level channel analysis. Generic is the default.
 
 ## Examples
 
@@ -42,7 +42,7 @@ Requests ordinary value-based channel detection without additional semantic assu
 <a id="srgb"></a>
 ### `Srgb = 1`
 
-Marks nonlinear sRGB color. Current channel detection uses the same component-presence rules as `Generic`; compression retains the requested stored color values without implicit color-space conversion.
+Marks nonlinear sRGB color. Channel detection promotes Red/RedGreen color results to RGB, except for single-red storage; compression retains the requested stored color values without implicit color-space conversion.
 
 <a id="normal"></a>
 ### `Normal = 2`

@@ -989,6 +989,19 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0013/0014/0028: fresh caller-owned program-free canvas placeholders work across the complete material family. Version-8 typed Material recovery retains original factory/opaque fields, aliases/cycles, scene-local ownership and missing-payload provenance through copies, worker requests and file bundles; fresh processes restore the actual blend material. Strict default, legacy versions 1\u20137, cache rollback/replacement, concrete subtype and corrupt role/provenance boundaries are verified. Linux software GPU/Compatibility pixels and 64 prepared RID switches per backend have separate physical-GPU/native-heap/foreign/owner gates. Material runtime inheritance, factory and borrowed identity are executable; editor inspection/extension hooks and 3D exclusions retain their individual dependency rows."
+    },
+    {
+      "godot": [
+        "Image::enum:AlphaMode",
+        "Image::enum:UsedChannels",
+        "Image::enum:CompressSource",
+        "Image::method:detect_alpha()",
+        "Image::method:detect_used_channels(int:Image.CompressSource)",
+        "Image::method:get_used_rect()",
+        "Image::method:is_invisible()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039: public all-format analysis checks cover byte thresholds, sRGB/normal roles, exact visible bounds, UInt16 endpoints, base-only snapshots, compressed limits, disposal and PNG/BCn consumers. See docs/components/images.md#image-analysis."
     }
   ],
   "extras": [

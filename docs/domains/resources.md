@@ -1,5 +1,7 @@
 # Resources domain
 
+[Image analysis](../components/images.md#image-analysis) verifies alpha, channel selection and visible base bounds with copied storage and PNG/BCn consumers.
+
 [Function-loaded extension modules](../components/extensions.md) execute typed entry/lifecycle callbacks through ExtensionManager and closed Resource copy/storage through Extension. Class registration and live reload remain open.
 
 Last updated: 2026-11-11

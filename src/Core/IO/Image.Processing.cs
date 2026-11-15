@@ -28,6 +28,9 @@ public sealed partial class Image
 
     /// <summary>Classifies the alpha values used by the base level.</summary>
     /// <returns><see cref="AlphaMode.None"/>, <see cref="AlphaMode.Bit"/>, or <see cref="AlphaMode.Blend"/>.</returns>
+    /// <remarks>LA8/RGBA8 classify bytes below 2 as transparent, 2 through 253 as blended, and 254 or 255 as opaque.
+    /// Other decoded alpha formats use exact endpoints (65535 for RGBA16I). Only the base level is scanned.
+    /// Empty images return None; compressed storage uses metadata: DXT3/DXT5 return Blend, other blocks return None.</remarks>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     public AlphaMode DetectAlpha() => DetectAlpha(Snapshot());
 
@@ -46,16 +49,27 @@ public sealed partial class Image
         for (var index = 0; index < state.Width * state.Height; index++)
         {
             var alpha = ReadColor(state.Data, index * bytes, state.Format).A;
-            if (alpha > 0f && alpha < opaque)
-                return AlphaMode.Blend;
-            hasTransparent |= alpha <= 0f;
+            if (state.Format is Format.La8 or Format.Rgba8)
+            {
+                var sample = state.Data[index * bytes + bytes - 1];
+                if (sample >= 2 && sample < 254)
+                    return AlphaMode.Blend;
+                hasTransparent |= sample < 2;
+            }
+            else
+            {
+                if (alpha > 0f && alpha < opaque)
+                    return AlphaMode.Blend;
+                hasTransparent |= alpha <= 0f;
+            }
         }
 
         return hasTransparent ? AlphaMode.Bit : AlphaMode.None;
     }
 
     /// <summary>Finds the smallest meaningful channel set used by the base level.</summary>
-    /// <param name="source">The semantic interpretation of the data.</param>
+    /// <param name="source">Generic by default. Normal selects red/green; sRGB promotes detected red/red-green to RGB,
+    /// except for single-channel storage whose channel identity is retained.</param>
     /// <returns>The detected channel set.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="source"/> is not defined.</exception>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
@@ -78,7 +92,6 @@ public sealed partial class Image
             return UsedChannels.Red;
 
         var bytes = GetBytesPerPixel(state.Format);
-        var red = false;
         var green = false;
         var blue = false;
         var alpha = false;
@@ -87,7 +100,6 @@ public sealed partial class Image
         for (var index = 0; index < state.Width * state.Height; index++)
         {
             var pixel = ReadColor(state.Data, index * bytes, state.Format);
-            red |= pixel.R > 0.001f;
             green |= pixel.G > 0.001f;
             blue |= pixel.B > 0.001f;
             alpha |= pixel.A < opaque - (state.Format == Format.Rgba16I ? 0f : 0.001f);
@@ -100,13 +112,13 @@ public sealed partial class Image
             return UsedChannels.Rgba;
         if (blue)
             return UsedChannels.Rgb;
-        if (green)
-            return UsedChannels.RedGreen;
-        return red ? UsedChannels.Red : UsedChannels.Luminance;
+        if (source == CompressSource.Srgb)
+            return UsedChannels.Rgb;
+        return green ? UsedChannels.RedGreen : UsedChannels.Red;
     }
 
     /// <summary>Returns the smallest rectangle containing every nontransparent base-level pixel.</summary>
-    /// <returns>An empty rectangle when no pixel is visible; otherwise half-open pixel bounds.</returns>
+    /// <returns>An empty rectangle when no alpha is greater than zero; otherwise exact half-open base-level bounds.</returns>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     public Rect2i GetUsedRect()
@@ -122,7 +134,7 @@ public sealed partial class Image
         {
             for (var x = 0; x < state.Width; x++)
             {
-                if (ReadColor(state.Data, ((y * state.Width) + x) * bytes, state.Format).A <= 0f)
+                if (!(ReadColor(state.Data, ((y * state.Width) + x) * bytes, state.Format).A > 0f))
                     continue;
                 minX = Math.Min(minX, x);
                 minY = Math.Min(minY, y);

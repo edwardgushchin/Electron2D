@@ -291,12 +291,12 @@ Equivalent to `SetPixel(point.X, point.Y, color)`.
 <a id="detectalpha"></a>
 ### `public Image.AlphaMode DetectAlpha()`
 
-Returns `None` when no base pixel is transparent, `Bit` when alpha uses only fully transparent/opaque values, and `Blend` when any fractional alpha is present. `Rgba16I` uses 65,535 as its opaque endpoint. Empty images and formats without alpha report `None`. Opaque compressed formats report `None`; DXT3 and DXT5 report `Blend` from format metadata without decoding.
+LA8/RGBA8 classify alpha bytes 0–1 as Bit, 2–253 as Blend, and 254–255 as None; Blend takes precedence. Other decoded alpha formats use exact endpoints. `Rgba16I` uses 65,535 as its opaque endpoint. Empty images and formats without alpha report `None`. Opaque compressed formats report `None`; DXT3 and DXT5 report `Blend` from format metadata without decoding.
 
 <a id="detectusedchannels"></a>
 ### `public Image.UsedChannels DetectUsedChannels(Image.CompressSource source = Image.CompressSource.Generic)`
 
-Scans the base level and returns the smallest useful channel set. `Rgba16I` alpha is compared against 65,535; `Normal` always selects red/green; `Srgb` currently uses ordinary color detection. Invalid enum values are rejected.
+Scans the base level and returns the smallest useful channel set. `Rgba16I` alpha is compared against 65,535; `Normal` always selects red/green; `Srgb` promotes detected red/red-green color to RGB except for single-red storage. Component presence uses >0.001 and normalized alpha uses <0.999. See [the full analysis contract](../components/images.md#image-analysis). Invalid enum values are rejected.
 
 <a id="getusedrect"></a>
 ### `public Rect2i GetUsedRect()`
