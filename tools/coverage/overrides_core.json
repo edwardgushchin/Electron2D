@@ -2532,10 +2532,12 @@
       "reason": "ADR 0018 defines the typed JSON-token text adaptation. VerifyConfigText checks LF encoding, complex/empty quoted names, BOM/CRLF/full-line comments, duplicate-section merge, stable order, empty input, exact round-trip and atomic rollback for malformed headers, names, assignments and values. The pinned ConfigFile text container and merge roles are preserved."
     },
     {
-      "godot": [
-        "ConfigFile::method:load(String:)",
-        "ConfigFile::method:save(String:)"
-      ],
+      "godot": ["ConfigFile::method:load(String:)"],
+      "state": "Implemented",
+      "reason": "ADR 0018 accepts ordinary OS paths, C# exceptions and strict UTF-8. VerifyConfigFiles checks BOM/CRLF load, merge and rollback on malformed, missing or invalid UTF-8 input. ErrorContracts.Consumer additionally verifies that malformed UTF-8 after a BOM and UTF-16 with a BOM both fail with DecoderFallbackException, leaving the prior configuration intact."
+    },
+    {
+      "godot": ["ConfigFile::method:save(String:)"],
       "state": "Implemented",
       "reason": "ADR 0018 accepts ordinary OS paths, C# exceptions, strict UTF-8 and atomic same-directory replacement. VerifyConfigFiles checks BOM/CRLF load, merge, malformed/missing/invalid-UTF8 rollback, empty save, overwrite, no-BOM LF bytes, missing-directory/directory-target failures and temporary cleanup. Crash durability and other filesystems remain platform verification limits."
     },

@@ -296,29 +296,37 @@ public sealed partial class ConfigFile : ElectronObject
     /// <summary>Loads and merges an unencrypted configuration document from an operating-system path.</summary>
     /// <param name="path">The nonempty file path.</param>
     /// <remarks>
-    /// Strict UTF-8, an optional BOM and ordinary line endings are accepted. Parsing is completed before mutation;
+    /// Strict UTF-8 with an optional UTF-8 BOM and ordinary line endings is accepted. Decoding and parsing finish before mutation;
     /// existing unmentioned entries survive and matching entries are replaced as one merge. Virtual paths are not resolved.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="IOException">The file cannot be read.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller cannot read the file.</exception>
-    /// <exception cref="DecoderFallbackException">The file is not valid UTF-8.</exception>
+    /// <exception cref="DecoderFallbackException">The file contains invalid UTF-8 bytes, including a BOM for another encoding.</exception>
     /// <exception cref="FormatException">The document is malformed.</exception>
     /// <exception cref="ObjectDisposedException">The configuration file is disposing or disposed.</exception>
     public void Load(string path)
     {
         ThrowIfDisposed();
         ValidatePath(path);
-        var data = File.ReadAllText(path, StrictUtf8);
+        string data;
+        using (var stream = File.OpenRead(path))
+            data = ReadDocumentText(stream);
         MergeParsed(ParseDocument(data));
     }
 
     internal void Load(Stream stream)
     {
         ThrowIfDisposed();
-        using var reader = new StreamReader(stream, StrictUtf8, leaveOpen: true);
-        MergeParsed(ParseDocument(reader.ReadToEnd()));
+        MergeParsed(ParseDocument(ReadDocumentText(stream)));
+    }
+
+    private static string ReadDocumentText(Stream stream)
+    {
+        // ParseDocument consumes the UTF-8 BOM as text. Auto-detection would replace the strict decoder.
+        using var reader = new StreamReader(stream, StrictUtf8, detectEncodingFromByteOrderMarks: false, leaveOpen: true);
+        return reader.ReadToEnd();
     }
 
     /// <summary>Loads and merges a configuration document encrypted with a 256-bit key.</summary>
