@@ -10,6 +10,24 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCALAR_MATH") == "1")
+{
+    VerifyMathF();
+    VerifyColors();
+    VerifyVector2Values();
+    VerifyVector2iValues();
+    VerifyVector3Values();
+    VerifyVector3iValues();
+    VerifyVector4Values();
+    VerifyVector4iValues();
+    VerifyRectangles();
+    VerifyIntegerRectangles();
+    VerifyTransforms();
+    VerifyNodeHierarchyAndTransforms();
+    Console.WriteLine("Mathf and geometry passed (127 overloads, seven constants, four concurrent warmed checks at 0 B each).");
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENGINE_METADATA") == "1") { EngineMetadataChecks.Run(args.Length == 0 ? null : args[0]); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_FILE_DIALOG") is { } chooserProfile) { if (chooserProfile == "regression") DisplayServerDialogTests.Run(); else WindowsFileDialogChecks.Run(chooserProfile, args[0], args[1]); return; }
@@ -249,7 +267,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_COPIES") is { } msCop
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEPTH_TRANSFERS") is { } depthTransfers) { DepthTransfersTests.Run(depthTransfers == "1" ? null : depthTransfers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_STORAGE") is { } msStorage) { MultisampleStorageTests.Run(msStorage == "1" ? null : msStorage); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_SAMPLING") is { } msSampling) { MultisampleSamplingTests.Run(msSampling == "1" ? null : msSampling); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else if (deviceSamplers == "depth") RenderingDeviceSamplerTests.RunDepth(); else if (deviceSamplers == "lod") RenderingDeviceSamplerTests.RunLOD(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_MULTIVIEW") is { } multiviewProfile) { if (multiviewProfile == "canvas") RenderingDeviceMultiviewTests.Canvas(); else RenderingDeviceMultiviewTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SPARSE") is { } sparseProfile) { try { if (sparseProfile == "canvas") RenderingDeviceSparseTests.Canvas(); else RenderingDeviceSparseTests.Run(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_PASSES") is { } devicePassProfile)
@@ -435,6 +453,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCAL_RESOURCE_CONSUMERS
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_USER_DATA") == "1") { ProjectUserDataTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_OVERRIDES") == "1") { VerifyProjectSettings(); ProjectOverrideTests.Run(packed: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_LISTING") == "1")
+{
+    VerifyDirAccess(listingOnly: true);
+    Console.WriteLine("Physical directory listing and cursor regressions passed.");
+    return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_PACK_METADATA") == "1") { DirAccessPackMetadataTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
@@ -712,7 +737,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION") == "1") { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_GROUP") is { } groupBackend) { CanvasServerGroupTests.Run(groupBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS_HOST") == "1") { RenderingCanvasTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS") == "1") { RenderingCanvasTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARALLAX_REGRESSION") == "1") { ParallaxTests.Run(); LegacyParallaxTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARALLAX_REGRESSION") == "1") { ParallaxTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_REPEAT") is { } repeatBackend) { CanvasRepeatTests.Run(repeatBackend); return; }
 if (args.Length == 2 && args[0] == "--gettext-oracle") { TranslationCatalogTests.VerifyFiles(args[1]); return; }
 if (args.Length == 2 && args[0] == "--gettext-child") { TranslationCatalogTests.ReadArchive(args[1]); return; }
@@ -746,6 +771,7 @@ if (args.Length == 3 && args[0] == "--file-compression-child") { FileCompression
 if (args.Length == 2 && args[0] == "--file-text-child") { FileTextTests.Child(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_TEXT") == "1") { FileTextTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_BINARY") == "1") { FileBinaryTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_LIFECYCLE") == "1") { FileAccessLifecycleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSION_LEVELS") == "1") { FileCompressionTests.Levels(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ZSTANDARD_OPTIONS") is { } zstandardProfile) { FileCompressionTests.ZstandardOptions(zstandardProfile == "legacy"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_COMPRESSION_NATIVE") is { } fileBackend) { FileCompressionTests.RunNative(fileBackend); return; }
@@ -779,7 +805,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER") == "1"
 if (args.Length == 3 && args[0] == "--node-duplication") { NodeDuplicationTests.Child(args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DUPLICATION") == "managed") { NodeDuplicationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DUPLICATION") is { } duplicationBackend) { NodeDuplicationTests.Render(duplicationBackend); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCAL_SCENES") == "1") { VerifyResources(); VerifyPackedScenes(); NodeReplacementTests.Run(); SubtreeResourceAuthoringTests.Run(); Console.WriteLine("Resource/local scene base, packed graph, root replacement and isolated authoring passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCAL_SCENES") == "1") { VerifyResources(); VerifyPackedScenes(); VerifySceneStateArchive(); NodeReplacementTests.Run(); SubtreeResourceAuthoringTests.Run(); Console.WriteLine("Resource/local scene base, packed graph, scene state archive, root replacement and isolated authoring passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_BASE") == "1") { VerifyResources(); Console.WriteLine("Resource base: copying/reset/errors, path/scene identity, graph duplication and lifetime passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY_CHILD") is { Length: > 0 } resourceDirectory) { ResourceDirectoryTests.RunChild(resourceDirectory); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY") == "1") { ResourceDirectoryTests.Run(); return; }
@@ -921,7 +947,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS_SRGB") is 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MIXED_TEXTURE_REPLACEMENT") == "1") { MixedTextureReplacementTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS") == "1") { RenderingDeviceCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") == "1") { RenderingDeviceTextureTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") is { } deviceTextures && deviceTextures is "1" or "sampling") { RenderingDeviceTextureTests.Run(deviceTextures == "sampling"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == "1") { PhysicsRegisteredBackendTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RIGID_CONTRACT") == "1") { BackendChecks.RunRigidBodyContract(threaded: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_GIZMOS") == "1") { SkeletonGizmoTests.Run(PhysicsServer.Backend.CPU, false, "compatibility"); return; }
@@ -1503,6 +1529,29 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_RENDER") is { } linkBackend) { LinkButtonRenderingTests.Run(linkBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_CHILD") is { } linkPath) { LinkButtonTests.RunChild(linkPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK") == "1") { LinkButtonTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_GUI") == "1")
+{
+    Environment.SetEnvironmentVariable("ELECTRON2D_TEST_LINK_GUI", null);
+    ControlLayoutTests.Run();
+    ControlInputTests.Run();
+    ControlFocusNavigationTests.Run();
+    ControlRecursiveBehaviorTests.Run();
+    ControlClipTests.Run();
+    ScrollInternalNodeTests.Run();
+    ScrollBarTests.Run();
+    ScrollContainerTests.Run();
+    ScrollThemeTests.Run();
+    ItemListTests.Run();
+    TabBarTests.Run();
+    TabContainerTests.Run();
+    ColorPickerTests.Run();
+    SpinBoxTests.Run();
+    FileDialogTests.Run();
+    MenuBarTests.Run();
+    MenuButtonTests.Run();
+    LinkButtonTests.Run();
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_CHILD") is { } menuButtonPath) { MenuButtonTests.RunChild(menuButtonPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
@@ -1624,6 +1673,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_HOST") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_ANCHORS") is { } anchorProfile)
 {
     if (anchorProfile == "managed") ControlLayoutTests.Run();
+    else if (anchorProfile.StartsWith("geometry-", StringComparison.Ordinal)) ControlAnchorRenderingTests.RunGeometry(anchorProfile["geometry-".Length..]);
     else ControlAnchorRenderingTests.Run(anchorProfile);
     return;
 }
@@ -1842,6 +1892,19 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOUCH_INPUT") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
 {
     InputPointerNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACTION_INPUT") is { } actionInputProfile)
+{
+    if (actionInputProfile == "windows")
+        InputActionNativeTests.Run();
+    else
+    {
+        VerifyInput();
+        VerifyInputEmulation();
+        InputActionSettingsTests.Run();
+    }
     return;
 }
 
@@ -2387,7 +2450,6 @@ CanvasCoordinateTests.Run();
 CameraTests.Run();
 JsonTests.Run();
 ParallaxTests.Run();
-LegacyParallaxTests.Run();
 CanvasLayerTests.Run();
 CanvasMaskTests.Run();
 CanvasTransformNotificationTests.Run();
@@ -2453,6 +2515,7 @@ VerifyProjectSettings();
 ProjectOverrideTests.Run();
 VerifyResources();
 VerifyPackedScenes();
+VerifySceneStateArchive();
 VerifyInputMapConfiguration();
 VerifyInputMapMatching();
 VerifyInputEventActionValues();
@@ -3408,6 +3471,101 @@ static void VerifyMathF()
     Expect<OverflowException>(() => _ = Mathf.Wrap(int.MinValue, 0, -1),
         "Integer wrapping must expose the extreme managed remainder overflow.");
 
+    // The floating remainder operator supplies the language-level fmod operation.
+    foreach (var sign in new[] { 1, -1 })
+    {
+        var single = sign * 5.5f;
+        var wide = sign * 5.5d;
+        var divisor = -sign * 2;
+        var zeroBits = sign < 0 ? int.MinValue : 0;
+        var wideZeroBits = sign < 0 ? long.MinValue : 0L;
+        Require(single % divisor == sign * 1.5f &&
+                BitConverter.SingleToInt32Bits((sign * 6f) % divisor) == zeroBits &&
+                BitConverter.SingleToInt32Bits((sign * 0f) % divisor) == zeroBits &&
+                (sign * float.MaxValue) % (2f * float.Epsilon) == 0f &&
+                (sign * float.Epsilon) % divisor == sign * float.Epsilon &&
+                single % (sign * float.PositiveInfinity) == single &&
+                float.IsNaN((sign * float.PositiveInfinity) % divisor) &&
+                float.IsNaN(single % (sign * 0f)) &&
+                float.IsNaN(float.NaN % divisor) && float.IsNaN(single % float.NaN),
+            "Single remainder must preserve the dividend's sign and follow the floating domain limits.");
+        Require(wide % divisor == sign * 1.5d &&
+                BitConverter.DoubleToInt64Bits((sign * 6d) % divisor) == wideZeroBits &&
+                BitConverter.DoubleToInt64Bits((sign * 0d) % divisor) == wideZeroBits &&
+                (sign * double.MaxValue) % (2d * double.Epsilon) == 0d &&
+                (sign * double.Epsilon) % divisor == sign * double.Epsilon &&
+                wide % (sign * double.PositiveInfinity) == wide &&
+                double.IsNaN((sign * double.PositiveInfinity) % divisor) &&
+                double.IsNaN(wide % (sign * 0d)) &&
+                double.IsNaN(double.NaN % divisor) && double.IsNaN(wide % double.NaN),
+            "Double remainder must preserve the dividend's sign and follow the floating domain limits.");
+    }
+
+    Require(Mathf.Inf == float.PositiveInfinity &&
+            BitConverter.SingleToInt32Bits(Mathf.Round(-0.5f)) == int.MinValue &&
+            BitConverter.DoubleToInt64Bits(Mathf.Round(-0.5d)) == long.MinValue &&
+            BitConverter.SingleToInt32Bits(Mathf.PosMod(-6f, 3f)) == int.MinValue &&
+            BitConverter.DoubleToInt64Bits(Mathf.PosMod(-6d, 3d)) == long.MinValue &&
+            BitConverter.SingleToInt32Bits(Mathf.SinCos(-0f).Sin) == int.MinValue &&
+            BitConverter.DoubleToInt64Bits(Mathf.Max(-0d, 0d)) == 0L &&
+            BitConverter.DoubleToInt64Bits(Mathf.Min(0d, -0d)) == long.MinValue,
+        "Signed zero must follow the operation, including ties and exact multiples.");
+    Require(Mathf.RoundToInt(-3.5f) == -4 && Mathf.RoundToInt(-2.5d) == -2 &&
+            Mathf.FloorToInt(-2147483648f) == int.MinValue &&
+            Mathf.CeilToInt(2147483646.5d) == int.MaxValue &&
+            Mathf.NearestPo2(1 << 30) == 1 << 30 && Mathf.NearestPo2((1 << 30) + 1) == int.MinValue &&
+            Mathf.NearestPo2(int.MinValue) == int.MinValue,
+        "Integer conversion and next-power boundaries must follow the documented Int32 contract.");
+    Expect<ArithmeticException>(() => _ = Mathf.MoveToward(double.PositiveInfinity, double.PositiveInfinity, 1d),
+        "Equal infinities yield an unordered movement difference.");
+    Expect<OverflowException>(() => _ = Mathf.DecimalCount(double.MaxValue),
+        "DecimalCount must reject values outside the decimal range.");
+    Require(Mathf.DecimalCount(-0.000m) == 3 &&
+            Mathf.StepDecimals(0.000000009999d) == 8 &&
+            Mathf.StepDecimals(Math.BitDecrement(0.000000009999d)) == 0 &&
+            Mathf.StepDecimals(double.NaN) == 0,
+        "Decimal scale and step estimation must preserve their distinct boundaries.");
+
+    // The scalar and cross-turn samples describe the same cubic control polygon after unwrapping.
+    Require(Mathf.CubicInterpolate(1f, 4f, -1f, 2f, 0.25f) == 1.796875f &&
+            Mathf.CubicInterpolate(1d, 4d, -1d, 2d, 0.25d) == 1.796875d &&
+            MathF.Abs(Mathf.CubicInterpolateAngle(1f, 4f - MathF.Tau, -1f + MathF.Tau, 2f, 0.25f) - 1.796875f) < 1e-6f &&
+            Math.Abs(Mathf.CubicInterpolateAngle(1d, 4d - Math.Tau, -1d + Math.Tau, 2d, 0.25d) - 1.796875d) < 1e-14d,
+        "Catmull-Rom must evaluate the control polygon after unwrapping each angle against its neighbor.");
+
+    // At time 1 the two intermediate lines are 8/3 and 44/15. Their midpoint is 14/5.
+    Require(MathF.Abs(Mathf.CubicInterpolateInTime(1f, 4f, -1f, 2f, 0.5f, 2f, -1f, 5f) - 2.8f) < 1e-6f &&
+            Math.Abs(Mathf.CubicInterpolateInTime(1d, 4d, -1d, 2d, 0.5d, 2d, -1d, 5d) - 2.8d) < 1e-14d &&
+            MathF.Abs(Mathf.CubicInterpolateAngleInTime(1f, 4f - MathF.Tau, -1f + MathF.Tau, 2f, 0.5f, 2f, -1f, 5f) - 2.8f) < 1e-6f &&
+            Math.Abs(Mathf.CubicInterpolateAngleInTime(1d, 4d - Math.Tau, -1d + Math.Tau, 2d, 0.5d, 2d, -1d, 5d) - 2.8d) < 1e-14d &&
+            Mathf.CubicInterpolateInTime(1f, 4f, -1f, 2f, 0.75f, 0f, 0f, 0f) == 0.5f &&
+            Mathf.CubicInterpolateInTime(1d, 4d, -1d, 2d, 0.75d, 0d, 0d, 0d) == 0.5d,
+        "Timed interpolation must handle nonuniform and coincident knots.");
+
+    // The cubic is 1 + 6t + 6t² - 4t³, with derivative 6 + 12t - 12t².
+    Require(Mathf.BezierInterpolate(1f, 3f, 7f, 9f, 0.25f) == 2.8125f &&
+            Mathf.BezierInterpolate(1d, 3d, 7d, 9d, 0.25d) == 2.8125d &&
+            Mathf.BezierDerivative(1f, 3f, 7f, 9f, 0.25f) == 8.25f &&
+            Mathf.BezierDerivative(1d, 3d, 7d, 9d, 0.25d) == 8.25d,
+        "Bezier value and tangent must match the expanded polynomial.");
+    Require(float.IsNaN(Mathf.CubicInterpolate(0f, 0f, 0f, 0f, 1e13f)) &&
+            double.IsNaN(Mathf.CubicInterpolate(0d, 0d, 0d, 0d, 1e110d)) &&
+            float.IsNaN(Mathf.BezierInterpolate(0f, 0f, 0f, 0f, 1e13f)) &&
+            double.IsNaN(Mathf.BezierInterpolate(0d, 0d, 0d, 0d, 1e110d)) &&
+            float.IsNaN(Mathf.BezierDerivative(0f, 0f, 0f, 0f, float.MaxValue)) &&
+            double.IsNaN(Mathf.BezierDerivative(0d, 0d, 0d, 0d, double.MaxValue)) &&
+            Mathf.RadToDeg(1d) == (double)57.295779513082320876798154814m,
+        "Cubic powers must overflow before multiplication by zero, and angle conversion must use the audited coefficient.");
+
+    Require(Mathf.Ease(0.25f, -2f) == 0.125f && Mathf.Ease(0.75d, -2d) == 0.875d &&
+            Mathf.SmoothStep(4f, 0f, 3f) == 0.15625f && Mathf.SmoothStep(4d, 0d, 3d) == 0.15625d &&
+            Mathf.SmoothStep(2d, 2d + 1e-14d, double.NaN) == 2d &&
+            float.IsPositiveInfinity(Mathf.Remap(2f, 1f, 1f, 0f, 1f)) &&
+            double.IsNaN(Mathf.Remap(1d, 1d, 1d, 0d, 1d)) &&
+            MathF.Abs(Mathf.PingPong(-7f, -5f) - 3f) < 1e-6f && Math.Abs(Mathf.PingPong(-7d, 5d) - 3d) < 1e-14d &&
+            Mathf.Snapped(-1f, 2f) == 0f && Mathf.Snapped(-1d, 2d) == 0d,
+        "Composed scalar operations must cover descending edges, degenerate ranges, reflection, and snapping ties.");
+
     Require(!new Vector2(Mathf.Epsilon, 0f).IsZeroApprox() &&
             new Vector2(Mathf.Epsilon * 0.5f, 0f).IsZeroApprox() &&
             !new Vector4(Mathf.Epsilon, 0f, 0f, 0f).IsZeroApprox() &&
@@ -3416,11 +3574,25 @@ static void VerifyMathF()
             !default(Transform).IsEqualApprox(new Transform(Mathf.Epsilon, 0f, 0f, 0f, 0f, 0f)),
         "Migrated geometry must use the authoritative Mathf epsilon boundary.");
 
-    _ = ExerciseMathfHotPath(32);
-    var allocationStart = GC.GetAllocatedBytesForCurrentThread();
-    var accumulator = ExerciseMathfHotPath(10_000);
-    Require(GC.GetAllocatedBytesForCurrentThread() == allocationStart && Mathf.IsFinite(accumulator),
-        "Mathf hot-path scalar operations must not allocate managed memory.");
+    var expected = ExerciseMathfHotPath(10_000);
+    using var start = new Barrier(4);
+    var workers = new Thread[4];
+    for (var i = 0; i < workers.Length; i++)
+    {
+        workers[i] = new Thread(() =>
+        {
+            _ = ExerciseMathfHotPath(10_000);
+            start.SignalAndWait();
+            var allocationStart = GC.GetAllocatedBytesForCurrentThread();
+            var accumulator = ExerciseMathfHotPath(10_000);
+            Require(GC.GetAllocatedBytesForCurrentThread() == allocationStart &&
+                    accumulator == expected && float.IsFinite(accumulator),
+                "Concurrent warmed Mathf calls must agree and allocate zero managed bytes per thread.");
+        });
+        workers[i].Start();
+    }
+    foreach (var worker in workers)
+        worker.Join();
 }
 
 static float ExerciseMathfHotPath(int iterations)
@@ -7157,7 +7329,7 @@ static void VerifyFileAccess()
     }
 }
 
-static void VerifyDirAccess()
+static void VerifyDirAccess(bool listingOnly = false)
 {
     Expect<ArgumentNullException>(() => DirAccess.Open(null!),
         "Directory opening must reject null paths.");
@@ -7225,6 +7397,36 @@ static void VerifyDirAccess()
                 "Streaming enumeration must return names, preserve entry kinds, and clear state at EOF.");
             directory.ListDirEnd();
             directory.ListDirEnd();
+            Require(directory.GetNext() == "" && !directory.CurrentIsDir(),
+                "Closing a listing twice must leave no current entry.");
+
+            directory.ListDirBegin();
+            Require(directory.GetNext() == "." && directory.CurrentIsDir(),
+                "A new listing must start with the navigational candidates when enabled.");
+            directory.ListDirBegin();
+            Require(!directory.CurrentIsDir(), "Restarting must clear the last entry kind.");
+            directory.IncludeNavigational = false;
+            directory.IncludeHidden = false;
+            var beforeChange = directory.GetFiles();
+            Expect<NotSupportedException>(() => ((IList<string>)beforeChange)[0] = "changed",
+                "A returned snapshot must prohibit mutation.");
+            var newPath = IOPath.Combine(root, "Beta.txt");
+            File.WriteAllText(newPath, "new");
+            try
+            {
+                Require(directory.GetFiles().SequenceEqual(["Beta.txt", "alpha.txt", "zeta.txt"]) &&
+                        beforeChange.SequenceEqual(["alpha.txt", "zeta.txt"]),
+                    "A fresh snapshot must sort ordinally and leave earlier snapshots intact.");
+                var captured = new List<string>();
+                for (var name = directory.GetNext(); name.Length > 0; name = directory.GetNext())
+                    captured.Add(name);
+                Require(captured.Order(StringComparer.Ordinal).SequenceEqual(["alpha.txt", "visible-dir", "zeta.txt"]),
+                    "Live filters and snapshot helpers must preserve the active cursor and its captured names.");
+            }
+            finally
+            {
+                File.Delete(newPath);
+            }
 
             directory.IncludeHidden = false;
             directory.IncludeNavigational = false;
@@ -7254,12 +7456,32 @@ static void VerifyDirAccess()
             Require(directory.DirExists("single") && directory.DirExists("nested/child"),
                 "Recursive directory creation must create missing parents and be idempotent.");
 
+            directory.IncludeNavigational = true;
+            directory.ListDirBegin();
+            Require(directory.GetNext() == "." && directory.CurrentIsDir(), "The active cursor must have a directory entry.");
+            Expect<DirectoryNotFoundException>(() => directory.ChangeDir("missing"),
+                "Changing to a missing directory must fail.");
+            Require(directory.GetCurrentDir() == IOPath.GetFullPath(root) && directory.CurrentIsDir() &&
+                    directory.GetNext() == "..", "A failed directory change must preserve the path, kind, and cursor.");
             directory.ChangeDir("nested/child");
             Require(directory.GetCurrentDir() == IOPath.Combine(root, "nested", "child"),
                 "Relative directory changes must update the current native path.");
+            Require(!directory.CurrentIsDir() && directory.GetNext() == "",
+                "A successful change must retire the previous listing.");
             directory.ChangeDir("../..");
             Expect<InvalidOperationException>(() => directory.ChangeDir("res://"),
                 "A physical accessor must reject a virtual scope switch.");
+            Require(DirAccess.GetFilesAt(root).SequenceEqual(["alpha.txt", "zeta.txt"]) &&
+                    DirAccess.GetDirectoriesAt(root).SequenceEqual(["nested", "single", "visible-dir"]),
+                "Static helpers must use default filters, independent of the open instance.");
+            if (OperatingSystem.IsWindows())
+            {
+                using var extendedPath = DirAccess.Open(@"\\?\" + IOPath.GetFullPath(root));
+                Require(extendedPath.GetCurrentDir(includeDrive: false) == IOPath.GetFullPath(root)[2..],
+                    "Drive suppression must also work for extended Windows drive paths.");
+            }
+            if (listingOnly)
+                return;
 
             directory.Copy("alpha.txt", "copy.txt");
             Require(File.ReadAllText(IOPath.Combine(root, "copy.txt")) == "alpha",
@@ -14786,6 +15008,7 @@ static void VerifyPackedScenes()
     Require(scene.CanInstantiate() && liveState.GetNodeCount() == 3 &&
             liveState.GetNodeName(0) == "Root" && liveState.GetNodeName(1) == "Child" &&
             liveState.GetNodeName(2) == "Grandchild" && liveState.GetNodePath(0) == "." &&
+            liveState.GetNodePath(0, forParent: true) == "" && liveState.GetNodePath(1, forParent: true) == "." &&
             liveState.GetNodePath(2) == "Child/Grandchild" && liveState.GetNodePath(2, forParent: true) == "Child" &&
             liveState.GetNodeOwnerPath(0).Length == 0 && liveState.GetNodeOwnerPath(1) == "." &&
             liveState.GetNodeGroups(1).SequenceEqual(["persistent"]) && liveState.GetNodeIndex(1) == -1 &&
@@ -14805,6 +15028,18 @@ static void VerifyPackedScenes()
         "Scene state must reject an invalid node index.");
     Expect<ArgumentOutOfRangeException>(() => liveState.GetNodePropertyName(1, 999),
         "Scene state must reject an invalid property index.");
+    Expect<ArgumentOutOfRangeException>(() => liveState.GetNodePropertyValue<int>(1, -1),
+        "Scene state must reject a negative property index.");
+    Expect<ArgumentOutOfRangeException>(() => liveState.GetNodeGroups(-1),
+        "Scene state must reject a negative node index.");
+    var dataIndex = Enumerable.Range(0, liveState.GetNodePropertyCount(1))
+        .Single(index => liveState.GetNodePropertyName(1, index) == nameof(PackedTestNode.Data));
+    Require(dataIndex == valuePropertyIndex + 1 && ReferenceEquals(liveState.GetNodePropertyValue<Resource>(1, dataIndex), local),
+        "Scene state must preserve property order and borrow resource values through compatible types.");
+    Parallel.For(0, 64, _ =>
+        Require(liveState.GetNodeCount() == 3 && liveState.GetNodeName(2) == "Grandchild" &&
+                liveState.GetNodePropertyValue<int>(1, valuePropertyIndex) == 11 && liveState.GetPath() == scene.ResourcePath,
+            "Concurrent readers must see the same published capture."));
 
     Expect<ArgumentNullException>(() => scene.Pack(null!),
         "Packing a null root must be rejected.");
@@ -14998,9 +15233,75 @@ static void VerifyPackedScenes()
     scene.ResourcePath = $"{prefix}/final.scene";
     var survivingState = scene.GetState();
     scene.Dispose();
-    Require(survivingState.GetNodeCount() == 1 && survivingState.GetPath() == $"{prefix}/final.scene",
+    Require(survivingState.GetNodeCount() == 1 && survivingState.GetNodeName(0) == "RaceRoot" &&
+            survivingState.GetPath() == $"{prefix}/final.scene",
         "An external scene-state reference must survive disposal of its packed-scene resource.");
     survivingState.Dispose();
+    Expect<ObjectDisposedException>(() => survivingState.GetPath(), "A disposed state must reject path reads.");
+    Expect<ObjectDisposedException>(() => survivingState.GetNodeName(0), "A disposed state must reject node reads.");
+}
+
+static void VerifySceneStateArchive()
+{
+    var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-state-{Guid.NewGuid():N}");
+    Directory.CreateDirectory(folder);
+    try
+    {
+        var path = System.IO.Path.Combine(folder, "metadata.e2dscene");
+        using var texture = new ImageTexture();
+        using var scene = new PackedScene();
+        using var beforeSave = scene.GetState();
+        using (var root = new Polygon
+        {
+            Name = "PolygonRoot",
+            Vertices = [new(0, 0), new(2, 0), new(0, 2)],
+            Polygons = [[0, 1, 2]],
+            Texture = texture
+        })
+        {
+            root.AddToGroup("Zulu", persistent: true);
+            root.AddToGroup("Alpha", persistent: true);
+            root.AddToGroup("RuntimeOnly");
+            scene.Pack(root);
+            root.Name = "Edited";
+            root.RemoveFromGroup("Alpha");
+        }
+
+        ResourceSaver.Save(scene, path, SaverFlags.BundleResources | SaverFlags.ChangePath);
+        Require(beforeSave.GetPath() == "" && beforeSave.GetNodeName(0) == "PolygonRoot",
+            "Saving restores the live state's path and ignores changes to the original node.");
+        using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore);
+        using var state = loaded.GetState();
+        Require(state.GetNodeCount() == 1 && state.GetNodeType(0) == nameof(Polygon) &&
+                state.GetNodeName(0) == "PolygonRoot" && state.GetNodePath(0) == "." &&
+                state.GetNodePath(0, forParent: true) == "" && state.GetNodeOwnerPath(0) == "" &&
+                state.GetNodeGroups(0).SequenceEqual(["Alpha", "Zulu"]) && state.GetPath() == loaded.ResourcePath &&
+                state.GetPath().Length > 0,
+            "The archive preserves stored node metadata and publishes its loaded resource path.");
+        Expect<NotSupportedException>(() => ((IList<string>)state.GetNodeGroups(0))[0] = "Injected",
+            "Archive groups must be read-only even through the mutable list interface.");
+
+        var names = Enumerable.Range(0, state.GetNodePropertyCount(0)).Select(i => state.GetNodePropertyName(0, i)).ToArray();
+        Require(names.SequenceEqual(Enumerable.Range(0, beforeSave.GetNodePropertyCount(0)).Select(i => beforeSave.GetNodePropertyName(0, i))),
+            "The archive must preserve property order.");
+        var contourIndex = Array.IndexOf(names, nameof(Polygon.Polygons));
+        var textureIndex = Array.IndexOf(names, nameof(Polygon.Texture));
+        var borrowed = state.GetNodePropertyValue<Texture>(0, textureIndex);
+        Require(ReferenceEquals(beforeSave.GetNodePropertyValue<Texture>(0, textureIndex), texture) &&
+                ReferenceEquals(borrowed, state.GetNodePropertyValue<Texture>(0, textureIndex)),
+            "Each view borrows its scene's stored resource identity.");
+        state.GetNodePropertyValue<int[][]>(0, contourIndex)[0][0] = 2;
+        loaded.Dispose();
+        Require(!borrowed.IsDisposed && state.GetNodePropertyValue<int[][]>(0, contourIndex)[0][0] == 0 &&
+                state.GetPath().Length > 0,
+            "A retained state protects the file graph after source disposal and each read copies nested arrays.");
+        state.Dispose();
+        Require(borrowed.IsDisposed && !texture.IsDisposed, "Disposing the state releases its last file graph lease.");
+    }
+    finally
+    {
+        Directory.Delete(folder, recursive: true);
+    }
 }
 
 static void Require(bool condition, string message)

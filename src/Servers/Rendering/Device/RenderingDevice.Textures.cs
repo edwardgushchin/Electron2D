@@ -124,6 +124,8 @@ public sealed unsafe partial class RenderingDevice
         internal uint BaseLayer { get; init; }
         internal uint BaseMip { get; init; }
         internal bool NativeArraySlice { get; init; }
+        internal uint[]? DownloadOffsets { get; init; }
+        internal uint DownloadSize { get; init; } = TransferSize;
     }
     private static SDL.GPUTextureUsageFlags NativeUsage(TextureUsageBits usage)
     {
@@ -286,9 +288,9 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Synchronizes and returns an independent tightly packed layer mip chain.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
     /// <param name="layer">Zero-based layer.</param>
-    /// <returns>A copied layer mip chain; depth/stencil uses the portable packed encoding with zero unused bits.</returns>
+    /// <returns>A copied layer mip chain with original compressed blocks and no native row padding. Depth/stencil uses the portable packed encoding with zero unused bits.</returns>
     public byte[] TextureGetData(RID texture, uint layer) { var entry = Get(texture, Kind.Texture); var bytes = new byte[entry.Size]; TextureGetData(texture, layer, bytes.AsSpan()); return bytes; }
-    /// <summary>Synchronizes and reads one layer mip chain into caller-owned storage.</summary>
+    /// <summary>Synchronizes and reads one tightly packed layer mip chain, including original compressed blocks, into caller-owned storage.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
     /// <param name="layer">Zero-based layer.</param>
     /// <param name="destination">Storage with the exact layer byte capacity.</param>
@@ -296,7 +298,7 @@ public sealed unsafe partial class RenderingDevice
     {
         IdleList(); var entry = ReadableTexture(texture, layer);
         if (destination.Length != entry.Size) throw new ArgumentException("The layer byte size does not match.", nameof(destination));
-        entry.Download ??= Transfer(entry.Texture!.TransferSize, SDL.GPUTransferBufferUsage.Download);
+        entry.Download ??= Transfer(entry.Texture!.DownloadSize, SDL.GPUTransferBufferUsage.Download);
         var pass = SDL.BeginGPUCopyPass(Commands()); if (pass == 0) throw GPUPhysicsDevice.Failure("begin texture read");
         try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) TransferTextureMip(entry, layer, mip, entry.Download.DangerousGetHandle(), false, pass); }
         finally { SDL.EndGPUCopyPass(pass); }

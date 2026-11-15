@@ -533,7 +533,7 @@ A texture RID belonging to this device.
 public System.Byte[] TextureGetData(Electron2D.RID texture, System.UInt32 layer)
 ```
 
-Synchronizes and returns an independent tightly packed layer mip chain.
+Synchronizes and returns an independent tightly packed layer mip chain, preserving compressed blocks and omitting native row padding.
 
 A copied layer mip chain.
 
@@ -651,7 +651,7 @@ Updates one complete layer including every mip level.
 
 `data`: Exact tightly packed layer mip-chain bytes.
 
-Image data uses exact tightly packed mip chains per layer with hidden native offsets. The array and Memory asynchronous overloads share buffer readback completion, FIFO, cancellation and reentrancy rules. See [image profile and remaining dependencies](../components/local-compute.md#device-images-and-samplers).
+Image data uses exact tightly packed mip chains per layer with hidden native offsets. Direct3D 12 BC3 reads preserve all encoded blocks of each mip, including partial edges, and strip native row padding. The array and Memory asynchronous overloads share buffer readback completion, FIFO, cancellation and reentrancy rules. See [image profile and remaining dependencies](../components/local-compute.md#device-images-and-samplers).
 
 ## Regional image transfer members
 

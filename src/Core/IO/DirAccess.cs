@@ -8,9 +8,11 @@ namespace Electron2D;
 /// <summary>Provides blocking access to directories and their contents.</summary>
 /// <remarks>
 /// Instances retain one current directory and one access scope. Relative paths resolve from that directory;
-/// <c>res://</c> and <c>user://</c> instances cannot leave their configured root or switch scopes. Operations are
+/// <c>res://</c> and <c>user://</c> instances cannot leave their captured root or switch scopes.
 /// Registered UID notation resolves through ResourceUID before applying these scope rules; unknown UIDs fail.
 /// Operations are serialized per instance, may block, and are unsuitable for real-time callbacks.
+/// Each resource existence or link query selects a mounted entry, a masked descendant, or the physical
+/// path from one mount snapshot. Physical metadata reads remain subject to external filesystem changes.
 /// </remarks>
 public sealed partial class DirAccess : ElectronObject
 {
@@ -37,7 +39,7 @@ public sealed partial class DirAccess : ElectronObject
     /// <summary>Gets or sets whether hidden entries are returned by directory enumeration.</summary>
     /// <value>
     /// <see langword="false"/> by default. Dot-prefixed names are hidden on Unix-family platforms; the hidden
-    /// filesystem attribute is honored on every platform.
+    /// filesystem attribute is honored on every platform. Dot-prefixed mounted resource names are hidden.
     /// </value>
     /// <remarks>The value affects subsequent <see cref="GetNext"/> calls in an active listing and snapshot helpers.</remarks>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
@@ -89,7 +91,7 @@ public sealed partial class DirAccess : ElectronObject
         }
     }
 
-    /// <summary>Opens an existing ordinary or directory-backed virtual directory.</summary>
+    /// <summary>Opens an existing filesystem, user-data, or mounted or directory-backed resource directory.</summary>
     /// <param name="path">A nonempty ordinary, <c>res://</c>, or <c>user://</c> path.</param>
     /// <returns>A new directory owner positioned at <paramref name="path"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -102,7 +104,7 @@ public sealed partial class DirAccess : ElectronObject
     {
         var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         var (absolutePath, scope, root) = ResolveOpenPath(path, roots);
-        RequireExistingDirectory(scope == AccessScope.Resources ? ResourcePath(absolutePath, root!) : absolutePath);
+        RequireExistingDirectory(absolutePath, scope == AccessScope.Resources ? ResourcePath(absolutePath, root!) : null);
         return new DirAccess(absolutePath, scope, root);
     }
 
@@ -130,8 +132,9 @@ public sealed partial class DirAccess : ElectronObject
 
     /// <summary>Starts a new unsorted directory listing and closes any previous listing.</summary>
     /// <remarks>
-    /// The visible entry metadata is captured when this method returns. Entries can subsequently disappear or change;
-    /// use <see cref="GetFiles"/> or <see cref="GetDirectories"/> for sorted snapshots.
+    /// Entry names and kinds are captured at begin. Filters apply as entries are read. If capture fails, the
+    /// previous listing and current entry remain available. Use <see cref="GetFiles"/> or
+    /// <see cref="GetDirectories"/> for sorted snapshots that leave the cursor intact.
     /// </remarks>
     /// <exception cref="DirectoryNotFoundException">The current directory no longer exists.</exception>
     /// <exception cref="IOException">The directory cannot be enumerated.</exception>
@@ -143,7 +146,7 @@ public sealed partial class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            _listing = CaptureEntries(AccessPath(_currentDirectory), includeNavigationalCandidates: true);
+            _listing = CaptureEntries(includeNavigationalCandidates: true);
             _listingIndex = 0;
             ClearCurrentEntryLocked();
         }
@@ -307,7 +310,7 @@ public sealed partial class DirAccess : ElectronObject
 
     /// <summary>Changes the current directory within this instance's access scope.</summary>
     /// <param name="path">A relative path or an absolute path in the same scope.</param>
-    /// <remarks>A successful change closes an active listing.</remarks>
+    /// <remarks>Success closes the listing. Failure preserves the current directory and listing.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="DirectoryNotFoundException">The resolved directory does not exist.</exception>
@@ -322,9 +325,9 @@ public sealed partial class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            var resolved = ResolveLocked(path);
-            RequireExistingDirectory(resolved);
-            _currentDirectory = Physical(resolved);
+            var resolved = ResolvePhysicalLocked(path);
+            RequireExistingDirectory(resolved, MountedPath(resolved));
+            _currentDirectory = resolved;
             EndListingLocked();
         }
     }
@@ -332,7 +335,7 @@ public sealed partial class DirAccess : ElectronObject
     /// <summary>Gets the current directory in this instance's original access scope.</summary>
     /// <param name="includeDrive">Whether a native filesystem result includes its drive prefix.</param>
     /// <returns>A <c>res://</c> or <c>user://</c> path for virtual scopes, otherwise a normalized native path.</returns>
-    /// <remarks><paramref name="includeDrive"/> affects only native Windows-style roots.</remarks>
+    /// <remarks><paramref name="includeDrive"/> affects only physical Windows paths with a drive letter.</remarks>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public string GetCurrentDir(bool includeDrive = true)
     {
@@ -347,12 +350,13 @@ public sealed partial class DirAccess : ElectronObject
                 return relative == "." ? prefix : prefix + relative.Replace('\\', '/');
             }
 
-            if (includeDrive)
-                return _currentDirectory;
-            var root = IOPath.GetPathRoot(_currentDirectory);
-            return string.IsNullOrEmpty(root) || root == IOPath.DirectorySeparatorChar.ToString()
-                ? _currentDirectory
-                : IOPath.DirectorySeparatorChar + _currentDirectory[root.Length..];
+            if (!includeDrive && OperatingSystem.IsWindows())
+            {
+                var path = NormalizeWindowsExtendedPath(_currentDirectory);
+                if (path.Length >= 2 && path[1] == ':')
+                    return path[2..];
+            }
+            return _currentDirectory;
         }
     }
 
@@ -607,6 +611,7 @@ public sealed partial class DirAccess : ElectronObject
     /// <returns><see langword="true"/> for a Windows reparse point or a symbolic link on other supported platforms.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
+    /// <exception cref="FileNotFoundException">A mounted file masks this descendant on a Unix link backend.</exception>
     /// <exception cref="UnauthorizedAccessException">The path escapes a virtual root or access is denied.</exception>
     /// <exception cref="InvalidOperationException"><paramref name="path"/> belongs to another access scope.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unsupported virtual scheme.</exception>
@@ -820,7 +825,7 @@ public sealed partial class DirAccess : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed();
-            var names = CaptureEntries(AccessPath(_currentDirectory), includeNavigationalCandidates: directories)
+            var names = CaptureEntries(includeNavigationalCandidates: directories)
                 .Where(entry => entry.IsDirectory == directories &&
                                 (_includeHidden || !entry.IsHidden) &&
                                 (_includeNavigational || !entry.IsNavigational))
@@ -831,7 +836,13 @@ public sealed partial class DirAccess : ElectronObject
         }
     }
 
-    private string AccessPath(string path) => _scope == AccessScope.Resources && StringComparer.Ordinal.Equals(_scopeRoot, ProjectSettings.ProjectRoot) ? ResourcePath(path, _scopeRoot!) : path;
+    private string AccessPath(string path) => MountedPath(path) ?? path;
+
+    private string? MountedPath(string path) =>
+        _scope == AccessScope.Resources && StringComparer.Ordinal.Equals(_scopeRoot, ProjectSettings.ProjectRoot)
+            ? ResourcePath(path, _scopeRoot!)
+            : null;
+
     private static string ResourcePath(string path, string root)
     {
         var relative = IOPath.GetRelativePath(root, path).Replace('\\', '/');
@@ -896,7 +907,7 @@ public sealed partial class DirAccess : ElectronObject
         ValidateAbsolutePath(path);
         var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         var (resolved, scope, root) = ResolveOpenPath(path, roots);
-        RequireExistingDirectory(scope == AccessScope.Resources ? ResourcePath(resolved, root!) : resolved);
+        RequireExistingDirectory(resolved, scope == AccessScope.Resources ? ResourcePath(resolved, root!) : null);
         return new DirAccess(resolved, scope, root);
     }
 
@@ -968,8 +979,14 @@ public sealed partial class DirAccess : ElectronObject
         }
     }
 
-    private static DirectoryEntry[] CaptureEntries(string directory, bool includeNavigationalCandidates)
+    private DirectoryEntry[] CaptureEntries(bool includeNavigationalCandidates)
     {
+        var mountedPath = MountedPath(_currentDirectory);
+        var mounted = mountedPath is null ? null : ResourcePacks.Runtime.GetDirectoryEntries(mountedPath, includeEntries: true);
+        var hasPhysicalDirectory = IsExistingDirectory(_currentDirectory);
+        if (!hasPhysicalDirectory && mounted is null)
+            throw new DirectoryNotFoundException($"Directory '{_currentDirectory}' does not exist.");
+
         var entries = new List<DirectoryEntry>();
         if (includeNavigationalCandidates)
         {
@@ -977,12 +994,7 @@ public sealed partial class DirAccess : ElectronObject
             entries.Add(new DirectoryEntry("..", IsDirectory: true, IsHidden: false, IsNavigational: true));
         }
 
-        ResourcePacks.Runtime.EnsureReadablePath(directory);
-        var physical = Physical(directory);
-        if (ResourcePacks.Runtime.TrySize(directory, out _)) throw new DirectoryNotFoundException("A mounted file occupies this path.");
-        var mounted = ResourcePacks.Runtime.List(directory);
-        if (!Directory.Exists(physical) && !ResourcePacks.Runtime.IsDirectory(directory)) throw new DirectoryNotFoundException(directory);
-        foreach (var path in Directory.Exists(physical) ? Directory.EnumerateFileSystemEntries(physical) : [])
+        foreach (var path in hasPhysicalDirectory ? Directory.EnumerateFileSystemEntries(_currentDirectory) : [])
         {
             var name = IOPath.GetFileName(path);
             var attributes = File.GetAttributes(path);
@@ -993,7 +1005,7 @@ public sealed partial class DirAccess : ElectronObject
                 (attributes & FileAttributes.Hidden) != 0,
                 IsNavigational: false));
         }
-        foreach (var entry in mounted)
+        foreach (var entry in mounted ?? [])
         {
             entries.RemoveAll(e => !e.IsNavigational && e.Name == entry.Name);
             entries.Add(new DirectoryEntry(entry.Name, entry.Directory, entry.Name.StartsWith('.'), false));
@@ -1090,12 +1102,25 @@ public sealed partial class DirAccess : ElectronObject
 
     private static bool TryGetAttributes(string path, out FileAttributes attributes)
     {
-        if (ResourcePacks.Runtime.TrySize(path, out _)) { attributes = FileAttributes.ReadOnly; return true; }
-        if (ResourcePacks.Runtime.IsDirectory(path)) { attributes = FileAttributes.Directory | FileAttributes.ReadOnly; return true; }
-        if (ResourcePacks.Runtime.HasFileAncestor(path)) { attributes = default; return false; }
+        var (absolutePath, mountedSize, mountedDirectory, maskedByFileAncestor) = ResourcePacks.Runtime.ResolvePathLocation(path);
+        if (mountedSize.HasValue)
+        {
+            attributes = FileAttributes.ReadOnly;
+            return true;
+        }
+        if (mountedDirectory)
+        {
+            attributes = FileAttributes.Directory | FileAttributes.ReadOnly;
+            return true;
+        }
+        if (maskedByFileAncestor)
+        {
+            attributes = default;
+            return false;
+        }
         try
         {
-            attributes = File.GetAttributes(Physical(path));
+            attributes = File.GetAttributes(absolutePath);
             return true;
         }
         catch (FileNotFoundException)
@@ -1116,8 +1141,10 @@ public sealed partial class DirAccess : ElectronObject
     private static bool IsExistingFile(string path) =>
         TryGetAttributes(path, out var attributes) && (attributes & FileAttributes.Directory) == 0;
 
-    private static void RequireExistingDirectory(string path)
+    private static void RequireExistingDirectory(string path, string? mountedPath)
     {
+        if (mountedPath is not null && ResourcePacks.Runtime.GetDirectoryEntries(mountedPath, includeEntries: false) is not null)
+            return;
         if (!IsExistingDirectory(path))
             throw new DirectoryNotFoundException($"Directory '{path}' does not exist.");
     }
@@ -1134,11 +1161,13 @@ public sealed partial class DirAccess : ElectronObject
 
     private static string? GetLinkTarget(string path)
     {
-        ResourcePacks.Runtime.EnsureReadablePath(path);
-        if (ResourcePacks.Runtime.TrySize(path, out _) || ResourcePacks.Runtime.IsDirectory(path)) return null;
-        path = Physical(path);
-        var fileTarget = new FileInfo(path).LinkTarget;
-        return fileTarget ?? new DirectoryInfo(path).LinkTarget;
+        var (absolutePath, mountedSize, mountedDirectory, maskedByFileAncestor) = ResourcePacks.Runtime.ResolvePathLocation(path);
+        if (mountedSize.HasValue || mountedDirectory)
+            return null;
+        if (maskedByFileAncestor)
+            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
+        var fileTarget = new FileInfo(absolutePath).LinkTarget;
+        return fileTarget ?? new DirectoryInfo(absolutePath).LinkTarget;
     }
 
     private static bool ProbeCaseSensitivity(string path)

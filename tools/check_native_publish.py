@@ -2,6 +2,7 @@
 """Check a self-contained desktop application and its private native ABIs."""
 
 import json
+import hashlib
 import re
 import subprocess
 import sys
@@ -74,7 +75,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     if not app_name or Path(app_name).name != app_name:
         raise ValueError("The application name must be a nonempty basename")
     if rid.startswith("win-"):
-        platform, host, names = "Windows", app_name + ".exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "libElectron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll", "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll")
+        platform, host, names = "Windows", app_name + ".exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "libElectron2D.dll", "freetype.dll", "harfbuzz.dll", "libcrypto-4.dll", "libssl-4.dll")
     elif rid.startswith("osx-"):
         platform, host, names = "MacOS", app_name, ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libElectron2D.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib", "libElectron2DCrypto.4.dylib", "libElectron2DSSL.4.dylib")
     elif rid.startswith("linux-"):
@@ -83,26 +84,78 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         raise ValueError(f"No self-contained desktop host for {rid}")
 
     assert (publish / host).is_file() and (publish / "Electron2D.dll").is_file(), "Missing application host or engine"
-    packages = json.loads((publish / (app_name + ".deps.json")).read_text())["libraries"]
+    dependencies = json.loads((publish / (app_name + ".deps.json")).read_text())
+    packages = dependencies["libraries"]
     expected = {
         f"SDL3-CS.{platform}/3.4.18",
         f"SDL3-CS.{platform}.Image/3.4.6.12",
         f"SDL3-CS.{platform}.Shadercross/3.0.0.13",
     }
     actual = {name for name in packages if name.startswith("SDL3-CS.")}
-    assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Shaping must use the selected source-built native payload"
+    if platform != "Windows":
+        assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Shaping must use the selected source-built native payload"
     assert actual == expected, f"Wrong SDL packages: {actual}"
-    assert f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/10.0.1" in packages, "Missing self-contained runtime pack"
+    runtime = json.loads((publish / (app_name + ".runtimeconfig.json")).read_text())["runtimeOptions"]
+    version = next((framework["version"] for framework in runtime.get("includedFrameworks", [])
+                    if framework["name"] == "Microsoft.NETCore.App"), "")
+    assert re.fullmatch(r"10\.0\.\d+", version) and f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/{version}" in packages, "Missing self-contained runtime pack"
     native = publish / "runtimes" / rid / "native"
     assert all((native / name).is_file() for name in names), f"Missing native render/text files: {names}"
-    assert not any((publish / name).exists() for name in names), "Native render/text files must retain their RID directory"
-    assert {path.name for path in (publish / "runtimes").iterdir()} == {rid}, "Foreign RID assets leaked into the game"
+    if platform != "Windows":
+        assert not any((publish / name).exists() for name in names), "Native render/text files must retain their RID directory"
+        assert {path.name for path in (publish / "runtimes").iterdir()} == {rid}, "Foreign RID assets leaked into the game"
     platform_packages = {name.split("/")[0] for name, library in packages.items() if name.startswith("Electron2D.") and library["type"] == "package"}
     assert platform_packages == {f"Electron2D.{platform}"}, f"Wrong engine platform packages: {platform_packages}"
     sys.path.insert(0, str(Path(__file__).resolve().parent / "native"))
     import package as native_package
+    if platform == "Windows":
+        receipt = json.loads((publish / "Electron2D.native-manifest.json").read_text())[rid]
+        assert set(receipt["files"]) == set(native_package.LIBRARIES["Windows"]), "Wrong Windows native manifest"
+        application_files = set()
+        native_directories = [directory for directory in (publish / "runtimes").glob("*/native") if directory.is_dir()]
+        retired_files = {directory / name for directory in (publish, *native_directories)
+                         for name in native_package.retired_windows_files()}
+        cleanup_names = set(native_package.retired_windows_files()) | set(receipt["files"])
+        for target in dependencies["targets"].values():
+            for owner, assets in target.items():
+                if owner.startswith("SDL3-CS.Windows"):
+                    cleanup_names.update(Path(path).name for path in assets.get("native", {}))
+                    cleanup_names.update(Path(path).name for path, metadata in assets.get("runtimeTargets", {}).items()
+                                         if metadata.get("assetType") == "native")
+        application_candidates = {directory / name for directory in (publish, *native_directories)
+                                  for name in cleanup_names}
+        application_receipt = publish / "Electron2D.application-native.sha256"
+        if application_receipt.is_file():
+            for line in application_receipt.read_text(encoding="utf-8-sig").splitlines():
+                checksum, relative = line.split(maxsplit=1)
+                path = publish / relative.replace("\\", "/")
+                assert path in application_candidates and re.fullmatch(r"[0-9A-Fa-f]{64}", checksum), "Invalid application native receipt entry"
+                assert path not in application_files, "Duplicate application native receipt entry"
+                assert path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == checksum.lower(), f"Application native checksum mismatch: {relative}"
+                application_files.add(path)
+        else:
+            for target in dependencies["targets"].values():
+                for owner, assets in target.items():
+                    if owner.startswith("HarfBuzzSharp.NativeAssets."):
+                        application_files.update(native / Path(path).name for path in assets.get("native", {}))
+                        application_files.update(native / Path(path).name for path, metadata in assets.get("runtimeTargets", {}).items()
+                                                if metadata.get("assetType") == "native" and metadata.get("rid") == rid)
+            application_files.intersection_update({native / "libHarfBuzzSharp.dll", native / "libHarfBuzzSharp.pdb"})
+        assert not any(path.is_file() and path not in application_files for path in retired_files), "Retired Windows payload leaked into publish"
+        assert not any((publish / name).exists() and publish / name not in application_files for name in names), "Native render/text files must retain their RID directory"
+        assert not any(path.is_file() and path not in application_files
+                       for directory in (publish / "runtimes").iterdir() if directory.name != rid
+                       for path in directory.rglob("*")), "Foreign RID assets leaked into the game"
+        for name, checksum in receipt["files"].items():
+            library = native / name
+            assert hashlib.sha256(library.read_bytes()).hexdigest() == checksum, f"Native manifest checksum mismatch: {name}"
+            exports = native_package.windows_exports(library, rid, name)
+            required = native_package.required_exports(name)
+            assert required <= exports, f"Missing native exports: {name}"
+            if name == "libElectron2D.dll":
+                assert exports == required, "Unified Windows native ABI mismatch"
     engine = native / ("libElectron2D.dll" if platform == "Windows" else "libElectron2D.dylib" if platform == "MacOS" else "libElectron2D.so")
-    assert engine.is_file() and not (publish / engine.name).exists(), "Unified native engine must retain its RID directory"
+    assert engine.is_file(), "Unified native engine must retain its RID directory"
     required = native_package.required_exports(engine.name)
     if platform == "Linux":
         actual = native_package.elf_exports(engine)

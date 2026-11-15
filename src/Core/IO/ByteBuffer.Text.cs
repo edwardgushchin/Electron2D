@@ -49,16 +49,30 @@ public static partial class ByteBuffer
 
     /// <summary>Decodes a named .NET multibyte encoding with strict error handling.</summary>
     /// <param name="data">Borrowed encoded bytes.</param>
-    /// <param name="encoding">A .NET encoding name; empty uses the Windows culture ANSI code page or UTF-8 on other hosts.</param>
+    /// <param name="encoding">A .NET encoding name. With an empty name, Windows resolves the current culture's ANSI code page by number and other hosts use UTF-8.</param>
     /// <returns>A new string. The framework code-page provider is used locally without changing the process registry.</returns>
-    /// <exception cref="ArgumentException">The encoding is null, unknown or unavailable.</exception>
+    /// <exception cref="ArgumentNullException">The encoding name is null.</exception>
+    /// <exception cref="ArgumentException">The encoding name is unknown or unavailable, or the name is empty and the current Windows culture has no ANSI code page.</exception>
     /// <exception cref="DecoderFallbackException">The text is malformed or truncated.</exception>
     public static string GetStringFromMultibyteChar(ReadOnlySpan<byte> data, string encoding = "")
     {
         ArgumentNullException.ThrowIfNull(encoding);
-        if (encoding.Length == 0) encoding = OperatingSystem.IsWindows() ? "cp" + CultureInfo.CurrentCulture.TextInfo.ANSICodePage.ToString(CultureInfo.InvariantCulture) : "utf-8";
-        var codec = CodePagesEncodingProvider.Instance.GetEncoding(encoding, EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback)
-            ?? Encoding.GetEncoding(encoding, EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback);
+        var provider = CodePagesEncodingProvider.Instance;
+        var encoderFallback = EncoderFallback.ExceptionFallback;
+        var decoderFallback = DecoderFallback.ExceptionFallback;
+        if (encoding.Length == 0)
+        {
+            if (!OperatingSystem.IsWindows()) return UTF8.GetString(data);
+
+            int codePage = CultureInfo.CurrentCulture.TextInfo.ANSICodePage;
+            if (codePage == 0) throw new ArgumentException("The current culture has no ANSI code page.", nameof(encoding));
+            var ansi = provider.GetEncoding(codePage, encoderFallback, decoderFallback)
+                ?? Encoding.GetEncoding(codePage, encoderFallback, decoderFallback);
+            return ansi.GetString(data);
+        }
+
+        var codec = provider.GetEncoding(encoding, encoderFallback, decoderFallback)
+            ?? Encoding.GetEncoding(encoding, encoderFallback, decoderFallback);
         return codec.GetString(data);
     }
 

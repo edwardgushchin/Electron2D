@@ -85,7 +85,7 @@ file.WriteString("ready");
 | [`public void WriteLine(string value)`](#m-electron2d-fileaccess-writeline-system-string) | Writes UTF-8 text followed by LF. |
 | [`public void WriteCSVLine(IEnumerable<string> values, char delimiter = ',')`](#m-electron2d-fileaccess-writecsvline-system-collections-generic-ienumerable-system-string-system-char) | Writes one CSV record followed by LF. |
 | [`public void WritePascalString(string value)`](#m-electron2d-fileaccess-writepascalstring-system-string) | Writes a UTF-8 string preceded by its unsigned 32-bit byte count. |
-| [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical or directory-backed virtual file exists. |
+| [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical, virtual, or mounted file exists. |
 | [`public static byte[] GetFileAsBytes(string path)`](#m-electron2d-fileaccess-getfileasbytes-system-string) | Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
 | [`public static string GetFileAsString(string path)`](#m-electron2d-fileaccess-getfileasstring-system-string) | Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
 | [`public static long GetAccessTime(string path)`](#m-electron2d-fileaccess-getaccesstime-system-string) | Gets the last-access time as Unix seconds. |
@@ -130,9 +130,9 @@ Gets the path supplied when this file was opened.
 <a id="p-electron2d-fileaccess-absolutepath"></a>
 ### `public string AbsolutePath { get; }`
 
-Gets the physical operating-system path, including staging when save and swap is enabled.
+Gets the file identity captured at open.
 
-**Value:** The staging path for save-and-swap writes, the resolved native path otherwise, or the mounted res:// identity.
+**Value:** The staging path for save-and-swap writes, the normalized `res://` identity for mounted reads, or the resolved native path for ordinary files. Closing preserves this value.
 
 <a id="p-electron2d-fileaccess-isopen"></a>
 ### `public bool IsOpen { get; }`
@@ -242,6 +242,10 @@ Opens a file with the requested access mode.
 
 On Windows, physical read-only streams allow staged replacement. An open reader can finish reading the original file, and subsequent opens of the path see the replacement.
 
+When a mounted directory and a physical file share a `res://` path, the directory takes precedence. `Open` throws `FileNotFoundException` for that resource path. The physical file remains accessible through its native absolute path.
+
+Writable opens check mounted file and directory precedence against one mount snapshot, including while a patch replaces one with the other. They reject writes through `res://` to descendants of mounted directories. The same rule applies to file and extended attribute mutations. Writable opens reject existing directories and paths ending in a directory separator, including in the transformed `Write` and `WriteRead` modes.
+
 **Parameters**
 
 - `path`: A nonempty ordinary, `res://`, or `user://` path.
@@ -254,7 +258,7 @@ On Windows, physical read-only streams allow staged replacement. An open reader 
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or `mode` is invalid.
 - `IO.IOException`: The file cannot be opened.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 <a id="m-electron2d-fileaccess-createtemp-electron2d-fileaccessmode-system-string-system-string-system-boolean"></a>
@@ -267,7 +271,7 @@ Creates a uniquely named temporary file and opens it.
 - `mode`: The permitted operations.
 - `prefix`: An optional filename prefix without directory separators. A hyphen separates it from the random name.
 - `extension`: An optional extension, with or without a leading period.
-- `keep`: Whether closing the returned instance preserves the file.
+- `keep`: Whether closing or disposing the returned instance preserves the file.
 
 **Returns:** An open temporary file owner.
 
@@ -298,10 +302,11 @@ Opens a whole-file compressed container.
 - `ArgumentOutOfRangeException`: `compressionMode` is unknown.
 - `PlatformNotSupportedException`: The selected native codec is unavailable in the packaged bridge.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The physical file cannot be read or replaced.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 
-**Remarks:** Changes are atomically encoded to the destination by [`FileAccess.Flush`](FileAccess.md#m-electron2d-fileaccess-flush) or [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close).
+**Remarks:** Writable opens check mount precedence in one lookup. Changes are atomically encoded to the destination by [`FileAccess.Flush`](FileAccess.md#m-electron2d-fileaccess-flush) or [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close).
 
 <a id="m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte"></a>
 ### `public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)`
@@ -322,11 +327,12 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `ArgumentException`: `key` is not exactly 32 bytes or the mode is invalid.
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses password mode.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The physical file cannot be read or replaced.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
-**Remarks:** Writing uses a fresh random nonce for every atomic commit.
+**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable opens check mount precedence in one lookup. A fresh random nonce is used each time changes are committed to the captured destination.
 
 <a id="m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string"></a>
 ### `public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`
@@ -347,11 +353,12 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `ArgumentException`: `password` is empty or the mode is invalid.
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses raw-key mode.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The physical file cannot be read or replaced.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
-**Remarks:** A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key; commits use fresh nonces.
+**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable opens check mount precedence in one lookup. A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.
 
 <a id="m-electron2d-fileaccess-close"></a>
 ### `public void Close()`
@@ -376,9 +383,10 @@ Flushes pending data to the physical file.
 
 - `InvalidOperationException`: The file is closed or was opened read-only.
 - `IO.IOException`: The data cannot be persisted.
+- `UnauthorizedAccessException`: The caller cannot replace the physical file.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** Transformed data atomically replaces the destination. Save-and-swap streams persist staging without publishing it; ordinary streams flush to disk.
+**Remarks:** Transformed data atomically replaces the destination. If replacement fails, the instance retains its pending data and cursor so the caller can retry. Save-and-swap streams flush staging without publishing it. Ordinary streams flush to disk.
 
 <a id="m-electron2d-fileaccess-seek-system-int64"></a>
 ### `public void Seek(long position)`
@@ -855,13 +863,15 @@ Writes a UTF-8 string preceded by its unsigned 32-bit byte count in the selected
 <a id="m-electron2d-fileaccess-fileexists-system-string"></a>
 ### `public static bool FileExists(string path)`
 
-Determines whether a physical or directory-backed virtual file exists.
+Determines whether a physical, virtual, or mounted file exists.
 
 **Parameters**
 
 - `path`: The file path.
 
 **Returns:** `true` only when the resolved path identifies an existing file.
+
+Mounted directories resolve as directories even when a physical file has the same name.
 
 **Exceptions**
 
@@ -898,7 +908,7 @@ Reads a complete file as strict UTF-8 from a physical path, a directory-backed v
 
 - `path`: The file path.
 
-**Returns:** The decoded text.
+**Returns:** An immutable snapshot of the decoded text, retaining a leading BOM, embedded NULs, and carriage returns.
 
 **Exceptions**
 
@@ -918,7 +928,7 @@ Gets the last-access time as Unix seconds.
 
 - `path`: The file path.
 
-**Returns:** Seconds since 1970-01-01 UTC.
+**Returns:** Seconds since 1970-01-01 UTC, or zero for a mounted file.
 
 **Exceptions**
 
@@ -937,7 +947,7 @@ Gets the last-modification time as Unix seconds.
 
 - `path`: The file path.
 
-**Returns:** Seconds since 1970-01-01 UTC.
+**Returns:** Seconds since 1970-01-01 UTC, or zero for a mounted file.
 
 **Exceptions**
 
@@ -956,7 +966,7 @@ Gets a file's length without opening a persistent instance.
 
 - `path`: The file path.
 
-**Returns:** The physical byte count.
+**Returns:** The byte count of the physical file or mounted entry. A symbolic link reports its target size. For a transformed container this is its encoded size.
 
 **Exceptions**
 
@@ -969,7 +979,7 @@ Gets a file's length without opening a persistent instance.
 <a id="m-electron2d-fileaccess-getmd5-system-string"></a>
 ### `public static string GetMD5(string path)`
 
-Computes a file's MD5 digest.
+Computes the MD5 digest of the selected physical file or mounted entry bytes.
 
 **Parameters**
 
@@ -990,7 +1000,7 @@ Computes a file's MD5 digest.
 <a id="m-electron2d-fileaccess-getsha256-system-string"></a>
 ### `public static string GetSHA256(string path)`
 
-Computes a file's SHA-256 digest.
+Computes the SHA-256 digest of the selected physical file or mounted entry bytes.
 
 **Parameters**
 
@@ -1031,6 +1041,8 @@ Gets whether the filesystem marks a file as hidden.
 
 Changes a file's hidden attribute.
 
+Checks mount precedence in one lookup and rejects physical directories before changing attributes.
+
 **Parameters**
 
 - `path`: The file path.
@@ -1041,7 +1053,7 @@ Changes a file's hidden attribute.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the attribute.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose this file attribute.
 
@@ -1070,6 +1082,8 @@ Gets whether the filesystem marks a file as read-only.
 
 Changes a file's read-only attribute.
 
+Checks mount precedence in one lookup and rejects physical directories before changing attributes.
+
 **Parameters**
 
 - `path`: The file path.
@@ -1080,7 +1094,7 @@ Changes a file's read-only attribute.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the attribute.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose this file attribute.
 
@@ -1109,6 +1123,8 @@ Gets Unix mode bits for a file.
 
 Sets Unix mode bits for a file.
 
+Checks mount precedence in one lookup and rejects physical directories before changing permissions.
+
 **Parameters**
 
 - `path`: The file path.
@@ -1120,7 +1136,7 @@ Sets Unix mode bits for a file.
 - `ArgumentOutOfRangeException`: `permissions` contains unknown bits.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the mode.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose Unix file modes.
 
@@ -1258,7 +1274,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Lifecycle and state transitions
 
-1. A static open validates path, exact mode, codec/key/password, and existing-file requirements before returning ownership.
+1. A static open validates path, exact mode, codec/key/password, and existing-file requirements before returning ownership. The owner keeps its file identity when project roots or mounts change.
 2. Raw files operate directly. Compressed/encrypted files decode fully into a seekable memory stream before the instance is published.
 3. Writes mark transformed state dirty. `Flush` encodes a complete snapshot and atomically replaces the physical destination; the in-memory cursor is restored.
 4. `Close` commits when writable, releases/zeroes memory, removes a disposable temporary file, and enters the closed state. `Dispose` then enters the inherited terminal state.
@@ -1292,6 +1308,8 @@ Each seekable instance uses one lock to serialize its stream operations, includi
 - Reuses the same internal atomic-replacement helper as `ConfigFile`.
 - Uses Linux libc xattrs, macOS libSystem xattrs, and Windows alternate data streams for the extended-attribute surface.
 - Process pipes use the OS service's native backend. Mounted file reads use the shared resource pack resolver.
+
+Static metadata queries use one mount lookup. Mounted files report zero timestamps, a clear hidden flag, a set read-only flag, and read bits for owner, group and others when the platform supports Unix permissions. Extended attribute operations throw `NotSupportedException` for a mounted file and `FileNotFoundException` when a mounted directory or file ancestor masks the requested path.
 
 ## Verification and known limits
 

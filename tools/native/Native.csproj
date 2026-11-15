@@ -34,6 +34,7 @@
     <None Include="../../licence/*" Exclude="../../licence/ReferenceData-LICENSE.txt" Pack="true" PackagePath="licence/" />
     <None Include="README.md" Pack="true" PackagePath="/" />
     <None Include="Electron2D.targets" Pack="true" PackagePath="buildTransitive/$(PackageId).targets" />
+    <None Include="WindowsNative.targets" Pack="true" PackagePath="buildTransitive/" />
   </ItemGroup>
   <Target Name="CheckNativePackageInputs" BeforeTargets="GenerateNuspec">
     <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)package.py&quot; check &quot;$(NativeArtifacts)&quot; --rids $(NativePackageRIDs) --platform $(NativePackagePlatform)" />

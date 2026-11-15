@@ -246,6 +246,8 @@ public class Sprite : Entity
         return new(position, size == Vector2.Zero ? Vector2.One : size);
     }
 
+    internal override Rect2 GetAnchorableRect() => GetRect();
+
     /// <summary>Tests source alpha at a finite point in the sprite's local drawing coordinates.</summary>
     /// <param name="position">The local point, before Entity transforms.</param>
     /// <returns>False without a nonempty texture or outside the drawn frame; otherwise the texture's opacity result.</returns>

@@ -18,11 +18,18 @@ public class PointLight : Light
 
     /// <summary>Gets or sets the finite local center offset of the light texture.</summary>
     /// <value>Zero initially; the shadow origin remains the light's entity origin.</value>
-    public Vector2 Offset { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _offset; } set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _offset = value; } }
+    public Vector2 Offset { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _offset; } set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _offset = value; NotifyItemRectChanged(); } }
 
     /// <summary>Gets or sets the finite texture size multiplier.</summary>
     /// <value>One initially; zero becomes 0.00001 to preserve an invertible mask.</value>
-    public float TextureScale { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _textureScale; } set { EnsureMutable(); if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); _textureScale = value == 0 ? 0.00001f : value; } }
+    public float TextureScale { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _textureScale; } set { EnsureMutable(); if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); _textureScale = value == 0 ? 0.00001f : value; NotifyItemRectChanged(); } }
+
+    internal override Rect2 GetAnchorableRect()
+    {
+        if (_texture is not { } texture) return default;
+        var size = texture.GetSize() * _textureScale;
+        return new(_offset - size / 2, size);
+    }
 
     /// <summary>Gets or sets finite light height in local scene units for normal and specular mapping.</summary>
     /// <value>Zero initially.</value>

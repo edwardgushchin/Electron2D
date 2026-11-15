@@ -76,6 +76,9 @@ internal static partial class ControlLayoutTests
         VerifyOffsetPresets();
         VerifyLayoutEditing();
         VerifyOffsetTransform();
+        VerifyGeometry();
+        VerifyParentGeometry();
+        VerifyResizeDelivery();
         Check(child.IsDisposed && parent.IsDisposed, "Tree disposal releases controls.");
         Console.WriteLine("Control layout checks passed.");
     }

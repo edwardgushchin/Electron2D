@@ -596,8 +596,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PanelContainer](classes/PanelContainer.md) | Container | Implemented | 2 |
 | [PanoramaSkyMaterial](classes/PanoramaSkyMaterial.md) | Material | Excluded | 3 |
 | [Parallax2D](classes/Parallax2D.md) | Node2D | Partial | 11 |
-| [ParallaxBackground](classes/ParallaxBackground.md) | CanvasLayer | Partial | 7 |
-| [ParallaxLayer](classes/ParallaxLayer.md) | Node2D | Partial | 4 |
+| [ParallaxBackground](classes/ParallaxBackground.md) | CanvasLayer | Excluded | 7 |
+| [ParallaxLayer](classes/ParallaxLayer.md) | Node2D | Excluded | 4 |
 | [ParticleProcessMaterial](classes/ParticleProcessMaterial.md) | Material | Implemented | 166 |
 | [Path2D](classes/Path2D.md) | Node2D | Implemented | 1 |
 | [Path3D](classes/Path3D.md) | Node3D | Excluded | 4 |
@@ -679,7 +679,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDPipelineRasterizationState](classes/RDPipelineRasterizationState.md) | RefCounted | Partial | 11 |
 | [RDPipelineShader](classes/RDPipelineShader.md) | RefCounted | Blocked | 2 |
 | [RDPipelineSpecializationConstant](classes/RDPipelineSpecializationConstant.md) | RefCounted | Implemented | 2 |
-| [RDSamplerState](classes/RDSamplerState.md) | RefCounted | Partial | 15 |
+| [RDSamplerState](classes/RDSamplerState.md) | RefCounted | Implemented | 15 |
 | [RDShaderFile](classes/RDShaderFile.md) | Resource | Implemented | 4 |
 | [RDShaderSPIRV](classes/RDShaderSPIRV.md) | Resource | Partial | 24 |
 | [RDShaderSource](classes/RDShaderSource.md) | RefCounted | Partial | 13 |
@@ -747,7 +747,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RootMotionView](classes/RootMotionView.md) | VisualInstance3D | Excluded | 5 |
 | [SceneMultiplayer](classes/SceneMultiplayer.md) | MultiplayerAPI | Implemented | 17 |
 | [SceneReplicationConfig](classes/SceneReplicationConfig.md) | Resource | Implemented | 17 |
-| [SceneState](classes/SceneState.md) | RefCounted | Partial | 28 |
+| [SceneState](classes/SceneState.md) | RefCounted | Implemented | 28 |
 | [SceneTree](classes/SceneTree.md) | MainLoop | Partial | 51 |
 | [SceneTreeTimer](classes/SceneTreeTimer.md) | RefCounted | Implemented | 2 |
 | [Script](classes/Script.md) | Resource | Partial | 18 |
@@ -885,7 +885,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TouchScreenButton](classes/TouchScreenButton.md) | Node2D | Implemented | 15 |
 | [Transform2D](classes/Transform2D.md) | — | Implemented | 43 |
 | [Transform3D](classes/Transform3D.md) | — | Excluded | 35 |
-| [Translation](classes/Translation.md) | Resource | Partial | 12 |
+| [Translation](classes/Translation.md) | Resource | Implemented | 12 |
 | [TranslationDomain](classes/TranslationDomain.md) | RefCounted | Partial | 23 |
 | [TranslationServer](classes/TranslationServer.md) | Object | Partial | 33 |
 | [Tree](classes/Tree.md) | Control | Partial | 163 |

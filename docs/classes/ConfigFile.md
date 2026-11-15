@@ -261,11 +261,11 @@ Loads and merges an unencrypted configuration document from an operating-system 
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The file cannot be read.
 - `UnauthorizedAccessException`: The caller cannot read the file.
-- `Text.DecoderFallbackException`: The file is not valid UTF-8.
+- `Text.DecoderFallbackException`: The file contains invalid UTF-8 bytes, including a BOM for another encoding.
 - `FormatException`: The document is malformed.
 - `ObjectDisposedException`: The configuration file is disposing or disposed.
 
-**Remarks:** Strict UTF-8, an optional BOM and ordinary line endings are accepted. Parsing completes before mutation; unmentioned entries survive and matching entries are replaced as one merge. Virtual paths are not resolved.
+**Remarks:** A UTF-8 BOM is optional. Decoding stays strict even after a BOM. Decoding and parsing finish before mutation. Unmentioned entries survive and matching entries are replaced as one merge. Virtual paths are not resolved.
 
 <a id="m-electron2d-configfile-loadencrypted-system-string-system-readonlyspan-system-byte"></a>
 ### `public void LoadEncrypted(string path, ReadOnlySpan<byte> key)`

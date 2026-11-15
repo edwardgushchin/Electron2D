@@ -21,6 +21,8 @@ CMakeLists.txt composes the retained static subsystem targets; exports.txt defin
 
 On Windows, MSVC uses the build-time import library Electron2D.lib, which refers to libElectron2D.dll. The DLL keeps its lib prefix to avoid colliding with managed Electron2D.dll; the import library is not shipped as a runtime asset.
 
+Windows third-party payloads use FAudio.dll, freetype.dll, harfbuzz.dll and the upstream OpenSSL major-4 basenames libcrypto-4.dll/libssl-4.dll. The RID directory separates architectures. WindowsNative.targets owns the explicit retired-file list shared by the source producer and incremental build/publish cleanup; it rejects the preceding subsystem package before copy. Desktop package consumers receive Electron2D.native-manifest.json, and the Windows publish check verifies its six hashes, PE identities, dependency closure and common ABI. See [the delivery contract](../../docs/native-packaging.md#windows-native-layout) for the older public package and qualification limits.
+
 Ninja builds probe MSVC's raw localized `/showIncludes` prefix through
 `msvc-dependencies.cmake`. This avoids console decoding corrupting header
 dependencies on installations without an English compiler language pack.

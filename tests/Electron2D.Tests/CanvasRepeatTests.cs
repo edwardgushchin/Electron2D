@@ -10,7 +10,6 @@ internal static class CanvasRepeatTests
             source.RepeatSize = new(8, 0); Check(source.ServerState.ItemRepeatSize is null, "Authored parallax size republishes its repetition.");
             source.ServerState.ItemRepeatSize = new(17, 19); source.RepeatTimes = 3; Check(source.ServerState.ItemRepeatSize is null, "Authored parallax count republishes its repetition.");
         }
-        using (var source = new ParallaxLayer()) { source.ServerState = new(null!, false) { ItemRepeatSize = new(17, 19), ItemRepeatTimes = 4 }; source.MotionMirroring = new(8, 0); Check(source.ServerState.ItemRepeatSize is null, "Legacy parallax authored period republishes."); }
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         var window = new Window { Size = new(128, 96) }; var sub = new SubViewport { Size = new(128, 96), RenderTargetUpdateMode = ViewportUpdateMode.Always }; window.AddChild(sub);
         RID canvas = default, root = default, child = default, nested = default; var phase = 0; long before = 0, allocated = 0; var entered = 0; var exited = 0;

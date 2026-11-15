@@ -55,7 +55,7 @@ Built-in values use generated JSON metadata with the existing numeric converters
 
 ## Current implementation status
 
-All applicable own members are implemented and audited under ADR 0018. Text tests cover complex names, stable LF output, BOM/CRLF/comments, merge, ordering and rollback. Plain file tests cover strict UTF-8, overwrite, directory errors and temporary cleanup. Encrypted tests cover both modes, independent PBKDF2/AES-GCM decoding, fresh salt/nonce, authenticated header/ciphertext, wrong credentials, malformed envelopes, authenticated invalid plaintext and failure cleanup. Error-return APIs are adapted to C# exceptions, universal values to typed keys, and reference-counted lifetime to managed memory. Filesystem crash durability and other platforms are verification limits.
+All applicable own members are implemented and audited under ADR 0018. Text tests cover complex names, stable LF output, BOM/CRLF/comments, merge, ordering and rollback. Plain file tests cover strict UTF-8, overwrite, directory errors and temporary cleanup. [ErrorContracts.Consumer](../../tests/ErrorContracts.Consumer/Program.cs) verifies that a UTF-8 BOM keeps decoding strict and a UTF-16 BOM triggers `DecoderFallbackException`. Both failures leave the current configuration intact. Encrypted tests cover both modes, independent PBKDF2/AES-GCM decoding, fresh salt/nonce, authenticated header/ciphertext, wrong credentials, malformed envelopes, authenticated invalid plaintext and failure cleanup. Error-return APIs are adapted to C# exceptions, universal values to typed keys, and reference-counted lifetime to managed memory. Filesystem crash durability and other platforms are verification limits.
 
 ## Exclusions and deferred integration
 

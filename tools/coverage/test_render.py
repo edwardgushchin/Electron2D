@@ -3,9 +3,10 @@
 
 import json
 import re
+from hashlib import sha256
 from unittest.mock import Mock, patch
 
-from render import ALIASES, CLASS_PAGES, DATA, cell, choose, coverage_target, engine_link, render, validate_public_type_names
+from render import ALIASES, CLASS_PAGES, DATA, ROOT, cell, choose, coverage_target, engine_link, render, validate_public_type_names
 from physics_report import scope
 
 
@@ -499,6 +500,11 @@ def main():
     corner_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines()
                    if row.startswith("| [`") and ("enum Corner" in row or "[Corner]" in row)]
     assert len(corner_rows) == 5 and all(" | Implemented | " in row for row in corner_rows)
+    error_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines()
+                  if row.startswith(("| [`enum Error`", "| [`method error_string("))
+                  or row.startswith("| [`enum_value ") and " [Error] = " in row.split(" | ")[0]]
+    assert len(error_rows) == 51
+    assert all(" | — | Excluded | [Pinned " in row and "](../../decisions/" in row for row in error_rows)
     flag_rows = [row for row in pages[CLASS_PAGES / "Control.md"].splitlines() if row.startswith("| [`") and ("enum SizeFlags" in row or "[SizeFlags]" in row or "size_flags_" in row)]
     assert len(flag_rows) == 11 and all(" | Implemented | " in row for row in flag_rows)
     container_rows = [row for row in pages[CLASS_PAGES / "Container.md"].splitlines() if row.startswith("| [`")]
@@ -832,6 +838,19 @@ def main():
     for item in engine:
         assert "Electron2D.Resource.SetupLocalToScene(" not in item["id"]
         assert "Electron2D.Resource.SetupLocalToSceneRequested(" not in item["id"]
+    pinned_snapshot = DATA / "godot-4.7.2.json"
+    pinned_digest = sha256(pinned_snapshot.read_text(encoding="utf-8").encode()).hexdigest()
+    pinned_evidence = f"JSON snapshot `{pinned_snapshot.relative_to(ROOT).as_posix()}` SHA-256 {pinned_digest}"
+    for name in ("ParallaxBackground", "ParallaxLayer"):
+        owner = next(item for item in upstream["types"] if item["name"] == name)
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert len(rows) == 1 + len(owner["members"])
+        evidence = cell(f'class deprecated="{owner["attributes"]["deprecated"]}"')
+        for row in rows:
+            assert " | — | Excluded | " in row and evidence in row
+            assert owner["source"] in row and upstream["godot_commit"] in row and upstream["godot_version"] in row
+            assert pinned_evidence in row and "No implementation trigger." in row and "Trigger:" not in row
+        assert not any(f"Electron2D.{name}" in item["signature"] for item in engine)
     for name, target in (("Shape2D", "Shape"), ("CircleShape2D", "CircleShape"),
                          ("CapsuleShape2D", "CapsuleShape"),
                          ("SegmentShape2D", "SegmentShape"),

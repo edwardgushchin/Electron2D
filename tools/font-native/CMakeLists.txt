@@ -20,16 +20,16 @@ endforeach()
 
 FetchContent_Declare(Zlib
     GIT_REPOSITORY https://github.com/madler/zlib.git
-    GIT_TAG ${zlib_revision})
+    GIT_TAG ${zlib_revision} GIT_CONFIG core.autocrlf=false core.longpaths=true)
 FetchContent_Declare(Brotli
     GIT_REPOSITORY https://github.com/google/brotli.git
-    GIT_TAG ${brotli_revision})
+    GIT_TAG ${brotli_revision} GIT_CONFIG core.autocrlf=false core.longpaths=true)
 FetchContent_Declare(HarfBuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
-    GIT_TAG ${harfbuzz_revision})
+    GIT_TAG ${harfbuzz_revision} GIT_CONFIG core.autocrlf=false core.longpaths=true)
 FetchContent_Declare(FreeType
     GIT_REPOSITORY https://github.com/freetype/freetype.git
-    GIT_TAG ${freetype_revision})
+    GIT_TAG ${freetype_revision} GIT_CONFIG core.autocrlf=false core.longpaths=true)
 
 set(BUILD_SHARED_LIBS OFF)
 set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -102,6 +102,9 @@ set_target_properties(freetype PROPERTIES OUTPUT_NAME Electron2DFreeType
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}" RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
     SKIP_BUILD_RPATH TRUE)
+if(WIN32)
+    set_target_properties(freetype PROPERTIES OUTPUT_NAME freetype)
+endif()
 if(APPLE)
     set_target_properties(freetype PROPERTIES INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE)
 endif()
