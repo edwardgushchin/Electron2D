@@ -34,23 +34,24 @@
   </Target>
   <Target Name="CleanElectron2DLegacyWindowsBuild" AfterTargets="CopyFilesToOutputDirectory" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(TargetDir)' != ''">
     <ItemGroup>
-      <_Electron2DLegacyWindowsBuildFile Include="@(_Electron2DLegacyWindowsFile->'$(TargetDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(TargetDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
-      <_Electron2DLegacyWindowsBuildFile Remove="@(NativeCopyLocalItems->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)');@(RuntimeTargetsCopyLocalItems->'$(TargetDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />
-      <_Electron2DLegacyWindowsBuildFile Remove="@(AllItemsFullPathWithTargetPath->'$(TargetDir)%(TargetPath)')" />
       <_Electron2DLegacyWindowsBuildPath Include="@(_Electron2DLegacyWindowsFile);@(_Electron2DLegacyWindowsFile->'runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
       <_Electron2DLegacyWindowsBuildPath Update="@(_Electron2DLegacyWindowsBuildPath)">
         <TargetPath>%(Identity)</TargetPath>
       </_Electron2DLegacyWindowsBuildPath>
-      <_Electron2DNativeBuildSource Include="@(NativeCopyLocalItems);@(RuntimeTargetsCopyLocalItems)">
-        <TargetPath>%(DestinationSubDirectory)%(Filename)%(Extension)</TargetPath>
-      </_Electron2DNativeBuildSource>
-      <_Electron2DBuildSource Include="@(_Electron2DNativeBuildSource);@(AllItemsFullPathWithTargetPath)" />
+      <_Electron2DReferenceBuildSource Include="@(ReferenceCopyLocalPaths)" Condition="'$(UseCommonOutputDirectory)' != 'true'">
+        <TargetPath>%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(ReferenceCopyLocalPaths.Filename)%(ReferenceCopyLocalPaths.Extension)</TargetPath>
+      </_Electron2DReferenceBuildSource>
+      <!-- The SDK copies project items after references, so project sources own overlapping paths. -->
+      <_Electron2DReferenceBuildSource Remove="@(AllItemsFullPathWithTargetPath)" MatchOnMetadata="TargetPath" MatchOnMetadataOptions="PathLike" />
+      <_Electron2DBuildSource Include="@(_Electron2DReferenceBuildSource);@(AllItemsFullPathWithTargetPath)" />
       <_Electron2DUnrelatedBuildSource Include="@(_Electron2DBuildSource)" />
       <_Electron2DUnrelatedBuildSource Remove="@(_Electron2DLegacyWindowsBuildPath)" MatchOnMetadata="TargetPath" MatchOnMetadataOptions="PathLike" />
       <_Electron2DApplicationNativeBuildFile Include="@(_Electron2DBuildSource)" />
       <_Electron2DApplicationNativeBuildFile Remove="@(_Electron2DUnrelatedBuildSource)" MatchOnMetadata="TargetPath" MatchOnMetadataOptions="PathLike" />
+      <_Electron2DLegacyWindowsBuildFile Include="@(_Electron2DLegacyWindowsBuildPath)" />
+      <_Electron2DLegacyWindowsBuildFile Remove="@(_Electron2DApplicationNativeBuildFile)" MatchOnMetadata="TargetPath" MatchOnMetadataOptions="PathLike" />
     </ItemGroup>
-    <Delete Files="@(_Electron2DLegacyWindowsBuildFile)" />
+    <Delete Files="@(_Electron2DLegacyWindowsBuildFile->'$(TargetDir)%(TargetPath)')" />
     <Copy SourceFiles="@(_Electron2DApplicationNativeBuildFile)" DestinationFiles="@(_Electron2DApplicationNativeBuildFile->'$(TargetDir)%(TargetPath)')" SkipUnchangedFiles="false" Condition="'@(_Electron2DApplicationNativeBuildFile)' != ''">
       <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
     </Copy>
@@ -65,10 +66,10 @@
   </Target>
   <Target Name="CleanElectron2DLegacyWindowsPublish" AfterTargets="Publish" Condition="$([System.String]::Copy('$(_Electron2DWindowsRID)').StartsWith('win-')) and '$(PublishDir)' != ''">
     <ItemGroup>
-      <_Electron2DLegacyWindowsPublishFile Include="@(_Electron2DLegacyWindowsFile->'$(PublishDir)%(Identity)');@(_Electron2DLegacyWindowsFile->'$(PublishDir)runtimes/$(_Electron2DWindowsRID)/native/%(Identity)')" />
-      <_Electron2DLegacyWindowsPublishFile Remove="@(ResolvedFileToPublish->'$(PublishDir)%(RelativePath)')" />
+      <_Electron2DLegacyWindowsPublishFile Include="@(_Electron2DLegacyWindowsPublishPath)" />
+      <_Electron2DLegacyWindowsPublishFile Remove="@(ResolvedFileToPublish)" MatchOnMetadata="RelativePath" MatchOnMetadataOptions="PathLike" />
     </ItemGroup>
-    <Delete Files="@(_Electron2DLegacyWindowsPublishFile)" />
+    <Delete Files="@(_Electron2DLegacyWindowsPublishFile->'$(PublishDir)%(RelativePath)')" />
     <GetFileHash Files="@(_Electron2DApplicationNativePublishFile)" Algorithm="SHA256" Condition="'@(_Electron2DApplicationNativePublishFile)' != ''">
       <Output TaskParameter="Items" ItemName="_Electron2DApplicationNativePublishHash" />
     </GetFileHash>

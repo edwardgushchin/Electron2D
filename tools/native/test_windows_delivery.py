@@ -11,11 +11,118 @@ import tempfile
 import time
 import unittest
 from xml.sax.saxutils import escape
+from zipfile import ZipFile
 
 import package
 
 
+def write_package_consumer(root, explicit_rid, copy_local):
+    feed = root / "feed"
+    feed.mkdir()
+    with ZipFile(feed / "NativeCopyFixture.1.0.0.nupkg", "w") as archive:
+        archive.writestr("NativeCopyFixture.nuspec", '<package><metadata><id>NativeCopyFixture</id>'
+            '<version>1.0.0</version><authors>Fixture</authors><description>Native copy fixture</description></metadata></package>')
+        archive.writestr("runtimes/win-x64/native/libHarfBuzzSharp.dll", b"nuget-owned native file")
+    (root / "NuGet.Config").write_text('<configuration><packageSources><clear/>'
+        '<add key="fixture" value="feed"/></packageSources></configuration>')
+    project = root / "Consumer.csproj"
+    project.write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
+        '<OutputType>Exe</OutputType><ImplicitUsings>enable</ImplicitUsings><TargetFramework>net10.0</TargetFramework>'
+        + ('<RuntimeIdentifier>win-x64</RuntimeIdentifier>' if explicit_rid else '')
+        + f'<CopyLocalLockFileAssemblies>{str(copy_local).lower()}</CopyLocalLockFileAssemblies>'
+        '<RestorePackagesPath>packages</RestorePackagesPath><NuGetAudit>false</NuGetAudit>'
+        '</PropertyGroup><ItemGroup><PackageReference Include="NativeCopyFixture" Version="1.0.0"/></ItemGroup></Project>')
+    (root / "Program.cs").write_text('if (args.Length == 2 && !File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, args[0]))'
+        '.AsSpan().SequenceEqual(System.Text.Encoding.UTF8.GetBytes(args[1]))) throw new Exception("Native file mismatch");'
+        'Console.WriteLine("Native selection consumer passed.");')
+    return project, "" if explicit_rid else "runtimes/win-x64/native/"
+
+
 class WindowsDeliveryTests(unittest.TestCase):
+    def test_build_respects_disabled_package_copying(self):
+        for explicit_rid in (True, False):
+            with self.subTest(explicit_rid=explicit_rid), tempfile.TemporaryDirectory(prefix="native copy disabled ") as temporary:
+                root = Path(temporary)
+                project, relative = write_package_consumer(root, explicit_rid, False)
+                output = root / "bin/Release/net10.0" / ("win-x64" if explicit_rid else "")
+                command = ["dotnet", "build", str(project), "-c", "Release", "--nologo"]
+                baseline = subprocess.run(command, capture_output=True, text=True)
+                self.assertEqual(baseline.returncode, 0, baseline.stdout + baseline.stderr)
+                selected = output / relative / "libHarfBuzzSharp.dll"
+                receipt = output / "Electron2D.application-native.sha256"
+                self.assertFalse(selected.exists())
+                baseline_publish = root / "baseline-publish"
+                baseline = subprocess.run(["dotnet", "publish", str(project), "-c", "Release", "--no-restore",
+                    "-o", str(baseline_publish)], capture_output=True, text=True)
+                self.assertEqual(baseline.returncode, 0, baseline.stdout + baseline.stderr)
+                published_files = list(baseline_publish.rglob("libHarfBuzzSharp.dll"))
+                self.assertEqual(len(published_files), 1)
+                publish_relative = published_files[0].relative_to(baseline_publish).as_posix()
+                project.write_text(project.read_text().replace('</Project>',
+                    f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" /></Project>'))
+                for stale in (False, True):
+                    if stale:
+                        selected.parent.mkdir(parents=True, exist_ok=True)
+                        selected.write_bytes(b"retired native file")
+                        future = time.time() + 864000
+                        os.utime(selected, (future, future))
+                        receipt.write_text("stale receipt")
+                    result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    self.assertFalse(selected.exists(), "Disabled NuGet copy was restored by cleanup")
+                    self.assertFalse(receipt.exists())
+                    launched = subprocess.run(["dotnet", str(output / "Consumer.dll")], capture_output=True, text=True)
+                    self.assertEqual(launched.returncode, 0, launched.stdout + launched.stderr)
+                publish = subprocess.run(["dotnet", "publish", str(project), "-c", "Release", "--no-restore",
+                    "-o", str(root / "publish")], capture_output=True, text=True)
+                self.assertEqual(publish.returncode, 0, publish.stdout + publish.stderr)
+                self.assertEqual((root / "publish" / publish_relative).read_bytes(), b"nuget-owned native file")
+                values = (root / "publish/Electron2D.application-native.sha256").read_text(encoding="utf-8-sig").split()
+                self.assertEqual([values[0], values[1].replace("\\", "/")],
+                    [hashlib.sha256(b"nuget-owned native file").hexdigest().upper(), publish_relative])
+                print("SELECTION " + json.dumps(dict(case="copy-local-disabled", explicitRID=explicit_rid,
+                    build="absent on clean and repeated build", receipt="absent", publish=publish_relative)), flush=True)
+
+    def test_project_file_wins_package_output_collision(self):
+        for explicit_rid, item, mode in product((True, False), ("None", "Content"), ("PreserveNewest", "Always", "IfDifferent")):
+            with self.subTest(explicit_rid=explicit_rid, item=item, mode=mode), tempfile.TemporaryDirectory(prefix="native collision ") as temporary:
+                root = Path(temporary)
+                project, relative = write_package_consumer(root, explicit_rid, True)
+                source = root / "application.bin"
+                source.write_bytes(b"application-owned native file")
+                # Restore timestamps must stay older than this PreserveNewest baseline source.
+                newer = time.time() + 86400
+                os.utime(source, (newer, newer))
+                project.write_text(project.read_text().replace('</ItemGroup>',
+                    f'<{item} Include="application.bin" Link="{relative}libHarfBuzzSharp.dll" '
+                    f'CopyToOutputDirectory="{mode}" CopyToPublishDirectory="Never" /></ItemGroup>'))
+                output = root / "bin/Release/net10.0" / ("win-x64" if explicit_rid else "")
+                command = ["dotnet", "build", str(project), "-c", "Release", "--nologo"]
+                baseline = subprocess.run(command, capture_output=True, text=True)
+                self.assertEqual(baseline.returncode, 0, baseline.stdout + baseline.stderr)
+                selected = output / relative / "libHarfBuzzSharp.dll"
+                self.assertEqual(selected.read_bytes(), source.read_bytes(), "Unexpected SDK copy order")
+                project.write_text(project.read_text().replace('</Project>',
+                    f'<Import Project="{escape(str(package.ROOT / "tools/native/WindowsNative.targets"))}" /></Project>'))
+                checksum = hashlib.sha256(source.read_bytes()).hexdigest()
+                for stale in (False, True):
+                    if stale:
+                        selected.write_bytes(b"x" * source.stat().st_size)
+                        future = time.time() + 864000
+                        os.utime(selected, (future, future))
+                    result = subprocess.run([*command, "--no-restore"], capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    self.assertEqual(selected.read_bytes(), source.read_bytes())
+                    receipt = output / "Electron2D.application-native.sha256"
+                    self.assertEqual(receipt.read_text(encoding="utf-8-sig").split(),
+                        [checksum.upper(), relative + "libHarfBuzzSharp.dll"])
+                    launched = subprocess.run(["dotnet", str(output / "Consumer.dll"), relative + "libHarfBuzzSharp.dll",
+                        source.read_text()], capture_output=True, text=True)
+                    self.assertEqual(launched.returncode, 0, launched.stdout + launched.stderr)
+                print("SELECTION " + json.dumps(dict(case="project-package-collision", explicitRID=explicit_rid,
+                    item=item, mode=mode, sourceSHA256=checksum, receiptEntries=1, cleanAndRepeatedRun=0,
+                    SDKBaseline="project file copied after package")), flush=True)
+
     def test_project_copy_items_are_preserved(self):
         sdk = subprocess.check_output(["dotnet", "--version"], text=True).strip()
         sdk_path = subprocess.check_output(["dotnet", "msbuild", str(package.ROOT / "Electron2D.csproj"),
@@ -144,6 +251,7 @@ class WindowsDeliveryTests(unittest.TestCase):
                         for name in selected:
                             (root / output / relative / name).write_bytes(b"application dependency")
                     assets = ''.join(f'<{item} Include="{escape(str(root / "package" / name))}" NuGetPackageId="HarfBuzzSharp.NativeAssets.Win32" DestinationSubDirectory="{relative}" />'
+                        f'<ReferenceCopyLocalPaths Include="{escape(str(root / "package" / name))}" DestinationSubDirectory="{relative}" />'
                         f'<ResolvedFileToPublish Include="{escape(str(root / "package" / name))}" RelativePath="{relative}{name}" />' for name in selected)
                     project = root / "Consumer.proj"
                     project.write_text('<Project><PropertyGroup><RuntimeIdentifier>win-x64</RuntimeIdentifier>'
