@@ -261,7 +261,7 @@ public sealed partial class Input
 
     /// <summary>Gets whether an action is currently pressed.</summary>
     /// <param name="action">The registered, case-sensitive action name.</param>
-    /// <param name="exactMatch">Whether only contributions with exact modifiers or analog direction are considered.</param>
+    /// <param name="exactMatch">Whether to use exact action matching for the current state.</param>
     /// <returns><see langword="true"/> when at least one matching source is pressed.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
@@ -270,16 +270,17 @@ public sealed partial class Input
 
     /// <summary>Gets whether an action transitioned from released to pressed since the current callback lane last completed.</summary>
     /// <param name="action">The registered, case-sensitive action name.</param>
-    /// <param name="exactMatch">Whether the transition must have been caused by an exact match.</param>
+    /// <param name="exactMatch">Whether the action's current match must be exact.</param>
     /// <returns><see langword="true"/> during the current process and physics transition windows.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
     public static bool IsActionJustPressed(string action, bool exactMatch = false) => Service.IsActionJustPressedCore(action, exactMatch);
 
-    /// <summary>Gets whether an action transitioned from pressed to released since the current callback lane last completed.</summary>
+    /// <summary>Gets whether a release was recorded since the current callback lane last completed.</summary>
+    /// <remarks>Calling <see cref="ActionRelease"/> can record another release for an already released action.</remarks>
     /// <param name="action">The registered, case-sensitive action name.</param>
-    /// <param name="exactMatch">Whether only exact-match state is considered.</param>
+    /// <param name="exactMatch">Whether the action's current match must be exact.</param>
     /// <returns><see langword="true"/> during the current process and physics transition windows.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
@@ -289,7 +290,7 @@ public sealed partial class Input
     /// <summary>Gets whether a specific event caused the action's current just-pressed transition.</summary>
     /// <param name="action">The registered, case-sensitive action name.</param>
     /// <param name="event">The event reference previously submitted to <see cref="ParseInputEvent"/>.</param>
-    /// <param name="exactMatch">Whether the event must have matched exactly.</param>
+    /// <param name="exactMatch">Whether the action's current match must be exact.</param>
     /// <returns><see langword="true"/> when the current transition was caused by <paramref name="event"/>.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> or <paramref name="event"/> is <see langword="null"/>.</exception>
@@ -300,7 +301,7 @@ public sealed partial class Input
     /// <summary>Gets whether a specific event caused the action's current just-released transition.</summary>
     /// <param name="action">The registered, case-sensitive action name.</param>
     /// <param name="event">The event reference previously submitted to <see cref="ParseInputEvent"/>.</param>
-    /// <param name="exactMatch">Whether the event must have matched exactly.</param>
+    /// <param name="exactMatch">Whether the action's current match must be exact.</param>
     /// <returns><see langword="true"/> when the current transition was caused by <paramref name="event"/>.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> or <paramref name="event"/> is <see langword="null"/>.</exception>
@@ -310,7 +311,7 @@ public sealed partial class Input
 
     /// <summary>Gets an action's deadzone-adjusted strength.</summary>
     /// <param name="action">The registered, case-sensitive action name.</param>
-    /// <param name="exactMatch">Whether only exact contributions are considered.</param>
+    /// <param name="exactMatch">Whether to use exact action matching for the current state.</param>
     /// <returns>The greatest matching strength from zero through one.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
@@ -319,8 +320,8 @@ public sealed partial class Input
 
     /// <summary>Gets an action's strength before deadzone remapping, including motion below the deadzone.</summary>
     /// <param name="action">The registered, case-sensitive action name.</param>
-    /// <param name="exactMatch">Whether only exact contributions are considered.</param>
-    /// <returns>The greatest matching raw strength. Native normalized sources use the range from zero through one.</returns>
+    /// <param name="exactMatch">Whether to use exact action matching for the current state.</param>
+    /// <returns>The greatest matching raw strength. A programmatically submitted axis magnitude can exceed one.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>

@@ -81,7 +81,7 @@ if (Input.IsActionPressed("jump"))
 | [`public static bool IsAnythingPressed()`](#m-electron2d-input-isanythingpressed) | Gets whether any key, mouse button, controller button, or action is currently pressed. |
 | [`public static bool IsActionPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionpressed-system-string-system-boolean) | Gets whether an action is currently pressed. |
 | [`public static bool IsActionJustPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressed-system-string-system-boolean) | Gets whether an action transitioned from released to pressed since the current callback lane last completed. |
-| [`public static bool IsActionJustReleased(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleased-system-string-system-boolean) | Gets whether an action transitioned from pressed to released since the current callback lane last completed. |
+| [`public static bool IsActionJustReleased(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleased-system-string-system-boolean) | Gets whether a release was recorded since the current callback lane last completed. |
 | [`public static bool IsActionJustPressedByEvent(string action, InputEvent event, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressedbyevent-system-string-electron2d-inputevent-system-boolean) | Gets whether a specific event caused the action's current just-pressed transition. |
 | [`public static bool IsActionJustReleasedByEvent(string action, InputEvent event, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleasedbyevent-system-string-electron2d-inputevent-system-boolean) | Gets whether a specific event caused the action's current just-released transition. |
 | [`public static float GetActionStrength(string action, bool exactMatch = false)`](#m-electron2d-input-getactionstrength-system-string-system-boolean) | Gets an action's deadzone-adjusted strength. |
@@ -346,7 +346,7 @@ Gets whether an action is currently pressed.
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether only contributions with exact modifiers or analog direction are considered.
+- `exactMatch`: Whether to use exact action matching for the current state.
 
 **Returns:** `true` when at least one matching source is pressed.
 
@@ -364,7 +364,7 @@ Gets whether an action transitioned from released to pressed since the current c
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether the transition must have been caused by an exact match.
+- `exactMatch`: Whether the action's current match must be exact.
 
 **Returns:** `true` during the current process and physics transition windows.
 
@@ -377,12 +377,12 @@ Gets whether an action transitioned from released to pressed since the current c
 <a id="m-electron2d-input-isactionjustreleased-system-string-system-boolean"></a>
 ### `public static bool IsActionJustReleased(string action, bool exactMatch = false)`
 
-Gets whether an action transitioned from pressed to released since the current callback lane last completed.
+Gets whether a release was recorded since the current callback lane last completed. Calling `ActionRelease` can record another release for an already released action.
 
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether only exact-match state is considered.
+- `exactMatch`: Whether the action's current match must be exact.
 
 **Returns:** `true` during the current process and physics transition windows.
 
@@ -401,7 +401,7 @@ Gets whether a specific event caused the action's current just-pressed transitio
 
 - `action`: The registered, case-sensitive action name.
 - `event`: The event reference previously submitted to [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent).
-- `exactMatch`: Whether the event must have matched exactly.
+- `exactMatch`: Whether the action's current match must be exact.
 
 **Returns:** `true` when the current transition was caused by `event`.
 
@@ -421,7 +421,7 @@ Gets whether a specific event caused the action's current just-released transiti
 
 - `action`: The registered, case-sensitive action name.
 - `event`: The event reference previously submitted to [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent).
-- `exactMatch`: Whether the event must have matched exactly.
+- `exactMatch`: Whether the action's current match must be exact.
 
 **Returns:** `true` when the current transition was caused by `event`.
 
@@ -440,7 +440,7 @@ Gets an action's deadzone-adjusted strength.
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether only exact contributions are considered.
+- `exactMatch`: Whether to use exact action matching for the current state.
 
 **Returns:** The greatest matching strength from zero through one.
 
@@ -458,9 +458,9 @@ Gets an action's strength before deadzone remapping.
 **Parameters**
 
 - `action`: The registered, case-sensitive action name.
-- `exactMatch`: Whether only exact contributions are considered.
+- `exactMatch`: Whether to use exact action matching for the current state.
 
-**Returns:** The greatest matching raw strength from zero through one.
+**Returns:** The greatest matching raw strength. A programmatically submitted axis magnitude can exceed one.
 
 **Exceptions**
 

@@ -47,10 +47,10 @@ try
     tree.ProcessFrame(0);
     sample.AxisValue = 0.75f;
     Input.ParseInputEvent(sample);
-    Check(Input.GetAxis(Left, Right) == 0.5f && Input.IsActionPressed(Either, true) &&
-        !Input.IsActionJustPressed(Either) && !Input.IsActionJustReleased(Either) &&
-        !Input.IsActionJustPressed(Either, true) && !Input.IsActionJustReleased(Either, true),
-        "One axis sample switches between opposite bindings without inventing an edge.");
+    Check(Input.GetAxis(Left, Right) == 0.5f && !Input.IsActionPressed(Either) &&
+        Input.GetActionRawStrength(Either, true) == 0 && !Input.IsActionJustPressed(Either) &&
+        Input.IsActionJustReleasedByEvent(Either, sample, true),
+        "The first of two opposing bindings releases the action even when the later binding matches exactly.");
     using var second = new InputEventJoypadMotion { Device = 2, Axis = JoyAxis.LeftX, AxisValue = -0.75f };
     Input.ParseInputEvent(second);
     Check(Input.GetAxis(Left, Right) == 0 && Input.IsActionPressed(Left) && Input.IsActionPressed(Right),
@@ -58,6 +58,10 @@ try
     Input.ActionPress(Down);
     Check(Math.Abs(Input.GetVector(Up, Right, Up, Down, 0).Length() - 1) < 0.00001f,
         "Diagonal input is limited to unit length.");
+    sample.AxisValue = 1.5f;
+    Input.ParseInputEvent(sample);
+    Check(Input.GetActionStrength(Right) == 1 && Input.GetActionRawStrength(Right, true) == 1.5f,
+        "Programmatically submitted axis magnitudes can exceed the normalized raw range.");
     Input.ActionRelease(Down);
     Input.ReleasePressedEvents();
     Check(!Input.IsAnythingPressed() && Input.GetActionRawStrength(Right) == 0, "Release-all clears raw contributions.");
@@ -68,7 +72,7 @@ try
     using var press = new InputEventKey { Keycode = Key.F8, Pressed = true };
     using var extraModifier = new InputEventKey { Keycode = Key.F8, ShiftPressed = true, Pressed = true };
     using var keyUp = new InputEventKey { Keycode = Key.F8 };
-    using var equalCopy = (InputEvent)press.Duplicate();
+    using var equalCopy = (InputEvent)extraModifier.Duplicate();
     using var invalid = new InputEventAction { Action = Button, EventIndex = 32, Pressed = true };
     var called = 0;
     probe.DuringInput = value =>
@@ -93,10 +97,14 @@ try
     probe.DuringInput = null;
     Input.UseAccumulatedInput = false;
     Input.ParseInputEvent(press);
-    Check(Input.IsActionPressed(Button, true) && Input.IsActionJustPressedByEvent(Button, press, true) &&
+    Check(Input.IsActionPressed(Button, true) && Input.IsActionJustPressedByEvent(Button, extraModifier, true) &&
         !Input.IsActionJustPressedByEvent(Button, equalCopy, true) &&
-        Input.IsActionJustPressedByEvent(Button, extraModifier) && !Input.IsActionJustPressedByEvent(Button, press),
-        "Only the matching aggregate edge attributes the original event.");
+        Input.IsActionJustPressedByEvent(Button, extraModifier) &&
+        !Input.IsActionJustPressedByEvent(Button, press) && !Input.IsActionJustPressedByEvent(Button, press, true),
+        "An exact match while held qualifies the existing edge and preserves its original event.");
+    tree.ProcessFrame(0);
+    Input.ParseInputEvent(press);
+    Check(!Input.IsActionJustPressed(Button, true), "An exact match cannot create a new edge in the next process window.");
     using var secondPress = new InputEventKey { Keycode = Key.F8, Device = 2, Pressed = true };
     using var secondRelease = new InputEventKey { Keycode = Key.F8, Device = 2 };
     Input.ParseInputEvent(secondPress);
@@ -104,10 +112,9 @@ try
     Check(Input.IsActionPressed(Button, true) && !Input.IsActionJustReleased(Button),
         "Releasing one of two equal physical inputs preserves the other.");
 
-    tree.ProcessFrame(0);
     probe.DuringPhysics = () =>
     {
-        Check(Input.IsActionJustPressedByEvent(Button, press, true) &&
+        Check(Input.IsActionJustPressedByEvent(Button, extraModifier, true) &&
             Input.IsActionJustPressedByEvent(Button, extraModifier), "Process completion leaves physics transitions intact.");
         Reject<InvalidOperationException>(Input.FlushBufferedEvents);
         throw new ProbeFailure();
@@ -131,6 +138,11 @@ try
         !Input.IsActionJustReleasedByEvent(Button, keyUp) && Input.IsKeyPressed(Key.F8),
         "Public release clears non-virtual action state without changing raw key state or attributing the edge to an event.");
     Input.ParseInputEvent(keyUp);
+    tree.ProcessFrame(0);
+    Check(!Input.IsActionJustReleased(Button), "The process window consumed the previous release.");
+    Input.ActionRelease(Button);
+    Check(Input.IsActionJustReleased(Button, true) && !Input.IsActionJustReleasedByEvent(Button, keyUp),
+        "An explicit release marks an already released action without attaching an event.");
     Input.FlushBufferedEvents();
     Console.WriteLine("callback ordering, by-event identity, lane lifetime and delivery rejection: passed");
 

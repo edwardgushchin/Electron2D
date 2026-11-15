@@ -870,7 +870,7 @@
       "electron2d": "method:Electron2D.Input.GetActionRawStrength(System.String,System.Boolean)",
       "godot": "Input::method:get_action_raw_strength(StringName:,bool:)",
       "state": "Implemented",
-      "reason": "Retains signed-direction magnitudes below the action deadzone and supports exact per-source filtering under ADR 0038."
+      "reason": "Retains directional magnitudes below the deadzone and above one for programmatic samples. The latest mapped event supplies exact eligibility for parsed state, with independent virtual contributions under ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEvent.Accumulate(Electron2D.InputEvent)",
@@ -8924,7 +8924,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Polling reflects committed pressed sources. Sub-deadzone raw values do not mark actions pressed. Anything combines raw logical keys, mouse and controller buttons with pressed actions.",
+      "reason": "The first matching binding in registration order supplies parsed state. The latest mapped event supplies exact eligibility. Anything combines raw logical keys, mouse and controller buttons with pressed actions.",
       "godot": [
         "Input::method:is_action_pressed(StringName:,bool:)",
         "Input::method:is_anything_pressed()"
@@ -8932,7 +8932,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Process and physics windows complete independently even on callback failure. Exact and permissive edges retain the original parsed identity, while manual changes have no event identity.",
+      "reason": "Process and physics windows complete independently even on callback failure. Exact eligibility filters the same aggregate edge and preserves the originating event identity across later matches during a hold. Explicit releases carry no event identity and can mark an already released action.",
       "godot": [
         "Input::method:is_action_just_pressed(StringName:,bool:)",
         "Input::method:is_action_just_released(StringName:,bool:)",

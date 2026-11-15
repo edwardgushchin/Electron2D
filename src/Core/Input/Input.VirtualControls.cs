@@ -10,7 +10,7 @@ public sealed partial class Input
                 return false;
             lock (SharedInstance._gate)
                 SharedInstance.UpdateContribution(action, new ActionSource(InputEvent.DeviceIdInternal, MaxEventsPerAction + 1 + slot, owner),
-                    strength > 0 ? new InputActionMatch(true, strength, strength) : default, exact: true);
+                    strength > 0 ? new InputActionMatch(true, strength, strength) : default);
         }
         return true;
     }

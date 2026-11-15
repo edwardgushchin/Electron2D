@@ -278,18 +278,8 @@ public sealed partial class InputMap : ElectronObject
                 return true;
             }
 
-            for (var index = 0; index < definition.Events.Count; index++)
-            {
-                var binding = definition.Events[index];
-                binding.EnsureUsable();
-                if ((binding.Device == AllDevices || binding.Device == @event.Device) &&
-                    binding.TryMatchAction(@event, exactMatch, definition.Deadzone, out status))
-                    return true;
-            }
+            return FindEventIndex(definition, @event, exactMatch, out status) >= 0;
         }
-
-        status = default;
-        return false;
     }
 
     internal void CollectMatches(InputEvent @event, List<MappedInputAction> matches)
@@ -322,17 +312,12 @@ public sealed partial class InputMap : ElectronObject
             foreach (var actionName in _actionOrder)
             {
                 var action = _actions[actionName];
-                for (var index = 0; index < action.Events.Count; index++)
-                {
-                    var binding = action.Events[index];
-                    binding.EnsureUsable();
-                    if ((binding.Device == AllDevices || binding.Device == @event.Device) &&
-                        binding.TryMatchAction(@event, exactMatch: false, action.Deadzone, out var status))
-                    {
-                        var exact = binding.TryMatchAction(@event, exactMatch: true, action.Deadzone, out _);
-                        matches.Add(new MappedInputAction(actionName, index, status, exact));
-                    }
-                }
+                var index = FindEventIndex(action, @event, exactMatch: false, out var status);
+                if (index < 0)
+                    continue;
+
+                var exact = FindEventIndex(action, @event, exactMatch: true) >= 0;
+                matches.Add(new MappedInputAction(actionName, index, status, exact));
             }
         }
     }
@@ -364,17 +349,21 @@ public sealed partial class InputMap : ElectronObject
     protected override void ValidateDisposal() =>
         throw new InvalidOperationException("The process-wide InputMap instance cannot be disposed.");
 
-    private static int FindEventIndex(ActionDefinition definition, InputEvent @event, bool exactMatch)
+    private static int FindEventIndex(ActionDefinition definition, InputEvent @event, bool exactMatch) =>
+        FindEventIndex(definition, @event, exactMatch, out _);
+
+    private static int FindEventIndex(ActionDefinition definition, InputEvent @event, bool exactMatch, out InputActionMatch status)
     {
         for (var index = 0; index < definition.Events.Count; index++)
         {
             var candidate = definition.Events[index];
             candidate.EnsureUsable();
             if ((candidate.Device == AllDevices || candidate.Device == @event.Device) &&
-                candidate.TryMatchAction(@event, exactMatch, definition.Deadzone, out _))
+                candidate.TryMatchAction(@event, exactMatch, definition.Deadzone, out status))
                 return index;
         }
 
+        status = default;
         return -1;
     }
 
