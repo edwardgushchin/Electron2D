@@ -2,13 +2,13 @@
 
 Last updated: 2026-11-06
 
-**Namespace:** `Electron2D`. **Declaration:** `public sealed partial class NativeMenu : ElectronObject`. **Source:** [owner](../../src/Servers/Menus/NativeMenu.cs), [API/XML](../../src/Servers/Menus/NativeMenu.API.cs), [Windows](../../src/Servers/Menus/NativeMenu.Windows.cs). **Component:** [Native popup menus](../components/native-menus.md). **Decision:** [ADR 0117](../decisions/native-menus.md#adr-0117).
+**Namespace:** `Electron2D`. **Declaration:** `public sealed partial class NativeMenu : ElectronObject`. **Source:** [owner](../../src/Servers/Menus/NativeMenu.cs), [API/XML](../../src/Servers/Menus/NativeMenu.API.cs), [Windows](../../src/Servers/Menus/NativeMenu.Windows.cs), [keyboard](../../src/Servers/Menus/NativeMenu.Keyboard.cs), [scancode map](../../src/Servers/Menus/NativeMenu.WindowsKeys.cs). **Component:** [Native popup menus](../components/native-menus.md). **Decision:** [ADR 0117](../decisions/native-menus.md#adr-0117).
 
 Display-owned OS popup menus with static public operations. No public constructor or Instance accessor exists. All operations require the live display owner except observational IsAvailable. RIDs, callbacks and icon snapshots retire with that exact session.
 
 | Public family | Behavior |
 | --- | --- |
-| IsAvailable; HasFeature(Feature) | Session observation and actual GlobalMenu/PopupMenu/OpenCloseCallback/HoverCallback/KeyCallback capability. Windows supports the three popup capabilities; global/key remain false. |
+| IsAvailable; HasFeature(Feature) | Session observation and actual GlobalMenu/PopupMenu/OpenCloseCallback/HoverCallback/KeyCallback capability. Windows supports popup/open-close/hover and KeyCallback; global menus remain unavailable. |
 | CreateMenu, HasMenu, FreeMenu, Clear | Independent opaque owners, deterministic detach/free, no RID reuse. |
 | AddItem, AddCheckItem, AddRadioCheckItem | Ordinary or exact typed tag/Action<T> activation; returns logical insertion index. |
 | AddIconItem, AddIconCheckItem, AddIconRadioCheckItem | Same activation families with borrowed readable Texture. |
@@ -27,6 +27,8 @@ Display-owned OS popup menus with static public operations. No public constructo
 
 Insertion uses -1 for append and clamps other insertion indices; item access requires a nonnegative in-range index. Text rejects embedded NUL. Generic insertion requires an explicit callback argument to avoid lambda/tag overload ambiguity. For integer submenu tags call AddSubmenuItem<int> explicitly. Generic callbacks require the exact stored tag type. Borrowed values are never disposed by the service.
 
-Popup closes its native reservation before required close callbacks and activation. Item/owner retirement during close suppresses stale selection. Errors aggregate after required cleanup; managed exceptions never cross the native callback ABI. Empty menus have no native window. System-menu IDs, global registration, keyboard callbacks/accelerators and native tooltip/indent/minimum-width operations are not exposed as inert fields. The PopupMenu bridge forwards keyboard focus through IDFocused and cancels the OS tree on Hide/Visible=false; temporary cleanup retains its exact service owner. See the component for fallback rules, executed checks and remaining target/platform boundaries.
+Popup closes its native reservation before required close callbacks and activation. Item/owner retirement during close suppresses stale selection. Errors aggregate after required cleanup; managed exceptions never cross the native callback ABI. Empty menus have no native window. System-menu IDs, global registration, native tooltip/indent/minimum-width operations are not exposed as inert fields. The PopupMenu bridge forwards keyboard focus through IDFocused and cancels the OS tree on Hide/Visible=false; temporary cleanup retains its exact service owner. See the component for fallback rules, executed checks and remaining target/platform boundaries.
 
 Root menu identities can be borrowed by the [DisplayServer status indicators](../components/status-indicators.md). Multiple bindings are allowed; a bound root cannot become a submenu, and FreeMenu clears all bindings before retirement.
+
+Windows accelerators use a distinct optional Action/Action<T> keyCallback across all seven insertion families. GetItemKeyCallback/SetItemKeyCallback retain the exact delegate and validate its tag type; GetItemAccelerator/SetItemAccelerator retain the logical key and modifiers and update native shortcut text. The display input path handles closed menus; a thread-local Win32 menu filter handles modal input. Matching skips hidden/disabled records and searches logical order recursively. Missing key callbacks return input to the engine without ordinary activation. See the component for the current verification limits.

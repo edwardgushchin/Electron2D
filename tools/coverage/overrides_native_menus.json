@@ -3,357 +3,387 @@
     {
       "godot": "class:NativeMenu",
       "electron2d": "T:Electron2D.NativeMenu",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::enum:Feature",
       "electron2d": "T:Electron2D.NativeMenu.Feature",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::enum_value:Feature.FEATURE_GLOBAL_MENU",
       "electron2d": "enumValue:Electron2D.NativeMenu.Feature.GlobalMenu()",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::enum_value:Feature.FEATURE_HOVER_CALLBACK",
       "electron2d": "enumValue:Electron2D.NativeMenu.Feature.HoverCallback()",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::enum_value:Feature.FEATURE_KEY_CALLBACK",
       "electron2d": "enumValue:Electron2D.NativeMenu.Feature.KeyCallback()",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::enum_value:Feature.FEATURE_OPEN_CLOSE_CALLBACK",
       "electron2d": "enumValue:Electron2D.NativeMenu.Feature.OpenCloseCallback()",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::enum_value:Feature.FEATURE_POPUP_MENU",
       "electron2d": "enumValue:Electron2D.NativeMenu.Feature.PopupMenu()",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_check_item(RID:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddCheckItem(Electron2D.RID,System.String,System.Action,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddCheckItem(Electron2D.RID,System.String,System.Action,System.Int32,System.Action,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_check_item(RID:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddCheckItem`1(Electron2D.RID,System.String,T,Action<T>,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddCheckItem`1(Electron2D.RID,System.String,T,Action<T>,System.Int32,Action<T>,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_icon_check_item(RID:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddIconCheckItem(Electron2D.RID,Electron2D.Texture,System.String,System.Action,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddIconCheckItem(Electron2D.RID,Electron2D.Texture,System.String,System.Action,System.Int32,System.Action,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_icon_check_item(RID:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddIconCheckItem`1(Electron2D.RID,Electron2D.Texture,System.String,T,Action<T>,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddIconCheckItem`1(Electron2D.RID,Electron2D.Texture,System.String,T,Action<T>,System.Int32,Action<T>,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_icon_item(RID:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddIconItem(Electron2D.RID,Electron2D.Texture,System.String,System.Action,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddIconItem(Electron2D.RID,Electron2D.Texture,System.String,System.Action,System.Int32,System.Action,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_icon_item(RID:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddIconItem`1(Electron2D.RID,Electron2D.Texture,System.String,T,Action<T>,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddIconItem`1(Electron2D.RID,Electron2D.Texture,System.String,T,Action<T>,System.Int32,Action<T>,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_icon_radio_check_item(RID:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddIconRadioCheckItem(Electron2D.RID,Electron2D.Texture,System.String,System.Action,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddIconRadioCheckItem(Electron2D.RID,Electron2D.Texture,System.String,System.Action,System.Int32,System.Action,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_icon_radio_check_item(RID:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddIconRadioCheckItem`1(Electron2D.RID,Electron2D.Texture,System.String,T,Action<T>,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddIconRadioCheckItem`1(Electron2D.RID,Electron2D.Texture,System.String,T,Action<T>,System.Int32,Action<T>,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_item(RID:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddItem(Electron2D.RID,System.String,System.Action,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddItem(Electron2D.RID,System.String,System.Action,System.Int32,System.Action,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_item(RID:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddItem`1(Electron2D.RID,System.String,T,Action<T>,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddItem`1(Electron2D.RID,System.String,T,Action<T>,System.Int32,Action<T>,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_multistate_item(RID:,String:,int:,int:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddMultistateItem(Electron2D.RID,System.String,System.Int32,System.Int32,System.Action,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddMultistateItem(Electron2D.RID,System.String,System.Int32,System.Int32,System.Action,System.Int32,System.Action,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_multistate_item(RID:,String:,int:,int:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddMultistateItem`1(Electron2D.RID,System.String,System.Int32,System.Int32,T,Action<T>,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddMultistateItem`1(Electron2D.RID,System.String,System.Int32,System.Int32,T,Action<T>,System.Int32,Action<T>,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_radio_check_item(RID:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddRadioCheckItem(Electron2D.RID,System.String,System.Action,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddRadioCheckItem(Electron2D.RID,System.String,System.Action,System.Int32,System.Action,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_radio_check_item(RID:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
-      "electron2d": "method:Electron2D.NativeMenu.AddRadioCheckItem`1(Electron2D.RID,System.String,T,Action<T>,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "electron2d": "method:Electron2D.NativeMenu.AddRadioCheckItem`1(Electron2D.RID,System.String,T,Action<T>,System.Int32,Action<T>,Electron2D.Key)",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_separator(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.AddSeparator(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_submenu_item(RID:,String:,RID:,Variant:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.AddSubmenuItem(Electron2D.RID,System.String,Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:add_submenu_item(RID:,String:,RID:,Variant:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.AddSubmenuItem`1(Electron2D.RID,System.String,Electron2D.RID,T,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:clear(RID:)",
       "electron2d": "method:Electron2D.NativeMenu.Clear(Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:create_menu()",
       "electron2d": "method:Electron2D.NativeMenu.CreateMenu()",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:find_item_index_with_submenu(RID:,RID:)",
       "electron2d": "method:Electron2D.NativeMenu.FindItemIndexWithSubmenu(Electron2D.RID,Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:find_item_index_with_tag(RID:,Variant:)",
       "electron2d": "method:Electron2D.NativeMenu.FindItemIndexWithTag`1(Electron2D.RID,T)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:find_item_index_with_text(RID:,String:)",
       "electron2d": "method:Electron2D.NativeMenu.FindItemIndexWithText(Electron2D.RID,System.String)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:free_menu(RID:)",
       "electron2d": "method:Electron2D.NativeMenu.FreeMenu(Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_callback(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemCallback(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_callback(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemCallback`1(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_count(RID:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemCount(Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_icon(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemIcon(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_max_states(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemMaxStates(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_state(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemState(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_submenu(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemSubmenu(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_tag(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemTag`1(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_item_text(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.GetItemText(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_popup_close_callback(RID:)",
       "electron2d": "method:Electron2D.NativeMenu.GetPopupCloseCallback(Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_popup_open_callback(RID:)",
       "electron2d": "method:Electron2D.NativeMenu.GetPopupOpenCallback(Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:get_size(RID:)",
       "electron2d": "method:Electron2D.NativeMenu.GetSize(Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:has_feature(int:NativeMenu.Feature)",
       "electron2d": "method:Electron2D.NativeMenu.HasFeature(Electron2D.NativeMenu.Feature)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:has_menu(RID:)",
       "electron2d": "method:Electron2D.NativeMenu.HasMenu(Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:is_item_checkable(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.IsItemCheckable(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:is_item_checked(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.IsItemChecked(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:is_item_disabled(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.IsItemDisabled(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:is_item_hidden(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.IsItemHidden(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:is_item_radio_checkable(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.IsItemRadioCheckable(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:is_opened(RID:)",
       "electron2d": "method:Electron2D.NativeMenu.IsOpened(Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:popup(RID:,Vector2i:)",
       "electron2d": "method:Electron2D.NativeMenu.Popup(Electron2D.RID,Electron2D.Vector2i)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:remove_item(RID:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.RemoveItem(Electron2D.RID,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_interface_direction(RID:,bool:)",
       "electron2d": "method:Electron2D.NativeMenu.SetInterfaceDirection(Electron2D.RID,System.Boolean)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_callback(RID:,int:,Callable:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemCallback(Electron2D.RID,System.Int32,System.Action)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_callback(RID:,int:,Callable:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemCallback`1(Electron2D.RID,System.Int32,Action<T>)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_checkable(RID:,int:,bool:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemCheckable(Electron2D.RID,System.Int32,System.Boolean)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_checked(RID:,int:,bool:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemChecked(Electron2D.RID,System.Int32,System.Boolean)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_disabled(RID:,int:,bool:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemDisabled(Electron2D.RID,System.Int32,System.Boolean)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_hidden(RID:,int:,bool:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemHidden(Electron2D.RID,System.Int32,System.Boolean)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_hover_callbacks(RID:,int:,Callable:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemHoverCallbacks(Electron2D.RID,System.Int32,System.Action)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_hover_callbacks(RID:,int:,Callable:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemHoverCallbacks`1(Electron2D.RID,System.Int32,Action<T>)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_icon(RID:,int:,Texture2D:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemIcon(Electron2D.RID,System.Int32,Electron2D.Texture)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_index(RID:,int:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemIndex(Electron2D.RID,System.Int32,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_max_states(RID:,int:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemMaxStates(Electron2D.RID,System.Int32,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_radio_checkable(RID:,int:,bool:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemRadioCheckable(Electron2D.RID,System.Int32,System.Boolean)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_state(RID:,int:,int:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemState(Electron2D.RID,System.Int32,System.Int32)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_submenu(RID:,int:,RID:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemSubmenu(Electron2D.RID,System.Int32,Electron2D.RID)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_tag(RID:,int:,Variant:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemTag`1(Electron2D.RID,System.Int32,T)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_item_text(RID:,int:,String:)",
       "electron2d": "method:Electron2D.NativeMenu.SetItemText(Electron2D.RID,System.Int32,System.String)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_popup_close_callback(RID:,Callable:)",
       "electron2d": "method:Electron2D.NativeMenu.SetPopupCloseCallback(Electron2D.RID,System.Action)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
     },
     {
       "godot": "NativeMenu::method:set_popup_open_callback(RID:,Callable:)",
       "electron2d": "method:Electron2D.NativeMenu.SetPopupOpenCallback(Electron2D.RID,System.Action)",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites."
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites."
+    },
+    {
+      "godot": "NativeMenu::method:get_item_key_callback(RID:,int:)",
+      "electron2d": "method:Electron2D.NativeMenu.GetItemKeyCallback(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0117: all seven insertion families execute distinct exact typed key callbacks and accelerator add/change/removal through the existing Windows owner and PopupMenu bridge. Independent native inspection, source and fresh-package CLR/strict full-trim NativeAOT pass 255 public checks and 92 native inspections in Compatibility and Vulkan GPU profiles. Foreign adapters and full ADR 0021 acceptance remain open."
+    },
+    {
+      "godot": "NativeMenu::method:get_item_key_callback(RID:,int:)",
+      "electron2d": "method:Electron2D.NativeMenu.GetItemKeyCallback`1(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0117: all seven insertion families execute distinct exact typed key callbacks and accelerator add/change/removal through the existing Windows owner and PopupMenu bridge. Independent native inspection, source and fresh-package CLR/strict full-trim NativeAOT pass 255 public checks and 92 native inspections in Compatibility and Vulkan GPU profiles. Foreign adapters and full ADR 0021 acceptance remain open."
+    },
+    {
+      "godot": "NativeMenu::method:set_item_key_callback(RID:,int:,Callable:)",
+      "electron2d": "method:Electron2D.NativeMenu.SetItemKeyCallback(Electron2D.RID,System.Int32,System.Action)",
+      "reason": "ADR 0117: all seven insertion families execute distinct exact typed key callbacks and accelerator add/change/removal through the existing Windows owner and PopupMenu bridge. Independent native inspection, source and fresh-package CLR/strict full-trim NativeAOT pass 255 public checks and 92 native inspections in Compatibility and Vulkan GPU profiles. Foreign adapters and full ADR 0021 acceptance remain open."
+    },
+    {
+      "godot": "NativeMenu::method:set_item_key_callback(RID:,int:,Callable:)",
+      "electron2d": "method:Electron2D.NativeMenu.SetItemKeyCallback`1(Electron2D.RID,System.Int32,Action<T>)",
+      "reason": "ADR 0117: all seven insertion families execute distinct exact typed key callbacks and accelerator add/change/removal through the existing Windows owner and PopupMenu bridge. Independent native inspection, source and fresh-package CLR/strict full-trim NativeAOT pass 255 public checks and 92 native inspections in Compatibility and Vulkan GPU profiles. Foreign adapters and full ADR 0021 acceptance remain open."
+    },
+    {
+      "godot": "NativeMenu::method:get_item_accelerator(RID:,int:)",
+      "electron2d": "method:Electron2D.NativeMenu.GetItemAccelerator(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0117: all seven insertion families execute distinct exact typed key callbacks and accelerator add/change/removal through the existing Windows owner and PopupMenu bridge. Independent native inspection, source and fresh-package CLR/strict full-trim NativeAOT pass 255 public checks and 92 native inspections in Compatibility and Vulkan GPU profiles. Foreign adapters and full ADR 0021 acceptance remain open."
+    },
+    {
+      "godot": "NativeMenu::method:set_item_accelerator(RID:,int:,int:Key)",
+      "electron2d": "method:Electron2D.NativeMenu.SetItemAccelerator(Electron2D.RID,System.Int32,Electron2D.Key)",
+      "reason": "ADR 0117: all seven insertion families execute distinct exact typed key callbacks and accelerator add/change/removal through the existing Windows owner and PopupMenu bridge. Independent native inspection, source and fresh-package CLR/strict full-trim NativeAOT pass 255 public checks and 92 native inspections in Compatibility and Vulkan GPU profiles. Foreign adapters and full ADR 0021 acceptance remain open."
     }
   ],
   "extras": [
@@ -373,14 +403,14 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites. Full platform acceptance under ADR 0021 remains open.",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites. Full platform acceptance under ADR 0021 remains open.",
       "godot": [
         "class:NativeMenu"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and keyboard/presentation extensions remain separate prerequisites.",
+      "reason": "ADR 0117: Windows native-menu service owns real Win32 popup trees, exact logical indices, typed callbacks/tags, icon snapshots, check/radio/state metadata, hidden/reordered items, native open/close/hover and geometry, owner-thread/modal guards and deterministic session retirement. Public consumer and independent Win32/MSAA inspector execute; foreign adapters, system menus and presentation extensions remain separate prerequisites.",
       "godot": [
         "NativeMenu::enum:Feature",
         "NativeMenu::enum_value:Feature.FEATURE_GLOBAL_MENU",
@@ -437,8 +467,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0117: ordinary activation, exact typed tags, icon/check/state and insertion behavior execute. Trigger: add the distinct native keyboard callback and accelerator-dispatch producer before extending these insertion signatures; no inert optional keyboard parameters are exposed.",
+      "state": "Implemented",
+      "reason": "ADR 0117: all seven insertion families execute distinct exact typed key callbacks and accelerator add/change/removal through the existing Windows owner and PopupMenu bridge. Independent native inspection, source and fresh-package CLR/strict full-trim NativeAOT pass 255 public checks and 92 native inspections in Compatibility and Vulkan GPU profiles. Foreign adapters and full ADR 0021 acceptance remain open.",
       "godot": [
         "NativeMenu::method:add_check_item(RID:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
         "NativeMenu::method:add_icon_check_item(RID:,Texture2D:,String:,Callable:,Callable:,Variant:,int:Key,int:)",
@@ -469,8 +499,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: implement native accelerator display/dispatch and distinct keyboard callbacks with exact tag typing and modal input verification under ADR 0117.",
+      "state": "Implemented",
+      "reason": "ADR 0117: all seven insertion families execute distinct exact typed key callbacks and accelerator add/change/removal through the existing Windows owner and PopupMenu bridge. Independent native inspection, source and fresh-package CLR/strict full-trim NativeAOT pass 255 public checks and 92 native inspections in Compatibility and Vulkan GPU profiles. Foreign adapters and full ADR 0021 acceptance remain open.",
       "godot": [
         "NativeMenu::method:get_item_accelerator(RID:,int:)",
         "NativeMenu::method:get_item_key_callback(RID:,int:)",

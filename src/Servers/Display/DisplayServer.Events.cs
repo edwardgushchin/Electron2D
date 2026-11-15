@@ -584,7 +584,8 @@ public sealed partial class DisplayServer
             AltPressed = (modifiers & SDL.Keymod.Alt) != 0,
             MetaPressed = (modifiers & SDL.Keymod.GUI) != 0,
         };
-        Input.ParseInputEvent(@event);
+        if (root._nativeMenus?.DispatchAccelerator(@event) != true)
+            Input.ParseInputEvent(@event);
     }
 
     private void DispatchMouseMotion(SDL.MouseMotionEvent source)
@@ -821,7 +822,7 @@ public sealed partial class DisplayServer
         _ => MouseButtonMask.None,
     };
 
-    private static Key MapKeycode(SDL.Keycode source)
+    internal static Key MapKeycode(SDL.Keycode source)
     {
         if (source == SDL.Keycode.Unknown)
             return Key.None;
@@ -912,6 +913,21 @@ public sealed partial class DisplayServer
         keys[SDL.Keycode.KpMultiply] = Key.KeypadMultiply;
         keys[SDL.Keycode.KpDivide] = Key.KeypadDivide;
         keys[SDL.Keycode.KpPeriod] = Key.KeypadPeriod;
+        keys[SDL.Keycode.Application] = Key.Menu;
+        keys[SDL.Keycode.SysReq] = Key.SystemRequest;
+        keys[SDL.Keycode.Mute] = Key.VolumeMute;
+        keys[SDL.Keycode.Sleep] = Key.Standby;
+        keys[SDL.Keycode.AcBack] = Key.Back;
+        keys[SDL.Keycode.AcForward] = Key.Forward;
+        keys[SDL.Keycode.AcRefresh] = Key.Refresh;
+        keys[SDL.Keycode.AcStop] = Key.Stop;
+        keys[SDL.Keycode.AcSearch] = Key.Search;
+        keys[SDL.Keycode.AcHome] = Key.HomePage;
+        keys[SDL.Keycode.AcBookmarks] = Key.Favorites;
+        keys[SDL.Keycode.MediaPlayPause] = Key.MediaPlay;
+        keys[SDL.Keycode.MediaNextTrack] = Key.MediaNext;
+        keys[SDL.Keycode.MediaPreviousTrack] = Key.MediaPrevious;
+        keys[SDL.Keycode.MediaSelect] = Key.LaunchMedia;
         return keys;
     }
 
