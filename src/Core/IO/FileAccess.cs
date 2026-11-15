@@ -273,7 +273,8 @@ public sealed partial class FileAccess : ElectronObject
     /// An open physical read-only stream can finish reading its original file after a staged replacement.
     /// Subsequent opens of the path see the replacement. I/O write failure aborts staging. A failed final
     /// replacement retains completed staging for recovery. A mounted directory at a resource path masks
-    /// any physical file at that path. An open instance keeps its stream and identity when project roots or mounts change.</remarks>
+    /// any physical file at that path. Writable opens check mounted files and directories against one mount snapshot.
+    /// An open instance keeps its stream and identity when project roots or mounts change.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or <paramref name="mode"/> is invalid.</exception>
     /// <exception cref="IOException">The file cannot be opened.</exception>
@@ -288,7 +289,7 @@ public sealed partial class FileAccess : ElectronObject
             return new FileAccess(path, identity, mode, stream, packed: packed);
         }
 
-        var absolutePath = ResolveWritablePath(path);
+        var absolutePath = ResourcePacks.Runtime.ResolveWritableFile(path);
         return new FileAccess(path, absolutePath, mode, OpenPhysical(absolutePath, mode));
     }
 
@@ -360,7 +361,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="mode">The required access mode.</param>
     /// <param name="compressionMode">The codec used to decode or encode the container.</param>
     /// <returns>A seekable view of the decoded bytes.</returns>
-    /// <remarks>Changes are atomically encoded by <see cref="Flush"/> or <see cref="Close"/>. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
+    /// <remarks>Changes are atomically encoded by <see cref="Flush"/> or <see cref="Close"/>. Writable opens check mount precedence in one lookup. DEFLATE and GZIP use their effective project levels. FastLZ and Zstandard require the matching native bundle and use bounded, checksummed blocks. Compression is not authentication.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The path is empty or the mode is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="compressionMode"/> is unknown.</exception>
@@ -389,7 +390,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="key">Exactly 32 key bytes.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
     /// <remarks>Read and ReadWrite authenticate existing data. Write and WriteRead start empty.
-    /// Writable instances commit to the destination captured at open, using a fresh random nonce for each commit.</remarks>
+    /// Writable opens check mount precedence in one lookup. A fresh random nonce is used each time changes are committed to the captured destination.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="key"/> is not exactly 32 bytes or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
@@ -425,7 +426,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <param name="password">A nonempty password.</param>
     /// <returns>A seekable view of authenticated plaintext bytes.</returns>
     /// <remarks>Read and ReadWrite authenticate existing data. Write and WriteRead start empty.
-    /// A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.</remarks>
+    /// Writable opens check mount precedence in one lookup. A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> or <paramref name="password"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="password"/> is empty or the mode is invalid.</exception>
     /// <exception cref="CryptographicException">Authentication fails.</exception>
@@ -1058,7 +1059,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static bool FileExists(string path)
     {
-        var size = ResourcePacks.Runtime.GetFileSize(path, out var absolutePath, out var blocked);
+        var (absolutePath, size, blocked) = ResourcePacks.Runtime.ResolveFileLocation(path);
         return size.HasValue || !blocked && File.Exists(absolutePath);
     }
 
@@ -1085,23 +1086,23 @@ public sealed partial class FileAccess : ElectronObject
 
     /// <summary>Gets the last-access time as Unix seconds.</summary>
     /// <param name="path">The file path.</param>
-    /// <returns>Seconds since 1970-01-01 UTC.</returns>
+    /// <returns>Seconds since 1970-01-01 UTC, or zero for a mounted file.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="FileNotFoundException">The file does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static long GetAccessTime(string path) => ResourcePacks.Runtime.TrySize(path, out _) ? 0 : new DateTimeOffset(GetFileInfo(path).LastAccessTimeUtc).ToUnixTimeSeconds();
+    public static long GetAccessTime(string path) => GetFileTime(path, modified: false);
 
     /// <summary>Gets the last-modification time as Unix seconds.</summary>
     /// <param name="path">The file path.</param>
-    /// <returns>Seconds since 1970-01-01 UTC.</returns>
+    /// <returns>Seconds since 1970-01-01 UTC, or zero for a mounted file.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="FileNotFoundException">The file does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static long GetModifiedTime(string path) => ResourcePacks.Runtime.TrySize(path, out _) ? 0 : new DateTimeOffset(GetFileInfo(path).LastWriteTimeUtc).ToUnixTimeSeconds();
+    public static long GetModifiedTime(string path) => GetFileTime(path, modified: true);
 
     /// <summary>Gets a file's length without opening a persistent instance.</summary>
     /// <param name="path">The file path.</param>
@@ -1114,7 +1115,7 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     public static long GetSize(string path)
     {
-        var size = ResourcePacks.Runtime.GetFileSize(path, out var absolutePath, out var blocked);
+        var (absolutePath, size, blocked) = ResourcePacks.Runtime.ResolveFileLocation(path);
         if (blocked)
             throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
         if (size.HasValue)
@@ -1156,14 +1157,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     /// <exception cref="PlatformNotSupportedException">The current platform does not expose this file attribute.</exception>
-    public static bool IsHidden(string path)
-    {
-        if (ResourcePacks.Runtime.TrySize(path, out _)) return false;
-        EnsurePortableFileAttributesSupported();
-        return (File.GetAttributes(ResolvePath(path)) & FileAttributes.Hidden) != 0;
-    }
+    public static bool IsHidden(string path) => (ReadAttributes(path) & FileAttributes.Hidden) != 0;
 
     /// <summary>Changes a file's hidden attribute.</summary>
+    /// <remarks>Checks mount precedence in one lookup before changing physical attributes.</remarks>
     /// <param name="path">The file path.</param>
     /// <param name="hidden">Whether to set the attribute.</param>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -1187,14 +1184,10 @@ public sealed partial class FileAccess : ElectronObject
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access or a virtual path escapes its root.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
     /// <exception cref="PlatformNotSupportedException">The current platform does not expose this file attribute.</exception>
-    public static bool IsReadOnly(string path)
-    {
-        if (ResourcePacks.Runtime.TrySize(path, out _)) return true;
-        EnsurePortableFileAttributesSupported();
-        return (File.GetAttributes(ResolvePath(path)) & FileAttributes.ReadOnly) != 0;
-    }
+    public static bool IsReadOnly(string path) => (ReadAttributes(path) & FileAttributes.ReadOnly) != 0;
 
     /// <summary>Changes a file's read-only attribute.</summary>
+    /// <remarks>Checks mount precedence in one lookup before changing physical attributes.</remarks>
     /// <param name="path">The file path.</param>
     /// <param name="readOnly">Whether to set the attribute.</param>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -1222,11 +1215,14 @@ public sealed partial class FileAccess : ElectronObject
     {
         if (OperatingSystem.IsWindows())
             throw new PlatformNotSupportedException("Unix file modes are unavailable on Windows.");
-        if (ResourcePacks.Runtime.TrySize(path, out _)) return (UnixPermissionFlags)292;
-        return (UnixPermissionFlags)(int)File.GetUnixFileMode(ResolvePath(path));
+        var (absolutePath, mountedSize, blocked) = ResourcePacks.Runtime.ResolveFileLocation(path);
+        if (mountedSize.HasValue)
+            return UnixPermissionFlags.ReadOwner | UnixPermissionFlags.ReadGroup | UnixPermissionFlags.ReadOther;
+        return (UnixPermissionFlags)(int)File.GetUnixFileMode(RequireUnmaskedPath(path, absolutePath, blocked));
     }
 
     /// <summary>Sets Unix mode bits for a file.</summary>
+    /// <remarks>Checks mount precedence in one lookup before changing physical permissions.</remarks>
     /// <param name="path">The file path.</param>
     /// <param name="permissions">The permission and special-mode bits.</param>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -1241,8 +1237,7 @@ public sealed partial class FileAccess : ElectronObject
         ValidateUnixPermissions(permissions);
         if (OperatingSystem.IsWindows())
             throw new PlatformNotSupportedException("Unix file modes are unavailable on Windows.");
-        ResourcePacks.Runtime.EnsureWritable(path);
-        File.SetUnixFileMode(ResolvePath(path), (UnixFileMode)(int)permissions);
+        File.SetUnixFileMode(ResourcePacks.Runtime.ResolveWritableFile(path), (UnixFileMode)(int)permissions);
     }
 
     internal static void ValidateUnixPermissions(UnixPermissionFlags permissions)
@@ -1255,6 +1250,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Gets one extended attribute as bytes.</summary>
+    /// <exception cref="NotSupportedException">The file is mounted or the virtual scheme is unsupported.</exception>
     /// <param name="path">The ordinary or supported virtual file path.</param>
     /// <param name="name">The nonempty attribute name without a Linux namespace prefix.</param>
     /// <returns>A new byte array containing the attribute value.</returns>
@@ -1267,6 +1263,7 @@ public sealed partial class FileAccess : ElectronObject
         ExtendedAttributes.Get(ResolveMetadataPath(path), name);
 
     /// <summary>Gets one extended attribute as strict UTF-8.</summary>
+    /// <exception cref="NotSupportedException">The file is mounted or the virtual scheme is unsupported.</exception>
     /// <param name="path">The ordinary or supported virtual file path.</param>
     /// <param name="name">The nonempty attribute name without a Linux namespace prefix.</param>
     /// <returns>The decoded value.</returns>
@@ -1280,6 +1277,7 @@ public sealed partial class FileAccess : ElectronObject
         StrictUtf8.GetString(GetExtendedAttribute(path, name));
 
     /// <summary>Lists extended attribute names without platform namespace syntax.</summary>
+    /// <exception cref="NotSupportedException">The file is mounted or the virtual scheme is unsupported.</exception>
     /// <param name="path">The ordinary or supported virtual file path.</param>
     /// <returns>An immutable snapshot in operating-system order.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
@@ -1291,6 +1289,7 @@ public sealed partial class FileAccess : ElectronObject
         Array.AsReadOnly(ExtendedAttributes.List(ResolveMetadataPath(path)));
 
     /// <summary>Sets one extended attribute from bytes.</summary>
+    /// <exception cref="NotSupportedException">The file is mounted or the virtual scheme is unsupported.</exception>
     /// <remarks>Linux and macOS pin the supplied span for the blocking native write; the backend retains no data pointer after return.</remarks>
     /// <param name="path">The ordinary or supported virtual file path.</param>
     /// <param name="name">The nonempty attribute name without a Linux namespace prefix.</param>
@@ -1304,6 +1303,7 @@ public sealed partial class FileAccess : ElectronObject
         ExtendedAttributes.Set(ResolveMetadataPath(path), name, value);
 
     /// <summary>Sets one extended attribute from UTF-8 text.</summary>
+    /// <exception cref="NotSupportedException">The file is mounted or the virtual scheme is unsupported.</exception>
     /// <param name="path">The ordinary or supported virtual file path.</param>
     /// <param name="name">The nonempty attribute name without a Linux namespace prefix.</param>
     /// <param name="value">The text value.</param>
@@ -1320,6 +1320,7 @@ public sealed partial class FileAccess : ElectronObject
     }
 
     /// <summary>Removes one extended attribute.</summary>
+    /// <exception cref="NotSupportedException">The file is mounted or the virtual scheme is unsupported.</exception>
     /// <param name="path">The ordinary or supported virtual file path.</param>
     /// <param name="name">The nonempty attribute name without a Linux namespace prefix.</param>
     /// <exception cref="ArgumentNullException">An argument is <see langword="null"/>.</exception>
@@ -1344,8 +1345,7 @@ public sealed partial class FileAccess : ElectronObject
 
     private static void ChangeAttribute(string path, FileAttributes attribute, bool enabled)
     {
-        ResourcePacks.Runtime.EnsureWritable(path);
-        var absolutePath = ResolvePath(path);
+        var absolutePath = ResourcePacks.Runtime.ResolveWritableFile(path);
         var attributes = File.GetAttributes(absolutePath);
         File.SetAttributes(absolutePath, enabled ? attributes | attribute : attributes & ~attribute);
     }
@@ -1421,12 +1421,26 @@ public sealed partial class FileAccess : ElectronObject
             return Convert.ToHexString(algorithm.ComputeHash(stream)).ToLowerInvariant();
     }
 
-    private static FileInfo GetFileInfo(string path)
+    private static long GetFileTime(string path, bool modified)
     {
-        var info = new FileInfo(ResolvePath(path));
+        var (absolutePath, mountedSize, blocked) = ResourcePacks.Runtime.ResolveFileLocation(path);
+        if (mountedSize.HasValue)
+            return 0;
+
+        var info = new FileInfo(RequireUnmaskedPath(path, absolutePath, blocked));
         if (!info.Exists)
             throw new FileNotFoundException("The file does not exist.", info.FullName);
-        return info;
+        return new DateTimeOffset(modified ? info.LastWriteTimeUtc : info.LastAccessTimeUtc).ToUnixTimeSeconds();
+    }
+
+    private static FileAttributes ReadAttributes(string path)
+    {
+        var (absolutePath, mountedSize, blocked) = ResourcePacks.Runtime.ResolveFileLocation(path);
+        if (mountedSize.HasValue)
+            return FileAttributes.ReadOnly;
+
+        EnsurePortableFileAttributesSupported();
+        return File.GetAttributes(RequireUnmaskedPath(path, absolutePath, blocked));
     }
 
     private static void EnsurePortableFileAttributesSupported()
@@ -1888,24 +1902,16 @@ public sealed partial class FileAccess : ElectronObject
 
     private static string ResolveMetadataPath(string path)
     {
-        if (ResourcePacks.Runtime.TrySize(path, out _)) throw new NotSupportedException("Mounted files have no mutable operating-system metadata.");
-        return ResolvePath(path);
+        var (absolutePath, mountedSize, blocked) = ResourcePacks.Runtime.ResolveFileLocation(path);
+        if (mountedSize.HasValue)
+            throw new NotSupportedException("Mounted files have no mutable operating-system metadata.");
+        return RequireUnmaskedPath(path, absolutePath, blocked);
     }
 
-    private static string ResolvePath(string path)
+    private static string RequireUnmaskedPath(string path, string absolutePath, bool blocked)
     {
-        ArgumentNullException.ThrowIfNull(path);
-        if (path.Length == 0)
-            throw new ArgumentException("A file path cannot be empty.", nameof(path));
-        ResourcePacks.Runtime.EnsureFilePath(path);
-        return ProjectSettings.GlobalizePath(path);
-    }
-
-    private static string ResolveWritablePath(string path)
-    {
-        var resolved = ResourceUID.EnsurePath(path);
-        var absolutePath = ResolvePath(resolved);
-        ResourcePacks.Runtime.EnsureWritable(resolved);
+        if (blocked)
+            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
         return absolutePath;
     }
 
@@ -1919,7 +1925,7 @@ public sealed partial class FileAccess : ElectronObject
         }
 
         packed = false;
-        absolutePath = ResolveWritablePath(path);
+        absolutePath = ResourcePacks.Runtime.ResolveWritableFile(path);
         if (Truncates(mode))
             return [];
 

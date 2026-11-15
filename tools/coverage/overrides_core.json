@@ -366,7 +366,7 @@
     {
       "electron2d": "method:Electron2D.FileAccess.SetHidden(System.String,System.Boolean)",
       "godot": "FileAccess::method:set_hidden_attribute(String:,bool:)",
-      "reason": "Typed equivalent; encryption intentionally uses authenticated envelope (ADR 0020)."
+      "reason": "C# exceptions for physical attribute changes. A single mount lookup protects masked files; the native attribute backend is platform-dependent (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.IsReadOnly(System.String)",
@@ -376,7 +376,7 @@
     {
       "electron2d": "method:Electron2D.FileAccess.SetReadOnly(System.String,System.Boolean)",
       "godot": "FileAccess::method:set_read_only_attribute(String:,bool:)",
-      "reason": "Typed equivalent; encryption intentionally uses authenticated envelope (ADR 0020)."
+      "reason": "C# exceptions for physical attribute changes. A single mount lookup protects masked files; the native attribute backend is platform-dependent (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.FileAccess.OpenEncrypted(System.String,Electron2D.FileAccessModeFlags,System.ReadOnlySpan<System.Byte>)",
@@ -681,9 +681,57 @@
       "reason": "Typed flags and C# error behavior for the same filesystem query (ADR 0020)."
     },
     {
+      "electron2d": "method:Electron2D.FileAccess.GetAccessTime(System.String)",
+      "godot": "FileAccess::method:get_access_time(String:)",
+      "state": "Partial",
+      "reason": "Unix seconds for physical files and zero for mounted files. One mount lookup blocks physical fallback through a mounted directory. This check covers namespace behavior; platform timestamp semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.GetModifiedTime(System.String)",
+      "godot": "FileAccess::method:get_modified_time(String:)",
+      "state": "Partial",
+      "reason": "Unix seconds for physical files and zero for mounted files. One mount lookup blocks physical fallback through a mounted directory. This check covers namespace behavior; platform timestamp semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.GetExtendedAttribute(System.String,System.String)",
+      "godot": "FileAccess::method:get_extended_attribute(String:,String:)",
+      "state": "Partial",
+      "reason": "One mount lookup rejects mounted or masked paths before invoking the Linux/macOS xattr or Windows alternate-stream backend. Windows x64 and WSL Linux exercise the namespace boundary; native macOS and broader backend qualification remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.GetExtendedAttributeString(System.String,System.String)",
+      "godot": "FileAccess::method:get_extended_attribute_string(String:,String:)",
+      "state": "Partial",
+      "reason": "One mount lookup rejects mounted or masked paths before invoking the Linux/macOS xattr or Windows alternate-stream backend. Windows x64 and WSL Linux exercise the namespace boundary; native macOS and broader backend qualification remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.GetExtendedAttributesList(System.String)",
+      "godot": "FileAccess::method:get_extended_attributes_list(String:)",
+      "state": "Partial",
+      "reason": "One mount lookup rejects mounted or masked paths before invoking the Linux/macOS xattr or Windows alternate-stream backend. Windows x64 and WSL Linux exercise the namespace boundary; native macOS and broader backend qualification remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.SetExtendedAttribute(System.String,System.String,System.ReadOnlySpan<System.Byte>)",
+      "godot": "FileAccess::method:set_extended_attribute(String:,String:,PackedByteArray:)",
+      "state": "Partial",
+      "reason": "One mount lookup rejects mounted or masked paths before invoking the Linux/macOS xattr or Windows alternate-stream backend. Windows x64 and WSL Linux exercise the namespace boundary; native macOS and broader backend qualification remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.SetExtendedAttributeString(System.String,System.String,System.String)",
+      "godot": "FileAccess::method:set_extended_attribute_string(String:,String:,String:)",
+      "state": "Partial",
+      "reason": "One mount lookup rejects mounted or masked paths before invoking the Linux/macOS xattr or Windows alternate-stream backend. Windows x64 and WSL Linux exercise the namespace boundary; native macOS and broader backend qualification remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.FileAccess.RemoveExtendedAttribute(System.String,System.String)",
+      "godot": "FileAccess::method:remove_extended_attribute(String:,String:)",
+      "state": "Partial",
+      "reason": "One mount lookup rejects mounted or masked paths before invoking the Linux/macOS xattr or Windows alternate-stream backend. Windows x64 and WSL Linux exercise the namespace boundary; native macOS and broader backend qualification remain open."
+    },
+    {
       "electron2d": "method:Electron2D.FileAccess.SetUnixPermissions(System.String,Electron2D.UnixPermissionFlags)",
       "godot": "FileAccess::method:set_unix_permissions(String:,int:FileAccess.UnixPermissionFlags)",
-      "reason": "Typed flags and C# error behavior for the same filesystem mutation (ADR 0020)."
+      "reason": "Typed Unix flags and C# exceptions, with a single mount lookup protecting masked files. Unix modes are unavailable on Windows (ADR 0020)."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetPropertyDescriptors()",
@@ -2359,7 +2407,7 @@
     {"godot": ["TranslationServer::method:compare_locales(String:,String:)"], "state": "Implemented", "reason": "ADR0007: same fixed default-aware locale identity parser as StandardizeLocale; score retains exact/language/script/region/variant semantics. Original C++ constructor agrees on 2600 cases and LocalizationProjectSettingsTests retains scalar score checks; actual catalogs consume the provider."},
     {"godot": ["TranslationServer::method:get_all_languages()", "TranslationServer::method:get_all_scripts()", "TranslationServer::method:get_all_countries()", "TranslationServer::method:get_language_name(String:)", "TranslationServer::method:get_script_name(String:)", "TranslationServer::method:get_country_name(String:)", "TranslationServer::method:get_locale_name(String:)", "TranslationServer::method:standardize_locale(String:,bool:)", "TranslationServer::method:get_plural_rules(String:)"], "state": "Implemented", "reason": "ADR0007 fixed copied locale tables and typed integer gettext rule provider; pinned normalization/aliases/script-country defaults execute independently of platform culture entries, while actual catalog Locale retains CultureInfo. Four inverted singular predicates are corrected, explicit caller selectors retain priority. LocaleCatalogTests and independent C++ table/arithmetic oracle plus GPU/compatibility language-menu consumers exercise the Linux profile; full decimal CLDR/import/foreign-host gates remain separate."},
     {"godot": ["FileAccess::method:open_compressed(String:,int:FileAccess.ModeFlags,int:FileAccess.CompressionMode)"], "state": "Implemented", "reason": "ADR 0020 retains the engine-owned E2DCMP envelope and whole-file/atomic semantics; default FastLZ and all five codecs execute seek/read/write/flush/reopen. Native 64 KiB blocks validate structure, exact decode, padding and SHA-256. FileCompressionTests verifies tiny/boundary/random/repeated data, edits, virtual paths, corruption, atomic failure and fresh-process reads; direct codec oracle and GPU/compatibility compressed-PNG pixels exercise Linux x64 with the matching native bundle. No reference container binary compatibility or foreign-host acceptance is claimed."},
-    {"godot": ["FileAccess::method:open(String:,int:FileAccess.ModeFlags)"], "state": "Implemented", "reason": "ADR 0020 projects the four exact modes to a non-null C# owner with exceptions. Physical and scoped paths, read-only mounted PCK/ZIP, cursor/length, preservation, truncation and staged Write execute through the public factory. Arbitrary pipe:// connections and sparse/delta export formats keep their separate backend dependencies."},
+    {"godot": ["FileAccess::method:open(String:,int:FileAccess.ModeFlags)"], "state": "Implemented", "reason": "ADR 0020 projects the four exact modes to a non-null C# owner with exceptions. Physical and scoped paths, read-only mounted PCK/ZIP, cursor/length, preservation, truncation and staged Write execute through the public factory. Writable opens check file and directory masking against one mount snapshot. Arbitrary pipe:// connections and sparse/delta export formats keep their separate backend dependencies."},
     {"godot": ["FileAccess::method:open_encrypted(String:,int:FileAccess.ModeFlags,PackedByteArray:,PackedByteArray:)"], "state": "Implemented", "reason": "ADR 0020 uses a 32-byte span key and the authenticated AES-GCM envelope. The engine supplies fresh nonces and omits the caller IV. Read and ReadWrite authenticate existing bytes, while Write and WriteRead start empty. Flush and Close commit atomically to the captured destination. The reference container is a different format."},
     {"godot": ["FileAccess::method:open_encrypted_with_pass(String:,int:FileAccess.ModeFlags,String:)"], "state": "Implemented", "reason": "OpenEncryptedWithPassword uses the same ownership and mode rules, with a nonempty password and salted PBKDF2 under ADR 0020. Wrong credentials and wrong envelope variants fail before publication. The reference password KDF and container are outside the accepted format."},
     {"godot": ["FileAccess::method:create_temp(int:FileAccess.ModeFlags,String:,String:,bool:)"], "state": "Implemented", "reason": "ADR 0020 typed factory retains empty prefix/extension and keep=false, adds optional ReadWrite mode and accepts a leading extension dot. It allocates a unique file and Close or disposal deletes it unless kept. Validation and creation failures throw."},

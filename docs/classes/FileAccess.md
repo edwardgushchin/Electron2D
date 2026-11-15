@@ -244,6 +244,8 @@ On Windows, physical read-only streams allow staged replacement. An open reader 
 
 When a mounted directory and a physical file share a `res://` path, the directory takes precedence. `Open` throws `FileNotFoundException` for that resource path. The physical file remains accessible through its native absolute path.
 
+Writable opens check mounted file and directory precedence against one mount snapshot, including while a patch replaces one with the other.
+
 **Parameters**
 
 - `path`: A nonempty ordinary, `res://`, or `user://` path.
@@ -303,7 +305,7 @@ Opens a whole-file compressed container.
 - `IO.IOException`: The physical file cannot be read or replaced.
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 
-**Remarks:** Changes are atomically encoded to the destination by [`FileAccess.Flush`](FileAccess.md#m-electron2d-fileaccess-flush) or [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close).
+**Remarks:** Writable opens check mount precedence in one lookup. Changes are atomically encoded to the destination by [`FileAccess.Flush`](FileAccess.md#m-electron2d-fileaccess-flush) or [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close).
 
 <a id="m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte"></a>
 ### `public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)`
@@ -328,7 +330,7 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
-**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable instances commit to the destination captured at open, using a fresh random nonce for each commit.
+**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable opens check mount precedence in one lookup. A fresh random nonce is used each time changes are committed to the captured destination.
 
 <a id="m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string"></a>
 ### `public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`
@@ -353,7 +355,7 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `UnauthorizedAccessException`: The caller lacks filesystem access.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 
-**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.
+**Remarks:** Read and ReadWrite authenticate existing data. Write and WriteRead start empty. Writable opens check mount precedence in one lookup. A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. Commits use fresh nonces and the destination captured at open.
 
 <a id="m-electron2d-fileaccess-close"></a>
 ### `public void Close()`
@@ -923,7 +925,7 @@ Gets the last-access time as Unix seconds.
 
 - `path`: The file path.
 
-**Returns:** Seconds since 1970-01-01 UTC.
+**Returns:** Seconds since 1970-01-01 UTC, or zero for a mounted file.
 
 **Exceptions**
 
@@ -942,7 +944,7 @@ Gets the last-modification time as Unix seconds.
 
 - `path`: The file path.
 
-**Returns:** Seconds since 1970-01-01 UTC.
+**Returns:** Seconds since 1970-01-01 UTC, or zero for a mounted file.
 
 **Exceptions**
 
@@ -1036,6 +1038,8 @@ Gets whether the filesystem marks a file as hidden.
 
 Changes a file's hidden attribute.
 
+Checks mount precedence in one lookup before changing physical attributes.
+
 **Parameters**
 
 - `path`: The file path.
@@ -1075,6 +1079,8 @@ Gets whether the filesystem marks a file as read-only.
 
 Changes a file's read-only attribute.
 
+Checks mount precedence in one lookup before changing physical attributes.
+
 **Parameters**
 
 - `path`: The file path.
@@ -1113,6 +1119,8 @@ Gets Unix mode bits for a file.
 ### `public static void SetUnixPermissions(string path, UnixPermissionFlags permissions)`
 
 Sets Unix mode bits for a file.
+
+Checks mount precedence in one lookup before changing physical permissions.
 
 **Parameters**
 
@@ -1297,6 +1305,8 @@ Each seekable instance uses one lock to serialize its stream operations, includi
 - Reuses the same internal atomic-replacement helper as `ConfigFile`.
 - Uses Linux libc xattrs, macOS libSystem xattrs, and Windows alternate data streams for the extended-attribute surface.
 - Process pipes use the OS service's native backend. Mounted file reads use the shared resource pack resolver.
+
+Static metadata queries use one mount lookup. Mounted files report zero timestamps, a clear hidden flag, a set read-only flag, and read bits for owner, group and others when the platform supports Unix permissions. Extended attribute operations throw `NotSupportedException` for a mounted file and `FileNotFoundException` when a mounted directory or file ancestor masks the requested path.
 
 ## Verification and known limits
 

@@ -297,8 +297,22 @@ internal sealed class ResourcePacks
         return entry.Open();
     }
 
-    internal long? GetFileSize(string path, out string absolutePath, out bool blocked) =>
-        ResolveFile(path, out absolutePath, out _, out blocked)?.Length;
+    internal (string AbsolutePath, long? MountedSize, bool Blocked) ResolveFileLocation(string path)
+    {
+        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked);
+        return (absolutePath, entry?.Length, blocked);
+    }
+
+    internal string ResolveWritableFile(string path)
+    {
+        var entry = ResolveFile(path, out var absolutePath, out _, out var blocked);
+        if (blocked)
+            throw new FileNotFoundException("A mounted entry blocks access to this file path.", path);
+        if (entry is not null)
+            throw new UnauthorizedAccessException("Mounted resource entries are read-only.");
+
+        return absolutePath;
+    }
 
     private Entry? ResolveFile(string path, out string absolutePath, out string? name, out bool blocked)
     {

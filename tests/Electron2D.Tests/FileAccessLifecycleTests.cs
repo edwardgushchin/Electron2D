@@ -23,6 +23,7 @@ internal static class FileAccessLifecycleTests
             var other = directory.CreateSubdirectory("other").FullName;
             ProjectSettings.ConfigurePaths(project, user);
             VerifySnapshots(directory.FullName, project, user);
+            VerifyMountedFileProtection(directory.FullName, project);
             if (OperatingSystem.IsLinux())
                 VerifyLinkedSize(project);
             VerifyTransformed(project, user, other);
@@ -122,6 +123,152 @@ internal static class FileAccessLifecycleTests
         }
         Check(ProjectSettings.LoadResourcePack(patch), "Publish a replacement PCK entry.");
         Check(old.ReadAllText() == Text && EFile.GetFileAsString(mountedPath) == "new", "Existing reader retains its entry.");
+    }
+
+    private static void VerifyMountedFileProtection(string directory, string project)
+    {
+        const string name = "lifecycle-shadowed";
+        const string child = name + "/child";
+        const string resource = "res://" + name;
+        const string attribute = "lifecycle-sentinel";
+        const string value = "metadata";
+        var physical = IOPath.Combine(project, name);
+        File.WriteAllBytes(physical, TextBytes);
+        var operations = new List<(string Name, Action Run)>
+        {
+            ("Open(Write)", () => { using var file = EFile.Open(resource, FileAccessModeFlags.Write); }),
+            ("OpenCompressed(Write)", () => { using var file = EFile.OpenCompressed(resource, FileAccessModeFlags.Write, FileCompressionMode.Gzip); }),
+            ("OpenEncrypted(Write)", () => { using var file = EFile.OpenEncrypted(resource, FileAccessModeFlags.Write, new byte[32]); }),
+            ("OpenEncryptedWithPassword(Write)", () => { using var file = EFile.OpenEncryptedWithPassword(resource, FileAccessModeFlags.Write, "password"); }),
+        };
+        var metadataReads = new List<Action>
+        {
+            () => Check(EFile.GetAccessTime(resource) == 0, "A mounted file reports the default access time."),
+            () => Check(EFile.GetModifiedTime(resource) == 0, "A mounted file reports the default modification time."),
+        };
+        var xattrs = new List<Action>();
+        if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+        {
+            EFile.SetExtendedAttributeString(physical, attribute, value);
+            xattrs.AddRange([
+                () => EFile.GetExtendedAttribute(resource, attribute),
+                () => EFile.GetExtendedAttributeString(resource, attribute),
+                () => EFile.GetExtendedAttributesList(resource),
+                () => EFile.SetExtendedAttribute(resource, attribute, "wrong"u8),
+                () => EFile.SetExtendedAttributeString(resource, attribute, "wrong"),
+                () => EFile.RemoveExtendedAttribute(resource, attribute),
+            ]);
+        }
+        var originalAttributes = File.GetAttributes(physical);
+        var originalMode = !OperatingSystem.IsWindows() ? File.GetUnixFileMode(physical) : default;
+        if (OperatingSystem.IsWindows())
+        {
+            operations.Add(("SetHidden", () => EFile.SetHidden(resource, (originalAttributes & FileAttributes.Hidden) == 0)));
+            operations.Add(("SetReadOnly", () => EFile.SetReadOnly(resource, (originalAttributes & FileAttributes.ReadOnly) == 0)));
+            metadataReads.Add(() => Check(!EFile.IsHidden(resource), "A mounted file reports the default hidden flag."));
+            metadataReads.Add(() => Check(EFile.IsReadOnly(resource), "A mounted file reports the read-only flag."));
+            Reject<PlatformNotSupportedException>(() => EFile.SetUnixPermissions(resource, UnixPermissionFlags.None));
+        }
+        else
+        {
+            var changedMode = originalMode ^ UnixFileMode.UserExecute;
+            operations.Add(("SetUnixPermissions", () => EFile.SetUnixPermissions(resource, (UnixPermissionFlags)changedMode)));
+            const UnixPermissionFlags readOnly = UnixPermissionFlags.ReadOwner | UnixPermissionFlags.ReadGroup | UnixPermissionFlags.ReadOther;
+            metadataReads.Add(() => Check(EFile.GetUnixPermissions(resource) == readOnly, "A mounted file reports the default Unix mode."));
+        }
+
+        var filePack = IOPath.Combine(directory, "shadow-file.pck");
+        using (var writer = new PCKPacker())
+        {
+            writer.PCKStart(filePack);
+            writer.AddFileRemoval(child);
+            writer.AddFileFromBuffer(name, "mounted"u8);
+        }
+        var directoryPack = IOPath.Combine(directory, "shadow-directory.pck");
+        using (var writer = new PCKPacker())
+        {
+            writer.PCKStart(directoryPack);
+            writer.AddFileRemoval(name);
+            writer.AddFileFromBuffer(child, "child"u8);
+        }
+
+        Check(ProjectSettings.LoadResourcePack(filePack), "Mount a file over the physical destination.");
+        foreach (var operation in operations)
+            Reject<UnauthorizedAccessException>(operation.Run);
+        foreach (var read in metadataReads)
+            read();
+        foreach (var operation in xattrs)
+            Reject<NotSupportedException>(operation);
+        Check(ProjectSettings.LoadResourcePack(directoryPack), "Replace the mounted file with a directory.");
+        foreach (var operation in operations)
+            Reject<FileNotFoundException>(operation.Run);
+        foreach (var read in metadataReads)
+            Reject<FileNotFoundException>(read);
+        foreach (var operation in xattrs)
+            Reject<FileNotFoundException>(operation);
+
+        var mounts = Task.Run(() =>
+        {
+            for (var attempt = 0; attempt < 512; attempt++)
+            {
+                Check(ProjectSettings.LoadResourcePack(filePack), "Replace the directory with a mounted file.");
+                Check(ProjectSettings.LoadResourcePack(directoryPack), "Replace the file with a mounted directory.");
+            }
+        });
+        try
+        {
+            do
+            {
+                foreach (var (operation, run) in operations)
+                {
+                    try
+                    {
+                        run();
+                        throw new InvalidOperationException($"A PCK replacement exposed a masked physical file to {operation}.");
+                    }
+                    catch (UnauthorizedAccessException) { }
+                    catch (FileNotFoundException) { }
+                }
+                foreach (var read in metadataReads)
+                {
+                    try { read(); }
+                    catch (FileNotFoundException) { }
+                }
+                foreach (var operation in xattrs)
+                {
+                    try
+                    {
+                        operation();
+                        throw new InvalidOperationException("A PCK replacement exposed the masked physical extended attributes.");
+                    }
+                    catch (NotSupportedException ex) when (ex.GetType() == typeof(NotSupportedException)) { }
+                    catch (FileNotFoundException) { }
+                }
+            }
+            while (!mounts.IsCompleted);
+        }
+        finally
+        {
+            mounts.GetAwaiter().GetResult();
+            if (OperatingSystem.IsWindows())
+            {
+                var attributes = File.GetAttributes(physical);
+                if (attributes != originalAttributes)
+                    File.SetAttributes(physical, originalAttributes);
+                Check(attributes == originalAttributes, "PCK replacements must preserve the masked Windows file attributes.");
+            }
+            else
+            {
+                Check(File.GetUnixFileMode(physical) == originalMode, "PCK replacements must preserve the masked Unix permission bits.");
+            }
+            Check(File.ReadAllBytes(physical).SequenceEqual(TextBytes), "PCK replacements must preserve the masked physical bytes.");
+            if (xattrs.Count != 0)
+            {
+                Check(EFile.GetExtendedAttributesList(physical).Contains(attribute) &&
+                    EFile.GetExtendedAttributeString(physical, attribute) == value,
+                    "PCK replacements must preserve the masked physical extended attributes.");
+            }
+        }
     }
 
     private static void VerifyTransformed(string project, string user, string other)
