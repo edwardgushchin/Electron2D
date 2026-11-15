@@ -220,9 +220,9 @@ public sealed partial class Engine
                 beforeFrame?.Invoke(window, checked(++nextFrame));
                 if (tree?.QuitRequested ?? window.HostQuitRequested) break;
                 var now = Stopwatch.GetTimestamp();
-                var elapsed = movie is null ? Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds : 1d / movieFPS;
+                var elapsed = Stopwatch.GetElapsedTime(lastFrame, now).TotalSeconds;
                 lastFrame = now;
-                var simulationElapsed = elapsed;
+                var simulationElapsed = movie is null ? elapsed : 1d / movieFPS;
                 if (movie is null && elapsed <= 1d && OS.DeltaSmoothing && DisplayServer.WindowGetVSyncMode() == DisplayServer.VSyncMode.Enabled)
                 {
                     var smoothed = _frameDeltaSmoother.Smooth((long)(elapsed * 1_000_000d), true, true, out var applied);

@@ -486,11 +486,8 @@ public sealed partial class Engine : ElectronObject
 
         var framesPerSecond = _fpsFrames / _fpsElapsed;
         AtomicFloatingPoint.Write(ref _framesPerSecond, framesPerSecond);
-        _fpsElapsed %= 1d;
-
-        if (_fpsElapsed > 1d - 1e-12d)
-            _fpsElapsed = 0d;
-
+        // Retire the same complete interval as the counted frames.
+        _fpsElapsed = 0d;
         _fpsFrames = 0;
         if (_printFPS)
             PrintFrameRateSample(framesPerSecond);

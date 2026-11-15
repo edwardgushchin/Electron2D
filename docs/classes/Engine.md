@@ -20,6 +20,10 @@ Public static declarations are in [`Engine.API.cs`](../../src/Core/Config/Engine
 
 ## Description
 
+`FramesPerSecond` divides completed process iterations by their complete unscaled elapsed window,
+then resets both values together. Windows close at one second or later. Successful attachment resets
+the sample; stop retains it. Owned recording measures wall time independently of its fixed simulation delta.
+
 Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
 Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.

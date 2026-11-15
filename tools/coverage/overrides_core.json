@@ -3105,6 +3105,15 @@
     },
     {
       "godot": [
+        "Engine::method:get_process_frames()",
+        "Engine::method:get_main_loop()",
+        "Engine::method:get_frames_per_second()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0016/0095: atomic borrowed MainLoop identity through initialization/frame/finalization; failed startup/teardown detach and permit a new run. ProcessFrames is a UInt64 process-lifetime count of completed process callbacks, including successful stop requests and excluding throws. FPS is completed iterations divided by their whole unscaled elapsed window; count and elapsed retire together. Owned ordinary/movie hosts use measured wall time, manual hosts supply elapsed time. This preserves the existing measured-rate contract rather than the pin's raw frames-per-window approximation (main/main.cpp lines 4741-4765); the initial/reset sample is zero. VerifyEngine, EngineObservationTests and adjacent lifecycle/physics/frame-rate profiles pass on Windows x64 CLR, including Vulkan and Compatibility ordinary/recording runs and zero managed bytes for warmed off-owner getters. Other hosts, NativeAOT and hard real-time guarantees remain unqualified."
+    },
+    {
+      "godot": [
         "Engine::property:physics_ticks_per_second",
         "Engine::property:max_physics_steps_per_frame",
         "Engine::property:physics_jitter_fix",
