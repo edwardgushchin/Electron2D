@@ -5,8 +5,8 @@
     <_Electron2DSSLName>libssl.so.4</_Electron2DSSLName>
     <_Electron2DCryptoName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DCrypto.4.dylib</_Electron2DCryptoName>
     <_Electron2DSSLName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DSSL.4.dylib</_Electron2DSSLName>
-    <_Electron2DCryptoName Condition="'$(Electron2DNativePlatform)' == 'Windows'">libcrypto-4-Electron2D.dll</_Electron2DCryptoName>
-    <_Electron2DSSLName Condition="'$(Electron2DNativePlatform)' == 'Windows'">libssl-4-Electron2D.dll</_Electron2DSSLName>
+    <_Electron2DCryptoName Condition="'$(Electron2DNativePlatform)' == 'Windows'">libcrypto-4.dll</_Electron2DCryptoName>
+    <_Electron2DSSLName Condition="'$(Electron2DNativePlatform)' == 'Windows'">libssl-4.dll</_Electron2DSSLName>
     <_Electron2DTLSDirectory>$(_Electron2DTLSBuild)</_Electron2DTLSDirectory>
     <_Electron2DTLSDirectory Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'Linux'">$(PkgElectron2D_Linux)/runtimes/$(_Electron2DPrivateNativeRID)/native</_Electron2DTLSDirectory>
     <_Electron2DTLSDirectory Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native</_Electron2DTLSDirectory>

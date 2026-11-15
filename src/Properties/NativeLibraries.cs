@@ -77,13 +77,13 @@ internal static partial class NativeLibraries
             }
             if (OperatingSystem.IsWindows())
             {
-                if (name == "HarfBuzzSharp") return LoadRuntime("libHarfBuzzSharp.dll", assembly, path);
-                if (name == "freetype") return LoadRuntime("Electron2DFreeType.dll", assembly, path);
-                if (name == "Electron2DCrypto") return LoadRuntime("libcrypto-4-Electron2D.dll", assembly, path);
+                if (name == "HarfBuzzSharp") return LoadRuntime("harfbuzz.dll", assembly, path);
+                if (name == "freetype") return LoadRuntime("freetype.dll", assembly, path);
+                if (name == "Electron2DCrypto") return LoadRuntime("libcrypto-4.dll", assembly, path);
                 if (name == "Electron2DSSL")
                 {
-                    LoadRuntime("libcrypto-4-Electron2D.dll", assembly, path);
-                    return LoadRuntime("libssl-4-Electron2D.dll", assembly, path);
+                    LoadRuntime("libcrypto-4.dll", assembly, path);
+                    return LoadRuntime("libssl-4.dll", assembly, path);
                 }
 
                 if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;

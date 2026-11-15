@@ -55,9 +55,9 @@ def build(rid, output, memory_library=None):
         subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs", "no-asm", "no-uplink",
                         "--prefix=" + str(output / "install")], cwd=directory, env=environment, check=True)
         subprocess.run(["nmake", "/nologo", "build_libs"], cwd=directory, check=True)
-        for name in ("libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll"):
+        for name in ("libcrypto-4.dll", "libssl-4.dll"):
             shutil.copy2(directory / name, output / name)
-        print(f"{rid}: pinned OpenSSL {VERSION} built with private DLL identities")
+        print(f"{rid}: pinned OpenSSL {VERSION} built with standard DLL basenames")
         return
     subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs",
                     "--prefix=/Electron2D", "--openssldir=/etc/ssl", *memory_options], cwd=directory, check=True)

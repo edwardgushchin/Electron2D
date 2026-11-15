@@ -16,23 +16,32 @@ namespace Electron2D;
 public sealed partial class TranslationServer : ElectronObject
 {
     private sealed record LocaleParts(string Language, string Script, string Region, string Variant);
-    private static readonly ConditionalWeakTable<string, LocaleParts> LocaleIdentities = new();
     private static readonly PropertyDescriptor[] TranslationProperties =
     [
         new PropertyDescriptor<TranslationServer, CultureInfo>(nameof(Culture),
-            server => server.CultureCore, (server, value) => server.CultureCore = value),
+            static _ => Culture, static (_, value) => Culture = value),
         new PropertyDescriptor<TranslationServer, bool>(nameof(PseudolocalizationEnabled),
-            server => server.PseudolocalizationEnabledCore, (server, value) => server.PseudolocalizationEnabledCore = value),
+            static _ => PseudolocalizationEnabled, static (_, value) => PseudolocalizationEnabled = value),
     ];
 
-    internal static TranslationServer Service { get; } = new();
+    internal static TranslationServer RegisteredService { get; } = new();
+
+    // Engine registration and descriptor discovery can expose the object before the first state access.
+    private static readonly Lazy<TranslationServer> InitializedService = new(static () =>
+    {
+        var service = RegisteredService;
+        service._culture = CultureInfo.CurrentUICulture;
+        return service;
+    });
+    private static TranslationServer Service => InitializedService.Value;
 
     private readonly object _gate = new();
+    private readonly ConditionalWeakTable<string, LocaleParts> _localeIdentities = new();
     private readonly Dictionary<(string Culture, string Domain, string Context, string Message), string> _messages = new();
     private readonly Dictionary<(string Culture, string Domain, string Context, string Singular, string Plural), Func<long, string>> _plurals = new();
     private readonly Dictionary<string, TranslationDomain> _domains = new(StringComparer.Ordinal);
 
-    private CultureInfo? _culture;
+    private CultureInfo _culture = null!; // Set by the lazy initializer before service operations can read it.
     private CultureInfo? _fallbackCulture = CultureInfo.GetCultureInfo("en");
     private int _enabled = 1;
 
@@ -62,7 +71,7 @@ public sealed partial class TranslationServer : ElectronObject
     }
 
     /// <summary>Gets or sets the culture used for subsequent translation lookups.</summary>
-    /// <value>The process-wide lookup culture. Before Engine startup, the first use of the selected culture captures
+    /// <value>The process-wide lookup culture. Before Engine startup, the first access to service state captures
     /// <see cref="CultureInfo.CurrentUICulture"/>. Engine startup samples it again unless a project test locale is configured.</value>
     /// <remarks>A different culture name reloads associated localized resources, then synchronously notifies
     /// <see cref="Engine.MainLoop"/> after commitment and release of the setter's catalog lock. Equal-name assignment
@@ -83,7 +92,7 @@ public sealed partial class TranslationServer : ElectronObject
         get
         {
             lock (_gate)
-                return GetOrCaptureCultureUnderLock();
+                return _culture;
         }
         set
         {
@@ -91,14 +100,12 @@ public sealed partial class TranslationServer : ElectronObject
             bool changed;
             lock (_gate)
             {
-                changed = !string.Equals(GetOrCaptureCultureUnderLock().Name, value.Name, StringComparison.Ordinal);
+                changed = !string.Equals(_culture.Name, value.Name, StringComparison.Ordinal);
                 _culture = value;
             }
             if (changed) NotifyTranslationChanged();
         }
     }
-
-    private CultureInfo GetOrCaptureCultureUnderLock() => _culture ??= CultureInfo.CurrentUICulture;
 
     internal static CultureInfo? FallbackCulture
     {
@@ -122,8 +129,9 @@ public sealed partial class TranslationServer : ElectronObject
         ArgumentNullException.ThrowIfNull(localeA);
         ArgumentNullException.ThrowIfNull(localeB);
         if (localeA == localeB) return 10;
-        var a = ParseLocale(localeA);
-        var b = ParseLocale(localeB);
+        var service = Service;
+        var a = service.ParseLocale(localeA);
+        var b = service.ParseLocale(localeB);
         if (a == b) return 10;
         if (a.Language != b.Language) return 0;
         var score = 5;
@@ -160,7 +168,7 @@ public sealed partial class TranslationServer : ElectronObject
         return best ?? FallbackCultureCore?.Name ?? string.Empty;
     }
 
-    private static LocaleParts ParseLocale(string locale) => LocaleIdentities.GetValue(locale, static key =>
+    private LocaleParts ParseLocale(string locale) => _localeIdentities.GetValue(locale, static key =>
     {
         var parsed = ParseCatalogLocale(key, true);
         return new(parsed.Language, parsed.Script, parsed.Region, parsed.Variant);
@@ -460,7 +468,7 @@ public sealed partial class TranslationServer : ElectronObject
         TranslationDomain? catalogDomain;
         lock (_gate)
         {
-            culture = GetOrCaptureCultureUnderLock();
+            culture = _culture;
             _domains.TryGetValue(domain, out catalogDomain);
         }
         if (catalogDomain is not null)
@@ -516,7 +524,7 @@ public sealed partial class TranslationServer : ElectronObject
         TranslationDomain? catalogDomain;
         lock (_gate)
         {
-            culture = GetOrCaptureCultureUnderLock();
+            culture = _culture;
             _domains.TryGetValue(domain, out catalogDomain);
         }
         if (catalogDomain is not null)

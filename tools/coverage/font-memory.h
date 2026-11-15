@@ -20,7 +20,7 @@ int e2d_ft_hb_memory(void *(*)(size_t), void *(*)(void *, size_t), void (*)(void
 static void prepare_font_memory(void) {
     // Private instrumented builds require a caller allocator; stock libraries use their own.
 #if defined(_WIN32)
-    FontMemory memory = (FontMemory)GetProcAddress(GetModuleHandleA("Electron2DFreeType.dll"), "e2d_ft_hb_memory");
+    FontMemory memory = (FontMemory)GetProcAddress(GetModuleHandleA("freetype.dll"), "e2d_ft_hb_memory");
 #else
     FontMemory memory = e2d_ft_hb_memory;
 #endif

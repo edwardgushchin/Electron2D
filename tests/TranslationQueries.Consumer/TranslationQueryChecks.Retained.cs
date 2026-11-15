@@ -5,10 +5,10 @@ using IOPath = System.IO.Path;
 
 internal static partial class TranslationQueryChecks
 {
-    internal static void RunInitialCulture()
+    internal static void RunInitialCulture(bool checkDomainFirst = false)
     {
         const string name = nameof(TranslationServer);
-        const string domain = "initial-culture";
+        const string domain = "menu";
         var english = CultureInfo.GetCultureInfo("en");
         var french = CultureInfo.GetCultureInfo("fr");
 
@@ -17,6 +17,8 @@ internal static partial class TranslationQueryChecks
         var server = Engine.GetSingleton<TranslationServer>(name);
         var culture = server.GetPropertyList().OfType<PropertyDescriptor<TranslationServer, CultureInfo>>()
             .Single(property => property.Name == nameof(TranslationServer.Culture));
+        if (checkDomainFirst)
+            Check(!TranslationServer.HasDomain(domain), "An unregistered domain lookup does not create the domain.");
 
         CultureInfo.CurrentUICulture = french;
         TranslationServer.AddTranslation(english, domain, "hello", "Hello");
@@ -24,13 +26,17 @@ internal static partial class TranslationQueryChecks
         TranslationServer.AddPluralTranslation(english, domain, "book", "books", _ => "books");
         TranslationServer.AddPluralTranslation(french, domain, "book", "books", _ => "livres");
         var translated = TranslationServer.Translate(domain, "hello");
-        Check(translated == "Bonjour", $"The first pre-start translation uses fr after registry enumeration under en. Got '{translated}'.");
+        var expectedCulture = checkDomainFirst ? english : french;
+        var expectedMessage = checkDomainFirst ? "Hello" : "Bonjour";
+        var expectedPlural = checkDomainFirst ? "books" : "livres";
+        var firstCall = checkDomainFirst ? "HasDomain under en" : "catalog registration under fr";
+        Check(translated == expectedMessage, $"After {firstCall}, the first pre-start translation uses {expectedCulture.Name}. Got '{translated}'.");
 
-        CultureInfo.CurrentUICulture = english;
+        CultureInfo.CurrentUICulture = checkDomainFirst ? french : english;
         Check(Engine.MainLoop is null && ReferenceEquals(Engine.GetSingleton(name), server) &&
-            ReferenceEquals(culture.GetValue(server), french) && TranslationServer.TranslatePlural(domain, "book", "books", 2) == "livres",
+            ReferenceEquals(culture.GetValue(server), expectedCulture) && TranslationServer.TranslatePlural(domain, "book", "books", 2) == expectedPlural,
             "Before Engine startup the selected culture persists across descriptor reads, plural lookups and ambient changes.");
-        Console.WriteLine("Initial culture: registry and descriptors enumerated under en, first pre-start translation under fr, captured fr retained.");
+        Console.WriteLine($"Initial culture: registry and descriptors enumerated under en. After {firstCall}, pre-start singular and plural use {expectedCulture.Name}.");
     }
 
     private static void CheckRetainedServer()

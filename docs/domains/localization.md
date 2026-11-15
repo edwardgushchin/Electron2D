@@ -29,7 +29,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 
 ## Invariants
 
-- Catalog access and culture changes are lock-protected.
+- Catalog access and culture changes are lock-protected. The first state access before startup captures the managed UI culture. Engine registry lookup and descriptor discovery leave that capture to the first state access.
 - Catalogs compete against the selected locale using default-aware scores, then the configured fallback is tried. Direct selected/parent entries share those scores and win ties; only explicit invariant direct entries form a universal fallback.
 - Domains, contexts, and messages are ordinal and case-sensitive.
 - Missing singular translations return the source message.

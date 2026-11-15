@@ -5,7 +5,7 @@ namespace Electron2D;
 public sealed partial class TranslationServer
 {
     private readonly record struct NumeralSystem(string[] Digits, string Percent, string LowerExponent, string UpperExponent);
-    private static readonly Dictionary<string, NumeralSystem> NumeralSystems = CreateNumeralSystems();
+    private readonly Dictionary<string, NumeralSystem> _numeralSystems = CreateNumeralSystems();
     private static Dictionary<string, NumeralSystem> CreateNumeralSystems()
     {
         var systems = new Dictionary<string, NumeralSystem>(StringComparer.Ordinal);
@@ -33,7 +33,7 @@ public sealed partial class TranslationServer
     public static string FormatNumber(string number, string locale)
     {
         ArgumentNullException.ThrowIfNull(number); ArgumentException.ThrowIfNullOrEmpty(locale);
-        if (!NumeralSystems.TryGetValue(locale.Replace('-', '_'), out var system)) return number;
+        if (!Service._numeralSystems.TryGetValue(locale.Replace('-', '_'), out var system)) return number;
         number = number.Replace("e", system.LowerExponent, StringComparison.Ordinal).Replace("E", system.UpperExponent, StringComparison.Ordinal);
         var result = new StringBuilder(); foreach (var rune in number.EnumerateRunes()) { if (rune.Value is >= '0' and <= '9') result.Append(system.Digits[rune.Value - '0']); else if (rune.Value is '.' or ',') result.Append(system.Digits[10]); else result.Append(rune.ToString()); }
         return result.ToString();
@@ -46,7 +46,7 @@ public sealed partial class TranslationServer
     public static string ParseNumber(string number, string locale)
     {
         ArgumentNullException.ThrowIfNull(number); ArgumentException.ThrowIfNullOrEmpty(locale);
-        if (!NumeralSystems.TryGetValue(locale.Replace('-', '_'), out var system)) return number;
+        if (!Service._numeralSystems.TryGetValue(locale.Replace('-', '_'), out var system)) return number;
         number = number.Replace(system.LowerExponent, "e", StringComparison.Ordinal).Replace(system.UpperExponent, "E", StringComparison.Ordinal);
         var result = new StringBuilder(); foreach (var rune in number.EnumerateRunes()) { var text = rune.ToString(); var index = Array.IndexOf(system.Digits, text); if (index == 10) result.Append('.'); else if (index >= 0) result.Append((char)('0' + index)); else result.Append(text); }
         return result.ToString();
@@ -54,6 +54,6 @@ public sealed partial class TranslationServer
     /// <summary>Returns the percent sign used by the selected numeral system.</summary>
     /// <param name="locale">A nonempty locale identifier.</param><returns>The locale's sign, or % for an unlisted locale.</returns>
     /// <exception cref="ArgumentException">The locale is empty.</exception>
-    public static string GetPercentSign(string locale) { ArgumentException.ThrowIfNullOrEmpty(locale); return NumeralSystems.TryGetValue(locale.Replace('-', '_'), out var system) ? system.Percent : "%"; }
+    public static string GetPercentSign(string locale) { ArgumentException.ThrowIfNullOrEmpty(locale); return Service._numeralSystems.TryGetValue(locale.Replace('-', '_'), out var system) ? system.Percent : "%"; }
 
 }
