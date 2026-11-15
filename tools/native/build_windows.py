@@ -21,15 +21,17 @@ def build(rid, sdl, artifacts):
     build_engine(rid, output / "sdl/SDL3.lib", output / "engine")
     destination = artifacts / "runtimes" / rid / "native"
     destination.mkdir(parents=True, exist_ok=True)
+    for name in package.retired_windows_files():
+        (destination / name).unlink(missing_ok=True)
     shutil.copy2(output / "engine/libElectron2D.dll", destination / "libElectron2D.dll")
-    for name in ("libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll"):
+    for name in ("libcrypto-4.dll", "libssl-4.dll"):
         shutil.copy2(output / "engine/tls" / name, destination / name)
     for source, target, name, options in (
             ("tools/audio-native", "FAudio-shared", "FAudio.dll", ["-DBUILD_SDL3=ON", "-DXNASONG=OFF",
                 "-DELECTRON2D_SDL_VERSION=" + package.configuration()["sdlVersion"],
                 "-DSDL3_LIBRARIES=" + str(output / "sdl/SDL3.lib")]),
-            ("tools/shaping-native", "harfbuzz", "libHarfBuzzSharp.dll", ["-DELECTRON2D_MEMORY_LIBRARY=" + str(output / "engine/Electron2D.lib")]),
-            ("tools/font-native", "freetype", "Electron2DFreeType.dll", [])):
+            ("tools/shaping-native", "harfbuzz", "harfbuzz.dll", ["-DELECTRON2D_MEMORY_LIBRARY=" + str(output / "engine/Electron2D.lib")]),
+            ("tools/font-native", "freetype", "freetype.dll", [])):
         directory = output / target
         subprocess.run(["cmake", "-S", str(root / source), "-B", str(directory), "-G", "Ninja",
                         "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW",

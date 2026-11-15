@@ -69,12 +69,26 @@ internal static partial class DeferredSceneTests
         for (var i = 0; i < 2; i++)
         {
             var pending = (Actor)actor.Instantiate(); pending.Name = "Pending" + i; root.AddChild(pending); pending.Owner = root;
-            pending.Position = new(42 + i, 53); pending.Label = "deferred"; pending.Values = [2, 5, 8]; pending.Target = pending.GetNode("Inherited");
+            pending.Position = new(42 + i, 53); pending.Label = "deferred"; pending.Values = [2, 5, 8];
+            pending.Target = i == 0 ? pending.GetNode("Inherited") : null;
             pending.SetSceneInstanceLoadPlaceholder(true); root.SetEditableInstance(pending, true);
         }
         using var parent = new PackedScene(); parent.Pack(root);
+        VerifyStoredTargets(parent, "after Pack");
         foreach (var (name, flags) in new[] { ("plain", (SaverFlags)0), ("bundled", SaverFlags.BundleResources | SaverFlags.RelativePaths | SaverFlags.SaveBigEndian | SaverFlags.Compress) })
             ResourceSaver.Save(parent, At(folder, name + ".e2dscene"), flags);
+    }
+    private static void VerifyStoredTargets(PackedScene scene, string phase)
+    {
+        using var state = scene.GetState();
+        foreach (var (name, expected) in new[] { ("Pending0", "Inherited"), ("Pending1", string.Empty) })
+        {
+            var node = Enumerable.Range(0, state.GetNodeCount()).Single(i => state.GetNodeName(i) == name);
+            var property = Enumerable.Range(0, state.GetNodePropertyCount(node))
+                .Single(i => state.GetNodePropertyName(node, i) == nameof(Actor.Target));
+            Check(state.GetNodePropertyValue<string>(node, property) == expected,
+                $"Deferred target on {name} must be '{expected}' {phase}.");
+        }
     }
     private static void ReadFiles(string folder)
     {
@@ -84,6 +98,7 @@ internal static partial class DeferredSceneTests
             Check(ResourceLoader.GetClassesUsed(path).Contains(typeof(InstancePlaceholder)), "Deferred class discovery consumes both field tables.");
             Check(ResourceLoader.GetDependencies(path).Length == 0, "Deferred paths are late lookup values rather than eager resource edges.");
             using var scene = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.IgnoreDeep);
+            VerifyStoredTargets(scene, $"after loading the {name} archive");
             var root = scene.Instantiate(); using var tree = new SceneTree(root);
             var first = root.GetNode<InstancePlaceholder>("Pending0"); var second = root.GetNode<InstancePlaceholder>("Pending1");
             Check(_factories == 0 && !ResourceLoader.HasCached(At(folder, "actor.e2dscene")), "Fresh loading never reads the deferred template or constructs its nodes.");

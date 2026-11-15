@@ -2,13 +2,13 @@
 
 Last updated: 2026-11-13
 
-**Inherits:** —
+**Inherits:** [ElectronObject](ElectronObject.md)
 
 **Inherited By:** —
 
 - **Source:** [`src/Core/String/TranslationServer.cs`](../../src/Core/String/TranslationServer.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public static class TranslationServer`
+- **Declaration:** `public sealed class TranslationServer : ElectronObject`
 
 > Stores and resolves process-wide in-memory translations for the selected UI culture.
 
@@ -17,6 +17,8 @@ Last updated: 2026-11-13
 Stores and resolves process-wide in-memory translations for the selected UI culture.
 
 `TranslationServer` is the process-wide in-memory translation registry. It owns named [`TranslationDomain`](TranslationDomain.md) instances and resolves direct entries and borrowed [`Translation`](Translation.md) resources by ordinal domain/context keys for the selected UI culture and a configured fallback. The empty name selects the main domain.
+
+Service operations use the static API. [Engine](Engine.md) permanently registers the object under `nameof(TranslationServer)`. Typed and untyped lookups return the same object throughout the process. Caller disposal and unregistration throw `InvalidOperationException`. The inherited `GetPropertyList()` exposes writable `PropertyDescriptor<TranslationServer, CultureInfo>` and `PropertyDescriptor<TranslationServer, bool>` entries for `Culture` and `PseudolocalizationEnabled`, respectively. Their setters use the same validation and synchronous notification path as static assignments.
 
 Lookups use exact, case-sensitive domain, context and source-message keys. Resource catalogs compete against the selected locale using fixed default-aware scores before project fallback. Selected/parent direct entries share those scores and win ties; explicit invariant direct entries are the lowest-priority universal fallback. The most recently registered resource wins an equal resource score. ResourceLoader imports supported catalog files; fixed integer plural rules do not imply decimal CLDR category support.
 
@@ -67,7 +69,7 @@ string text = TranslationServer.Translate("ui", "menu.play");
 
 Gets or sets the culture used for subsequent translation lookups.
 
-**Value:** The process-wide lookup culture, initialized from `Globalization.CultureInfo.CurrentUICulture`. Each Engine start samples the active [`ProjectSettings.LocaleTest`](ProjectSettings.md#localetest) override; an empty setting samples the current managed UI culture. Assigning this property changes subsequent lookups immediately. A different culture name reloads associated localized resources and then synchronously notifies the attached `Engine.MainLoop` after the setter lock is released. File refresh is cold, blocking and allocation-capable; catalog fallback and domain overrides do not select localized files. Equal-name assignment retains the supplied managed object without another notification. Scene delivery requires its owner thread; a notification error leaves the culture committed. Independent library trees use explicit notification.
+**Value:** The process-wide lookup culture. Before startup, the first access to service state captures `CultureInfo.CurrentUICulture`. A domain check such as `HasDomain` counts as state access. Registry lookup, registry enumeration and descriptor discovery can run before this capture. Each Engine start samples the active [`ProjectSettings.LocaleTest`](ProjectSettings.md#localetest) override; an empty setting samples the current managed UI culture. Assigning this property changes subsequent lookups immediately. A different culture name reloads associated localized resources and then synchronously notifies the attached `Engine.MainLoop` after the setter lock is released. File refresh is cold, blocking and allocation-capable; catalog fallback and domain overrides do not select localized files. Equal-name assignment retains the supplied managed object without another notification. Scene delivery requires its owner thread; a notification error leaves the culture committed. Independent library trees use explicit notification.
 
 **Exceptions**
 

@@ -241,7 +241,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [EditorExportPlatformLinuxBSD](classes/EditorExportPlatformLinuxBSD.md) | EditorExportPlatformPC | Blocked | 15 |
 | [EditorExportPlatformMacOS](classes/EditorExportPlatformMacOS.md) | EditorExportPlatform | Blocked | 237 |
 | [EditorExportPlatformPC](classes/EditorExportPlatformPC.md) | EditorExportPlatform | Blocked | 0 |
-| [EditorExportPlatformVisionOS](classes/EditorExportPlatformVisionOS.md) | EditorExportPlatformAppleEmbedded | Blocked | 189 |
+| [EditorExportPlatformVisionOS](classes/EditorExportPlatformVisionOS.md) | EditorExportPlatformAppleEmbedded | Excluded | 189 |
 | [EditorExportPlatformWeb](classes/EditorExportPlatformWeb.md) | EditorExportPlatform | Blocked | 23 |
 | [EditorExportPlatformWindows](classes/EditorExportPlatformWindows.md) | EditorExportPlatformPC | Blocked | 38 |
 | [EditorExportPlugin](classes/EditorExportPlugin.md) | RefCounted | Blocked | 47 |
@@ -650,7 +650,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PlaneMesh](classes/PlaneMesh.md) | PrimitiveMesh | Excluded | 9 |
 | [PointLight2D](classes/PointLight2D.md) | Light2D | Implemented | 4 |
 | [PointMesh](classes/PointMesh.md) | PrimitiveMesh | Excluded | 0 |
-| [Polygon2D](classes/Polygon2D.md) | Node2D | Partial | 23 |
+| [Polygon2D](classes/Polygon2D.md) | Node2D | Implemented | 23 |
 | [PolygonOccluder3D](classes/PolygonOccluder3D.md) | Occluder3D | Excluded | 1 |
 | [PolygonPathFinder](classes/PolygonPathFinder.md) | Resource | Implemented | 8 |
 | [Popup](classes/Popup.md) | Window | Partial | 10 |
@@ -679,7 +679,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDPipelineRasterizationState](classes/RDPipelineRasterizationState.md) | RefCounted | Partial | 11 |
 | [RDPipelineShader](classes/RDPipelineShader.md) | RefCounted | Blocked | 2 |
 | [RDPipelineSpecializationConstant](classes/RDPipelineSpecializationConstant.md) | RefCounted | Implemented | 2 |
-| [RDSamplerState](classes/RDSamplerState.md) | RefCounted | Partial | 15 |
+| [RDSamplerState](classes/RDSamplerState.md) | RefCounted | Implemented | 15 |
 | [RDShaderFile](classes/RDShaderFile.md) | Resource | Implemented | 4 |
 | [RDShaderSPIRV](classes/RDShaderSPIRV.md) | Resource | Partial | 24 |
 | [RDShaderSource](classes/RDShaderSource.md) | RefCounted | Partial | 13 |
@@ -747,7 +747,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RootMotionView](classes/RootMotionView.md) | VisualInstance3D | Excluded | 5 |
 | [SceneMultiplayer](classes/SceneMultiplayer.md) | MultiplayerAPI | Implemented | 17 |
 | [SceneReplicationConfig](classes/SceneReplicationConfig.md) | Resource | Implemented | 17 |
-| [SceneState](classes/SceneState.md) | RefCounted | Partial | 28 |
+| [SceneState](classes/SceneState.md) | RefCounted | Implemented | 28 |
 | [SceneTree](classes/SceneTree.md) | MainLoop | Partial | 51 |
 | [SceneTreeTimer](classes/SceneTreeTimer.md) | RefCounted | Implemented | 2 |
 | [Script](classes/Script.md) | Resource | Partial | 18 |
@@ -872,7 +872,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ThemeDB](classes/ThemeDB.md) | Object | Partial | 8 |
 | [Thread](classes/Thread.md) | RefCounted | Blocked | 11 |
 | [TileData](classes/TileData.md) | Object | Partial | 44 |
-| [TileMap](classes/TileMap.md) | Node2D | Blocked | 63 |
+| [TileMap](classes/TileMap.md) | Node2D | Excluded | 63 |
 | [TileMapLayer](classes/TileMapLayer.md) | Node2D | Partial | 50 |
 | [TileMapPattern](classes/TileMapPattern.md) | Resource | Implemented | 10 |
 | [TileSet](classes/TileSet.md) | Resource | Partial | 121 |

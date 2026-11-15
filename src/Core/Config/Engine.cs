@@ -105,6 +105,7 @@ public sealed partial class Engine : ElectronObject
         AddPermanentSingleton(nameof(AudioServer), AudioServer.Service);
         AddPermanentSingleton(nameof(PhysicsServer), PhysicsServer.Service);
         AddPermanentSingleton(nameof(Performance), Performance.Service);
+        AddPermanentSingleton(nameof(TranslationServer), TranslationServer.RegisteredService);
     }
 
     private void AddPermanentSingleton(string name, ElectronObject instance)

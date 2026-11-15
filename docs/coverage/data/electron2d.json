@@ -14597,10 +14597,12 @@
     "kind": "type",
     "declaringType": "Electron2D.TranslationServer",
     "name": "TranslationServer",
-    "signature": "public static class Electron2D.TranslationServer",
+    "signature": "public sealed class Electron2D.TranslationServer",
     "visibility": "public",
-    "baseType": "System.Object",
-    "interfaces": [],
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -242990,6 +242992,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TranslationServer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TranslationServer.GetScriptName(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.TranslationServer",
@@ -243285,6 +243300,19 @@
       }
     ],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {

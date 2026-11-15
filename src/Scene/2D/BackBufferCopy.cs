@@ -28,6 +28,8 @@ public class BackBufferCopy : Entity
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     /// <exception cref="Exception">A property-list subscriber fails after commitment.</exception>
     public BackBufferCopyMode CopyMode { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _mode; } set { EnsureMutable(); Animation.Valid(value); _mode = value; if (ServerState is { } state) state.Copy = null; NotifyPropertyListChanged(); } }
+    internal override Rect2 GetAnchorableRect() => _rect;
+
     /// <summary>Gets or sets the finite local rectangle used by Rect mode.</summary>
     /// <value>-100,-100,200,200 initially; signed dimensions are retained.</value>
     /// <remarks>Every valid assignment republishes the authored copy policy and raises ItemRectChanged. The zero-valued rectangle uses a complete

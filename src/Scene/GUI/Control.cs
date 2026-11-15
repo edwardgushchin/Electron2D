@@ -49,7 +49,9 @@ public partial class Control : CanvasItem
     /// <summary>Identifies a layout-direction change propagated through the scene subtree.</summary>
     public const int NotificationLayoutDirectionChanged = 49;
 
-    /// <summary>Occurs after a size change while attached to the scene tree.</summary>
+    /// <summary>Occurs synchronously during <see cref="NotificationResized"/>, after <see cref="CanvasItem.ItemRectChanged"/>.</summary>
+    /// <remarks>Automatic delivery follows a significant size change while attached. Geometry is already committed,
+    /// and a handler may change it again. A throwing handler stops subsequent synchronous delivery.</remarks>
     public event Action? Resized { add => _publisherResized.Add(value); remove => _publisherResized.Remove(value); }
     private EventPublisher<Action> _publisherResized;
 
@@ -281,46 +283,52 @@ public partial class Control : CanvasItem
     /// <summary>Supplies the intrinsic maximum size; the base control is unbounded.</summary>
     protected virtual Vector2 OnGetMaximumSize() => new(-1, -1);
 
-    /// <summary>Gets or sets the local rotation in radians around PivotOffset.</summary>
+    /// <summary>Gets or sets the local rotation in radians around the combined pivot.</summary>
+    /// <value>Zero initially.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     public float Rotation
     {
-        get { ThrowIfDisposed(); return _rotation; }
-        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_rotation == value) return; _rotation = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _rotation; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_rotation == value) return; _rotation = value; NotifyLocalTransformChangedAndQueueRedraw(); }
     }
 
-    /// <summary>Gets or sets the local rotation in degrees.</summary>
+    /// <summary>Gets or sets <see cref="Rotation"/> in degrees.</summary>
+    /// <value>Zero initially.</value>
     public float RotationDegrees
     {
         get => Rotation * (180f / Mathf.Pi);
         set => Rotation = value * (Mathf.Pi / 180f);
     }
 
-    /// <summary>Gets or sets the local scale around PivotOffset.</summary>
-    /// <remarks>Zero components are replaced by a small positive epsilon to keep the transform invertible.</remarks>
+    /// <summary>Gets or sets the signed local scale around the combined pivot.</summary>
+    /// <value>One on both axes initially. Exact zero components become 0.00001.</value>
+    /// <exception cref="ArgumentOutOfRangeException">An assigned component is nonfinite.</exception>
     public Vector2 Scale
     {
-        get { ThrowIfDisposed(); return _scale; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _scale; }
         set
         {
             EnsureMutable(); EnsureFinite(value, nameof(value));
             if (value == _scale) return;
             _scale = new(value.X == 0 ? 0.00001f : value.X, value.Y == 0 ? 0.00001f : value.Y);
-            NotifyLocalTransformChanged(); QueueRedraw();
+            NotifyLocalTransformChangedAndQueueRedraw();
         }
     }
 
-    /// <summary>Gets or sets the point around which local rotation and scale are applied.</summary>
+    /// <summary>Gets or sets the absolute local component of the pivot for rotation and scale.</summary>
+    /// <value>Zero initially. <see cref="PivotOffsetRatio"/> adds a size-relative component.</value>
+    /// <exception cref="ArgumentOutOfRangeException">An assigned component is nonfinite.</exception>
     public Vector2 PivotOffset
     {
-        get { ThrowIfDisposed(); return _pivotOffset; }
-        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffset == value) return; _pivotOffset = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _pivotOffset; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffset == value) return; _pivotOffset = value; NotifyLocalTransformChangedAndQueueRedraw(); }
     }
 
     /// <summary>Gets or sets the portion of the current size added to PivotOffset.</summary>
     public Vector2 PivotOffsetRatio
     {
-        get { ThrowIfDisposed(); return _pivotOffsetRatio; }
-        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffsetRatio == value) return; _pivotOffsetRatio = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _pivotOffsetRatio; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffsetRatio == value) return; _pivotOffsetRatio = value; NotifyLocalTransformChangedAndQueueRedraw(); }
     }
 
     /// <summary>Gets the absolute pivot plus its current size-relative component.</summary>
@@ -338,7 +346,7 @@ public partial class Control : CanvasItem
     public bool OffsetTransformEnabled
     {
         get { ThrowIfDisposed(); return _offsetTransformEnabled; }
-        set { EnsureMutable(); if (_offsetTransformEnabled == value) return; _offsetTransformEnabled = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+        set { EnsureMutable(); if (_offsetTransformEnabled == value) return; _offsetTransformEnabled = value; NotifyLocalTransformChangedAndQueueRedraw(); }
     }
 
     /// <summary>Gets or sets the absolute translation of the additional transform.</summary>
@@ -393,8 +401,13 @@ public partial class Control : CanvasItem
     private void NotifyOffsetTransformChanged()
     {
         if (!_offsetTransformEnabled) return;
+        NotifyLocalTransformChangedAndQueueRedraw();
+    }
+
+    private void NotifyLocalTransformChangedAndQueueRedraw()
+    {
         NotifyLocalTransformChanged();
-        QueueRedraw();
+        if (!IsDisposed) QueueRedraw();
     }
 
     private Transform GetOffsetTransform()
@@ -658,35 +671,43 @@ public partial class Control : CanvasItem
         ApplyLayout(rect);
     }
 
-    /// <summary>Returns the direct parent when it is a Control.</summary>
+    /// <summary>Returns the direct node parent when it is a Control, including while detached or TopLevel.</summary>
     /// <returns>The parent control or null.</returns>
-    public Control? GetParentControl() { ThrowIfDisposed(); return Parent as Control; }
+    /// <exception cref="InvalidOperationException">An attached query is outside the owner/processing groups.</exception>
+    /// <exception cref="ObjectDisposedException">The control is disposed.</exception>
+    public Control? GetParentControl()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureProcessingReadAccess();
+        return Parent as Control;
+    }
 
     /// <summary>Returns the size used to resolve anchors, or zero while detached.</summary>
-    /// <returns>The direct parent control's size or the viewport's visible size.</returns>
+    /// <returns>The direct canvas parent's current anchorable size, or the viewport's visible size for a canvas root.</returns>
+    /// <remarks>The query reads the current area. Parent and viewport notifications or layout edits resolve <see cref="Size"/>.</remarks>
+    /// <exception cref="InvalidOperationException">An attached query is outside the owner/processing groups.</exception>
+    /// <exception cref="ObjectDisposedException">The control or a borrowed parent resource is disposed.</exception>
     public Vector2 GetParentAreaSize()
     {
+        Tree?.EnsureProcessingReadAccess();
         return GetParentAnchorRect().Size;
     }
+
+    internal override Rect2 GetAnchorableRect() => new(Vector2.Zero, _size);
 
     private Rect2 GetParentAnchorRect()
     {
         ThrowIfDisposed();
         if (!IsInsideTree) return default;
-        return GetParentItem() switch
-        {
-            Control parent => new Rect2(Vector2.Zero, parent.Size),
-            null => GetViewport()?.GetVisibleRect() ?? default,
-            _ => default
-        };
+        return GetParentItem() is { } parent ? parent.GetAnchorableRect() : GetViewport()?.GetVisibleRect() ?? default;
     }
 
-    /// <summary>Returns the unrotated local rectangle after pivot and scale.</summary>
-    /// <returns>The transformed origin and scaled size.</returns>
+    /// <summary>Returns the rectangle in the containing node’s coordinate system.</summary>
+    /// <returns>The local transform origin and its decomposed signed scale multiplied by the layout size.</returns>
     public Rect2 GetRect() { var transform = GetTransform(); return new(transform.Origin, transform.Scale * _size); }
 
-    /// <summary>Returns the unrotated global rectangle after pivot and scale.</summary>
-    /// <returns>The global transformed origin and scaled size.</returns>
+    /// <summary>Returns the rectangle in the containing canvas’s coordinate system.</summary>
+    /// <returns>The global transform origin and its decomposed signed scale multiplied by the layout size.</returns>
     public Rect2 GetGlobalRect() { var transform = GetGlobalTransform(); return new(transform.Origin, transform.Scale * _size); }
 
     /// <inheritdoc />
@@ -879,10 +900,11 @@ public partial class Control : CanvasItem
         var notifyPosition = !LayoutEqualApprox(rect.Position, _position);
         _position = rect.Position; _size = rect.Size;
         NotifyLocalTransformChanged();
+        if (IsDisposed) return;
         if (IsInsideTree && (notifySize || notifyPosition))
         {
             NotifyItemRectChanged(sizeChanged);
-            if (notifySize) DispatchNotification(NotificationResized);
+            if (notifySize && !IsDisposed) DispatchNotification(NotificationResized);
         }
         else if (sizeChanged) QueueRedraw();
     }

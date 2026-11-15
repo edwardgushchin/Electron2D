@@ -470,7 +470,8 @@ public sealed partial class RenderingServer
 
     /// <summary>Occurs after the canvas frame is submitted to the active backend.</summary>
     /// <remarks>Submission does not imply the GPU has completed or the compositor has displayed the frame.
-    /// Runs synchronously on the owner thread. Frame or event-pump re-entry is rejected.</remarks>
+    /// Runs synchronously on the owner thread. Frame or event-pump re-entry is rejected.
+    /// Subscriptions belong to the active renderer and retire with that session.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static event Action? FramePostDraw
     {

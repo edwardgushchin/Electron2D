@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>Describes filtering, normalized or texel-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.</summary>
 /// <remarks>The current profile supports repeat, mirrored repeat and clamp-to-edge. The Vulkan profile also supports
 /// clamp-to-border and negotiated mirror-clamp. Unsupported native capabilities fail during creation.
-/// Integer image sampling requires nearest filters without effective anisotropy. A limit of one disables anisotropy.
+/// Integer image sampling requires nearest filters and no requested anisotropy above one.
+/// Direct3D 12 uses anisotropy with linear min and mag filters. Nearest mip selection also requires
+/// native support for anisotropic point-mip filtering. Other combinations use the authored ordinary filters.
 /// Nonzero LOD bias fails on a backend that cannot apply it.</remarks>
 public sealed class RDSamplerState : ElectronObject
 {
@@ -39,19 +41,19 @@ public sealed class RDSamplerState : ElectronObject
     public RenderingDevice.SamplerBorderColor BorderColor { get { ThrowIfDisposed(); return _borderColor; } set { ThrowIfDisposed(); _borderColor = SamplerConfiguration.Border(value); } }
     private float _lODBias = 0;
     /// <summary>Gets or sets the bias added to the implicit mip selection.</summary>
-    /// <value>Initially 0; copied when a device sampler or shader binding is configured.</value>
+    /// <value>Initially 0. Must be finite and within the native backend's bias range when creating the sampler.</value>
     public float LODBias { get { ThrowIfDisposed(); return _lODBias; } set { ThrowIfDisposed(); _lODBias = RDTextureConfiguration.Finite(value); } }
     private float _minLOD = 0;
     /// <summary>Gets or sets the minimum mip level, with zero identifying the base level.</summary>
-    /// <value>Initially 0; copied when a device sampler or shader binding is configured.</value>
+    /// <value>Initially 0. When captured, the finite interval must satisfy 0 &lt;= MinLOD &lt;= MaxLOD.</value>
     public float MinLOD { get { ThrowIfDisposed(); return _minLOD; } set { ThrowIfDisposed(); _minLOD = RDTextureConfiguration.Finite(value); } }
     private float _maxLOD = 1e20f;
     /// <summary>Gets or sets the maximum mip level used for sampling.</summary>
-    /// <value>Initially 1e20f; copied when a device sampler or shader binding is configured.</value>
+    /// <value>Initially 1e20f. When captured, the finite interval must satisfy 0 &lt;= MinLOD &lt;= MaxLOD.</value>
     public float MaxLOD { get { ThrowIfDisposed(); return _maxLOD; } set { ThrowIfDisposed(); _maxLOD = RDTextureConfiguration.Finite(value); } }
     private float _anisotropyMax = 1;
     /// <summary>Gets or sets the anisotropic filtering limit from one through sixteen.</summary>
-    /// <value>Initially 1; copied when a device sampler or shader binding is configured.</value>
+    /// <value>Initially 1, which disables anisotropy. Direct3D 12 uses the integer part of a supported limit.</value>
     public float AnisotropyMax { get { ThrowIfDisposed(); return _anisotropyMax; } set { ThrowIfDisposed(); _anisotropyMax = RDTextureConfiguration.Anisotropy(value); } }
     private bool _useAnisotropy = false;
     /// <summary>Gets or sets whether the sampler uses anisotropic filtering.</summary>

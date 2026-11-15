@@ -77,7 +77,7 @@ public abstract partial class CanvasItem
         _polygonCount++;
     }
 
-    internal void AttachLastPolygonSkin(Polygon owner, ReadOnlySpan<int> source) => _polygons![_polygonCount - 1].SetSkin(owner, source);
+    internal void AttachLastPolygonSkin(Polygon owner, ReadOnlySpan<int> source, int inputLength) => _polygons![_polygonCount - 1].SetSkin(owner, source, inputLength);
 
     internal void EnableLastPolygonAntialias(ReadOnlySpan<Vector2> invertedInner) => _polygons![_polygonCount - 1].EnableAntialias(invertedInner);
 

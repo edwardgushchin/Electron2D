@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -12,7 +12,7 @@ Last updated: 2026-11-14
 
 ## Description
 
-Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. A direct Control parent supplies the area for anchors; a root Control uses its viewport's visible size. A neutral Node breaks canvas parentage, so the control uses the containing viewport. A direct Entity parent supplies a zero-size anchor area. Detached controls also use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands. Attached rendering also consumes its viewport's separate GUISnapControlsToPixels policy; logical geometry stays fractional.
+Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. An attached control resolves anchors against its immediate canvas parent's anchorable rectangle. At a canvas root, including a neutral Node or TopLevel boundary, it uses the containing viewport's visible size. Detached controls use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. The parent’s ItemRectChanged event or the root viewport’s SizeChanged event reflows an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands. Attached rendering also consumes its viewport's separate GUISnapControlsToPixels policy; logical geometry stays fractional.
 
 Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and pointer hit regions normally use the current pose. Assign `On` explicitly to interpolate a Control and its inheriting canvas children while the tree enables physics interpolation. The displayed transform may then differ from current logical layout coordinates until the next physics tick; `ResetPhysicsInterpolation` removes that history.
 
@@ -72,10 +72,10 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public bool PropagateMaximumSize { get; set; }` | Passes enabled maximum bounds to direct child controls unless they are top-level. |
 | `public LayoutDirection LayoutDirection { get; set; }` | Inherited by default; explicit, application-locale and system-locale policies are available. |
 | `public GrowDirection GrowHorizontal { get; set; }` / `GrowVertical` | Edge policy for minimum growth and maximum shrinkage. |
-| `public float Rotation { get; set; }` | Radians around PivotOffset. |
-| `public float RotationDegrees { get; set; }` | Degrees around PivotOffset. |
+| `public float Rotation { get; set; }` | Radians around the combined pivot. |
+| `public float RotationDegrees { get; set; }` | Degrees around the combined pivot. |
 | `public Vector2 Scale { get; set; }` | Local scale; zero components become a small positive epsilon. |
-| `public Vector2 PivotOffset { get; set; }` | Local pivot for rotation and scale. |
+| `public Vector2 PivotOffset { get; set; }` | Absolute component of the local pivot for rotation and scale. |
 | `public Vector2 PivotOffsetRatio { get; set; }` | Current-size component added to the ordinary pivot. |
 | `public bool OffsetTransformEnabled { get; set; }` | Enables or disables the retained additional transform. |
 | `public Vector2 OffsetTransformPosition { get; set; }` / `OffsetTransformPositionRatio` | Absolute and size-relative additional translation. |
@@ -199,11 +199,11 @@ Creates a detached control. Anchors, offsets, position, size, rotation and pivot
 
 ### `Position`, `Size`
 
-Position is the upper-left layout point before transform. Size is the local rectangle extent. Both setters preserve anchors by adjusting offsets; Size rejects negative components. Parent or viewport resize can subsequently change either resolved value.
+Position is the upper-left layout point before transform. Size is the local rectangle extent. Both setters preserve anchors by adjusting offsets; Size clamps negative finite components through the effective size bounds. Parent or viewport resize can subsequently change either resolved value.
 
 ### `Rotation`, `RotationDegrees`, `Scale`, `PivotOffset`
 
-These form the local affine transform around PivotOffset. Rotation uses radians; RotationDegrees converts degrees. A zero scale component becomes a small positive epsilon. Assignments request redraw and invalidate descendant transforms without changing the anchor rectangle.
+Rotation and RotationDegrees access the same angle in radians and degrees, respectively. They default to zero. Scale defaults to (1, 1), preserves negative components, and replaces each exact zero with 0.00001. The combined pivot is PivotOffset + PivotOffsetRatio × Size, with both pivot properties initially zero. The setters reject nonfinite components before updating state. Transform edits request redraw and invalidate descendant transforms while preserving the layout rectangle. PackedScene stores RotationDegrees, Scale, PivotOffset and PivotOffsetRatio.
 
 ### `GlobalPosition`
 
@@ -267,11 +267,11 @@ GetOffset returns the stored local distance from the selected anchor. SetOffset 
 
 ### `GetParentControl()`, `GetParentAreaSize()`
 
-GetParentControl returns the direct parent only when it is a Control. GetParentAreaSize returns that parent's size, or the visible viewport size for a canvas root. A detached control or a direct non-Control canvas parent currently yields zero.
+GetParentControl returns the direct node parent if it is a Control, including while detached or TopLevel. GetParentAreaSize returns zero while detached. While attached, it uses the direct canvas parent's anchorable rectangle or the containing viewport's visible area at a canvas root, including across a neutral Node or TopLevel boundary. Control supplies its layout size. Sprite and AnimatedSprite supply frame bounds, BackBufferCopy supplies its authored rectangle, PointLight supplies scaled mask bounds, and TouchScreenButton supplies its normal texture size. Other canvas parents supply zero. Reflow uses the same rectangle and listens for ItemRectChanged on the current canvas parent or SizeChanged on the viewport. Clearing AnimatedSprite.SpriteFrames, PointLight.Texture, or TouchScreenButton.TextureNormal immediately makes the queried area zero. The child keeps its resolved Size until the next reflow, such as an anchor edit.
 
 ### `GetRect()`, `GetGlobalRect()`, `GetTransform()`
 
-GetTransform composes layout position with pivot, rotation and scale. GetRect and GetGlobalRect use its local or global transformed origin and signed scale times Size; these rectangles are not rotated axis-aligned bounds. Attached local and global transform queries require the scene owner thread.
+GetTransform composes layout position with the combined pivot, rotation and scale, followed by an enabled logical offset transform. GetRect and GetGlobalRect return the local or global transform origin and its decomposed signed scale multiplied by Size. Use transformed corner points to compute a rotated axis-aligned bound. Attached geometry queries permit the scene owner or an active processing group. Coordinate concurrent writes.
 
 ### `Reparent(Node newParent, bool keepGlobalTransform = true)`
 
@@ -283,7 +283,7 @@ OnNotification subscribes to the direct canvas parent's geometry or containing v
 
 ### `Resized`, `NotificationResized`
 
-The constant is 40. A significant size change while attached delivers this notification after ItemRectChanged, then raises Resized synchronously. Position-only changes do not raise Resized. A throwing handler sees committed geometry and stops later synchronous handlers.
+The constant is 40. After a significant size change while attached, ItemRectChanged observes the committed geometry first, then notification 40 raises Resized synchronously from Control.OnNotification. A handler that changes size again causes nested delivery. A throwing handler sees committed geometry and stops later synchronous handlers. Disposing the control during LocalTransformChanged ends the current layout or transform update before redraw. Disposing it during ItemRectChanged ends the outer resize delivery.
 
 ## Lifecycle and invariants
 

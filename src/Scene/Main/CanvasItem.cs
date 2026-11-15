@@ -97,6 +97,8 @@ public abstract partial class CanvasItem : Node
 
     internal CanvasItem? GetParentItem() => TopLevel ? null : Parent as CanvasItem;
 
+    internal virtual Rect2 GetAnchorableRect() => default;
+
     /// <summary>Reports a change that may affect this item's local drawing bounds.</summary>
     /// <param name="sizeChanged">Whether to request redraw before delivering the event; defaults to true.</param>
     /// <remarks>Commit the geometry first. Delivery is synchronous, including while hidden or detached, and does not

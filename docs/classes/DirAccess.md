@@ -1,6 +1,6 @@
 # DirAccess
 
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -25,6 +25,8 @@ An instance opened normally never owns the directory. `CreateTemp` is the except
 Instances retain one current directory and one access scope. Relative paths resolve from that directory;
 `res://` and `user://` instances cannot leave their configured root or switch scopes. Operations are
 serialized per instance, may block, and are unsuitable for real-time callbacks.
+
+On `res://` paths, `FileExists`, `DirExists`, `DirExistsAbsolute`, `IsLink` and `ReadLink` each select the current mounted entry, a mounted file ancestor or the physical path from one view of the mounts. A mounted file or directory supplies the entry kind and has no link target. A mounted file ancestor hides all physical metadata below it. Each call can observe a different mount after a replacement. Physical metadata is read after the mount lookup and follows the host filesystem's usual race semantics.
 
 ## Examples
 
@@ -124,9 +126,9 @@ Opens an existing filesystem, user-data, or mounted or directory-backed resource
 
 **Parameters**
 
-- `path`: A nonempty ordinary, `res://`, or `user://` path.
+- `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
 
-**Returns:** A new directory owner positioned at `path`.
+**Returns:** A new directory owner positioned at `path` on success. The call reports a failure directly through an exception.
 
 **Exceptions**
 
@@ -135,6 +137,7 @@ Opens an existing filesystem, user-data, or mounted or directory-backed resource
 - `IO.DirectoryNotFoundException`: The resolved directory does not exist.
 - `IO.IOException`: The directory metadata cannot be read.
 - `UnauthorizedAccessException`: A virtual path escapes its configured root or access is denied.
+- `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
 - `NotSupportedException`: `path` uses an unsupported virtual scheme.
 
 <a id="m-electron2d-diraccess-createtemp-system-string-system-boolean"></a>
@@ -678,6 +681,7 @@ Reports whether a path identifies a symbolic link or platform reparse point.
 
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: `path` is empty or invalid.
+- `IO.FileNotFoundException`: A mounted file masks this descendant on a Unix link backend.
 - `UnauthorizedAccessException`: The path escapes a virtual root or access is denied.
 - `InvalidOperationException`: `path` belongs to another access scope.
 - `NotSupportedException`: `path` uses an unsupported virtual scheme.
@@ -866,13 +870,14 @@ Filesystem state remains external and can change between validation and mutation
 - Reuses `UnixPermissionFlags` and `FileAccess.SetUnixPermissions` for optional copy permissions.
 - Uses `System.IO` for paths, directory/file mutations, links, temporary ownership, ordinary mount metadata, and Windows logical drives.
 - Uses native Win32/NT metadata for filesystem identity, directory case flags, and UNC capacity; Unix `stat` and Linux file flags for identity and case folding; and macOS Foundation/AppKit metadata for mounted volumes and file-package classification.
-- Has no SDL, Scene, renderer, asset loader, pack mount, scripting, editor, physics, or external package dependency.
+- Shares mounted path resolution with `FileAccess` for entry attributes and link queries.
+- Has no SDL, Scene, renderer, asset loader, scripting, editor, physics, or external package dependency.
 
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` covers null/empty/missing/relative/unknown paths, ordinary and virtual scopes, lexical traversal, current-directory changes, hidden/navigational filters, unspecified streaming versus sorted snapshots, concurrent listing consumption, single/recursive creation, copy overwrite, pre-mutation permission validation and self-copy rejection, instance/static file and directory rename with failed-move destination restoration, nonrecursive removal, relative and dangling symlink targets, hard-link and symlink equivalence on Linux, native case metadata, drive/capacity/filesystem queries, absolute helpers, temporary keep/delete ownership, current-directory changes before temporary disposal, and disposed access.
 
-The executable evidence is Linux-only. Windows/macOS link, file-identity, drive, filesystem-type, rename, case, permission, and path-root behavior are compiled but not native-host verified. Android/iOS identity code is compiled but not device-verified; their link and drive-enumeration APIs intentionally throw until platform host/storage integration is implemented. Web browser directory/storage behavior is unimplemented and unverified; its capability boundary belongs to the first Web host slice. Packed/exported resources remain absent.
+The `DIR_PACK_METADATA` profile exercises mounted file and directory replacement over a physical link, a masked descendant, and physical fallback. It covers Windows x64 NTFS junctions and Linux x64 symbolic links. Below a mounted file, `IsLink` returns `false` on Windows and throws `FileNotFoundException` on Unix link backends. `ReadLink` throws `FileNotFoundException` on both. Other Windows link types and macOS link behavior require native-host verification. Android/iOS identity code is compiled but awaits device verification; their link and drive-enumeration APIs throw until platform host/storage integration is implemented. Web browser directory/storage behavior belongs to the first Web host slice.
 
 ## Decisions
 

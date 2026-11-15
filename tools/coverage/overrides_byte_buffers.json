@@ -148,7 +148,7 @@
     {
       "godot": "PackedByteArray::method:get_string_from_multibyte_char(String:)",
       "electron2d": "method:Electron2D.ByteBuffer.GetStringFromMultibyteChar(System.ReadOnlySpan<System.Byte>,System.String)",
-      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+      "reason": "ADR 0020: strict managed decoding of borrowed bytes with a framework encoding name or a host default."
     },
     {
       "godot": "PackedByteArray::method:get_string_from_utf16()",
@@ -299,7 +299,6 @@
         "PackedByteArray::method:encode_u64(int:,int:)",
         "PackedByteArray::method:encode_u8(int:,int:)",
         "PackedByteArray::method:get_string_from_ascii()",
-        "PackedByteArray::method:get_string_from_multibyte_char(String:)",
         "PackedByteArray::method:get_string_from_utf16()",
         "PackedByteArray::method:get_string_from_utf32()",
         "PackedByteArray::method:get_string_from_utf8()",
@@ -325,6 +324,11 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": ["PackedByteArray::method:get_string_from_multibyte_char(String:)"],
+      "state": "Implemented",
+      "reason": "ADR 0020: strict .NET decoding with local code-page lookup. An empty name resolves the current culture's numeric ANSI code page on Windows and UTF-8 elsewhere. Windows cultures without an ANSI code page require a name. ByteBuffers.Consumer covers Windows-1251, Windows-1252 and Shift JIS defaults, the UTF-8 default on other hosts, explicit names, empty and malformed input, and invalid names."
     }
   ]
 }

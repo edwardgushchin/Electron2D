@@ -270,7 +270,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_COPIES") is { } msCop
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEPTH_TRANSFERS") is { } depthTransfers) { DepthTransfersTests.Run(depthTransfers == "1" ? null : depthTransfers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_STORAGE") is { } msStorage) { MultisampleStorageTests.Run(msStorage == "1" ? null : msStorage); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_SAMPLING") is { } msSampling) { MultisampleSamplingTests.Run(msSampling == "1" ? null : msSampling); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else if (deviceSamplers == "depth") RenderingDeviceSamplerTests.RunDepth(); else if (deviceSamplers == "lod") RenderingDeviceSamplerTests.RunLOD(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_MULTIVIEW") is { } multiviewProfile) { if (multiviewProfile == "canvas") RenderingDeviceMultiviewTests.Canvas(); else RenderingDeviceMultiviewTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SPARSE") is { } sparseProfile) { try { if (sparseProfile == "canvas") RenderingDeviceSparseTests.Canvas(); else RenderingDeviceSparseTests.Run(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_PASSES") is { } devicePassProfile)
@@ -462,6 +462,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_LISTING") == "1")
     Console.WriteLine("Physical directory listing and cursor regressions passed.");
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIR_PACK_METADATA") == "1") { DirAccessPackMetadataTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PACK_FILE_SYSTEM") == "1")
 {
     VerifyFileAccess(); VerifyDirAccess(); VerifyProjectSettings();
@@ -495,6 +496,7 @@ if (args.Length == 2 && args[0] == "--progress-bar-archive") { ProgressBarTests.
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROGRESS_BAR") is { } progressProfile) { if (progressProfile == "managed") ProgressBarTests.RunManaged(); else ProgressBarTests.RunNative(progressProfile); return; }
 if (args.Length == 2 && args[0] == "--image-exr-archive") { ImageEXRTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_PIXELS") is { } pixelProfile) { if (pixelProfile == "managed") ImagePixelTests.RunManaged(); else ImagePixelTests.RunNative(pixelProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_TEXTURE_DATA") is { } textureDataProfile) { if (textureDataProfile == "managed") ImageTextureDataTests.RunManaged(); else ImageTextureDataTests.RunNative(textureDataProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_STORAGE") == "1") { VerifyImages(); VerifyImageStorage(); VerifyImageMIPChains(); VerifyImageResize(); VerifyImageRegions(); VerifyImageConversion(); RenderingRuntimeTests.VerifyAtlasResources(); Console.WriteLine("Image storage, processing and archive snapshots passed."); return; }
 if (args.Length == 2 && args[0] == "--image-exr-oracle") { ImageEXRTests.RunOracle(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_EXR") is { } exrProfile) { if (exrProfile == "managed") { VerifyImages(); ImageEXRTests.RunManaged(); } else ImageEXRTests.RunNative(exrProfile); return; }
@@ -773,6 +775,7 @@ if (args.Length == 3 && args[0] == "--file-compression-child") { FileCompression
 if (args.Length == 2 && args[0] == "--file-text-child") { FileTextTests.Child(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_TEXT") == "1") { FileTextTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_BINARY") == "1") { FileBinaryTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_LIFECYCLE") == "1") { FileAccessLifecycleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSION_LEVELS") == "1") { FileCompressionTests.Levels(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ZSTANDARD_OPTIONS") is { } zstandardProfile) { FileCompressionTests.ZstandardOptions(zstandardProfile == "legacy"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_COMPRESSION_NATIVE") is { } fileBackend) { FileCompressionTests.RunNative(fileBackend); return; }
@@ -806,7 +809,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_POINTER") == "1"
 if (args.Length == 3 && args[0] == "--node-duplication") { NodeDuplicationTests.Child(args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DUPLICATION") == "managed") { NodeDuplicationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_DUPLICATION") is { } duplicationBackend) { NodeDuplicationTests.Render(duplicationBackend); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCAL_SCENES") == "1") { VerifyResources(); VerifyPackedScenes(); NodeReplacementTests.Run(); SubtreeResourceAuthoringTests.Run(); Console.WriteLine("Resource/local scene base, packed graph, root replacement and isolated authoring passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCAL_SCENES") == "1") { VerifyResources(); VerifyPackedScenes(); VerifySceneStateArchive(); NodeReplacementTests.Run(); SubtreeResourceAuthoringTests.Run(); Console.WriteLine("Resource/local scene base, packed graph, scene state archive, root replacement and isolated authoring passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_BASE") == "1") { VerifyResources(); Console.WriteLine("Resource base: copying/reset/errors, path/scene identity, graph duplication and lifetime passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY_CHILD") is { Length: > 0 } resourceDirectory) { ResourceDirectoryTests.RunChild(resourceDirectory); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_DIRECTORY") == "1") { ResourceDirectoryTests.Run(); return; }
@@ -948,7 +951,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS_SRGB") is 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MIXED_TEXTURE_REPLACEMENT") == "1") { MixedTextureReplacementTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS") == "1") { RenderingDeviceCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") == "1") { RenderingDeviceTextureTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") is { } deviceTextures && deviceTextures is "1" or "sampling") { RenderingDeviceTextureTests.Run(deviceTextures == "sampling"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == "1") { PhysicsRegisteredBackendTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RIGID_CONTRACT") == "1") { BackendChecks.RunRigidBodyContract(threaded: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_GIZMOS") == "1") { SkeletonGizmoTests.Run(PhysicsServer.Backend.CPU, false, "compatibility"); return; }
@@ -1530,6 +1533,29 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_PRIMITIVES") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_RENDER") is { } linkBackend) { LinkButtonRenderingTests.Run(linkBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_CHILD") is { } linkPath) { LinkButtonTests.RunChild(linkPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK") == "1") { LinkButtonTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINK_GUI") == "1")
+{
+    Environment.SetEnvironmentVariable("ELECTRON2D_TEST_LINK_GUI", null);
+    ControlLayoutTests.Run();
+    ControlInputTests.Run();
+    ControlFocusNavigationTests.Run();
+    ControlRecursiveBehaviorTests.Run();
+    ControlClipTests.Run();
+    ScrollInternalNodeTests.Run();
+    ScrollBarTests.Run();
+    ScrollContainerTests.Run();
+    ScrollThemeTests.Run();
+    ItemListTests.Run();
+    TabBarTests.Run();
+    TabContainerTests.Run();
+    ColorPickerTests.Run();
+    SpinBoxTests.Run();
+    FileDialogTests.Run();
+    MenuBarTests.Run();
+    MenuButtonTests.Run();
+    LinkButtonTests.Run();
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_CHILD") is { } menuButtonPath) { MenuButtonTests.RunChild(menuButtonPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
@@ -1651,6 +1677,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_HOST") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_ANCHORS") is { } anchorProfile)
 {
     if (anchorProfile == "managed") ControlLayoutTests.Run();
+    else if (anchorProfile.StartsWith("geometry-", StringComparison.Ordinal)) ControlAnchorRenderingTests.RunGeometry(anchorProfile["geometry-".Length..]);
     else ControlAnchorRenderingTests.Run(anchorProfile);
     return;
 }
@@ -1869,6 +1896,19 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOUCH_INPUT") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
 {
     InputPointerNativeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACTION_INPUT") is { } actionInputProfile)
+{
+    if (actionInputProfile == "windows")
+        InputActionNativeTests.Run();
+    else
+    {
+        VerifyInput();
+        VerifyInputEmulation();
+        InputActionSettingsTests.Run();
+    }
     return;
 }
 
@@ -2459,6 +2499,7 @@ VerifyImages();
 VerifyImageStorage();
 VerifyImageMIPChains();
 ImagePixelTests.RunManaged();
+ImageTextureDataTests.RunManaged();
 VerifyImageResize();
 VerifyImageRegions();
 VerifyImageConversion();
@@ -2480,6 +2521,7 @@ VerifyProjectSettings();
 ProjectOverrideTests.Run();
 VerifyResources();
 VerifyPackedScenes();
+VerifySceneStateArchive();
 VerifyInputMapConfiguration();
 VerifyInputMapMatching();
 VerifyInputEventActionValues();
@@ -6949,6 +6991,20 @@ static void VerifyFileAccess()
         "Unknown resource identities fail explicitly.");
     Expect<NotSupportedException>(() => EngineFileAccess.FileExists("pipe://channel"),
         "Pipe paths must remain explicit until their platform backend exists.");
+    Func<string, EngineFileAccess>[] openForWrite =
+    [
+        path => EngineFileAccess.Open(path, FileAccessModeFlags.Write),
+        path => EngineFileAccess.OpenCompressed(path, FileAccessModeFlags.Write, FileCompressionMode.Deflate),
+        path => EngineFileAccess.OpenEncrypted(path, FileAccessModeFlags.Write, new byte[32]),
+        path => EngineFileAccess.OpenEncryptedWithPassword(path, FileAccessModeFlags.Write, "password")
+    ];
+    foreach (var open in openForWrite)
+    {
+        Expect<KeyNotFoundException>(() => open("uid://missing"),
+            "File factories must reject an unregistered UID during open, even in Write mode.");
+        Expect<NotSupportedException>(() => open("pipe://channel"),
+            "File factories must reject an unsupported scheme during open, even in Write mode.");
+    }
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(prefix: "bad/name"),
         "Temporary-file prefixes must reject directory separators.");
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(extension: "bad/name"),
@@ -7047,8 +7103,17 @@ static void VerifyFileAccess()
             Expect<InvalidOperationException>(() => readOnly.WriteByte(1),
                 "Read-only files must reject writes.");
             Require(readOnly.ReadString(6) == "abcdef", "Raw UTF-8 strings must round-trip.");
-            Require(readOnly.ReadBytes(1).Length == 0 && readOnly.EOFReached,
-                "A short buffer read must return available bytes and mark EOF.");
+            Require(!readOnly.EOFReached && readOnly.ReadBytes(0).Length == 0 && !readOnly.EOFReached,
+                "Reading to the exact end and requesting zero bytes must leave EOF clear.");
+            readOnly.SeekEnd(-2);
+            Require(readOnly.ReadBytes(3).SequenceEqual("ef"u8.ToArray()) && readOnly.EOFReached,
+                "A short buffer read must return the available prefix and mark EOF.");
+            readOnly.SeekEnd(-2);
+            Require(!readOnly.EOFReached, "Seeking must clear EOF before another read.");
+            Expect<EndOfStreamException>(() => readOnly.ReadUInt32(),
+                "A truncated fixed-width read must fail after consuming the prefix.");
+            Require(readOnly.Position == readOnly.Length && readOnly.EOFReached,
+                "An exact read must consume the available prefix and mark EOF.");
             readOnly.Close();
             readOnly.Close();
             Require(!readOnly.IsOpen, "Closing must be idempotent and publish the closed state.");
@@ -7302,7 +7367,9 @@ static void VerifyDirAccess(bool listingOnly = false)
     Expect<DirectoryNotFoundException>(() => DirAccess.Open(IOPath.Combine(IOPath.GetTempPath(), Guid.NewGuid().ToString("N"))),
         "Directory opening must reject missing directories.");
     Expect<KeyNotFoundException>(() => DirAccess.Open("uid://missing"),
-        "Directory opening must reject unknown virtual schemes.");
+        "Directory opening must reject an unregistered UID.");
+    Expect<NotSupportedException>(() => DirAccess.Open("pipe://channel"),
+        "Directory opening must reject an unsupported virtual scheme.");
     Expect<ArgumentException>(() => DirAccess.GetFilesAt("relative"),
         "Static directory operations must reject relative paths.");
     Expect<ArgumentException>(() => DirAccess.CreateTemp("../invalid"),
@@ -10109,7 +10176,7 @@ static void VerifyEngine()
             ReferenceEquals(Engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Service) &&
             ReferenceEquals(Engine.GetSingleton<AudioServer>(nameof(AudioServer)), AudioServer.Service) &&
             ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), nameof(TranslationServer)]),
         "All built-in process services must be present in the global singleton registry.");
     Require(ReferenceEquals(Engine.GetSingleton<CameraServer>(nameof(CameraServer)), CameraServer.Service), "Camera service retains its registered process identity.");
     Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(CameraServer)), "The built-in camera service cannot be unregistered.");
@@ -10164,7 +10231,7 @@ static void VerifyEngine()
                 ReferenceEquals(Engine.GetSingleton("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<TestObject>("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), "tests.primary"]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), nameof(TranslationServer), "tests.primary"]),
             "Engine singleton lookup must preserve identity, type, and registration order.");
         Expect<InvalidOperationException>(() => Engine.RegisterSingleton("tests.primary", registered),
             "Engine singleton names must be unique.");
@@ -10197,7 +10264,7 @@ static void VerifyEngine()
         instance.Dispose();
     });
     Require(ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(ExtensionManager), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), nameof(TranslationServer)]),
         "Concurrent singleton removal must preserve only the built-in registry entries.");
 
     Engine.PhysicsTicksPerSecond = 10;
@@ -14972,6 +15039,7 @@ static void VerifyPackedScenes()
     Require(scene.CanInstantiate() && liveState.GetNodeCount() == 3 &&
             liveState.GetNodeName(0) == "Root" && liveState.GetNodeName(1) == "Child" &&
             liveState.GetNodeName(2) == "Grandchild" && liveState.GetNodePath(0) == "." &&
+            liveState.GetNodePath(0, forParent: true) == "" && liveState.GetNodePath(1, forParent: true) == "." &&
             liveState.GetNodePath(2) == "Child/Grandchild" && liveState.GetNodePath(2, forParent: true) == "Child" &&
             liveState.GetNodeOwnerPath(0).Length == 0 && liveState.GetNodeOwnerPath(1) == "." &&
             liveState.GetNodeGroups(1).SequenceEqual(["persistent"]) && liveState.GetNodeIndex(1) == -1 &&
@@ -14991,6 +15059,18 @@ static void VerifyPackedScenes()
         "Scene state must reject an invalid node index.");
     Expect<ArgumentOutOfRangeException>(() => liveState.GetNodePropertyName(1, 999),
         "Scene state must reject an invalid property index.");
+    Expect<ArgumentOutOfRangeException>(() => liveState.GetNodePropertyValue<int>(1, -1),
+        "Scene state must reject a negative property index.");
+    Expect<ArgumentOutOfRangeException>(() => liveState.GetNodeGroups(-1),
+        "Scene state must reject a negative node index.");
+    var dataIndex = Enumerable.Range(0, liveState.GetNodePropertyCount(1))
+        .Single(index => liveState.GetNodePropertyName(1, index) == nameof(PackedTestNode.Data));
+    Require(dataIndex == valuePropertyIndex + 1 && ReferenceEquals(liveState.GetNodePropertyValue<Resource>(1, dataIndex), local),
+        "Scene state must preserve property order and borrow resource values through compatible types.");
+    Parallel.For(0, 64, _ =>
+        Require(liveState.GetNodeCount() == 3 && liveState.GetNodeName(2) == "Grandchild" &&
+                liveState.GetNodePropertyValue<int>(1, valuePropertyIndex) == 11 && liveState.GetPath() == scene.ResourcePath,
+            "Concurrent readers must see the same published capture."));
 
     Expect<ArgumentNullException>(() => scene.Pack(null!),
         "Packing a null root must be rejected.");
@@ -15184,9 +15264,75 @@ static void VerifyPackedScenes()
     scene.ResourcePath = $"{prefix}/final.scene";
     var survivingState = scene.GetState();
     scene.Dispose();
-    Require(survivingState.GetNodeCount() == 1 && survivingState.GetPath() == $"{prefix}/final.scene",
+    Require(survivingState.GetNodeCount() == 1 && survivingState.GetNodeName(0) == "RaceRoot" &&
+            survivingState.GetPath() == $"{prefix}/final.scene",
         "An external scene-state reference must survive disposal of its packed-scene resource.");
     survivingState.Dispose();
+    Expect<ObjectDisposedException>(() => survivingState.GetPath(), "A disposed state must reject path reads.");
+    Expect<ObjectDisposedException>(() => survivingState.GetNodeName(0), "A disposed state must reject node reads.");
+}
+
+static void VerifySceneStateArchive()
+{
+    var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-state-{Guid.NewGuid():N}");
+    Directory.CreateDirectory(folder);
+    try
+    {
+        var path = System.IO.Path.Combine(folder, "metadata.e2dscene");
+        using var texture = new ImageTexture();
+        using var scene = new PackedScene();
+        using var beforeSave = scene.GetState();
+        using (var root = new Polygon
+        {
+            Name = "PolygonRoot",
+            Vertices = [new(0, 0), new(2, 0), new(0, 2)],
+            Polygons = [[0, 1, 2]],
+            Texture = texture
+        })
+        {
+            root.AddToGroup("Zulu", persistent: true);
+            root.AddToGroup("Alpha", persistent: true);
+            root.AddToGroup("RuntimeOnly");
+            scene.Pack(root);
+            root.Name = "Edited";
+            root.RemoveFromGroup("Alpha");
+        }
+
+        ResourceSaver.Save(scene, path, SaverFlags.BundleResources | SaverFlags.ChangePath);
+        Require(beforeSave.GetPath() == "" && beforeSave.GetNodeName(0) == "PolygonRoot",
+            "Saving restores the live state's path and ignores changes to the original node.");
+        using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore);
+        using var state = loaded.GetState();
+        Require(state.GetNodeCount() == 1 && state.GetNodeType(0) == nameof(Polygon) &&
+                state.GetNodeName(0) == "PolygonRoot" && state.GetNodePath(0) == "." &&
+                state.GetNodePath(0, forParent: true) == "" && state.GetNodeOwnerPath(0) == "" &&
+                state.GetNodeGroups(0).SequenceEqual(["Alpha", "Zulu"]) && state.GetPath() == loaded.ResourcePath &&
+                state.GetPath().Length > 0,
+            "The archive preserves stored node metadata and publishes its loaded resource path.");
+        Expect<NotSupportedException>(() => ((IList<string>)state.GetNodeGroups(0))[0] = "Injected",
+            "Archive groups must be read-only even through the mutable list interface.");
+
+        var names = Enumerable.Range(0, state.GetNodePropertyCount(0)).Select(i => state.GetNodePropertyName(0, i)).ToArray();
+        Require(names.SequenceEqual(Enumerable.Range(0, beforeSave.GetNodePropertyCount(0)).Select(i => beforeSave.GetNodePropertyName(0, i))),
+            "The archive must preserve property order.");
+        var contourIndex = Array.IndexOf(names, nameof(Polygon.Polygons));
+        var textureIndex = Array.IndexOf(names, nameof(Polygon.Texture));
+        var borrowed = state.GetNodePropertyValue<Texture>(0, textureIndex);
+        Require(ReferenceEquals(beforeSave.GetNodePropertyValue<Texture>(0, textureIndex), texture) &&
+                ReferenceEquals(borrowed, state.GetNodePropertyValue<Texture>(0, textureIndex)),
+            "Each view borrows its scene's stored resource identity.");
+        state.GetNodePropertyValue<int[][]>(0, contourIndex)[0][0] = 2;
+        loaded.Dispose();
+        Require(!borrowed.IsDisposed && state.GetNodePropertyValue<int[][]>(0, contourIndex)[0][0] == 0 &&
+                state.GetPath().Length > 0,
+            "A retained state protects the file graph after source disposal and each read copies nested arrays.");
+        state.Dispose();
+        Require(borrowed.IsDisposed && !texture.IsDisposed, "Disposing the state releases its last file graph lease.");
+    }
+    finally
+    {
+        Directory.Delete(folder, recursive: true);
+    }
 }
 
 static void Require(bool condition, string message)

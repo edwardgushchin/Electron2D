@@ -1,6 +1,6 @@
 # BackBufferCopy
 
-Last updated: 2026-10-14
+Last updated: 2026-11-15
 
 **Namespace:** `Electron2D`. **Declaration:** `public class BackBufferCopy : Entity`.
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-14
 Copies the existing canvas image at its normal Z/order position for later SCREEN_TEXTURE materials. CopyMode defaults to Rect and Rect to -100,-100,200,200. Stored signed local dimensions remain unchanged; rendering transforms bounds and clips them to viewport/ancestor rectangles. The zero-valued Rect is the full-copy sentinel. Viewport copies the full canvas; Disabled/hidden/masked nodes leave the snapshot unchanged, and in-group copies are ignored. Samples outside a copied region are unspecified. Every valid CopyMode assignment commits then notifies the property list, including equality; every Rect write commits and emits ItemRectChanged, including equality. Callback failure does not roll back state. The first ordinary screen-reading draw automatically snapshots if no explicit copy supplied data; later draws reuse the current snapshot. The node supplies Entity placement rather than Control anchors. Scene factories/descriptors store both policies; native storage belongs to the viewport target, not this node. GPU HLSL/GLSL consume the screen binding; compatibility performs copies but rejects arbitrary shaders. Editor inspector Rect hiding and alpha-mask clipping have separate prerequisites.
 
 Attached reads and mutations use the scene owner; mutation also rejects scene capture. Disposed access rejects. In-memory PackedScene reconstruction has executable checks; file/editor authoring and owner visual acceptance are separate. [The composition component](../components/canvas-rendering.md#group-composition-and-screen-snapshots) records native lifetime, backend and allocation limits.
+
+An attached child [Control](Control.md) uses Rect for its anchor area in every copy mode. Assigning Rect raises ItemRectChanged and reflows the child.
 
 ## Example
 

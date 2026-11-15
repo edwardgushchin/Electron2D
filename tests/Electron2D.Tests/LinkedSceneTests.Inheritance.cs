@@ -19,6 +19,17 @@ internal static partial class LinkedSceneTests
         using var inheritedConnection = _pulse.Subscribe(source, receiver, 3);
         using var template = new PackedScene();
         template.Pack(source);
+        using var baseState = template.GetState();
+        var targetIndex = Enumerable.Range(0, baseState.GetNodePropertyCount(0))
+            .Single(i => baseState.GetNodePropertyName(0, i) == nameof(Probe.Target));
+        var receiverIndex = Enumerable.Range(0, baseState.GetNodeCount())
+            .Single(i => baseState.GetNodeName(i) == "Receiver");
+        var receiverTargetIndex = Enumerable.Range(0, baseState.GetNodePropertyCount(receiverIndex))
+            .Single(i => baseState.GetNodePropertyName(receiverIndex, i) == nameof(Probe.Target));
+        Check(baseState.GetNodePropertyValue<string>(0, targetIndex) == "Receiver" &&
+              baseState.GetNodePropertyValue<string>(receiverIndex, receiverTargetIndex) == "",
+            "Typed node references expose stored relative paths, including an empty path for null.");
+        Reject<InvalidCastException>(() => baseState.GetNodePropertyValue<Node>(0, targetIndex));
 
         Reject<NotSupportedException>(() => template.Instantiate(PackedSceneEditState.MainInherited));
         Reject<ArgumentOutOfRangeException>(() => template.Instantiate((PackedSceneEditState)4));
@@ -61,6 +72,7 @@ internal static partial class LinkedSceneTests
         Check(state.GetNodePropertyCount(0) == 1 && state.GetNodePropertyName(0, 0) == nameof(Probe.Tag) &&
               state.GetConnectionCount() == 1 && state.GetNodeGroups(0).SequenceEqual(new[] { "Authored" }),
             "Only the derived root's changed property, added group and authored binding are stored.");
+        Reject<NotSupportedException>(() => ((IList<string>)state.GetNodeGroups(0))[0] = "Injected");
         var folder = At(System.IO.Path.GetTempPath(), "electron2d-inherited-scene-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(folder);
         try

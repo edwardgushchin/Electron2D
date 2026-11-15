@@ -1,5 +1,6 @@
 using Electron2D;
 using Path = System.IO.Path;
+using static Electron2D.RenderingDevice;
 
 internal static partial class ShaderSamplerChecks
 {
@@ -9,14 +10,14 @@ internal static partial class ShaderSamplerChecks
         var bytes = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "Shaders", name + ".frag." + extension + ".spv"));
         return blit ? Shader.CreateFromSPIRV(bytes, Shader.Mode.TextureBlit) : Shader.CreateFromSPIRV(bytes);
     }
-    private static void Native(string output)
+    private static void Native(string output, string? filteringDriver = null)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         using var root = new Window { Size = new(256, 128), Title = "Shader sampler state" };
-        root.AddChild(new SamplerScene(output)); Engine.Run(root);
+        root.AddChild(new SamplerScene(output, filteringDriver)); Engine.Run(root);
         Check(root.IsDisposed && !RenderingServer.IsAvailable, "Native sampler host tears down.");
     }
-    private sealed partial class SamplerScene(string output) : Node
+    private sealed partial class SamplerScene(string output, string? filteringDriver) : Node
     {
         private readonly List<Resource> _resources = [];
         private readonly List<(Vector2i Position, Color Expected, string Name)> _pixels = [];
@@ -32,6 +33,12 @@ internal static partial class ShaderSamplerChecks
             var data = new byte[84];
             for (var i = 0; i < 21; i++) { data[i * 4 + (i < 16 ? 0 : i < 20 ? 1 : 2)] = 255; data[i * 4 + 3] = 255; }
             using var mipImage = Image.CreateFromData(4, 4, true, Image.Format.Rgba8, data); var mips = Own(ImageTexture.CreateFromImage(mipImage));
+            if (filteringDriver is not null)
+            {
+                Check(RenderingServer.GetCurrentRenderingDriverName() == filteringDriver, "The requested GPU driver must execute the probes.");
+                Filtering(texture, drawing, mips);
+                return;
+            }
             var ownedShader = RenderingServer.ShaderCreate();
             try
             {
@@ -74,6 +81,48 @@ internal static partial class ShaderSamplerChecks
             }
             Extended(texture, drawing);
         }
+
+        private void Filtering(Texture texture, Texture drawing, Texture mips)
+        {
+            var pixels = new byte[(16 * 16 + 8 * 8 + 4 * 4 + 2 * 2 + 1) * 4];
+            for (var i = 0; i < pixels.Length / 4; i++)
+            {
+                pixels[i * 4 + (i < 256 ? 0 : 1)] = 255;
+                pixels[i * 4 + 3] = 255;
+            }
+            using var image = Image.CreateFromData(16, 16, true, Image.Format.Rgba8, pixels);
+            var elongated = Own(ImageTexture.CreateFromImage(image));
+            foreach (var language in new[] { "GLSL", "HLSL" })
+            {
+                var shader = Own(Load("Canvas" + language));
+                Add(shader, texture, drawing, new(.375f, .25f, 0, 0), new() { MinFilter = SamplerFilter.Linear },
+                    Colors.Red, language + "/nearest-mag");
+                Add(shader, texture, drawing, new(.375f, .25f, 0, 0), new() { MagFilter = SamplerFilter.Linear },
+                    new(.75f, .25f, 0, 1), language + "/linear-mag");
+                Add(shader, texture, drawing, new(-4.125f, .25f, 8, 0), new() { MagFilter = SamplerFilter.Linear },
+                    Colors.Red, language + "/nearest-min");
+                Add(shader, texture, drawing, new(-4.125f, .25f, 8, 0), new() { MinFilter = SamplerFilter.Linear },
+                    new(.75f, .25f, 0, 1), language + "/linear-min");
+                var green = new Color(0, 1, 0, 1);
+                Add(shader, mips, drawing, new(0, 0, 1, 1), new() { MinLOD = 1 }, green, language + "/min-lod", 4);
+                Add(shader, mips, drawing, new(0, 0, 4, 4), new() { MaxLOD = 0 }, Colors.Red, language + "/max-lod", 4);
+                Add(shader, mips, drawing, new(0, 0, 1, 1), new() { LODBias = 1 }, green, language + "/positive-bias", 4);
+                Add(shader, mips, drawing, new(0, 0, 2, 2), new() { LODBias = -1 }, Colors.Red, language + "/negative-bias", 4);
+                Add(shader, mips, drawing, new(0, 0, 1, 1), new() { MinLOD = .5f, MIPFilter = SamplerFilter.Linear },
+                    new(.5f, .5f, 0, 1), language + "/linear-mip", 4);
+                Add(shader, mips, drawing, new(0, 0, 1, 1), new() { MinLOD = .75f }, green, language + "/nearest-mip", 4);
+
+                var linear = SamplerFilter.Linear;
+                var footprint = new Vector4(0, -1.75f, .25f, 4);
+                Add(shader, elongated, drawing, footprint, new() { MinFilter = linear, MagFilter = linear, MIPFilter = linear },
+                    green, language + "/isotropic-mip");
+                Add(shader, elongated, drawing, footprint, new() { MinFilter = linear, MagFilter = linear, MIPFilter = linear, UseAnisotropy = true, AnisotropyMax = 16 },
+                    Colors.Red, language + "/anisotropic-mip");
+                if (filteringDriver == "direct3d12")
+                    Add(shader, texture, drawing, new(.375f, .25f, 0, 0), new() { MinFilter = linear, UseAnisotropy = true, AnisotropyMax = 4 },
+                        Colors.Red, language + "/nearest-mag-with-anisotropy-request");
+            }
+        }
         private void Add(Shader basis, Resource input, Texture drawing, Vector4 coordinates, RDSamplerState? state, Color expected, string name, int size = 8, string binding = "pixels", int bindingIndex = 0)
         {
             using (state)
@@ -108,9 +157,23 @@ internal static partial class ShaderSamplerChecks
             if (_frames == 4)
             {
                 using var image = ((Window)Parent!).GetTexture().GetImage()!;
-                foreach (var pixel in _pixels) Match(image.GetPixel(pixel.Position.X, pixel.Position.Y), pixel.Expected, pixel.Name);
+                foreach (var pixel in _pixels)
+                {
+                    var actual = image.GetPixel(pixel.Position.X, pixel.Position.Y);
+                    Match(actual, pixel.Expected, pixel.Name);
+                    if (filteringDriver is not null)
+                        Console.WriteLine(FormattableString.Invariant(
+                            $"{pixel.Name} at ({pixel.Position.X},{pixel.Position.Y}): actual ({actual.R:R},{actual.G:R},{actual.B:R},{actual.A:R}), expected ({pixel.Expected.R:R},{pixel.Expected.G:R},{pixel.Expected.B:R},{pixel.Expected.A:R})"));
+                }
+                if (filteringDriver is not null)
+                {
+                    Console.WriteLine($"{filteringDriver}: {_pixels.Count} GLSL/HLSL filtering pixels matched on {RenderingServer.GetRenderingDevice()!.GetDeviceName()}.");
+                    Tree!.Quit();
+                    return;
+                }
                 image.SavePNG(output); Console.WriteLine($"Native shader samplers: {_pixels.Count} canvas/particle probes plus six blits passed.");
             }
+            if (filteringDriver is not null) return;
             WarmFrame();
         }
         protected override void Dispose(bool disposing) { CleanupExtended(); foreach (var resource in _resources) resource.Dispose(); base.Dispose(disposing); }

@@ -12,7 +12,7 @@ internal sealed partial class CanvasPolygon
     private CanvasSkeletonSkin? _skin;
     private bool _skinEnabled, _rawTriangles, _hasContourMapping;
     private MeshSurfaceData? _triangleData;
-    internal void SetSkin(Polygon owner, ReadOnlySpan<int> source) { (_skin ??= new()).Set(owner, source.IsEmpty && _hasContourMapping ? _skinSource.AsSpan(0, VertexCount) : source, VertexCount); _skinEnabled = true; }
+    internal void SetSkin(Polygon owner, ReadOnlySpan<int> source, int inputLength) { (_skin ??= new()).Set(owner, source.IsEmpty && _hasContourMapping ? _skinSource.AsSpan(0, VertexCount) : source, VertexCount, inputLength); _skinEnabled = true; }
 
     internal Rect2 GetLocalBounds() { if (_rawTriangles) { var points = _triangleData!.Vertices; var area = new Rect2(points[0], Vector2.Zero); for (var i = 1; i < points.Length; i++) area = area.Expand(points[i]); return area; } var bounds = VertexCount == 0 ? default : new Rect2(Vertices[0].Position, Vector2.Zero); for (var i = 1; i < VertexCount; i++) bounds = bounds.Expand(Vertices[i].Position); return bounds; }
     internal void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive, int[][]? contours = null)

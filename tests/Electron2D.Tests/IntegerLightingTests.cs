@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using Electron2D;
 using static TextureArrayTests;
 
@@ -28,8 +29,9 @@ internal static class IntegerLightingTests
         root.Ready += _ =>
         {
             device = RenderingServer.GetRenderingDevice()!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            var direct3D = RenderingServer.GetCurrentRenderingDriverName() == "direct3d12";
             RenderingServer.CanvasSetModulate(root.FindWorld()!.Canvas, new(.05f, .05f, .05f));
-            using var format = new RDTextureFormat { Width = 4, Height = 4, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyTo | RenderingDevice.TextureUsageBits.CPURead }; using var view = new RDTextureView();
+            using var format = new RDTextureFormat { Width = 4, Height = 4, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyTo | RenderingDevice.TextureUsageBits.CPURead | RenderingDevice.TextureUsageBits.CanUpdate }; using var view = new RDTextureView();
             Texture CPU(Color value)
             {
                 using var image = Image.CreateEmpty(4, 4, false, Image.Format.Rgbaf); image.Fill(value);
@@ -37,8 +39,24 @@ internal static class IntegerLightingTests
             }
             TextureRD GPU(RenderingDevice.DataFormat kind, Color value, out RID rid)
             {
-                format.Format = kind; rid = device.TextureCreate(format, view); device.TextureClear(rid, Bits(value), 0, 1, 0, 1);
+                format.Format = kind; rid = device.TextureCreate(format, view);
+                if (direct3D) UpdateInteger(rid, kind, value, 4, new byte[4 * 4 * 16]);
+                else device.TextureClear(rid, Bits(value), 0, 1, 0, 1);
                 var texture = new TextureRD { TextureRDRID = rid }; resources.Add(texture); return texture;
+            }
+            void UpdateInteger(RID rid, RenderingDevice.DataFormat kind, Color value, int width, byte[] buffer)
+            {
+                var data = buffer.AsSpan(0, width * 4 * (kind == RenderingDevice.DataFormat.R8G8B8A8UINT ? 4 : kind == RenderingDevice.DataFormat.R16G16B16A16SINT ? 8 : 16));
+                var laneBytes = data.Length / (width * 4 * 4);
+                Span<int> values = stackalloc int[] { (int)value.R, (int)value.G, (int)value.B, (int)value.A };
+                for (var offset = 0; offset < data.Length; offset += laneBytes)
+                {
+                    var lane = values[offset / laneBytes % values.Length];
+                    if (laneBytes == 1) data[offset] = (byte)lane;
+                    else if (laneBytes == 2) BinaryPrimitives.WriteInt16LittleEndian(data[offset..], (short)lane);
+                    else BinaryPrimitives.WriteInt32LittleEndian(data[offset..], lane);
+                }
+                device.TextureUpdate(rid, 0, data);
             }
             for (var channel = 0; channel < 3; channel++) for (var scalar = 0; scalar < 3; scalar++)
                 {
@@ -79,12 +97,23 @@ internal static class IntegerLightingTests
             var unsignedClip = GPU(RenderingDevice.DataFormat.R8G8B8A8UINT, Colors.White, out unsignedClipID);
             var unsignedClipped = new Patch(unsignedClip, new(1, 1, 1, .5f)) { Name = "unsigned_clip", Position = new(104, 88), ClipChildren = ClipChildrenMode.Only }; unsignedClipped.AddChild(new Patch(white, Colors.Red) { Material = clipMaterial }); root.AddChild(unsignedClipped);
             root.Tree!.ProcessFrameStarted += _ => before = GC.GetAllocatedBytesForCurrentThread();
+            var update = direct3D ? new byte[4 * 4 * 16] : null;
             RenderingServer.FramePreDraw += () =>
             {
                 var value = frames % 2 == 0 ? Colors.White : new Color(0, 1, 0);
-                device.TextureClear(maskID, Bits(value), 0, 1, 0, 1); device.TextureClear(signedMaskID, Bits(value), 0, 1, 0, 1);
-                device.TextureClear(clipID, Bits(frames % 2 == 0 ? Colors.White : new Color(1, 1, 1, 0)), 0, 1, 0, 1);
-                device.TextureClear(unsignedClipID, Bits(frames % 2 == 0 ? Colors.White : new Color(1, 1, 1, 0)), 0, 1, 0, 1);
+                var alpha = frames % 2 == 0 ? Colors.White : new Color(1, 1, 1, 0);
+                if (update is not null)
+                {
+                    UpdateInteger(maskID, RenderingDevice.DataFormat.R8G8B8A8UINT, value, frames < 3 ? 4 : 8, update);
+                    UpdateInteger(signedMaskID, RenderingDevice.DataFormat.R16G16B16A16SINT, value, 4, update);
+                    UpdateInteger(clipID, RenderingDevice.DataFormat.R32G32B32A32SINT, alpha, 4, update);
+                    UpdateInteger(unsignedClipID, RenderingDevice.DataFormat.R8G8B8A8UINT, alpha, 4, update);
+                }
+                else
+                {
+                    device.TextureClear(maskID, Bits(value), 0, 1, 0, 1); device.TextureClear(signedMaskID, Bits(value), 0, 1, 0, 1);
+                    device.TextureClear(clipID, Bits(alpha), 0, 1, 0, 1); device.TextureClear(unsignedClipID, Bits(alpha), 0, 1, 0, 1);
+                }
             };
             RenderingServer.FramePostDraw += () =>
             {
@@ -102,7 +131,7 @@ internal static class IntegerLightingTests
                 if (frames == 2)
                 {
                     device.FreeRID(maskID); Check(mask.GetSize() == Vector2.Zero, "Freed mask binding expires before replacement.");
-                    using var replacementFormat = new RDTextureFormat { Width = 8, Height = 4, Format = RenderingDevice.DataFormat.R8G8B8A8UINT, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyTo };
+                    using var replacementFormat = new RDTextureFormat { Width = 8, Height = 4, Format = RenderingDevice.DataFormat.R8G8B8A8UINT, UsageBits = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyTo | RenderingDevice.TextureUsageBits.CanUpdate };
                     using var replacementView = new RDTextureView(); maskID = device.TextureCreate(replacementFormat, replacementView); mask.TextureRDRID = maskID;
                 }
                 frames++; if (frames != 56) return;

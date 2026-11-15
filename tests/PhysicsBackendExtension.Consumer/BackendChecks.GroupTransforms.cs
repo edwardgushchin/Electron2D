@@ -65,21 +65,34 @@ public static partial class BackendChecks
         Entity[] targets = [leaf, top, broken, underControl, first, second]; var locals = new Transform[targets.Length]; var globals = new Transform[targets.Length];
         Transform controlLocal = default, controlGlobal = default, relative = default; Vector2 pivot = default;
         var owner = Environment.CurrentManagedThreadId; var notices = 0; var errors = false;
+        var guardChecks = true;
         parent.TransformChanged += _ => { Check(Environment.CurrentManagedThreadId == owner, "Transform notifications remain on the scene owner"); notices++; };
         var collector = new GroupTransformReader { ProcessThreadGroup = Node.ProcessThreadGroupMode.MainThread, ProcessThreadGroupOrder = -1 };
         collector.Read = () =>
         {
             if (!errors) Check(a.Count == b.Count && a.Count > 0, "Both real parallel groups finish their reads before main physics collection");
-            first.LinearVelocity = new(4, 0); second.LinearVelocity = new(0, 5);
+            if (!guardChecks)
+            {
+                first.LinearVelocity = new(4, 0);
+                second.LinearVelocity = new(0, 5);
+            }
             parent.Position = parent.Position;
         };
         root.AddChild(collector); using var tree = new SceneTree(root);
-        var guardChecks = true;
         a.Read = () => Read(first, second); b.Read = () => Read(second, first);
         using var barrier = new Barrier(2);
         Snapshot(); parent.Position = parent.Position; parent.ForceUpdateTransform(); var beforeNotices = notices; var calls = parent.Calls;
+        var firstStart = first.Position;
+        var secondStart = second.Position;
         parent.Readers = barrier; tree.PhysicsFrame(.01); parent.Readers = null;
         Check(a.ThreadID != b.ThreadID && parent.Calls == calls + 2, "Two dirty global queries compute before publishing one shared cache");
+        var firstVelocity = first.LinearVelocity;
+        var secondVelocity = second.LinearVelocity;
+        var firstMotion = first.Position - firstStart;
+        var secondMotion = second.Position - secondStart;
+        Check(firstVelocity.DistanceTo(new(4, 0)) < .0001f && secondVelocity.DistanceTo(new(0, 5)) < .0001f &&
+            firstMotion.DistanceTo(new(.04f, 0)) < .0001f && secondMotion.DistanceTo(new(0, .05f)) < .0001f,
+            $"Current-group velocity publication produced velocities {firstVelocity}/{secondVelocity} and motion {firstMotion}/{secondMotion}");
         parent.ForceUpdateTransform(); Check(notices == beforeNotices + 1, "Worker reads clear global invalidation so the next equal owner assignment queues a new notification");
         guardChecks = false;
         var failure = new ApplicationException("Expected transform getter failure"); parent.Failure = failure; parent.Position = parent.Position; errors = true;
@@ -108,7 +121,7 @@ public static partial class BackendChecks
         for (var i = 0; i < 128; i++) Frame(); allocated = GC.GetAllocatedBytesForCurrentThread() - allocated; all = GC.GetTotalAllocatedBytes(true) - all;
         Check(allocated == 0 && all == 0 && PhysicsServer.SpaceGetTick(world.Space) == tick + 128 && first.Position.X > x, $"Worker transform full physics frames {allocated}/{all} B");
         Check(world.PhysicsBackendName == world.RequestedPhysicsBackendName && world.PhysicsFallbackReason is null, "Read-only transforms preserve actual selected physics");
-        Console.WriteLine($"Group transforms {world.PhysicsBackendName}/{(threaded ? "separate" : "owner")}/{(poolOwner ? "pool-host" : "ordinary-host")}: parallel own/foreign logical reads, shared cache, control ancestry, notifications/errors and 128 complete physics/query intervals at 0/0 B passed.");
+        Console.WriteLine($"Group transforms {world.PhysicsBackendName}/{(threaded ? "separate" : "owner")}/{(poolOwner ? "pool-host" : "ordinary-host")}: parallel own/foreign logical reads, shared cache, control ancestry, own-group velocity publication, foreign write rejection, notifications/errors and 128 complete physics/query intervals at 0/0 B passed.");
         void Snapshot()
         {
             for (var i = 0; i < targets.Length; i++) { locals[i] = targets[i].Transform; globals[i] = targets[i].GlobalTransform; }
@@ -137,7 +150,8 @@ public static partial class BackendChecks
         {
             own.Position = own.Position; Reject<InvalidOperationException>(() => foreign.Position = foreign.Position); Reject<InvalidOperationException>(() => leaf.Translate(Vector2.One));
             Reject<InvalidOperationException>(() => leaf.GlobalTransform = leaf.GlobalTransform); Reject<InvalidOperationException>(() => parent.ForceUpdateTransform());
-            Reject<InvalidOperationException>(() => first.LinearVelocity = Vector2.Zero);
+            own.LinearVelocity = ReferenceEquals(own, first) ? new(4, 0) : new(0, 5);
+            Reject<InvalidOperationException>(() => foreign.LinearVelocity = Vector2.Zero);
             foreach (var read in GroupTransformReads) Reject<ObjectDisposedException>(() => read(dead));
             Reject<InvalidOperationException>(() => singular.ToLocal(Vector2.One)); Reject<InvalidOperationException>(() => singular.GetAngleTo(Vector2.One));
             Reject<ArgumentNullException>(() => leaf.GetRelativeTransformToParent(null!)); Reject<ArgumentException>(() => leaf.GetRelativeTransformToParent(broken));

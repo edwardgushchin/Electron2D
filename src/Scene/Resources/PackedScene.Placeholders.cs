@@ -44,7 +44,7 @@ public sealed partial class PackedScene
         try
         {
             var record = new SceneNodeData(new SceneFactoryData(static () => new Node(), instance.GetType(), 0), instance.Name,
-                -1, -1, -1, ".", ".", "", [], fields.Select(field => new ScenePropertyData(field.Name, new DeferredPropertyValue(field))).ToArray(), null, "");
+                -1, -1, -1, ".", "", "", [], fields.Select(field => new ScenePropertyData(field.Name, new DeferredPropertyValue(field))).ToArray(), null, "");
             RestoreProperties(instance, record.Properties, resources, nodeReferences: null, localRoot: instance, externalReference: placeholder.GetNodeOrNull);
             foreach (var node in nodes) node.ValidateSceneInstance();
             resources.AssignLocalScene(instance); resources.SetupLocalResources();
