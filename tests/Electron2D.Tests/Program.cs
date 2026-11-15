@@ -1919,6 +1919,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_KEYBOARD_STATE") is { } keyboardStateProfile) { InputKeyboardStateTests.Run(keyboardStateProfile == "windows"); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACTION_INPUT") is { } actionInputProfile)
 {
     if (actionInputProfile == "windows")
