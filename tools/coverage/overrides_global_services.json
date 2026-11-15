@@ -1,0 +1,354 @@
+{
+  "mappings": [
+    {
+      "godot": "@GlobalScope::property:AccessibilityServer",
+      "electron2d": "T:Electron2D.AccessibilityServer",
+      "reason": "ADR 0114: static access reaches the retained service. IsSupported observes or initializes the active display bridge; bridge-dependent operations reject without it. The Linux AT-SPI adapter and outstanding adapters are tracked on the owning class page."
+    },
+    {
+      "godot": "@GlobalScope::property:AudioServer",
+      "electron2d": "T:Electron2D.AudioServer",
+      "reason": "ADR 0047: static calls address one registered audio service; Engine owns device activation and teardown."
+    },
+    {
+      "godot": "@GlobalScope::property:CameraServer",
+      "electron2d": "T:Electron2D.CameraServer",
+      "reason": "ADR 0095: static calls address the registered camera service; individual camera streams retain their own lifecycle."
+    },
+    {
+      "godot": "@GlobalScope::property:DisplayServer",
+      "electron2d": "T:Electron2D.DisplayServer",
+      "reason": "ADRs 0040/0095: static calls require a published display. Open returns a caller-owned display; Engine.Run owns the ordinary windowed session. IsAvailable observes publication."
+    },
+    {
+      "godot": "@GlobalScope::property:Engine",
+      "electron2d": "T:Electron2D.Engine",
+      "reason": "ADRs 0016/0095: static operations use the permanent Engine. Typed and untyped named lookup return the same object, with shared property descriptors."
+    },
+    {
+      "godot": "@GlobalScope::property:GDExtensionManager",
+      "electron2d": "T:Electron2D.ExtensionManager",
+      "reason": "ADRs 0095/0116: static calls address the registered ExtensionManager. Individual extensions keep the owning domain's lifetime."
+    },
+    {
+      "godot": "@GlobalScope::property:Geometry2D",
+      "electron2d": "T:Electron2D.Geometry",
+      "reason": "ADR 0004: the pure planar algorithms use the typed static Geometry type, including the region ownership rules under ADR 0069. This role needs no retained service object."
+    },
+    {
+      "godot": "@GlobalScope::property:IP",
+      "electron2d": "T:Electron2D.IP",
+      "reason": "ADR 0095: static resolver operations and configuration reach the permanent registered IP object."
+    },
+    {
+      "godot": "@GlobalScope::property:Input",
+      "electron2d": "T:Electron2D.Input",
+      "reason": "ADRs 0038/0095: static operations and events address the registered process input state. Device and action semantics are audited on the owning class."
+    },
+    {
+      "godot": "@GlobalScope::property:InputMap",
+      "electron2d": "T:Electron2D.InputMap",
+      "reason": "ADRs 0038/0095: static operations address the same registered binding data, including project-backed updates."
+    },
+    {
+      "godot": "@GlobalScope::property:NativeMenu",
+      "electron2d": "T:Electron2D.NativeMenu",
+      "reason": "ADR 0117: static menu operations resolve the display-owned service. IsAvailable observes the display, HasFeature checks support, and display teardown retires its menu RIDs."
+    },
+    {
+      "godot": "@GlobalScope::property:NavigationServer2D",
+      "electron2d": "T:Electron2D.NavigationServer",
+      "reason": "ADRs 0004/0095/0097: static operations use one registered planar server; map, region and related RIDs keep their individual lifetimes."
+    },
+    {
+      "godot": "@GlobalScope::property:OS",
+      "electron2d": "T:Electron2D.OS",
+      "reason": "ADRs 0015/0095: static host operations address the registered process object; individual OS capability gates are tracked separately."
+    },
+    {
+      "godot": "@GlobalScope::property:Performance",
+      "electron2d": "T:Electron2D.Performance",
+      "reason": "ADRs 0016/0095: static monitors use the registered process object; frame state is updated by Engine."
+    },
+    {
+      "godot": "@GlobalScope::property:PhysicsServer2D",
+      "electron2d": "T:Electron2D.PhysicsServer",
+      "reason": "ADRs 0004/0095/0103: static calls address the registered planar facade. Explicit backend objects belong to their owned world contexts."
+    },
+    {
+      "godot": "@GlobalScope::property:PhysicsServer2DManager",
+      "electron2d": "T:Electron2D.PhysicsServerManager",
+      "reason": "ADRs 0095/0103: static registration and priority selection share retained factory state; factory products have independent ownership."
+    },
+    {
+      "godot": "@GlobalScope::property:ProjectSettings",
+      "electron2d": "T:Electron2D.ProjectSettings",
+      "reason": "ADRs 0019/0095: static operations and changes use the same named runtime registry and descriptors. Explicit ProjectSettingsRegistry objects retain isolated scopes."
+    },
+    {
+      "godot": "@GlobalScope::property:RenderingServer",
+      "electron2d": "T:Electron2D.RenderingServer",
+      "reason": "ADRs 0028/0095: static calls and event subscriptions require an active renderer. Engine owns publication and retirement; event subscriptions stay with their session."
+    },
+    {
+      "godot": "@GlobalScope::property:TextServerManager",
+      "electron2d": "T:Electron2D.TextServerManager",
+      "reason": "ADRs 0095/0107: static access uses the retained manager and named object identity. Operations on TextServer implementations use the exact owned implementation."
+    },
+    {
+      "godot": "@GlobalScope::property:ThemeDB",
+      "electron2d": "T:Electron2D.ThemeDB",
+      "reason": "ADRs 0083/0095: static theme lookups and mutations share one retained process object. Theme resources keep their domain ownership."
+    },
+    {
+      "godot": "@GlobalScope::property:Time",
+      "electron2d": "T:Electron2D.Time",
+      "reason": "ADRs 0095/0111: static clock and calendar operations, registered identity and rejected disposal follow the permanent service contract."
+    },
+    {
+      "godot": "@GlobalScope::property:WorkerThreadPool",
+      "electron2d": "T:Electron2D.WorkerThreadPool",
+      "reason": "ADRs 0095/0104: static work submission and completion use one permanent registered pool. Completion IDs keep their owning pool semantics."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: static access reaches the retained service. IsSupported observes or initializes the active display bridge; bridge-dependent operations reject without it. The Linux AT-SPI adapter and outstanding adapters are tracked on the owning class page.",
+      "godot": [
+        "@GlobalScope::property:AccessibilityServer"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: static calls address one registered audio service; Engine owns device activation and teardown.",
+      "godot": [
+        "@GlobalScope::property:AudioServer"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0095: static calls address the registered camera service; individual camera streams retain their own lifecycle.",
+      "godot": [
+        "@GlobalScope::property:CameraServer"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0001/0004: dynamic class-name discovery and invocation are outside the typed C# contract. Compiled CLR types, typed factories and descriptors cover the accepted access; no engine-owned class database trigger.",
+      "godot": [
+        "@GlobalScope::property:ClassDB"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0040/0095: static calls require a published display. Open returns a caller-owned display; Engine.Run owns the ordinary windowed session. IsAvailable observes publication.",
+      "godot": [
+        "@GlobalScope::property:DisplayServer"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: ADRs 0027/0090 editor executable with an active editor context exposing typed scene selection, editing and viewport operations. Engine editor hints and project jobs do not provide this access.",
+      "godot": [
+        "@GlobalScope::property:EditorInterface"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0016/0095: static operations use the permanent Engine. Typed and untyped named lookup return the same object, with shared property descriptors.",
+      "godot": [
+        "@GlobalScope::property:Engine"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed breakpoint, profiler and message-capture host under ADRs 0016/0090/0091. Engine diagnostic logging does not expose that control surface.",
+      "godot": [
+        "@GlobalScope::property:EngineDebugger"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0095/0116: static calls address the registered ExtensionManager. Individual extensions keep the owning domain's lifetime.",
+      "godot": [
+        "@GlobalScope::property:GDExtensionManager"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0001/0004: the pinned language-specific protocol derives from JSONRPC and serves GDScript tooling. Typed C# tooling has no such global service trigger.",
+      "godot": [
+        "@GlobalScope::property:GDScriptLanguageProtocol"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0004: the pure planar algorithms use the typed static Geometry type, including the region ownership rules under ADR 0069. This role needs no retained service object.",
+      "godot": [
+        "@GlobalScope::property:Geometry2D"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0095: static resolver operations and configuration reach the permanent registered IP object.",
+      "godot": [
+        "@GlobalScope::property:IP"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0038/0095: static operations and events address the registered process input state. Device and action semantics are audited on the owning class.",
+      "godot": [
+        "@GlobalScope::property:Input"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0038/0095: static operations address the same registered binding data, including project-backed updates.",
+      "godot": [
+        "@GlobalScope::property:InputMap"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: ADR 0021 Android interop slice exposing a typed Java class lookup and invocation contract with JNI ownership and a public Android consumer.",
+      "godot": [
+        "@GlobalScope::property:JavaClassWrapper"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: ADR 0021 Web interop slice exposing typed JavaScript object/callback access with browser lifetime and a public Web consumer.",
+      "godot": [
+        "@GlobalScope::property:JavaScriptBridge"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0001: Base64 and UTF-8 use System.Convert and System.Text. Variant serialization and a duplicate global wrapper are outside the typed C# contract.",
+      "godot": [
+        "@GlobalScope::property:Marshalls"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0117: static menu operations resolve the display-owned service. IsAvailable observes the display, HasFeature checks support, and display teardown retires its menu RIDs.",
+      "godot": [
+        "@GlobalScope::property:NativeMenu"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: the pinned owning type has deprecated=\"\" metadata and its NavigationMesh/NavigationMeshSourceGeometryData3D operations bake 3D meshes. Planar baking belongs to NavigationServer under ADR 0097.",
+      "godot": [
+        "@GlobalScope::property:NavigationMeshGenerator"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0095/0097: static operations use one registered planar server; map, region and related RIDs keep their individual lifetimes.",
+      "godot": [
+        "@GlobalScope::property:NavigationServer2D"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: ADRs 0052/0097 navigation implementation selection with named backend factories and priority selection before the planar server is created. The current managed backend provides no public factory registry.",
+      "godot": [
+        "@GlobalScope::property:NavigationServer2DManager"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004 excludes selection of 3D navigation server implementations. No implementation trigger.",
+      "godot": [
+        "@GlobalScope::property:NavigationServer3DManager"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0015/0095: static host operations address the registered process object; individual OS capability gates are tracked separately.",
+      "godot": [
+        "@GlobalScope::property:OS"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0016/0095: static monitors use the registered process object; frame state is updated by Engine.",
+      "godot": [
+        "@GlobalScope::property:Performance"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0095/0103: static calls address the registered planar facade. Explicit backend objects belong to their owned world contexts.",
+      "godot": [
+        "@GlobalScope::property:PhysicsServer2D"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0095/0103: static registration and priority selection share retained factory state; factory products have independent ownership.",
+      "godot": [
+        "@GlobalScope::property:PhysicsServer2DManager"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004 excludes selection of 3D physics server implementations. No implementation trigger.",
+      "godot": [
+        "@GlobalScope::property:PhysicsServer3DManager"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0019/0095: static operations and changes use the same named runtime registry and descriptors. Explicit ProjectSettingsRegistry objects retain isolated scopes.",
+      "godot": [
+        "@GlobalScope::property:ProjectSettings"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: static calls and event subscriptions require an active renderer. Engine owns publication and retirement; event subscriptions stay with their session.",
+      "godot": [
+        "@GlobalScope::property:RenderingServer"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0095/0107: static access uses the retained manager and named object identity. Operations on TextServer implementations use the exact owned implementation.",
+      "godot": [
+        "@GlobalScope::property:TextServerManager"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0083/0095: static theme lookups and mutations share one retained process object. Theme resources keep their domain ownership.",
+      "godot": [
+        "@GlobalScope::property:ThemeDB"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0095/0111: static clock and calendar operations, registered identity and rejected disposal follow the permanent service contract.",
+      "godot": [
+        "@GlobalScope::property:Time"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0095/0104: static work submission and completion use one permanent registered pool. Completion IDs keep their owning pool semantics.",
+      "godot": [
+        "@GlobalScope::property:WorkerThreadPool"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004 excludes the XR interface, tracking and rendering service. No implementation trigger.",
+      "godot": [
+        "@GlobalScope::property:XRServer"
+      ]
+    }
+  ]
+}

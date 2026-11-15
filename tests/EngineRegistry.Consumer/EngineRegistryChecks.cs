@@ -1,3 +1,4 @@
+using System.Reflection;
 using Electron2D;
 
 internal static class EngineRegistryChecks
@@ -30,6 +31,7 @@ internal static class EngineRegistryChecks
         Check(Engine.GetSingletonList().SequenceEqual(baseline), "Rejected mutations leave permanent order unchanged.");
         Check(ReferenceEquals(Engine.GetSingleton<ProjectSettingsRegistry>(nameof(ProjectSettings)),
                               Engine.GetSingleton<ProjectSettings>(nameof(ProjectSettings))), "Typed lookup accepts a service base type.");
+        VerifyStaticAccess(baseline);
 
         foreach (var invalid in new string?[] { null, "", " \t", "\u2003" })
         {
@@ -76,6 +78,99 @@ internal static class EngineRegistryChecks
         Check(!other.IsDisposed && Engine.GetSingletonList().SequenceEqual(baseline), "Removal restores names and leaves ownership with the caller.");
         VerifyConcurrent(baseline);
         Console.WriteLine($"Engine registry managed checks passed for all {PermanentNames.Length} permanent names, name/type errors, snapshots, disposal and concurrent operations.");
+    }
+
+    private static void VerifyStaticAccess(IReadOnlyList<string> names)
+    {
+        var services = names.Select(name => Engine.GetSingleton(name).GetType()).Concat(
+            [typeof(ThemeDB), typeof(PhysicsServerManager), typeof(DisplayServer), typeof(RenderingServer),
+             typeof(NativeMenu), typeof(AccessibilityServer), typeof(Geometry)]);
+        const BindingFlags declaredPublic = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
+        foreach (var service in services)
+        {
+            var operations = service.GetMethods(declaredPublic);
+            Check(service.GetMember("Instance", declaredPublic).Length == 0 &&
+                  service.GetConstructors(declaredPublic).Length == 0 &&
+                  operations.Length > 0 && operations.All(operation => operation.IsStatic),
+                  $"{service.Name} exposes only static operations and no public construction or Instance.");
+        }
+
+        var engine = Engine.GetSingleton<Engine>(nameof(Engine));
+        var timeScale = engine.GetPropertyList().OfType<PropertyDescriptor<Engine, double>>()
+            .Single(property => property.Name == nameof(Engine.TimeScale));
+        var previous = Engine.TimeScale;
+        try
+        {
+            Engine.TimeScale = 0.75;
+            Check(timeScale.GetValue(engine) == 0.75, "The retained descriptor sees a static write.");
+            timeScale.SetValue(engine, 0.5);
+            Check(Engine.TimeScale == 0.5 && ReferenceEquals(Engine.GetSingleton(nameof(Engine)), engine),
+                  "The static read sees the descriptor write on the same retained engine.");
+        }
+        finally
+        {
+            Engine.TimeScale = previous;
+            ProjectSettings.FlushChanges();
+        }
+        var settings = Engine.GetSingleton<ProjectSettingsRegistry>(nameof(ProjectSettings));
+        var nameDescriptor = settings.GetPropertyList().OfType<PropertyDescriptor<ProjectSettingsRegistry, string>>()
+            .Single(property => property.Name == ProjectSettings.ApplicationName.Name);
+        Check(nameDescriptor.GetValue(settings) == ProjectSettings.Get(ProjectSettings.ApplicationName),
+              "The typed descriptor on the retained registry reads the project setting.");
+        foreach (var name in names)
+        {
+            var service = Engine.GetSingleton(name);
+            Reject<InvalidOperationException>(service.Dispose);
+            Check(!service.IsDisposed && ReferenceEquals(Engine.GetSingleton(name), service), $"{name} remains owned by the runtime.");
+        }
+        VerifyNativeUnavailable();
+        Console.WriteLine("26 static service surfaces, permanent ownership and retained property descriptors passed.");
+    }
+
+    private static void VerifyNativeUnavailable()
+    {
+        Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable && !NativeMenu.IsAvailable &&
+              !AccessibilityServer.IsSupported(), "Native operations have no active session.");
+        Reject<InvalidOperationException>(() => DisplayServer.GetName());
+        Reject<InvalidOperationException>(() => RenderingServer.GetCurrentRenderingMethod());
+        Reject<InvalidOperationException>(() => RenderingServer.FramePostDraw += UnexpectedFrame);
+        Reject<InvalidOperationException>(() => RenderingServer.FramePostDraw -= UnexpectedFrame);
+        Reject<InvalidOperationException>(() => NativeMenu.HasFeature(NativeMenu.Feature.PopupMenu));
+        Reject<NotSupportedException>(() => AccessibilityServer.GetWindowRoot(DisplayServer.MainWindowId));
+    }
+
+    private static void UnexpectedFrame() => throw new InvalidOperationException("An inactive subscription must never run.");
+
+    private static void VerifyExplicitDisplay()
+    {
+        DisplayServer? previous = null;
+        RID previousMenu = default;
+        for (var pass = 1; pass <= 2; pass++)
+        {
+            VerifyNativeUnavailable();
+            using (var display = DisplayServer.Open("Engine registry display", new(96, 80), hidden: true))
+            {
+                Check(DisplayServer.IsAvailable && NativeMenu.IsAvailable && !RenderingServer.IsAvailable &&
+                      !display.IsDisposed && !ReferenceEquals(previous, display) && DisplayServer.GetName().Length > 0,
+                      "Explicit opening publishes a fresh caller-owned display without a renderer.");
+                Reject<InvalidOperationException>(() => DisplayServer.Open("Duplicate display", new(96, 80), hidden: true));
+                Task.Run(() => Reject<InvalidOperationException>(() => DisplayServer.GetName())).GetAwaiter().GetResult();
+                if (OperatingSystem.IsWindows())
+                {
+                    Check(NativeMenu.HasFeature(NativeMenu.Feature.PopupMenu), "Windows exposes the native popup capability.");
+                    if (previous is not null)
+                        Check(!NativeMenu.HasMenu(previousMenu), "A menu from a closed display stays retired.");
+                    previousMenu = NativeMenu.CreateMenu();
+                    Check(NativeMenu.HasMenu(previousMenu), "The active display owns its popup menu.");
+                    Check(!AccessibilityServer.IsSupported(), "The Windows display lacks an accessibility bridge.");
+                    Reject<NotSupportedException>(() => AccessibilityServer.GetWindowRoot(DisplayServer.MainWindowId));
+                }
+                previous = display;
+            }
+            Check(previous.IsDisposed, "The caller closed its explicit display.");
+            VerifyNativeUnavailable();
+        }
+        Console.WriteLine("Two caller-owned native display lifecycles passed.");
     }
 
     private static void VerifyConcurrent(IReadOnlyList<string> baseline)
@@ -133,6 +228,7 @@ internal static class EngineRegistryChecks
     internal static void RunWindowed(string backend)
     {
         Check(backend is "gpu" or "compatibility", "Specify gpu or compatibility.");
+        VerifyExplicitDisplay();
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         Engine.MaxFPS = 60;
@@ -143,6 +239,7 @@ internal static class EngineRegistryChecks
         Engine.RegisterSingleton(Primary, shared);
         try
         {
+            RegistryScene? previous = null;
             for (var pass = 1; pass <= 2; pass++)
             {
                 using var root = new Window { Size = new(96, 80), Borderless = true };
@@ -154,10 +251,13 @@ internal static class EngineRegistryChecks
                       "The real scene rendered and all lifecycle callbacks completed.");
                 Check(!DisplayServer.IsAvailable && !RenderingServer.IsAvailable && Engine.MainLoop is null,
                       "Each run retires display, renderer and scene loop.");
+                VerifyNativeUnavailable();
                 Check(!Engine.HasSingleton(Alias) && ReferenceEquals(Engine.GetSingleton<Probe>(Primary), shared) && !shared.IsDisposed &&
                       ReferenceEquals(Engine.GetSingleton<TextServerManager>(nameof(TextServerManager)), manager) &&
                       ReferenceEquals(Engine.GetSingleton<TranslationServer>(nameof(TranslationServer)), translation),
                       "Shutdown preserves caller-owned and permanent process registrations.");
+                Check(previous is null || previous.Frames == 1, "The previous frame subscription stayed with its retired renderer.");
+                previous = scene;
                 Console.WriteLine($"Run {pass}: {backend} / {scene.Driver} / {scene.Adapter}; red pixel read back; scene and renderer retired.");
             }
         }
@@ -196,12 +296,14 @@ internal static class EngineRegistryChecks
     {
         internal bool Rendered { get; private set; }
         internal bool Exited { get; private set; }
+        internal int Frames { get; private set; }
         internal string Driver { get; private set; } = "";
         internal string Adapter { get; private set; } = "";
 
         protected override void OnReady()
         {
-            Check(ReferenceEquals(Engine.MainLoop, Tree) && !Engine.HasSingleton(Alias), "Ready observes the published scene loop.");
+            Check(ReferenceEquals(Engine.MainLoop, Tree) && DisplayServer.IsAvailable && RenderingServer.IsAvailable &&
+                  !Engine.HasSingleton(Alias), "Ready observes the published scene loop, display and renderer.");
             Engine.RegisterSingleton(Alias, shared);
             Check(ReferenceEquals(Engine.GetSingleton(Alias), shared), "Ready can register a scene-scoped alias.");
             Check(RenderingServer.GetCurrentRenderingMethod() == backend, "The requested native renderer is active.");
@@ -218,6 +320,7 @@ internal static class EngineRegistryChecks
 
         private void Finish()
         {
+            Frames++;
             using var image = root.GetTexture().GetImage();
             Check(image is not null && image.GetPixel(16, 16).R >= 0.95f && image.GetPixel(16, 16).G <= 0.05f,
                   "The native backend must deliver the scene's red rectangle.");
@@ -227,7 +330,7 @@ internal static class EngineRegistryChecks
 
         protected override void OnExitTree()
         {
-            RenderingServer.FramePostDraw -= Finish;
+            // Leave the subscription on this renderer to verify retirement across two sessions.
             Check(ReferenceEquals(Engine.GetSingleton<Probe>(Alias), shared), "Scene teardown sees its borrowed alias.");
             Engine.UnregisterSingleton(Alias);
             Exited = true;
