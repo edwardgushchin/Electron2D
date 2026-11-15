@@ -1,6 +1,6 @@
 # ByteBuffer
 
-Last updated: 2026-10-27
+Last updated: 2026-11-15
 
 `public static class Electron2D.ByteBuffer`
 
@@ -539,11 +539,12 @@ A new string. The framework code-page provider is used locally without changing 
 Parameters:
 
 - `data`: Borrowed encoded bytes.
-- `encoding`: A .NET encoding name; empty uses the Windows culture ANSI code page or UTF-8 on other hosts.
+- `encoding`: A .NET encoding name. With an empty name, Windows resolves the current culture's ANSI code page by number and other hosts use UTF-8.
 
 Errors:
 
-- `T:System.ArgumentException`: The encoding is null, unknown or unavailable.
+- `T:System.ArgumentNullException`: The encoding name is null.
+- `T:System.ArgumentException`: The encoding name is unknown or unavailable, or the name is empty and the current Windows culture has no ANSI code page.
 - `T:System.Text.DecoderFallbackException`: The text is malformed or truncated.
 
 <a id="member-4c8e9a676e78"></a>
