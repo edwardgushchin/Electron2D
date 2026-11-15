@@ -1,10 +1,10 @@
 # Native sampler borders
 
-Last updated: 2026-10-27
+Last updated: 2026-11-15
 
 [RDSamplerState.BorderColor](../classes/RDSamplerState.md#border-color) and [SamplerBorderColor](../classes/RenderingDevice.SamplerBorderColor.md) connect normalized ClampToBorder U/V addressing to device samplers and copied Shader settings under [ADR 0028](../decisions/rendering.md#adr-0028). The default is FloatOpaqueBlack. Each axis keeps its own addressing mode; a border color contributes only outside a border-clamped axis, including native linear filtering across that edge. Ordinary and array images preserve their existing mip, comparison and lifetime contracts.
 
-Floating-point border variants serve normalized/floating-point/depth sampling; integer variants serve signed/unsigned integer sampling. Integer images still require nearest filtering without effective anisotropy. Mismatched border/image scalar classes reject in high-level authoring, combined device binding or separate image/sampler dispatch validation. Unused border colors do not constrain a binding. Undefined colors reject at the configuration setter. Configurations and getters remain independent copied ElectronObject values; disposing the description cannot mutate an existing RID.
+Floating-point border variants serve normalized/floating-point/depth sampling; integer variants serve signed/unsigned integer sampling. Integer images require nearest min, mag and mip filters and reject a request for anisotropy above one. Mismatched border/image scalar classes reject in high-level authoring, combined device binding or separate image/sampler dispatch validation. Unused border colors do not constrain a binding. Undefined colors reject at the configuration setter. Configurations and getters remain independent copied ElectronObject values; disposing the description cannot mutate an existing RID.
 
 The private Electron2DRender adapter uses the SHA-pinned SDL 3.4.18 declarations and rejects another SDL core/revision or a non-Vulkan driver before opaque native access. It creates a normal SDL sampler, creates the requested Vulkan sampler and replaces its handle before publishing the wrapper. SDL retains wrapper reference counting, command retention and deferred destruction. Failure releases the unpublished wrapper. There are no public native handles, vendored implementation edits or shader source rewrites. Metal and other drivers reject border sampling explicitly; [mirror-clamp](sampler-mirror-clamp.md) now uses a negotiated native extension through this same adapter.
 

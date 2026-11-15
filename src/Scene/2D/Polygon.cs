@@ -24,6 +24,7 @@ public partial class Polygon : Entity
 
     private Vector2[] _vertices = [], _uv = [];
     private Vector2[] _drawPoints = [], _drawUV = [], _contourPoints = [], _contourUV = [];
+    private Vector2[] _invertedPoints = [];
     private Color[] _contourColors = [];
     private int[][] _polygons = [];
     private Color[] _vertexColors = [];
@@ -49,7 +50,7 @@ public partial class Polygon : Entity
     }
 
     /// <summary>Gets or sets how many trailing vertices are omitted from the default contour.</summary>
-    /// <value>Zero by default. Explicit contours may reference the trailing vertices.</value>
+    /// <value>Zero by default. Inversion also omits these vertices; explicit contours may reference them.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned count is negative.</exception>
     public int InternalVertexCount
     {
@@ -58,7 +59,8 @@ public partial class Polygon : Entity
     }
 
     /// <summary>Gets or replaces copied index contours into Vertices.</summary>
-    /// <value>Empty by default, meaning one contour in vertex order. Contours with fewer than three indices are skipped.</value>
+    /// <value>Empty by default, meaning one contour in vertex order. Contours with fewer than three indices are skipped.
+    /// An index outside the current <see cref="Vertices"/> fails on redraw.</value>
     /// <exception cref="ArgumentNullException">The outer array or a contour is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A contour index is negative.</exception>
     public int[][] Polygons
@@ -100,7 +102,7 @@ public partial class Polygon : Entity
         }
     }
 
-    /// <summary>Gets or sets the borrowed fill texture.</summary>
+    /// <summary>Gets or sets the borrowed fill texture. Texture changes request a redraw.</summary>
     /// <value>Null by default.</value>
     /// <exception cref="ObjectDisposedException">The assigned texture is disposed.</exception>
     public Texture? Texture
@@ -118,7 +120,7 @@ public partial class Polygon : Entity
         }
     }
 
-    /// <summary>Gets or replaces copied pixel-space texture coordinates. An incomplete set uses local vertices.</summary>
+    /// <summary>Gets or replaces copied pixel-space texture coordinates. A count mismatch uses the drawn local positions.</summary>
     /// <value>An empty array by default.</value>
     /// <exception cref="ArgumentNullException">The assigned array is null.</exception>
     /// <exception cref="ArgumentException">A coordinate is nonfinite.</exception>
@@ -137,7 +139,7 @@ public partial class Polygon : Entity
         set { EnsureMutable(); ValidateVector(value); _offset = value; InvalidateCanvas(); }
     }
 
-    /// <summary>Gets or sets the finite translation applied to pixel-space texture coordinates.</summary>
+    /// <summary>Gets or sets the finite offset applied after rotation and before per-axis scaling of pixel-space texture coordinates.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentException">The assigned offset is nonfinite.</exception>
     public Vector2 TextureOffset
@@ -160,7 +162,7 @@ public partial class Polygon : Entity
         }
     }
 
-    /// <summary>Gets or sets the finite texture-coordinate scale before rotation.</summary>
+    /// <summary>Gets or sets the finite per-axis scale applied after texture-coordinate rotation and offset.</summary>
     /// <value>One on each axis by default.</value>
     /// <exception cref="ArgumentException">The assigned scale is nonfinite.</exception>
     public Vector2 TextureScale
@@ -190,7 +192,7 @@ public partial class Polygon : Entity
     }
 
     /// <summary>Gets or sets the finite padding of the bounding rectangle used for inverted fill.</summary>
-    /// <value>100 local units by default. A nonpositive value may fail triangulation.</value>
+    /// <value>100 local units by default. Inverted drawing requires padding that expands the contour bounds.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned border is nonfinite.</exception>
     public float InvertBorder
     {
@@ -208,54 +210,70 @@ public partial class Polygon : Entity
     {
         base.OnDraw();
         if (_vertices.Length < 3) return;
-        var length = _invertEnabled || _polygons.Length == 0 ? Math.Max(0, _vertices.Length - _internalVertexCount) : _vertices.Length;
+        var length = SkinInputLength;
         if (length < 3) return;
+        var texture = _texture;
+        Vector2 textureSize = default;
+        if (texture is not null)
+        {
+            if (texture.IsDisposed) throw new ObjectDisposedException(nameof(Texture));
+            textureSize = texture.GetSize();
+            EnsureMutable();
+            if (!ReferenceEquals(texture, _texture)) return;
+            if (!textureSize.IsFinite() || textureSize.X <= 0 || textureSize.Y <= 0)
+                throw new InvalidOperationException("Polygon texture dimensions must be positive and finite.");
+            length = SkinInputLength;
+            if (length < 3) return;
+        }
         if (_drawPoints.Length < length) Array.Resize(ref _drawPoints, length);
         for (var i = 0; i < length; i++) _drawPoints[i] = _vertices[i] + _offset;
-        ReadOnlySpan<Vector2> points = _drawPoints.AsSpan(0, length);
-        if (_invertEnabled) points = InvertContour(points.ToArray(), _invertBorder);
+        var sourcePoints = _drawPoints.AsSpan(0, length);
+        var inverted = _invertEnabled;
+        var contours = _polygons;
+        ReadOnlySpan<Vector2> points = inverted ? InvertContour(sourcePoints) : sourcePoints;
         length = points.Length;
         Span<Color> uniform = stackalloc Color[1]; uniform[0] = _color;
         ReadOnlySpan<Color> colors = _vertexColors.Length == length ? _vertexColors : uniform;
         ReadOnlySpan<Vector2> uvs = default;
-        if (_texture is { } texture)
+        if (texture is not null)
         {
-            var size = texture.GetSize();
-            if (!size.IsFinite() || size.X <= 0 || size.Y <= 0) throw new InvalidOperationException("Polygon texture dimensions must be positive and finite.");
             if (_drawUV.Length < length) Array.Resize(ref _drawUV, length);
-            var transform = new Transform(_textureRotation, _textureOffset);
-            for (var i = 0; i < length; i++) { var source = _uv.Length == length ? _uv[i] : points[i]; _drawUV[i] = (transform * (source * _textureScale)) / size; }
+            var transform = new Transform(_textureRotation, _textureOffset).Scaled(_textureScale);
+            var sourceUV = _uv.Length == length ? _uv.AsSpan() : points;
+            for (var i = 0; i < length; i++) _drawUV[i] = (transform * sourceUV[i]) / textureSize;
             uvs = _drawUV.AsSpan(0, length);
         }
+        // The node samples the backing image using UVs normalized by the authored texture's logical size.
+        var drawTexture = texture is AtlasTexture atlas ? atlas.ResolvePolygonTexture(false, out _) : texture;
         if (_antialiased)
         {
-            if (!_invertEnabled && _polygons.Length != 0)
+            if (!inverted && contours.Length != 0)
             {
-                var found = false; foreach (var contour in _polygons) found |= contour.Length >= 3;
+                var found = false; foreach (var contour in contours) found |= contour.Length >= 3;
                 if (!found) return;
             }
-            RecordPolygon(points, colors, uvs, _texture, primitive: false, _invertEnabled ? null : _polygons);
-            EnableLastPolygonAntialias(_invertEnabled ? _drawPoints.AsSpan(0, Math.Max(0, _vertices.Length - _internalVertexCount)) : default);
-            if (!_invertEnabled) AttachLastPolygonSkin(this, default);
+            RecordPolygon(points, colors, uvs, drawTexture, primitive: false, inverted ? null : contours);
+            EnableLastPolygonAntialias(inverted ? sourcePoints : default);
+            if (!inverted) AttachLastPolygonSkin(this, default, length);
             return;
         }
-        if (_invertEnabled || _polygons.Length == 0)
+        if (inverted || contours.Length == 0)
         {
-            DrawPolygon(points, colors, uvs, _texture); if (!_invertEnabled) AttachLastPolygonSkin(this, default); return;
+            DrawPolygon(points, colors, uvs, drawTexture); if (!inverted) AttachLastPolygonSkin(this, default, length); return;
         }
-        foreach (var contour in _polygons)
+        foreach (var contour in contours)
         {
             if (contour.Length < 3) continue;
             if (_contourPoints.Length < contour.Length) Array.Resize(ref _contourPoints, contour.Length);
             if (_contourColors.Length < contour.Length) Array.Resize(ref _contourColors, contour.Length);
-            if (_texture is not null && _contourUV.Length < contour.Length) Array.Resize(ref _contourUV, contour.Length);
+            if (texture is not null && _contourUV.Length < contour.Length) Array.Resize(ref _contourUV, contour.Length);
             for (var i = 0; i < contour.Length; i++)
             {
                 var index = contour[i]; if ((uint)index >= (uint)length) throw new ArgumentOutOfRangeException(nameof(Polygons), "A contour index is outside Vertices.");
-                _contourPoints[i] = points[index]; _contourColors[i] = colors.Length == 1 ? colors[0] : colors[index]; if (_texture is not null) _contourUV[i] = uvs[index];
+                _contourPoints[i] = points[index]; _contourColors[i] = colors.Length == 1 ? colors[0] : colors[index]; if (texture is not null) _contourUV[i] = uvs[index];
             }
-            DrawPolygon(_contourPoints.AsSpan(0, contour.Length), _contourColors.AsSpan(0, contour.Length), _texture is null ? default : _contourUV.AsSpan(0, contour.Length), _texture);
-            AttachLastPolygonSkin(this, contour);
+            DrawPolygon(_contourPoints.AsSpan(0, contour.Length), _contourColors.AsSpan(0, contour.Length), texture is null ? default : _contourUV.AsSpan(0, contour.Length), drawTexture);
+            AttachLastPolygonSkin(this, contour, length);
         }
     }
 
@@ -277,7 +295,7 @@ public partial class Polygon : Entity
 
     private void TextureChanged(Resource _) => InvalidateCanvas();
 
-    private static Vector2[] InvertContour(Vector2[] points, float border)
+    private ReadOnlySpan<Vector2> InvertContour(ReadOnlySpan<Vector2> points)
     {
         var minimum = points[0]; var maximum = points[0];
         var highestIndex = 0;
@@ -289,35 +307,42 @@ public partial class Polygon : Entity
             maximum = new(Math.Max(maximum.X, point.X), Math.Max(maximum.Y, point.Y));
             if (point.Y > points[highestIndex].Y) highestIndex = i;
             var next = points[(i + 1) % points.Length];
-            orientation += ((double)next.X - point.X) * (next.Y + point.Y);
+            orientation += ((double)next.X - point.X) * ((double)next.Y + point.Y);
         }
 
-        minimum -= new Vector2(border, border);
-        maximum += new Vector2(border, border);
+        if (orientation == 0) throw new ArgumentException("An inverted contour must enclose a nonzero area.", nameof(Vertices));
+        var padding = new Vector2(_invertBorder, _invertBorder);
+        var outerMin = minimum - padding;
+        var outerMax = maximum + padding;
+        if (outerMin.X >= minimum.X || outerMin.Y >= minimum.Y || outerMax.X <= maximum.X || outerMax.Y <= maximum.Y)
+            throw new ArgumentException("The inversion border must expand the contour bounds.", nameof(InvertBorder));
+
         var highest = points[highestIndex];
         var bridgeX = highest.X - 0.00001f;
         if (bridgeX == highest.X) bridgeX = MathF.BitDecrement(highest.X);
-        Vector2[] bridge =
+        Span<Vector2> bridge =
         [
-            new(highest.X, highest.Y + border),
-            maximum,
-            new(maximum.X, minimum.Y),
-            minimum,
-            new(minimum.X, maximum.Y),
-            new(bridgeX, highest.Y + border),
+            new(highest.X, outerMax.Y),
+            outerMax,
+            new(outerMax.X, outerMin.Y),
+            outerMin,
+            new(outerMin.X, outerMax.Y),
+            new(bridgeX, outerMax.Y),
             new(bridgeX, highest.Y),
         ];
+        var length = checked(points.Length + bridge.Length);
+        if (_invertedPoints.Length < length) Array.Resize(ref _invertedPoints, length);
+        var result = _invertedPoints.AsSpan(0, length);
+        points[..(highestIndex + 1)].CopyTo(result);
         if (orientation > 0)
         {
             (bridge[1], bridge[4]) = (bridge[4], bridge[1]);
             (bridge[2], bridge[3]) = (bridge[3], bridge[2]);
             (bridge[5], bridge[0]) = (bridge[0], bridge[5]);
-            (bridge[6], points[highestIndex]) = (points[highestIndex], bridge[6]);
+            (bridge[6], result[highestIndex]) = (result[highestIndex], bridge[6]);
         }
-        var result = new Vector2[points.Length + bridge.Length];
-        Array.Copy(points, 0, result, 0, highestIndex + 1);
-        Array.Copy(bridge, 0, result, highestIndex + 1, bridge.Length);
-        Array.Copy(points, highestIndex + 1, result, highestIndex + 1 + bridge.Length, points.Length - highestIndex - 1);
+        bridge.CopyTo(result[(highestIndex + 1)..]);
+        points[(highestIndex + 1)..].CopyTo(result[(highestIndex + 1 + bridge.Length)..]);
         return result;
     }
 

@@ -74,8 +74,9 @@ public sealed class ImageTexture : Texture
 
     /// <summary>Replaces pixels while retaining the original image dimensions, format and mipmap configuration.</summary>
     /// <param name="image">A live image matching the original pixel configuration.</param>
-    /// <remarks>Logical size overrides do not change the required pixel dimensions. Input is copied and failure
-    /// preserves the previous pixels. Compatible GPU allocation is reused, with native cycling for queued frames.</remarks>
+    /// <remarks>Logical size overrides do not change the required pixel dimensions. Input is copied and validation failure
+    /// preserves the previous pixels. A successful update emits Changed after publication. Compatible GPU allocation is
+    /// reused, with native cycling for queued frames.</remarks>
     /// <exception cref="ArgumentException">The image configuration differs from the original.</exception>
     /// <exception cref="InvalidOperationException">The texture is uninitialized or the codec work budget is exceeded.</exception>
     /// <exception cref="NotSupportedException">The image format is not integrated.</exception>
@@ -103,6 +104,7 @@ public sealed class ImageTexture : Texture
 
     /// <summary>Changes the logical drawing size without reallocating or resampling pixel data.</summary>
     /// <param name="size">New dimensions; zero retains that axis's current value.</param>
+    /// <remarks>Emits Changed only when at least one logical dimension changes.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A dimension is negative.</exception>
     /// <exception cref="ObjectDisposedException">The texture is disposed.</exception>
     public void SetSizeOverride(Vector2i size)
@@ -119,7 +121,15 @@ public sealed class ImageTexture : Texture
     }
 
     /// <inheritdoc />
-    public override Image? GetImage() => CapturePixels()?.CopyImage();
+    public override Image? GetImage()
+    {
+        // Prepared video frames can overwrite the source buffer under the same lock.
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            return _pixels?.CopyImage();
+        }
+    }
 
     internal override TexturePixels? CapturePixels() { lock (_gate) { ThrowIfDisposed(); return _pixels; } }
 

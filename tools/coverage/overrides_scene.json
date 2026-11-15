@@ -510,12 +510,6 @@
       "reason": "Parent-first manual notification delivery."
     },
     {
-      "electron2d": "property:Electron2D.CanvasLayer.Layer()",
-      "godot": "ParallaxBackground::property:layer",
-      "state": "Partial",
-      "reason": "The inherited CanvasLayer.Layer property defaults to -100 on ParallaxBackground and orders its canvas behind the default layer. Managed construction and native pixels verify the root Window path; independent viewport and editor canvas behavior remain unaudited."
-    },
-    {
       "electron2d": "property:Electron2D.InputEventScreenTouch.Index()",
       "godot": "InputEventScreenTouch::property:index",
       "reason": "Signed touch-contact identifier maps to the typed C# property."
@@ -556,8 +550,8 @@
     {
       "electron2d": "property:Electron2D.Polygon.Vertices()",
       "godot": "Polygon2D::property:polygon",
-      "state": "Partial",
-      "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, inverted fill and packed state execute; full skeletal geometry remains absent."
+      "state": "Implemented",
+      "reason": "ADR 0004 maps the copied vertex array to Vertices because C# forbids a member named Polygon on Polygon. Finite local vertices feed default and indexed contours, inversion, retained skin deformation and typed scene storage."
     },
     {
       "electron2d": "method:Electron2D.Line.GetPointCount()",
@@ -875,8 +869,7 @@
     {
       "electron2d": "method:Electron2D.Input.GetActionRawStrength(System.String,System.Boolean)",
       "godot": "Input::method:get_action_raw_strength(StringName:,bool:)",
-      "state": "Partial",
-      "reason": "Typed action-name/exact-match query; ADR 0038."
+      "reason": "Maps the typed action name and optional exact-match flag."
     },
     {
       "electron2d": "method:Electron2D.InputEvent.Accumulate(Electron2D.InputEvent)",
@@ -1287,14 +1280,12 @@
     {
       "electron2d": "method:Electron2D.SceneState.GetNodeCount()",
       "godot": "SceneState::method:get_node_count()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "ADR 0023: zero for empty data, otherwise the count of stored records in capture order, excluding implicit linked content."
     },
     {
       "electron2d": "method:Electron2D.SceneState.GetPath()",
       "godot": "SceneState::method:get_path()",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "reason": "ADR 0023: observes the resource path through path updates and archive loading, with the last committed path retained after source disposal."
     },
     {
       "electron2d": "method:Electron2D.SceneTree.CallGroup(System.String,System.Action<Electron2D.Node>,Electron2D.GroupCallFlags)",
@@ -5735,6 +5726,11 @@
       "reason": "ADR 0093 executable RESET save preparation. Stored ResetOnSave defaults true and executes through separate allocating PackedScene.PackForSave: guarded source capture, detached exact factories, isolated deep resource copies, RESET value/Bezier at zero, coupled property/resource capture, original factory metadata and owned copied assets. Preview values/clocks/queues remain untouched; ordinary Pack stays actual-pose. Method/audio/nested events, scene activation/instantiation notification and local-resource setup are suppressed. AnimationResetSaveTests verifies all controller families, disabled/missing/inactive policies, setter failures, source/hierarchy guards, asset lifetime and fresh-process files; Linux native GPU/compatibility checks are recorded separately."
     },
     {
+      "godot": "Parallax2D::property:physics_interpolation_mode",
+      "electron2d": "property:Electron2D.Node.PhysicsInterpolationMode()",
+      "reason": "Parallax uses the inherited typed Node property with the Inherit default."
+    },
+    {
       "godot": "Viewport::property:physics_interpolation_mode",
       "electron2d": "property:Electron2D.Node.PhysicsInterpolationMode()",
       "reason": "The inherited typed Node property preserves the Viewport On-default override through construction, revert metadata and stored/duplicated/copied scenes. CPU/GPU physical/presentation and nested native pixel checks execute the complete policy."
@@ -6413,41 +6409,6 @@
       "electron2d": "property:Electron2D.Node.TranslationDomain()",
       "reason": "Derived C# override of the inherited Object translation-domain contract; Node resolves its parent's current domain until explicitly assigned, as required by ADR 0007.",
       "adr": "adr-0007"
-    },
-    {
-      "electron2d": "constructor:Electron2D.ParallaxBackground..ctor()",
-      "state": "Implemented",
-      "reason": "Typed construction initializes the inherited canvas layer to -100 and all scroll settings to their pinned defaults."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxBackground.CreateSceneInstanceFactory()",
-      "state": "Implemented",
-      "reason": "Static exact-type constructor for PackedScene reconstruction."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxBackground.GetPropertyDescriptors()",
-      "state": "Implemented",
-      "reason": "Typed descriptors store six scroll settings and the background-specific inherited layer default."
-    },
-    {
-      "electron2d": "constructor:Electron2D.ParallaxLayer..ctor()",
-      "state": "Implemented",
-      "reason": "Typed detached construction defaults motion to unit scale, zero offset and no mirroring."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxLayer.CreateSceneInstanceFactory()",
-      "state": "Implemented",
-      "reason": "Static exact-type constructor for PackedScene reconstruction."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxLayer.GetConfigurationWarnings()",
-      "state": "Implemented",
-      "reason": "Reports the direct ParallaxBackground parent requirement through the existing typed Node diagnostics API."
-    },
-    {
-      "electron2d": "method:Electron2D.ParallaxLayer.GetPropertyDescriptors()",
-      "state": "Implemented",
-      "reason": "Typed descriptors store original position and scale instead of camera-calculated values, plus three motion settings."
     },
     {
       "electron2d": "constructor:Electron2D.Parallax..ctor()",
@@ -8944,6 +8905,100 @@
   "statusGroups": [
     {
       "state": "Implemented",
+      "reason": "Finite clamped manual press, mapped-release reset, and explicit clearing of manual and parsed state without callbacks. Virtual controls retain owner contributions under ADR 0038.",
+      "godot": [
+        "Input::method:action_press(StringName:,float:)",
+        "Input::method:action_release(StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Returns aggregate deadzone-adjusted strength. With exactMatch enabled, an exact action state returns the aggregate strength. An inexact action state returns only the virtual controls' strength under ADR 0038.",
+      "godot": [
+        "Input::method:get_action_strength(StringName:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Keeps directional magnitudes below the action deadzone and above one for programmatic samples. With exactMatch enabled, an exact action state returns the aggregate raw strength. An inexact action state returns only the virtual controls' strength under ADR 0038.",
+      "godot": [
+        "Input::method:get_action_raw_strength(StringName:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Subtracts the negative action's effective strength from the positive action's effective strength, using default action matching. The public consumer verifies signed cancellation.",
+      "godot": [
+        "Input::method:get_axis(StringName:,StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Subtracts opposing raw strengths using default action matching, applies a circular deadzone and limits length to one. The public consumer verifies raw motion below the action deadzone, circular deadzone and unit length.",
+      "godot": [
+        "Input::method:get_vector(StringName:,StringName:,StringName:,StringName:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The first matching binding in registration order supplies parsed state. The latest mapped event supplies exact eligibility. Anything combines raw logical keys, mouse and controller buttons with pressed actions.",
+      "godot": [
+        "Input::method:is_action_pressed(StringName:,bool:)",
+        "Input::method:is_anything_pressed()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Process and physics windows complete independently even on callback failure. Exact eligibility filters the same aggregate edge and preserves the originating event identity across later matches during a hold. Explicit releases carry no event identity and can mark an already released action.",
+      "godot": [
+        "Input::method:is_action_just_pressed(StringName:,bool:)",
+        "Input::method:is_action_just_released(StringName:,bool:)",
+        "Input::method:is_action_just_pressed_by_event(StringName:,InputEvent:,bool:)",
+        "Input::method:is_action_just_released_by_event(StringName:,InputEvent:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0038 uses synchronous delivery with pre-mutation owner, lifecycle and capacity validation. Window observers and SceneTree see committed state. Caller ownership and original transition identity survive dispatch.",
+      "godot": [
+        "Input::method:parse_input_event(InputEvent:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0038 keeps public parse synchronous. The SDL display combines compatible queued mouse motion by default, drains at pump boundaries and explicitly flushes on the eligible owner. MIDI keeps its own producer queue.",
+      "godot": [
+        "Input::method:flush_buffered_events()",
+        "Input::property:use_accumulated_input"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: doc/classes/ParallaxBackground.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use the [Parallax2D] node instead.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Use Electron2D Parallax. No implementation trigger.",
+      "godot": [
+        "class:ParallaxBackground",
+        "ParallaxBackground::property:layer",
+        "ParallaxBackground::property:scroll_base_offset",
+        "ParallaxBackground::property:scroll_base_scale",
+        "ParallaxBackground::property:scroll_ignore_camera_zoom",
+        "ParallaxBackground::property:scroll_limit_begin",
+        "ParallaxBackground::property:scroll_limit_end",
+        "ParallaxBackground::property:scroll_offset"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: doc/classes/ParallaxLayer.xml at 4.7.2-stable (ed1daf0bf001b61586d9930840f2f1394092c079) carries class deprecated=\"Use the [Parallax2D] node instead.\". Pinned JSON snapshot `docs/coverage/data/godot-4.7.2.json` SHA-256 baf448054a0c7b4e96cd966f6aee9b796d8e8a9eb041c0a4644ca231c43c7a2e (Git blob bytes). Use Electron2D Parallax. No implementation trigger.",
+      "godot": [
+        "class:ParallaxLayer",
+        "ParallaxLayer::property:motion_mirroring",
+        "ParallaxLayer::property:motion_offset",
+        "ParallaxLayer::property:motion_scale",
+        "ParallaxLayer::property:physics_interpolation_mode"
+      ]
+    },
+    {
+      "state": "Implemented",
       "reason": "ADR 0016/0095: exact borrowed object identity; absent lookup throws KeyNotFoundException instead of logging and returning null in the pinned implementation. The registry retains names after caller disposal. The generic overload checks C# assignability while preserving the same identity and absent-name behavior.",
       "godot": [
         "Engine::method:get_singleton(StringName:)"
@@ -8972,7 +9027,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0016/0095: all 18 permanent entries reject removal, matching the pinned user-created guard. Missing and permanent names throw managed exceptions. Removing a user name leaves the object and its other registrations with their owner.",
+      "reason": "ADR 0016/0095: all 19 permanent entries reject removal, matching the pinned user-created guard. Missing and permanent names throw managed exceptions. Removing a user name leaves the object and its other registrations with their owner.",
       "godot": [
         "Engine::method:unregister_singleton(StringName:)"
       ]
@@ -9157,6 +9212,44 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0023: live typed metadata exposes captured state and the immediate base for in-memory and archived scenes. Concrete scenes return an absent base. Repacking and archive reload retain the documented view and file ownership."
+    },
+    {
+      "godot": ["class:SceneState"],
+      "state": "Implemented",
+      "reason": "ADR 0023: PackedScene creates a live read-only ElectronObject view with managed disposal. Each query reads one published state. A retained view preserves the final data and its file graph after source disposal."
+    },
+    {
+      "godot": [
+        "SceneState::method:get_node_name(int:)",
+        "SceneState::method:get_node_path(int:,bool:)",
+        "SceneState::method:get_node_owner_path(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0023: zero-based records expose captured names and root-relative string paths. The root is '.', an absent parent or owner is empty, and forParent defaults to false. Indexed queries throw on invalid indices."
+    },
+    {
+      "godot": ["SceneState::method:get_node_groups(int:)"],
+      "state": "Implemented",
+      "reason": "ADR 0023: persistent group names are captured in ordinal order, with only added groups stored for inherited overrides. The C# read-only list preserves stored order and cannot mutate the packed record."
+    },
+    {
+      "godot": ["SceneState::method:get_node_count()"],
+      "state": "Implemented",
+      "reason": "ADR 0023: zero for empty data, otherwise the count of stored records in capture order, excluding implicit linked content."
+    },
+    {
+      "godot": ["SceneState::method:get_path()"],
+      "state": "Implemented",
+      "reason": "ADR 0023: observes the resource path through path updates and archive loading, with the last committed path retained after source disposal."
+    },
+    {
+      "godot": [
+        "SceneState::method:get_node_property_count(int:)",
+        "SceneState::method:get_node_property_name(int:,int:)",
+        "SceneState::method:get_node_property_value(int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0023: stored descriptor and deferred values expose zero-based names and values in application order. Typed reads return compatible values, copy array containers, borrow resources and project node references as paths. Bad indices and incompatible types raise C# exceptions."
     },
     {
       "godot": [
@@ -10462,42 +10555,6 @@
     },
     {
       "state": "Partial",
-      "reason": "Legacy canvas layer and direct spatial children follow pinned parallax_background.cpp/parallax_layer.cpp camera scrolling, zoom policy, mirroring and scene storage. Managed and native root Window checks pass. Editor behavior, independent/offscreen viewports and full canvas interpolation are missing or unaudited; no complete type parity is claimed.",
-      "godot": [
-        "class:ParallaxBackground",
-        "class:ParallaxLayer"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "Pinned camera movement and setter timing are implemented with typed finite validation; LegacyParallaxTests checks defaults, manual changes, zoom policy and packed state. Independent viewport and editor behavior remain unaudited.",
-      "godot": [
-        "ParallaxBackground::property:scroll_base_offset",
-        "ParallaxBackground::property:scroll_base_scale",
-        "ParallaxBackground::property:scroll_ignore_camera_zoom",
-        "ParallaxBackground::property:scroll_limit_begin",
-        "ParallaxBackground::property:scroll_limit_end",
-        "ParallaxBackground::property:scroll_offset"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "Pinned motion setters and one-extra-copy mirrored canvas submission execute through retained drawing; managed state and Linux dummy/Wayland pixels cover camera motion, original scale and packing. Editor and independent viewport behavior remain unaudited.",
-      "godot": [
-        "ParallaxLayer::property:motion_mirroring",
-        "ParallaxLayer::property:motion_offset",
-        "ParallaxLayer::property:motion_scale"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: implement Node.PhysicsInterpolationMode and render-pose interpolation in the scene and canvas backends; ParallaxLayer must default the inherited policy to Off. No inert per-type property is exposed (ADR 0008).",
-      "godot": [
-        "ParallaxLayer::property:physics_interpolation_mode"
-      ]
-    },
-    {
-      "state": "Partial",
       "reason": "The complete runtime countdown contract is executable and audited against pinned timer.cpp/timer.h under ADR 0036. Edited-scene autostart suppression requires the absent editor runtime; inherited Node gaps remain on Node coverage.",
       "godot": [
         "class:Timer",
@@ -10635,15 +10692,22 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Polygon : Entity draws filled, inverted, colored and textured contours and stores typed scene state on tested Linux backends. Antialiasing and skeletal deformation remain separate member gaps under ADR 0004. Weighted Skeleton/Bone skinning now executes; antialiasing and the stated inversion/geometry parity limits remain.",
+      "state": "Implemented",
+      "reason": "Polygon : Entity implements all applicable own runtime properties and methods for geometry, texture, edge smoothing and borrowed skeletal deformation under ADRs 0004/0008/0028/0092. Contour, UV, pivot and weight editing tools belong to the separate editor under ADR 0027. Platform qualification follows ADR 0021.",
       "godot": [
         "class:Polygon2D"
       ]
     },
     {
+      "state": "Implemented",
+      "reason": "ADR 0004 maps the copied vertex array to Vertices because C# forbids a member named Polygon on Polygon. Finite local vertices feed default and indexed contours, inversion, retained skin deformation and typed scene storage.",
+      "godot": [
+        "Polygon2D::property:polygon"
+      ]
+    },
+    {
       "state": "Partial",
-      "reason": "Parallax : Entity executes camera-relative scroll, limits, autoscroll, repeated descendant drawing and packed configuration on Linux Wayland compatibility/GPU. The inherited physics-interpolation override awaits the Node interpolation slice; other platforms remain unverified (ADRs 0004/0008/0028).",
+      "reason": "Parallax : Entity supports camera-relative scroll, limits, autoscroll, retained descendant repetition and packed configuration (ADRs 0004/0008/0028). Native pixels pass on Windows x64 (Compatibility/D3D11 and GPU/D3D12), Linux Wayland (Compatibility and GPU) and SDL dummy (software Compatibility). This is root-window evidence. Other platforms, nested/offscreen viewports, high repeat counts, combined physics interpolation and editor behavior remain open.",
       "godot": [
         "class:Parallax2D"
       ]
@@ -10671,21 +10735,20 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: implement Node.PhysicsInterpolationMode and render-pose interpolation across the scene and both canvas backends; Parallax defaults this inherited policy to Off when that first interpolation slice lands (ADR 0008). No inert per-type property is exposed.",
+      "state": "Partial",
+      "reason": "Parallax inherits the implemented Node.PhysicsInterpolationMode and defaults to Inherit. The pinned Parallax2D default is Off. The interaction with parallax scrolling and repetition remains unverified.",
       "godot": [
         "Parallax2D::property:physics_interpolation_mode"
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Executable retained contour rendering, copied typed state and Linux pixel checks exist. Pinned polygon_2d.cpp was audited for defaults, UV/color fallback, index contours and inverted fill; antialiasing and skeleton integration remain separate, and edge-case geometry parity remains to audit.",
+      "state": "Implemented",
+      "reason": "Pinned Polygon draw contract: explicit indices address all vertices, default and inverted contours omit trailing internal vertices, and UV and color channels use the complete selected draw count. The UV transform rotates, adds offset, scales output axes and normalizes by texture size. Typed copy, scene storage and finite/invalid-index guards follow ADR 0004. Internal-count edits request redraw and invalidate the relevant prepared skin selection.",
       "godot": [
         "Polygon2D::property:color",
         "Polygon2D::property:internal_vertex_count",
         "Polygon2D::property:offset",
         "Polygon2D::property:polygons",
-        "Polygon2D::property:texture",
         "Polygon2D::property:texture_offset",
         "Polygon2D::property:texture_rotation",
         "Polygon2D::property:texture_scale",
@@ -10694,8 +10757,15 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "InvertEnabled and InvertBorder use the pinned seven-point outer-contour bridge and retained polygon triangulation, ignoring explicit index contours during inversion. Managed square/concave and winding checks, packed-state checks and Linux native square pixels execute; degenerate/self-intersecting geometry and other backends need parity audit.",
+      "state": "Implemented",
+      "reason": "The borrowed texture supplies logical dimensions and sampled pixels; an atlas uses the full backing image through the node path. Changed invalidates retained geometry, reassignment and disposal remove the subscription, and scene storage follows the normal resource policy. Invalid dimensions and disposed textures use typed errors under ADR 0004.",
+      "godot": [
+        "Polygon2D::property:texture"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "InvertEnabled and InvertBorder use the pinned seven-point bridge to the enlarged rectangle, suppress explicit index contours and skinning, and persist typed state. Both windings and concave contours use retained triangulation; zero signed area, unexpandable borders and triangulation failure report typed errors. Prepared redraw reuses the bridge storage.",
       "godot": [
         "Polygon2D::property:invert_border",
         "Polygon2D::property:invert_enabled"

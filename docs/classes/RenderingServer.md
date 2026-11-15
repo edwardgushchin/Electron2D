@@ -113,7 +113,7 @@ Renders the active root Window's retained CanvasItem commands. Engine.Run create
 
 The service supports rectangles, lines, polygons, short primitives and textures using source-alpha blending into an RGBA8 framebuffer. Shader materials require GPU rendering. Startup settings select `gpu` or `compatibility` and whether GPU initialization may fall back. This does not implement live device migration or recovery.
 
-CanvasLayer grouping precedes item Z/Y ordering. Default-canvas and layer roots use their own viewport transform; retained commands survive layer motion, camera following and order changes. [Parallax](Parallax.md) and [ParallaxLayer](ParallaxLayer.md) repeat descendant retained commands within that ordering without duplicating nodes or draw callbacks. Transform snapping prepares canvas translations separately from item translations. See [canvas layers](../components/canvas-rendering.md#canvas-layers).
+CanvasLayer grouping precedes item Z/Y ordering. Default-canvas and layer roots use their own viewport transform; retained commands survive layer motion, camera following and order changes. [Parallax](Parallax.md) repeats descendant retained commands within that ordering without duplicating nodes or draw callbacks. Transform snapping prepares canvas translations separately from item translations. See [canvas layers](../components/canvas-rendering.md#canvas-layers).
 
 When the scene tree enables physics interpolation, the renderer composes previous/current canvas-item transforms and the current camera's viewport transform with the Engine's fractional tick progress. Both GPU and compatibility backends receive the same prepared vertices. Logical node, viewport and input coordinates are never rewritten for rendering. A first tick or explicit reset presents the current pose.
 
@@ -1391,7 +1391,7 @@ Margins are finite nonnegative screen pixels. fitEmpty synthesizes a rectangle a
 
 Retained screen snapshots can be configured through RenderingServer.CanvasItemSetCopyToBackBuffer on live item identities. BackBufferCopy source assignments republish the authored policy; renderer-only settings stay outside scene getters/storage. See [retained copy contract](../components/canvas-rendering.md#retained-backbuffer-copy-settings).
 
-[UInt16 image texture sources](../components/integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
+[UInt16 image texture sources](../components/integer-textures.md) retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility. Direct3D 12 borrows the typed renderer allocation for raw transfers and reports `Sampling` when the device confirms Shader Model 6.7 and Advanced Texture Operations.
 
 ## Viewport screen attachment
 

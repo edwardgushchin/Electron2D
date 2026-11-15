@@ -1,6 +1,6 @@
 # DirAccess
 
-Last updated: 2026-10-29
+Last updated: 2026-11-15
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -26,6 +26,8 @@ Instances retain one current directory and one access scope. Relative paths reso
 `res://` and `user://` instances cannot leave their configured root or switch scopes. Operations are
 serialized per instance, may block, and are unsuitable for real-time callbacks.
 
+On `res://` paths, `FileExists`, `DirExists`, `DirExistsAbsolute`, `IsLink` and `ReadLink` each select the current mounted entry, a mounted file ancestor or the physical path from one view of the mounts. A mounted file or directory supplies the entry kind and has no link target. A mounted file ancestor hides all physical metadata below it. Each call can observe a different mount after a replacement. Physical metadata is read after the mount lookup and follows the host filesystem's usual race semantics.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
@@ -47,7 +49,7 @@ foreach (string fileName in directory.GetFiles())
 
 | Member | Description |
 | --- | --- |
-| [`public static DirAccess Open(string path)`](#m-electron2d-diraccess-open-system-string) | Opens an existing ordinary or directory-backed virtual directory. |
+| [`public static DirAccess Open(string path)`](#m-electron2d-diraccess-open-system-string) | Opens an existing filesystem, user-data, or mounted or directory-backed resource directory. |
 | [`public static DirAccess CreateTemp(string prefix = "", bool keep = false)`](#m-electron2d-diraccess-createtemp-system-string-system-boolean) | Creates and opens a uniquely named temporary directory. |
 | [`public void ListDirBegin()`](#m-electron2d-diraccess-listdirbegin) | Starts a new unsorted directory listing and closes any previous listing. |
 | [`public string GetNext()`](#m-electron2d-diraccess-getnext) | Returns the next visible name from the active directory listing. |
@@ -94,7 +96,7 @@ foreach (string fileName in directory.GetFiles())
 Gets or sets whether hidden entries are returned by directory enumeration.
 
 **Value:** `false` by default. Dot-prefixed names are hidden on Unix-family platforms; the hidden
-filesystem attribute is honored on every platform.
+filesystem attribute is honored on every platform. Dot-prefixed mounted resource names are hidden.
 
 **Exceptions**
 
@@ -120,7 +122,7 @@ Gets or sets whether the navigational entries `.` and `..` are enumerated.
 <a id="m-electron2d-diraccess-open-system-string"></a>
 ### `public static DirAccess Open(string path)`
 
-Opens an existing ordinary or directory-backed virtual directory.
+Opens an existing filesystem, user-data, or mounted or directory-backed resource directory.
 
 **Parameters**
 
@@ -171,8 +173,7 @@ Starts a new unsorted directory listing and closes any previous listing.
 - `UnauthorizedAccessException`: The caller lacks directory-listing access.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** The visible entry metadata is captured when this method returns. Entries can subsequently disappear or change;
-use [`DirAccess.GetFiles`](DirAccess.md#m-electron2d-diraccess-getfiles) or [`DirAccess.GetDirectories`](DirAccess.md#m-electron2d-diraccess-getdirectories) for sorted snapshots.
+**Remarks:** Entry names and kinds are captured at begin. Filters apply as entries are read. If capture fails, the previous listing and current entry remain available. Use [`DirAccess.GetFiles`](DirAccess.md#m-electron2d-diraccess-getfiles) or [`DirAccess.GetDirectories`](DirAccess.md#m-electron2d-diraccess-getdirectories) for sorted snapshots that leave the cursor intact.
 
 <a id="m-electron2d-diraccess-getnext"></a>
 ### `public string GetNext()`
@@ -364,7 +365,7 @@ Changes the current directory within this instance's access scope.
 - `NotSupportedException`: `path` uses an unsupported virtual scheme.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** A successful change closes an active listing.
+**Remarks:** Success closes the listing. Failure preserves the current directory and listing.
 
 <a id="m-electron2d-diraccess-getcurrentdir-system-boolean"></a>
 ### `public string GetCurrentDir(bool includeDrive = true)`
@@ -381,7 +382,7 @@ Gets the current directory in this instance's original access scope.
 
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** `includeDrive` affects only native Windows-style roots.
+**Remarks:** `includeDrive` affects only physical Windows paths with a drive letter.
 
 <a id="m-electron2d-diraccess-makedir-system-string"></a>
 ### `public void MakeDir(string path)`
@@ -680,6 +681,7 @@ Reports whether a path identifies a symbolic link or platform reparse point.
 
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: `path` is empty or invalid.
+- `IO.FileNotFoundException`: A mounted file masks this descendant on a Unix link backend.
 - `UnauthorizedAccessException`: The path escapes a virtual root or access is denied.
 - `InvalidOperationException`: `path` belongs to another access scope.
 - `NotSupportedException`: `path` uses an unsupported virtual scheme.
@@ -868,13 +870,14 @@ Filesystem state remains external and can change between validation and mutation
 - Reuses `UnixPermissionFlags` and `FileAccess.SetUnixPermissions` for optional copy permissions.
 - Uses `System.IO` for paths, directory/file mutations, links, temporary ownership, ordinary mount metadata, and Windows logical drives.
 - Uses native Win32/NT metadata for filesystem identity, directory case flags, and UNC capacity; Unix `stat` and Linux file flags for identity and case folding; and macOS Foundation/AppKit metadata for mounted volumes and file-package classification.
-- Has no SDL, Scene, renderer, asset loader, pack mount, scripting, editor, physics, or external package dependency.
+- Shares mounted path resolution with `FileAccess` for entry attributes and link queries.
+- Has no SDL, Scene, renderer, asset loader, scripting, editor, physics, or external package dependency.
 
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` covers null/empty/missing/relative/unknown paths, ordinary and virtual scopes, lexical traversal, current-directory changes, hidden/navigational filters, unspecified streaming versus sorted snapshots, concurrent listing consumption, single/recursive creation, copy overwrite, pre-mutation permission validation and self-copy rejection, instance/static file and directory rename with failed-move destination restoration, nonrecursive removal, relative and dangling symlink targets, hard-link and symlink equivalence on Linux, native case metadata, drive/capacity/filesystem queries, absolute helpers, temporary keep/delete ownership, current-directory changes before temporary disposal, and disposed access.
 
-The executable evidence is Linux-only. Windows/macOS link, file-identity, drive, filesystem-type, rename, case, permission, and path-root behavior are compiled but not native-host verified. Android/iOS identity code is compiled but not device-verified; their link and drive-enumeration APIs intentionally throw until platform host/storage integration is implemented. Web browser directory/storage behavior is unimplemented and unverified; its capability boundary belongs to the first Web host slice. Packed/exported resources remain absent.
+The `DIR_PACK_METADATA` profile exercises mounted file and directory replacement over a physical link, a masked descendant, and physical fallback. It covers Windows x64 NTFS junctions and Linux x64 symbolic links. Below a mounted file, `IsLink` returns `false` on Windows and throws `FileNotFoundException` on Unix link backends. `ReadLink` throws `FileNotFoundException` on both. Other Windows link types and macOS link behavior require native-host verification. Android/iOS identity code is compiled but awaits device verification; their link and drive-enumeration APIs throw until platform host/storage integration is implemented. Web browser directory/storage behavior belongs to the first Web host slice.
 
 ## Decisions
 

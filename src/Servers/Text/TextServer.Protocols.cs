@@ -102,7 +102,10 @@ public abstract partial class TextServer
             _call = owner.EnterImplementation(); var entered = false;
             try
             {
-                if (!Enum.IsDefined(parser)) throw new ArgumentOutOfRangeException(nameof(parser));
+                // Avoid rebuilding runtime enum metadata during shaping after a collection.
+                if (parser is not (StructuredTextParser.Default or StructuredTextParser.URI or StructuredTextParser.File or
+                    StructuredTextParser.Email or StructuredTextParser.List or StructuredTextParser.Custom))
+                    throw new ArgumentOutOfRangeException(nameof(parser));
                 ArgumentNullException.ThrowIfNull(options); NativeTextBreak.ValidateString(text);
                 for (var i = 0; i < options.Count; i++) NativeTextBreak.ValidateString(options[i]);
                 if (_parserDepth >= Font.MaximumReadAttempts) throw new InvalidOperationException("Structured parser reentry exceeds sixty-four levels.");

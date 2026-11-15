@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using Electron2D;
 using FileAccess = Electron2D.FileAccess;
@@ -109,16 +110,55 @@ internal static class ByteBufferTests
         Check(ByteBuffer.GetStringFromUTF32(Encoding.UTF32.GetBytes(text)) == text, "UTF-32 LE.");
         Check(ByteBuffer.GetStringFromUTF32(new byte[] { 0, 0, 0xFE, 0xFF }.Concat(new UTF32Encoding(true, false, true).GetBytes(text)).ToArray()) == text, "UTF-32 BE BOM.");
         Check(ByteBuffer.GetStringFromWChar((OperatingSystem.IsWindows() ? Encoding.Unicode : Encoding.UTF32).GetBytes(text)) == text, "Native wide characters.");
-        Check(ByteBuffer.GetStringFromMultibyteChar([0xCF, 0xF0, 0xE8, 0xE2, 0xE5, 0xF2], "windows-1251") == "Привет", "Named legacy code page.");
-        Check(ByteBuffer.GetStringFromMultibyteChar([65]) == "A" && ByteBuffer.GetStringFromMultibyteChar([], "utf-8") == "", "Default and empty text.");
-        Reject<ArgumentException>(() => ByteBuffer.GetStringFromMultibyteChar([65], "unavailable-e2d-encoding"));
-        Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromMultibyteChar([0xC0], "utf-8"));
+        MultibyteText();
         Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromUTF8([0xC0, 0x80]));
         Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromUTF16([0]));
         Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromUTF16([0, 0xD8]));
         Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromUTF32([0, 0, 0x11, 0]));
         Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromUTF32([0, 0, 0]));
         Check(ByteBuffer.GetStringFromUTF8([]) == "" && ByteBuffer.GetStringFromUTF16([]) == "" && ByteBuffer.GetStringFromUTF32([]) == "" && ByteBuffer.HexEncode([]) == "", "Empty text.");
+    }
+    private static void MultibyteText()
+    {
+        ReadOnlySpan<byte> cyrillic = [0xCF, 0xF0, 0xE8, 0xE2, 0xE5, 0xF2];
+        bool registered = Encoding.GetEncodings().Any(codec => codec.CodePage == 1251);
+        Check(ByteBuffer.GetStringFromMultibyteChar(cyrillic, "windows-1251") == "Привет", "Named Windows-1251.");
+        Check(ByteBuffer.GetStringFromMultibyteChar([0x82, 0xA0], "shift_jis") == "あ", "Named Shift JIS.");
+        Check(ByteBuffer.GetStringFromMultibyteChar("Привет"u8, "utf-8") == "Привет", "Named UTF-8.");
+        Check(ByteBuffer.GetStringFromMultibyteChar([], "utf-8") == "", "Empty named text.");
+        Reject<ArgumentNullException>(() => ByteBuffer.GetStringFromMultibyteChar([], null!));
+        Reject<ArgumentException>(() => ByteBuffer.GetStringFromMultibyteChar([], "unavailable-e2d-encoding"));
+        Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromMultibyteChar([0xC0], "utf-8"));
+        Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromMultibyteChar([0x82], "shift_jis"));
+
+        var originalCulture = CultureInfo.CurrentCulture;
+        try
+        {
+            CheckDefault("ru-RU", cyrillic, "Привет");
+            CheckDefault("en-US", [0x80], "€");
+            CheckDefault("ja-JP", [0x82, 0xA0], "あ");
+            Reject<DecoderFallbackException>(() => ByteBuffer.GetStringFromMultibyteChar([0x82], ""));
+            if (OperatingSystem.IsWindows())
+            {
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("hi-IN");
+                Reject<ArgumentException>(() => ByteBuffer.GetStringFromMultibyteChar([]));
+            }
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = originalCulture;
+        }
+        Check(ReferenceEquals(CultureInfo.CurrentCulture, originalCulture), "Multibyte checks restore the caller's culture.");
+        Check(Encoding.GetEncodings().Any(codec => codec.CodePage == 1251) == registered, "Multibyte decoding leaves the process registry unchanged.");
+        Console.WriteLine($"ByteBuffer multibyte: {(OperatingSystem.IsWindows() ? "Windows-1251/1252, Shift JIS and a culture without ANSI" : "UTF-8 across ru-RU, en-US and ja-JP")}, named codecs, empty/malformed input, process registry and culture restoration passed.");
+
+        static void CheckDefault(string culture, ReadOnlySpan<byte> ansi, string expected)
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+            bool windows = OperatingSystem.IsWindows();
+            Check(ByteBuffer.GetStringFromMultibyteChar(windows ? ansi : "Привет"u8) == (windows ? expected : "Привет"), $"Default encoding for {culture}.");
+            Check(ByteBuffer.GetStringFromMultibyteChar([], "") == "", $"Empty default text for {culture}.");
+        }
     }
     private static void Arrays()
     {

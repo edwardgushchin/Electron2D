@@ -2,12 +2,37 @@ src/Vendor/SDL3-CS/** -whitespace
 src/Vendor/Clipper2/** -whitespace
 src/Vendor/Box2D.NET/** -whitespace
 src/Vendor/UnicodeText/** -whitespace
-src/Vendor/ICU/** -whitespace
+src/Vendor/ICU/** -text -whitespace
 src/Servers/Rendering/Shaders/Includes/smaa/SMAA.h -text -whitespace
 licence/SMAA-LICENSE.txt -text
-licence/** -whitespace
+licence/** -text -whitespace
 tests/Electron2D.Tests/Fixtures/Fonts/LICENSE.* -whitespace
-src/Vendor/FAudio/** -whitespace
+src/Vendor/FAudio/** -text -whitespace
 src/Vendor/QOA/** -whitespace
 src/Scene/Theme/Icons/*.svg text eol=lf
+# Build entry points and byte-sensitive inputs must survive Windows checkout.
+tools/**/*.sh text eol=lf
+tools/shaders/*.py text eol=lf
+tools/shaders/toolchain.lock.json text eol=lf
+docs/coverage/data/*.json text eol=lf
+
 tools/**/*.gd -linguist-detectable
+docs/coverage/data/electron2d.json text eol=lf
+
+src/Vendor/PCRE2/** -text
+src/Vendor/libdatachannel/** -text
+src/Vendor/MSDFGen/** -text
+src/Vendor/ENet/** -text
+src/Vendor/FastLZ/** -text
+src/Vendor/meshoptimizer/** -text
+src/Vendor/BCn/** text=auto eol=lf
+src/Vendor/Toolkit/** text=auto eol=lf
+licence/BCnEncoder-LICENSE.txt text eol=lf
+licence/BufferTools-LICENSE.txt text eol=lf
+tools/native/** text=auto eol=lf
+tools/*-native/** text=auto eol=lf
+tools/*-native.targets text eol=lf
+tools/native-package.* text eol=lf
+tools/check_native_publish.py text eol=lf
+src/Servers/Text/Native/** text=auto eol=lf
+.github/workflows/native.yml text eol=lf

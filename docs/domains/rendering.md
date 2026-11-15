@@ -78,7 +78,7 @@ RenderingDevice [native resource labels](../components/local-compute.md#native-r
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-15
 
 [Dynamic raster state](../components/depth-stencil-state.md#dynamic-raster-state) changes line width, depth bias and stored-depth bounds within a Vulkan draw list.
 
@@ -462,6 +462,8 @@ Type 1 PFB/PFA outlines and paired PFM/AFM native metrics now execute through Fo
 
 [BC/DDS images](../components/image-bcn.md) now execute S3TC/BPTC CPU authoring, exact DDS/raw/full-mip source archives, native BC1–BC7 GPU textures/arrays and decoded Compatibility sampling. Imported RenderingDevice texture descriptors use the actual native BC format, with exact block readback and existing ownership. Compatibility BC6 retains its driver-dependent HDR precision gate; the exercised driver rejects it. [ETC/EAC/ASTC decoding](../components/image-block-decoding.md) now supplies prepared ordinary/array sampling, preserving signed/HDR precision. UInt16 sources execute raw unsigned GPU sampling; foreign-platform/native allocator acceptance remains separate.
 
+[BC3 device readback](../components/local-compute.md#device-images-and-samplers) on Direct3D 12 preserves exact blocks at each mip edge for both owned and renderer-borrowed textures.
+
 ## Themed numeric progress
 
 [ProgressBar](../classes/ProgressBar.md) connects shared Range state with actual background/fill styles, centered localized percentage text and outline, four physical/RTL directions and clipped indeterminate animation. The existing EditedSceneRoot selection scopes static or animated authoring preview. Exact scene factories restore settings in a fresh process. GPU/Compatibility pixel masks and 64 prepared active frames verify current Linux rendering and zero managed owner-thread allocation; authored Theme archive, native semantics and foreign platforms retain their separate dependencies. See [ADR 0080](../decisions/rendering.md#adr-0080).
@@ -577,7 +579,7 @@ GPU thin canvas strokes retain native line-list/line-strip topology, including d
 
 RenderingServer.HasOSFeature reads each active backend’s immutable native ordinary-image compression snapshot. GPU startup captures complete BC family support using its already selected device, compatibility exposes no native compressed-upload family, and OS.HasFeature observes session publication/retirement. See [host platform queries](../components/host-platform.md).
 
-[Explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state) connects typed RDSamplerState authoring to canvas, particles and writable-image blits, including engine-owned, global, layered and indexed sampled roles. Shader archives, compatible reload and caller-owned RenderingServer mutation preserve the same copied contract. Shared sampler preparation retains the managed zero-allocation boundary; backend-specific unsupported modes fail explicitly.
+[Explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state) connects typed RDSamplerState authoring to canvas, particles and writable-image blits, including engine-owned, global, layered and indexed sampled roles. Shader archives, compatible reload and caller-owned RenderingServer mutation preserve the same copied contract. Shared sampler preparation retains the managed zero-allocation boundary. [Sampler filtering and LOD](../components/local-compute.md#sampler-filtering-and-lod) describes native bias limits, anisotropy capability selection and image binding restrictions.
 
 [Retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode) connects the typed item setter to real MSDF image decoding across ordinary commands, meshes, instances and particles. Renderer-session ownership, explicit-command precedence, material composition, zero-managed-byte prepared frames and unsupported backend gates are executable; scalar SDF images are a separate domain.
 

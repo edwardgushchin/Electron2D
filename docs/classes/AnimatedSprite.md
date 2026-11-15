@@ -1,6 +1,6 @@
 # AnimatedSprite
 
-Last updated: 2026-10-27
+Last updated: 2026-11-15
 
 **Inherits:** [Entity](Entity.md), [CanvasItem](CanvasItem.md), [Node](Node.md)
 
@@ -17,6 +17,8 @@ Playback uses internal idle processing, independently of ProcessEnabled and visi
 Attached mutations require the scene owner thread. Library Changed on that thread reconciles the current index/progress and redraw immediately. Worker Changed marks an atomic pending update: the next owner Frame/FrameProgress read or enter/ready/internal-process/draw notification reconciles it. For an attached node, no scene event runs on that worker. Detached library notifications run on the mutating thread. Getters on a different thread do not flush pending work and are not a synchronization mechanism. Resource disposal remains caller-coordinated. Scene capture may reject a pending reconciliation rather than mutating captured nodes.
 
 Events run synchronously in subscription order. Exceptions retain committed state and abort the operation. Play/Pause/Stop finally reconcile the internal scheduling flag with the final playback flag, including reentrant calls and throwing observers. Disposal during an event stops further playback access; borrowed resources survive node disposal. Callback Pause affects following process calls; the current time-consumption loop may still finish its remaining iterations, matching the playback contract below.
+
+An attached child [Control](Control.md) reads its anchor area from the current frame and offset. A missing frame supplies an empty rectangle. Centered and Offset edits raise ItemRectChanged and reflow the child.
 
 ## Example
 

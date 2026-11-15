@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Stores copied Vorbis packet audio and musical loop metadata.</summary>
 /// <remarks>Data replacement validates/decodes before committing. Prepared PCM snapshots are immutable;
-/// existing playback retains its captured samples. Consumers borrow this resource and own independent playbacks. Import prepares full mono/stereo PCM
+/// existing playback retains its captured samples. Consumers borrow this resource and own independent playbacks.
+/// Playback and generated samples use the first two encoded channels, with mono duplicated for stereo playback. Import prepares full PCM
 /// outside mixing; long assets therefore require proportionate managed storage.</remarks>
 public sealed class AudioStreamOggVorbis : AudioStream
 {
@@ -118,7 +119,16 @@ public sealed class AudioStreamOggVorbis : AudioStream
             var frames = _pcm.Samples.Length / _pcm.Channels;
             var begin = (int)Math.Clamp(_loopOffset * _pcm.Rate, 0, frames);
             if (_loop && begin == frames) throw new InvalidOperationException("The loop offset leaves no sample frames.");
-            return new(this, _pcm.Samples, _pcm.Channels, _pcm.Rate, _loop ? AudioLoopMode.Forward : AudioLoopMode.Disabled, begin, frames);
+            var samples = _pcm.Samples;
+            var channels = _pcm.Channels;
+            if (channels > 2)
+            {
+                samples = new float[frames * 2];
+                for (var frame = 0; frame < frames; frame++)
+                    _pcm.Samples.AsSpan(frame * channels, 2).CopyTo(samples.AsSpan(frame * 2, 2));
+                channels = 2;
+            }
+            return new(this, samples, channels, _pcm.Rate, _loop ? AudioLoopMode.Forward : AudioLoopMode.Disabled, begin, frames);
         }
     }
     /// <inheritdoc />

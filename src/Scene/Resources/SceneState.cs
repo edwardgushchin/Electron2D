@@ -7,6 +7,8 @@ namespace Electron2D;
 /// Instances are created by <see cref="PackedScene.GetState"/>. A live state object tracks every content and path
 /// transition of its source resource, while retaining its final snapshot if that resource is later disposed.
 /// A returned file-backed view retains its resource graph and must be disposed when finished.
+/// Releasing the last lease disposes the resources owned by that graph.
+/// Each query can run concurrently and reads one published state. Successive queries may see different states.
 /// </remarks>
 public sealed class SceneState : ElectronObject
 {
@@ -88,13 +90,14 @@ public sealed class SceneState : ElectronObject
         (uint)index < (uint)data.Connections.Length ? data.Connections[index] : throw new ArgumentOutOfRangeException(nameof(index));
 
     /// <summary>Gets the number of stored nodes.</summary>
-    /// <returns>Zero for an empty state; otherwise the captured node count.</returns>
+    /// <returns>The number of stored records in parent-first depth-first capture order; zero for an empty state.
+    /// Implicit linked or inherited nodes are not counted.</returns>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public int GetNodeCount() => Read(data => data.Nodes.Length);
 
     /// <summary>Gets the persistent groups stored for a node.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
-    /// <returns>An immutable group-name snapshot in ordinal order.</returns>
+    /// <returns>A read-only snapshot in stored order. Packing captures persistent group names in ordinal order.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public IReadOnlyList<string> GetNodeGroups(int nodeIndex) => ReadNode(nodeIndex).Groups;
@@ -129,7 +132,7 @@ public sealed class SceneState : ElectronObject
 
     /// <summary>Gets the path of a stored node's owner.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
-    /// <returns><c>.</c> for nodes owned by the root, or an empty string when no owner is stored.</returns>
+    /// <returns>The owner's root-relative path, <c>.</c> for a root owner, or an empty string when no owner is stored.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public string GetNodeOwnerPath(int nodeIndex) => ReadNode(nodeIndex).OwnerPath;
@@ -137,7 +140,7 @@ public sealed class SceneState : ElectronObject
     /// <summary>Gets a stored node path or its parent's path.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
     /// <param name="forParent"><see langword="true"/> to return the stored parent path.</param>
-    /// <returns>A relative scene path; the root is represented by <c>.</c>.</returns>
+    /// <returns>A root-relative path. The root's own path is <c>.</c> and its parent path is empty.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public string GetNodePath(int nodeIndex, bool forParent = false)
@@ -156,7 +159,7 @@ public sealed class SceneState : ElectronObject
     /// <summary>Gets the name of a stored node property.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
     /// <param name="propertyIndex">The zero-based property index.</param>
-    /// <returns>The property name.</returns>
+    /// <returns>The property name in stored application order.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Either index is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public string GetNodePropertyName(int nodeIndex, int propertyIndex) =>
@@ -175,7 +178,7 @@ public sealed class SceneState : ElectronObject
     /// <typeparam name="TValue">The requested result type.</typeparam>
     /// <param name="nodeIndex">The zero-based node index.</param>
     /// <param name="propertyIndex">The zero-based property index.</param>
-    /// <returns>The captured property value; stored arrays are copied on each read. For a stored node reference, request
+    /// <returns>The captured property value. Stored arrays are copied on each read and resources remain borrowed. For a stored node reference, request
     /// string to obtain its relative path, or an empty string for null. No original or instantiated node is returned.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Either index is outside the state.</exception>
     /// <exception cref="InvalidCastException">The captured value is not compatible with <typeparamref name="TValue"/>.</exception>
@@ -192,7 +195,7 @@ public sealed class SceneState : ElectronObject
 
     /// <summary>Gets a stored node's runtime type name.</summary>
     /// <param name="nodeIndex">The zero-based node index.</param>
-    /// <returns>The unqualified runtime type name for a fresh local node; empty for a linked root or reused override.</returns>
+    /// <returns>The unqualified runtime type name for a fresh local node; empty for a linked root, deferred placeholder, or reused override.</returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="nodeIndex"/> is outside the state.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>
     public string GetNodeType(int nodeIndex)

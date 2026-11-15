@@ -21,6 +21,10 @@ internal static partial class LinkedSceneTests
         level.SetEditableInstance(instance, true);
         ((Sprite)instance.GetNode("Visual")).Position = new(22, 23);
         packed.Pack(level);
+        var state = packed.GetState();
+        Check(state.GetNodeCount() == 3 && state.GetNodeOwnerPath(2) == "One" &&
+              state.GetNodeType(1) == "" && state.GetNodeType(2) == "",
+            "Linked and reused records have empty types, and an editable child retains its nonroot owner path.");
         using var overridden = packed.Instantiate();
         Check(((Sprite)overridden.GetNode("One/Visual")).Position == new Vector2(22, 23), "Editable instance state applies to reused template nodes.");
         Behavior();

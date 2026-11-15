@@ -194,6 +194,10 @@ namespace Electron2D.NVorbisBindings
 
             _block0Size = 1 << (int)packet.ReadBits(4);
             _block1Size = 1 << (int)packet.ReadBits(4);
+            if (!packet.ReadBit())
+            {
+                return false;
+            }
 
             if (NominalBitrate == 0 && UpperBitrate > 0 && LowerBitrate > 0)
             {
@@ -221,6 +225,11 @@ namespace Electron2D.NVorbisBindings
                 _comments[i] = ReadString(packet);
             }
 
+            if (!packet.ReadBit())
+            {
+                return false;
+            }
+
             _stats.AddPacket(-1, packet.BitsRead, packet.BitsRemaining, packet.ContainerOverheadBits);
 
             return true;
@@ -244,9 +253,15 @@ namespace Electron2D.NVorbisBindings
                 books[i].Init(packet, huffman);
             }
 
-            // Vorbis never used this feature, so we just skip the appropriate number of bits
+            // Vorbis I reserves these placeholders for time-domain transforms.
             var times = (int)packet.ReadBits(6) + 1;
-            packet.SkipBits(16 * times);
+            for (var i = 0; i < times; i++)
+            {
+                if (packet.ReadBits(16) != 0)
+                {
+                    throw new InvalidDataException("Setup header contains a nonzero time-domain transform.");
+                }
+            }
 
             // read the floors
             var floors = new IFloor[packet.ReadBits(6) + 1];

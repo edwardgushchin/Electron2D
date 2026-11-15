@@ -54,7 +54,7 @@ The stored model uses the Core typed resource-file producer for persistence. Cap
 
 ## Threading
 
-Packed state and live-state replacement are lock-serialized. Concurrent instantiations use immutable snapshots and factory identity tracking. `SceneState` supports concurrent reads. Resource path callbacks use the currently committed path rather than stale callback order.
+Packed state and live-state replacement are lock-serialized. Concurrent instantiations use immutable snapshots and factory identity tracking. Each `SceneState` query reads one published state. Successive queries can see different publications. The root path is `.` and absent parents and owners use empty strings. Groups are read-only. Property queries copy array containers and borrow resources. Resource path callbacks read the currently committed path.
 
 User factories, descriptor delegates, resource copy/setup callbacks, node notifications, and events execute synchronously on the initiating thread. Attached-node capture must run on the tree owner thread. Detached derived state and callback code require caller coordination. Packing and instantiation are not real-time or allocation-free paths.
 

@@ -7,15 +7,15 @@ internal sealed class CanvasSkeletonSkin
     private float[] _weights = [];
     private Vector2[] _positions = [];
     private RID _skeleton;
-    private int _count;
+    private int _count, _inputLength;
     private ulong _revision = ulong.MaxValue, _setup, _path;
-    internal void Set(Polygon owner, ReadOnlySpan<int> source, int count)
+    internal void Set(Polygon owner, ReadOnlySpan<int> source, int count, int inputLength)
     {
-        var changed = _owner is null || !_owner.TryGetTarget(out var previous) || !ReferenceEquals(previous, owner) || _count != count;
+        var changed = _owner is null || !_owner.TryGetTarget(out var previous) || !ReferenceEquals(previous, owner) || _count != count || _inputLength != inputLength;
         if (_owner is null) _owner = new(owner); else _owner.SetTarget(owner);
         if (_source.Length < count) Array.Resize(ref _source, count);
         for (var i = 0; i < count; i++) { var index = source.IsEmpty ? i : source[i]; changed |= _source[i] != index; _source[i] = index; }
-        _count = count; if (changed) _revision = ulong.MaxValue;
+        _count = count; _inputLength = inputLength; if (changed) _revision = ulong.MaxValue;
     }
     internal bool Prepare(CanvasVertex[] vertices, int count)
     {
@@ -43,7 +43,7 @@ internal sealed class CanvasSkeletonSkin
         var length = checked(count * 4); if (_indices.Length < length) Array.Resize(ref _indices, length); if (_weights.Length < length) Array.Resize(ref _weights, length); Array.Clear(_weights, 0, length);
         for (var record = 0; record < owner.GetBoneCount(); record++)
         {
-            var boneData = owner.SkinRecord(record); if (boneData.Weights.Length != owner.SkinInputLength || skeleton.GetNodeOrNull(boneData.Path) is not Bone bone || !ReferenceEquals(bone.SkeletonOwner, skeleton)) continue; var index = bone.GetIndexInSkeleton(); if (index < 0) continue;
+            var boneData = owner.SkinRecord(record); if (boneData.Weights.Length != _inputLength || skeleton.GetNodeOrNull(boneData.Path) is not Bone bone || !ReferenceEquals(bone.SkeletonOwner, skeleton)) continue; var index = bone.GetIndexInSkeleton(); if (index < 0) continue;
             for (var vertex = 0; vertex < count; vertex++)
             {
                 var weight = boneData.Weights[_source[vertex]]; if (weight <= 0) continue;

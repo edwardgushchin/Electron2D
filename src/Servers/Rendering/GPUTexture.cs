@@ -38,12 +38,14 @@ internal sealed unsafe class GPUTexture : IDisposable
             Image.Format.Rgba16I => SDL.GPUTextureFormat.R16G16B16A16Uint,
             _ => SDL.GPUTextureFormat.R32G32B32A32Float
         };
-        if (!SDL.GPUTextureSupportsFormat(_device, format, type, SDL.GPUTextureUsageFlags.Sampler))
-            throw new NotSupportedException($"The active GPU backend cannot sample texture format {pixels.Source.Format}.");
+        var usage = SampledUsage(_device, format, SDL.GPUTextureUsageFlags.Sampler);
+        if (!SDL.GPUTextureSupportsFormat(_device, format, type, usage))
+            throw new NotSupportedException($"The active GPU backend cannot create a shader-readable texture for {pixels.Source.Format}.");
         NativeTextureFormat = format;
         _transferBytes = _blockUpload ? array ? pixels.Source.Data.Length * layers : pixels.Source.Data.Length : bytes;
-        var usage = SDL.GPUTextureUsageFlags.Sampler;
-        DeviceUsage = RenderingDevice.TextureUsageBits.Sampling | RenderingDevice.TextureUsageBits.CanCopyFrom | RenderingDevice.TextureUsageBits.CanCopyTo | RenderingDevice.TextureUsageBits.CanUpdate;
+        DeviceUsage = RenderingDevice.TextureUsageBits.CanCopyFrom | RenderingDevice.TextureUsageBits.CanCopyTo | RenderingDevice.TextureUsageBits.CanUpdate;
+        if (usage == SDL.GPUTextureUsageFlags.Sampler || ShaderCompiler.D3D12IntegerSampling(_device) == true)
+            DeviceUsage |= RenderingDevice.TextureUsageBits.Sampling;
         var storage = SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
         if (SDL.GPUTextureSupportsFormat(_device, format, type, usage | storage)) { usage |= storage; DeviceUsage |= RenderingDevice.TextureUsageBits.Storage; }
         _nativeUsage = usage;
@@ -57,6 +59,19 @@ internal sealed unsafe class GPUTexture : IDisposable
             _transfer = new RenderHandle(SDL.CreateGPUTransferBuffer(_device, in transfer), h => SDL.ReleaseGPUTransferBuffer(_device, h), device);
         }
         catch { _texture.Dispose(); throw; }
+    }
+
+    internal static bool UsesD3D12IntegerSRV(nint device, SDL.GPUTextureFormat format) =>
+        format is >= SDL.GPUTextureFormat.R8Uint and <= SDL.GPUTextureFormat.R32G32B32A32Int &&
+        SDL.GetGPUDeviceDriver(device) == "direct3d12";
+
+    internal static SDL.GPUTextureUsageFlags SampledUsage(nint device, SDL.GPUTextureFormat format, SDL.GPUTextureUsageFlags usage)
+    {
+        // SDL's Sampler query requires SHADER_SAMPLE. On D3D12 the graphics storage-read
+        // role creates the same typed SRV and keeps it in ALL_SHADER_RESOURCE.
+        if ((usage & SDL.GPUTextureUsageFlags.Sampler) != 0 && UsesD3D12IntegerSRV(device, format))
+            return (usage & ~SDL.GPUTextureUsageFlags.Sampler) | SDL.GPUTextureUsageFlags.GraphicsStorageRead;
+        return usage;
     }
 
     private SDL.GPUTextureCreateInfo AllocationInfo(int layers, bool array) => new()

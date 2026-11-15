@@ -6,7 +6,7 @@ Last updated: 2026-11-12
 
 **Inherits:** —
 
-**Inherited By:** [IP](IP.md), [ThemeDB](ThemeDB.md), [ConfigFile](ConfigFile.md), [DirAccess](DirAccess.md), [DisplayServer](DisplayServer.md), [Engine](Engine.md), [FileAccess](FileAccess.md), [Input](Input.md), [InputMap](InputMap.md), [MainLoop](MainLoop.md), [Node](Node.md), [ProjectSettingsRegistry](ProjectSettingsRegistry.md), [Resource](Resource.md), [SceneState](SceneState.md), [SceneTreeTimer](SceneTreeTimer.md), [Tween](Tween.md), [Tweener](Tweener.md)
+**Inherited By:** [IP](IP.md), [ThemeDB](ThemeDB.md), [ConfigFile](ConfigFile.md), [DirAccess](DirAccess.md), [DisplayServer](DisplayServer.md), [Engine](Engine.md), [FileAccess](FileAccess.md), [Input](Input.md), [InputMap](InputMap.md), [MainLoop](MainLoop.md), [Node](Node.md), [ProjectSettingsRegistry](ProjectSettingsRegistry.md), [Resource](Resource.md), [SceneState](SceneState.md), [SceneTreeTimer](SceneTreeTimer.md), [TranslationServer](TranslationServer.md), [Tween](Tween.md), [Tweener](Tweener.md)
 
 - **Source:** [`src/Core/Object/ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs); [notification direction](../../src/Core/Object/ElectronObject.Notifications.cs)
 - **Namespace:** `Electron2D`

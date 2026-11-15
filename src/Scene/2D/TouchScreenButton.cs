@@ -29,6 +29,8 @@ public partial class TouchScreenButton : Entity
     /// <summary>Gets or assigns the borrowed pressed texture.</summary>
     /// <value>Null initially; normal texture is used while pressed when this is absent.</value>
     public Texture? TexturePressed { get { CheckTouch(); return _pressedTexture; } set => SetTexture(ref _pressedTexture, value); }
+    internal override Rect2 GetAnchorableRect() => _normal is { } texture ? new(Vector2.Zero, texture.GetSize()) : default;
+
     private void SetTexture(ref Texture? target, Texture? value)
     {
         EnsureMutable(); Live(value); if (ReferenceEquals(target, value)) return;

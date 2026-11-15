@@ -72,13 +72,35 @@ Resource and scene archives use the same snapshot when writing images. Saving du
 
 Run `ELECTRON2D_TEST_IMAGE_STORAGE=1` to check all raw format sizes, odd compressed mip layouts, copied ownership, empty and disposed state, and 64 archive round trips while a background writer alternates between two incompatible image layouts. The same profile checks an embedded image texture round trip.
 
+## Pixel edits and orientation
+
+`GetPixel` and `SetPixel` use zero-based base-level coordinates. Scalar and vector overloads share the same bounds checks. `SetPixel` leaves the authored mip bytes intact. `Fill` writes the same encoded color to every stored pixel, including all lower levels.
+
+Unsigned channels clamp before truncating. Normalized channels scale in single precision so decoding and re-encoding a stored sample preserves its code. Byte luminance stores the maximum of RGB. For half formats, `SetPixel` and `Fill` truncate the significand, flush half subnormals and signed zero to zero, and retain the sign of overflow and canonical NaN. Raw buffers, conversion and mip filtering support half subnormals. Full floats retain their component bits. RGB9E5 uses a shared exponent and ignores alpha.
+
+Flips and rotations permute the stored base pixels byte for byte. Quarter turns swap width and height. Every orientation change regenerates an existing mip chain from the result, including when a one-pixel axis makes the base permutation an identity. Images with only a base level stay base-only.
+
+Empty or compressed images raise `InvalidOperationException`. Coordinates outside the base level and undefined directions raise `ArgumentOutOfRangeException`. Failed validation preserves the whole state. Each successful edit emits one synchronous `Resource.Changed` after publication. A callback exception propagates after commit. Textures keep their copied pixels until replaced explicitly.
+
+Run `ELECTRON2D_TEST_IMAGE_PIXELS` with `managed`, `gpu`, and `compatibility` in separate processes. The managed profile compares 25 format vectors and exact mip buffers. The two windowed profiles sample an ordinary Sprite's ImageTexture before and after replacing it with a rotated image, then read the rendered pixels.
+
 ## Mip chain editing
 
 `ShrinkX2` promotes the first stored mip and keeps the remaining bytes in order. It works on uncompressed pixels and complete block-compressed chains. When the promoted base is 1×1, the image reports no lower levels. Base-only uncompressed images halve through the generation filter and stay base-only.
 
-`GenerateMIPMaps` averages 2×2 samples in storage space. Odd extents truncate and one-pixel axes repeat their sample. Byte and unsigned 16-bit channels round to the nearest value. Normal renormalization applies to byte, float, half and unsigned 16-bit RGB/RGBA layouts. It normalizes the averaged RGB and preserves the averaged alpha. Packed and one- or two-channel formats use ordinary averaging.
+`GenerateMIPMaps` averages 2×2 samples in storage space. Odd extents truncate and one-pixel axes repeat their sample. Byte and unsigned 16-bit channels round to the nearest value. RGB565 and RGBA4444 sum each stored channel exactly and truncate the mean, so reordering a block leaves its mip pixel unchanged. Normal renormalization applies to byte, float, half and unsigned 16-bit RGB/RGBA layouts. It normalizes the averaged RGB and preserves the averaged alpha.
 
 `ClearMIPMaps` retains the base bytes, including compressed blocks. ImageTexture captures the resulting format, base extent and exact remaining mip chain. The image-storage profile checks authored BC1 colors, odd and one-pixel axes, integer and half-float values, base edits, and observer failure after commit.
+
+## Image texture data
+
+ImageTexture copies the original format, physical dimensions and all stored mips. GetImage returns a fresh snapshot in that format. Source format, alpha presence and mip count are available before the renderer starts. The uninitialized resource has zero logical size, format L8, no alpha, no mips and no image. A custom pixel-backed Texture implements the required logical width and height queries and returns a fresh GetImage copy. Its derived metadata refreshes on Changed.
+
+SetSizeOverride changes logical dimensions and retains an axis when its input is zero. Opacity uses the corresponding physical texel and tests alpha above 0.1. Update matches the original physical dimensions, format and mip configuration. SetImage accepts a new configuration and resets the logical size. Validation failures preserve the previous state. Changed follows a successful publication. The texture RID stays stable across these mutations. Update reuses compatible native storage and SetImage replaces it. Scene-local ImageTexture copies retain original mip bytes and logical size and receive distinct RIDs after loading and instantiating the scene.
+
+GPU sampling uses the prepared upload or supported native block storage, with complete mip chains. Windows/D3D12 and Windows/Vulkan support sampling the four [UInt16 formats](integer-textures.md), including the ordinary Sprite path and RenderingDevice export. RenderingDevice also reads BC3 blocks on both drivers. Compatibility samples the base mip of supported formats, uses decoded block pixels and rejects unsigned integer sampling. Its floating-point path requires a driver that preserves HDR precision.
+
+The `ELECTRON2D_TEST_IMAGE_TEXTURE_DATA` profiles exercise managed data and scene archives, plus Sprite output and native lifetime with byte formats on D3D12 and D3D11. Readback from a rendered viewport verifies the sampled output independently from GetImage's source snapshot. Full package and host qualification follows ADR 0021.
 
 ## Image resizing
 

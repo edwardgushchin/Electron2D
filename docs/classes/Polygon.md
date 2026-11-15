@@ -1,6 +1,6 @@
 # Polygon
 
-Last updated: 2026-10-20
+Last updated: 2026-11-15
 
 - Declaration: `public partial class Polygon : Entity`
 - Source: [Polygon.cs](../../src/Scene/2D/Polygon.cs), [skin](../../src/Scene/2D/Polygon.Skin.cs)
@@ -149,9 +149,9 @@ window.AddChild(shape);
 | `Texture? Texture { get; set; }` | Null | Borrowed sampled texture. |
 | `Vector2[] UV { get; set; }` | Empty | Pixel-space texture coordinates when the array matches the drawn vertex count; otherwise offset local positions are used. |
 | `Vector2 Offset { get; set; }` | Zero | Local displacement before drawing and default UV generation. |
-| `Vector2 TextureOffset { get; set; }` | Zero | Translation in pixel-space texture coordinates. |
+| `Vector2 TextureOffset { get; set; }` | Zero | Pixel-space translation after rotation and before scaling. |
 | `float TextureRotation { get; set; }` | 0 | Clockwise texture-coordinate rotation in radians. |
-| `Vector2 TextureScale { get; set; }` | One | Per-axis texture-coordinate scale before rotation. |
+| `Vector2 TextureScale { get; set; }` | One | Per-axis scale of the rotated and translated coordinates. |
 | `bool Antialiased { get; set; }` | False | One-framebuffer-pixel transparent boundary fringe. |
 | `bool InvertEnabled { get; set; }` | False | Fills outside the contour up to its padded bounds. |
 | `float InvertBorder { get; set; }` | 100 | Finite padding, in local units, around the contour bounds during inversion. |
@@ -161,7 +161,11 @@ The `Antialiased` property is described [below](#antialiased).
 
 ## Drawing and errors
 
-At least three selected vertices are required. Positions are offset, then texture UVs are scaled, rotated, translated and divided by positive texture dimensions for normalized sampling. A complete `VertexColors` array replaces uniform `Color`; an incomplete one uses `Color` for every drawn vertex. `Polygons` references the complete vertex list, including internal vertices. Inversion excludes trailing internal vertices and appends a bridge around the expanded bounding rectangle. It ignores explicit index contours and uses the uniform color or UVs generated from its new positions when original per-vertex arrays no longer match. The existing canvas renderer triangulates every contour; self-intersections and non-inverted holes are unsupported. Invalid contour indices or untriangulable contours fail on redraw. Nonfinite input vectors/colors, negative internal counts and disposed textures are rejected when assigned. A nonpositive inversion border can make triangulation fail. A texture with zero or invalid dimensions fails on redraw. Inherited materials and backend capability errors follow CanvasItem.
+Fewer than three selected vertices produce an empty drawing. `Polygons` indexes the complete vertex list, including internal vertices. A complete `VertexColors` array replaces uniform `Color`; any other count uses `Color` for every drawn vertex. A complete `UV` array supplies pixel coordinates. Any other count uses the drawn local positions, including `Offset`. The UV transform rotates the source coordinates, adds `TextureOffset`, scales both axes by `TextureScale`, then divides by the texture dimensions. An `AtlasTexture` supplies the logical dimensions and the underlying sampled image. UVs address that full image. Sampling multiplies the result by the selected fill colors.
+
+Inversion excludes trailing internal vertices and uses one contour, with a seven-point bridge to its expanded bounding rectangle. Explicit indices and skeletal deformation are ignored. The color and UV count checks include the seven inserted vertices. Ordinary and inverted redraws reuse the prepared vertex buffers. Skinning rebuilds its weight selection when the source count changes, including when an explicit contour selects the same indices from a longer source array.
+
+Invalid contour indices and failed triangulation raise exceptions on redraw. Inverted drawing also requires a contour with nonzero signed area and padding large enough to expand each bound. Self-intersections and ordinary contour holes are unsupported. Nonfinite coordinates and colors, negative indices or internal counts, and disposed textures are rejected when assigned. A texture with invalid dimensions or a disposed assigned texture fails on recording. Materials, atlas sampling and backend capability errors follow CanvasItem.
 
 All fourteen geometry properties participate in typed `PackedScene` capture. Vector, color and nested index arrays are copied at capture, state read and instantiation; borrowed texture resources follow the ordinary scene resource policy. Geometry and texture edits request redraw even when the node is hidden; the next visible frame records current values.
 
@@ -177,6 +181,8 @@ The typed property stores through scene capture and resource files, requests red
 
 ## Verification
 
-[PolygonTests](../../tests/Electron2D.Tests/PolygonTests.cs) checks geometry, attributes, copied arrays, inverted square and concave contours in both windings, scene storage and errors. [PolygonRenderingTests](../../tests/Electron2D.Tests/PolygonRenderingTests.cs) reads pixels for filled, indexed, textured and inverted shapes across color and inversion-border changes on Linux Wayland compatibility/GPU with HLSL/GLSL materials, and dummy/software compatibility. This is executable pixel evidence, not owner visual acceptance.
+[PolygonTests](../../tests/Electron2D.Tests/PolygonTests.cs) covers defaults, array copies, the UV transform and fallback, square and concave inversion in both windings, errors and recovery, typed scene archives and prepared inverted redraw allocation. [PolygonRenderingTests](../../tests/Electron2D.Tests/PolygonRenderingTests.cs) uses public properties and frame readback to verify changes to the fill, inversion bounds and UV transform, live image updates and resizing, atlas sampling and texture removal, and the skin source count. It also measures prepared inversion redraw and skin presentation on the render owner thread.
+
+On Windows x64, the node scenario passes on Compatibility/D3D11, GPU/D3D12 with the default and authored HLSL and GLSL shaders, and Compatibility/software. Each profile verifies zero managed owner-thread bytes over 128 prepared redraws. Platform qualification for the changed behavior follows ADR 0021.
 
 [PolygonAntialiasTests](../../tests/Electron2D.Tests/PolygonAntialiasTests.cs) exercises boundary cancellation, inversion, transformed width, persistence, native coverage and prepared managed allocation. Physical GPU, native allocator, foreign platforms and human visual acceptance remain separate.

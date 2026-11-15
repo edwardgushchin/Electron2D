@@ -20,6 +20,9 @@ class WindowsNativeTests(unittest.TestCase):
         self.assertEqual(targets["electron2d-win-arm64"]["cflags"].split(), ["/GF", "/Gy", "/MT"])
         for target in ("electron2d-win-x86", "electron2d-win-x64"):
             self.assertEqual(targets[target]["cflags"].split(), ["/Gs0", "/GF", "/Gy", "/MT"])
+        for target in targets.values():
+            self.assertEqual(target["multilib"], "")
+            self.assertEqual(target["shlib_variant"], "")
 
     def test_restored_sdl_architectures_exports_and_import_libraries(self):
         packages = Path(os.environ.get("NUGET_PACKAGES", Path.home() / ".nuget/packages")) / "sdl3-cs.windows/3.4.18/runtimes"
@@ -51,7 +54,7 @@ class WindowsNativeTests(unittest.TestCase):
                     package.windows_exports(Path("FAudio.dll"), "win-x64", "FAudio.dll")
         with patch.object(windows, "inspect", return_value=(set(), {"libcrypto-3.dll"})):
             with self.assertRaises(ValueError):
-                package.windows_exports(Path("libssl-4-Electron2D.dll"), "win-x64", "libssl-4-Electron2D.dll")
+                package.windows_exports(Path("libssl-4.dll"), "win-x64", "libssl-4.dll")
 
 
 if __name__ == "__main__":

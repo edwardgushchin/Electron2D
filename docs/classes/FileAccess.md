@@ -10,18 +10,15 @@ Last updated: 2026-10-29
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed class FileAccess : ElectronObject`
 
-> Provides seekable binary and text access to ordinary and directory-backed virtual files.
+> Provides binary and text access to ordinary files, mounted or directory-backed virtual files, and process pipes.
 
 Linux/macOS extended-attribute calls use [tracked UTF8 path/name storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29) and pin caller data for the call without retaining its pointer.
 
 ## Description
 
-Provides binary and text access to ordinary and virtual files, transformed files and process pipes. [File and directory access](../components/file-access.md#operation-failures-and-eof) describes exceptions and EOF transitions.
+`FileAccess` supplies binary and text I/O for seekable file streams and decoded in-memory views, including mounted resources. It also wraps [non-seekable process pipes](#process-pipe-streams) in blocking or nonblocking mode. Each instance owns its stream until [`Close`](#m-electron2d-fileaccess-close) or disposal. File operations include virtual-path resolution, metadata, hashing, extended attributes, and temporary files. [File and directory access](../components/file-access.md#operation-failures-and-eof) describes errors and EOF.
 
-`FileAccess` owns one seekable physical stream or decoded in-memory view. It supplies blocking binary/text I/O, virtual-path resolution, file metadata, hashing, Linux/macOS/Windows extended attributes, temporary files, whole-file compression, and authenticated whole-file encryption. The instance exclusively owns and closes its stream; it never owns `ProjectSettings`.
-
-Instances own their stream until [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close) or disposal. Individual operations are serialized, but a
-multi-call seek/read/write sequence is not atomic. FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard check base codec availability in every open mode, including `Write` and `WriteRead`. Decoding nonempty Zstandard containers with a configured window requires the updated native bundle. Reading an empty container skips the block decoder. Encoding pending data with a configured level or window can raise `PlatformNotSupportedException` at [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) before the destination is created or replaced. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
+FastLZ (the default), DEFLATE, Zstandard, GZip and Brotli execute seekable whole-file access. FastLZ and Zstandard check base codec availability in every open mode, including `Write` and `WriteRead`. Decoding nonempty Zstandard containers with a configured window requires the updated native bundle. Reading an empty container skips the block decoder. Encoding pending data with a configured level or window can raise `PlatformNotSupportedException` at [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) before the destination is created or replaced. Native payloads use 64 KiB logical blocks with compressed lengths and SHA-256 checksums. Checksums detect corruption, not malicious replacement. DEFLATE and GZIP writers use their [project compression levels](../components/file-access.md#compression-levels). File operations may block and are unsuitable for real-time frame
 callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
 
 ## Examples
@@ -88,9 +85,9 @@ file.WriteString("ready");
 | [`public void WriteLine(string value)`](#m-electron2d-fileaccess-writeline-system-string) | Writes UTF-8 text followed by LF. |
 | [`public void WriteCSVLine(IEnumerable<string> values, char delimiter = ',')`](#m-electron2d-fileaccess-writecsvline-system-collections-generic-ienumerable-system-string-system-char) | Writes one CSV record followed by LF. |
 | [`public void WritePascalString(string value)`](#m-electron2d-fileaccess-writepascalstring-system-string) | Writes a UTF-8 string preceded by its unsigned 32-bit byte count. |
-| [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical or directory-backed virtual file exists. |
-| [`public static byte[] GetFileAsBytes(string path)`](#m-electron2d-fileaccess-getfileasbytes-system-string) | Reads a complete physical or directory-backed virtual file. |
-| [`public static string GetFileAsString(string path)`](#m-electron2d-fileaccess-getfileasstring-system-string) | Reads a complete physical or directory-backed virtual file as strict UTF-8. |
+| [`public static bool FileExists(string path)`](#m-electron2d-fileaccess-fileexists-system-string) | Determines whether a physical, virtual, or mounted file exists. |
+| [`public static byte[] GetFileAsBytes(string path)`](#m-electron2d-fileaccess-getfileasbytes-system-string) | Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
+| [`public static string GetFileAsString(string path)`](#m-electron2d-fileaccess-getfileasstring-system-string) | Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. |
 | [`public static long GetAccessTime(string path)`](#m-electron2d-fileaccess-getaccesstime-system-string) | Gets the last-access time as Unix seconds. |
 | [`public static long GetModifiedTime(string path)`](#m-electron2d-fileaccess-getmodifiedtime-system-string) | Gets the last-modification time as Unix seconds. |
 | [`public static long GetSize(string path)`](#m-electron2d-fileaccess-getsize-system-string) | Gets a file's length without opening a persistent instance. |
@@ -133,9 +130,9 @@ Gets the path supplied when this file was opened.
 <a id="p-electron2d-fileaccess-absolutepath"></a>
 ### `public string AbsolutePath { get; }`
 
-Gets the physical operating-system path, including staging when save and swap is enabled.
+Gets the file identity captured at open.
 
-**Value:** The staging path for save-and-swap writes, the resolved native path otherwise, or the mounted res:// identity.
+**Value:** The staging path for save-and-swap writes, the normalized `res://` identity for mounted reads, or the resolved native path for ordinary files. Closing preserves this value.
 
 <a id="p-electron2d-fileaccess-isopen"></a>
 ### `public bool IsOpen { get; }`
@@ -155,7 +152,7 @@ Gets whether a read encountered end of stream.
 
 **Value:** `true` after a read detects end of stream. A live nonblocking pipe that is temporarily empty leaves the flag clear.
 
-A read that stops as soon as it has the requested bytes can reach the end with the flag clear. [`ReadCSVLine`](#m-electron2d-fileaccess-readcsvline-system-char) can detect EOF while returning a complete final record without a line terminator. A successful seek, resize or write clears the seekable file's EOF flag.
+A read that stops as soon as it has the requested bytes can reach the end with the flag clear. [`ReadCSVLine`](#m-electron2d-fileaccess-readcsvline-system-char) can detect EOF while returning a complete final record without a line terminator. A zero-length read preserves the flag. A successful seek, resize or write clears the seekable file's EOF flag.
 
 **Exceptions**
 
@@ -173,6 +170,7 @@ Gets the current byte offset.
 
 - `InvalidOperationException`: The file is closed.
 - `IO.IOException`: The stream cannot report its cursor.
+- `NotSupportedException`: The stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="p-electron2d-fileaccess-length"></a>
@@ -186,6 +184,7 @@ Gets the decoded file length in bytes.
 
 - `InvalidOperationException`: The file is closed.
 - `IO.IOException`: The stream cannot report its length.
+- `NotSupportedException`: The stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="p-electron2d-fileaccess-hidden"></a>
@@ -241,6 +240,12 @@ Gets or sets Unix permission and special-mode bits for the physical file.
 
 Opens a file with the requested access mode.
 
+On Windows, physical read-only streams allow staged replacement. An open reader can finish reading the original file, and subsequent opens of the path see the replacement.
+
+When a mounted directory and a physical file share a `res://` path, the directory takes precedence. `Open` throws `FileNotFoundException` for that resource path. The physical file remains accessible through its native absolute path.
+
+Writable opens check mounted file and directory precedence against one mount snapshot, including while a patch replaces one with the other. They reject writes through `res://` to descendants of mounted directories. The same rule applies to file and extended attribute mutations. Writable opens reject existing directories and paths ending in a directory separator, including in the transformed `Write` and `WriteRead` modes.
+
 **Parameters**
 
 - `path`: A nonempty ordinary, `res://`, or `user://` path, or a registered `uid://` that resolves to one.
@@ -256,7 +261,7 @@ Opens a file with the requested access mode.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: The path is empty or `mode` is invalid.
 - `IO.IOException`: The file cannot be opened.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
@@ -270,7 +275,7 @@ Creates a uniquely named temporary file and opens it.
 - `mode`: The permitted operations.
 - `prefix`: An optional filename prefix without directory separators. A hyphen separates it from the random name.
 - `extension`: An optional extension, with or without a leading period.
-- `keep`: Whether closing the returned instance preserves the file.
+- `keep`: Whether closing or disposing the returned instance preserves the file.
 
 **Returns:** An open temporary file owner.
 
@@ -301,12 +306,13 @@ Opens a whole-file compressed container.
 - `ArgumentOutOfRangeException`: `compressionMode` is unknown.
 - `PlatformNotSupportedException`: The native bundle lacks the selected native codec in any open mode, or lacks configured-window support when decoding a nonempty Zstandard container.
 - `IO.InvalidDataException`: An existing container is malformed or uses another codec.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
-**Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encodes pending data and atomically creates or replaces the destination.
+**Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. Writable opens check mount precedence in one lookup. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encodes pending data and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte"></a>
 ### `public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)`
@@ -327,13 +333,14 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 - `ArgumentException`: `key` is not exactly 32 bytes or the mode is invalid.
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses password mode.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 - `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
-**Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data with a fresh random nonce and atomically creates or replaces the destination.
+**Remarks:** In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. Writable opens check mount precedence in one lookup. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data for the captured destination with a fresh random nonce and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string"></a>
 ### `public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`
@@ -354,13 +361,14 @@ Opens a whole-file container protected by a password and authenticated encryptio
 - `ArgumentException`: `password` is empty or the mode is invalid.
 - `Security.Cryptography.CryptographicException`: Authentication fails.
 - `IO.InvalidDataException`: The encryption envelope is malformed or uses raw-key mode.
+- `IO.DirectoryNotFoundException`: A physical file occupies a parent path in Write or WriteRead mode.
 - `IO.IOException`: The existing container cannot be read in a mode that preserves its contents.
-- `UnauthorizedAccessException`: The caller lacks filesystem access.
+- `UnauthorizedAccessException`: The path identifies a directory, a writable path ends in a directory separator, or access is denied.
 - `PlatformNotSupportedException`: AES-GCM is unavailable.
 - `Collections.Generic.KeyNotFoundException`: The `uid://` is not registered.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
-**Remarks:** A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data with a fresh nonce and atomically creates or replaces the destination.
+**Remarks:** A random salt and PBKDF2-HMAC-SHA-256 derive a 256-bit key. In `Write` and `WriteRead` modes, the factory starts with an empty memory stream. Writable opens check mount precedence in one lookup. [`Flush`](#m-electron2d-fileaccess-flush) or [`Close`](#m-electron2d-fileaccess-close) encrypts pending data for the captured destination with a fresh nonce and atomically creates or replaces the destination.
 
 <a id="m-electron2d-fileaccess-close"></a>
 ### `public void Close()`
@@ -389,10 +397,10 @@ Flushes pending data to the physical file.
 - `IO.DirectoryNotFoundException`: Pending transformed data cannot be committed because the destination parent directory is missing.
 - `PlatformNotSupportedException`: The native bundle lacks support for the configured Zstandard compression level or window when encoding pending data.
 - `IO.IOException`: The data cannot be persisted.
-- `UnauthorizedAccessException`: The caller lacks access to persist the data.
+- `UnauthorizedAccessException`: The caller cannot replace the physical file.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** Transformed data atomically replaces the destination. Save-and-swap streams persist staging without publishing it; ordinary streams flush to disk.
+**Remarks:** Transformed data atomically replaces the destination. If replacement fails, the instance retains its pending data and cursor so the caller can retry. Save-and-swap streams flush staging without publishing it. Ordinary streams flush to disk.
 
 <a id="m-electron2d-fileaccess-seek-system-int64"></a>
 ### `public void Seek(long position)`
@@ -408,7 +416,10 @@ Moves the cursor to an absolute byte offset.
 - `ArgumentOutOfRangeException`: `position` is negative.
 - `InvalidOperationException`: The file is closed.
 - `IO.IOException`: Seeking fails.
+- `NotSupportedException`: The stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
+
+**Remarks:** A successful seek clears EOF without growing the file.
 
 <a id="m-electron2d-fileaccess-seekend-system-int64"></a>
 ### `public void SeekEnd(long offset = 0)`
@@ -423,7 +434,10 @@ Moves the cursor relative to the end of the file.
 
 - `InvalidOperationException`: The file is closed.
 - `IO.IOException`: Seeking fails.
+- `NotSupportedException`: The stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
+
+**Remarks:** A successful seek clears EOF without growing the file.
 
 <a id="m-electron2d-fileaccess-resize-system-int64"></a>
 ### `public void Resize(long length)`
@@ -439,9 +453,10 @@ Changes the file length.
 - `ArgumentOutOfRangeException`: `length` is negative.
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Resizing fails.
+- `NotSupportedException`: The writable stream is a process pipe.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** Extending fills the new region with zero bytes. The current cursor is unchanged.
+**Remarks:** Extending fills the new region with zero bytes. The absolute cursor is preserved even beyond the new end. Resizing successfully clears EOF.
 
 <a id="m-electron2d-fileaccess-readbyte"></a>
 ### `public byte ReadByte()`
@@ -573,7 +588,7 @@ Reads up to a requested number of bytes.
 - `IO.IOException`: Reading fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
-**Remarks:** A short file read sets [`FileAccess.EOFReached`](FileAccess.md#p-electron2d-fileaccess-eofreached). A zero-length request leaves it unchanged. A live nonblocking pipe can return a short or empty buffer with EOF clear. Blocking pipes wait for the requested count or EOF.
+**Remarks:** The returned buffer owns its bytes. An incomplete file read sets [`EOFReached`](#p-electron2d-fileaccess-eofreached). An empty request preserves the cursor and EOF. A blocking pipe waits for the requested count or EOF. A nonblocking pipe returns the available prefix, and temporary emptiness does not set EOF.
 
 <a id="m-electron2d-fileaccess-readline"></a>
 ### `public string ReadLine()`
@@ -656,6 +671,7 @@ Writes one unsigned byte.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe failed before accepting the byte. `BytesWritten` is zero. Retry the byte if the pipe can still accept writes.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writeuint16-system-uint16"></a>
@@ -671,6 +687,7 @@ Writes one unsigned 16-bit integer.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writeuint32-system-uint32"></a>
@@ -686,6 +703,7 @@ Writes one unsigned 32-bit integer.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writeuint64-system-uint64"></a>
@@ -701,6 +719,7 @@ Writes one unsigned 64-bit integer.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writehalf-system-half"></a>
@@ -716,6 +735,7 @@ Writes an IEEE 754 binary16 value.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writesingle-system-single"></a>
@@ -731,6 +751,7 @@ Writes an IEEE 754 binary32 value.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writedouble-system-double"></a>
@@ -746,6 +767,7 @@ Writes an IEEE 754 binary64 value.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writereal-system-single"></a>
@@ -761,6 +783,7 @@ Writes the engine real-number storage format.
 
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): The process pipe accepted zero or more bytes before the write failed. If the failure is retryable, encode the value with the original `BigEndian` setting and pass the suffix starting at `BytesWritten` to [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Retrying the numeric method would resend any bytes already accepted.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte"></a>
@@ -777,7 +800,10 @@ Writes bytes at the current cursor.
 - [`PipeWriteException`](PipeWriteException.md): A process pipe stopped accepting bytes. `BytesWritten` gives the consumed prefix of this write.
 - `InvalidOperationException`: The file is closed or not writable.
 - `IO.IOException`: Writing fails.
+- [`PipeWriteException`](PipeWriteException.md): A process pipe write failed after accepting zero or more bytes. For a retryable write, pass the unwritten suffix starting at `error.BytesWritten` in the supplied span.
 - `ObjectDisposedException`: The instance is disposing or disposed.
+
+**Remarks:** Byte order does not affect the supplied bytes. A successful write clears file EOF.
 
 <a id="m-electron2d-fileaccess-writestring-system-string"></a>
 ### `public void WriteString(string value)`
@@ -793,6 +819,7 @@ Writes UTF-8 text without a length prefix or terminator.
 - `ArgumentNullException`: `value` is `null`.
 - `Text.EncoderFallbackException`: The string contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
+- [`PipeWriteException`](PipeWriteException.md): A pipe write failed after accepting zero or more bytes of the UTF-8 bytes. If retryable, send the suffix starting at `BytesWritten` with [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Repeating the operation can duplicate the accepted prefix.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
@@ -810,6 +837,7 @@ Writes UTF-8 text followed by LF.
 - `ArgumentNullException`: `value` is `null`.
 - `Text.EncoderFallbackException`: The string contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
+- [`PipeWriteException`](PipeWriteException.md): A pipe write failed after accepting zero or more bytes of the UTF-8 bytes including the appended LF. If retryable, send the suffix starting at `BytesWritten` with [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Repeating the operation can duplicate the accepted prefix.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
@@ -829,6 +857,7 @@ Writes one CSV record followed by LF.
 - `ArgumentException`: `delimiter` is a line terminator, a double quote, or a UTF-16 surrogate.
 - `Text.EncoderFallbackException`: A field contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
+- [`PipeWriteException`](PipeWriteException.md): A pipe write failed after accepting zero or more bytes of the UTF-8 CSV record including CSV escaping and the appended LF. If retryable, send the suffix starting at `BytesWritten` with [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Repeating the operation can duplicate the accepted prefix.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
@@ -846,19 +875,22 @@ Writes a UTF-8 string preceded by its unsigned 32-bit byte count in the selected
 - `ArgumentNullException`: `value` is `null`.
 - `Text.EncoderFallbackException`: The string contains invalid UTF-16.
 - `InvalidOperationException`: The file is closed or not writable.
+- [`PipeWriteException`](PipeWriteException.md): A pipe write failed after accepting zero or more bytes of the complete Pascal frame including its length prefix. If retryable, send the suffix starting at `BytesWritten` with [`WriteBytes`](#m-electron2d-fileaccess-writebytes-system-readonlyspan-system-byte). Repeating the operation can duplicate the accepted prefix. Encode the prefix with the original `BigEndian` setting.
 - `IO.IOException`: Writing fails.
 - `ObjectDisposedException`: The instance is disposing or disposed.
 
 <a id="m-electron2d-fileaccess-fileexists-system-string"></a>
 ### `public static bool FileExists(string path)`
 
-Determines whether a physical or directory-backed virtual file exists.
+Determines whether a physical, virtual, or mounted file exists.
 
 **Parameters**
 
 - `path`: The file path.
 
 **Returns:** `true` only when the resolved path identifies an existing file.
+
+Mounted directories resolve as directories even when a physical file has the same name.
 
 **Exceptions**
 
@@ -870,7 +902,7 @@ Determines whether a physical or directory-backed virtual file exists.
 <a id="m-electron2d-fileaccess-getfileasbytes-system-string"></a>
 ### `public static byte[] GetFileAsBytes(string path)`
 
-Reads a complete physical or directory-backed virtual file.
+Reads a complete file from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. Mounted entries resolve through [the `res://` overlay](../components/resource-packs.md).
 
 **Parameters**
 
@@ -889,13 +921,13 @@ Reads a complete physical or directory-backed virtual file.
 <a id="m-electron2d-fileaccess-getfileasstring-system-string"></a>
 ### `public static string GetFileAsString(string path)`
 
-Reads a complete physical or directory-backed virtual file as strict UTF-8.
+Reads a complete file as strict UTF-8 from a physical path, a directory-backed virtual path, or a mounted PCK or ZIP resource pack. Mounted entries resolve through [the `res://` overlay](../components/resource-packs.md).
 
 **Parameters**
 
 - `path`: The file path.
 
-**Returns:** The decoded text.
+**Returns:** An immutable snapshot of the decoded text, retaining a leading BOM, embedded NULs, and carriage returns.
 
 **Exceptions**
 
@@ -915,7 +947,7 @@ Gets the last-access time as Unix seconds.
 
 - `path`: The file path.
 
-**Returns:** Seconds since 1970-01-01 UTC.
+**Returns:** Seconds since 1970-01-01 UTC, or zero for a mounted file.
 
 **Exceptions**
 
@@ -934,7 +966,7 @@ Gets the last-modification time as Unix seconds.
 
 - `path`: The file path.
 
-**Returns:** Seconds since 1970-01-01 UTC.
+**Returns:** Seconds since 1970-01-01 UTC, or zero for a mounted file.
 
 **Exceptions**
 
@@ -953,7 +985,7 @@ Gets a file's length without opening a persistent instance.
 
 - `path`: The file path.
 
-**Returns:** The physical byte count.
+**Returns:** The byte count of the physical file or mounted entry. A symbolic link reports its target size. For a transformed container this is its encoded size.
 
 **Exceptions**
 
@@ -966,7 +998,7 @@ Gets a file's length without opening a persistent instance.
 <a id="m-electron2d-fileaccess-getmd5-system-string"></a>
 ### `public static string GetMD5(string path)`
 
-Computes a file's MD5 digest.
+Computes the MD5 digest of the selected physical file or mounted entry bytes.
 
 **Parameters**
 
@@ -987,7 +1019,7 @@ Computes a file's MD5 digest.
 <a id="m-electron2d-fileaccess-getsha256-system-string"></a>
 ### `public static string GetSHA256(string path)`
 
-Computes a file's SHA-256 digest.
+Computes the SHA-256 digest of the selected physical file or mounted entry bytes.
 
 **Parameters**
 
@@ -1028,6 +1060,8 @@ Gets whether the filesystem marks a file as hidden.
 
 Changes a file's hidden attribute.
 
+Checks mount precedence in one lookup and rejects physical directories before changing attributes.
+
 **Parameters**
 
 - `path`: The file path.
@@ -1038,7 +1072,7 @@ Changes a file's hidden attribute.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the attribute.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose this file attribute.
 
@@ -1067,6 +1101,8 @@ Gets whether the filesystem marks a file as read-only.
 
 Changes a file's read-only attribute.
 
+Checks mount precedence in one lookup and rejects physical directories before changing attributes.
+
 **Parameters**
 
 - `path`: The file path.
@@ -1077,7 +1113,7 @@ Changes a file's read-only attribute.
 - `ArgumentNullException`: `path` is `null`.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the attribute.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose this file attribute.
 
@@ -1106,6 +1142,8 @@ Gets Unix mode bits for a file.
 
 Sets Unix mode bits for a file.
 
+Checks mount precedence in one lookup and rejects physical directories before changing permissions.
+
 **Parameters**
 
 - `path`: The file path.
@@ -1117,7 +1155,7 @@ Sets Unix mode bits for a file.
 - `ArgumentOutOfRangeException`: `permissions` contains unknown bits.
 - `ArgumentException`: `path` is empty or invalid.
 - `IO.IOException`: The filesystem cannot change the mode.
-- `UnauthorizedAccessException`: The caller lacks filesystem access or a virtual path escapes its root.
+- `UnauthorizedAccessException`: The path identifies a directory, a virtual path escapes its root, or access is denied.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 - `PlatformNotSupportedException`: The current platform does not expose Unix file modes.
 
@@ -1255,7 +1293,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Lifecycle and state transitions
 
-1. A static open validates path, exact mode, codec/key/password, and existing-file requirements before returning ownership.
+1. A static open validates path, exact mode, codec/key/password, and existing-file requirements before returning ownership. The owner keeps its file identity when project roots or mounts change.
 2. Raw files operate directly. Compressed/encrypted files decode fully into a seekable memory stream before the instance is published.
 3. Writes mark transformed state dirty. `Flush` encodes a complete snapshot and atomically replaces the physical destination; the in-memory cursor is restored.
 4. `Close` commits when writable, releases/zeroes memory, removes a disposable temporary file, and enters the closed state. `Dispose` then enters the inherited terminal state.
@@ -1279,7 +1317,7 @@ Filesystem, authorization, decoder, compression, cryptographic, and disposed/clo
 
 ## Threading and re-entrancy
 
-All instance state/stream operations are serialized by one private lock. One call is atomic with respect to other calls, including Pascal prefix+payload operations and transformed flush. A caller-owned sequence such as `Seek` followed by `ReadBytes` is not atomic against another caller unless externally synchronized. Static operations own only local state and are safe concurrently. Blocking I/O, hashing, compression, PBKDF2, and allocation make the component unsuitable for frame, physics, audio, or render hot paths.
+Each seekable instance uses one lock to serialize its stream operations, including a single call that handles both the Pascal string prefix and payload or flushes a transformed file. Callers must synchronize compound sequences such as `Seek` followed by `ReadBytes`. Process pipes serialize reads and writes separately, so one thread can read while another writes to the same instance. Blocking I/O, hashing, compression, PBKDF2, and allocation make the component unsuitable for frame, physics, audio, or render hot paths.
 
 ## Dependencies and interactions
 
@@ -1288,13 +1326,17 @@ All instance state/stream operations are serialized by one private lock. One cal
 - Uses .NET file, UTF-8, hash, compression, PBKDF2, random, and AES-GCM primitives.
 - Reuses the same internal atomic-replacement helper as `ConfigFile`.
 - Uses Linux libc xattrs, macOS libSystem xattrs, and Windows alternate data streams for the extended-attribute surface.
-- Has no SDL, Scene, renderer, resource loader, scripting, editor, physics, or external package dependency.
+- Process pipes use the OS service's native backend. Mounted file reads use the shared resource pack resolver.
+
+Static metadata queries use one mount lookup. Mounted files report zero timestamps, a clear hidden flag, a set read-only flag, and read bits for owner, group and others when the platform supports Unix permissions. Extended attribute operations throw `NotSupportedException` for a mounted file and `FileNotFoundException` when a mounted directory or file ancestor masks the requested path.
 
 ## Verification and known limits
 
+The [binary I/O checks](../components/file-access.md#binary-io) exercise independent wire vectors, exact and short reads, cursor preservation and native process-pipe behavior.
+
 `tests/Electron2D.Tests/Program.cs` covers invalid paths/modes, all four access modes, truncation/preservation, little/big-endian primitives, half/float/double/real, buffers, strict UTF-8, CR/LF/null lines, CSV/Pascal strings, EOF and seek transitions, resize, cursor preservation on decode failure, close/dispose, static metadata/hashes and missing-file errors, explicit unsupported Linux hidden/read-only attributes, Unix permissions, Linux xattrs, temporary ownership including prefix/extension/read-only mode, three codecs, malformed/mismatched compression, raw/password encryption, wrong keys/passwords/mode confusion, tampering, virtual project paths, concurrent static hashing and compound Pascal writes, and commit failure cleanup.
 
-The checks ran on Linux with its active filesystem. They do not prove the implemented macOS xattr or Windows alternate-stream backends, and no Android/iOS extended-attribute backend or native-host verification is currently claimed. Web browser storage behavior is unimplemented and unverified; its capability boundary belongs to the first Web host slice. These checks also do not prove every filesystem's crash durability, very-large-file memory behavior for transformed whole-file access, hostile TOCTOU races, or protection after process compromise. FastLZ and Zstandard execute through the matching private native bundle; packed archives remain unimplemented. Native file-codec verification covers Linux x64 only.
+The binary and text checks also ran on Windows x64. PCK and ZIP overlays expose read-only files through [resource packs](../components/resource-packs.md). Native [file-codec checks](../components/file-access.md#verification) cover Windows x64 and Linux x64 and require a matching private bundle. macOS extended attributes, Android/iOS extended-attribute support and browser storage remain outside these checks. Filesystem crash durability and very large transformed files remain unverified.
 
 ## Decisions
 
