@@ -205,15 +205,18 @@ public sealed partial class Input
         get => Service.MouseButtonMaskCore;
     }
 
-    /// <summary>Gets the most recently submitted local mouse velocity.</summary>
+    /// <summary>Gets mouse velocity sampled from relative motion over at least 0.1 seconds.</summary>
     /// <value>A thread-safe snapshot in content-scaled pixels per second.</value>
+    /// <remarks>Reading advances the shared sample with zero displacement. Idle samples become zero;
+    /// a gap over three seconds restarts accumulation. Event velocity fields are not used.</remarks>
     public static Vector2 LastMouseVelocity
     {
         get => Service.LastMouseVelocityCore;
     }
 
-    /// <summary>Gets the most recently submitted screen-space mouse velocity.</summary>
+    /// <summary>Gets screen-space mouse velocity from the shared relative-motion sample.</summary>
     /// <value>A thread-safe snapshot in unscaled screen pixels per second.</value>
+    /// <remarks>Uses screen-relative displacement and the same clock and idle policy as <see cref="LastMouseVelocity"/>.</remarks>
     public static Vector2 LastMouseScreenVelocity
     {
         get => Service.LastMouseScreenVelocityCore;
@@ -389,6 +392,8 @@ public sealed partial class Input
     /// validates owner-thread and lifecycle eligibility before any state changes. Active DisplayWindowEvents.Input
     /// subscriptions also require the display owner thread. Their captured native-window publishers observe
     /// committed state before scene routing; untagged events broadcast, while tagged events select their window ID.
+    /// Touch drags are delivered through a temporary owned copy with calibrated per-contact velocity;
+    /// the caller-owned event is unchanged. Generated touch drags use the sampled mouse velocity.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="event"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Parsing is re-entered, an active loop is called off its owner thread or during another callback, or a direct action event cannot obtain a valid source index.</exception>

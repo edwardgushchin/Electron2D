@@ -74,7 +74,7 @@ internal static class DisplayServerTouchNativeTests
                       probe.Events[1] is InputEventScreenDrag { Index: 0, Pressure: 0.5f } drag &&
                       drag.Position == new Vector2(size.X * 0.75f, size.Y * 0.5f) &&
                       drag.Relative == new Vector2(size.X * 0.25f, 0f) &&
-                      drag.ScreenRelative == drag.Relative && drag.Velocity == drag.Relative &&
+                      drag.ScreenRelative == drag.Relative && drag.Velocity.IsFinite() && drag.Velocity.X >= 0 &&
                       drag.ScreenVelocity == drag.Velocity &&
                       probe.Events[2] is InputEventScreenTouch { Index: 0, Pressed: false, Canceled: true } &&
                       probe.Events[3] is InputEventScreenTouch { Index: 0, Pressed: true } &&

@@ -10,6 +10,13 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MOUSE_STATE") is { } mouseStateProfile)
+{
+    if (mouseStateProfile == "windows") { InputMouseStateTests.RunNative(); VerifyInputEmulation(); }
+    else InputMouseStateTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_TARGET") is { } targetProfile)
 {
     if (targetProfile == "managed")
@@ -3167,21 +3174,21 @@ static void VerifyDisplayServer()
         motion.Motion.XRel = 3;
         Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts consecutive pointer motion.");
         DisplayServer.ProcessEvents();
-        Require(NearlyEqual(Input.LastMouseVelocity.X, 2.5f),
-            "Accumulated pointer motion combines relative travel across the batch.");
+        Require(NearlyEqual(Input.Service.GetLastMousePositionCore().X, 13f),
+            "Accumulated pointer motion publishes the final position in the batch.");
         Input.UseAccumulatedInput = false;
         motion.Motion.Timestamp = 3_000_000_000;
         motion.Motion.XRel = 4;
         Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts direct pointer motion.");
         DisplayServer.ProcessEvents();
-        Require(NearlyEqual(Input.LastMouseVelocity.X, 4f),
-            "Disabling accumulation dispatches each pointer motion separately.");
+        Require(NearlyEqual(Input.Service.GetLastMousePositionCore().X, 13f),
+            "Disabling accumulation publishes the native pointer position.");
         Input.UseAccumulatedInput = true;
         motion.Motion.WindowID = nativeWindowId + 1;
         motion.Motion.XRel = 100;
         Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts foreign-window pointer motion.");
         DisplayServer.ProcessEvents();
-        Require(NearlyEqual(Input.LastMouseVelocity.X, 4f),
+        Require(NearlyEqual(Input.Service.GetLastMousePositionCore().X, 13f),
             "Pointer motion from an unowned window cannot enter the accumulated input stream.");
         Input.FlushBufferedEvents();
         VerifyDisplayServerDropBatches(display);
@@ -9504,9 +9511,9 @@ static void VerifyInput()
             Require(Input.MouseButtonMask == MouseButtonMask.Left &&
                     Input.IsMouseButtonPressed(MouseButton.Left) &&
                     !Input.IsMouseButtonPressed(MouseButton.WheelUp) &&
-                    Input.LastMouseVelocity == new Vector2(20f, 30f) &&
-                    Input.LastMouseScreenVelocity == new Vector2(40f, 50f),
-                "Mouse motion must publish held buttons and both velocity coordinate spaces.");
+                    motion.Velocity == new Vector2(20f, 30f) &&
+                    motion.ScreenVelocity == new Vector2(40f, 50f),
+                "Mouse motion publishes held buttons without changing caller-owned velocity fields.");
             Expect<ArgumentOutOfRangeException>(() => Input.IsMouseButtonPressed((MouseButton)99),
                 "Mouse-button queries must reject unknown identifiers.");
         }
@@ -9793,7 +9800,7 @@ static void VerifyInputEmulation()
             Device: InputEvent.DeviceIdEmulation, ButtonMask: MouseButtonMask.Left,
             Relative: { X: 5f, Y: 4f }, Pressure: 0.5f,
         } && probe.Events[1] is InputEventScreenDrag { Device: 2, Index: 7 } &&
-                Input.LastMouseVelocity == new Vector2(50f, 40f),
+                drag.Velocity == new Vector2(50f, 40f),
             "The tracked contact's drag must become emulated mouse motion with velocity and pressure.");
         probe.Clear();
 

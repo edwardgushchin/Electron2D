@@ -52,8 +52,8 @@ if (Input.IsActionPressed("jump"))
 | [`public static bool EmulateMouseFromTouch { get; set; }`](#p-electron2d-input-emulatemousefromtouch) | Makes the first active touch contact generate left-button mouse input; defaults to `true`. |
 | [`public static bool EmulateTouchFromMouse { get; set; }`](#p-electron2d-input-emulatetouchfrommouse) | Makes left-button mouse input generate touch input; defaults to `false`. |
 | [`public static MouseButtonMask MouseButtonMask { get; }`](#p-electron2d-input-mousebuttonmask) | Gets the non-wheel mouse buttons currently held. |
-| [`public static Vector2 LastMouseVelocity { get; }`](#p-electron2d-input-lastmousevelocity) | Gets the most recently submitted local mouse velocity. |
-| [`public static Vector2 LastMouseScreenVelocity { get; }`](#p-electron2d-input-lastmousescreenvelocity) | Gets the most recently submitted screen-space mouse velocity. |
+| [`public static Vector2 LastMouseVelocity { get; }`](#p-electron2d-input-lastmousevelocity) | Gets mouse velocity sampled from relative motion over at least 0.1 seconds. |
+| [`public static Vector2 LastMouseScreenVelocity { get; }`](#p-electron2d-input-lastmousescreenvelocity) | Gets screen-space mouse velocity from the shared relative-motion sample. |
 | [`public static MouseMode MouseMode { get; set; }`](#p-electron2d-input-mousemode) | Gets or applies native pointer visibility, capture and confinement. |
 | [`public static bool IgnoreJoypadOnUnfocusedApplication { get; set; }`](#p-electron2d-input-ignorejoypadonunfocusedapplication) | Suppresses controller input and effects while unfocused; defaults to false. |
 
@@ -197,14 +197,14 @@ Gets the non-wheel mouse buttons currently held.
 <a id="p-electron2d-input-lastmousevelocity"></a>
 ### `public static Vector2 LastMouseVelocity { get; }`
 
-Gets the most recently submitted local mouse velocity.
+Gets mouse velocity sampled from relative motion over at least 0.1 seconds.
 
-**Value:** A thread-safe snapshot in content-scaled pixels per second.
+**Value:** A thread-safe snapshot in content-scaled pixels per second. Reading advances the shared sample with zero displacement; idle samples become zero. A gap over three seconds restarts accumulation. Event velocity fields are not used.
 
 <a id="p-electron2d-input-lastmousescreenvelocity"></a>
 ### `public static Vector2 LastMouseScreenVelocity { get; }`
 
-Gets the most recently submitted screen-space mouse velocity.
+Gets screen-space mouse velocity from the shared relative-motion sample.
 
 **Value:** A thread-safe snapshot in unscaled screen pixels per second.
 
@@ -555,6 +555,8 @@ Delivers pending native mouse motion, then pumps the active MIDI input session. 
 ### `public static void ParseInputEvent(InputEvent event)`
 
 Submits one typed input event, updates state, and synchronously routes it to the active main loop.
+
+Touch drags reach callbacks through a temporary owned copy with calibrated per-contact velocity; the caller-owned event remains unchanged. Generated touch drags use sampled mouse velocity.
 
 **Parameters**
 

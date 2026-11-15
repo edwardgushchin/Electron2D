@@ -36,8 +36,8 @@ public sealed partial class Input : ElectronObject
     private MouseButtonMask _mouseButtonMask;
     private Vector2 _lastMousePosition;
     private long _lastMouseWindowID;
-    private Vector2 _lastMouseVelocity;
-    private Vector2 _lastMouseScreenVelocity;
+    private PointerVelocity _mouseVelocity = new();
+    private readonly Dictionary<(int Device, int Index), PointerVelocity> _touchVelocities = [];
     private bool _isParsing;
     private bool _useAccumulatedInput = true;
     private bool _emulateMouseFromTouch = true;
@@ -109,7 +109,10 @@ public sealed partial class Input : ElectronObject
         get
         {
             lock (_gate)
-                return _lastMouseVelocity;
+            {
+                _mouseVelocity.Update(Vector2.Zero, Vector2.Zero);
+                return _mouseVelocity.Local;
+            }
         }
     }
 
@@ -118,7 +121,10 @@ public sealed partial class Input : ElectronObject
         get
         {
             lock (_gate)
-                return _lastMouseScreenVelocity;
+            {
+                _mouseVelocity.Update(Vector2.Zero, Vector2.Zero);
+                return _mouseVelocity.Screen;
+            }
         }
     }
 
@@ -290,8 +296,10 @@ public sealed partial class Input : ElectronObject
             _isParsing = true;
             try
             {
-                CommitEvent(@event);
-                using var emulated = CreateEmulatedEvent(@event, mainLoop is not null);
+                using var calibrated = CalibrateTouchMotion(@event);
+                var parsed = calibrated ?? @event;
+                CommitEvent(parsed);
+                using var emulated = CreateEmulatedEvent(parsed, mainLoop is not null);
                 Exception? emulationFailure = null;
                 if (emulated is not null)
                 {
@@ -309,7 +317,7 @@ public sealed partial class Input : ElectronObject
 
                 try
                 {
-                    DispatchParsedEvent(mainLoop, windowSources, @event);
+                    DispatchParsedEvent(mainLoop, windowSources, parsed);
                 }
                 catch (Exception error) when (emulationFailure is not null)
                 {
@@ -405,8 +413,8 @@ public sealed partial class Input : ElectronObject
                     Position = motion.Position,
                     Relative = motion.Relative,
                     ScreenRelative = motion.ScreenRelative,
-                    Velocity = motion.Velocity,
-                    ScreenVelocity = motion.ScreenVelocity,
+                    Velocity = LastMouseVelocityCore,
+                    ScreenVelocity = LastMouseScreenVelocityCore,
                     Tilt = motion.Tilt,
                     PenInverted = motion.PenInverted,
                     Pressure = motion.Pressure,
@@ -475,6 +483,7 @@ public sealed partial class Input : ElectronObject
             _mouseButtonMask = MouseButtonMask.None;
             _mouseFromTouch = null;
             _touchFromMouseDevice = null;
+            _touchVelocities.Clear();
 
             foreach (var state in _actions.Values)
             {
@@ -575,6 +584,12 @@ public sealed partial class Input : ElectronObject
 
     private void UpdateRawState(InputEvent @event)
     {
+        if (@event is InputEventScreenTouch touch)
+        {
+            var key = (touch.Device, touch.Index);
+            if (touch.IsPressed()) _touchVelocities[key] = new PointerVelocity();
+            else _touchVelocities.Remove(key);
+        }
         if (@event is InputEventMouse pointer) { _lastMousePosition = pointer.Position; _lastMouseWindowID = pointer.WindowID; }
         if (@event.IsCanceled() && @event is not InputEventMouseButton)
             return;
@@ -602,8 +617,7 @@ public sealed partial class Input : ElectronObject
                 SetMouseDeviceMask(mouseMotion.Device,
                     mouseMotion.Device == InputEvent.DeviceIdEmulation
                         ? mouseMotion.ButtonMask & MouseButtonMask.Left : mouseMotion.ButtonMask);
-                _lastMouseVelocity = mouseMotion.Velocity;
-                _lastMouseScreenVelocity = mouseMotion.ScreenVelocity;
+                _mouseVelocity.Update(mouseMotion.Relative, mouseMotion.ScreenRelative);
                 break;
 
             case InputEventJoypadButton joyButton:

@@ -51,8 +51,9 @@ internal static class CursorRefreshTests
             using var motion = new InputEventMouseMotion { Position = new(3, 7), Velocity = new(8, 9), ScreenVelocity = new(10, 11), ButtonMask = MouseButtonMask.Left };
             Input.ParseInputEvent(motion); Input.SetDefaultCursorShape(CursorShape.IBeam);
             Check(Input.LastMouseVelocity == Vector2.Zero && Input.LastMouseScreenVelocity == Vector2.Zero && Input.MouseButtonMask == MouseButtonMask.Left, "Default refresh without a scene preserves buttons and clears velocity.");
-            Input.ParseInputEvent(motion); Input.SetDefaultCursorShape(CursorShape.IBeam);
-            Check(Input.LastMouseVelocity == new Vector2(8, 9), "Same default does not synthesize or clear velocity.");
+            motion.Relative = new(8, 9); motion.ScreenRelative = new(16, 18);
+            Input.ParseInputEvent(motion); Thread.Sleep(150); Input.SetDefaultCursorShape(CursorShape.IBeam);
+            Check(Input.LastMouseVelocity.X > 0, "Same default does not synthesize or clear velocity.");
             Input.SetDefaultCursorShape(); Input.ReleasePressedEvents();
         }
         var method = ProjectSettings.Get(ProjectSettings.RenderingMethod); var fallback = ProjectSettings.Get(ProjectSettings.RenderingFallback);
