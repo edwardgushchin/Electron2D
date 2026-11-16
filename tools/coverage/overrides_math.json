@@ -4671,6 +4671,19 @@
       ],
       "state": "Implemented",
       "reason": "The complete declared bit mask contract is executable: alpha thresholding, bit operations, nearest resize, L8 image conversion, circular dilation/erosion, marching-squares contours, resource copying and lifetime have managed tests. Native platforms beyond Linux remain unverified."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum:EulerOrder",
+        "@GlobalScope::enum_value:EulerOrder.EULER_ORDER_XYZ",
+        "@GlobalScope::enum_value:EulerOrder.EULER_ORDER_XZY",
+        "@GlobalScope::enum_value:EulerOrder.EULER_ORDER_YXZ",
+        "@GlobalScope::enum_value:EulerOrder.EULER_ORDER_YZX",
+        "@GlobalScope::enum_value:EulerOrder.EULER_ORDER_ZXY",
+        "@GlobalScope::enum_value:EulerOrder.EULER_ORDER_ZYX"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004 excludes the spatial rotation-order consumers Basis.from_euler/get_euler, Quaternion.get_euler and Node3D.rotation_order; Quaternion.from_euler uses fixed YXZ. Ordinary Vector3 data and numeric shader matrices remain applicable under ADRs 0033/0028 and do not consume this enum. No implementation trigger. See [Euler order audit](../euler-order.md)."
     }
   ]
 }
