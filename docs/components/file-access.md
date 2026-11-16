@@ -1,6 +1,6 @@
 # File and directory access component
 
-Last updated: 2026-11-15
+Last updated: 2026-11-16
 
 ## Scope
 
@@ -169,3 +169,9 @@ Mounted res:// resources now share [resource pack resolution](resource-packs.md)
 `FileAccessModeTests` exercises the four exact access modes across ordinary, all five compressed and both encrypted factories, missing/existing files and explicit Close/disposal. It checks initial cursor, truncation, permissions, persisted bytes, temporary owners and invalid raw values. Transformed streams supply the memory-backed cases; no separate public memory factory exists. The lifecycle and save-and-swap sharing profiles retain mounted read-only protection and direct versus staged write boundaries.
 
 `FileCompressionTests.Vectors` supplies 40 independent empty/tiny/64 KiB boundary/multiblock vectors: literal-only FastLZ, raw-block Zstandard and directly encoded BCL streams. FileAccess and ByteBuffer decode the same input, reject other codecs and truncated payloads, enforce buffer budgets and preserve bytes after failed editing opens. Repeated seek/read and the existing 110 random/repeated round trips, corruption, atomic commit failure and fresh-process tests also pass on Windows x64 CLR. Native checksums detect corruption; these containers do not promise authentication for all arbitrary payload edits. Package, foreign-host and full ADR 0021 qualification remain separate.
+
+### Temporary directory ownership
+
+`DirAccess.CreateTemp` creates an independent physical directory under the system temporary path. The optional prefix is validated before creation; `keep` defaults to false. Ownership stays with the captured root across directory changes. Disposal ends the listing and recursively removes non-kept contents without following directory links. A missing root is harmless; other cleanup exceptions leave a terminal owner and may leave content for caller recovery. Repeated disposal does not retry deletion. Detached listing snapshots survive disposal.
+
+`DirAccessTemporaryTests` runs with the directory mutation profile and checks public file I/O, exact Unicode prefixes, 32 concurrent owners, keep/delete, observer failure/reentry, missing roots and Windows read-only cleanup failure. Windows cleanup enumerates directory links without entering reparse points and deletes each link nonrecursively before the BCL recursive tree delete. This avoids the BCL junction-unmount step, which returns Win32 access denied on the tested host even though deleting the junction itself is permitted. Cleanup errors are still propagated. Junctions at the root and in nested directories exercise external-target preservation without symbolic-link privilege. Foreign hosts, NativeAOT and release packages remain unqualified; ordinary filesystem races remain possible.

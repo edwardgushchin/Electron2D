@@ -5,6 +5,7 @@ internal static class DirAccessMutationTests
 {
     internal static void Run()
     {
+        DirAccessTemporaryTests.Run();
         using var fixture = DirAccess.CreateTemp("dir-mutations");
         var root = fixture.GetCurrentDir();
         var project = IOPath.Combine(root, "project");

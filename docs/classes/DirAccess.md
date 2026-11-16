@@ -1,6 +1,6 @@
 # DirAccess
 
-Last updated: 2026-11-15
+Last updated: 2026-11-16
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -167,7 +167,7 @@ Creates and opens a uniquely named temporary directory.
 - `IO.IOException`: The temporary directory cannot be created.
 - `UnauthorizedAccessException`: The caller lacks access to the system temporary directory.
 
-**Remarks:** Unless `keep` is true, disposal recursively deletes the complete owned directory.
+**Remarks:** The system temporary path contains the new physical root. Empty prefixes omit the hyphen. Otherwise the prefix is preserved and followed by a hyphen and a random suffix. Null, dot/dot-dot, control characters and `<>:"/\|?*` are rejected. Unless `keep` is true, disposal recursively deletes the captured root even after `ChangeDir`, removing directory links without traversing their targets. An already deleted root is harmless. Other cleanup failures propagate and leave a terminal disposed owner; repeated disposal does not retry cleanup. External path replacement races are not prevented.
 
 <a id="m-electron2d-diraccess-listdirbegin"></a>
 ### `public void ListDirBegin()`
