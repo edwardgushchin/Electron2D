@@ -15,7 +15,20 @@ public sealed partial class TranslationServer
         // Validate before the catalog parser can discard unrecognized components.
         var culture = System.Globalization.CultureInfo.GetCultureInfo(name.Replace('_', '-'));
         var canonical = culture.Name;
-        if (modifier >= 0) canonical += locale[modifier..];
+        if (modifier >= 0)
+        {
+            var modifierLanguage = ParseCatalogLocale(canonical, false).Language;
+            // The metadata parser may ignore tokens, including those after its first script.
+            // Runtime assignment must validate the entire suffix before that lossy parse.
+            foreach (var item in locale[(modifier + 1)..].Split(';'))
+            {
+                var value = item.ToLowerInvariant();
+                if (value is "cyrillic" or "latin" or "devanagari" ||
+                    LocaleCatalog.Variants.TryGetValue(value, out var owner) && owner == modifierLanguage) continue;
+                throw new System.Globalization.CultureNotFoundException(nameof(locale), locale, "Unrecognized locale modifier.");
+            }
+            canonical += locale[modifier..];
+        }
         return System.Globalization.CultureInfo.GetCultureInfo(StandardizeLocale(canonical).Replace('_', '-'));
     }
 

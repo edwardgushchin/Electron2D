@@ -114,12 +114,29 @@ internal static class TranslationDomainTests
         {
             ("C", "en"), ("in_ID", "id-ID"), ("no_NO", "nb-NO"),
             ("en_UK", "en-GB"), ("iw_IL", "he-IL"), ("EN_us", "en-US"), ("sr_RS@latin", "sr-Latn-RS"),
+            ("sr_RS@CYRILLIC", "sr-Cyrl-RS"), ("sd_IN@devanagari", "sd-Deva-IN"),
+            ("ca@valencia", "ca-valencia"), ("tt@iqtelif", "tt-iqtelif"),
+            ("aa@saaho", "aa-saaho"), ("es@tradnl", "es-tradnl"),
+            ("ca@valencia;LATIN", "ca-Latn-valencia"), ("sr_RS@latin;cyrillic", "sr-Latn-RS"),
             ("zh_hant_tw", "zh-Hant-TW"), ("", "")
         })
         {
+            string? expectedName = null;
+            try { expectedName = CultureInfo.GetCultureInfo(expected).Name; }
+            catch (CultureNotFoundException) { }
+            if (expectedName is null)
+            {
+                var oldDomain = domain.LocaleOverride;
+                var oldCatalog = catalog.Locale;
+                Reject<CultureNotFoundException>(() => domain.LocaleOverride = input);
+                Reject<CultureNotFoundException>(() => catalog.Locale = input);
+                Check(domain.LocaleOverride == oldDomain && catalog.Locale == oldCatalog,
+                    "Pinned modifiers cannot bypass an unsupported managed culture.");
+                continue;
+            }
             domain.LocaleOverride = input;
             catalog.Locale = input;
-            Check(domain.LocaleOverride == expected && catalog.Locale == expected,
+            Check(domain.LocaleOverride == expectedName && catalog.Locale == domain.LocaleOverride,
                 $"Runtime locale normalization agrees for {input}.");
         }
         domain.LocaleOverride = "iw_IL";
@@ -129,12 +146,17 @@ internal static class TranslationDomainTests
         domain.AddTranslation(catalog);
         Check(domain.Translate("runtime-key") == "translated" &&
             domain.TranslatePlural("runtime-one", "runtime-many", 2) == "many", "Alias override resolves singular and plural catalogs.");
-        foreach (var invalid in new[] { "bad locale!", "en_!", new string('x', 100) })
+        var notifications = 0;
+        catalog.Changed += _ => notifications++;
+        foreach (var invalid in new[] { "bad locale!", "en_!", new string('x', 100),
+            "en@!", "en@unknown", "en@", "en@@latin", "en@latin@!", "en@!;latin", "en@latin;!",
+            "en@latin;", "en@;latin", "en@latin;;cyrillic", "en@valencia", "ca@valencia;!" })
         {
             Reject<CultureNotFoundException>(() => domain.LocaleOverride = invalid);
             Reject<CultureNotFoundException>(() => catalog.Locale = invalid);
-            Check(domain.LocaleOverride == "he-IL" && catalog.Locale == "he-IL" &&
-                domain.Translate("runtime-key") == "translated", "Rejected locale retains working state.");
+            Check(domain.LocaleOverride == "he-IL" && catalog.Locale == "he-IL" && notifications == 0 &&
+                domain.Translate("runtime-key") == "translated" &&
+                domain.TranslatePlural("runtime-one", "runtime-many", 2) == "many", "Rejected locale retains working state.");
         }
         Reject<ArgumentNullException>(() => domain.LocaleOverride = null!);
         Reject<ArgumentNullException>(() => catalog.Locale = null!);

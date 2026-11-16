@@ -37,7 +37,8 @@ public sealed class TranslationDomain : ElectronObject
 
     /// <summary>Gets or sets a culture name used instead of the process-wide UI culture; empty clears the override.</summary>
     /// <remarks>Normalizes managed casing and catalog aliases and script modifiers before storing CultureInfo.Name.
-    /// Locale ranking supplies script/region defaults. Invalid or unsupported cultures leave the previous override intact.</remarks>
+    /// Locale ranking supplies script/region defaults. Every token after @ must be a pinned script modifier or a variant
+    /// for the selected language. Invalid or unsupported cultures leave the previous override intact.</remarks>
     /// <exception cref="ArgumentNullException">The value is null.</exception>
     /// <exception cref="CultureNotFoundException">The managed runtime cannot resolve the culture.</exception>
     /// <exception cref="ObjectDisposedException">The domain is disposed.</exception>

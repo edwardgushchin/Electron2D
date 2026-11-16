@@ -29,8 +29,15 @@ internal static class LocalizationProjectSettingsTests
                 foreach (var key in new[] { ProjectSettings.LocaleTest, ProjectSettings.LocaleFallback })
                 {
                     saved.Set(key, " sr_RS@latin ");
-                    Reject<ArgumentOutOfRangeException>(() => saved.Set(key, "bad locale!"));
-                    Check(saved.Get(key) == " sr_RS@latin ", "Rejected locale leaves the setting text intact.");
+                    foreach (var invalid in new[] { "bad locale!", "en@!", "en@unknown", "en@", "en@@latin",
+                        "en@latin@!", "en@!;latin", "en@latin;!", "en@latin;", "en@;latin",
+                        "en@latin;;cyrillic", "en@valencia", "ca@valencia;!" })
+                    {
+                        var version = saved.Version;
+                        Reject<ArgumentOutOfRangeException>(() => saved.Set(key, invalid));
+                        Check(saved.Get(key) == " sr_RS@latin " && saved.Version == version,
+                            "Rejected locale leaves the setting text and version intact.");
+                    }
                     saved.Reset(key);
                 }
                 saved.Set(ProjectSettings.LocaleTest, "sr_RS@latin");
