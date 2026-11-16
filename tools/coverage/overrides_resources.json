@@ -1002,6 +1002,14 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0039: public all-format analysis checks cover byte thresholds, sRGB/normal roles, exact visible bounds, UInt16 endpoints, base-only snapshots, compressed limits, disposal and PNG/BCn consumers. See docs/components/images.md#image-analysis."
+    },
+    {
+      "godot": [
+        "Image::method:adjust_bcs(float:,float:,float:)",
+        "Image::method:compute_image_metrics(Image:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0039: public ImageColorMetrics.Consumer verifies ordered all-mip BCS, alpha, format encoding, finite-factor refusal, HDR propagation, snapshot isolation, post-commit subscriber failure, reentry and disposal; rounded-byte RGBA/Rec.709 histograms, common-area normalization by four, identical PSNR 1e10, HDR/nonfinite guards and independent block decompression. Windows CLR DPITexture raster saturation and existing storage/pixel/block/DPI profiles pass; foreign platforms, NativeAOT and full product-platform acceptance remain separate. See docs/components/images.md#color-adjustment-and-image-metrics."
     }
   ],
   "extras": [

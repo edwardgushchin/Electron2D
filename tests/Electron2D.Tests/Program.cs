@@ -4742,8 +4742,8 @@ static void VerifyImages()
         first.Fill(Colors.Black);
         second.Fill(Colors.Black);
         var identical = first.ComputeImageMetrics(second, useLuma: false);
-        Require(identical.Maximum == 0d && identical.RootMeanSquared == 0d && identical.PeakSignalToNoiseRatio == 500d,
-            "Identical image metrics must report zero error and capped peak SNR.");
+        Require(identical.Maximum == 0d && identical.RootMeanSquared == 0d && identical.PeakSignalToNoiseRatio == 1e10d,
+            "Identical image metrics must report zero error and the identical-image peak SNR.");
         second.SetPixel(0, 0, Colors.White);
         var componentMetrics = first.ComputeImageMetrics(second, useLuma: false);
         Require(componentMetrics.Maximum == 255d && componentMetrics.Mean == 95.625d &&

@@ -1,6 +1,6 @@
 # ImageMetrics
 
-Last updated: 2026-09-21
+Last updated: 2026-11-16
 
 **Inherits:** `System.ValueType`
 
@@ -14,7 +14,7 @@ Last updated: 2026-09-21
 
 ## Description
 
-`ImageMetrics` is an immutable value. All errors are measured in 8-bit component units even when source images use another readable format. A luminance comparison contributes one error per overlapping pixel; an RGBA comparison contributes four.
+`ImageMetrics` is an immutable value. All errors are measured in 8-bit component units even when source images use another readable format. A luminance comparison contributes one error per overlapping pixel; an RGBA comparison contributes four. Both normalize by four times the overlapping pixel count. Identical images return PSNR 1e10; nonzero errors return PSNR in 0..500. See [the metric contract](../components/images.md#color-adjustment-and-image-metrics).
 
 The type is a typed replacement for an unstructured metric dictionary. Record-struct value equality compares all five stored doubles.
 
@@ -87,7 +87,7 @@ The square root of `MeanSquared`, normally from 0 through 255.
 <a id="peaksignaltonoiseratio"></a>
 ### `public double PeakSignalToNoiseRatio { get; }`
 
-The decibel value `20 × log10(255 / RootMeanSquared)`, clamped to `0..500`. Identical compared regions report 500.
+The decibel value `20 × log10(255 / RootMeanSquared)`, clamped to `0..500` for nonzero error. Identical compared regions report `1e10`.
 
 ## Method and Operator Descriptions
 

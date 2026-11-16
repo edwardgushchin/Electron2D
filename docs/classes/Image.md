@@ -436,7 +436,7 @@ Decodes the base level of an `Rgbe9995` image to linear RGB, applies the sRGB tr
 <a id="computeimagemetrics"></a>
 ### `public ImageMetrics ComputeImageMetrics(Image comparedImage, bool useLuma)`
 
-Computes errors in 8-bit units over the two base levels' common top-left area. With `useLuma`, each pixel contributes Rec. 709 luminance; otherwise it contributes RGBA. Components outside `0..1`, empty images, and compressed images are rejected.
+Computes errors in 8-bit units over the two base levels' common top-left area. With `useLuma`, each pixel contributes Rec. 709 luminance; otherwise it contributes RGBA. Both modes normalize by four times the common pixel count. Identical regions return PSNR `1e10`. Supported blocks decode from independent snapshots without changing either image. Empty images, half/shared-exponent decoded storage, and nonfinite or out-of-range components are rejected. See [the full contract](../components/images.md#color-adjustment-and-image-metrics).
 
 ## Constant Descriptions
 
