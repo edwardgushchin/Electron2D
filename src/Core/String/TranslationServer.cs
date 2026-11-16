@@ -244,7 +244,8 @@ public sealed partial class TranslationServer : ElectronObject
     /// <summary>Registers a live translation resource for a domain.</summary>
     /// <param name="translation">The borrowed resource; its subsequent edits are visible to lookups.</param>
     /// <param name="domain">The case-sensitive domain, empty by default.</param>
-    /// <remarks>The most recently registered resource wins within one locale. Disposing the resource removes it.</remarks>
+    /// <remarks>Registration compares references. Repeating a registration keeps its position; removing and adding
+    /// appends it. The latest registration wins equal locale scores. Disposing the borrowed resource removes it.</remarks>
     /// <exception cref="ArgumentNullException">An argument is null.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public static void AddTranslation(Translation translation, string domain = "") =>
@@ -258,7 +259,7 @@ public sealed partial class TranslationServer : ElectronObject
         GetOrAddDomainCore(domain).AddTranslation(translation);
     }
 
-    /// <summary>Unregisters a translation resource from a domain without disposing it.</summary>
+    /// <summary>Unregisters the exact translation resource from a domain without disposing it.</summary>
     /// <param name="translation">The resource to remove.</param>
     /// <param name="domain">The registration domain.</param>
     /// <exception cref="ArgumentNullException">An argument is null.</exception>
@@ -281,6 +282,7 @@ public sealed partial class TranslationServer : ElectronObject
     /// <summary>Returns a registered translation domain, creating it if necessary.</summary>
     /// <param name="name">The exact case-sensitive domain name; empty selects the main domain.</param>
     /// <returns>A caller-visible borrowed domain; disposing it removes its registration.</returns>
+    /// <exception cref="ArgumentNullException">The name is null.</exception>
     public static TranslationDomain GetOrAddDomain(string name) =>
         Service.GetOrAddDomainCore(name);
 
@@ -293,6 +295,7 @@ public sealed partial class TranslationServer : ElectronObject
     /// <summary>Reports whether a named domain is registered.</summary>
     /// <param name="name">The exact domain name.</param>
     /// <returns>True for the main domain or a live custom domain.</returns>
+    /// <exception cref="ArgumentNullException">The name is null.</exception>
     public static bool HasDomain(string name) =>
         Service.HasDomainCore(name);
 
@@ -304,6 +307,8 @@ public sealed partial class TranslationServer : ElectronObject
 
     /// <summary>Removes a custom domain and its direct entries without disposing the domain or its catalogs.</summary>
     /// <param name="name">A nonempty exact domain name.</param>
+    /// <exception cref="ArgumentNullException">The name is null.</exception>
+    /// <exception cref="ArgumentException">The name selects the main domain.</exception>
     public static void RemoveDomain(string name) =>
         Service.RemoveDomainCore(name);
 
@@ -323,7 +328,7 @@ public sealed partial class TranslationServer : ElectronObject
     }
 
     /// <summary>Gets a snapshot of resources in the main domain.</summary>
-    /// <returns>Registered resources in registration order.</returns>
+    /// <returns>An independent array of borrowed resources in registration order, excluding direct entries.</returns>
     public static Translation[] GetTranslations() => GetOrAddDomain(string.Empty).GetTranslations();
 
     /// <summary>Gets matching resources from the main domain.</summary>
@@ -339,6 +344,7 @@ public sealed partial class TranslationServer : ElectronObject
     /// <summary>Reports whether the main domain contains a resource by identity.</summary>
     /// <param name="translation">The resource to inspect.</param>
     /// <returns>True when registered.</returns>
+    /// <exception cref="ArgumentNullException">The resource is null.</exception>
     public static bool HasTranslation(Translation translation) => GetOrAddDomain(string.Empty).HasTranslation(translation);
 
     /// <summary>Reports whether the main domain has a catalog matching a locale.</summary>
@@ -596,7 +602,8 @@ public sealed partial class TranslationServer : ElectronObject
     }
 
     /// <summary>Removes all direct translations and borrowed resource registrations without disposing resources.</summary>
-    /// <remarks>The selected <see cref="Culture"/> and <see cref="Enabled"/> state are not changed.</remarks>
+    /// <remarks>The selected <see cref="Culture"/>, enablement, domain identities and their settings are preserved.
+    /// Detached domains are independent and are not cleared.</remarks>
     public static void Clear() =>
         Service.ClearCore();
 

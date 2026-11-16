@@ -349,6 +349,20 @@
       "godot": [
         "@GlobalScope::property:XRServer"
       ]
+    },
+    {
+      "godot": [
+        "TranslationServer::method:add_translation(Translation:)",
+        "TranslationServer::method:remove_translation(Translation:)",
+        "TranslationServer::method:get_translations()",
+        "TranslationServer::method:has_translation(Translation:)",
+        "TranslationServer::method:clear()",
+        "TranslationServer::method:get_or_add_domain(StringName:)",
+        "TranslationServer::method:has_domain(StringName:)",
+        "TranslationServer::method:remove_domain(StringName:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0007/0095: static public registry checks cover reference identity even with overridden equality, duplicate and remove/add order, independent borrowed arrays, live singular/plural catalogs and direct overrides, disposal, Clear, ordinal domain names, detached use and replacement, invalid arguments, selector reentry and 128 concurrent clear/registration transitions. Existing managed queries cover live locale edits and concurrent resource disposal; node/domain/project-settings regressions execute. Typed registration order, borrowing and all-domain Clear are accepted adaptations. Evidence: .tasks/qa/T-0076/report.md. Class and GetToolLocale remain Partial; foreign-host, rendering and release-package qualification are separate."
     }
   ]
 }

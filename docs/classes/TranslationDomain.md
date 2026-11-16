@@ -13,6 +13,8 @@ Last updated: 2026-11-13
 
 A domain owns the registration order of borrowed [`Translation`](Translation.md) resources. It does not dispose them. A live catalog's edits and locale changes affect subsequent lookups; its disposal unregisters it. Registered domains also participate in [`TranslationServer`](TranslationServer.md) direct entries. An independent domain resolves only its own catalogs. Resource lookups rank all catalogs against the selected locale, then try the configured fallback only when no message resolves. Parent or invariant resource locales cannot intercept a better regional/script match. The most recently registered resource wins an equal locale score.
 
+Registration, membership and removal compare resource references, including catalogs whose derived types override `Equals`. Repeated registration keeps the original position; removal followed by registration appends it. Returned arrays are independent containers of borrowed references.
+
 `Enabled`, `LocaleOverride` and pseudolocalization options belong to each domain. The process-wide server enablement still applies. The server's main domain uses the empty name. Removing a custom domain detaches it without disposing it; disposing a registered domain removes its registration and direct entries. Managed lifetime follows `ElectronObject`.
 
 ## Example
