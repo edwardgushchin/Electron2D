@@ -113,7 +113,11 @@ public sealed partial class DirAccess : ElectronObject
     /// <param name="prefix">An optional portable name prefix. A hyphen is appended before the random suffix.</param>
     /// <param name="keep">Whether disposal preserves the directory and its contents.</param>
     /// <returns>An owner positioned at the new temporary directory.</returns>
-    /// <remarks>Unless <paramref name="keep"/> is true, disposal recursively deletes the complete owned directory.</remarks>
+    /// <remarks>The directory is created under the system temporary path. Empty prefixes omit the hyphen.
+    /// Unless <paramref name="keep"/> is true, disposal recursively deletes the captured root, even after
+    /// <see cref="ChangeDir"/>. Directory links are removed without traversing their targets. A missing root
+    /// is harmless; other cleanup failures propagate and leave the owner disposed, without an automatic retry.
+    /// Filesystem operations do not protect against hostile external path replacement races.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="prefix"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="prefix"/> is not a portable filename prefix.</exception>
     /// <exception cref="IOException">The temporary directory cannot be created.</exception>
@@ -821,7 +825,24 @@ public sealed partial class DirAccess : ElectronObject
                 if (!_keepTemporary && _temporaryPath is not null)
                 {
                     if (IsExistingDirectory(_temporaryPath))
+                    {
+                        if (OperatingSystem.IsWindows())
+                        {
+                            // Recursive BCL deletion tries to unmount junctions, which can require extra privileges.
+                            var links = new System.IO.Enumeration.FileSystemEnumerable<string>(_temporaryPath,
+                                (ref System.IO.Enumeration.FileSystemEntry entry) => entry.ToFullPath(),
+                                new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = 0, IgnoreInaccessible = false })
+                            {
+                                ShouldRecursePredicate = (ref System.IO.Enumeration.FileSystemEntry entry) =>
+                                    (entry.Attributes & FileAttributes.ReparsePoint) == 0,
+                                ShouldIncludePredicate = (ref System.IO.Enumeration.FileSystemEntry entry) =>
+                                    entry.IsDirectory && (entry.Attributes & FileAttributes.ReparsePoint) != 0
+                            };
+                            foreach (var link in links)
+                                Directory.Delete(link, recursive: false);
+                        }
                         Directory.Delete(_temporaryPath, recursive: true);
+                    }
                     _temporaryPath = null;
                 }
             }
