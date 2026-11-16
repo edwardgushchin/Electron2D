@@ -1,0 +1,40 @@
+{
+  "statusGroups": [
+    {
+      "godot": [
+        "@GlobalScope::enum_value:PropertyUsageFlags.PROPERTY_USAGE_STORAGE"
+      ],
+      "state": "Implemented",
+      "reason": "[Pinned declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2993-L3094). ADRs 0005/0023; see [role audit](../property-usage.md). Bit 2 selects scene serialization. IsStored=true on writable typed descriptors drives capture and ordinary setter restoration. PropertyUsage.Consumer checks memory/file round trips and transient exclusion; storage does not imply editor visibility."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:PropertyUsageFlags.PROPERTY_USAGE_NONE"
+      ],
+      "state": "Blocked",
+      "reason": "[Pinned declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2993-L3094). ADRs 0005/0023; see [role audit](../property-usage.md). Value 0 combines no storage with no Inspector display. stored=false retains discovery/read/write and skips storage. Trigger: independent typed Inspector visibility metadata and consuming inspector under ADR 0005."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:PropertyUsageFlags.PROPERTY_USAGE_NO_EDITOR"
+      ],
+      "state": "Blocked",
+      "reason": "[Pinned declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2993-L3094). ADRs 0005/0023; see [role audit](../property-usage.md). Value 2 aliases STORAGE without the EDITOR bit. IsStored=true covers storage only and does not hide discovery or Inspector display. Trigger: independent typed Inspector visibility metadata and consuming inspector under ADR 0005."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:PropertyUsageFlags.PROPERTY_USAGE_READ_ONLY"
+      ],
+      "state": "Blocked",
+      "reason": "[Pinned declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2993-L3094). ADRs 0005/0023; see [role audit](../property-usage.md). Bit 268435456 restricts Inspector editing, not programmatic setters or restoration. IsReadOnly means no programmatic setter and is not equivalent. Trigger: independent editor-only editability metadata and consuming inspector preserving typed writes under ADR 0005."
+    }
+  ],
+  "mappings": [
+    {
+      "godot": "@GlobalScope::enum_value:PropertyUsageFlags.PROPERTY_USAGE_STORAGE",
+      "electron2d": "property:Electron2D.PropertyDescriptor.IsStored()",
+      "reason": "[Pinned declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml#L2993-L3094). ADRs 0005/0023; see [role audit](../property-usage.md). Bit 2 selects scene serialization. IsStored=true on writable typed descriptors drives capture and ordinary setter restoration. PropertyUsage.Consumer checks memory/file round trips and transient exclusion; storage does not imply editor visibility."
+    }
+  ]
+}
+

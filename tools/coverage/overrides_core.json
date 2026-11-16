@@ -1709,11 +1709,6 @@
       "adr": "adr-0005"
     },
     {
-      "electron2d": "property:Electron2D.PropertyDescriptor.IsStored()",
-      "reason": "Typed property descriptor replacing Variant dictionaries.",
-      "adr": "adr-0005"
-    },
-    {
       "electron2d": "property:Electron2D.PropertyDescriptor.Name()",
       "reason": "Typed property descriptor replacing Variant dictionaries.",
       "adr": "adr-0005"

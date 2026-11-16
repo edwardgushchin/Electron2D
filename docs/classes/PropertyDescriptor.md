@@ -36,6 +36,10 @@ IndexedPropertyTests verifies object rebinding, components, copied arrays/maps/c
 
 An internal AlwaysDuplicateResource policy on the Skeleton stack descriptor selects force duplication through the existing scene resource session. It is schema metadata, with no public dynamic selector, and ensures independent executable modifications for each instantiated rig.
 
+## Storage and access roles
+
+`IsStored` selects packed-scene capture and restoration; false leaves discovery and typed access available. `IsReadOnly` describes a missing programmatic setter, independently of storage or editor presentation. Stored typed descriptors require a setter so restoration can use ordinary validation. Neither property specifies Inspector visibility or an editor-only write restriction. See the [role audit](../coverage/property-usage.md) for the separate editor prerequisites and public consumer evidence.
+
 ## Description
 
 Describes a typed property exposed to Electron2D tooling.

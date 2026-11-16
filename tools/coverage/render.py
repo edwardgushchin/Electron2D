@@ -22,6 +22,7 @@ OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in 
 OVERRIDES.append(Path(__file__).with_name("overrides_control_geometry.json"))
 OVERRIDES.append(Path(__file__).with_name("overrides_global_services.json"))
 OVERRIDES.append(Path(__file__).with_name("overrides_method_flags.json"))
+OVERRIDES.append(Path(__file__).with_name("overrides_property_usage.json"))
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
