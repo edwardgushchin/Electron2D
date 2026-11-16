@@ -135,7 +135,7 @@ public sealed class TranslationDomain : ElectronObject
         }
     }
 
-    /// <summary>Unregisters a catalog without disposing it.</summary>
+    /// <summary>Unregisters the exact catalog instance without disposing it.</summary>
     /// <param name="translation">The resource to remove.</param>
     public void RemoveTranslation(Translation translation)
     {
@@ -383,7 +383,11 @@ public sealed class TranslationDomain : ElectronObject
 
     private void RemoveUnderLock(Translation translation)
     {
-        if (_translations.Remove(translation)) { translation.Disposed -= OnTranslationDisposed; _lookupSnapshot = null; }
+        var index = _translations.FindIndex(item => ReferenceEquals(item, translation));
+        if (index < 0) return;
+        _translations.RemoveAt(index);
+        translation.Disposed -= OnTranslationDisposed;
+        _lookupSnapshot = null;
     }
 
     private static bool MatchesLocale(string locale, Translation translation, bool exact)
