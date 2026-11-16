@@ -475,6 +475,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOCAL_RESOURCE_CONSUMERS
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_USER_DATA") == "1") { ProjectUserDataTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_SETTINGS") == "1")
 {
+    ProjectPathTests.Run();
     ProjectSettingsContractTests.Run();
     ProjectSettingsMetadataTests.Run();
     VerifyProjectSettings();

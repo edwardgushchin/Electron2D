@@ -437,3 +437,5 @@ Owned movie runs now preserve the last successful simulation pose and PCM on pro
 [Windows system fonts](../components/system-fonts.md#windows-native-verification) connect existing OS catalog queries, SystemFont and owned automatic text fallback to local DirectWrite file/collection identities through the shared text owner.
 
 The [process component](../components/processes.md#windows-console-and-capture) owns Windows shared stdout/stderr capture and separate console identity, with common CreateProcess/Execute launch, retained CreateInstance/OpenWithProgram semantics and SDL pipe lifetime. This Windows x64 slice leaves mobile launch, general macOS bundles and the full target qualification open.
+
+Path conversion normalizes native and directory virtual paths without requiring files to exist. Localization selects the deeper containing root from one configured pair. See [the path contract](../components/project-settings.md#path-conversion) for validation, UID handling and platform limits.

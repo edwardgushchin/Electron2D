@@ -966,12 +966,14 @@ public partial class ProjectSettingsRegistry : ElectronObject
         if (!isKnownVirtualPath && path.Contains("://", StringComparison.Ordinal))
             throw new NotSupportedException($"Virtual path scheme in '{path}' is not supported.");
 
-        var fullPath = isKnownVirtualPath ? GlobalizePathCore(path) : IOPath.GetFullPath(path);
+        string fullPath;
         string projectRoot;
         string userDataRoot;
         lock (_gate)
         {
             ThrowIfDisposed();
+            // Keep virtual expansion and reverse root selection on the same configuration.
+            fullPath = isKnownVirtualPath ? GlobalizePathCore(path) : IOPath.GetFullPath(path);
             projectRoot = _projectRoot;
             userDataRoot = _userDataRoot;
         }
