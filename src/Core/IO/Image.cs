@@ -943,7 +943,7 @@ public readonly record struct ImageMetrics
     /// <param name="mean">The mean absolute 8-bit component error.</param>
     /// <param name="meanSquared">The mean squared 8-bit component error.</param>
     /// <param name="rootMeanSquared">The square root of <paramref name="meanSquared"/>.</param>
-    /// <param name="peakSignalToNoiseRatio">The peak signal-to-noise ratio in decibels, capped at 500.</param>
+    /// <param name="peakSignalToNoiseRatio">The peak signal-to-noise ratio in decibels; nonzero errors are capped at 500.</param>
     public ImageMetrics(double maximum, double mean, double meanSquared, double rootMeanSquared, double peakSignalToNoiseRatio)
     {
         Maximum = maximum;
@@ -970,6 +970,6 @@ public readonly record struct ImageMetrics
     public double RootMeanSquared { get; }
 
     /// <summary>Gets the peak signal-to-noise ratio in decibels.</summary>
-    /// <value>A value from zero through 500; identical images report 500.</value>
+    /// <value>A value from zero through 500 for nonzero error; identical images report 1e10.</value>
     public double PeakSignalToNoiseRatio { get; }
 }

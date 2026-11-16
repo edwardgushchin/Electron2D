@@ -672,16 +672,27 @@ public sealed partial class Image
 
     /// <summary>Computes absolute-error metrics against another image over their common base-level area.</summary>
     /// <param name="comparedImage">The image to compare.</param>
-    /// <param name="useLuma">Whether to compare Rec. 709 luminance instead of four RGBA components.</param>
+    /// <param name="useLuma">Whether to compare Rec. 709 luminance instead of four RGBA components. Both modes normalize by four times the pixel count.</param>
     /// <returns>Maximum, mean, squared, root-mean-squared, and peak signal-to-noise values in 8-bit units.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="comparedImage"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">Either image is empty, compressed, or contains a component outside <c>0..1</c>.</exception>
+    /// <exception cref="InvalidOperationException">Either image is empty, uses half-float/shared-exponent storage after decompression, or contains a nonfinite component or a component outside <c>0..1</c>.</exception>
     /// <exception cref="ObjectDisposedException">Either image is disposing or disposed.</exception>
+    /// <remarks>Reads independent snapshots, decompresses blocks without changing either image, and ignores mip levels.
+    /// Identical images report a peak signal-to-noise ratio of 1e10; other results are capped at 500.</remarks>
+    /// <exception cref="InvalidDataException">Compressed blocks are invalid.</exception>
+    /// <exception cref="IOException">Decompression cannot allocate working memory.</exception>
     public ImageMetrics ComputeImageMetrics(Image comparedImage, bool useLuma)
     {
         ArgumentNullException.ThrowIfNull(comparedImage);
-        var first = RequireReadablePixels();
-        var second = comparedImage.RequireReadablePixels();
+        var first = Snapshot();
+        var second = ReferenceEquals(this, comparedImage) ? first : comparedImage.Snapshot();
+        if (IsCompressedFormat(first.Format)) first = DecompressPixels(first);
+        if (IsCompressedFormat(second.Format)) second = DecompressPixels(second);
+        RequireReadablePixels(first);
+        RequireReadablePixels(second);
+        if (first.Format is >= Format.Rh and <= Format.Rgbe9995 ||
+            second.Format is >= Format.Rh and <= Format.Rgbe9995)
+            throw new InvalidOperationException("Image metrics do not support half-float or shared-exponent storage.");
         var width = Math.Min(first.Width, second.Width);
         var height = Math.Min(first.Height, second.Height);
         var histogram = new long[256];
@@ -702,10 +713,10 @@ public sealed partial class Image
                 }
                 else
                 {
-                    histogram[Math.Abs(ToByte(a.R) - ToByte(b.R))]++;
-                    histogram[Math.Abs(ToByte(a.G) - ToByte(b.G))]++;
-                    histogram[Math.Abs(ToByte(a.B) - ToByte(b.B))]++;
-                    histogram[Math.Abs(ToByte(a.A) - ToByte(b.A))]++;
+                    histogram[Math.Abs(ToMetricByte(a.R) - ToMetricByte(b.R))]++;
+                    histogram[Math.Abs(ToMetricByte(a.G) - ToMetricByte(b.G))]++;
+                    histogram[Math.Abs(ToMetricByte(a.B) - ToMetricByte(b.B))]++;
+                    histogram[Math.Abs(ToMetricByte(a.A) - ToMetricByte(b.A))]++;
                 }
             }
         }
@@ -722,11 +733,11 @@ public sealed partial class Image
             squaredSum += error * error * histogram[error];
         }
 
-        var values = (double)width * height * (useLuma ? 1 : 4);
+        var values = (double)width * height * 4;
         var mean = sum / values;
         var meanSquared = squaredSum / values;
         var rootMeanSquared = Math.Sqrt(meanSquared);
-        var peak = rootMeanSquared == 0d ? 500d : Math.Clamp(Math.Log10(255d / rootMeanSquared) * 20d, 0d, 500d);
+        var peak = rootMeanSquared == 0d ? 1e10d : Math.Clamp(Math.Log10(255d / rootMeanSquared) * 20d, 0d, 500d);
         return new ImageMetrics(maximum, mean, meanSquared, rootMeanSquared, peak);
     }
 
@@ -1404,8 +1415,10 @@ public sealed partial class Image
             throw new InvalidOperationException("Image metrics require finite normalized color components.");
     }
 
+    private static byte ToMetricByte(float value) => (byte)MathF.Round(value * 255f, MidpointRounding.AwayFromZero);
+
     private static int ToLumaByte(Color color) =>
-        ToLumaByte(ToByte(color.R), ToByte(color.G), ToByte(color.B));
+        ToLumaByte(ToMetricByte(color.R), ToMetricByte(color.G), ToMetricByte(color.B));
 
     private static int ToLumaByte(byte r, byte g, byte b) =>
         ((13_938 * r) + (46_869 * g) + (4_729 * b) + 32_768) >> 16;

@@ -4,7 +4,7 @@ Last updated: 2026-11-14
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 596 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 594 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 133 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking. Advance the self-hosted editor through the dependency stages below rather than waiting for the whole runtime backlog. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -43,8 +43,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [FileAccess](classes/FileAccess.md) | 0 | 17 |
 | [DirAccess](classes/DirAccess.md) | 0 | 16 |
 | [Viewport](classes/Viewport.md) | 0 | 12 |
-| [Image](classes/Image.md) | 0 | 9 |
 | [TranslationServer](classes/TranslationServer.md) | 0 | 9 |
+| [Image](classes/Image.md) | 0 | 7 |
 | [ResourceLoader](classes/ResourceLoader.md) | 0 | 4 |
 | [InputEventMouseMotion](classes/InputEventMouseMotion.md) | 0 | 3 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 3 |

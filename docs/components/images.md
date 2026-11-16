@@ -154,6 +154,14 @@ All four queries read an owned snapshot and ignore authored mip levels. They nev
 
 The public `tests/ImageAnalysis.Consumer` exercises all 47 storage formats, enum identities/defaults, thresholds, authored mips, query purity, disposal and PNG/BCn integration. Host results and remaining platform limits are recorded in `.tasks/qa/T-0062` at the board root. This managed slice does not qualify native delivery or other platforms.
 
+## Color adjustment and image metrics
+
+`AdjustBCS` multiplies RGB by brightness, interpolates from 0.5 using contrast, then interpolates from the resulting RGB average using saturation. Every stored mip is transformed in its own format; alpha is retained. Finite factors may be negative or exceed one. Pixel encoding applies the format's existing quantization and range rules, including float HDR/nonfinite propagation. Empty/compressed storage and nonfinite factors fail before publication. The shared mutation gate publishes a complete copied buffer before one `Changed` event; subscriber failures leave the result committed.
+
+`ComputeImageMetrics` reads snapshots and decompresses supported blocks without changing either source. It compares only the top-left common base-level rectangle, ignoring mips. Components are rounded to the nearest byte (halfway away from zero); luma uses integer Rec. 709 weights 13938/46869/4729 with rounding. RGBA adds four absolute errors per pixel and luma adds one, but **both modes divide their sums by four times the common pixel count**. Maximum is the largest histogram error, MeanSquared uses squared errors, and RootMeanSquared is its square root. PSNR is `20 log10(255 / RMS)`, clamped to 0..500 for nonzero error; identical images return `1e10`.
+
+Half-float/shared-exponent storage after decoding is rejected. Empty images and any compared nonfinite or nonnormalized RGBA component raise `InvalidOperationException` in either mode; validation covers only the common area. These safety guards replace unsafe numeric indexing, including the reference luma branch's incomplete validation. The result is a typed `ImageMetrics`; queries emit no events. Decompression follows the existing bounded codec errors and native prerequisites. The public consumer is `tests/ImageColorMetrics.Consumer`; full platform qualification remains separate.
+
 ## Alpha-edge repair and premultiplication
 
 Both operations edit the RGBA8 base level and preserve all authored mip bytes. Edge repair copies the nearest RGB whose alpha byte is at least 20 into each pixel below that threshold. It searches up to four pixels on each axis, measures squared distance, and visits candidates in top-to-bottom, left-to-right order. Repaired pixels remain below the threshold and cannot become sources. Premultiplication applies integer `(component * alpha + 255) >> 8` to each base RGB byte. Both operations keep alpha values.
