@@ -125,11 +125,14 @@ internal static partial class ScriptTests
         using var nested = (Script)script.Duplicate();
         using var nestedOwner = script.New(() => nested.New<ScriptActor>());
         Check(ReferenceEquals(nestedOwner.GetScript(), nested), "nested construction retains the innermost actual source");
-        using var worker = script.New(() => Task.Run(() => new ScriptActor()).GetAwaiter().GetResult());
-        Check(ReferenceEquals(worker.GetScript(), script) && ReferenceEquals(worker.ConstructorScript, script), "constructor provenance flows to worker code");
         var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 256; i++) Check(ReferenceEquals(node.GetScript(), script), "prepared source observation");
-        Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all, "prepared source reads allocate nothing");
+        var ownerDelta = GC.GetAllocatedBytesForCurrentThread() - owner;
+        var allDelta = GC.GetTotalAllocatedBytes(true) - all;
+        Check(ownerDelta == 0 && allDelta == 0, $"prepared source reads allocate nothing: owner={ownerDelta}, all={allDelta}");
+        // Keep asynchronous worker setup outside the prepared all-thread read interval.
+        using var worker = script.New(() => Task.Run(() => new ScriptActor()).GetAwaiter().GetResult());
+        Check(ReferenceEquals(worker.GetScript(), script) && ReferenceEquals(worker.ConstructorScript, script), "constructor provenance flows to worker code");
         var retired = script.New<ScriptActor>(); retired.VetoDisposal = true; retired.Dispose();
         Check(!retired.IsDisposed && ReferenceEquals(retired.GetScript(), script), "cancelled disposal preserves association");
         retired.Dispose();

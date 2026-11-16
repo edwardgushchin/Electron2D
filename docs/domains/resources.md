@@ -343,3 +343,5 @@ Typed visual graph routing uses [VisualShaderNodeReroute](../classes/VisualShade
 [Material placeholders](../components/material-placeholders.md) connect fresh program-free Material factories with version-8 typed missing-material recovery, opaque graph preservation, cache/worker/local ownership and fresh-process restoration. Current native evidence covers Linux software GPU/Compatibility; physical GPU, native-heap, foreign and owner gates remain distinct.
 
 Video preparation and recording share the [complete OGV codec domain](../coverage/performance-producers.md#complete-ogv-codec-allocation-domain-2026-10-29). Pure-C callbacks own original codec working heaps, direct buffers and owner-table storage. Native refusal is terminal for that context, partial cleanup is safe, and failed track replacement preserves its prior live owner. Managed/runtime composition and foreign qualification remain open.
+
+Script method metadata preserves typed compiled signatures and independent snapshots with process-held registration lifetime. See [Script](../classes/Script.md#method-metadata) for registration and reflection/trim/AOT limits.

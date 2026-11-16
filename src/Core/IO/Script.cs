@@ -109,6 +109,11 @@ public sealed partial class Script : Resource
         if (!property.TryGetRevertValue(owner, out var value)) throw new InvalidOperationException("The property has no declared default."); return value;
     }
     /// <summary>Returns declared project methods and inherited project methods without invoking them.</summary><returns>Copied registration-time CLR method metadata, ordered by name/signature.</returns>
+    /// <remarks>Includes public and nonpublic instance/static declarations from project bases, excluding accessors and
+    /// compiler-generated methods. Inspect CLR signatures, IsStatic, IsVirtual, IsFinal and IsAbstract, and parameter
+    /// attributes for typed params declarations. These do not describe receiver constness or editor execution policy.
+    /// Each call copies the array; metadata borrows the process-held compiled registration and survives wrapper disposal.
+    /// Registration requires file-backed assemblies, matching portable symbols and untrimmed declarations.</remarks>
     public MethodInfo[] GetScriptMethodList() { lock (_gate) { ThrowIfDisposed(); return _registration is null ? [] : (MethodInfo[])_registration.Methods.Clone(); } }
     /// <summary>Reports a project method name across the compiled script inheritance chain.</summary><param name="methodName">Nonnull metadata name.</param><returns>Whether such a method is declared.</returns>
     public bool HasScriptMethod(string methodName) { ArgumentNullException.ThrowIfNull(methodName); return GetScriptMethodList().Any(m => m.Name == methodName); }

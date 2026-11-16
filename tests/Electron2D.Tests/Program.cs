@@ -1300,6 +1300,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_FACTORIES") is { 
         Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_FACTORIES_THREADED") == "1"); return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EXTENSION_SOURCE") == "1") { ExtensionSourceTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_METHOD_METADATA") == "1") { ScriptTests.MethodMetadata(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT") == "1") { ScriptTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") is not null ||
     Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1")
