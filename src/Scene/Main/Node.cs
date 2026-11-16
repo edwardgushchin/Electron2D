@@ -1163,7 +1163,7 @@ public partial class Node : ElectronObject
 
         try
         {
-            NotifyChildOrderChanged();
+            Tree?.NotifyTreeChanged();
         }
         catch (Exception error)
         {
@@ -1172,7 +1172,7 @@ public partial class Node : ElectronObject
 
         try
         {
-            Tree?.NotifyTreeChanged();
+            NotifyChildOrderChanged();
         }
         catch (Exception error)
         {
@@ -1786,6 +1786,8 @@ public partial class Node : ElectronObject
     /// node has entered another tree first, the old entry leaves the request intact for the new tree. Repeated calls
     /// are idempotent. Cancellation invalidates that exact request: a later request receives a new FIFO position,
     /// including when it is created during a captured deletion batch. The method may be called from a non-owner thread.
+    /// A tree discards its pending request at shutdown. Entries from an older attachment cannot delete the node
+    /// or cancel the request retained by a newer attachment, even if the node has detached again.
     /// </remarks>
     /// <exception cref="InvalidOperationException">This node is the active scene-tree root.</exception>
     /// <exception cref="ObjectDisposedException">Deletion publication has closed, or this node is disposing on another thread or has finished disposing.</exception>
@@ -1818,11 +1820,17 @@ public partial class Node : ElectronObject
 
             try
             {
-                var tree = Tree;
+                SceneTree? tree;
+                ulong attachment;
+                do
+                {
+                    attachment = TreeAttachmentVersion;
+                    tree = Tree;
+                } while (attachment != TreeAttachmentVersion);
                 if (tree is null)
                     Interlocked.CompareExchange(ref _queuedForDeletion, publishing + 1, publishing);
                 else
-                    tree.QueueForDeletion(this, publishing + 1);
+                    tree.QueueForDeletion(this, publishing + 1, attachment);
 
                 return;
             }
@@ -2171,6 +2179,9 @@ public partial class Node : ElectronObject
     internal void ReleaseClaimedQueuedDeletion(long ticket) =>
         Interlocked.CompareExchange(ref _queuedForDeletion, ticket & ~7L, ticket | 1);
 
+    internal void DiscardQueuedDeletion(long ticket) =>
+        Interlocked.CompareExchange(ref _queuedForDeletion, ticket & ~7L, ticket);
+
     internal Func<Node> CaptureSceneInstanceFactory()
     {
         ThrowIfDisposed();
@@ -2447,6 +2458,7 @@ public partial class Node : ElectronObject
     {
 
         Tree = tree;
+        tree.NodesInTreeCount++;
         if (Parent is null && _processMode == ProcessMode.Inherit) _processMode = ProcessMode.Pausable;
         _activeViewport = this as Viewport ?? Parent?._activeViewport;
         _absolutePathCache = null;
@@ -2521,7 +2533,7 @@ public partial class Node : ElectronObject
         {
             try
             {
-                tree.QueueForDeletion(this, deletionTicket);
+                tree.QueueForDeletion(this, deletionTicket, TreeAttachmentVersion);
             }
             catch (Exception error)
             {
@@ -2621,6 +2633,7 @@ public partial class Node : ElectronObject
 
         _isExitingTree = true;
         _hasPendingTreeExit = true;
+        var countReleased = false;
         List<Exception>? errors = null;
         try
         {
@@ -2637,6 +2650,8 @@ public partial class Node : ElectronObject
             catch (Exception error) { CollectException(ref errors, error); }
             try { DispatchNotification(NotificationExitTree); }
             catch (Exception error) { CollectException(ref errors, error); }
+            tree.NodesInTreeCount--;
+            countReleased = true;
             try { OnTreeMembershipChanged(entering: false); }
             catch (Exception error) { CollectException(ref errors, error); }
             try { NotifyPhysicsObjectBindings(entering: false); }
@@ -2650,6 +2665,8 @@ public partial class Node : ElectronObject
             try { DetachAccessibility(); } catch (Exception error) { CollectException(ref errors, error); }
             tree.UnbindProcessingGroup(this);
             _activeViewport = null;
+            try { tree.NotifyTreeChanged(); }
+            catch (Exception error) { CollectException(ref errors, error); }
             Tree = null;
             HasStartedReady = false;
             _absolutePathCache = null;
@@ -2663,6 +2680,7 @@ public partial class Node : ElectronObject
             HasStartedReady = false;
             if (ReferenceEquals(Tree, tree))
             {
+                if (!countReleased) tree.NodesInTreeCount--;
                 try { DetachAccessibility(); } catch (Exception error) { CollectException(ref errors, error); }
                 tree.UnbindProcessingGroup(this);
                 _activeViewport = null;
@@ -2948,6 +2966,7 @@ public partial class Node : ElectronObject
                 ChangeInternalChildCount(child._internalMode, -1);
                 child.Parent = null;
                 child.InvalidatePathCache();
+                tree?.InvalidateHierarchyPaths();
 
                 try
                 {
@@ -2970,15 +2989,6 @@ public partial class Node : ElectronObject
                 try
                 {
                     BeginEventEmission(_publisherChildRemoved.Handlers)?.Invoke(this, child);
-                }
-                catch (Exception error)
-                {
-                    CollectException(ref errors, error);
-                }
-
-                try
-                {
-                    tree?.NotifyTreeChanged();
                 }
                 catch (Exception error)
                 {

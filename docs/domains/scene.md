@@ -6,6 +6,8 @@
 
 # Scene domain
 
+[Scene-tree membership](../components/scene-tree.md#scope) tracks parent-first entry and child-first exit independently of child topology; `NodeCount` reads the retained count without allocating. The public consumer also exercises Windows Window roots with both renderers, per-node exit changes, blocked path invalidation and attachment-qualified deletion transfers/shutdown. Foreign-host and NativeAOT qualification remain separate.
+
 [Missing-node recovery](../classes/MissingNode.md) preserves unavailable compiled roles as bounded typed authoring data, with actual fresh-process restoration and separate missing-instance save consequences under ADR 0023.
 
 [System back navigation](../components/window-runtime.md#system-back-navigation) now connects the native Android host to containing-window notifications, a typed Window event and independent SceneTree root quit policy. Owner-thread delivery, nested-window boundaries, signal blocking and teardown remain scene contracts.

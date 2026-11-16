@@ -16,6 +16,12 @@ An attached `ProcessMode` change publishes [TreeProcessModeChanged](../classes/S
 
 ## Scope
 
+`NodeCount` tracks lifecycle membership rather than child topology. Parent-first entry counts each node before callbacks; child-first exit releases it after the exit notification and before `NodeRemoved`. Callback failures still release membership. The public `tests/SceneTree.Consumer` checks nested entry/exit observations, removal, reattachment, failure cleanup and finalization, plus native Window roots through `Engine.Run` with both current renderers on Windows.
+
+Exit publishes `TreeChanged` for each departing node after `NodeRemoved` and before clearing its tree association. Structural removal then invalidates path consumers without another public change event. Moving a child publishes `TreeChanged` before child-order notifications; rename publishes the node event, `NodeRenamed`, then `TreeChanged`. Blocking signals leaves path and multiplayer branch invalidation active.
+
+Cancellable deletion entries carry both their request generation and attachment version. An older tree cannot consume or discard a request accepted by a newer attachment, including when that node has detached again. Finalization discards the latest detached request and releases explicit deletion marks. The public deletion profile covers cancellation/reissue, independent explicit requests, plain/resource/node targets, transfers, shutdown, failure continuation and concurrent node disposal.
+
 This Scene component provides the concrete [Main loop](main-loop.md), owns one active hierarchy and an optional current scene child, propagates typed input and system notifications, delivers lifecycle and pause changes, accepts direct or [Engine](engine-runtime.md)-scheduled process/physics frame boundaries, frame counters and events, tree-change events, reusable Node timers, lightweight one-shot timers, frame-driven [tweening](tweening.md), typed group operations, deferred work, and queued deletion. Per-node hierarchy and 2D state belong to the [Scene hierarchy component](scene-hierarchy.md).
 
 Accepted Node.Name assignments, including unchanged names, notify active trees

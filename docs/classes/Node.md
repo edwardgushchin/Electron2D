@@ -1233,6 +1233,8 @@ Receives a keyboard event that remains unhandled after the first input stage.
 <a id="m-electron2d-node-queuefree"></a>
 ### `public void QueueFree()`
 
+Pending deletion follows the latest tree attachment. A stale entry from an older attachment cannot delete the node after a transfer, even if it has detached again. Shutdown discards the current tree's request; it does not cancel a request accepted by a newer attachment.
+
 Atomically requests this node's deferred disposal at a future scene-tree safe point.
 
 **Remarks:** A request made while already detached is queued if the node later enters a tree. Removing the node before its current tree flushes does not cancel deletion: that tree disposes the detached node at its safe point. If the node has entered another tree first, the old entry leaves the request intact for the new tree. Repeated calls are idempotent. Cancellation and reissue create a new request identity and FIFO position. A request reissued during a captured deletion batch waits for the next batch. The method may be called from a non-owner thread.

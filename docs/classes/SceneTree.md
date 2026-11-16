@@ -129,7 +129,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public event Action<SceneTree, Node> NodeRenamed`](#e-electron2d-scenetree-noderenamed) | Occurs after an active node accepts a name assignment, including an unchanged name. |
 | [`public event Action<SceneTree> ProcessFrameStarted`](#e-electron2d-scenetree-processframestarted) | Occurs before the idle transform-delivery phase and eligible node process callbacks. |
 | [`public event Action<SceneTree> PhysicsFrameStarted`](#e-electron2d-scenetree-physicsframestarted) | Occurs after pending transform delivery and before eligible node physics-process callbacks. |
-| [`public event Action<SceneTree> TreeChanged`](#e-electron2d-scenetree-treechanged) | Occurs after the active hierarchy is structurally changed or an active node is renamed. |
+| [`public event Action<SceneTree> TreeChanged`](#e-electron2d-scenetree-treechanged) | Occurs when hierarchy membership, child order, or an active node name changes. |
 | [`public event Action<SceneTree>? TreeProcessModeChanged`](#e-electron2d-scenetree-treeprocessmodechanged) | Observes attached process-mode changes throughout an editor tree. |
 | [`public event Action<SceneTree>? SceneChanged`](#e-electron2d-scenetree-scenechanged) | Occurs after a pending scene enters successfully. |
 
@@ -219,7 +219,9 @@ Gets the root node owned by this tree.
 
 Gets the number of nodes currently inside this tree.
 
-**Value:** The current hierarchy size, including [`SceneTree.Root`](SceneTree.md#p-electron2d-scenetree-root), or zero after finalization releases the hierarchy.
+**Value:** The active membership count, including [`SceneTree.Root`](SceneTree.md#p-electron2d-scenetree-root), or zero after finalization releases the hierarchy.
+
+Entry counts a node before its callbacks and before descendants enter. Exit releases its count after the exit notification and before `NodeRemoved`, including callback failures. Reading this property does not traverse or copy the hierarchy. Manual lifecycle notifications do not change membership.
 
 **Exceptions**
 
@@ -773,7 +775,9 @@ Occurs after pending transform delivery and before eligible node physics-process
 <a id="e-electron2d-scenetree-treechanged"></a>
 ### `public event Action<SceneTree> TreeChanged`
 
-Occurs after the active hierarchy is structurally changed or an active node is renamed.
+Exit delivers after `NodeRemoved` for each node, before clearing its tree association and structural edge. Insertion follows entry and ready; child moves deliver before child-order notifications. Rename follows `NodeRenamed`. Remaining lifecycle phases continue after subscriber failures. Blocking public signals preserves internal path invalidation.
+
+Occurs when hierarchy membership, child order, or an active node name changes.
 
 **Remarks:** Delivery is synchronous after the corresponding state change. A throwing subscriber prevents later subscribers of that invocation; the state change is not rolled back.
 
