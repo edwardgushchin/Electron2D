@@ -65,7 +65,7 @@ public partial class Node
         try { parent.MoveChild(instance, Math.Min(index, parent.GetChildCount() - 1)); }
         catch (Exception error) { CollectException(ref errors, error); }
         if (replace && !IsDisposed && Parent is null)
-            try { QueueFree(); tree.QueueForDeletion(this, GetQueuedDeletionTicket()); }
+            try { QueueFree(); tree.QueueForDeletion(this, GetQueuedDeletionTicket(), TreeAttachmentVersion); }
             catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Placeholder lifecycle delivery failed after structural progress.", errors);
     }

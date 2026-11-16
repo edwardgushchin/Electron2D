@@ -15,6 +15,7 @@ namespace Electron2D;
 /// </remarks>
 public sealed partial class SceneTree : MainLoop
 {
+    internal int NodesInTreeCount;
     private const GroupCallFlags SupportedGroupCallFlags =
         GroupCallFlags.Reverse | GroupCallFlags.Deferred | GroupCallFlags.Unique;
 
@@ -153,6 +154,7 @@ public sealed partial class SceneTree : MainLoop
             Initialize();
             root.EnterTree(this);
             root.MakeReady(readied);
+            NotifyTreeChanged();
             _constructionComplete = true;
         }
         catch (Exception activationError)
@@ -260,7 +262,9 @@ public sealed partial class SceneTree : MainLoop
     internal ulong PhysicsFrameCount => unchecked((ulong)GetFrame());
 
     /// <summary>Gets the number of nodes currently inside this tree.</summary>
-    /// <value>The current hierarchy size, including <see cref="Root"/>, or zero after finalization releases the hierarchy.</value>
+    /// <value>The active membership count, including <see cref="Root"/>, or zero after finalization releases the hierarchy.</value>
+    /// <remarks>Entry counts each node before its callbacks and descendants. Exit releases its count after
+    /// the exit notification and before NodeRemoved, even when callbacks fail. Reading does not traverse children.</remarks>
     /// <exception cref="InvalidOperationException">The property is read from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree is disposing on another thread or has finished disposing.</exception>
     public int NodeCount
@@ -269,7 +273,7 @@ public sealed partial class SceneTree : MainLoop
         {
             ThrowIfDisposed();
             EnsureOwnerThread();
-            return Root.IsDisposed ? 0 : Root.EnumerateDepthFirst().Count();
+            return NodesInTreeCount;
         }
     }
 
@@ -432,8 +436,11 @@ public sealed partial class SceneTree : MainLoop
     public event Action<SceneTree>? PhysicsFrameStarted { add => _publisherPhysicsFrameStarted.Add(value); remove => _publisherPhysicsFrameStarted.Remove(value); }
     private EventPublisher<Action<SceneTree>> _publisherPhysicsFrameStarted;
 
-    /// <summary>Occurs after the active hierarchy is structurally changed or an active node is renamed.</summary>
-    /// <remarks>Delivery is synchronous after the corresponding state change. A throwing subscriber prevents later subscribers of that invocation; the state change is not rolled back.</remarks>
+    /// <summary>Occurs when hierarchy membership, child order, or an active node's name changes.</summary>
+    /// <remarks>Exit delivers once per node after NodeRemoved and before clearing its tree association and structural edge.
+    /// Child moves deliver before child-order notifications; insertion follows entry and ready. Rename follows NodeRenamed.
+    /// A throwing subscriber prevents later subscribers of that invocation; remaining lifecycle phases still run.
+    /// Signal blocking suppresses public delivery while internal path invalidation continues.</remarks>
     public event Action<SceneTree>? TreeChanged { add => _publisherTreeChanged.Add(value); remove => _publisherTreeChanged.Remove(value); }
     private EventPublisher<Action<SceneTree>> _publisherTreeChanged;
 
@@ -1289,14 +1296,14 @@ public sealed partial class SceneTree : MainLoop
 
     internal bool IsRoot(Node node) => ReferenceEquals(Root, node);
 
-    internal void QueueForDeletion(Node node, long ticket)
+    internal void QueueForDeletion(Node node, long ticket, ulong attachment)
     {
         lock (_workGate)
         {
             EnsureAcceptingWorkUnderLock();
 
             if (node.TryPublishQueuedDeletion(ticket))
-                _deletions.Enqueue(new DeletionRequest(node, ticket));
+                _deletions.Enqueue(new DeletionRequest(node, ticket, attachment));
         }
     }
 
@@ -1393,10 +1400,14 @@ public sealed partial class SceneTree : MainLoop
     }
 
     internal ulong PathRevision { get; private set; }
-    internal void NotifyNodeRenamed(Node node)
+    internal void InvalidateHierarchyPaths()
     {
         PathRevision++;
         InvalidateMultiplayerPaths();
+    }
+    internal void NotifyNodeRenamed(Node node)
+    {
+        InvalidateHierarchyPaths();
         List<Exception>? errors = null;
 
         try
@@ -1422,7 +1433,7 @@ public sealed partial class SceneTree : MainLoop
 
     internal void NotifyTreeChanged()
     {
-        PathRevision++; InvalidateMultiplayerPaths();
+        InvalidateHierarchyPaths();
         List<Exception>? errors = null;
         try { ReconcileShaderGlobals(); } catch (Exception error) { CollectException(ref errors, error); }
         try { BeginEventEmission(_publisherTreeChanged.Handlers)?.Invoke(this); } catch (Exception error) { CollectException(ref errors, error); }
@@ -1974,6 +1985,9 @@ public sealed partial class SceneTree : MainLoop
                 return;
             }
 
+            if (request.NodeTicket != 0 && node.TreeAttachmentVersion != request.NodeAttachment)
+                return;
+
             if (node.Tree is not null && !ReferenceEquals(node.Tree, this))
             {
                 if (request.NodeTicket != 0)
@@ -2204,10 +2218,13 @@ public sealed partial class SceneTree : MainLoop
         _transformChanges.Clear(); _nextTransformNotification = null;
     }
 
-    private static void DiscardDeletions(ConcurrentQueue<DeletionRequest> queue)
+    private void DiscardDeletions(ConcurrentQueue<DeletionRequest> queue)
     {
         while (queue.TryDequeue(out var request))
             if (request.NodeTicket == 0) request.Instance.ReleaseQueuedDeletion();
+            else if (request.Instance is Node node && node.TreeAttachmentVersion == request.NodeAttachment &&
+                     (node.Tree is null || ReferenceEquals(node.Tree, this)))
+                node.DiscardQueuedDeletion(request.NodeTicket);
     }
 
     private void ClearEventSubscribers()
@@ -2285,7 +2302,7 @@ public sealed partial class SceneTree : MainLoop
         }
     }
 
-    private readonly record struct DeletionRequest(ElectronObject Instance, long NodeTicket);
+    private readonly record struct DeletionRequest(ElectronObject Instance, long NodeTicket, ulong NodeAttachment = 0);
 
     private enum InputStage
     {

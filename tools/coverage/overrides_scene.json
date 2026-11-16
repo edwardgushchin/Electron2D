@@ -8901,6 +8901,11 @@
   ],
   "statusGroups": [
     {
+      "godot": ["SceneTree::property:root", "SceneTree::method:get_node_count()", "SceneTree::method:queue_delete(Object:)", "SceneTree::signal:tree_changed()"],
+      "state": "Implemented",
+      "reason": "ADRs 0006/0008/0011: stable caller-supplied headless Node or Engine.Run Window root, retained entry/exit membership count, per-node exit changes before association release, child-move/rename ordering and attachment-qualified deletion are audited against pinned node.cpp/scene_tree.cpp. SceneTree.Consumer executes lifecycle failures/rollback, signal blocking/reentry, cached paths and multiplayer branches, cancellation/reissue/transfers, explicit target types, both frame safe points, shutdown discard and 128 Dispose races for each queue API. Windows CLR headless and both native renderers pass; deferred/group/lifecycle/placeholder/multiplayer/shader regressions and prepared allocation checks pass. Typed exception/events, owner-thread disposal, cancellable QueueFree and captured deletion batches retain the accepted adaptations. Foreign-host, NativeAOT and full performance qualification remain separate. See docs/components/scene-tree.md#scope."
+    },
+    {
       "state": "Implemented",
       "reason": "Finite clamped manual press, mapped-release reset, and explicit clearing of manual and parsed state without callbacks. Virtual controls retain owner contributions under ADR 0038.",
       "godot": [

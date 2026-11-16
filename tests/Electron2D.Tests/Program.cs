@@ -11972,7 +11972,7 @@ static void VerifySceneTreeGroupsEventsAndTimers()
 
     Require(nodeEvents.SequenceEqual(["added:added", "added:added-child", "renamed:renamed", "removed:added-child", "removed:renamed"]),
         "Tree node events must describe parent-first entry, rename, and child-first exit.");
-    Require(treeChanges == 3, "TreeChanged must report insertion, rename, and removal once each.");
+    Require(treeChanges == 4, "TreeChanged must report insertion, rename, and each node's exit.");
     added.Dispose();
 
     var frameStarts = new List<string>();
