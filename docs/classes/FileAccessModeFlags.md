@@ -1,6 +1,6 @@
 # FileAccessModeFlags
 
-Last updated: 2026-09-24
+Last updated: 2026-11-16
 
 **Inherits:** —
 
@@ -67,6 +67,6 @@ The enum depends only on `System.FlagsAttribute`. `CreateTemp` creates the empty
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies every mode's existence/truncation/read/write behavior and invalid combinations.
+`FileAccessModeTests`, called by the lifecycle profile, verifies all four numeric identities and ordinary, five compressed and both encrypted factories: missing/existing paths, truncation, permissions, cursor, Close/Dispose, persisted bytes and invalid combinations. Transformed factories own memory streams; there is no separate public memory-file factory. The lifecycle regression preserves mounted PCK/ZIP read-only boundaries. Windows x64 CLR is exercised; foreign/package qualification is separate.
 
 Exact Write participates in the default-disabled [save-and-swap policy](../components/file-save-and-swap.md): creation/truncation becomes visible on close. ReadWrite and WriteRead remain direct.
