@@ -435,26 +435,32 @@ public sealed partial class ProjectSettings
     public new static bool FlushChanges() => Service.FlushChangesCore();
 
     /// <summary>Converts a virtual or ordinary path to an absolute native operating-system path.</summary>
-    /// <param name="path">A nonempty path, optionally beginning with <c>res://</c> or <c>user://</c>.</param>
+    /// <param name="path">A nonempty native path, directory virtual path, or registered <c>uid://</c> token.</param>
     /// <returns>An absolute normalized path.</returns>
     /// <remarks>
     /// Virtual paths are lexically confined to their configured roots and reject parent traversal. This method does not
-    /// resolve symbolic links and is not a filesystem security sandbox.
+    /// resolve symbolic links and is not a filesystem security sandbox. Ordinary relative paths use the process working directory.
+    /// Conversion does not require files to exist or create directories.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
     /// <exception cref="UnauthorizedAccessException">A virtual path escapes its configured root.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unknown virtual-path scheme.</exception>
+    /// <exception cref="KeyNotFoundException">A resource UID is not registered.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public new static string GlobalizePath(string path) => Service.GlobalizePathCore(path);
 
-    /// <summary>Converts an ordinary path inside a configured root to a virtual project or user path.</summary>
-    /// <param name="path">A nonempty operating-system or already virtual path.</param>
+    /// <summary>Normalizes a native or directory virtual path and localizes it to the deepest containing root.</summary>
+    /// <param name="path">A nonempty native, <c>res://</c> or <c>user://</c> path; UID tokens are not accepted.</param>
     /// <returns>
     /// A <c>res://</c> or <c>user://</c> path when contained by a configured root; otherwise an absolute native path.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
+    /// <remarks>Uses one configured root pair and native path rules without requiring files to exist.
+    /// Relative native paths use the process working directory. Virtual suffixes reject rooted paths and lexical escape.
+    /// Virtual results use forward slashes. No symbolic-link security is promised.</remarks>
+    /// <exception cref="UnauthorizedAccessException">A virtual suffix is rooted or escapes its root.</exception>
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unknown virtual-path scheme.</exception>
     /// <exception cref="ObjectDisposedException">The registry is disposing or disposed.</exception>
     public new static string LocalizePath(string path) => Service.LocalizePathCore(path);

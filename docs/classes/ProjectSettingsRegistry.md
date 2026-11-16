@@ -892,3 +892,5 @@ Construction captures the same host feature vocabulary as OS. Independent regist
 ## Accessibility built-in definition
 
 Independent registries register the same [ProjectSettings.AccessibilitySupport](ProjectSettings.md#accessibilitysupport) key and enum validator. Its default is Auto; its executable consumer is display startup, not the registry itself. Project settings persistence and feature overrides use the existing built-in registry path.
+
+Path conversion normalizes native and directory virtual paths without requiring files to exist. Localization selects the deeper containing root from one configured pair. See [the path contract](../components/project-settings.md#path-conversion) for validation, UID handling and platform limits.
