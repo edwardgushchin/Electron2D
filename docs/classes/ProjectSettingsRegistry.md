@@ -894,3 +894,11 @@ Construction captures the same host feature vocabulary as OS. Independent regist
 Independent registries register the same [ProjectSettings.AccessibilitySupport](ProjectSettings.md#accessibilitysupport) key and enum validator. Its default is Auto; its executable consumer is display startup, not the registry itself. Project settings persistence and feature overrides use the existing built-in registry path.
 
 Path conversion normalizes native and directory virtual paths without requiring files to exist. Localization selects the deeper containing root from one configured pair. See [the path contract](../components/project-settings.md#path-conversion) for validation, UID handling and platform limits.
+
+## Feature query contract
+
+Both `GetWithOverride<T>` overloads require the exact registered definition and return independent typed snapshots. The first stored matching override wins; updating its value preserves its position, while removal and reinsertion move it behind surviving entries. With no match the query returns the base value, or the current initial value when no base exists. Reads leave version and change notifications untouched.
+
+The active query uses built-in host/build tags and the registry's live custom tags. The explicit query replaces that set entirely: an empty list selects the base/default. Tags normalize to lowercase; request order and duplicates do not change precedence. Invalid or null tags fail, and enumerator exceptions propagate. Enumeration completes before the locked value selection, so reentrant enumeration can publish changes observed by that selection. Each concurrent query returns one complete serialized snapshot; separate calls are not a transaction.
+
+`ProjectFeatureQueryTests` exercises selection, mutable copies, registry isolation, save/load order, failures, reentry, concurrent reads/writes and the Engine timing consumer on Windows CLR. Other runtime targets and NativeAOT were not exercised by this check.

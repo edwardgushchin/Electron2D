@@ -576,12 +576,12 @@
     {
       "electron2d": "method:Electron2D.ProjectSettings.GetWithOverride`1(ProjectSetting<T>)",
       "godot": "ProjectSettings::method:get_setting_with_override(StringName:)",
-      "reason": "Typed key and current feature set (ADR 0019)."
+      "reason": "ADRs 0019/0095: exact typed identity, first stored matching override, base/initial fallback and live built-in/custom activation. Public and independent registry checks cover copies, persistence order, read silence, failures, reentry, concurrency and Engine timing on Windows CLR. NativeAOT and foreign hosts remain unverified."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.GetWithOverride`1(ProjectSetting<T>,System.Collections.Generic.IEnumerable<System.String>)",
       "godot": "ProjectSettings::method:get_setting_with_override_and_custom_features(StringName:,PackedStringArray:)",
-      "reason": "Typed key plus explicit features (ADR 0019)."
+      "reason": "ADRs 0019/0095: explicit features replace active tags; lowercase normalization, duplicates and request order preserve stored precedence; empty lists select base/initial. Public and registry checks cover independent snapshots, invalid/null/throwing enumeration, disposal and reentry on Windows CLR. NativeAOT and foreign hosts remain unverified."
     },
     {
       "electron2d": "method:Electron2D.ProjectSettings.GetGlobalClassList()",
@@ -1976,6 +1976,8 @@
     }
   ],
   "statusGroups": [
+    {"state": "Implemented", "reason": "ADRs 0019/0095: exact typed identity, first stored matching override, base/initial fallback and live built-in/custom activation. Public and independent registry checks cover copies, persistence order, read silence, failures, reentry, concurrency and Engine timing on Windows CLR. NativeAOT and foreign hosts remain unverified.", "godot": ["ProjectSettings::method:get_setting_with_override(StringName:)"]},
+    {"state": "Implemented", "reason": "ADRs 0019/0095: explicit features replace active tags; lowercase normalization, duplicates and request order preserve stored precedence; empty lists select base/initial. Public and registry checks cover independent snapshots, invalid/null/throwing enumeration, disposal and reentry on Windows CLR. NativeAOT and foreign hosts remain unverified.", "godot": ["ProjectSettings::method:get_setting_with_override_and_custom_features(StringName:,PackedStringArray:)"]},
     {"godot": ["Input::method:get_last_mouse_velocity()", "Input::method:get_last_mouse_screen_velocity()"], "state": "Implemented", "reason": "ADRs 0038/0040: shared monotonic sampling follows pinned input.cpp VelocityTrack (0.1-second minimum, restart after a gap over three seconds, zero-delta getter updates). Public checks cover defaults, distinct relative spaces, transforms, idle, cursor refresh, native motion and 16384 warmed zero-byte query pairs. Event payload calibration shares this sampler. Windows x64 CLR is verified; foreign hosts, hardware, NativeAOT and native heaps remain separate qualification limits."},
     {"godot": ["Input::method:get_mouse_button_mask()", "Input::method:is_mouse_button_pressed(int:MouseButton)"], "state": "Implemented", "reason": "ADRs 0038/0040: non-wheel polling aggregates independent device masks. Public tests cover all five buttons, four wheel impulses, device union, motion masks, cancellation/release, reset, native focus loss and two Windows display sessions. Physical multi-mouse devices and foreign hosts remain separate qualification limits."},
     {"godot": ["Input::property:emulate_mouse_from_touch", "Input::property:emulate_touch_from_mouse"], "state": "Implemented", "reason": "ADRs 0038/0040: defaults, first-contact/device ownership, generated-before-source delivery, no recursion, SDL counterpart suppression and policy-paired release execute publicly. Both directions cover combined callback failures, reentry, cancellation/reset/reacquisition and two Windows native sessions. Touch/source/generated payloads use calibrated per-contact or mouse samples while borrowed events remain unchanged; owned copies retire on failures. Native warp motion and software SDL touch are verified, not physical touch hardware. Generated/normalized events allocate; foreign hosts, NativeAOT and native heaps remain separate qualification limits."},

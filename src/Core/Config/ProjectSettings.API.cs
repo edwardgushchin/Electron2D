@@ -139,7 +139,7 @@ public sealed partial class ProjectSettings
     /// <typeparam name="T">The non-null setting value type.</typeparam>
     /// <param name="setting">The exact registered definition.</param>
     /// <returns>An independent value snapshot.</returns>
-    /// <remarks>Override precedence follows the insertion order of override entries in the loaded or modified document.</remarks>
+    /// <remarks>Override precedence follows the insertion order of override entries in the loaded or modified document. If none matches, the base value or current initial value is returned. Reads do not queue setting changes.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
     /// <exception cref="InvalidOperationException">A different definition owns the same name.</exception>
@@ -151,7 +151,7 @@ public sealed partial class ProjectSettings
     /// <param name="setting">The exact registered definition.</param>
     /// <param name="features">Feature tags replacing the registry's current active feature set for this lookup.</param>
     /// <returns>An independent value snapshot.</returns>
-    /// <remarks>Tags are normalized to lowercase. Override precedence follows stored override insertion order.</remarks>
+    /// <remarks>Tags are normalized to lowercase. Override precedence follows stored override insertion order, regardless of feature order or duplicates. An empty list selects the base or current initial value. Enumeration completes before selection; enumeration failures propagate without changing registry state. Reads do not queue setting changes.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="setting"/>, <paramref name="features"/>, or one of its items is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">A feature tag is invalid.</exception>
     /// <exception cref="KeyNotFoundException"><paramref name="setting"/> is not registered.</exception>
