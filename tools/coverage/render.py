@@ -21,6 +21,7 @@ ALIASES = Path(__file__).with_name("type_aliases.json")
 OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "midi", "extensions", "file_save_swap", "byte_buffers", "host_delta", "movie_writing", "video_playback", "camera_feeds", "diagnostics", "zip", "resource_packs", "jobs", "display", "hdr_output", "accessibility", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "render_memory", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "device_limits", "device_caches", "navigation", "navigation_diagnostics", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "native_menus", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles", "error_contracts")]
 OVERRIDES.append(Path(__file__).with_name("overrides_control_geometry.json"))
 OVERRIDES.append(Path(__file__).with_name("overrides_global_services.json"))
+OVERRIDES.append(Path(__file__).with_name("overrides_method_flags.json"))
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -778,6 +779,8 @@ def render():
             updated = "2026-11-14"
         if name in {"EditorExportPlatformVisionOS", "ProjectSettings"}:
             updated = "2026-11-15"
+        if name in {"@GlobalScope", "Script"}:
+            updated = "2026-11-16"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

@@ -1,0 +1,103 @@
+{
+  "mappings": [
+    {
+      "godot": "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_STATIC",
+      "electron2d": "method:Electron2D.Script.GetScriptMethodList()",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 32: MethodInfo.IsStatic preserves receiver-free calls; ScriptTests.MethodMetadata checks positive and negative declarations and compiled calls. See [audit](../method-flags.md)."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_VIRTUAL",
+      "electron2d": "method:Electron2D.Script.GetScriptMethodList()",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 8: CLR IsVirtual with IsFinal and GetBaseDefinition preserves overridable declarations and overrides; IsVirtual alone includes sealed overrides and is not a callback eligibility policy. ScriptTests.MethodMetadata checks base virtual, abstract and sealed override alongside compiled virtual calls. See [audit](../method-flags.md)."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_VIRTUAL_REQUIRED",
+      "electron2d": "method:Electron2D.Script.GetScriptMethodList()",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 128: MethodInfo.IsAbstract identifies required implementations; abstract base metadata and concrete override remain distinct. C# compilation enforces implementation; ScriptTests.MethodMetadata verifies both declarations and concrete calls. See [audit](../method-flags.md)."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_VARARG",
+      "electron2d": "method:Electron2D.Script.GetScriptMethodList()",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 16 adapts variable argument calls to typed C# params under ADR 0001: ParameterInfo ParamArrayAttribute distinguishes params from a fixed array. CLR CallingConventions.VarArgs is not params. ScriptTests.MethodMetadata checks zero/multiple arguments and fixed-array metadata. Arbitrary Variant invocation remains excluded. See [audit](../method-flags.md)."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "@GlobalScope::enum:MethodFlags"
+      ],
+      "state": "Excluded",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. The shared numeric binding transport is outside the typed API; applicable individual semantics are audited separately in [MethodFlags](../method-flags.md). No implementation trigger."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_NORMAL"
+      ],
+      "state": "Excluded",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 1 initializes MethodInfo.flags and MethodBind hint_flags; it is not the negation of virtual/static/const. Typed methods need no binding-registration marker. No implementation trigger."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAGS_DEFAULT"
+      ],
+      "state": "Excluded",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Value 1 aliases NORMAL and initializes binding metadata; it does not select C# optional parameter defaults, which remain in ParameterInfo. No implementation trigger."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_CONST"
+      ],
+      "state": "Excluded",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 4 comes from MethodBind receiver constness and becomes a DocData qualifier; GDScript enum completion also filters it. CLR IsStatic, a getter, PureAttribute and readonly parameters do not establish C++ receiver constness. This language-specific qualifier has no C# counterpart under ADR 0001; query behavior remains on each owning method row. No implementation trigger."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_OBJECT_CORE"
+      ],
+      "state": "Excluded",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 64 tags core virtual methods in ClassDB.add_virtual_method and suppresses their extension JSON API dump. Script lists project declarations only; DeclaringType is provenance, not this export policy. No extension JSON binding transport under ADR 0091; no implementation trigger."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_EDITOR"
+      ],
+      "state": "Blocked",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 2 denotes editor-method metadata, not a class ToolAttribute or Engine.IsEditorHint. CLR visibility/attributes do not prove editor eligibility. Trigger: the ADR 0027 editor method discovery/action consumer must define and exercise per-method eligibility shared with Script metadata. No runtime scheduler or invented attribute is added by this audit."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_STATIC"
+      ],
+      "state": "Implemented",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 32: MethodInfo.IsStatic preserves receiver-free calls; ScriptTests.MethodMetadata checks positive and negative declarations and compiled calls. See [audit](../method-flags.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_VIRTUAL"
+      ],
+      "state": "Implemented",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 8: CLR IsVirtual with IsFinal and GetBaseDefinition preserves overridable declarations and overrides; IsVirtual alone includes sealed overrides and is not a callback eligibility policy. ScriptTests.MethodMetadata checks base virtual, abstract and sealed override alongside compiled virtual calls. See [audit](../method-flags.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_VIRTUAL_REQUIRED"
+      ],
+      "state": "Implemented",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 128: MethodInfo.IsAbstract identifies required implementations; abstract base metadata and concrete override remain distinct. C# compilation enforces implementation; ScriptTests.MethodMetadata verifies both declarations and concrete calls. See [audit](../method-flags.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum_value:MethodFlags.METHOD_FLAG_VARARG"
+      ],
+      "state": "Implemented",
+      "reason": "[Declaration](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/method_info.h#L36-L46). ADRs 0001/0002/0010/0091 retain typed calls/events and explicit cold Script metadata. Bit 16 adapts variable argument calls to typed C# params under ADR 0001: ParameterInfo ParamArrayAttribute distinguishes params from a fixed array. CLR CallingConventions.VarArgs is not params. ScriptTests.MethodMetadata checks zero/multiple arguments and fixed-array metadata. Arbitrary Variant invocation remains excluded. See [audit](../method-flags.md)."
+    },
+    {
+      "godot": [
+        "Script::method:get_script_method_list()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0091: copied registration-time CLR declarations preserve static, virtual/final/abstract and typed params semantics, project inheritance and nonpublic visibility. ScriptTests.MethodMetadata verifies compiled calls, independent snapshots, unbound/disposed wrappers and process-held registration lifetime. File-backed assemblies, matching portable PDBs and untrimmed declarations are required; embedded NativeAOT source registration is unsupported. See [MethodFlags audit](../method-flags.md) for bit-specific applicability and the open editor eligibility consumer."
+    }
+  ]
+}

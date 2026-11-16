@@ -296,3 +296,7 @@ declaration coverage is 1363/1369 (99.56%), six Partial,
 Each record exposes a name, C# language, project source path, abstract flag, and inherited tool flag. The typed base is the nearest global project class, engine class or extension role. An `IconAttribute` on the class can name an icon relative to the source or project root. Icons outside the project are omitted. Discovery reads registration metadata without opening files or constructing instances. To create an object, load the returned source through `ResourceLoader.Load<Script>()` and call the typed `New<T>()`. That operation enforces the ordinary source checksum and construction requirements. Changing the configured project root changes discovery scope.
 
 The executable fixture queries an empty catalog, registers concrete and abstract project classes, inspects base/tool/icon metadata, changes the result array and switches projects. It then loads the discovered source, constructs the exact class and runs its callbacks in a headless scene. This verifies programmatic discovery and simulation. Editor UI, agent workflow and rendered output are separate checks.
+
+## Method metadata
+
+[Script method metadata](../classes/Script.md#method-metadata) preserves CLR signatures and independent snapshots with process-held registration lifetime. The [MethodFlags audit](../coverage/method-flags.md) records the bit-specific projection, exclusions and pending editor eligibility consumer.
