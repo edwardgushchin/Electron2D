@@ -170,6 +170,7 @@ public sealed class InputEventKey : InputEventWithModifiers
     }
 
     /// <inheritdoc />
+    /// <remarks>Logical identity takes precedence over physical identity, then label-only identity. Location restricts only a selected physical identity.</remarks>
     public override bool IsMatch(InputEvent @event, bool exactMatch = true)
     {
         ThrowIfDisposed();
@@ -177,9 +178,6 @@ public sealed class InputEventKey : InputEventWithModifiers
         @event.EnsureUsable();
 
         if (@event is not InputEventKey key || !HasSameKeyIdentity(key))
-            return false;
-
-        if (_physicalKeycode != Key.None && _location != KeyLocation.Unspecified && _location != key._location)
             return false;
 
         return !exactMatch || GetModifiersMask() == key.GetModifiersMask();
@@ -228,9 +226,6 @@ public sealed class InputEventKey : InputEventWithModifiers
         if (actual is not InputEventKey key || !HasSameKeyIdentity(key))
             return false;
 
-        if (_physicalKeycode != Key.None && _location != KeyLocation.Unspecified && _location != key._location)
-            return false;
-
         if (!HasCompatibleModifiers(key, exactMatch))
             return false;
 
@@ -246,7 +241,8 @@ public sealed class InputEventKey : InputEventWithModifiers
             return _keyLabel == key._keyLabel;
         if (_keycode != Key.None)
             return _keycode == key._keycode;
-        return _physicalKeycode != Key.None && _physicalKeycode == key._physicalKeycode;
+        return _physicalKeycode != Key.None && _physicalKeycode == key._physicalKeycode &&
+            (_location == KeyLocation.Unspecified || _location == key._location);
     }
 
     private Key CombineWithModifiers(Key key)

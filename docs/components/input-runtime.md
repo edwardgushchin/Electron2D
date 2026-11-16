@@ -10,6 +10,11 @@ Last updated: 2026-10-29
 
 ## Scope
 
+Keyboard bindings select logical identity before physical identity and a label-only
+identity last. A stored location restricts physical matching only; storing a physical
+code beside a logical code does not add a location requirement to that logical
+binding. Event, action-map and Shortcut matching share this selection rule.
+
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 This component converts caller-supplied typed events into raw device state, named action state, per-process/per-physics transitions, and synchronous scene callbacks. Its pointer-control facade delegates to the active display; it owns no native device or pump.

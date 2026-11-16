@@ -1,6 +1,10 @@
 # Input domain
 
-Last updated: 2026-10-29
+Keyboard event, InputMap and Shortcut matching share logical, physical, then
+label-only identity precedence. Location restricts the selected physical identity;
+it does not constrain a logical binding that also stores a physical code.
+
+Last updated: 2026-11-16
 
 [MIDI input](../components/midi-input.md) provides OS-owned ALSA Sequencer sessions on desktop Linux and WinMM sessions on Windows, with typed events and owner-thread scene delivery.
 
