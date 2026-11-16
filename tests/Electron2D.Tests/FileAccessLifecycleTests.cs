@@ -22,6 +22,7 @@ internal static class FileAccessLifecycleTests
             var user = directory.CreateSubdirectory("user").FullName;
             var other = directory.CreateSubdirectory("other").FullName;
             ProjectSettings.ConfigurePaths(project, user);
+            FileAccessModeTests.Run(project);
             VerifySnapshots(directory.FullName, project, user);
             VerifyMountedFileProtection(directory.FullName, project);
             VerifyMountedDirectoryWriteProtection(directory.FullName, project);

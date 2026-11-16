@@ -1,6 +1,6 @@
 # FileCompressionMode
 
-Last updated: 2026-10-27
+Last updated: 2026-11-16
 
 Used by both [FileAccess](FileAccess.md) and [ByteBuffer](ByteBuffer.md) compressed containers.
 
@@ -83,8 +83,8 @@ The value owns no state. Codec streams are created and disposed inside one compl
 
 ## Dependencies and limitations
 
-Implemented codecs use `System.IO.Compression`. The container is Electron2D-specific and is not a transparent reader for arbitrary raw `.gz`, Brotli, DEFLATE, or another engine's compressed-file envelope.
+DEFLATE, GZip and Brotli use `System.IO.Compression`; FastLZ and Zstandard use the private native codec bridge. The container is Electron2D-specific and is not a transparent reader for arbitrary raw `.gz`, Brotli, DEFLATE, or another engine's compressed-file envelope.
 
 ## Verification
 
-The executable harness round-trips all five codecs, verifies intermediate flush, cross-instance and fresh-process reads, block boundaries, edits, malformed envelopes, checksum failures and atomic replacement failures. Native file codecs require a matching bridge; Linux x64 is the exercised target.
+The executable harness round-trips all five codecs, verifies intermediate flush, cross-instance and fresh-process reads, block boundaries, edits, malformed envelopes, checksum failures and atomic replacement failures. The Windows x64 CLR profile additionally decodes 40 independent vectors through FileAccess and ByteBuffer. Native vectors use literal-only FastLZ and raw-block Zstandard frames; BCL vectors bypass the engine encoder. Wrong codecs, output limits, truncated payloads, repeated reads and failed editing opens are checked. Empty ByteBuffer compression returns empty bytes; empty compressed files retain the envelope. Native file codecs require a matching bridge; package and foreign-host qualification remain separate.

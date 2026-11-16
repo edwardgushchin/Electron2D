@@ -1,6 +1,8 @@
 namespace Electron2D;
 
 /// <summary>Specifies the operations permitted by an opened <see cref="FileAccess"/>.</summary>
+/// <remarks>Only the four declared values are valid; arbitrary flag combinations are rejected.
+/// Every successful open starts at position zero. Transformed writers stage their decoded bytes in memory.</remarks>
 [Flags]
 public enum FileAccessModeFlags
 {
