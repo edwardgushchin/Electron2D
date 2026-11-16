@@ -25,6 +25,21 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0004/0038/0095: retained static OS key naming, case-insensitive named-key/modifier parsing and exact character-capability classification share InputEventKey formatting. Compiled pinned keyboard.cpp table/classifier oracle checks 191 Linux identities, 37 classifier boundaries and modifiers. Named Unknown returns Key.Unknown despite the stale XML example; unsupported names contribute None. Public saved-project/input-action JIT and NativeAOT consumers establish the executable host-independent workflow; native keyboard-layout and per-key produced Unicode remain separate prerequisites."
+    },
+    {
+      "godot": [
+        "InputEventKey::method:get_key_label_with_modifiers()",
+        "InputEventKey::method:get_keycode_with_modifiers()",
+        "InputEventKey::method:get_physical_keycode_with_modifiers()",
+        "InputEventKey::property:echo",
+        "InputEventKey::property:key_label",
+        "InputEventKey::property:keycode",
+        "InputEventKey::property:location",
+        "InputEventKey::property:physical_keycode",
+        "InputEventKey::property:pressed"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0038: public keyboard checks audit defaults, stored typed descriptors/revert, exact raw bits, all modifier bits and autoremap, copies, notifications/errors/reentry and disposal. Logical identity takes precedence; location restricts only physical identity in shared event/action/Shortcut matching. Windows layout ru/en, native keyboard/action/modifier and native-menu profiles execute; 16384 warmed scalar/matching groups allocate zero bytes. Programmatic native input is distinct from physical keyboard acceptance. Per-key Unicode, foreign-host and package/NativeAOT qualification remain separate limits. Evidence: .tasks/qa/T-0074/final/report.md."
     }
   ]
 }

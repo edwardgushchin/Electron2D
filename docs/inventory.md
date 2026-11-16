@@ -1,3 +1,5 @@
+[InputEventKey matching](classes/InputEventKey.md) shares logical/physical/label selection across events, InputMap and Shortcut. Location restricts only the selected physical identity.
+
 [NativeSystemFonts](classes/NativeSystemFonts.md) now owns the internal WindowsCatalog, IAnalysisSource and AnalysisSource helpers in NativeSystemFonts.Windows.cs for [DirectWrite local system fonts](components/system-fonts.md#windows-native-verification). The existing OS/SystemFont/FontFile API and shared text owners remain unchanged.
 
 [Image analysis](components/images.md#image-analysis) verifies alpha, channel selection and visible base bounds with copied storage and PNG/BCn consumers.

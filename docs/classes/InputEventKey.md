@@ -271,6 +271,12 @@ Returns the key-location description.
 
 Tests whether this event has the same binding configuration as another event.
 
+The binding selects `Keycode` first, then `PhysicalKeycode`, then a label-only
+`KeyLabel`. `Location` restricts only the selected physical identity. A logical
+binding that also stores a physical code ignores location. Press and echo state
+do not change identity matching. InputMap action matching and Shortcut alternatives
+use the same identity precedence.
+
 **Parameters**
 
 - `event`: The event to compare.

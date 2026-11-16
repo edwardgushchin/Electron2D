@@ -10012,7 +10012,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Defined key text and matching are audited, including 191 pinned Linux display names. Native committed strings and IME composition now reach focused Controls separately; a per-key Unicode source and physical keyboard layout verification remain prerequisites for full InputEventKey parity under ADR 0038. Inherited Resource lifecycle is classified separately.",
+      "reason": "Defined key text and matching are audited, including 191 pinned Linux display names. Native committed strings and IME composition now reach focused Controls separately; a per-key Unicode source remains a prerequisite for full InputEventKey parity under ADR 0038. Windows ru/en programmatic native layout identities are verified by T-0074; physical keyboard and foreign-host acceptance remain unverified. Inherited Resource lifecycle is classified separately.",
       "godot": [
         "class:InputEventKey"
       ]
