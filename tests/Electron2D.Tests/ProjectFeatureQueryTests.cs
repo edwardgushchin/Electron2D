@@ -74,6 +74,10 @@ internal static class ProjectFeatureQueryTests
                 Check(registry.GetWithOverride(setting, ["first"]) is [6], "Concurrent explicit reads.");
             });
             Check(registry.Version == version && !registry.FlushChanges() && notifications == 0, "Successful and failed reads do not mutate or notify.");
+            Reject<ApplicationException>(() => registry.GetWithOverride(setting,
+                FailingFeatures(() => registry.SetFeatureOverride(setting, "first", [10]))));
+            Check(registry.GetWithOverride(setting, ["first"]) is [10] && registry.Version > version &&
+                registry.FlushChanges() && notifications == 1, "Enumerator writes and their notifications survive enumeration failure.");
             Check(registry.GetWithOverride(setting, ReentrantFeatures(registry, setting)) is [8], "Enumeration occurs outside selection lock and selection sees committed reentrant changes.");
             var writer = Task.Run(() => { for (var i = 0; i < 1000; i++) registry.SetFeatureOverride(setting, "first", [i % 2 + 8]); });
             for (var i = 0; i < 1000; i++)
@@ -82,6 +86,7 @@ internal static class ProjectFeatureQueryTests
             registry.Dispose();
             Reject<ObjectDisposedException>(() => registry.GetWithOverride(setting));
             Reject<ObjectDisposedException>(() => registry.GetWithOverride(setting, []));
+            VerifyFlushFallback(root.FullName);
             VerifyGlobal();
             Console.WriteLine("Feature query selection, snapshots, persistence, failures, reentry, concurrency and Engine passed.");
         }
@@ -108,6 +113,11 @@ internal static class ProjectFeatureQueryTests
             Check(Engine.PhysicsTicksPerSecond == 120, "Engine consumes active override.");
             ProjectSettings.RemoveCustomFeature("query-test");
             Check(Engine.PhysicsTicksPerSecond == 60 && ProjectSettings.GetWithOverride(setting) is [2], "Engine observes active feature removal.");
+            Reject<ApplicationException>(() => ProjectSettings.GetWithOverride(setting,
+                FailingFeatures(() => ProjectSettings.SetFeatureOverride(setting, "first", [4]))));
+            Check(ProjectSettings.GetWithOverride(setting, ["first"]) is [4], "Public query preserves enumerator writes on failure.");
+            Check(ProjectSettings.GetWithOverride(ProjectSettings.FlushSTDOUTOnPrint, ["DEBUG"]) &&
+                !ProjectSettings.GetWithOverride(ProjectSettings.FlushSTDOUTOnPrint, []), "Public debug fallback and explicit empty set.");
         }
         finally
         {
@@ -119,9 +129,37 @@ internal static class ProjectFeatureQueryTests
         }
     }
 
-    private static IEnumerable<string> FailingFeatures()
+    private static void VerifyFlushFallback(string root)
+    {
+        using var registry = new ProjectSettingsRegistry(root);
+        var setting = ProjectSettings.FlushSTDOUTOnPrint;
+        foreach (bool? baseValue in new bool?[] { null, false, true })
+        {
+            if (baseValue.HasValue) registry.Set(setting, baseValue.Value);
+            Check(registry.GetWithOverride(setting, ["debug"]) &&
+                registry.GetWithOverride(setting, []) == (baseValue ?? false) &&
+                registry.GetWithOverride(setting, ["release"]) == (baseValue ?? false), "Debug fallback precedes absent, false and true base; other contexts use base/initial.");
+            registry.SetFeatureOverride(setting, "other", false);
+            registry.SetFeatureOverride(setting, "debug", false);
+            Check(!registry.GetWithOverride(setting, ["DEBUG"]) &&
+                !registry.GetWithOverride(setting, ["debug", "other"]), "Stored matches precede built-in fallback.");
+            registry.ClearFeatureOverride(setting, "debug");
+            registry.ClearFeatureOverride(setting, "other");
+        }
+        registry.Set(setting, false);
+        registry.AddCustomFeature("debug");
+        Check(registry.GetWithOverride(setting), "Active debug enables built-in fallback.");
+        registry.SetFeatureOverride(setting, "debug", false);
+        Check(!registry.GetWithOverride(setting), "Stored active override precedes built-in fallback.");
+        registry.ClearFeatureOverride(setting, "debug");
+        registry.RemoveCustomFeature("debug");
+        Check(registry.GetWithOverride(setting) == registry.HasFeature("debug"), "Removal restores host debug context.");
+    }
+
+    private static IEnumerable<string> FailingFeatures(Action? mutation = null)
     {
         yield return "first";
+        mutation?.Invoke();
         throw new ApplicationException("enumerator failure");
     }
 
