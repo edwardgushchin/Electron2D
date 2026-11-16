@@ -1,6 +1,6 @@
 # TranslationDomain
 
-Last updated: 2026-11-13
+Last updated: 2026-11-16
 
 **Inherits:** [`ElectronObject`](ElectronObject.md)
 **Inherited By:** —
@@ -70,7 +70,7 @@ domain.Dispose();
 
 ## Member behavior
 
-- `LocaleOverride` accepts .NET culture names and underscore separators, normalizes them to `CultureInfo.Name`, and rejects unknown names. Empty removes the override. A null value throws `ArgumentNullException`.
+- `LocaleOverride` normalizes managed casing, hyphen/underscore separators and the catalog's language/country aliases and script modifiers, then stores `CultureInfo.Name`. Locale scoring supplies applicable script/region defaults. Both the input culture and normalized culture must be supported by the managed runtime. Empty removes the override; null throws `ArgumentNullException`. Rejected assignments preserve the previous working override.
 - `FindTranslations` and `HasTranslationForLocale` share one live resource predicate. With `exact = true`, the supplied text must equal the stored `Translation.Locale` ordinally: a catalog storing `fr-CA` matches `fr-CA`, but not `fr_CA` or `fr-ca`. With `exact = false`, a positive [`TranslationServer.CompareLocales`](TranslationServer.md#comparelocales) score accepts fixed aliases, script modifiers and regional/default-script identities; the query does not require a managed culture entry. For example, `iw_IL` can find a catalog storing `he-IL`. Catalog assignment still uses the managed `CultureInfo` boundary. Null queries throw `ArgumentNullException`.
 - Queries return every matching resource once in registration order, without score sorting. Their arrays are independent membership snapshots; resource objects remain live and caller-owned. Later `Locale` edits, removal, re-registration, clear and disposal affect the next query. Enablement, locale override, direct entries and configured fallback do not affect these catalog queries. `HasTranslationForLocale` applies the same predicate without creating a result array; prepared active and missing queries allocate no managed storage.
 - `Translate` and `TranslatePlural` use a case-sensitive context. Direct entries and resource catalogs compete by default-aware locale score for a registered domain, with direct entries winning ties; the configured fallback is tried after a miss. Disabled lookups return source text. Resource plural selectors may throw their own exceptions. Singular translations, including source fallback, are pseudolocalized when enabled; plural translations are not.

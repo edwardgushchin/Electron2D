@@ -2,6 +2,23 @@ namespace Electron2D;
 
 public sealed partial class TranslationServer
 {
+    internal static System.Globalization.CultureInfo GetRuntimeLocale(string locale)
+    {
+        ArgumentNullException.ThrowIfNull(locale);
+        var modifier = locale.IndexOf('@');
+        var name = modifier < 0 ? locale : locale[..modifier];
+        var separator = name.IndexOfAny(['_', '-']);
+        var language = separator < 0 ? name : name[..separator];
+        var alias = language == "C" ? language : language.ToLowerInvariant();
+        if (LocaleCatalog.LanguageRenames.TryGetValue(alias, out var replacement))
+            name = replacement + name[language.Length..];
+        // Validate before the catalog parser can discard unrecognized components.
+        var culture = System.Globalization.CultureInfo.GetCultureInfo(name.Replace('_', '-'));
+        var canonical = culture.Name;
+        if (modifier >= 0) canonical += locale[modifier..];
+        return System.Globalization.CultureInfo.GetCultureInfo(StandardizeLocale(canonical).Replace('_', '-'));
+    }
+
     /// <summary>Gets all supported language codes in catalog order.</summary>
     /// <returns>A caller-owned ordered array.</returns>
     public static string[] GetAllLanguages() => LocaleCatalog.Languages.Keys.ToArray();

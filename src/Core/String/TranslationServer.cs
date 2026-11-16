@@ -441,8 +441,8 @@ public sealed partial class TranslationServer : ElectronObject
         var settings = ProjectSettings.Service;
         var test = settings.GetWithOverrideCore(ProjectSettings.LocaleTest).Trim();
         var fallback = settings.GetWithOverrideCore(ProjectSettings.LocaleFallback).Trim();
-        var culture = test.Length == 0 ? CultureInfo.CurrentUICulture : CultureInfo.GetCultureInfo(test.Replace('_', '-'));
-        var fallbackCulture = fallback.Length == 0 ? null : CultureInfo.GetCultureInfo(fallback.Replace('_', '-'));
+        var culture = test.Length == 0 ? CultureInfo.CurrentUICulture : GetRuntimeLocale(test);
+        var fallbackCulture = fallback.Length == 0 ? null : GetRuntimeLocale(fallback);
         ApplyProjectPseudolocalization();
         lock (_gate)
         {

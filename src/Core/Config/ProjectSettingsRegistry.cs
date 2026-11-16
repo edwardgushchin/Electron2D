@@ -1462,7 +1462,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         if (locale is null) return false;
         locale = locale.Trim();
         if (locale.Length == 0) return true;
-        try { _ = CultureInfo.GetCultureInfo(locale.Replace('_', '-')); return true; }
+        try { _ = TranslationServer.GetRuntimeLocale(locale); return true; }
         catch (CultureNotFoundException) { return false; }
     }
 

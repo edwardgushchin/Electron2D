@@ -8,7 +8,7 @@ effective feature override only to an unassigned root Window before native
 creation. Explicit scene authoring wins; independent SubViewports retain their
 own HDR canvas policy.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-16
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
@@ -456,12 +456,12 @@ Permanent `internationalization/locale/translation_remaps` definition; default e
 <a id="localetest"></a>
 ### `public static ProjectSetting<string> LocaleTest { get; }`
 
-Defines `internationalization/locale/test`, default empty. A nonempty supported .NET culture name overrides the managed UI culture at the next Engine startup. Underscore separators are accepted. Unsupported names fail validation before storage; changing this setting does not alter a running lookup culture.
+Defines `internationalization/locale/test`, default empty. A nonempty supported .NET culture name overrides the managed UI culture at the next Engine startup. Stored text is preserved; startup trims it and normalizes managed casing, separators, catalog aliases and script modifiers. Unsupported names fail validation before storage; changing this setting does not alter a running lookup culture.
 
 <a id="localefallback"></a>
 ### `public static ProjectSetting<string> LocaleFallback { get; }`
 
-Defines `internationalization/locale/fallback`, default `en`. Engine startup samples the active feature override for resource-catalog and direct-entry fallback after primary locale lookup. Empty disables fallback. Supported .NET culture names and underscore separators are accepted; unsupported names fail validation. Changing the setting takes effect on the next Engine startup.
+Defines `internationalization/locale/fallback`, default `en`. Engine startup samples the active feature override for resource-catalog and direct-entry fallback after primary locale lookup. Empty disables fallback. The same runtime normalization and validation as `LocaleTest` applies; unsupported cultures fail validation before storage. Changing the setting takes effect on the next Engine startup.
 
 <a id="rootnodeautotranslate"></a>
 ### `public static ProjectSetting<bool> RootNodeAutoTranslate { get; }`

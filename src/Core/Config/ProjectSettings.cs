@@ -672,11 +672,14 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
 
     /// <summary>Defines an optional locale used instead of the process UI culture when an application loop starts.</summary>
     /// <value>The permanent typed project setting, empty by default.</value>
+    /// <remarks>Stores the supplied text; startup trims it and applies the shared runtime culture normalization.
+    /// Catalog aliases and script modifiers are supported only when the resulting culture is available in the managed runtime.</remarks>
     public static ProjectSetting<string> LocaleTest { get; } =
         new("internationalization/locale/test", string.Empty, IsValidProjectLocale);
 
     /// <summary>Defines the catalog locale consulted after the selected locale has no translation.</summary>
     /// <value>The permanent typed project setting, <c>en</c> by default. Empty disables the fallback.</value>
+    /// <remarks>Uses the same validation and startup normalization as LocaleTest. Whitespace is trimmed at startup.</remarks>
     public static ProjectSetting<string> LocaleFallback { get; } =
         new("internationalization/locale/fallback", "en", IsValidProjectLocale);
 

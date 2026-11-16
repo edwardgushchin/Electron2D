@@ -5,6 +5,7 @@ internal static class TranslationDomainTests
 {
     internal static void Run()
     {
+        VerifyRuntimeLocales();
         var oldCulture = TranslationServer.Culture;
         var oldEnabled = TranslationServer.Enabled;
         var main = TranslationServer.GetOrAddDomain("");
@@ -103,6 +104,40 @@ internal static class TranslationDomainTests
             TranslationServer.Enabled = oldEnabled;
         }
         Console.WriteLine("Translation domain registration, lookup and pseudolocalization passed.");
+    }
+
+    private static void VerifyRuntimeLocales()
+    {
+        using var domain = new TranslationDomain();
+        using var catalog = new Translation();
+        foreach (var (input, expected) in new (string, string)[]
+        {
+            ("C", "en"), ("in_ID", "id-ID"), ("no_NO", "nb-NO"),
+            ("en_UK", "en-GB"), ("iw_IL", "he-IL"), ("EN_us", "en-US"), ("sr_RS@latin", "sr-Latn-RS"),
+            ("zh_hant_tw", "zh-Hant-TW"), ("", "")
+        })
+        {
+            domain.LocaleOverride = input;
+            catalog.Locale = input;
+            Check(domain.LocaleOverride == expected && catalog.Locale == expected,
+                $"Runtime locale normalization agrees for {input}.");
+        }
+        domain.LocaleOverride = "iw_IL";
+        catalog.Locale = "he_IL";
+        catalog.AddMessage("runtime-key", "translated");
+        catalog.AddPluralMessage("runtime-one", ["one", "many"]);
+        domain.AddTranslation(catalog);
+        Check(domain.Translate("runtime-key") == "translated" &&
+            domain.TranslatePlural("runtime-one", "runtime-many", 2) == "many", "Alias override resolves singular and plural catalogs.");
+        foreach (var invalid in new[] { "bad locale!", "en_!", new string('x', 100) })
+        {
+            Reject<CultureNotFoundException>(() => domain.LocaleOverride = invalid);
+            Reject<CultureNotFoundException>(() => catalog.Locale = invalid);
+            Check(domain.LocaleOverride == "he-IL" && catalog.Locale == "he-IL" &&
+                domain.Translate("runtime-key") == "translated", "Rejected locale retains working state.");
+        }
+        Reject<ArgumentNullException>(() => domain.LocaleOverride = null!);
+        Reject<ArgumentNullException>(() => catalog.Locale = null!);
     }
 
     private static void Check(bool ok, string message) { if (!ok) throw new InvalidOperationException(message); }

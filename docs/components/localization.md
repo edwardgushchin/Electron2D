@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-11-14
+Last updated: 2026-11-16
 
 ## Scope
 
@@ -16,7 +16,7 @@ Direct registration and contextual, mutable resource catalogs execute through th
 
 ## Retained service
 
-The static translation API addresses one process-lifetime [translation service](../classes/TranslationServer.md). Engine registers it before any loop and keeps the same identity through startup and shutdown. The first access to service state before startup captures the current managed UI culture, including a read-only `HasDomain` call. Engine samples the project locale or current managed UI culture at startup. The writable culture and pseudolocalization descriptors inspect and update the facade's live state. Fresh processes in the [public consumer](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.Retained.cs) distinguish registry and descriptor discovery from `HasDomain`, then check singular and plural translations before startup. The managed profile also covers notification reentry, borrowed catalog lifetime and prepared reads across an Engine loop.
+The static translation API addresses one process-lifetime [translation service](../classes/TranslationServer.md). Engine registers it before any loop and keeps the same identity through startup and shutdown. The first access to service state before startup captures the current managed UI culture, including a read-only `HasDomain` call. Engine samples the project locale or current managed UI culture at startup. Domain overrides, Translation locales, project locale validation and startup share managed-casing and catalog alias/script normalization. Both input and normalized cultures must resolve through CultureInfo; metadata-only normalization does not establish runtime support. Project text is retained until startup trimming; domain/catalog getters return CultureInfo.Name. Script/region defaults remain part of locale scoring. The writable culture and pseudolocalization descriptors inspect and update the facade's live state. Fresh processes in the [public consumer](../../tests/TranslationQueries.Consumer/TranslationQueryChecks.Retained.cs) distinguish registry and descriptor discovery from `HasDomain`, then check singular and plural translations before startup. The managed profile also covers notification reentry, borrowed catalog lifetime and prepared reads across an Engine loop.
 
 <a id="catalog-queries"></a>
 ## Catalog queries
