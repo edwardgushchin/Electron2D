@@ -36,13 +36,19 @@ public sealed class TranslationDomain : ElectronObject
     }
 
     /// <summary>Gets or sets a culture name used instead of the process-wide UI culture; empty clears the override.</summary>
+    /// <remarks>Normalizes managed casing and catalog aliases and script modifiers before storing CultureInfo.Name.
+    /// Locale ranking supplies script/region defaults. Every token after @ must be a pinned script modifier or a variant
+    /// for the selected language. Invalid or unsupported cultures leave the previous override intact.</remarks>
+    /// <exception cref="ArgumentNullException">The value is null.</exception>
+    /// <exception cref="CultureNotFoundException">The managed runtime cannot resolve the culture.</exception>
+    /// <exception cref="ObjectDisposedException">The domain is disposed.</exception>
     public string LocaleOverride
     {
         get { lock (_gate) { ThrowIfDisposed(); return _localeOverride; } }
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            var culture = value.Length == 0 ? null : CultureInfo.GetCultureInfo(value.Replace('_', '-'));
+            var culture = value.Length == 0 ? null : TranslationServer.GetRuntimeLocale(value);
             lock (_gate) { ThrowIfDisposed(); _localeOverride = culture?.Name ?? string.Empty; _overrideCulture = culture; }
         }
     }

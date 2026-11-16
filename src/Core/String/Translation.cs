@@ -37,9 +37,10 @@ public partial class Translation : Resource
     public Translation() { }
 
     /// <summary>Gets or sets the locale of this catalog.</summary>
-    /// <value>A culture name normalized through <see cref="CultureInfo"/> after converting underscores to hyphens.
+    /// <value>A culture name normalized through <see cref="CultureInfo"/> and the catalog alias/script rules.
     /// The default is <c>en</c>; an empty name is the invariant culture.</value>
-    /// <remarks>Assignment prepares the automatic plural rule before publishing the locale and raising <see cref="Resource.Changed"/>.</remarks>
+    /// <remarks>Every token after @ must be a pinned script modifier or a variant for the selected language.
+    /// Assignment prepares the automatic plural rule before publishing the locale and raising <see cref="Resource.Changed"/>.</remarks>
     /// <exception cref="ArgumentException">The locale is not recognized by the managed globalization runtime.</exception>
     /// <exception cref="ArgumentNullException">The locale is null.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
@@ -56,7 +57,7 @@ public partial class Translation : Resource
     internal void SetCatalogLocale(string value)
     {
         ArgumentNullException.ThrowIfNull(value);
-        var normalized = CultureInfo.GetCultureInfo(value.Replace('_', '-')).Name;
+        var normalized = TranslationServer.GetRuntimeLocale(value).Name;
         var defaultSelector = TranslationServer.FindPluralRule(normalized).Select;
         lock (_gate)
         {

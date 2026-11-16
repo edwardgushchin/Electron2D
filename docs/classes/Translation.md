@@ -1,6 +1,6 @@
 # Translation
 
-Last updated: 2026-11-14
+Last updated: 2026-11-16
 
 **Inherits:** [Resource](Resource.md)
 
@@ -70,7 +70,7 @@ The snippet assumes `using System.Globalization;` and leaves any prior process-w
 
 ### Locale
 
-`Locale` starts at `en`. Assignment normalizes underscores to hyphens and resolves the name through `CultureInfo`; the empty name selects the invariant culture. A null or unsupported locale throws before mutation. The committed change raises `Resource.Changed`. The locale determines which server culture tier may use this catalog and selects the fixed automatic plural rule.
+`Locale` starts at `en`. Assignment normalizes managed casing and separators, applies the catalog alias/script rules, and resolves the result through `CultureInfo`; the empty name selects the invariant culture. Every token after `@` must be a pinned script modifier or a variant for the selected language; empty or unknown tokens are rejected before normalization can discard them. A null or unsupported locale throws before mutation. The committed change raises `Resource.Changed`. The locale determines which server culture tier may use this catalog and selects the fixed automatic plural rule.
 
 ### PluralSelector
 

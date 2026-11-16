@@ -24,7 +24,23 @@ internal static class LocalizationProjectSettingsTests
                 saved.Set(ProjectSettings.PseudolocalizationFakeBIDI, true);
                 saved.Set(ProjectSettings.PseudolocalizationExpansionRatio, 0.5f);
                 saved.Set(ProjectSettings.PseudolocalizationPrefix, "<");
-                saved.Set(ProjectSettings.LocaleTest, "fr-CA");
+                saved.Set(ProjectSettings.LocaleTest, "sr_RS@latin");
+                saved.Set(ProjectSettings.LocaleFallback, "de");
+                foreach (var key in new[] { ProjectSettings.LocaleTest, ProjectSettings.LocaleFallback })
+                {
+                    saved.Set(key, " sr_RS@latin ");
+                    foreach (var invalid in new[] { "bad locale!", "en@!", "en@unknown", "en@", "en@@latin",
+                        "en@latin@!", "en@!;latin", "en@latin;!", "en@latin;", "en@;latin",
+                        "en@latin;;cyrillic", "en@valencia", "ca@valencia;!" })
+                    {
+                        var version = saved.Version;
+                        Reject<ArgumentOutOfRangeException>(() => saved.Set(key, invalid));
+                        Check(saved.Get(key) == " sr_RS@latin " && saved.Version == version,
+                            "Rejected locale leaves the setting text and version intact.");
+                    }
+                    saved.Reset(key);
+                }
+                saved.Set(ProjectSettings.LocaleTest, "sr_RS@latin");
                 saved.Set(ProjectSettings.LocaleFallback, "de");
                 saved.Set(ProjectSettings.RootNodeAutoTranslate, false);
                 saved.Save();
@@ -35,7 +51,7 @@ internal static class LocalizationProjectSettingsTests
                 loaded.Get(ProjectSettings.PseudolocalizationFakeBIDI) &&
                 loaded.Get(ProjectSettings.PseudolocalizationExpansionRatio) == 0.5f &&
                 loaded.Get(ProjectSettings.PseudolocalizationPrefix) == "<" &&
-                loaded.Get(ProjectSettings.LocaleTest) == "fr-CA" &&
+                loaded.Get(ProjectSettings.LocaleTest) == "sr_RS@latin" &&
                 loaded.Get(ProjectSettings.LocaleFallback) == "de", "Typed localization settings survive a project-file round trip.");
             Check(!loaded.Get(ProjectSettings.RootNodeAutoTranslate), "The root translation mode setting survives a project-file round trip.");
             Reject<ArgumentOutOfRangeException>(() => loaded.Set(ProjectSettings.PseudolocalizationExpansionRatio, -0.1f));
@@ -152,8 +168,8 @@ internal static class LocalizationProjectSettingsTests
                 "Locale score distinguishes exact, language, region, script and unrelated languages.");
             main.AddTranslation(regional);
             main.AddTranslation(english);
-            ProjectSettings.Set(ProjectSettings.LocaleTest, "fr-CA");
-            ProjectSettings.Set(ProjectSettings.LocaleFallback, "en");
+            ProjectSettings.Set(ProjectSettings.LocaleTest, " FR_ca ");
+            ProjectSettings.Set(ProjectSettings.LocaleFallback, " EN ");
             using (var tree = new SceneTree(new Node()))
             {
                 Engine.Start(tree);
@@ -186,6 +202,25 @@ internal static class LocalizationProjectSettingsTests
                     Check(TranslationServer.Culture.Name == "de-DE" && TranslationServer.FallbackCulture is null &&
                         TranslationServer.Translate("", "Only English") == "Only English",
                         "The next run applies the changed test locale and disabled fallback.");
+                }
+                finally { Engine.Stop(); }
+            }
+            ProjectSettings.Set(ProjectSettings.LocaleTest, "iw_IL");
+            ProjectSettings.Set(ProjectSettings.LocaleFallback, "FR_fr");
+            using var alias = new Translation { Locale = "he_IL" };
+            alias.AddMessage("Alias", "resolved");
+            alias.AddPluralMessage("alias-one", ["single", "multiple"]);
+            main.AddTranslation(alias);
+            using (var tree = new SceneTree(new Node()))
+            {
+                Engine.Start(tree);
+                try
+                {
+                    Check(TranslationServer.Culture.Name == "he-IL" &&
+                        TranslationServer.Translate("", "Alias") == "resolved" &&
+                        TranslationServer.TranslatePlural("", "alias-one", "alias-many", 2) == "multiple" &&
+                        TranslationServer.Translate("", "Color") == "Couleur",
+                        "Startup aliases resolve singular/plural and normalized fallback catalogs.");
                 }
                 finally { Engine.Stop(); }
             }
