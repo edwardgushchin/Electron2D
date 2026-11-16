@@ -478,6 +478,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_SETTINGS") == "1
     ProjectPathTests.Run();
     ProjectSettingsContractTests.Run();
     ProjectSettingsMetadataTests.Run();
+    ProjectFeatureQueryTests.Run();
     VerifyProjectSettings();
     Console.WriteLine("ProjectSettings persistence and registry regressions passed.");
     return;
