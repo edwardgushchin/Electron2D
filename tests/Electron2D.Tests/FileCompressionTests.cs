@@ -13,6 +13,7 @@ internal static partial class FileCompressionTests
         Directory.CreateDirectory(directory);
         try
         {
+            IndependentVectors(directory);
             var previousProject = ProjectSettings.ProjectRoot; var previousUser = ProjectSettings.UserDataRoot;
             try
             {

@@ -1,6 +1,9 @@
 namespace Electron2D;
 
 /// <summary>Identifies the codec used by a compressed <see cref="FileAccess"/> or <see cref="ByteBuffer"/> container.</summary>
+/// <remarks>All five codecs encode and decode the versioned Electron2D container. A reader requires the
+/// stored codec identity to match. Native codecs require the matching runtime bundle. Compression of an
+/// empty ByteBuffer returns empty bytes; an empty compressed file retains its container header.</remarks>
 public enum FileCompressionMode
 {
     /// <summary>Uses the native FastLZ codec in bounded checksummed file blocks.</summary>
