@@ -65,12 +65,14 @@ public abstract partial class PropertyDescriptor
     public string HintString
     { get => _hintString; init { ArgumentNullException.ThrowIfNull(value); _hintString = value; } }
 
-    /// <summary>Gets whether the property has no setter.</summary>
+    /// <summary>Gets whether the property has no programmatic setter.</summary>
+    /// <remarks>This is an access capability, independent of editor presentation or editability.</remarks>
     /// <value><see langword="true"/> for a read-only descriptor; otherwise <see langword="false"/>.</value>
     public bool IsReadOnly { get; }
 
     /// <summary>Gets whether packed scenes should store this property when its owner is a node.</summary>
     /// <value><see langword="true"/> only for an explicitly storage-enabled writable descriptor.</value>
+    /// <remarks>Storage does not select editor visibility. Non-stored properties may still be discovered, read and written.</remarks>
     public bool IsStored { get; }
     internal bool AlwaysDuplicateResource { get; init; }
 
