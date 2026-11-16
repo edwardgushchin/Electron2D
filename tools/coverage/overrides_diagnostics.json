@@ -183,11 +183,43 @@
       "godot": "Engine::method:capture_script_backtraces(bool:)",
       "electron2d": "method:Electron2D.Engine.CaptureScriptBacktraces()",
       "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
+    },
+    {
+      "godot": "@GlobalScope::method:print()",
+      "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
+      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+    },
+    {
+      "godot": "@GlobalScope::method:printerr()",
+      "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
+      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+    },
+    {
+      "godot": "@GlobalScope::method:prints()",
+      "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
+      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+    },
+    {
+      "godot": "@GlobalScope::method:printt()",
+      "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
+      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+    },
+    {
+      "godot": "@GlobalScope::method:push_error()",
+      "electron2d": "method:Electron2D.OS.LogError(System.String,Electron2D.LoggerErrorType,System.String,System.String,System.String,System.Int32)",
+      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+    },
+    {
+      "godot": "@GlobalScope::method:push_warning()",
+      "electron2d": "method:Electron2D.OS.LogError(System.String,Electron2D.LoggerErrorType,System.String,System.String,System.String,System.Int32)",
+      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
     }
   ],
   "statusGroups": [
     {
-      "godot": ["OS::method:crash(String:)"],
+      "godot": [
+        "OS::method:crash(String:)"
+      ],
       "state": "Implemented",
       "reason": "The pinned [OS::crash](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/core_bind.cpp#L348-L350) is [registered as crash(message)](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/core_bind.cpp#L763) and uses the [crash macro](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/error/error_macros.h) to send a structured error with the supplied message before trapping. Under ADRs 0015/0095/0108 the static retained OS uses the normal logger stream and CLR fail-fast, with typed null validation and no lifecycle/thread-owner dependency. The [desktop crash handler](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/linuxbsd/crash_handler_linuxbsd.cpp) owns conditional main-loop crash notification. [Child-process checks and platform limits](../../components/diagnostics.md#fatal-process-termination)."
     },
@@ -211,12 +243,17 @@
       "reason": "ADRs 0016/0019/0108: typed startup settings apply through the common diagnostic ingress, native gate and owned header producer. Managed writer flush and debug-feature selection execute. See docs/components/diagnostics.md#startup-output-policy for host and verification boundaries."
     },
     {
-      "godot": ["ProjectSettings::property:application/run/frame_delay_msec"],
+      "godot": [
+        "ProjectSettings::property:application/run/frame_delay_msec"
+      ],
       "state": "Implemented",
       "reason": "ADRs 0016/0019: synchronous and yielding window hosts honor a startup-sampled fixed post-frame wait with responsive native event handling. Manual frames and fixed-rate capture bypass pacing. See docs/components/engine-runtime.md#frame-rate-settings."
     },
     {
-      "godot": ["ProjectSettings::property:application/run/max_fps", "ProjectSettings::property:debug/settings/stdout/print_fps"],
+      "godot": [
+        "ProjectSettings::property:application/run/max_fps",
+        "ProjectSettings::property:debug/settings/stdout/print_fps"
+      ],
       "state": "Implemented",
       "reason": "ADRs 0016/0019/0108: stored typed settings and feature overrides have executable cadence and periodic diagnostics consumers. Host switches, unscaled reporting, exact warmup count, effective cap, rendered pacing and live property assignments execute. See docs/components/engine-runtime.md#frame-rate-settings for verification boundaries."
     },
@@ -282,6 +319,48 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0001/0091/0108: Variant-valued live variable getters would recreate a universal value carrier; no object/dynamic fallback is exposed. Future CLR debugging requires a separately accepted typed projection."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:print()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: caller composes text using string.Concat, then OS.LogMessage preserves it, appends a physical newline and delivers the original text to loggers. [Public consumer and pinned semantic audit](../diagnostic-text.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:printerr()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: caller composes text using string.Concat and error: true, then OS.LogMessage preserves it, appends a physical newline and delivers the original text to loggers. [Public consumer and pinned semantic audit](../diagnostic-text.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:prints()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: caller composes text using string.Join(\" \", parts), then OS.LogMessage preserves it, appends a physical newline and delivers the original text to loggers. [Public consumer and pinned semantic audit](../diagnostic-text.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:printt()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: caller composes text using string.Join(\"\\t\", parts), then OS.LogMessage preserves it, appends a physical newline and delivers the original text to loggers. [Public consumer and pinned semantic audit](../diagnostic-text.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:push_error()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: typed preformatted text through OS.LogError with Error classification and compiler caller metadata. [Public consumer and pinned semantic audit](../diagnostic-text.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:push_warning()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: typed preformatted text through OS.LogError with Warning classification and compiler caller metadata. [Public consumer and pinned semantic audit](../diagnostic-text.md)."
     }
   ],
   "extras": [
@@ -291,14 +370,6 @@
     },
     {
       "electron2d": "method:Electron2D.Logger.Dispose(System.Boolean)",
-      "reason": "ADR 0108: explicit typed CLR diagnostic ingress, deterministic receiver lifetime or immutable snapshot string formatting; no universal values or platform identity exposed."
-    },
-    {
-      "electron2d": "method:Electron2D.OS.LogError(System.String,Electron2D.LoggerErrorType,System.String,System.String,System.String,System.Int32)",
-      "reason": "ADR 0108: explicit typed CLR diagnostic ingress, deterministic receiver lifetime or immutable snapshot string formatting; no universal values or platform identity exposed."
-    },
-    {
-      "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
       "reason": "ADR 0108: explicit typed CLR diagnostic ingress, deterministic receiver lifetime or immutable snapshot string formatting; no universal values or platform identity exposed."
     },
     {

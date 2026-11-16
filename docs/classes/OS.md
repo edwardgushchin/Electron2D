@@ -185,7 +185,7 @@ CreateInstance resolves a framework-dependent entry DLL by assembly name in AppC
 
 Runtime messages now use [diagnostic delivery](../components/diagnostics.md). Engine output flags affect its physical stream; typed logger callbacks retain delivery. Host Console writers retain ordinary C# semantics.
 
-`AddLogger(Logger)`/`RemoveLogger(Logger)` retain registration identity. `LogMessage(string, bool)` and `LogError(string, LoggerErrorType, string, string, string, int)` provide typed message/error ingress with compiler caller metadata.
+`AddLogger(Logger)`/`RemoveLogger(Logger)` retain registration identity. `LogMessage(string, bool)` and `LogError(string, LoggerErrorType, string, string, string, int)` provide typed message/error ingress with compiler caller metadata. Compose values with `string.Concat` or `string.Join` before sending; physical output appends a newline while message callbacks preserve the original text. Error and Warning classifications share the structured stderr path. See the [six-role audit](../coverage/diagnostic-text.md) for exact composition and verification.
 
 `Crash(string message)` reports a fatal error and terminates the current process from the calling thread. It accepts empty text and throws `ArgumentNullException` for null. A fatal call bypasses exception unwinding and ordinary managed shutdown. See [fatal process termination](../components/diagnostics.md#fatal-process-termination).
 

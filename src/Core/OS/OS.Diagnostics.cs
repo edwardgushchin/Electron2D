@@ -63,7 +63,10 @@ public sealed partial class OS
     /// <param name="message">Diagnostic text; physical output appends a newline.</param>
     /// <param name="error">Whether to use stderr instead of stdout.</param>
     /// <remarks>Engine output flags affect the console, while callbacks still receive the message. Direct
-    /// consumer Console writes remain host-owned output. Recursive log messages are printed without callbacks.</remarks>
+    /// consumer Console writes remain host-owned output. Recursive log messages are printed without callbacks.
+    /// Compose multiple values before sending, for example with string.Concat or string.Join using a space
+    /// or tab separator. Empty text is allowed; embedded newlines and trailing whitespace are preserved.
+    /// Callbacks receive the original text even when physical output is disabled or its writer fails.</remarks>
     /// <exception cref="ArgumentNullException">Message is null.</exception>
     /// <exception cref="IOException">The host output writer fails.</exception>
     public static void LogMessage(string message, bool error = false) => RuntimeDiagnostics.Instance.Message(message, error);
@@ -75,6 +78,10 @@ public sealed partial class OS
     /// <param name="function">Origin function, supplied by the compiler by default.</param>
     /// <param name="file">Origin file, supplied by the compiler by default.</param>
     /// <param name="line">Origin line, supplied by the compiler by default.</param>
+    /// <remarks>Use Error for an error and Warning for a warning. Reporting alone does not throw or stop
+    /// execution. Physical stderr includes classification and available origin, followed by a newline;
+    /// callbacks receive separate text and metadata fields even when physical output is disabled or fails.
+    /// Caller attributes describe the C# call site; wrappers may explicitly forward their own caller metadata.</remarks>
     /// <exception cref="ArgumentNullException">A text argument is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Type is unknown or line is negative.</exception>
     /// <exception cref="IOException">The host error writer fails.</exception>
