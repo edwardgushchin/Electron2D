@@ -52,7 +52,7 @@ The [graphics adapter identity](../components/graphics-adapter-identity.md) desc
 
 [Texture storage replacement](../components/canvas-rendering.md#texture-storage-replacement) switches ordinary textures and arrays between copied images and borrowed device images while keeping retained canvas and material identities.
 
-RenderingDevice [native command labels](../components/local-compute.md#native-command-labels) mark ranges of draw, compute and copy work in the Vulkan command stream.
+RenderingDevice [native command labels](../components/local-compute.md#native-command-labels) mark ranges of draw, compute and copy work on Vulkan command buffers and Direct3D 12 command lists.
 
 RenderingDevice [native resource labels](../components/local-compute.md#native-resource-labels) give live Vulkan and Direct3D 12 objects caller-supplied names in graphics diagnostics.
 

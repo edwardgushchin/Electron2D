@@ -332,7 +332,7 @@ Borrowers become invalid and may still be freed explicitly. The root device iden
 
 ### DrawCommandBeginLabel and DrawCommandEndLabel
 
-Labels the commands recorded on this device with a UTF-8 name and RGBA color. A new label replaces the current region. Explicit end or submission closes it. Labels can span native draw, compute and copy passes. See [native command labels](../components/local-compute.md#native-command-labels).
+Labels the commands recorded on this device with a Unicode name and diagnostic color on Vulkan and Direct3D 12. A new label replaces the current region. Explicit end or submission closes it. Labels can span native draw, compute and copy passes. See [native command labels](../components/local-compute.md#native-command-labels).
 
 ### SetResourceName
 

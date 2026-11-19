@@ -10,7 +10,11 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Starts a native debug region for commands recorded on this device.</summary>
     /// <param name="name">A UTF-8 region name without null characters.</param>
     /// <param name="color">The diagnostic RGBA color, with channels in the range zero to one.</param>
-    /// <remarks>A new label replaces the current label. The region can span draw, compute and copy passes and ends at submission.</remarks>
+    /// <remarks>
+    /// A new label replaces the current label. The region can span draw, compute and copy passes and ends at submission.
+    /// Vulkan debug utils records RGBA. Direct3D 12 records a PIX event with RGB rounded to eight bits per channel.
+    /// PIX names are limited to 235 UTF-16 code units and are shortened at a character boundary.
+    /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> contains a null character.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="color"/> contains a nonfinite or out-of-range channel.</exception>
@@ -27,8 +31,14 @@ public sealed unsafe partial class RenderingDevice
             throw new ArgumentOutOfRangeException(nameof(color));
 
         int supported;
-        try { supported = LabelNativeCommands(Device, 1, 0, null, 0, 0, 0, 0, 0); }
-        catch (EntryPointNotFoundException) { supported = 0; }
+        try
+        {
+            supported = LabelNativeCommands(Device, 1, 0, null, 0, 0, 0, 0, 0);
+        }
+        catch (EntryPointNotFoundException)
+        {
+            supported = 0;
+        }
         if (supported != 1)
             throw new NotSupportedException("The active GPU does not expose colored command labels.");
 

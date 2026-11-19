@@ -622,7 +622,17 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             RenderingServer.NotifyRenderMutation();
             if (_drawPass != 0) { try { RestoreAddressUniforms(); } finally { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; } }
-            if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; _commandLabelOpen = false; }
+            if (_command != 0)
+            {
+                // SDL closes the native D3D12 list even when it discards the recording.
+                if (_commandLabelOpen && SDL.GetGPUDeviceDriver(Device) == "direct3d12")
+                {
+                    LabelNativeCommands(Device, 1, _command, null, 0, 0, 0, 0, 0);
+                }
+                SDL.CancelGPUCommandBuffer(_command);
+                _command = 0;
+                _commandLabelOpen = false;
+            }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
             ReleaseDepthResolves();

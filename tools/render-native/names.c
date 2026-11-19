@@ -50,6 +50,56 @@ static int label_d3d12_resource(uint32_t kind, void *resource, const wchar_t *na
         default: return 0;
     }
 }
+
+static int label_d3d12_commands(SDL_GPUDevice *device, SDL_GPUCommandBuffer *command,
+    const char *name, float r, float g, float b, uint32_t replace)
+{
+    if (!command) {
+        return 1;
+    }
+    D3D12CommandBuffer *buffer = (D3D12CommandBuffer *)command;
+    if (buffer->common.device != device || buffer->renderer != (D3D12Renderer *)device->driverData ||
+        !buffer->graphicsCommandList) {
+        return -1;
+    }
+    ID3D12GraphicsCommandList *list = buffer->graphicsCommandList;
+    if (!name) {
+        ID3D12GraphicsCommandList_EndEvent(list);
+        return 1;
+    }
+
+    // PIX's legacy GPU BeginEvent_NoArgs format carries a literal UTF-16 name.
+    // See microsoft/PixEvents include/PIXEventsLegacy.h and include/pix3_win.h.
+    enum { pix_event_metadata = 2, pix_header_words = 3, pix_record_words = 62 };
+    uint64_t event[pix_record_words] = {
+        UINT64_C(2) << 10,
+        UINT64_C(0xff000000) | ((uint64_t)(r * 255.0f + 0.5f) << 16) |
+            ((uint64_t)(g * 255.0f + 0.5f) << 8) | (uint64_t)(b * 255.0f + 0.5f),
+        UINT64_C(8) << 55
+    };
+    wchar_t *wide = (wchar_t *)SDL_iconv_string("UTF-16LE", "UTF-8", name, SDL_strlen(name) + 1);
+    if (!wide) {
+        return -2;
+    }
+    const size_t capacity = (sizeof(event) - pix_header_words * sizeof(event[0])) / sizeof(*wide);
+    size_t length = SDL_wcslen(wide);
+    if (length >= capacity) {
+        length = capacity - 1;
+        if (wide[length - 1] >= 0xd800 && wide[length - 1] <= 0xdbff) {
+            --length;
+        }
+    }
+    SDL_memcpy(event + pix_header_words, wide, length * sizeof(*wide));
+    SDL_free(wide);
+
+    const size_t name_words = ((length + 1) * sizeof(wchar_t) + sizeof(event[0]) - 1) / sizeof(event[0]);
+    if (replace) {
+        ID3D12GraphicsCommandList_EndEvent(list);
+    }
+    ID3D12GraphicsCommandList_BeginEvent(list, pix_event_metadata, event,
+        (UINT)((pix_header_words + name_words) * sizeof(event[0])));
+    return 1;
+}
 #endif
 
 static int label(VulkanRenderer *renderer, VkObjectType type, uint64_t handle, const char *name)
@@ -142,6 +192,11 @@ E2D_EXPORT int e2d_render_command_label(SDL_GPUDevice *device, uint32_t abi, SDL
     const char *name, float r, float g, float b, float a, uint32_t replace)
 {
     if (!device || abi != 1) return -1;
+#if defined(SDL_PLATFORM_WIN32)
+    if (e2d_d3d12_device(device)) {
+        return label_d3d12_commands(device, command, name, r, g, b, replace);
+    }
+#endif
     VulkanRenderer *renderer = debug_renderer(device);
     if (!renderer || !renderer->vkCmdBeginDebugUtilsLabelEXT || !renderer->vkCmdEndDebugUtilsLabelEXT) return 0;
     if (!command) return 1;
