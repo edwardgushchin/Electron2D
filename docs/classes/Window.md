@@ -770,9 +770,9 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 
 The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu theme keys, inherited Window popup hooks and an exact built-in scene/file factory. Internal item/search controls receive focus after visibility propagation; public runtime signatures of these owners are unchanged.
 
-## Embedded title width
+## Title width
 
-`public System.Boolean KeepTitleVisible { get; set; }` defaults to false and expands embedded width from its actual themed title font and close-button allowance, bounded by MaxSize. Title and theme changes recompute the minimum. AcceptDialog defaults to true. Native roots reject this enabled policy before acquiring resources; native title metrics remain a backend prerequisite. The policy is stored; it does not clamp the window position.
+`public System.Boolean KeepTitleVisible { get; set; }` defaults to false. It contributes a minimum width from the themed title and close button for embedded windows, or from the system caption for Win32 top-level windows. `MaxSize` bounds the minimum. Title, decoration, and DPI changes refresh the Win32 minimum. AcceptDialog defaults to true. Other native backends and native popup surfaces reject the enabled policy. The property is stored and applies to width only.
 
 Internal native presentation interception lets FileDialog route Visible/Show/Popup and centered variants to an asynchronous chooser before custom visibility or geometry commit. Ordinary Window behavior keeps its existing embedded host. See the [file-dialog component](../components/file-dialogs.md) for its exercised flow and limits.
 

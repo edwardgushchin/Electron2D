@@ -335,9 +335,12 @@ public sealed partial class DisplayServer
 
         switch (type)
         {
-            case SDL.EventType.WindowExposed:
+            case SDL.EventType.WindowLeaveFullscreen:
             case SDL.EventType.WindowRestored:
             case SDL.EventType.WindowShown:
+                RefreshNativeCaptionMinimum();
+                goto case SDL.EventType.WindowExposed;
+            case SDL.EventType.WindowExposed:
                 RenderingServer.NotifyRenderMutation();
                 break;
             case SDL.EventType.WindowMouseEnter:
@@ -369,6 +372,7 @@ public sealed partial class DisplayServer
                     try
                     {
                         RefreshMouseInputRegion();
+                        RefreshNativeCaptionMinimum();
                         RenderingServer.NotifyRenderMutation();
                         if (_waylandWindowPosition)
                         {

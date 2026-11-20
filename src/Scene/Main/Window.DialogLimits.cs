@@ -4,19 +4,36 @@ public partial class Window
 {
     private bool _keepTitleVisible;
     internal bool ClampToEmbedder;
-    /// <summary>Gets or sets whether embedded window width expands to display its complete title.</summary>
+    /// <summary>Gets or sets whether window width expands to display its complete title.</summary>
     /// <value>False initially; AcceptDialog defaults to true.</value>
     /// <remarks>Uses the embedded title font, maximum focused/unfocused style minimum and close-button space. MaxSize still bounds the result.
-    /// Native title measurement is unavailable and a native root rejects this enabled policy.</remarks>
-    /// <exception cref="NotSupportedException">Enabled on an active native root.</exception>
+    /// On Win32 top-level windows this uses the system caption font and space for caption controls at the window's DPI.
+    /// Changes made in fullscreen are applied to the caption width when the window leaves fullscreen.
+    /// Disabling the policy removes the title minimum. It leaves the current width in place.</remarks>
+    /// <exception cref="NotSupportedException">Enabled on a native backend or popup role without caption measurement.</exception>
     public bool KeepTitleVisible
     {
         get { ThrowIfDisposed(); return _keepTitleVisible; }
-        set { EnsureMutable(); if (value && _display != null) throw new NotSupportedException("Native title measurement is unavailable."); if (_keepTitleVisible == value) return; _keepTitleVisible = value; UpdateEmbeddedContents(); }
+        set
+        {
+            EnsureMutable();
+            if (_keepTitleVisible == value)
+                return;
+            if (_display is { } display)
+            {
+                display.SetNativeTitleVisibility(value);
+                _keepTitleVisible = value;
+            }
+            else
+            {
+                _keepTitleVisible = value;
+                UpdateEmbeddedContents();
+            }
+        }
     }
     private Vector2i TitleMinimum()
     {
-        if (!_keepTitleVisible || Borderless || GetThemeFont("title_font", "Window") is not { } font) return Vector2i.Zero;
+        if (!_keepTitleVisible || _display is not null || Borderless || GetThemeFont("title_font", "Window") is not { } font) return Vector2i.Zero;
         return new(checked((int)MathF.Ceiling(font.GetStringSize(Title, fontSize: GetThemeFontSize("title_font_size", "Window"), direction: IsLayoutRTL() ? TextDirection.RTL : TextDirection.LTR).X + DecorationMetric(true).X + GetThemeConstant("close_h_offset", "Window"))), 0);
     }
     private Vector2i ClampEmbeddedPosition(Vector2i position)

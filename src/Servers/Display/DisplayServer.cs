@@ -496,8 +496,20 @@ public sealed partial class DisplayServer : ElectronObject
         ArgumentNullException.ThrowIfNull(title);
         if (title.Contains('\0')) throw new ArgumentException("Window titles cannot contain null characters.", nameof(title));
         if (IsNativePopup) { _popupTitle = title; return; }
-        if (!SDL.SetWindowTitle(GetWindow(windowId), title))
+        var window = GetWindow(windowId);
+        var previousTitle = _keepNativeTitleVisible ? SDL.GetWindowTitle(window) : null;
+        if (!SDL.SetWindowTitle(window, title))
             throw SDLFailure("set window title");
+        try
+        {
+            RefreshNativeCaptionMinimum();
+        }
+        catch (Exception error)
+        {
+            if (previousTitle is not null && !SDL.SetWindowTitle(window, previousTitle))
+                throw new AggregateException(error, SDLFailure("restore the window title"));
+            throw;
+        }
         _accessibilityTitle = title;
     }
 

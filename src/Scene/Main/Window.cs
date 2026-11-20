@@ -417,8 +417,9 @@ public partial class Window : Viewport
     private void ConfigureNative(
         (WindowMode Mode, WindowInitialPosition Policy, Vector2i Position, int Screen)? projectPlacement = null)
     {
-        if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         var display = _display ?? throw new InvalidOperationException("The native window is absent.");
+        if (_keepTitleVisible && !display.SupportsCaptionButtons)
+            throw new NotSupportedException("Native title measurement requires a top-level Win32 window.");
         display.SetHDROutputRequestCore(_hdrOutputRequested);
         _observedNativePosition = display.ObservedWindowPosition;
         if (!SupportsNativeSizeLimits)
@@ -435,6 +436,7 @@ public partial class Window : Viewport
         foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.MousePassthrough, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus, WindowFlag.Popup, WindowFlag.Transparent, WindowFlag.PopupWmHint, WindowFlag.MinimizeDisabled, WindowFlag.MaximizeDisabled, WindowFlag.SharpCorners, WindowFlag.ExcludeFromCapture })
             if (GetFlag(flag))
                 display.WindowSetFlagCore(flag, true);
+        display.SetNativeTitleVisibility(_keepTitleVisible);
         display.WindowSetMousePassthroughCore(_mousePassthroughPolygon);
         if (_currentScreen is { } screen)
             display.WindowSetCurrentScreenCore(screen);

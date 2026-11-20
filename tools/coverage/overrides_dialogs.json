@@ -304,7 +304,7 @@
         "Window::property:keep_title_visible"
       ],
       "state": "Partial",
-      "reason": "Embedded title-width policy executes, updates changed titles and rejects native roots before resource acquisition. Trigger: native title measurement supported by the DisplayServer backend, then physical/compositor acceptance."
+      "reason": "Embedded title measurement uses the theme. Win32 top-level windows use the system caption font and reserve space for caption controls, bounded by MaxSize. Trigger: caption measurement adapters and native acceptance for the remaining backends."
     },
     {
       "godot": [

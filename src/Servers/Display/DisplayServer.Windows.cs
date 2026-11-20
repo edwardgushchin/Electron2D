@@ -320,7 +320,7 @@ public sealed partial class DisplayServer
         return success ? new(width, height) : throw SDLFailure("read native window size limits");
     }
 
-    private void ApplyWindowLimits(Vector2i minimum, Vector2i maximum, Vector2i content, Vector2i? resize = null)
+    private void ApplyWindowLimits(Vector2i minimum, Vector2i maximum, Vector2i content, Vector2i? resize = null, int? captionWidth = null)
     {
         EnsureOwner();
         if (minimum.X < 0 || minimum.Y < 0 || maximum.X < 0 || maximum.Y < 0 || LimitsConflict(minimum, maximum))
@@ -332,7 +332,8 @@ public sealed partial class DisplayServer
         if (LimitsConflict(nativeMinimum, nativeMaximum))
             throw new ArgumentOutOfRangeException(nameof(minimum), "The limits cannot both be represented at the current pixel density.");
         var nativeContent = _waylandWindowPosition ? WaylandLogicalWindowLimit(content, window, minimum: true) : content;
-        nativeMinimum = CapWindowMinimum(nativeMinimum.Max(nativeContent), nativeMaximum);
+        var captionMinimum = captionWidth ?? _captionMinimumWidth;
+        nativeMinimum = CapWindowMinimum(nativeMinimum.Max(nativeContent).Max(new Vector2i(captionMinimum, 0)), nativeMaximum);
 
         var previousMinimum = ReadNativeWindowLimit(minimum: true);
         var previousMaximum = ReadNativeWindowLimit(minimum: false);
@@ -363,6 +364,7 @@ public sealed partial class DisplayServer
         _requestedMinimumSize = minimum;
         _requestedMaximumSize = maximum;
         _contentMinimumSize = content;
+        _captionMinimumWidth = captionMinimum;
     }
 
     private static void SetNativeWindowLimits(nint window, Vector2i oldMinimum, Vector2i oldMaximum, Vector2i minimum, Vector2i maximum)
@@ -516,7 +518,8 @@ public sealed partial class DisplayServer
         }
         if (SDL.GetCurrentVideoDriver() == "wayland" && (flag == WindowFlag.AlwaysOnTop || flag == WindowFlag.NoFocus && !IsNativePopup))
             throw new NotSupportedException($"Window flag {flag} is unavailable for a Wayland top-level window.");
-        var previousBorderless = flag == WindowFlag.Borderless && (SDL.GetWindowFlags(window) & SDL.WindowFlags.Borderless) != 0;
+        var changesFrame = flag is WindowFlag.Borderless or WindowFlag.ResizeDisabled;
+        var previousFlags = changesFrame ? SDL.GetWindowFlags(window) : default;
         var success = flag switch
         {
             WindowFlag.Borderless => SDL.SetWindowBordered(window, !enabled),
@@ -528,15 +531,25 @@ public sealed partial class DisplayServer
         };
         if (!success)
             throw SDLFailure("change window flag");
-        if (flag == WindowFlag.Borderless)
+        if (changesFrame)
         {
-            try { RefreshMouseInputRegion(); }
+            try
+            {
+                if (flag == WindowFlag.Borderless)
+                    RefreshMouseInputRegion();
+                RefreshNativeCaptionMinimum();
+            }
             catch (Exception error)
             {
                 try
                 {
-                    if (!SDL.SetWindowBordered(window, !previousBorderless)) throw SDLFailure("restore window borders");
-                    RefreshMouseInputRegion();
+                    var restored = flag == WindowFlag.Borderless
+                        ? SDL.SetWindowBordered(window, (previousFlags & SDL.WindowFlags.Borderless) == 0)
+                        : SDL.SetWindowResizable(window, (previousFlags & SDL.WindowFlags.Resizable) != 0);
+                    if (!restored)
+                        throw SDLFailure("restore the window frame");
+                    if (flag == WindowFlag.Borderless)
+                        RefreshMouseInputRegion();
                 }
                 catch (Exception rollback) { throw new AggregateException(error, rollback); }
                 throw;

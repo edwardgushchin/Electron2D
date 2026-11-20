@@ -6,8 +6,10 @@ internal static partial class RenderingRuntimeTests
     private static void VerifyDialogRendering(string backend)
     {
         var root = new Window { Size = new(540, 330), GUIEmbedSubwindows = true }; var dialog = new ConfirmationDialog { DialogText = "Apply the selected settings?", OKButtonText = "Apply", CancelButtonText = "Back" }; var confirmed = 0; var canceled = 0; var custom = 0; dialog.Confirmed += () => confirmed++; dialog.Canceled += () => canceled++; dialog.CustomAction += _ => custom++; var help = dialog.AddButton("Help", action: "help"); root.AddChild(dialog); var frame = 0;
+        var supportsNativeTitle = false;
         root.Ready += _ =>
         {
+            supportsNativeTitle = SDL.GetCurrentVideoDriver() == "windows";
             dialog.PopupCentered(new(380, 180)); RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
         {
             frame++; using var pixels = RenderingServer.Service!.Readback();
@@ -23,7 +25,23 @@ internal static partial class RenderingRuntimeTests
             Check(confirmed == 1 && !dialog.Visible, "Native Enter confirms focused OK."); root.Tree!.Quit();
         };
         };
-        Engine.Run(root); Released(root); Check(frame == 4, "Native dialog action sequence completed."); VerifyDialogWarm(backend); var unsupported = new Window { KeepTitleVisible = true }; try { Engine.Run(unsupported); throw new InvalidOperationException("Native title measurement must reject."); } catch (NotSupportedException) { Released(unsupported); }
+        Engine.Run(root);
+        Released(root);
+        Check(frame == 4, "Native dialog action sequence completed.");
+        VerifyDialogWarm(backend);
+        if (!supportsNativeTitle)
+        {
+            var unsupported = new Window { KeepTitleVisible = true };
+            try
+            {
+                Engine.Run(unsupported);
+                throw new InvalidOperationException("Native title measurement must reject on unsupported backends.");
+            }
+            catch (NotSupportedException)
+            {
+                Released(unsupported);
+            }
+        }
         Console.WriteLine($"Dialogs {backend}: native pointer custom action, Escape cancellation, Return confirmation and themed pixels passed.");
     }
     private static void DialogClick(Vector2 point)

@@ -41,7 +41,11 @@ public sealed partial class DisplayServer
         var style = disabled || !defaultButton ? previousStyle & ~button : previousStyle | button;
 
         SetMask(mask);
-        try { WriteCaptionStyle(hwnd, style); }
+        try
+        {
+            WriteCaptionStyle(hwnd, style);
+            RefreshNativeCaptionMinimum();
+        }
         catch (Exception error)
         {
             try { SetMask(previousMask); WriteCaptionStyle(hwnd, previousStyle); }
