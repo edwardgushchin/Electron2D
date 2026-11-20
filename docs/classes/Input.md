@@ -625,7 +625,7 @@ Stores one of the 17 native cursor shapes separately from the current display sh
 <a id="m-electron2d-input-setcustommousecursor"></a>
 ### `public static void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`
 
-Copies pixels from a readable `Image` or `Texture` into the selected cursor slot; `null` restores its system cursor. The source stays caller-owned and may be disposed after the call. Size is limited to 256 × 256 pixels, and the hotspot must fall inside the image. Invalid resources, shapes, image sizes and hotspots fail through `DisplayServer`. Animated-texture first-frame semantics and native behavior beyond the tested Linux backend are not fully audited.
+Copies pixels from a readable `Image` or `Texture` into the selected cursor slot. Pass `null` to restore its system cursor. For `AnimatedTexture`, the copy uses the image and dimensions of frame zero even when another frame is active. Later playback or disposal of the source does not affect the installed cursor. An unavailable, unreadable or empty first frame raises `ArgumentException` and preserves the previous cursor. The copied image must be at most 256 × 256 pixels and contain the hotspot. See [the display adapter](../components/display-server.md) for native support and conversion.
 
 <a id="m-electron2d-input-warpmouse"></a>
 ### `public static void WarpMouse(Vector2 position)`

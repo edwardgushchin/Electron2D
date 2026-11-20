@@ -2836,7 +2836,7 @@
         "Input::method:set_custom_mouse_cursor(Resource:,int:Input.CursorShape,Vector2:)"
       ],
       "state": "Partial",
-      "reason": "Image and readable Texture pixels are copied into an SDL cursor with per-shape slots, size/hotspot validation and null reset; native tests cover Image and errors. AnimatedTexture first-frame semantics and other backends remain unaudited."
+      "reason": "The SDL path copies Image and readable Texture pixels per shape, taking frame zero at its image size for AnimatedTexture. Native tests exercise pixels at creation, hotspot validation, source disposal, unavailable frames, retention on error and null reset. Other platform profiles still require qualification."
     },
     {
       "godot": [

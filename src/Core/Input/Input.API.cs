@@ -154,8 +154,13 @@ public sealed partial class Input
     /// <summary>Installs or clears a copied image for one native cursor shape.</summary>
     /// <param name="image">A caller-owned Image or readable Texture, or null to restore the system shape.</param>
     /// <param name="shape">The shape slot to customize.</param>
-    /// <param name="hotspot">The active pixel position in the source image.</param>
-    /// <remarks>The display copies the pixels before return. A later edit of the source requires another call.</remarks>
+    /// <param name="hotspot">The active pixel position within the copied image.</param>
+    /// <remarks>The display copies the pixels before return. For an <see cref="AnimatedTexture"/>, it copies
+    /// frame zero at that frame's image size, independently of the current frame. Later source changes require
+    /// another call.</remarks>
+    /// <exception cref="ArgumentException">The image or first frame is missing, unreadable, empty, or exceeds the
+    /// size limit, or the resource is neither an Image nor a Texture. The existing cursor is retained.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The shape or hotspot is invalid.</exception>
     public static void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default) => Service.SetCustomMouseCursorCore(image, shape, hotspot);
 
     /// <summary>Requests pointer movement to a client-area position on backends that support warping.</summary>

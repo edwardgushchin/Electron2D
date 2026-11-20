@@ -353,10 +353,12 @@ public sealed partial class DisplayServer
     /// <param name="hotspot">The active point relative to the image's upper-left corner, truncated to a pixel on native submission.</param>
     /// <remarks>Pixels are copied before this method returns; the resource remains caller-owned. Texture.GetImage
     /// supplies a temporary owned image, which is disposed after conversion. Cursor dimensions and hotspots use
-    /// this image's pixels, independently of the texture's logical size override. Images must be at most 256 by 256
+    /// this image's pixels, independently of the texture's logical size override. For an <see cref="AnimatedTexture"/>,
+    /// the image comes from frame zero, independently of the current frame. Images must be at most 256 by 256
     /// pixels. The default hotspot is the top-left pixel. Other cursor slots are unaffected. Later resource changes
     /// require another call to refresh the cursor.</remarks>
-    /// <exception cref="ArgumentException">The resource is neither Image nor Texture, has no readable nonempty image, or exceeds the cursor size limit.</exception>
+    /// <exception cref="ArgumentException">The resource is neither Image nor Texture, has no readable nonempty image
+    /// or available first frame, or exceeds the cursor size limit. The existing cursor is retained.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The shape or hotspot is invalid.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or the native cursor operation fails.</exception>
     /// <exception cref="ObjectDisposedException">The display server, source resource or returned image is disposing or disposed.</exception>

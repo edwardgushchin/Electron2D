@@ -146,9 +146,12 @@ public sealed partial class DisplayServer
         if ((uint)shape >= (uint)CursorShape.Max)
             throw new ArgumentOutOfRangeException(nameof(shape), shape, "Unknown cursor shape.");
         if (image is { IsDisposed: true }) throw new ObjectDisposedException(nameof(image));
-        using var textureImage = image is Texture texture
-            ? texture.GetImage() ?? throw new ArgumentException("The cursor texture has no readable image.", nameof(image))
-            : null;
+        var texture = image is AnimatedTexture animation ? animation.GetFrameTexture(0) : image as Texture;
+        if (image is AnimatedTexture && (texture is null || texture.IsDisposed))
+            throw new ArgumentException("The cursor animation has no available first frame.", nameof(image));
+        using var textureImage = texture?.GetImage();
+        if (texture is not null && textureImage is null)
+            throw new ArgumentException("The cursor texture has no readable image.", nameof(image));
         // Custom texture capture can run user code that closes the display.
         EnsureOwner();
         var pixels = image switch
