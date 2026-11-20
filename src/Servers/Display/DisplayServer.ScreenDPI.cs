@@ -33,8 +33,23 @@ public sealed partial class DisplayServer
                     return dpi;
             }
         }
+        else if (_videoDriver == "wayland" && _waylandInput is { } wayland)
+        {
+            var output = SDL.GetPointerProperty(SDL.GetDisplayProperties(id), SDL.Props.DisplayWaylandWLOutputPointer, 0);
+            var dpi = wayland.ReadOutputDPI(output);
+            if (dpi > 0)
+                return dpi;
+        }
 
         return DefaultScreenDPI;
+    }
+
+    internal static int PhysicalScreenDPI(int width, int height, int widthMM, int heightMM)
+    {
+        var x = widthMM > 0 && width > 0 ? width * 25.4 / widthMM : 0;
+        var y = heightMM > 0 && height > 0 ? height * 25.4 / heightMM : 0;
+        var dpi = x > 0 && y > 0 ? (x + y) / 2 : x + y;
+        return dpi is >= 1 and <= int.MaxValue ? (int)dpi : 0;
     }
 
     [LibraryImport("shcore.dll")]

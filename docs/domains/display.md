@@ -54,7 +54,7 @@ The display owns [Windows native ICO publication](../components/window-runtime.m
 
 [Desktop accessibility queries](../components/display-server.md#desktop-accessibility-preferences) read live native screen-reader activity and contrast, motion and transparency preferences through the display owner. The available values depend on the desktop provider.
 
-[`ScreenGetDPI`](../classes/DisplayServer.md#method-screengetdpi) reads effective Win32 monitor density and physical X11 density through the shared screen selectors. The [screen density contract](../components/display-server.md#screen-density) covers unavailable measurements and driver support.
+[`ScreenGetDPI`](../classes/DisplayServer.md#method-screengetdpi) reads effective Win32 monitor density and physical X11 and Wayland density through the shared screen selectors. The [screen density contract](../components/display-server.md#screen-density) covers unavailable measurements and driver support.
 
 [`DisplayServer.Beep()`](../classes/DisplayServer.md#method-beep) requests the [system bell](../components/display-server.md#system-bell) through the active desktop host.
 

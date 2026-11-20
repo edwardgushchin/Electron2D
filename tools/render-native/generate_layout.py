@@ -10,6 +10,7 @@ SOURCES = {
     "src/gpu/d3d12/SDL_gpu_d3d12.c": "6cd3964004aff0aef48b2959131fb0eb6f3ad8dfd1d9befc571385f7e00c1e4d",
     "src/gpu/SDL_sysgpu.h": "86f74c57f00529fc9531f680340be114414688c4809b724eac894d862f86fb6e",
     "src/gpu/vulkan/SDL_gpu_vulkan.c": "28b42c4286805a6cff952bd698de29659180132ae881eedd3f6bf24d16583361",
+    "src/video/wayland/SDL_waylandvideo.h": "a538db500621b7283d34ed5eab19819bc54a31f515cc74e3b9d619ea8704603e",
 }
 
 
@@ -81,6 +82,7 @@ def generate(source):
     gpu = (source / "src/gpu/SDL_sysgpu.h").read_text(encoding="utf-8")
     vulkan = (source / "src/gpu/vulkan/SDL_gpu_vulkan.c").read_text(encoding="utf-8")
     functions = (source / "src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h").read_text(encoding="utf-8")
+    wayland = (source / "src/video/wayland/SDL_waylandvideo.h").read_text(encoding="utf-8")
     renderer = block(vulkan, "struct VulkanRenderer\n{").replace('#include "SDL_gpu_vulkan_vkfuncs.h"', functions)
     pointers = sorted(set(re.findall(r"^    ([A-Za-z_]\w*) \*", renderer, re.M)) -
                       {"SDL_Mutex", "VulkanMemoryAllocator"})
@@ -93,6 +95,8 @@ def generate(source):
         "#include <SDL3/SDL.h>", "#include <SDL3/SDL_revision.h>",
         "#define VK_NO_PROTOTYPES", "#define VK_ENABLE_BETA_EXTENSIONS",
         '#include "vulkan/vulkan.h"',
+        "typedef struct SDL_VideoData SDL_VideoData;",
+        prefix(wayland, "struct SDL_DisplayData\n{", "uint32_t registry_id;"),
         "typedef struct SDL_GPURenderer SDL_GPURenderer;",
         block(gpu, "struct SDL_GPUDevice\n{"),
         gpu[gpu.index("#define MAX_TEXTURE_SAMPLERS_PER_STAGE"):gpu.index("typedef struct TextureCommonHeader")],

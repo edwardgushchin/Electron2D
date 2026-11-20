@@ -735,7 +735,7 @@ public sealed partial class DisplayServer
     /// <summary>Gets the pixel density of a display in dots per inch.</summary>
     /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
     /// <returns>Native display DPI, or 96 when the display is invalid or its density is unavailable.</returns>
-    /// <remarks>Windows reports effective monitor DPI. X11 calculates density from display pixels and native millimeter dimensions. Call on the opening thread.</remarks>
+    /// <remarks>Windows reports effective monitor DPI. X11 and Wayland calculate physical DPI from display pixels and millimeters. The calculation truncates the mean of the available axes, or uses a single available axis. Call on the opening thread.</remarks>
     /// <exception cref="InvalidOperationException">The display service is inactive or the caller is off its opening thread.</exception>
     public static int ScreenGetDPI(int screen = ScreenOfMainWindow) => RequireService().ScreenGetDPICore(screen);
 

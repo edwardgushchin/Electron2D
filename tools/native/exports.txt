@@ -185,3 +185,4 @@ e2d_render_depth_resolve_release
 
 e2d_render_stencil_support
 e2d_render_stencil_begin
+e2d_wayland_output_global

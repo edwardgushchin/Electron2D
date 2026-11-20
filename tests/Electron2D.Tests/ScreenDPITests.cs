@@ -6,6 +6,12 @@ internal static partial class ScreenDPITests
 {
     internal static void Run(string profile, string[] args)
     {
+        if (profile == "wayland")
+        {
+            WaylandFixture(args);
+            return;
+        }
+
         Reject(() => DisplayServer.ScreenGetDPI());
         using (DisplayServer.Open("Screen DPI test", new(64, 64), hidden: true))
         {
@@ -53,6 +59,54 @@ internal static partial class ScreenDPITests
         }
         Reject(() => DisplayServer.ScreenGetDPI());
         Console.WriteLine($"Screen DPI passed ({profile}).");
+    }
+
+    private static void WaylandFixture(string[] args)
+    {
+        var socket = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WAYLAND_PRIVATE_DISPLAY");
+        Check(OperatingSystem.IsLinux() && !string.IsNullOrEmpty(socket) &&
+            socket == Environment.GetEnvironmentVariable("WAYLAND_DISPLAY"), "Use the private Wayland DPI fixture.");
+
+        // These constants are computed directly from the native fixture's unrotated pixel
+        // modes and millimeters, with truncation after averaging the available axes.
+        var (firstDPI, secondDPI) = args switch
+        {
+            ["physical"] => (106, 119),
+            ["missing"] => (96, 125),
+            _ => throw new ArgumentException("Expected a physical or missing fixture profile.", nameof(args)),
+        };
+
+        for (var pass = 0; pass < 2; pass++)
+        {
+            Reject(() => DisplayServer.ScreenGetDPI());
+            using var display = DisplayServer.Open("Wayland screen DPI test", new(64, 64), hidden: true);
+            Check(DisplayServer.GetName() == "Wayland" && DisplayServer.GetScreenCount() == 2,
+                "Use native Wayland with two fixture outputs.");
+
+            var first = DisplayServer.ScreenGetPosition(0) == Vector2i.Zero ? 0 : 1;
+            var second = 1 - first;
+            Check(DisplayServer.ScreenGetPosition(first) == Vector2i.Zero &&
+                DisplayServer.ScreenGetPosition(second) == new Vector2i(1920, 0), "Output positions identify the fixture panels.");
+            Check(DisplayServer.ScreenGetSize(first) == new Vector2i(1920, 1080) &&
+                DisplayServer.ScreenGetSize(second) == new Vector2i(1440, 2560), "The second panel is rotated 90 degrees.");
+            Check(DisplayServer.ScreenGetScale(first) == 1f && DisplayServer.ScreenGetScale(second) == 2f,
+                "The outputs have distinct content scales.");
+
+            ExpectDPI(first, firstDPI);
+            ExpectDPI(second, secondDPI);
+            ExpectDPI(first, firstDPI);
+            foreach (var invalid in new[] { 2, int.MaxValue, int.MinValue })
+                ExpectDPI(invalid, 96);
+            Reject(() => Task.Run(() => DisplayServer.ScreenGetDPI()).GetAwaiter().GetResult());
+            Console.WriteLine($"Wayland {args[0]}, open {pass + 1}: DPI-1 {firstDPI} DPI, DPI-2 {secondDPI} DPI.");
+        }
+        Reject(() => DisplayServer.ScreenGetDPI());
+    }
+
+    private static void ExpectDPI(int selector, int expected)
+    {
+        var actual = DisplayServer.ScreenGetDPI(selector);
+        Check(actual == expected, $"Display selector {selector}: expected {expected} DPI, got {actual}.");
     }
 
     private static void Check(bool condition, string message)

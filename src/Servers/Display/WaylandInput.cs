@@ -144,6 +144,9 @@ internal sealed unsafe partial class WaylandInput : IDisposable
         _seats.Clear();
         Retire(ref _systemBell, 0);
         DisposeCapture();
+        foreach (var output in _outputs.Values)
+            output.Dispose();
+        _outputs.Clear();
         if (_registry != 0) DestroyProxyLocal(_registry);
         if (_listener.IsAllocated) _listener.Free();
         if (_queue != 0) DestroyQueue(_queue);
@@ -163,6 +166,7 @@ internal sealed unsafe partial class WaylandInput : IDisposable
                 var name = Marshal.PtrToStringUTF8(arguments[1].Object);
                 var version = arguments[2].UInt;
                 if (name == "wl_seat") owner.AddSeat(id, version);
+                else if (name == "wl_output") owner.AddOutput(id, version);
                 else if (name == "xdg_toplevel_icon_manager_v1" && version >= 1) owner._toplevelIconGlobal = id;
                 else if (name == BellProtocol.Name && owner._systemBellGlobal == 0) owner._systemBellGlobal = id;
                 else owner.ObserveCaptureGlobal(id, name, version);
@@ -170,6 +174,7 @@ internal sealed unsafe partial class WaylandInput : IDisposable
             else if (opcode == 1)
             {
                 if (owner._seats.Remove(id, out var seat)) seat.Dispose();
+                else if (owner._outputs.Remove(id, out var output)) output.Dispose();
                 else if (id == owner._toplevelIconGlobal) owner._toplevelIconGlobal = 0;
                 else if (id == owner._systemBellGlobal)
                 {

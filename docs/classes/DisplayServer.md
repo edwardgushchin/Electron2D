@@ -1050,7 +1050,7 @@ Gets the usable desktop rectangle of a display.
 <a id="method-screengetdpi"></a>
 #### `public static int ScreenGetDPI(int screen = ScreenOfMainWindow)`
 
-Gets native dots per inch for a display index or a special screen selector. Windows reports effective monitor DPI. Linux X11 reports pixel density from native millimeter dimensions. Invalid selectors and unavailable measurements return 96. Call on the active display's opening thread. See [screen density](../components/display-server.md#screen-density).
+Gets native dots per inch for a display index or a special screen selector. Windows reports effective monitor DPI. X11 and Wayland calculate physical DPI from display pixels and millimeters. The calculation truncates the mean of both axes or uses a single available axis. Invalid selectors and unavailable measurements return 96. Call on the active display's opening thread. See [screen density](../components/display-server.md#screen-density).
 
 <a id="method-screengetscale"></a>
 #### `public static float ScreenGetScale(int screen = ScreenOfMainWindow)`

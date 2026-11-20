@@ -1,5 +1,6 @@
 #include "pinned-core.h"
 #include <stdint.h>
+#include <string.h>
 #include "memory-layout.h"
 
 #if defined(_WIN32)
@@ -7,6 +8,21 @@
 #else
 #define E2D_EXPORT __attribute__((visibility("default")))
 #endif
+
+/* Recover the registry identity of SDL's own output proxy on its Wayland connection. */
+E2D_EXPORT uint32_t e2d_wayland_output_global(const void *output, const void *data)
+{
+    if (!output || !data || !e2d_render_pinned_core())
+        return 0;
+
+    struct SDL_DisplayData display;
+    memcpy(&display.output, (const char *)data + offsetof(struct SDL_DisplayData, output), sizeof(display.output));
+    if (display.output != output)
+        return 0;
+
+    memcpy(&display.registry_id, (const char *)data + offsetof(struct SDL_DisplayData, registry_id), sizeof(display.registry_id));
+    return display.registry_id;
+}
 
 extern uint64_t e2d_views_memory(SDL_GPUDevice *);
 extern uint64_t e2d_addresses_memory(SDL_GPUDevice *);

@@ -1387,7 +1387,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Win32 effective DPI and X11 physical DPI are executable. Wayland needs same-output wl_output physical geometry mapped to SDL display identities. Cocoa and mobile need native display density adapters and target checks. See docs/components/display-server.md#screen-density (ADRs 0021/0040/0044).",
+      "reason": "Win32 reports effective DPI. X11 and Wayland report physical DPI. A native Wayland fixture verifies the selected wl_output, scale, rotation and missing geometry with the pinned SDL bridge. Cocoa and mobile need native display density adapters and target checks. See docs/components/display-server.md#screen-density (ADRs 0021/0040/0044).",
       "godot": [
         "DisplayServer::method:screen_get_dpi(int:)"
       ]

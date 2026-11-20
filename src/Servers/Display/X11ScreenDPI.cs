@@ -22,7 +22,7 @@ internal static unsafe partial class X11ScreenDPI
             bounds.W != XDisplayWidth(display, screen) || bounds.H != XDisplayHeight(display, screen))
             return 0;
 
-        return Density(bounds.W, bounds.H, XDisplayWidthMM(display, screen), XDisplayHeightMM(display, screen));
+        return DisplayServer.PhysicalScreenDPI(bounds.W, bounds.H, XDisplayWidthMM(display, screen), XDisplayHeightMM(display, screen));
     }
 
     private static int ReadMonitor(nint display, SDL.Rect bounds)
@@ -52,7 +52,7 @@ internal static unsafe partial class X11ScreenDPI
                     match = monitor;
                 }
 
-                return match == null ? 0 : Density(match->Width, match->Height, match->WidthMM, match->HeightMM);
+                return match == null ? 0 : DisplayServer.PhysicalScreenDPI(match->Width, match->Height, match->WidthMM, match->HeightMM);
             }
             finally { XRRFreeMonitors(monitors); }
         }
@@ -60,14 +60,6 @@ internal static unsafe partial class X11ScreenDPI
         {
             return 0;
         }
-    }
-
-    private static int Density(int width, int height, int widthMM, int heightMM)
-    {
-        var x = widthMM > 0 && width > 0 ? width * 25.4 / widthMM : 0;
-        var y = heightMM > 0 && height > 0 ? height * 25.4 / heightMM : 0;
-        var dpi = x > 0 && y > 0 ? (x + y) / 2 : x + y;
-        return dpi is >= 1 and <= int.MaxValue ? (int)dpi : 0;
     }
 
     [StructLayout(LayoutKind.Sequential)]
