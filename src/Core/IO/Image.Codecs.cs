@@ -87,7 +87,10 @@ public sealed partial class Image
     /// <summary>Rasterizes an uncompressed UTF-8 SVG buffer and replaces the image atomically.</summary>
     /// <param name="buffer">SVG data, copied before validation and decoding, at most 64 MiB.</param>
     /// <param name="scale">Finite positive multiplier for the SVG's intrinsic dimensions.</param>
-    /// <remarks>Produces an RGBA8 base image without mipmaps. The root style can supply width and height as positive pixel or physical lengths, percentages, or auto.
+    /// <remarks>Produces an RGBA8 base image without mipmaps. Root width and height can come from presentation attributes, embedded CSS or inline style.
+    /// The style cascade uses importance, inline priority, selector specificity and source order. Styled values accept positive pixel or physical lengths, percentages, or auto.
+    /// CSS comments between components of a compound root selector preserve its match.
+    /// A selector list with an empty entry invalidates the whole rule.
     /// XML DTDs are rejected. Failure preserves the previous image.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Scale is not finite and positive.</exception>
     /// <exception cref="InvalidDataException">The document is malformed or exceeds image limits.</exception>

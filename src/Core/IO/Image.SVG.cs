@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Electron2D;
@@ -38,21 +39,17 @@ public sealed partial class Image
         if (!float.IsFinite(scale) || scale <= 0) throw new ArgumentOutOfRangeException(nameof(scale));
         try
         {
-            using var stream = new MemoryStream(data, writable: false);
-            using var reader = XmlReader.Create(stream, new XmlReaderSettings
-            {
-                DtdProcessing = DtdProcessing.Prohibit,
-                XmlResolver = null,
-                MaxCharactersInDocument = MaximumEncodedBytes,
-            });
+            using var reader = CreateSVGReader(data);
             if (reader.MoveToContent() != XmlNodeType.Element || reader.LocalName != "svg")
                 throw new InvalidDataException("The document root must be an SVG element.");
 
             var viewBox = reader.GetAttribute("viewBox");
             var viewSize = ParseViewBox(viewBox);
-            var (inlineWidth, inlineHeight) = InlineSVGDimensions(reader.GetAttribute("style"));
-            var width = ParseLength(inlineWidth ?? reader.GetAttribute("width"), viewSize?.Width ?? 300);
-            var height = ParseLength(inlineHeight ?? reader.GetAttribute("height"), viewSize?.Height ?? 150);
+            var widthAttribute = reader.GetAttribute("width");
+            var heightAttribute = reader.GetAttribute("height");
+            var (styleWidth, styleHeight) = CascadedSVGDimensions(reader);
+            var width = ParseLength(styleWidth ?? widthAttribute, viewSize?.Width ?? 300);
+            var height = ParseLength(styleHeight ?? heightAttribute, viewSize?.Height ?? 150);
             if (width is null && height is null)
             {
                 width = viewSize?.Width ?? 300;
@@ -64,7 +61,7 @@ public sealed partial class Image
             var logicalWidth = width ?? throw new InvalidDataException("SVG width is missing.");
             var logicalHeight = height ?? throw new InvalidDataException("SVG height is missing.");
             var size = new Vector2i(RasterDimension(logicalWidth, scale), RasterDimension(logicalHeight, scale));
-            if (inlineWidth is not null || inlineHeight is not null)
+            if (styleWidth is not null || styleHeight is not null)
             {
                 var userWidth = viewSize?.Width ?? logicalWidth;
                 var userHeight = viewSize?.Height ?? logicalHeight;
@@ -75,77 +72,259 @@ public sealed partial class Image
                 {
                     // SDL_image fits its own viewport with a uniform scale. Pass the final integer
                     // viewport and retain the document's logical coordinate system in the viewBox.
-                    data = RewriteSVGViewport(reader, size, viewBox ?? FormattableString.Invariant($"0 0 {logicalWidth:R} {logicalHeight:R}"));
-                    return size;
+                    using var rasterReader = CreateSVGReader(data);
+                    rasterReader.MoveToContent();
+                    data = RewriteSVGViewport(rasterReader, size, viewBox ?? FormattableString.Invariant($"0 0 {logicalWidth:R} {logicalHeight:R}"));
                 }
             }
-            while (reader.Read()) { }
             return size;
         }
         catch (XmlException error) { throw new InvalidDataException("Invalid SVG XML.", error); }
     }
 
-    private static (string? Width, string? Height) InlineSVGDimensions(string? style)
+    private static XmlReader CreateSVGReader(byte[] data) =>
+        XmlReader.Create(new MemoryStream(data, writable: false), new XmlReaderSettings
+        {
+            CloseInput = true,
+            DtdProcessing = DtdProcessing.Prohibit,
+            XmlResolver = null,
+            MaxCharactersInDocument = MaximumEncodedBytes,
+        });
+
+    private static readonly char[] CSSWhitespace = [' ', '\t', '\n', '\r', '\f'];
+
+    private static readonly Regex SVGSelectorName = new(
+        @"\G(?:--|-?[_a-zA-Z\u0080-\uFFFF])[-_a-zA-Z0-9\u0080-\uFFFF]*",
+        RegexOptions.CultureInvariant);
+
+    private static (string? Width, string? Height) CascadedSVGDimensions(XmlReader reader)
     {
-        if (style is null) return default;
-        string? width = null, height = null;
-        var widthImportant = false;
-        var heightImportant = false;
-        var declaration = new StringBuilder();
+        var rootName = reader.LocalName;
+        var rootNamespace = reader.NamespaceURI;
+        var id = reader.GetAttribute("id");
+        var classes = new HashSet<string>(
+            (reader.GetAttribute("class") ?? "").Split(CSSWhitespace, StringSplitOptions.RemoveEmptyEntries),
+            StringComparer.Ordinal);
+        var inline = reader.GetAttribute("style");
+        (string? Value, (bool Important, bool Inline, int IDs, int Classes, int Types) Priority) width = default, height = default;
+
+        while (reader.Read())
+        {
+            if (reader.NodeType != XmlNodeType.Element || reader.Depth == 0 || reader.LocalName != "style" ||
+                reader.NamespaceURI != rootNamespace || reader.IsEmptyElement)
+                continue;
+
+            var type = reader.GetAttribute("type")?.Trim();
+            var media = reader.GetAttribute("media")?.Trim();
+            if ((!string.IsNullOrEmpty(type) && !type.Equals("text/css", StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(media) && !media.Equals("all", StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            using var style = reader.ReadSubtree();
+            var css = new StringBuilder();
+            var textOnly = true;
+            while (style.Read())
+            {
+                if (style.NodeType == XmlNodeType.Element && style.Depth > 0)
+                    textOnly = false;
+                if (style.NodeType is XmlNodeType.Text or XmlNodeType.CDATA or XmlNodeType.Whitespace or XmlNodeType.SignificantWhitespace)
+                    css.Append(style.Value);
+            }
+            if (textOnly)
+                ApplyStylesheet(css.ToString());
+        }
+
+        if (inline is not null)
+            ApplyDeclarations(inline, inlineStyle: true, default);
+        return (width.Value, height.Value);
+
+        void ApplyStylesheet(string css)
+        {
+            var offset = 0;
+            while (offset < css.Length)
+            {
+                var selectors = ReadCSSSegment(css, ref offset, "{;", out var delimiter);
+                if (delimiter != '{')
+                    continue;
+                var declarations = ReadCSSSegment(css, ref offset, "}", out delimiter);
+                var selectorOffset = 0;
+                SkipCSSTrivia(selectors, ref selectorOffset);
+                if (delimiter != '}' || selectors.AsSpan(selectorOffset).StartsWith("@", StringComparison.Ordinal))
+                    continue;
+
+                (int IDs, int Classes, int Types)? best = null;
+                char separator;
+                do
+                {
+                    var selector = ReadCSSSegment(selectors, ref selectorOffset, ",", out separator);
+                    var start = 0;
+                    SkipCSSTrivia(selector, ref start);
+                    if (start == selector.Length)
+                    {
+                        best = null;
+                        break;
+                    }
+
+                    var specificity = MatchSVGRoot(selector, start, rootName, id, classes);
+                    if (specificity is { } match && (best is null || match.CompareTo(best.Value) > 0))
+                        best = match;
+                }
+                while (separator == ',');
+
+                if (best is { } winner)
+                    ApplyDeclarations(declarations, inlineStyle: false, winner);
+            }
+        }
+
+        void ApplyDeclarations(string css, bool inlineStyle, (int IDs, int Classes, int Types) specificity)
+        {
+            var offset = 0;
+            while (offset < css.Length)
+            {
+                var entry = ReadCSSSegment(css, ref offset, ";", out _, preserveComments: false).AsSpan();
+                var colon = entry.IndexOf(':');
+                if (colon < 0)
+                    continue;
+                var property = entry[..colon].Trim(CSSWhitespace);
+                var isWidth = property.Equals("width", StringComparison.OrdinalIgnoreCase);
+                if (!isWidth && !property.Equals("height", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var value = entry[(colon + 1)..].Trim(CSSWhitespace);
+                var bang = value.LastIndexOf('!');
+                var important = bang >= 0 && value[(bang + 1)..].Trim(CSSWhitespace).Equals("important", StringComparison.OrdinalIgnoreCase);
+                if (important)
+                    value = value[..bang].TrimEnd(CSSWhitespace);
+                if (value.IsEmpty)
+                    continue;
+
+                ref var selected = ref (isWidth ? ref width : ref height);
+                var priority = (important, inlineStyle, specificity.IDs, specificity.Classes, specificity.Types);
+                if (selected.Value is null || priority.CompareTo(selected.Priority) >= 0)
+                    selected = (value.Equals("auto", StringComparison.OrdinalIgnoreCase) ? "100%" : value.ToString(), priority);
+            }
+        }
+    }
+
+    private static (int IDs, int Classes, int Types)? MatchSVGRoot(string selector, int offset, string name, string? id, HashSet<string> classes)
+    {
+        var specificity = (IDs: 0, Classes: 0, Types: 0);
+        var start = offset;
+        if (selector[offset] == '*')
+        {
+            offset++;
+            if (SkipCSSTrivia(selector, ref offset) && offset < selector.Length)
+                return null;
+        }
+
+        while (offset < selector.Length)
+        {
+            var componentStart = offset;
+            var prefix = selector[offset];
+            if (prefix is '#' or '.' or ':')
+            {
+                offset++;
+                // A hash and its name form one token. A dot or colon is a separate token.
+                if (prefix != '#' && SkipCSSTrivia(selector, ref offset))
+                    return null;
+            }
+            else
+                prefix = '\0';
+
+            var identifier = SVGSelectorName.Match(selector, offset);
+            if (!identifier.Success)
+                return null;
+
+            var value = identifier.Value;
+            switch (prefix)
+            {
+                case '\0' when componentStart == start && value == name:
+                    specificity.Types++;
+                    break;
+                case '#' when value == id:
+                    specificity.IDs++;
+                    break;
+                case '.' when classes.Contains(value):
+                case ':' when value.Equals("root", StringComparison.OrdinalIgnoreCase):
+                    specificity.Classes++;
+                    break;
+                default:
+                    return null;
+            }
+            offset += identifier.Length;
+            if (SkipCSSTrivia(selector, ref offset) && offset < selector.Length)
+                return null;
+        }
+        return specificity;
+    }
+
+    private static bool SkipCSSTrivia(string css, ref int offset)
+    {
+        var whitespace = false;
+        while (offset < css.Length)
+        {
+            if (CSSWhitespace.AsSpan().Contains(css[offset]))
+            {
+                whitespace = true;
+                offset++;
+            }
+            else if (css.AsSpan(offset).StartsWith("/*", StringComparison.Ordinal))
+                offset = EndCSSComment(css, offset);
+            else
+                break;
+        }
+        return whitespace;
+    }
+
+    private static int EndCSSComment(string css, int start)
+    {
+        var close = css.IndexOf("*/", start + 2, StringComparison.Ordinal);
+        return close < 0 ? css.Length : close + 2;
+    }
+
+    private static string ReadCSSSegment(string css, ref int offset, string separators, out char delimiter, bool preserveComments = true)
+    {
+        var segment = new StringBuilder();
         var quote = '\0';
         var depth = 0;
-        for (var i = 0; i <= style.Length; i++)
+        delimiter = '\0';
+        while (offset < css.Length)
         {
-            var end = i == style.Length;
-            var ch = end ? ';' : style[i];
-            if (end || (ch == ';' && quote == '\0' && depth == 0))
+            var ch = css[offset++];
+            if (quote == '\0' && depth == 0 && separators.Contains(ch))
             {
-                ReadDimension();
-                declaration.Clear();
-                continue;
+                delimiter = ch;
+                break;
             }
-            if (ch == '\\' && i + 1 < style.Length)
+            if (ch == '\\' && offset < css.Length)
             {
-                declaration.Append(ch).Append(style[++i]);
+                segment.Append(ch).Append(css[offset++]);
                 continue;
             }
             if (quote != '\0')
             {
-                if (ch == quote) quote = '\0';
+                if (ch == quote)
+                    quote = '\0';
             }
-            else if (ch is '\'' or '"') quote = ch;
-            else if (ch == '/' && i + 1 < style.Length && style[i + 1] == '*')
+            else if (ch is '\'' or '"')
+                quote = ch;
+            else if (ch == '/' && offset < css.Length && css[offset] == '*')
             {
-                var close = style.IndexOf("*/", i + 2, StringComparison.Ordinal);
-                declaration.Append(' ');
-                i = close < 0 ? style.Length - 1 : close + 1;
+                var start = offset - 1;
+                offset = EndCSSComment(css, start);
+                if (preserveComments)
+                    segment.Append(css.AsSpan(start, offset - start));
+                else
+                    segment.Append(' ');
                 continue;
             }
-            else if (ch is '(' or '[' or '{') depth++;
-            else if ((ch is ')' or ']' or '}') && depth > 0) depth--;
-            declaration.Append(ch);
+            else if (ch is '(' or '[' or '{')
+                depth++;
+            else if ((ch is ')' or ']' or '}') && depth > 0)
+                depth--;
+            segment.Append(ch);
         }
-        return (width, height);
-
-        void ReadDimension()
-        {
-            var entry = declaration.ToString().AsSpan();
-            var colon = entry.IndexOf(':');
-            if (colon < 0) return;
-            var property = entry[..colon].Trim();
-            var isWidth = property.Equals("width", StringComparison.OrdinalIgnoreCase);
-            if (!isWidth && !property.Equals("height", StringComparison.OrdinalIgnoreCase)) return;
-            var value = entry[(colon + 1)..].Trim();
-            var bang = value.LastIndexOf('!');
-            var important = bang >= 0 && value[(bang + 1)..].Trim().Equals("important", StringComparison.OrdinalIgnoreCase);
-            if (important) value = value[..bang].TrimEnd();
-            if (value.IsEmpty) return;
-            ref var selected = ref (isWidth ? ref width : ref height);
-            ref var selectedImportant = ref (isWidth ? ref widthImportant : ref heightImportant);
-            if (selectedImportant && !important) return;
-            selected = value.Equals("auto", StringComparison.OrdinalIgnoreCase) ? "100%" : value.ToString();
-            selectedImportant = important;
-        }
+        return segment.ToString();
     }
 
     private static byte[] RewriteSVGViewport(XmlReader reader, Vector2i size, string viewBox)
@@ -210,7 +389,8 @@ public sealed partial class Image
                     factor = multiplier; value = value[..^unit.Length]; break;
                 }
         }
-        if (!double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var number) ||
+        const NumberStyles numberStyle = NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent;
+        if (!double.TryParse(value, numberStyle, CultureInfo.InvariantCulture, out var number) ||
             !double.IsFinite(number) || number <= 0 || !double.IsFinite(number * factor))
             throw new InvalidDataException("SVG dimensions must be positive finite pixel or physical lengths.");
         return number * factor;

@@ -132,7 +132,179 @@ internal static class ImageCodecTests
         }
         finally { File.Delete(path); }
 
-        Console.WriteLine("SVG checks passed (viewport dimensions, raster pixels, scaling, file and resource loading, failure rollback).");
+        VerifySVGStylesheets();
+        Console.WriteLine("SVG checks passed (viewport dimensions, stylesheet cascade, raster pixels, scaling, file and resource loading, failure rollback).");
+    }
+
+    private static void VerifySVGStylesheets()
+    {
+        const string cascaded = """
+            <svg xmlns="http://www.w3.org/2000/svg" id="Viewport" class="tile panel" width="2" height="3"
+                 viewBox="0 0 4 4" style="width:31px; height:6px !important">
+                <style>
+                    /* Only the matching branch contributes specificity. */
+                    #Viewport.tile.panel.missing, svg#Viewport.panel:root {
+                        width: 8px !important;
+                    }
+                    svg, svg/**/.tile#Viewport:root {
+                        --ignored: "}; width:90px !important";
+                        width: /* } { ; , ! [ ( " ' */ 12px !important;
+                        height: 9px !important;
+                    }
+                    #Viewport.tile.panel.missing, svg {
+                        width: 99px !important;
+                    }
+                </style>
+                <rect width="2" height="4" fill="red"/>
+                <rect x="2" width="2" height="4" fill="blue"/>
+            </svg>
+            """;
+
+        using var image = new Image();
+        image.LoadSVGFromString(cascaded);
+        CheckCascadePixels(image, 1, "SVG string");
+
+        image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(cascaded));
+        CheckCascadePixels(image, 1, "SVG buffer");
+        image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(cascaded), 2);
+        CheckCascadePixels(image, 2, "Scaled SVG buffer");
+
+        var path = IOPath.Combine(IOPath.GetTempPath(), "electron2d-svg-cascade-" + Guid.NewGuid().ToString("N") + ".svg");
+        try
+        {
+            File.WriteAllText(path, cascaded);
+            using var file = Image.LoadFromFile(path);
+            CheckCascadePixels(file, 1, "SVG file");
+            using var texture = ResourceLoader.Load<ImageTexture>(path, ResourceLoader.CacheMode.Ignore);
+            using var pixels = texture.GetImage()!;
+            Check(texture.GetSize() == new Vector2(12, 6), "ImageTexture reports the cascaded SVG dimensions.");
+            CheckCascadePixels(pixels, 1, "ImageTexture file");
+            Check(pixels.GetData().SequenceEqual(file.GetData()), "The image and texture file decoders return identical SVG pixels.");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+
+        using var dpi = DPITexture.CreateFromString(cascaded);
+        Check(dpi.GetSize() == new Vector2(12, 6), "DPITexture preflight reports the cascaded SVG dimensions.");
+        using (var pixels = dpi.GetImage()!)
+        {
+            CheckCascadePixels(pixels, 1, "DPITexture base");
+        }
+        dpi.BaseScale = 2;
+        Check(dpi.GetSize() == new Vector2(24, 12), "DPITexture logical dimensions include BaseScale.");
+        using (var pixels = dpi.GetImage()!)
+        {
+            CheckCascadePixels(pixels, 2, "DPITexture with BaseScale");
+        }
+        var scaleReference = CanvasRasterScale.Quantize(1);
+        var oversampled = CanvasRasterScale.Quantize(2);
+        CanvasRasterScale.ChangeReference(ref scaleReference, oversampled);
+        try
+        {
+            using var pixels = dpi.ForScale(oversampled)!.GetImage()!;
+            CheckCascadePixels(pixels, 4, "DPITexture with BaseScale and twofold oversampling");
+        }
+        finally
+        {
+            CanvasRasterScale.ChangeReference(ref scaleReference, CanvasRasterScale.Quantize(1));
+        }
+
+        image.LoadSVGFromString("""
+            <svg xmlns="http://www.w3.org/2000/svg" id="Viewport" class="tile panel" width="2" height="3"
+                 style="height:4px">
+                <style>
+                    .tile.panel { width: 7px; height: 5px; }
+                    .tile { width: 11px; }
+                    #viewport, .Tile, rect:root { width: 99px !important; }
+                </style>
+                <rect width="2" height="3" fill="red"/>
+                <style>
+                    .tile.panel { width: 9px; }
+                    .panel { width: 21px; }
+                </style>
+            </svg>
+            """);
+        Check(image.Size == new Vector2i(9, 4) && image.GetPixel(1, 1) == Colors.Red &&
+            image.GetPixel(8, 1).A == 0, "Normal rules honor document order and specificity; inline wins on height.");
+
+        image.LoadSVGFromString("""
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:other="urn:other" id="Viewport" class="tile" width="4" height="3">
+                <style>
+                    #viewport, .Tile, rect:root { width: 99px; height: 99px; }
+                    body svg, :is(rect, svg, circle) { width: 98px; height: 98px; }
+                    svg/**/tile { width: 94px !important; height: 94px !important; }
+                    sv/**/g, .ti/**/le { width: 93px !important; height: 93px !important; }
+                    svg .tile, svg/**/ .tile { width: 92px !important; height: 92px !important; }
+                    @media all {
+                        svg { width: 97px; height: 97px; }
+                    }
+                </style>
+                <style media="print">svg { width: 96px; height: 96px; }</style>
+                <other:style>svg { width: 95px; height: 95px; }</other:style>
+                <rect width="2" height="3" fill="red"/>
+            </svg>
+            """);
+        Check(image.Size == new Vector2i(4, 3) && image.GetPixel(1, 1) == Colors.Red &&
+            image.GetPixel(3, 1).A == 0, "Nonmatching and unsupported rules leave attributes in effect.");
+
+        var beforeSize = image.Size;
+        var beforePixels = image.GetData();
+        foreach (var invalidRule in new[]
+        {
+            "svg, { width: 12px; }",
+            ", svg { width: 12px; }",
+            "svg, , rect { width: 12px; }",
+            "svg, /* empty branch */ { width: 12px; }",
+        })
+        {
+            image.LoadSVGFromString($$"""
+                <svg xmlns="http://www.w3.org/2000/svg" width="4" height="3">
+                    <style>{{invalidRule}}</style>
+                    <rect width="2" height="3" fill="red"/>
+                </svg>
+                """);
+            Check(image.Size == beforeSize && image.GetData().SequenceEqual(beforePixels),
+                $"An empty selector branch leaves the viewport and raster unchanged: {invalidRule}");
+        }
+
+        var changes = 0;
+        image.Changed += _ => changes++;
+        foreach (var invalid in new[] { "16foo", "0x10px", "12 px", "1/**/2px", "12/**/px", "NaN", "-2px", "20000px" })
+        {
+            Reject<InvalidDataException>(() => image.LoadSVGFromString(StylesheetWithWidth(invalid)));
+        }
+        Reject<InvalidDataException>(() => image.LoadSVGFromString("""
+            <!DOCTYPE svg [<!ENTITY size "12px">]>
+            <svg><style>svg { width: &size;; height: 6px; }</style></svg>
+            """));
+        Reject<InvalidDataException>(() => image.LoadSVGFromString("""
+            <svg><style>svg { width: 12px; height: 6px; }</style><rect></svg>
+            """));
+        Check(image.Size == beforeSize && image.GetData().SequenceEqual(beforePixels) && changes == 0,
+            "Invalid stylesheet dimensions, a DTD and malformed XML leave the previous image intact.");
+        image.LoadSVGFromString(StylesheetWithWidth("12px"));
+        Check(image.Size == new Vector2i(12, 6) && image.GetPixel(1, 1) == Colors.Red && changes == 1,
+            "Correcting the winning dimension allows a single successful replacement.");
+    }
+
+    private static string StylesheetWithWidth(string width) => $$"""
+        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="3">
+            <style>
+                :root { width: {{width}}; height: 6px; }
+            </style>
+            <rect width="2" height="3" fill="red"/>
+        </svg>
+        """;
+
+    private static void CheckCascadePixels(Image image, int scale, string caller)
+    {
+        Check(image.Size == new Vector2i(12 * scale, 6 * scale), $"{caller}: expected {12 * scale}×{6 * scale}, got {image.Size}.");
+        Check(image.GetPixel(scale, 2 * scale).A == 0 &&
+            image.GetPixel(4 * scale, 2 * scale) == Colors.Red &&
+            image.GetPixel(7 * scale, 2 * scale) == Colors.Blue &&
+            image.GetPixel(10 * scale, 2 * scale).A == 0, $"{caller}: centered red and blue content with transparent margins.");
     }
 
     internal static byte[] VerifyJPEG()

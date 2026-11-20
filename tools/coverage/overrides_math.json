@@ -4247,7 +4247,7 @@
     {
       "state": "Partial",
       "godot": ["Image::method:load(String:)", "Image::method:load_from_file(String:)"],
-      "reason": "ADR 0039: existing typed file loads now include bounded Radiance HDR decoding to RGBE9995 with raw, legacy and planar-RLE scanlines and both axis orders. ResourceLoader uses the same codec for ImageTexture discovery and loading. Inline root SVG dimensions also execute through both file APIs and the ImageTexture loader. Stylesheet-driven geometry, additional file variants, color metadata and target qualification remain open. See docs/components/images.md#radiance-hdr-loading and #svg-viewport-sizing."
+      "reason": "ADR 0039: existing typed file loads now include bounded Radiance HDR decoding to RGBE9995 with raw, legacy and planar-RLE scanlines and both axis orders. ResourceLoader uses the same codec for ImageTexture discovery and loading. The root SVG viewport cascade also executes through both file APIs and the ImageTexture loader. Other stylesheet-driven geometry, additional file variants, color metadata and target qualification remain open. See docs/components/images.md#radiance-hdr-loading and #svg-viewport-sizing."
     },
     {
       "state": "Partial",
@@ -4255,7 +4255,7 @@
         "Image::method:load_svg_from_buffer(PackedByteArray:,float:)",
         "Image::method:load_svg_from_string(String:,float:)"
       ],
-      "reason": "ADR 0039: bounded XML preflight and atomic RGBA8 publication. Root inline width and height override presentation attributes, resolve pixel/physical/percent/auto dimensions and drive the actual scaled native viewport. Tests cover exact pixels and rollback, as well as file and scalable texture consumers. Remaining: stylesheet-driven geometry, additional CSS units/functions, nested viewport fidelity and foreign-target qualification. See docs/components/images.md#svg-viewport-sizing."
+      "reason": "ADR 0039: bounded XML preflight and atomic RGBA8 publication. Root width and height cascade across attributes, matching embedded rules and inline declarations, then drive the scaled native viewport. Tests cover exact pixels and rollback, as well as file and scalable texture consumers. Remaining: other stylesheet-driven geometry, additional CSS units/functions, nested viewport fidelity and foreign-target qualification. See docs/components/images.md#svg-viewport-sizing."
     },
     {
       "state": "Partial",
