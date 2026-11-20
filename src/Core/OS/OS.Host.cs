@@ -122,11 +122,18 @@ public sealed partial class OS
 #endif
     }
     /// <summary>Reports whether the current application runs in a platform sandbox.</summary>
-    /// <returns>On Linux, whether Flatpak, the complete Snap environment or a host container-manager marker is present.</returns>
-    /// <remarks>Environment checks are live. A generic container is not automatically an application sandbox.</remarks>
+    /// <returns>On Windows, whether the current process token identifies an AppContainer.
+    /// On Linux, whether Flatpak, the complete Snap environment or a host container-manager marker is present.</returns>
+    /// <remarks>Checks are live and independent of DisplayServer initialization.</remarks>
+    /// <exception cref="System.ComponentModel.Win32Exception">Windows could not open or query the current process token.</exception>
     /// <exception cref="PlatformNotSupportedException">The profile needs its native application-sandbox adapter.</exception>
     public static bool IsSandboxed()
     {
+        if (OperatingSystem.IsWindows())
+        {
+            return IsWindowsAppContainer();
+        }
+
         if (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid()) throw new PlatformNotSupportedException("Application sandbox detection requires this platform's adapter.");
         if (System.IO.File.Exists("/.flatpak-info") || System.IO.File.Exists("/run/host/container-manager")) return true;
         lock (Service._environmentGate) return Environment.GetEnvironmentVariable("SNAP") is not null && Environment.GetEnvironmentVariable("SNAP_NAME") is not null && Environment.GetEnvironmentVariable("SNAP_REVISION") is not null;

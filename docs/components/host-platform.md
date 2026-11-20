@@ -10,7 +10,7 @@ Last updated: 2026-11-11
 
 GetName reports Windows/Linux/macOS/Android/iOS/tvOS/Web. Logical CPU count comes from the platform; it can differ from process scheduling capacity. CPU brand data is cached from CPUID where available, otherwise Linux metadata may supply it. Distribution/version queries parse bounded optional Linux metadata with exact keys; empty values retain fallback behavior. GetVersion falls back to the kernel build text on Linux. Missing optional input does not imply a fabricated hardware model.
 
-GetLocale reads current LANG on Linux/FreeBSD, strips the encoding suffix and uses en when the variable is absent. Other hosts use the native preferred locale pointer array, which is freed deterministically. GetLocaleLanguage returns the first language component. These cold queries leave application Culture/catalogs unchanged. Linux sandbox checks use Flatpak/container markers and all of SNAP/SNAP_NAME/SNAP_REVISION; one or two unrelated variables are insufficient. Other sandbox profiles throw until their actual adapters exist.
+GetLocale reads current LANG on Linux/FreeBSD, strips the encoding suffix and uses en when the variable is absent. Other hosts use the native preferred locale pointer array, which is freed deterministically. GetLocaleLanguage returns the first language component. These cold queries leave application Culture/catalogs unchanged. Linux sandbox checks use Flatpak/container markers and all of SNAP/SNAP_NAME/SNAP_REVISION; one or two unrelated variables are insufficient. Windows reads the AppContainer flag from the primary process token on each call, releasing the token on both success and failure. Win32Exception preserves the native error code when opening or querying it fails. These sandbox queries run before DisplayServer initialization. macOS, mobile, Web and other profiles without an adapter throw PlatformNotSupportedException.
 
 Host/build/architecture tags are shared with typed settings, including pc/mobile, x86/arm families, pointer bitness, single precision, template configuration and thread profile. Query matching follows the existing case-insensitive typed feature policy. Custom tags are live and runtime-managed; saving settings persists their typed override values, not an implicit activation. OS.HasFeature adds live movie, system-font and renderer observations. Project default overrides use host/custom tags; explicit supplied feature lists preserve their own selection context.
 
@@ -44,7 +44,19 @@ Host metadata and capability preparation are cold. Prepared immutable identity a
 
 ## Verification and limits
 
-`tests/HostPlatform.Consumer` uses only public runtime API. Managed mode checks Linux metadata, host/custom feature selection, persistence boundaries, LANG isolation and Snap combinations. `gpu OUTPUT` and `compatibility OUTPUT` select BC1 or RGBA input, render red pixels and save a native framebuffer. Root `ELECTRON2D_TEST_HOST_PLATFORM=1` links the same checks and adds exact-key/quote/malformed metadata fixtures. JIT, strict NativeAOT, both Linux display protocols and both renderer backends are separate observations. Warm queries measure owner-managed bytes only. Remaining version/model host qualification, foreign sandbox and simulator/browser feature adapters, physical GPU, native allocation, editor and human acceptance remain open.
+`tests/HostPlatform.Consumer` uses only public runtime API. Managed mode checks Linux metadata, host/custom feature selection, persistence boundaries, LANG isolation and Snap combinations. `gpu OUTPUT` and `compatibility OUTPUT` select BC1 or RGBA input, render red pixels and save a native framebuffer. Root `ELECTRON2D_TEST_HOST_PLATFORM=1` links the same checks and adds exact-key/quote/malformed metadata fixtures. JIT, strict NativeAOT, both Linux display protocols and both renderer backends are separate observations. Warm queries measure owner-managed bytes only. The Windows sandbox scenario compares the public result in a normal child and a real AppContainer child with an independent observation of each child token. The root Windows sandbox check exercises native access denial and repeated queries for handle leaks. Remaining version/model host qualification, sandbox adapters beyond Windows and Linux, simulator/browser feature adapters, physical GPU, native allocation, editor and human acceptance remain open.
+
+On Windows, run the public sandbox scenario and the native error and handle checks from the repository root with the current Windows native package available:
+
+```powershell
+dotnet run --project tests/HostPlatform.Consumer/HostPlatform.Consumer.csproj -c Release -- sandbox
+$env:ELECTRON2D_TEST_WINDOWS_SANDBOX = '1'
+try {
+    dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release
+} finally {
+    Remove-Item Env:ELECTRON2D_TEST_WINDOWS_SANDBOX
+}
+```
 
 ## Decisions
 

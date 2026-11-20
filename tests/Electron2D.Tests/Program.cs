@@ -178,6 +178,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_CENSUS") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HOST_MEMORY") == "1") { HostMemoryTests.Run(args); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_ENTROPY") == "1") { HostPlatformChecks.Run(["entropy"]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_SANDBOX") == "1")
+{
+    HostPlatformTests.RunWindowsSandbox();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HOST_PLATFORM") == "1") { HostPlatformTests.Run(); HostPlatformChecks.Run(args); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOCALES") == "1") { ResourceLocaleChecks.Run(args); return; }

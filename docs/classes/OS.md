@@ -323,7 +323,7 @@ Sources: [OS.Host.cs](../../src/Core/OS/OS.Host.cs), [OS.HostIdentity.cs](../../
 | `public static string GetLocale()` | Live host locale, independent of application Culture. |
 | `public static string GetLocaleLanguage()` | Language component, retaining nonstandard system values. |
 | `public static bool IsDebugBuild()` | Engine assembly's Debug configuration. |
-| `public static bool IsSandboxed()` | Live Linux application sandbox detection. |
+| `public static bool IsSandboxed()` | Live Windows and Linux application sandbox detection. |
 | `public static bool HasFeature(string tagName)` | Shared host/custom tags and live movie/font/renderer observations. |
 
 ### GetName
@@ -368,7 +368,9 @@ Observes the engine build symbol. A Release engine remains Release when its cons
 
 ### IsSandboxed
 
-On Linux, Flatpak/container-manager markers or the complete SNAP, SNAP_NAME and SNAP_REVISION environment identify application sandboxing. Environment observations are live; one or two unrelated Snap variables are insufficient. Other profiles throw PlatformNotSupportedException until their native application sandbox adapter exists.
+On Windows, this query returns whether the primary token of the current process identifies an AppContainer. It works before DisplayServer initialization and throws Win32Exception with the native error code if the token cannot be opened or queried.
+
+On Linux, Flatpak/container-manager markers or the complete SNAP, SNAP_NAME and SNAP_REVISION environment identify application sandboxing. Each call reads the current markers and environment. Profiles without a native adapter throw PlatformNotSupportedException.
 
 ### HasFeature
 

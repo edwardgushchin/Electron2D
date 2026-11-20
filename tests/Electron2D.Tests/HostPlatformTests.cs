@@ -1,7 +1,61 @@
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Electron2D;
+using Microsoft.Win32.SafeHandles;
 
-internal static class HostPlatformTests
+internal static partial class HostPlatformTests
 {
+    internal static void RunWindowsSandbox()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            throw new PlatformNotSupportedException("This check requires a Windows process token.");
+        }
+
+        using var process = Process.GetCurrentProcess();
+        const uint tokenDuplicate = 0x0002;
+        if (OpenProcessToken(process.Handle, tokenDuplicate, out var token) == 0)
+        {
+            throw new Win32Exception(Marshal.GetLastPInvokeError());
+        }
+
+        using (token)
+        {
+            try
+            {
+                OS.ReadWindowsAppContainer(token);
+                throw new InvalidOperationException("The token without TOKEN_QUERY was accepted.");
+            }
+            catch (Win32Exception error) when (error.NativeErrorCode == 5)
+            {
+                Console.WriteLine("GetTokenInformation without TOKEN_QUERY reported ERROR_ACCESS_DENIED (5).");
+            }
+        }
+
+        Check(token.IsClosed, "The denied query's test token must be closed.");
+        for (var i = 0; i < 32; i++)
+        {
+            OS.IsSandboxed();
+        }
+
+        process.Refresh();
+        var before = process.HandleCount;
+        for (var i = 0; i < 1024; i++)
+        {
+            OS.IsSandboxed();
+        }
+
+        process.Refresh();
+        var after = process.HandleCount;
+        Check(after <= before, $"Process handle count grew from {before} to {after}.");
+        Console.WriteLine($"1024 public queries, process handles {before} -> {after}.");
+    }
+
+    [LibraryImport("advapi32.dll", SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    private static partial int OpenProcessToken(nint process, uint desiredAccess, out SafeAccessTokenHandle token);
+
     internal static void Run()
     {
         var fields = OS.ParseHostRelease("#header\r\nPRETTY_NAME=Wrong\nNAME=\"Exact distro\"\r\nVERSION_ID=1\nVERSION='Release = stable'\nOTHER=ignored\nBROKEN\n=invalid\n");
