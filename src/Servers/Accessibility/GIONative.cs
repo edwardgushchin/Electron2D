@@ -19,6 +19,7 @@ internal static unsafe partial class GIONative
     [LibraryImport(GLib)] internal static partial int g_main_context_pending(nint context);
     [LibraryImport(GLib)] internal static partial int g_main_context_iteration(nint context, int mayBlock);
     [LibraryImport(GLib)] internal static partial void g_error_free(nint error);
+    [LibraryImport(GLib)] internal static partial void g_free(nint value);
     [LibraryImport(GIO, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))] internal static partial nint g_dbus_error_new_for_dbus_error(string name, string message);
     internal static void SetError(nint error, string message, string name = "org.freedesktop.DBus.Error.Failed") { if (error != 0) *(nint*)error = g_dbus_error_new_for_dbus_error(name, message); }
     [LibraryImport(GObject)] internal static partial void g_object_unref(nint value);
@@ -80,10 +81,10 @@ internal static unsafe partial class GIONative
     internal static int IntArg(nint args, nuint index) { var v = g_variant_get_child_value(args, index); try { return g_variant_get_int32(v); } finally { g_variant_unref(v); } }
     internal static uint UIntArg(nint args, nuint index) { var v = g_variant_get_child_value(args, index); try { return g_variant_get_uint32(v); } finally { g_variant_unref(v); } }
     internal static string StringArg(nint args, nuint index) { var v = g_variant_get_child_value(args, index); try { return String(v); } finally { g_variant_unref(v); } }
-    internal static string ErrorMessage(nint error)
+    internal static string ErrorMessage(nint error, string fallback = "Native accessibility operation failed.")
     {
-        if (error == 0) return "Native accessibility operation failed.";
-        try { return Marshal.PtrToStringUTF8(((Error*)error)->Message) ?? "Native accessibility operation failed."; }
+        if (error == 0) return fallback;
+        try { return Marshal.PtrToStringUTF8(((Error*)error)->Message) ?? fallback; }
         finally { g_error_free(error); }
     }
 }

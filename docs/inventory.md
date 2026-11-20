@@ -4,7 +4,7 @@
 
 [Image analysis](components/images.md#image-analysis) verifies alpha, channel selection and visible base bounds with copied storage and PNG/BCn consumers.
 
-The existing static OS service owns [Windows file-manager navigation](components/file-manager.md) through OS.WindowsFileManager.cs and a private STA/PIDL adapter. No public type is added.
+The static OS service owns [file-manager navigation](components/file-manager.md) through a private Windows STA/PIDL adapter and a Linux GIO/D-Bus adapter.
 
 The existing static OS service owns [system certificate snapshots](components/system-certificates.md) through OS.Certificates.cs and its private native helpers. It adds no public type or trust-store owner.
 

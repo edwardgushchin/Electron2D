@@ -30,24 +30,62 @@ public sealed partial class OS : ElectronObject
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(uri); if (uri.Length == 0 || uri.Contains('\0')) throw new ArgumentException("Expected a nonempty resource identifier.", nameof(uri));
         uri = System.IO.Path.IsPathRooted(uri) ? new Uri(System.IO.Path.GetFullPath(uri)).AbsoluteUri : Uri.TryCreate(uri, UriKind.Absolute, out var parsed) ? parsed.AbsoluteUri : new Uri(System.IO.Path.GetFullPath(uri)).AbsoluteUri;
+        LaunchResource(uri);
+    }
+
+    private static void LaunchResource(string uri)
+    {
         if (!SDL3.SDL.OpenURL(uri)) throw new InvalidOperationException("The platform rejected the resource launch request: " + SDL3.SDL.GetError());
     }
     /// <summary>Requests the file manager for a file or directory.</summary>
     /// <param name="fileOrDirPath">An ordinary filesystem path. Globalize project paths before calling.</param><param name="openFolder">Enters a directory when true; otherwise selects the item in its parent.</param>
     /// <remarks>Windows uses native Shell item identities on a temporary STA worker, preserving the caller's COM apartment.
-    /// Other supported hosts use the existing folder-URI fallback; macOS native selection is not integrated.
+    /// Linux uses the desktop FileManager1 service via GIO. When the service, session bus address, or GIO is unavailable,
+    /// Linux opens the requested directory or the item's containing directory through the default application.
+    /// The fallback does not select an item. The macOS selection backend is unavailable.
     /// This cold synchronous operation requests the external application; its UI may finish opening afterward.</remarks>
     /// <exception cref="ArgumentException">The path is empty, contains a null character, or is not a valid ordinary path.</exception>
-    /// <exception cref="IOException">The Windows Shell cannot parse, open or select the target.</exception>
+    /// <exception cref="ArgumentNullException">The path is null.</exception>
+    /// <exception cref="IOException">The target does not exist or the native request fails.</exception>
+    /// <exception cref="InvalidOperationException">The default application rejects the fallback launch.</exception>
     /// <exception cref="NotSupportedException">The profile requires a native item-selection backend.</exception>
     public static void ShellShowInFileManager(string fileOrDirPath, bool openFolder = true) => Service.ShowInFileManagerCore(fileOrDirPath, openFolder);
     private void ShowInFileManagerCore(string path, bool openFolder)
     {
-        ThrowIfDisposed(); ArgumentException.ThrowIfNullOrEmpty(path); if (path.Contains('\0')) throw new ArgumentException("Path contains a null character.", nameof(path));
+        ThrowIfDisposed();
+        ArgumentException.ThrowIfNullOrEmpty(path);
+        if (path.Contains('\0'))
+            throw new ArgumentException("Path contains a null character.", nameof(path));
+
         var absolute = System.IO.Path.GetFullPath(path);
-        if (OperatingSystem.IsWindows()) { WindowsFileManager.Show(absolute, openFolder); return; }
-        if (OperatingSystem.IsMacOS()) throw new NotSupportedException("Native file-manager selection requires the platform backend.");
-        var directory = openFolder && Directory.Exists(absolute) ? absolute : System.IO.Path.GetDirectoryName(absolute) ?? absolute; ShellOpenCore(new Uri(directory).AbsoluteUri);
+        if (OperatingSystem.IsWindows())
+        {
+            WindowsFileManager.Show(absolute, openFolder);
+            return;
+        }
+
+        if (OperatingSystem.IsMacOS())
+            throw new NotSupportedException("Native file-manager selection requires the platform backend.");
+
+        var isDirectory = Directory.Exists(absolute);
+        var enterDirectory = openFolder && isDirectory;
+        var desktopLinux = OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid();
+        if (desktopLinux)
+        {
+            if (!isDirectory && !File.Exists(absolute))
+                throw new FileNotFoundException("The file-manager target does not exist.", absolute);
+
+            if (LinuxFileManager.TryShow(absolute, enterDirectory))
+                return;
+
+            if (isDirectory && absolute.Length > 1)
+                absolute = absolute.TrimEnd('/');
+        }
+
+        var directory = enterDirectory ? absolute : System.IO.Path.GetDirectoryName(absolute) ?? absolute;
+        // Escape raw Linux filenames, where a percent escape may be literal path text.
+        var uri = desktopLinux ? "file://" + string.Join('/', directory.Split('/').Select(Uri.EscapeDataString)) : new Uri(directory).AbsoluteUri;
+        LaunchResource(uri);
     }
     private void MoveToTrashCore(string path)
     {

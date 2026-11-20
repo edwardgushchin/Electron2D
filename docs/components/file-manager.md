@@ -1,6 +1,6 @@
 # File-manager navigation
 
-Last updated: 2026-11-07
+Last updated: 2026-11-20
 
 `OS.ShellShowInFileManager(path, openFolder = true)` accepts an ordinary filesystem path. Call `ProjectSettings.GlobalizePath` first for project/user paths. Relative paths resolve against the current process directory before native work. Null, empty and embedded-NUL paths fail before launching an external application.
 
@@ -8,9 +8,25 @@ On Windows, `openFolder = true` enters an existing directory. A file, or any req
 
 The retained static OS service starts a temporary STA worker and balances COM initialization, uninitialization and the Shell PIDL allocation. `SHParseDisplayName` resolves the item; `SHOpenFolderAndSelectItems` selects it. Directory entry uses `ShellExecuteExW` with a PIDL, synchronous handoff and native error UI suppressed. The caller apartment remains unchanged, including an existing MTA. Native failure throws `IOException`; there is no alternate command-line launch after failure. The request returns after handoff, while Explorer may finish updating its UI later. This cold, blocking operation is unsuitable for real-time callbacks and does not initialize an engine display.
 
-Linux retains the folder-URI fallback through `OS.ShellOpen`, which opens the containing directory without a native item-selection guarantee. macOS still requires a native selection adapter. Mobile/browser behavior and foreign Windows architecture/sandbox/desktop qualification remain separate target gates under ADR 0021. No new public type or signature is introduced; ADRs 0004 and 0095 continue to govern the existing service.
+On desktop Linux, system GIO constructs the target's `file://` URI and sends it to [FileManager1](https://wiki.freedesktop.org/www/Specifications/file-manager-interface/) on the session D-Bus. `ShowFolders` enters an existing directory when `openFolder` is true. `ShowItems` requests selection in the parent for a file or for a directory with `openFolder` false. Missing paths throw `IOException` before reaching the bus.
+
+When GIO, a session bus address, or the FileManager1 destination is unavailable, the SDL launcher used by `OS.ShellOpen` requests the default application for the same directory or the item's parent. The fallback preserves literal percent sequences in directory names and cannot select an item. Service errors and transport failures after obtaining a bus address throw `IOException` and never trigger a second launch.
+
+macOS still requires a native selection adapter. Mobile/browser behavior and foreign Windows architecture/sandbox/desktop qualification remain separate target gates under ADR 0021. No new public type or signature is introduced; ADRs 0004 and 0095 continue to govern the existing service.
 
 ## Executable verification
+
+### Linux
+
+From the repository root, run the public consumer against an independent GIO receiver on an isolated D-Bus session. The fixture needs .NET 10, a C compiler, `pkg-config` with the `gio-2.0` development files, `dbus-run-session` and a loadable SDL3 runtime. It records fallback calls through a private `xdg-open` fixture.
+
+```bash
+bash tests/FileManager.Consumer/verify-linux.sh
+```
+
+The receiver verifies method, argument signature and exact URI, including Unicode, spaces and literal percent escapes. The fixture checks missing paths, the folder fallback and service rejection without a second launch. A real file manager was unavailable in the WSL2 test environment, so visible item selection remains unverified.
+
+### Windows
 
 `FileManagerChecks`, linked by `tests/FileManager.Consumer` and the root check host (`ELECTRON2D_TEST_FILE_MANAGER`), uses only public engine API and standard .NET. `tools/file-manager-probe.cpp` is an independent Windows SDK observer: it locates the private fixture folder through `IShellWindows`/`IFolderView2` and compares canonical `IShellItem` identities and native selection counts. It checks the external folder view, rather than treating a successful native return code as acceptance.
 

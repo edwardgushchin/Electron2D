@@ -841,7 +841,7 @@
         "OS::method:shell_show_in_file_manager(String:,bool:)"
       ],
       "state": "Partial",
-      "reason": "Windows native directory entry and exact file/directory selection execute through private STA/PIDL ownership, preserving caller COM state. Independent SDK folder-view checks cover source, fresh Core and NativeAOT profiles; see docs/components/file-manager.md. Linux retains the existing folder-URI fallback without exact-selection semantics. macOS needs its native selection adapter; mobile/browser, foreign Windows architecture/sandbox and full ADR 0021 qualification remain open."
+      "reason": "Windows native directory entry and exact file/directory selection execute through private STA/PIDL ownership, preserving caller COM state. Independent SDK folder-view checks cover source, fresh Core and NativeAOT profiles; see docs/components/file-manager.md. Linux sends ShowFolders or ShowItems through GIO/FileManager1, with a folder-only fallback when the service is unavailable. A private D-Bus receiver verifies method, exact URI and error handling. Real Linux desktop selection remains unverified. macOS needs its native selection adapter; mobile/browser, foreign Windows architecture/sandbox and full ADR 0021 qualification remain open."
     }
   ]
 }

@@ -12,6 +12,7 @@ src/Vendor/QOA/** -whitespace
 src/Scene/Theme/Icons/*.svg text eol=lf
 # Build entry points and byte-sensitive inputs must survive Windows checkout.
 tools/**/*.sh text eol=lf
+tests/FileManager.Consumer/verify-linux.sh text eol=lf
 tools/shaders/*.py text eol=lf
 tools/shaders/toolchain.lock.json text eol=lf
 docs/coverage/data/*.json text eol=lf
