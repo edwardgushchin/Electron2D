@@ -185,34 +185,44 @@
       "reason": "ADR 0108/0091: immutable managed C# stack metadata, checked frame access and deterministic formatting execute; available debug symbols supply file/line, unavailable trimmed names are explicit. Snapshot retains strings only. CLR variable name/count inspection requires an actual debugger/symbol adapter and an accepted typed variable projection; value APIs remain excluded under ADR 0001. No constant-zero inspectors or inert capture-locals option."
     },
     {
+      "godot": "@GlobalScope::method:printraw()",
+      "electron2d": "method:Electron2D.OS.LogRaw(System.String)",
+      "reason": "ADR 0108: Typed raw stdout preserves exact text with no newline and retains logger delivery. [Text diagnostics audit](../diagnostic-text.md)."
+    },
+    {
+      "godot": "@GlobalScope::method:print_rich()",
+      "electron2d": "method:Electron2D.OS.LogRich(System.String)",
+      "reason": "ADR 0108: Typed rich stdout expands supported tags, uses plain fallback without ANSI, and preserves original logger payload. [Text diagnostics audit](../diagnostic-text.md)."
+    },
+    {
       "godot": "@GlobalScope::method:print()",
       "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
-      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+      "reason": "ADR 0108 typed preformatted text projection; see [text diagnostics audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
     },
     {
       "godot": "@GlobalScope::method:printerr()",
       "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
-      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+      "reason": "ADR 0108 typed preformatted text projection; see [text diagnostics audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
     },
     {
       "godot": "@GlobalScope::method:prints()",
       "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
-      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+      "reason": "ADR 0108 typed preformatted text projection; see [text diagnostics audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
     },
     {
       "godot": "@GlobalScope::method:printt()",
       "electron2d": "method:Electron2D.OS.LogMessage(System.String,System.Boolean)",
-      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+      "reason": "ADR 0108 typed preformatted text projection; see [text diagnostics audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
     },
     {
       "godot": "@GlobalScope::method:push_error()",
       "electron2d": "method:Electron2D.OS.LogError(System.String,Electron2D.LoggerErrorType,System.String,System.String,System.String,System.Int32)",
-      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+      "reason": "ADR 0108 typed preformatted text projection; see [text diagnostics audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
     },
     {
       "godot": "@GlobalScope::method:push_warning()",
       "electron2d": "method:Electron2D.OS.LogError(System.String,Electron2D.LoggerErrorType,System.String,System.String,System.String,System.Int32)",
-      "reason": "ADR 0108 typed preformatted text projection; see [six-role audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
+      "reason": "ADR 0108 typed preformatted text projection; see [text diagnostics audit](../diagnostic-text.md) for pinned semantics, composition, output and origin checks."
     }
   ],
   "statusGroups": [
@@ -319,6 +329,20 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0001/0091/0108: Variant-valued live variable getters would recreate a universal value carrier; no object/dynamic fallback is exposed. Future CLR debugging requires a separately accepted typed projection."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:printraw()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: Typed raw stdout preserves exact text with no newline and retains logger delivery. [Text diagnostics audit](../diagnostic-text.md)."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:print_rich()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0108: Typed rich stdout expands supported tags, uses plain fallback without ANSI, and preserves original logger payload. [Text diagnostics audit](../diagnostic-text.md)."
     },
     {
       "godot": [

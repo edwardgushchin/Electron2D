@@ -156892,6 +156892,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.LogRaw(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "LogRaw",
+    "signature": "public static System.Void LogRaw(System.String message)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.LogRich(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "LogRich",
+    "signature": "public static System.Void LogRich(System.String message)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.LogVerbose(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.OS",

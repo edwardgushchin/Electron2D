@@ -160,4 +160,25 @@ public sealed partial class OS
     [LibraryImport("kernel32.dll", EntryPoint = "GetConsoleMode")]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool GetNativeConsoleMode(nint handle, out uint mode);
+
+    internal static bool SupportsSTDOUTANSI()
+    {
+        if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("NO_COLOR")))
+        {
+            return false;
+        }
+        if (Environment.GetEnvironmentVariable("FORCE_COLOR") == "1")
+        {
+            return true;
+        }
+        if (Console.IsOutputRedirected || Environment.GetEnvironmentVariable("TERM") == "dumb")
+        {
+            return false;
+        }
+
+        const uint enableVirtualTerminalProcessing = 0x0004;
+        return !OperatingSystem.IsWindows()
+            || GetNativeConsoleMode(GetNativeStandardHandle(-11), out var mode)
+            && (mode & enableVirtualTerminalProcessing) != 0;
+    }
 }

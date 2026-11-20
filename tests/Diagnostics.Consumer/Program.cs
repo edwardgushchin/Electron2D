@@ -9,6 +9,14 @@ switch (args.FirstOrDefault() ?? "text")
     case "output": DiagnosticsTests.RunOutputPolicy("", null); break;
     case "verbose": DiagnosticsTests.RunVerbose(args[1..]); break;
     case "text": TextChecks.Run(); break;
+    case "raw-rich":
+        TextChecks.RunRawRich();
+        break;
+    case "raw-rich-wire":
+        EOs.LogRaw("A\t");
+        EOs.LogRich("[color=green][b]Б😀[/b][/color]");
+        EOs.LogMessage("end");
+        break;
     case "wire":
         EOs.LogMessage(string.Concat("A", "Б"));
         EOs.LogMessage(string.Concat("A", "Б"), error: true);
@@ -20,17 +28,36 @@ switch (args.FirstOrDefault() ?? "text")
     default: throw new ArgumentException("Unknown diagnostics profile.");
 }
 
-internal static class TextChecks
+internal static partial class TextChecks
 {
     private sealed class Writer : StringWriter
     {
         internal bool FailWrite, FailFlush, Disposed;
+        internal int Flushes;
+        public override void Write(string? value)
+        {
+            if (FailWrite)
+            {
+                throw new IOException("writer failure");
+            }
+
+            base.Write(value);
+        }
+
         public override void WriteLine(string? value)
         {
             if (FailWrite) throw new IOException("writer failure");
             base.WriteLine(value);
         }
-        public override void Flush() { if (FailFlush) throw new IOException("flush failure"); }
+        public override void Flush()
+        {
+            if (FailFlush)
+            {
+                throw new IOException("flush failure");
+            }
+
+            Flushes++;
+        }
         protected override void Dispose(bool disposing) { Disposed = true; base.Dispose(disposing); }
     }
 

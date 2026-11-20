@@ -71,6 +71,25 @@ public sealed partial class OS
     /// <exception cref="IOException">The host output writer fails.</exception>
     public static void LogMessage(string message, bool error = false) => RuntimeDiagnostics.Instance.Message(message, error);
 
+    /// <summary>Writes diagnostic text to stdout without appending a newline.</summary>
+    /// <param name="message">The exact text to write and deliver to registered loggers.</param>
+    /// <remarks>The physical write follows <see cref="Engine.PrintToSTDOUT"/>. Registered loggers
+    /// receive the original text even if physical output is disabled or fails.</remarks>
+    /// <exception cref="ArgumentNullException">The message is null.</exception>
+    /// <exception cref="IOException">The host output writer fails.</exception>
+    public static void LogRaw(string message) =>
+        RuntimeDiagnostics.Instance.Message(message, error: false, format: DiagnosticTextFormat.Raw);
+
+    /// <summary>Writes a message with supported terminal markup and appends a newline.</summary>
+    /// <param name="message">Text with optional style, color or layout tags.</param>
+    /// <remarks>ANSI-capable output uses terminal styles. Other output retains text and layout.
+    /// Registered loggers receive the original markup regardless of terminal capability,
+    /// <see cref="Engine.PrintToSTDOUT"/>, or physical writer failure.</remarks>
+    /// <exception cref="ArgumentNullException">The message is null.</exception>
+    /// <exception cref="IOException">The host output writer fails.</exception>
+    public static void LogRich(string message) =>
+        RuntimeDiagnostics.Instance.Message(message, error: false, format: DiagnosticTextFormat.Rich);
+
     /// <summary>Publishes a structured engine diagnostic with available C# stack metadata.</summary>
     /// <param name="rationale">Human-readable diagnostic.</param>
     /// <param name="errorType">Diagnostic classification.</param>

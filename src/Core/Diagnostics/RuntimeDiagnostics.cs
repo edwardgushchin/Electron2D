@@ -126,17 +126,28 @@ internal sealed unsafe class RuntimeDiagnostics
         }
     }
 
-    private void WriteConsole(string message, bool error)
+    private void WriteConsole(string message, bool error, DiagnosticTextFormat format = DiagnosticTextFormat.Line)
     {
         var run = Volatile.Read(ref _runOutput);
         var enabled = error ? run?.Stderr ?? Volatile.Read(ref _errors) : run?.Stdout ?? Volatile.Read(ref _stdout);
         if (!enabled) return;
         var writer = error ? Console.Error : Console.Out;
-        writer.WriteLine(message);
+        switch (format)
+        {
+            case DiagnosticTextFormat.Raw:
+                writer.Write(message);
+                break;
+            case DiagnosticTextFormat.Rich:
+                writer.WriteLine(RichDiagnosticText.Format(message, OS.SupportsSTDOUTANSI()));
+                break;
+            default:
+                writer.WriteLine(message);
+                break;
+        }
         if (error || run?.FlushStdout == true) writer.Flush();
     }
 
-    internal void Message(string message, bool error)
+    internal void Message(string message, bool error, DiagnosticTextFormat format = DiagnosticTextFormat.Line)
     {
         ArgumentNullException.ThrowIfNull(message);
         var nested = _dispatchDepth++ != 0;
@@ -144,7 +155,7 @@ internal sealed unsafe class RuntimeDiagnostics
         {
             var targets = Volatile.Read(ref _loggers);
             Exception? outputFailure = null;
-            try { WriteConsole(message, error); }
+            try { WriteConsole(message, error, format); }
             catch (Exception failure) { outputFailure = failure; }
             if (!nested)
                 foreach (var logger in targets)

@@ -2,17 +2,25 @@
 
 Last updated: 2026-11-14
 
-Logger receives the engine diagnostic stream through static OS.AddLogger/RemoveLogger registration. OS.LogMessage is a typed message ingress; OS.LogError supplies classification, expression/rationale and compiler caller information. Native SDL logs join the same stream after the selected native core loads. Engine lifecycle failures retain their existing exceptions and cleanup behavior while reporting structured C# metadata.
+Logger receives the engine diagnostic stream through static OS.AddLogger/RemoveLogger registration. OS.LogMessage, OS.LogRaw and OS.LogRich share typed message delivery; OS.LogError supplies classification, expression/rationale and compiler caller information. Native SDL logs join the same stream after the selected native core loads. Engine lifecycle failures retain their existing exceptions and cleanup behavior while reporting structured C# metadata.
 
 ## Delivery and ownership
 
-The [six-role text audit](../coverage/diagnostic-text.md) records the typed composition of plain stdout/stderr, space/tab-separated messages and structured errors/warnings. Callers format values before the shared ingress. Empty text, embedded newlines and separators are preserved. Writer failures propagate after logger delivery; the engine retains neither ownership nor disposal responsibility for host writers. `tests/Diagnostics.Consumer` checks exact physical output separately from callback payloads and reuses the existing diagnostics profiles.
+The [text diagnostics audit](../coverage/diagnostic-text.md) records the typed composition of plain stdout/stderr, space/tab-separated messages and structured errors/warnings. Callers format values before the shared ingress. Empty text, embedded newlines and separators are preserved. Writer failures propagate after logger delivery; the engine retains neither ownership nor disposal responsibility for host writers. `tests/Diagnostics.Consumer` checks exact physical output separately from callback payloads and reuses the existing diagnostics profiles.
 
 Registration retains a borrowed Logger until removal or disposal and deduplicates identity. Copy-on-write receiver snapshots avoid holding a registry lock across callbacks. A removal affects subsequent sends; an already selected live receiver may receive the current message. Callbacks execute synchronously on sending threads, may overlap, and must synchronize their own mutable state. Reentry prints permitted output without recursively invoking receivers. A throwing receiver is isolated, reported through the fallback error writer, and cannot replace the original runtime exception. Disposal unregisters but does not wait for a callback already entered; callers must coordinate disposal of their own callback state.
 
 Engine.PrintToSTDOUT and PrintErrorMessages default to true and govern physical engine output; receivers continue to observe suppressed messages. Node.PrintTree/PrintTreePretty, pack verbose reports and restart failures use the same ingress. Direct consumer Console writes remain host-owned output. Existing Console writers are never replaced or disposed. LogMessage appends a physical newline and delivers its original message string. Structured errors use the typed LoggerErrorType identities Error=0, Warning=1, Script=2 and Shader=3; runtime editorNotify remains false.
 
 Managed-only registration/message capture does not initialize video or load SDL. The dynamic core resolver attaches native logging when the actual core becomes available. The prior sink, userdata and managed delegate root are retained coherently; output is forwarded when enabled. Final removal/default flags restore that exact sink only if the service still owns the native callback, preserving a later foreign replacement. SDL Info remains a message, Warn a warning, and Error/Critical errors. Native callbacks cannot propagate managed exceptions across the ABI. Desktop native execution must be measured; distinct statically linked and mobile bootstrap paths retain their host hooks and acceptance gates.
+
+## Raw and rich stdout
+
+`OS.LogRaw(message)` writes the exact string with no added newline. A later raw or ordinary message can continue the same line. `OS.LogRich(message)` writes a formatted line. Both accept empty strings, reject null, obey `Engine.PrintToSTDOUT` and the active stdout flush policy, and deliver the original string with `error: false` to registered loggers.
+
+Rich output recognizes case-sensitive `b`, `i`, `u`, `s`, `code`, `indent`, `url`, `center`, `right`, `color`, `bgcolor` and `fgcolor` tags. Style and color closures reset their ANSI attributes without reopening a surrounding tag. A rich ANSI line ends with a full reset, even for empty or unstyled text. Colors use the terminal palette for common names and RGB for other named or hexadecimal colors, with black as the fallback. The `fgcolor` tag sets both color planes. The opening layout tags emit four spaces, LF plus three tabs, or LF plus six tabs respectively. Bare URL wrappers disappear. Other opening URL forms and unknown or incomplete tags are literal. The parser can still recognize a complete tag after a literal opening bracket.
+
+Redirected stdout, `TERM=dumb`, and a Windows console without virtual terminal processing receive text and layout without generated ANSI sequences. `FORCE_COLOR=1` opts the current writer into ANSI, including for redirection. A nonempty `NO_COLOR` takes precedence. The host continues to own the writer and its console mode.
 
 ## Fatal process termination
 

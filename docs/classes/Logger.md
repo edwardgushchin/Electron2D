@@ -10,7 +10,7 @@ Last updated: 2026-10-15
 
 > Receives synchronous engine diagnostics through retained OS registration.
 
-See [runtime diagnostics](../components/diagnostics.md) for threading, ownership, physical output and metadata limits.
+Ordinary, raw and rich messages deliver the original string to `OnLogMessage`. See [runtime diagnostics](../components/diagnostics.md) for threading, ownership, physical output and metadata limits.
 
 ## API
 
