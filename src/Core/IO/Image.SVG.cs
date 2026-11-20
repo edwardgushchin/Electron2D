@@ -48,8 +48,10 @@ public sealed partial class Image
             var widthAttribute = reader.GetAttribute("width");
             var heightAttribute = reader.GetAttribute("height");
             var (styleWidth, styleHeight) = CascadedSVGDimensions(reader);
-            var width = ParseLength(styleWidth ?? widthAttribute, viewSize?.Width ?? 300);
-            var height = ParseLength(styleHeight ?? heightAttribute, viewSize?.Height ?? 150);
+            var widthValue = styleWidth ?? widthAttribute;
+            var heightValue = styleHeight ?? heightAttribute;
+            var width = ParseLength(widthValue, viewSize?.Width ?? 300);
+            var height = ParseLength(heightValue, viewSize?.Height ?? 150);
             if (width is null && height is null)
             {
                 width = viewSize?.Width ?? 300;
@@ -61,7 +63,8 @@ public sealed partial class Image
             var logicalWidth = width ?? throw new InvalidDataException("SVG width is missing.");
             var logicalHeight = height ?? throw new InvalidDataException("SVG height is missing.");
             var size = new Vector2i(RasterDimension(logicalWidth, scale), RasterDimension(logicalHeight, scale));
-            if (styleWidth is not null || styleHeight is not null)
+            if (styleWidth is not null || styleHeight is not null ||
+                IsSVGCalculation(widthValue) || IsSVGCalculation(heightValue))
             {
                 var userWidth = viewSize?.Width ?? logicalWidth;
                 var userHeight = viewSize?.Height ?? logicalHeight;
@@ -312,7 +315,7 @@ public sealed partial class Image
             {
                 var start = offset - 1;
                 offset = EndCSSComment(css, start);
-                if (preserveComments)
+                if (preserveComments || depth > 0)
                     segment.Append(css.AsSpan(start, offset - start));
                 else
                     segment.Append(' ');
@@ -372,25 +375,32 @@ public sealed partial class Image
         return (width, height);
     }
 
+    private static readonly (string Unit, double Factor)[] SVGPhysicalUnits =
+    [
+        ("px", 1), ("pt", 96d / 72), ("pc", 16), ("mm", 96d / 25.4), ("cm", 96d / 2.54), ("in", 96),
+    ];
+
+    private const NumberStyles SVGNumberStyle =
+        NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent;
+
     private static double? ParseLength(string? value, double percentBase)
     {
         if (value is null) return null;
-        value = value.Trim();
+        value = value.Trim(CSSWhitespace);
+        if (IsSVGCalculation(value))
+            return new SVGCalculation(value, percentBase).Read();
+
         double factor = 1;
         if (value.EndsWith('%')) { factor = percentBase / 100; value = value[..^1]; }
         else
         {
-            foreach (var (unit, multiplier) in new (string, double)[]
-            {
-                ("px", 1), ("pt", 96d / 72), ("pc", 16), ("mm", 96d / 25.4), ("cm", 96d / 2.54), ("in", 96)
-            })
+            foreach (var (unit, multiplier) in SVGPhysicalUnits)
                 if (value.EndsWith(unit, StringComparison.OrdinalIgnoreCase))
                 {
                     factor = multiplier; value = value[..^unit.Length]; break;
                 }
         }
-        const NumberStyles numberStyle = NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent;
-        if (!double.TryParse(value, numberStyle, CultureInfo.InvariantCulture, out var number) ||
+        if (!double.TryParse(value, SVGNumberStyle, CultureInfo.InvariantCulture, out var number) ||
             !double.IsFinite(number) || number <= 0 || !double.IsFinite(number * factor))
             throw new InvalidDataException("SVG dimensions must be positive finite pixel or physical lengths.");
         return number * factor;

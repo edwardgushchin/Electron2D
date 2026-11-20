@@ -114,7 +114,7 @@ internal static class ImageCodecTests
 
         var before = image.GetData();
         var beforeChanges = changes;
-        foreach (var style in new[] { "width:20000px;height:2px", "width:2px;height:-1px", "width:calc(2px + 3px)", "width:1e-100px;height:1px" })
+        foreach (var style in new[] { "width:20000px;height:2px", "width:2px;height:-1px", "width:1e-100px;height:1px" })
             Reject<InvalidDataException>(() => image.LoadSVGFromString($"<svg style=\"{style}\"/>"));
         Reject<InvalidDataException>(() => image.LoadSVGFromString("""<svg style="width:6px;height:3px"><rect"""));
         Check(image.GetData().SequenceEqual(before) && changes == beforeChanges,
@@ -133,7 +133,9 @@ internal static class ImageCodecTests
         finally { File.Delete(path); }
 
         VerifySVGStylesheets();
-        Console.WriteLine("SVG checks passed (viewport dimensions, stylesheet cascade, raster pixels, scaling, file and resource loading, failure rollback).");
+        VerifySVGMath();
+        VerifySVGMathWhitespace();
+        Console.WriteLine("SVG checks passed (viewport dimensions, stylesheet cascade, CSS math, raster pixels, scaling, file and resource loading, failure rollback).");
     }
 
     private static void VerifySVGStylesheets()
@@ -305,6 +307,229 @@ internal static class ImageCodecTests
             image.GetPixel(4 * scale, 2 * scale) == Colors.Red &&
             image.GetPixel(7 * scale, 2 * scale) == Colors.Blue &&
             image.GetPixel(10 * scale, 2 * scale).A == 0, $"{caller}: centered red and blue content with transparent margins.");
+    }
+
+    private static void VerifySVGMath()
+    {
+        // The viewBox gives percentage bases of 8 and 4. The winning dimensions are
+        // 16×6, so the default meet alignment centers 12×6 of paint with two-pixel side margins.
+        const string cascaded = """
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 4" width="5" height="7"
+                 style="width:calc(9px); height:Min(8px, calc(50% + 8px/2)) !important">
+                <style>
+                    :root {
+                        width: clamp(10px, max(50% + 2px*6, min(1pc, 12px)), 20px) !important;
+                        height: max(7px, 9px) !important;
+                    }
+                </style>
+                <rect width="4" height="4" fill="red"/>
+                <rect x="4" width="4" height="4" fill="blue"/>
+            </svg>
+            """;
+        using var image = new Image();
+        image.LoadSVGFromString(cascaded);
+        CheckMathPixels(image, 1, "SVG math string");
+        var expectedPixels = image.GetData();
+
+        var bytes = Encoding.UTF8.GetBytes(cascaded);
+        image.LoadSVGFromBuffer(bytes);
+        CheckMathPixels(image, 1, "SVG math buffer");
+        Check(image.GetData().SequenceEqual(expectedPixels), "SVG math string and buffer have identical pixels.");
+        image.LoadSVGFromBuffer(bytes, 2);
+        CheckMathPixels(image, 2, "Scaled SVG math buffer");
+
+        var path = IOPath.Combine(IOPath.GetTempPath(), "electron2d-svg-math-" + Guid.NewGuid().ToString("N") + ".svg");
+        try
+        {
+            File.WriteAllText(path, cascaded);
+            image.Load(path);
+            CheckMathPixels(image, 1, "SVG math file");
+            Check(image.GetData().SequenceEqual(expectedPixels), "SVG math string and file have identical pixels.");
+            using var texture = ResourceLoader.Load<ImageTexture>(path, ResourceLoader.CacheMode.Ignore);
+            using var pixels = texture.GetImage()!;
+            Check(texture.GetSize() == new Vector2(16, 6), "ImageTexture reports computed SVG dimensions.");
+            CheckMathPixels(pixels, 1, "SVG math ImageTexture");
+            Check(pixels.GetData().SequenceEqual(expectedPixels), "SVG math ImageTexture and Image have identical pixels.");
+
+            var changes = 0;
+            image.Changed += _ => changes++;
+            File.WriteAllText(path, StylesheetWithWidth("calc(8px / 0)"));
+            Reject<InvalidDataException>(() => image.Load(path));
+            Check(image.Size == new Vector2i(16, 6) && image.GetData().SequenceEqual(expectedPixels) && changes == 0,
+                "A failed SVG math file reload keeps the previous image and emits no Changed event.");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+
+        VerifySVGMathDPI(cascaded);
+
+        image.LoadSVGFromString("""
+            <svg xmlns="http://www.w3.org/2000/svg" width="calc(8192px + 8192px)" height="1">
+                <rect width="16384" height="1" fill="red"/>
+            </svg>
+            """);
+        Check(image.Size == new Vector2i(16384, 1) && image.GetPixel(16383, 0) == Colors.Red,
+            "The largest supported computed axis rasterizes through its last pixel.");
+
+        // Without a viewBox, 10% uses the default 300×150 viewport. The unit ratio
+        // is a number, and the first clamp bound wins when the bounds are reversed.
+        image.LoadSVGFromString("""
+            <svg xmlns="http://www.w3.org/2000/svg" width="calc(10% * (2px/2px))"
+                 height="clamp(10%, 20px, 12px)">
+                <rect width="10" height="15" fill="red"/>
+                <rect x="10" width="10" height="15" fill="blue"/>
+            </svg>
+            """);
+        Check(image.Size == new Vector2i(30, 15) && image.GetPixel(5, 7) == Colors.Red &&
+            image.GetPixel(15, 7) == Colors.Blue && image.GetPixel(25, 7).A == 0,
+            "SVG attributes use the default percentage bases and retain the computed viewport coordinates.");
+
+        var beforeSize = image.Size;
+        var beforePixels = image.GetData();
+        var mathChanges = 0;
+        image.Changed += _ => mathChanges++;
+        foreach (var invalid in new[]
+        {
+            "calc(6px + 2)",
+            "min(4px, 2)",
+            "clamp(1px, 2, 3px)",
+            "calc(6px / -0)",
+            "calc(1px - 1px)",
+            "calc(1px - 2px)",
+            "calc(6px / 2px)",
+            "calc(2px * 3px)",
+            "calc(1e308px * 2)",
+            "max(12px, NaN)",
+            "calc(0x10px)",
+            "calc(12foo)",
+            "calc(1/**/2px)",
+            "calc(12/**/px)",
+            "calc(2px+3px)",
+            "calc(2px +3px)",
+            "calc(2px/**/+ 3px)",
+            "calc(1.px)",
+            "calc(12px)junk",
+            "min()",
+            "max(12px,)",
+            "clamp(4px, 12px)",
+            "clamp(4px, 12px, 16px, 20px)",
+            "calc(16384px + 1px)",
+        })
+        {
+            var invalidBytes = Encoding.UTF8.GetBytes(StylesheetWithWidth(invalid));
+            Reject<InvalidDataException>(() => image.LoadSVGFromBuffer(invalidBytes));
+            Check(image.Size == beforeSize && image.GetData().SequenceEqual(beforePixels) && mathChanges == 0,
+                $"Rejected SVG math keeps the previous raster and notifications: {invalid}");
+        }
+        Reject<InvalidDataException>(() => image.LoadSVGFromString("""<svg style="height:6px;width:calc(12px"/>"""));
+        Reject<InvalidDataException>(() => image.LoadSVGFromString(StylesheetWithWidth("calc(8192px + 1px)"), 2));
+        Check(image.Size == beforeSize && image.GetData().SequenceEqual(beforePixels) && mathChanges == 0,
+            "Malformed inline math and computed dimensions beyond the scaled axis limit preserve the raster.");
+
+        var nested = new string('(', 64) + "12px" + new string(')', 64);
+        Reject<InvalidDataException>(() => image.LoadSVGFromString(StylesheetWithWidth($"calc({nested})")));
+        Check(image.Size == beforeSize && image.GetData().SequenceEqual(beforePixels) && mathChanges == 0,
+            "Excessive nesting preserves the raster and notifications.");
+
+        image.LoadSVGFromString(StylesheetWithWidth("calc(+1.2e1px /**/ + (2px - 2px))"));
+        Check(image.Size == new Vector2i(12, 6) && image.GetPixel(1, 1) == Colors.Red && mathChanges == 1,
+            "Corrected SVG math accepts signed decimal exponents and parentheses, and emits Changed once.");
+    }
+
+    private static void VerifySVGMathWhitespace()
+    {
+        foreach (var inline in new[] { false, true })
+        {
+            var location = inline ? "inline style" : "attribute";
+            using var image = new Image();
+            image.LoadSVGFromString(SVG);
+            var beforePixels = image.GetData();
+            var changes = 0;
+            image.Changed += _ => changes++;
+
+            foreach (var (position, expression) in new[]
+            {
+                ("before", "\u00A0calc(8px + 4px)"),
+                ("after", "calc(8px + 4px)\u00A0"),
+                ("inside", "calc(8px\u00A0 + 4px)"),
+            })
+            {
+                Reject<InvalidDataException>(() => image.LoadSVGFromString(Document(expression)));
+                Check(image.Size == new Vector2i(3, 2) && image.GetData().SequenceEqual(beforePixels) && changes == 0,
+                    $"A non-CSS space {position} calc in an SVG {location} leaves the raster and notifications unchanged.");
+            }
+
+            // XML character references preserve the actual CSS whitespace characters in each attribute value.
+            image.LoadSVGFromString(Document(" &#x9;calc(8px + 4px)&#xD;&#xA; "));
+            Check(image.Size == new Vector2i(12, 6) && image.GetPixel(1, 1) == Colors.Red &&
+                image.GetPixel(11, 5).A == 0 && changes == 1,
+                $"CSS whitespace at the boundaries of calc in an SVG {location} allows one successful replacement.");
+
+            string Document(string expression)
+            {
+                var dimensions = inline
+                    ? $"style=\"height:6px; width:{expression}\""
+                    : $"height=\"6\" width=\"{expression}\"";
+                return $$"""
+                    <svg xmlns="http://www.w3.org/2000/svg" {{dimensions}}>
+                        <rect width="4" height="6" fill="red"/>
+                    </svg>
+                    """;
+            }
+        }
+    }
+
+    private static void VerifySVGMathDPI(string source)
+    {
+        using var dpi = DPITexture.CreateFromString(source);
+        Check(dpi.GetSize() == new Vector2(16, 6), "DPITexture preflight uses the computed viewport.");
+        using (var pixels = dpi.GetImage()!)
+        {
+            CheckMathPixels(pixels, 1, "SVG math DPITexture base");
+        }
+
+        dpi.BaseScale = 2;
+        Check(dpi.GetSize() == new Vector2(32, 12), "DPITexture applies BaseScale to the computed viewport.");
+        using (var pixels = dpi.GetImage()!)
+        {
+            CheckMathPixels(pixels, 2, "SVG math DPITexture BaseScale");
+        }
+
+        var scaleReference = CanvasRasterScale.Quantize(1);
+        var oversampled = CanvasRasterScale.Quantize(2);
+        CanvasRasterScale.ChangeReference(ref scaleReference, oversampled);
+        try
+        {
+            var variant = dpi.ForScale(oversampled)!;
+            using var pixels = variant.GetImage()!;
+            CheckMathPixels(pixels, 4, "SVG math DPITexture oversampled variant");
+
+            var changes = 0;
+            dpi.Changed += _ => changes++;
+            Reject<InvalidDataException>(() => dpi.SetSource(StylesheetWithWidth("calc(6px + 2)")));
+            Reject<InvalidDataException>(() => dpi.SetSource(StylesheetWithWidth("calc(8192px + 1px)")));
+            Check(dpi.GetSource() == source && dpi.GetSize() == new Vector2(32, 12) && changes == 0 &&
+                ReferenceEquals(dpi.ForScale(oversampled), variant),
+                "A failed DPITexture source update keeps the source, logical size, cached variant and notifications.");
+            using var retained = variant.GetImage()!;
+            Check(retained.GetData().SequenceEqual(pixels.GetData()), "The retained DPI raster pixels survive a failed update.");
+        }
+        finally
+        {
+            CanvasRasterScale.ChangeReference(ref scaleReference, CanvasRasterScale.Quantize(1));
+        }
+    }
+
+    private static void CheckMathPixels(Image image, int scale, string caller)
+    {
+        var expectedSize = new Vector2i(16 * scale, 6 * scale);
+        Check(image.Size == expectedSize, $"{caller}: expected {expectedSize}, got {image.Size}.");
+        Check(image.GetPixel(scale, 2 * scale).A == 0 &&
+            image.GetPixel(4 * scale, 2 * scale) == Colors.Red &&
+            image.GetPixel(10 * scale, 2 * scale) == Colors.Blue &&
+            image.GetPixel(15 * scale, 2 * scale).A == 0, $"{caller}: expected centered red and blue content with transparent margins.");
     }
 
     internal static byte[] VerifyJPEG()
