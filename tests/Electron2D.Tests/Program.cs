@@ -392,6 +392,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_ACCESSIBILITY_STAT
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_SCHEDULING") is { } schedulingProfile) { if (schedulingProfile == "managed") AccessibilitySchedulingTests.Managed(); else AccessibilitySchedulingTests.Native(schedulingProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_URL") is { } urlProfile) { if (urlProfile == "managed") AccessibilityURLTests.RunManaged(); else AccessibilityURLTests.RunNative(urlProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_CONTEXT") is { } contextProfile) { if (contextProfile == "managed") AccessibilityContextTests.RunManaged(); else AccessibilityContextTests.RunNative(contextProfile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_BRAILLE") is { } brailleBackend)
+{
+    AccessibilityBrailleTests.Run(brailleBackend);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_DRAG") is { } dragProfile) { if (dragProfile == "managed") AccessibilityDragTests.RunManaged(); else if (dragProfile == "regression") { GUIDragTests.Run(); InputActionSettingsTests.Run(); } else AccessibilityDragTests.RunNative(dragProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_LIVE") is { } liveBackend) { AccessibilityLiveTests.RunNative(liveBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_COLLECTION") is { } collectionBackend) { AccessibilityCollectionTests.RunNative(collectionBackend); return; }

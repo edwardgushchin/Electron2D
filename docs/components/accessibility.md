@@ -136,3 +136,9 @@ owner-frame samples with zero managed bytes. NativeAOT, foreign targets, native
 heap totals and human-reader acceptance remain separate gates.
 
 Mutating native requests force current scene passes before dispatch and after successful mutation, including numeric writes, actions, focus, scrolling, text edits/selections and collection selection. This preserves current geometry and selection between rate-limited publications. Read-only native queries do not force a pass. If source preparation retires the requested identity, the request returns an expired-object error; preparation failures keep the existing owner-pump aggregation policy.
+
+## Braille attributes
+
+Custom producers can set [braille metadata](../classes/AccessibilityServer.md#braille-attributes) on live elements through the same semantic attribute path as class names and ordinary role descriptions. Linux AT-SPI exposes the two attributes through `Accessible.GetAttributes`. The adapter uses the existing object `AttributesChanged` signal and does not change the element's accessible name or role.
+
+The [independent D-Bus client](../../tests/AccessibilityClient/braille.py) checks Unicode, replacement, repeated writes, clearing and element retirement through the public producer fixture. The check reads the AT-SPI transport. It does not measure screen reader presentation or physical braille output.

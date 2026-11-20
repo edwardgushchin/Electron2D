@@ -41,6 +41,7 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal string URL = "";
         internal string? SourceURL;
         internal string ContainerContext = "", HelpText = "", ClassName = "", RoleDescription = "", Shortcut = "";
+        internal string BrailleLabel = "", BrailleRoleDescription = "";
         internal string? SourceShortcut, SourceContextLocale;
         internal Control? SourceContextParent;
         internal bool SourceContextPrepared, ExplicitShortcut, IncludeContainerContext;

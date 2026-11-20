@@ -1153,6 +1153,18 @@
       "reason": "ADR 0114: contextual Control help/container hooks, native HelpText and composed names, direct Action keybindings from actual mutable button/menu sources, and class/role attributes execute through the owner bridge. Parent generations, non-Control boundaries, source override/retirement, native wire failures and prepared active/idle frames retain explicit verification. Human readers, native heaps, physical devices, foreign platforms and release packages remain separate gates."
     },
     {
+      "godot": "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetBrailleLabel(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: publishes braillelabel through Linux AT-SPI GetAttributes and signals AttributesChanged on changes, including removal. Automatic GUI authoring, physical braille output and other platform adapters remain open."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetBrailleRoleDescription(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: publishes brailleroledescription through Linux AT-SPI GetAttributes and signals AttributesChanged on changes, including removal. Automatic GUI authoring, physical braille output and other platform adapters remain open."
+    },
+    {
       "godot": "AccessibilityServer::method:update_set_role_description(RID:,String:)",
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetRoleDescription(Electron2D.RID,System.String)",
       "state": "Implemented",
@@ -1246,7 +1258,7 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Color values, braille/state and typed producer metadata retain their exact native/source triggers. Integer custom callbacks and composed name context execute. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Braille attributes execute for typed producers. Color values, state descriptions and other typed producer metadata retain their exact native/source triggers. Integer custom callbacks and composed name context execute. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
       "godot": [
         "class:AccessibilityServer"
       ]
@@ -1268,10 +1280,8 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: the 2026-10-27 consumer check found Orca brailleroledescription in the shared role path, but braillelabel only in its web accessible-name generator, which rejects ordinary desktop content. Complete this connected presentation slice after a real desktop braille-label consumer and GUI-source propagation execute. state_description has no verified native projection in the inspected AccessKit Unix adapter f3026222559c7f5f46d8f25cb7404de68eb149f0; establish an actual native state-description consumer before exposing it. No inert setters or invented role/state attributes.",
+      "reason": "ADR 0114: state_description has no verified native projection in the inspected AccessKit Unix adapter f3026222559c7f5f46d8f25cb7404de68eb149f0. Establish an actual native state-description consumer before exposing it.",
       "godot": [
-        "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
-        "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",
         "AccessibilityServer::method:update_set_state_description(RID:,String:)"
       ]
     },

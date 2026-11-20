@@ -254,7 +254,7 @@ Supplies separate outer/decorated and inner/client rectangles in screen coordina
 
 Closing a native child window retires all its elements, including unattached ones. Display teardown removes native registrations, connection/context ownership, callbacks and RID membership even after callback or notification failure. Reopening creates a new bridge and new element identities. Protected `ValidateDisposal()` rejects disposal of the permanent service.
 
-[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profiles cover Accessible/Application/Component/Action/Value/Text/EditableText/Selection/Table/TableCell/Cache and native announcements. Color values and remaining braille/state metadata and color payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
+[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profiles cover Accessible/Application/Component/Action/Value/Text/EditableText/Selection/Table/TableCell/Cache and native announcements. Color values and state descriptions and color payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
 
 <a id="numeric-values"></a>
 ### Numeric values
@@ -565,7 +565,13 @@ LinkButton automatically publishes its stored URI and uses its existing Click pi
 ELECTRON2D_TEST_ACCESSIBILITY_URL=managed checks null/availability guards and packed/duplicated URI ownership. compatibility/gpu execute [AccessibilityURLTests](../../tests/Electron2D.Tests/AccessibilityURLTests.cs) and an independent [libatspi/GIO client](../../tests/AccessibilityClient/url.py): real URI discovery, external/internal coexistence, count ABI, invalid indices, clearing, target/source retirement, reparenting, long/Unicode/native-normalized strings, override refresh, actual activation hooks, callback failure and fresh reopening. These tests never launch an external resource; the source hook records its actual configured URI. Prepared 64 idle/64 active owner-frame samples and a strict source NativeAOT consumer retain separate native-heap, hardware, foreign-platform, human-reader, OS handoff and release-package gates.
 
 
-Remaining braille/state presentation has an explicit consumer dependency. The 2026-10-27 check found Orca's shared [role-description path](https://gitlab.gnome.org/GNOME/orca/-/blob/main/src/orca/ax_object.py) reading brailleroledescription, but its [braille-label path](https://gitlab.gnome.org/GNOME/orca/-/blob/main/src/orca/scripts/web/braille_generator.py) is restricted to web content. A working desktop braille-label reader and GUI propagation are required for the connected slice. State description still needs an actual native consumer/projection; the inspected [Unix adapter](https://github.com/AccessKit/accesskit/blob/f3026222559c7f5f46d8f25cb7404de68eb149f0/atspi-common/src/node.rs) does not supply one. These remain implementation obligations in coverage.
+## Braille attributes
+
+`UpdateSetBrailleLabel(RID, string)` and `UpdateSetBrailleRoleDescription(RID, string)` publish producer-supplied text through AT-SPI `Accessible.GetAttributes`. Linux uses the exact keys `braillelabel` and `brailleroledescription` defined by [Core AAM](https://www.w3.org/TR/2026/CRD-core-aam-1.2-20260604/#aria-braillelabel). The accessible name, role and ordinary `roledescription` retain their own values.
+
+New elements have neither attribute. Setting a different value emits the existing object `AttributesChanged` notification. An empty string removes only the matching key. Repeating the same value, including an empty string, emits no notification. The setters enforce the live RID and owner-thread contract and reject null text.
+
+Automatic GUI braille metadata and other platform adapters remain unimplemented. Assistive-reader presentation and physical braille output require separate verification. State description still requires a native projection and consumer.
 
 ## Producer models
 

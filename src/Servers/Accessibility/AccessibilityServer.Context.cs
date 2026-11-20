@@ -27,6 +27,46 @@ public sealed partial class AccessibilityServer
         ArgumentNullException.ThrowIfNull(description); var e = Require().Get(id); if (e.RoleDescription == description) return;
         e.RoleDescription = description; Runtime._native!.SemanticAttributesChanged(e);
     }
+    /// <summary>Publishes the element's braille label as the AT-SPI braillelabel attribute.</summary>
+    /// <param name="id">Live element.</param>
+    /// <param name="name">Braille label. An empty string removes the attribute.</param>
+    /// <exception cref="ArgumentNullException">The label is null.</exception>
+    /// <exception cref="NotSupportedException">No bridge is active.</exception>
+    /// <exception cref="KeyNotFoundException">The element is absent or retired.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner.</exception>
+    public static void UpdateSetBrailleLabel(RID id, string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        var element = Require().Get(id);
+        if (element.BrailleLabel == name)
+        {
+            return;
+        }
+
+        element.BrailleLabel = name;
+        Runtime._native!.SemanticAttributesChanged(element);
+    }
+
+    /// <summary>Publishes the element's braille role description as the AT-SPI brailleroledescription attribute.</summary>
+    /// <param name="id">Live element.</param>
+    /// <param name="description">Braille role description. An empty string removes the attribute.</param>
+    /// <exception cref="ArgumentNullException">The description is null.</exception>
+    /// <exception cref="NotSupportedException">No bridge is active.</exception>
+    /// <exception cref="KeyNotFoundException">The element is absent or retired.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner.</exception>
+    public static void UpdateSetBrailleRoleDescription(RID id, string description)
+    {
+        ArgumentNullException.ThrowIfNull(description);
+        var element = Require().Get(id);
+        if (element.BrailleRoleDescription == description)
+        {
+            return;
+        }
+
+        element.BrailleRoleDescription = description;
+        Runtime._native!.SemanticAttributesChanged(element);
+    }
+
     internal static bool UpdateSourceContext(Element e, Control control)
     {
         var tree = control.Tree!;

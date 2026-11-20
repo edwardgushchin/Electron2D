@@ -28,5 +28,14 @@ internal sealed unsafe partial class ATSPIServer
     {
         if (e.ClassName.Length != 0) g_variant_builder_add_value(builder, g_variant_new_dict_entry(S("class"), S(e.ClassName)));
         if (e.RoleDescription.Length != 0) g_variant_builder_add_value(builder, g_variant_new_dict_entry(S("roledescription"), S(e.RoleDescription)));
+        if (e.BrailleLabel.Length != 0)
+        {
+            g_variant_builder_add_value(builder, g_variant_new_dict_entry(S("braillelabel"), S(e.BrailleLabel)));
+        }
+
+        if (e.BrailleRoleDescription.Length != 0)
+        {
+            g_variant_builder_add_value(builder, g_variant_new_dict_entry(S("brailleroledescription"), S(e.BrailleRoleDescription)));
+        }
     }
 }
