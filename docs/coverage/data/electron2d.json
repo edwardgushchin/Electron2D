@@ -5546,6 +5546,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.GlobalRandom",
+    "kind": "type",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "GlobalRandom",
+    "signature": "public static class Electron2D.GlobalRandom",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.GlobalScriptClass",
     "kind": "type",
     "declaringType": "Electron2D.GlobalScriptClass",
@@ -124306,6 +124319,155 @@
       }
     ],
     "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GlobalRandom.RandFromSeed(System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "RandFromSeed",
+    "signature": "public static System.ValueTuple\u003CSystem.UInt32, System.UInt64\u003E RandFromSeed(System.UInt64 seed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "seed",
+        "type": "System.UInt64",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CSystem.UInt32, System.UInt64\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GlobalRandom.Randf()",
+    "kind": "method",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "Randf",
+    "signature": "public static System.Single Randf()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GlobalRandom.RandfRange(System.Double,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "RandfRange",
+    "signature": "public static System.Double RandfRange(System.Double from, System.Double to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GlobalRandom.Randfn(System.Double,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "Randfn",
+    "signature": "public static System.Double Randfn(System.Double mean = 0, System.Double deviation = 1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mean",
+        "type": "System.Double",
+        "default": "0"
+      },
+      {
+        "name": "deviation",
+        "type": "System.Double",
+        "default": "1"
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GlobalRandom.Randi()",
+    "kind": "method",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "Randi",
+    "signature": "public static System.UInt32 Randi()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GlobalRandom.RandiRange(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "RandiRange",
+    "signature": "public static System.Int32 RandiRange(System.Int32 from, System.Int32 to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GlobalRandom.Randomize()",
+    "kind": "method",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "Randomize",
+    "signature": "public static System.Void Randomize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GlobalRandom.Seed(System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.GlobalRandom",
+    "name": "Seed",
+    "signature": "public static System.Void Seed(System.UInt64 seed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "seed",
+        "type": "System.UInt64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

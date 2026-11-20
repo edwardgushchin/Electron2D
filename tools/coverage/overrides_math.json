@@ -1,6 +1,46 @@
 {
   "mappings": [
     {
+      "godot": "@GlobalScope::method:rand_from_seed(int:)",
+      "electron2d": "method:Electron2D.GlobalRandom.RandFromSeed(System.UInt64)",
+      "reason": "The typed (UInt32 Value, UInt64 Seed) tuple returns the initial PCG32 word and the original seed bits without affecting the shared stream."
+    },
+    {
+      "godot": "@GlobalScope::method:randf()",
+      "electron2d": "method:Electron2D.GlobalRandom.Randf()",
+      "reason": "Single matches the typed binding and scales one unsigned PCG32 word into the inclusive unit interval."
+    },
+    {
+      "godot": "@GlobalScope::method:randf_range(float:,float:)",
+      "electron2d": "method:Electron2D.GlobalRandom.RandfRange(System.Double,System.Double)",
+      "reason": "Double follows the typed binding and uses the pinned exponent/significand sample and ordered interpolation."
+    },
+    {
+      "godot": "@GlobalScope::method:randfn(float:,float:)",
+      "electron2d": "method:Electron2D.GlobalRandom.Randfn(System.Double,System.Double)",
+      "reason": "Double Box-Muller sampling retains defaults, the low-sample guard and two double-precision unit samples."
+    },
+    {
+      "godot": "@GlobalScope::method:randi()",
+      "electron2d": "method:Electron2D.GlobalRandom.Randi()",
+      "reason": "UInt32 exposes one raw PCG32 draw without signed overflow."
+    },
+    {
+      "godot": "@GlobalScope::method:randi_range(int:,int:)",
+      "electron2d": "method:Electron2D.GlobalRandom.RandiRange(System.Int32,System.Int32)",
+      "reason": "Int32 matches the bounds after native dispatch. Reversed and full ranges remain inclusive, with unbiased rejection and no draw for equal bounds."
+    },
+    {
+      "godot": "@GlobalScope::method:randomize()",
+      "electron2d": "method:Electron2D.GlobalRandom.Randomize()",
+      "reason": "Restarts the shared stream from wall and monotonic clocks and the prior state."
+    },
+    {
+      "godot": "@GlobalScope::method:seed(int:)",
+      "electron2d": "method:Electron2D.GlobalRandom.Seed(System.UInt64)",
+      "reason": "UInt64 preserves every seed bit and restarts one process-wide stream."
+    },
+    {
       "godot": "class:Geometry2D",
       "electron2d": "T:Electron2D.Geometry",
       "reason": "The stateless geometry singleton is projected as a static C# service; the class remains Partial until the other geometry methods and polygon operations are implemented."
@@ -2268,6 +2308,11 @@
   ],
   "extras": [
     {
+      "electron2d": "T:Electron2D.GlobalRandom",
+      "reason": "Static C# owner for the eight global random operations. The independent generator and stateless scalar functions remain separate.",
+      "adr": "core-math.md#adr-0034"
+    },
+    {
       "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Decimal)",
       "reason": "Managed C# decimal scale helper. Reads the stored scale after conversion where applicable.",
       "adr": "core-math.md#adr-0034"
@@ -2864,6 +2909,20 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "GlobalRandomTests verifies the typed shared PCG32 stream without a native backend.",
+      "godot": [
+        "@GlobalScope::method:rand_from_seed(int:)",
+        "@GlobalScope::method:randf()",
+        "@GlobalScope::method:randf_range(float:,float:)",
+        "@GlobalScope::method:randfn(float:,float:)",
+        "@GlobalScope::method:randi()",
+        "@GlobalScope::method:randi_range(int:,int:)",
+        "@GlobalScope::method:randomize()",
+        "@GlobalScope::method:seed(int:)"
+      ]
+    },
     {
       "state": "Implemented",
       "reason": "Positive infinity is exposed as Single.PositiveInfinity. The Single projection follows ADR 0034.",

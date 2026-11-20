@@ -302,6 +302,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TIME") == "zone") { Time
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TIME") == "1") { TimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARTICLE_SERVER") is { } particleServer) { ParticleServerTests.Run(particleServer); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARTICLE_SHADER") is { } particleShader) { if (particleShader == "managed") ParticleShaderTests.RunManaged(); else ParticleShaderTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RANDOM") == "1")
+{
+    RandomNumberGeneratorTests.Run();
+    GlobalRandomTests.Run();
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") is { } portableProfile) { PortableTextureTests.Run(portableProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DRAWABLE") is { } drawableProfile) { DrawableTextureTests.Run(drawableProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_TEXTURE") is { } meshTextureProfile) { MeshTextureTests.Run(meshTextureProfile); return; }
@@ -2172,6 +2178,7 @@ CurveTests.Run();
 CurveTextureTests.Run();
 GradientTests.Run();
 RandomNumberGeneratorTests.Run();
+GlobalRandomTests.Run();
 RegExTests.Run();
 XMLParserTests.Run();
 BitMapTests.Run();

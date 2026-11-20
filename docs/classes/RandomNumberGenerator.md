@@ -12,7 +12,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-An independent, stateful PCG32 stream for gameplay and procedural calculations. The constructor chooses a time-dependent seed. Set `Seed` to reproduce a sequence; save and restore `State` after setting `Seed` to resume at a particular draw. Calls on one instance are serialized and fail after disposal. This generator is not cryptographic; file encryption, temporary names and resource IDs continue to use `System.Security.Cryptography.RandomNumberGenerator`.
+For shared gameplay draws, see [GlobalRandom](GlobalRandom.md). An instance provides an independent, stateful PCG32 stream for gameplay and procedural calculations. The constructor chooses a time-dependent seed. Set `Seed` to reproduce a sequence; save and restore `State` after setting `Seed` to resume at a particular draw. Calls on one instance are serialized and fail after disposal. This generator is not cryptographic; file encryption, temporary names and resource IDs continue to use `System.Security.Cryptography.RandomNumberGenerator`.
 
 ```csharp
 using var rng = new Electron2D.RandomNumberGenerator { Seed = 12345 };
