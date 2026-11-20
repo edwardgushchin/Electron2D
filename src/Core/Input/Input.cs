@@ -344,7 +344,19 @@ public sealed partial class Input : ElectronObject
         if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
     }
 
-    private void CommitEvent(InputEvent @event)
+    internal void RetirePointerRelease(InputEventFromWindow release)
+    {
+        // Window teardown can run inside an input callback. Commit the release without dispatching.
+        lock (_parseGate)
+        {
+            CommitEvent(release, retiring: true);
+            using var emulated = CreateEmulatedEvent(release, hasScene: false);
+            if (emulated is InputEventMouseButton)
+                CommitEvent(emulated, retiring: true);
+        }
+    }
+
+    private void CommitEvent(InputEvent @event, bool retiring = false)
     {
         try
         {
@@ -353,14 +365,14 @@ public sealed partial class Input : ElectronObject
                 InputMap.Service.CollectMatches(@event, _matches);
                 lock (_gate)
                 {
-                    UpdateRawState(@event);
+                    UpdateRawState(@event, updatePointerPosition: !retiring);
                     if (@event.IsCanceled() && @event is not InputEventMouseButton { Pressed: false })
                         return;
 
                     foreach (var match in _matches)
                     {
                         var state = GetOrAddActionState(match.Action);
-                        if (!match.Status.Pressed)
+                        if (!match.Status.Pressed && !retiring)
                             state.Contributions.Remove(SyntheticSource);
 
                         SetContribution(state, new ActionSource(@event.Device, match.SourceIndex), match.Status);
@@ -582,7 +594,7 @@ public sealed partial class Input : ElectronObject
             : snapshot.JustReleased && snapshot.ReleasedEventId == @event.InstanceID;
     }
 
-    private void UpdateRawState(InputEvent @event)
+    private void UpdateRawState(InputEvent @event, bool updatePointerPosition)
     {
         if (@event is InputEventScreenTouch touch)
         {
@@ -590,7 +602,11 @@ public sealed partial class Input : ElectronObject
             if (touch.IsPressed()) _touchVelocities[key] = new PointerVelocity();
             else _touchVelocities.Remove(key);
         }
-        if (@event is InputEventMouse pointer) { _lastMousePosition = pointer.Position; _lastMouseWindowID = pointer.WindowID; }
+        if (updatePointerPosition && @event is InputEventMouse pointer)
+        {
+            _lastMousePosition = pointer.Position;
+            _lastMouseWindowID = pointer.WindowID;
+        }
         if (@event.IsCanceled() && @event is not InputEventMouseButton)
             return;
 

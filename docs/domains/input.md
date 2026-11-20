@@ -22,7 +22,7 @@ Input owns typed input-event values, the process-wide action map, raw and mapped
 
 | Component | Responsibility | State |
 | --- | --- | --- |
-| [Input runtime](../components/input-runtime.md) | Typed events, action bindings/state, raw device state, frame transitions, and SceneTree propagation | Implemented and verified; hardware-host gaps have exact triggers |
+| [Input runtime](../components/input-runtime.md) | Typed events, action bindings/state, raw device state, frame transitions, [SDL pen input](../components/input-runtime.md#sdl-pen-input), and SceneTree propagation | Implemented and verified; hardware-host gaps have exact triggers |
 
 Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/InputMap.md), [`JoypadInfo`](../classes/JoypadInfo.md), [`InputActionSettings`](../classes/InputActionSettings.md), [`InputBindingSettings`](../classes/InputBindingSettings.md), [`InputBindingKind`](../classes/InputBindingKind.md), [`DragPayload`](../classes/DragPayload.md) and [`DragPayload<T>`](../classes/DragPayload.Generic.md), the [`InputEvent`](../classes/InputEvent.md) hierarchy, and the seven input enums listed in the inventory.
 

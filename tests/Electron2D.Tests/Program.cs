@@ -1934,6 +1934,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINTER_PIXELS") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PEN_INPUT") == "1")
+{
+    ViewportMotionTests.RunPen();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOUCH_INPUT") == "1")
 {
     using var display = DisplayServer.Open("Touch input checks", new Vector2i(320, 240));

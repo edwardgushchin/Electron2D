@@ -10236,14 +10236,14 @@
     },
     {
       "state": "Partial",
-      "reason": "Managed drag storage, indexed accumulation with floating overflow, transforms, source copying and localized text execute with the shared numeric-format audit. Focused Wayland synthetic input verifies drag position, physical relative/screen vectors and timestamp velocity after malformed events. ViewportMotionTests checks nested push and native touch routing. Native pen eraser/tilt remains absent; ADR 0014 input dispatch allocation remains an inherited obligation.",
+      "reason": "Managed drag storage, indexed accumulation with floating overflow, transforms, source copying and localized text execute with the shared numeric-format audit. Focused Wayland synthetic input verifies drag position, physical relative/screen vectors and timestamp velocity after malformed events. ViewportMotionTests checks nested push and native touch routing. The SDL queue test covers pen drag metadata and contact lifetime; physical tablets remain unverified; ADR 0014 input dispatch allocation remains an inherited obligation.",
       "godot": [
         "class:InputEventScreenDrag"
       ]
     },
     {
       "state": "Partial",
-      "reason": "The pinned setters retain source eraser, pressure and tilt values; VerifyInput checks defaults and non-finite copies. SDL FingerMotion supplies finite clamped contact pressure but no pen eraser/tilt identity. Trigger: first SDL pen/tablet event and device-lifetime slice must map all three and verify native target behavior.",
+      "reason": "The pinned setters retain source eraser, pressure and tilt values; VerifyInput checks defaults and non-finite copies. SDL pen contact motion and stationary axis updates supply pressure, normalized tilt and eraser state. The queue test covers concurrent pens, reset and nested viewport delivery. Trigger: verify with physical tablets on native targets.",
       "godot": [
         "InputEventScreenDrag::property:pen_inverted",
         "InputEventScreenDrag::property:pressure",
@@ -10311,14 +10311,14 @@
     },
     {
       "state": "Partial",
-      "reason": "Managed motion storage, copying, accumulation, transforms and localized text execute with the shared numeric-format audit. Wayland mouse path checks finite native input rejection, physical deltas, timed velocity and captured-mode zero velocity. ViewportMotionTests checks nested push and native mouse motion. Native pen eraser/pressure/tilt integration remains absent. Inherited GUI hot-path allocation remains on InputEventMouse.",
+      "reason": "Managed motion storage, copying, accumulation, transforms and localized text execute with the shared numeric-format audit. Wayland mouse path checks finite native input rejection, physical deltas, timed velocity and captured-mode zero velocity. ViewportMotionTests checks nested push and native mouse motion. The SDL queue test covers pen hover, emulated drag metadata, and per-pen barrel-button masks and releases across native windows; physical tablets remain unverified. Inherited GUI hot-path allocation remains on InputEventMouse.",
       "godot": [
         "class:InputEventMouseMotion"
       ]
     },
     {
       "state": "Partial",
-      "reason": "The pinned setters store source eraser state, pressure and tilt directly, and VerifyInput checks defaults and arbitrary values/copy. The SDL mouse-motion path has no pen eraser, pressure or tilt producer. Trigger: first SDL pen/tablet event and device-lifetime slice must map those values and verify physical/native target behavior.",
+      "reason": "The pinned setters store source eraser state, pressure and tilt directly, and VerifyInput checks defaults and arbitrary values/copy. SDL pen hover supplies pressure, normalized tilt and eraser state. First-contact mouse emulation preserves drag metadata. The queue test covers the producer, per-pen button state and reset, including ownership retirement on programmatic child-window disposal. Trigger: verify with physical tablets on native targets.",
       "godot": [
         "InputEventMouseMotion::property:pen_inverted",
         "InputEventMouseMotion::property:pressure",

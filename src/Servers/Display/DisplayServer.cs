@@ -655,6 +655,8 @@ public sealed partial class DisplayServer : ElectronObject
         {
             RetireWindowGesture();
             retirementFailure = !_retiringNativeWindow ? PrepareNativeWindowRetirement() : null;
+            try { CancelPens(retiring: true); }
+            catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
             if (RetireWindowEvents() is { } eventFailure) retirementFailure = retirementFailure is null ? eventFailure : new AggregateException(retirementFailure, eventFailure);
             _publisherQuitRequestedCore.Handlers = _publisherSystemThemeChangedCore.Handlers = _publisherCloseRequestedCore.Handlers = null;
             _publisherWindowMouseEnteredCore.Handlers = _publisherWindowMouseExitedCore.Handlers = _publisherWindowDpiChangedCore.Handlers = _publisherGoBackRequestedCore.Handlers = null;

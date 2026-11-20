@@ -1,12 +1,13 @@
 using Electron2D;
 using SDL = SDL3.SDL;
 
-internal static class ViewportMotionTests
+internal static partial class ViewportMotionTests
 {
     private sealed class Receiver : Control
     {
         internal InputEvent? SceneEvent, GUIEvent;
         internal Sample SceneSample, GUISample;
+        internal PenSample GUIPenSample;
         internal int SceneCount, GUICount;
         internal bool Handles;
         internal Vector2? Marker;
@@ -24,6 +25,7 @@ internal static class ViewportMotionTests
             if (input is not (InputEventMouseMotion or InputEventScreenDrag)) return;
             GUIEvent = input;
             GUISample = new(input);
+            GUIPenSample = PenSample.From(input);
             GUICount++;
             Marker = GUISample.Position;
             QueueRedraw();

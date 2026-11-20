@@ -86,6 +86,7 @@ public sealed partial class DisplayServer
                 _pendingInputWindow = null;
                 _layoutHeldKeys?.Clear();
                 _hasPendingMouseMotion = false;
+                _pens?.Clear();
                 _touchContacts.Clear();
                 _freeTouchIndexes.Clear();
                 _nextTouchIndex = 0;
@@ -93,6 +94,7 @@ public sealed partial class DisplayServer
                 foreach (var child in _childWindows.Values)
                 {
                     child._hasPendingMouseMotion = false;
+                    child._pens?.Clear();
                     child._touchContacts.Clear();
                     child._freeTouchIndexes.Clear();
                     child._nextTouchIndex = 0;
@@ -105,6 +107,20 @@ public sealed partial class DisplayServer
             {
                 var type = (SDL.EventType)nativeEvent.Type;
                 if (ConsumeWindowsColorPickKey(type, nativeEvent)) continue;
+                if (IsEmulatedPenEvent(type, nativeEvent))
+                    continue;
+                if (type is >= SDL.EventType.PenFirst and <= SDL.EventType.PenLast)
+                {
+                    if (!dropInput)
+                    {
+                        try { FlushBufferedInput(); }
+                        catch (Exception error) { Node.CollectException(ref failures, error); }
+                        try { DispatchPenEvent(type, nativeEvent, ref failures); }
+                        catch (Exception error) { Node.CollectException(ref failures, error); }
+                    }
+                    continue;
+                }
+                FlushPenMotion(ref failures);
                 DisplayServer? gestureRelease = null;
                 if (_windowGestureRelease is { } owner && type is SDL.EventType.MouseButtonDown or SDL.EventType.MouseButtonUp &&
                     nativeEvent.Button.Button == 1 && nativeEvent.Button.Which == 0)
@@ -180,6 +196,7 @@ public sealed partial class DisplayServer
                     (failures ??= new List<Exception>()).Add(exception);
                 }
             }
+            FlushPenMotion(ref failures);
             try
             {
                 FlushBufferedInput();
@@ -366,8 +383,12 @@ public sealed partial class DisplayServer
                 }
             case SDL.EventType.WindowCloseRequested:
                 _pendingDroppedFiles = null;
-                if (IsNativePopup) ForceClosePopup();
-                else PublishWindow(BeginEventEmission(_publisherCloseRequestedCore.Handlers), _windowEvents?.CloseHandlers);
+                try { CancelPens(); }
+                finally
+                {
+                    if (IsNativePopup) ForceClosePopup();
+                    else PublishWindow(BeginEventEmission(_publisherCloseRequestedCore.Handlers), _windowEvents?.CloseHandlers);
+                }
                 break;
             case SDL.EventType.WindowResized when !_pixelWindowCoordinates:
             case SDL.EventType.WindowPixelSizeChanged when _pixelWindowCoordinates:
@@ -407,8 +428,12 @@ public sealed partial class DisplayServer
                 _hasEventKeyModifiers = true;
                 ReleaseWindowTouches();
                 _heldMouseButtons = MouseButtonMask.None;
-                try { DispatchFocusChanged(focused: false); }
-                finally { ApplyGamepadFocusPolicy(); }
+                try { CancelPens(); }
+                finally
+                {
+                    try { DispatchFocusChanged(focused: false); }
+                    finally { ApplyGamepadFocusPolicy(); }
+                }
                 break;
             case SDL.EventType.KeyDown:
             case SDL.EventType.KeyUp:

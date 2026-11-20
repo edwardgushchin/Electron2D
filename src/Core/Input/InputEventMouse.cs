@@ -261,7 +261,7 @@ public sealed class InputEventMouseMotion : InputEventMouse
     }
 
     /// <summary>Gets or sets stylus pressure.</summary>
-    /// <value>The source pressure, normally from zero through one; arbitrary values are retained.</value>
+    /// <value>SDL pen pressure is clamped to zero through one. Programmatically assigned values are retained.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public float Pressure
@@ -314,7 +314,7 @@ public sealed class InputEventMouseMotion : InputEventMouse
     }
 
     /// <summary>Gets or sets stylus tilt.</summary>
-    /// <value>The source tilt components, normally from minus one through one; arbitrary values are retained.</value>
+    /// <value>For SDL pens, each component is the sine of the corresponding tilt angle. Programmatically assigned values are retained.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Tilt
