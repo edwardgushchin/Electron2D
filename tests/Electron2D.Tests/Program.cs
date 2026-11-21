@@ -821,6 +821,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
 if (args.Length == 3 && args[0] == "--file-compression-child") { FileCompressionTests.Child(args[1], args[2]); return; }
 if (args.Length == 2 && args[0] == "--file-text-child") { FileTextTests.Child(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_TEXT") == "1") { FileTextTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_TEXT") == "after-project-settings")
+{
+    ProjectLayoutDirectionTests.Run();
+    SaveTestProjectSettings();
+    FileTextTests.Run();
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_BINARY") == "1") { FileBinaryTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_LIFECYCLE") == "1") { FileAccessLifecycleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPRESSION_LEVELS") == "1") { FileCompressionTests.Levels(); return; }
@@ -2547,6 +2554,7 @@ ProjectLayoutDirectionTests.Run();
 WindowContentScaleTests.Run();
 WindowInputTests.RunManaged();
 WindowGoBackTests.Run(PhysicsServer.Backend.CPU); WindowGoBackTests.Run(PhysicsServer.Backend.GPU);
+SaveTestProjectSettings();
 KeyCodeNamesTests.Run();
 ProjectShaderGlobalsTests.RunManaged();
 VerifyMathF();
@@ -7033,6 +7041,21 @@ static void VerifyConfigFiles()
         "Disposed configurations must reject reads.");
     Expect<ObjectDisposedException>(() => config.Save("unused.cfg"),
         "Disposed configurations must reject file operations before touching the path.");
+}
+
+static void SaveTestProjectSettings()
+{
+    // The preceding runtime fixtures restore values through Set, which still records unsaved edits.
+    // Save the shared test settings to a disposable file before handing the registry to other projects.
+    var path = IOPath.GetTempFileName();
+    try
+    {
+        ProjectSettings.SaveCustom(path);
+    }
+    finally
+    {
+        File.Delete(path);
+    }
 }
 
 static void VerifyFileAccess()

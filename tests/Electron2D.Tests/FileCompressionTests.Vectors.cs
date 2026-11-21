@@ -9,6 +9,7 @@ internal static partial class FileCompressionTests
     private static void IndependentVectors(string directory)
     {
         foreach (var mode in Enum.GetValues<FileCompressionMode>())
+        {
             foreach (var size in new[] { 0, 1, 15, 16, 65535, 65536, 65537, 131089 })
             {
                 var data = Enumerable.Range(0, size).Select(index => (byte)(index * 73 + index / 251)).ToArray();
@@ -27,13 +28,20 @@ internal static partial class FileCompressionTests
                     Reject<InvalidDataException>(() => ByteBuffer.Decompress(envelope, Math.Max(1, size), other));
                     Reject<InvalidDataException>(() => FileAccess.OpenCompressed(path, FileAccessModeFlags.Read, other).Dispose());
                 }
-                if (size > 1) Reject<InvalidDataException>(() => ByteBuffer.Decompress(envelope, size - 1, mode));
+                if (size > 1)
+                {
+                    Reject<InvalidDataException>(() => ByteBuffer.Decompress(envelope, size - 1, mode));
+                }
                 if (mode is FileCompressionMode.Deflate or FileCompressionMode.Gzip or FileCompressionMode.Brotli)
                 {
                     Check(ByteBuffer.DecompressDynamic(envelope, -1, mode).SequenceEqual(data), "Independent dynamic vector.");
-                    if (size > 1) Reject<InvalidDataException>(() => ByteBuffer.DecompressDynamic(envelope, size - 1, mode));
+                    if (size > 1)
+                    {
+                        Reject<InvalidDataException>(() => ByteBuffer.DecompressDynamic(envelope, size - 1, mode));
+                    }
                 }
-                var bad = (byte[])envelope.Clone(); bad[6] = 255;
+                var bad = (byte[])envelope.Clone();
+                bad[6] = 255;
                 File.WriteAllBytes(path, bad);
                 var snapshot = File.ReadAllBytes(path);
                 Reject<InvalidDataException>(() => FileAccess.OpenCompressed(path, FileAccessModeFlags.ReadWrite, mode).Dispose());
@@ -48,6 +56,7 @@ internal static partial class FileCompressionTests
                     Reject<InvalidDataException>(() => FileAccess.OpenCompressed(path, FileAccessModeFlags.Read, mode).Dispose());
                 }
             }
+        }
         foreach (var raw in new[] { -1, 5, 256, int.MaxValue })
         {
             var mode = (FileCompressionMode)raw;

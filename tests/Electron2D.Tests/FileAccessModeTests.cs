@@ -19,13 +19,18 @@ internal static class FileAccessModeTests
         foreach (var open in factories)
         {
             foreach (var mode in Enum.GetValues<FileAccessModeFlags>())
+            {
                 foreach (var exists in new[] { false, true })
+                {
                     foreach (var dispose in new[] { false, true })
                     {
                         var path = System.IO.Path.Combine(directory, "mode-matrix");
                         File.Delete(path);
                         if (exists)
-                            using (var seed = open(path, FileAccessModeFlags.Write)) seed.WriteBytes([11, 22, 33]);
+                        {
+                            using var seed = open(path, FileAccessModeFlags.Write);
+                            seed.WriteBytes([11, 22, 33]);
+                        }
                         var truncates = mode is FileAccessModeFlags.Write or FileAccessModeFlags.WriteRead;
                         if (!exists && !truncates)
                         {
@@ -52,8 +57,15 @@ internal static class FileAccessModeTests
                                 Check(file.ReadByte() == 99, "Mixed mode can read its write.");
                             }
                         }
-                        if (dispose) file.Dispose();
-                        else { file.Close(); file.Close(); }
+                        if (dispose)
+                        {
+                            file.Dispose();
+                        }
+                        else
+                        {
+                            file.Close();
+                            file.Close();
+                        }
                         if (!dispose)
                         {
                             Check(!file.IsOpen, "Close retires owner.");
@@ -66,6 +78,8 @@ internal static class FileAccessModeTests
                             : truncates ? new byte[] { 99 } : new byte[] { 99, 22, 33 };
                         Check(read.ReadBytes(9).SequenceEqual(expected), "Reopened committed content.");
                     }
+                }
+            }
             foreach (var raw in new[] { -1, 0, 4, 5, 6, 8, int.MaxValue })
             {
                 var path = System.IO.Path.Combine(directory, "invalid-mode");
