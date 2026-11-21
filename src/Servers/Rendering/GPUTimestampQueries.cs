@@ -6,11 +6,19 @@ internal sealed unsafe partial class GPUTimestampQueries : IDisposable
 {
     private readonly nint _device;
     private readonly RenderHandle _pool;
-    internal GPUTimestampQueries(nint device, SafeHandle parent, uint capacity)
+    internal GPUTimestampQueries(nint device, SafeHandle parent, uint capacity, bool d3d12 = false)
     {
         _device = device; int status; nint pool;
-        try { status = NativeTimestampCreate(device, 1, capacity, out pool); }
-        catch (Exception error) when (error is EntryPointNotFoundException or DllNotFoundException) { throw new NotSupportedException("Native timestamp queries require the current native Vulkan adapter.", error); }
+        try
+        {
+            status = d3d12
+                ? NativeD3D12TimestampCreate(device, 1, capacity, out pool)
+                : NativeTimestampCreate(device, 1, capacity, out pool);
+        }
+        catch (Exception error) when (error is EntryPointNotFoundException or DllNotFoundException)
+        {
+            throw new NotSupportedException("Native timestamp queries require the current native rendering bridge.", error);
+        }
         if (status == 0) throw new NotSupportedException("This device has no integrated native timestamp query adapter.");
         if (status != 1 || pool == 0) throw new InvalidOperationException("The native timestamp query pool could not be created.");
         try { _pool = new(pool, h => NativeTimestampDestroy(device, 1, h), parent); }
@@ -37,6 +45,7 @@ internal sealed unsafe partial class GPUTimestampQueries : IDisposable
     }
     public void Dispose() => _pool.Dispose();
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_create")] private static partial int NativeTimestampCreate(nint device, uint abi, uint capacity, out nint pool);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_d3d12_timestamp_create")] private static partial int NativeD3D12TimestampCreate(nint device, uint abi, uint capacity, out nint pool);
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_reset")] private static partial int NativeTimestampReset(nint device, uint abi, nint pool, nint command);
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_write")] private static partial int NativeTimestampWrite(nint device, uint abi, nint pool, nint command, uint index);
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_read")] private static partial int NativeTimestampRead(nint device, uint abi, nint pool, uint count, ulong* values);

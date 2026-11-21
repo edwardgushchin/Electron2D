@@ -120,6 +120,7 @@ e2d_render_storage_barrier
 e2d_render_texture_create
 e2d_render_texture_format
 e2d_render_texture_import
+e2d_render_d3d12_timestamp_create
 e2d_render_timestamp_create
 e2d_render_timestamp_destroy
 e2d_render_timestamp_elapsed

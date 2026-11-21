@@ -11,7 +11,28 @@ internal static class GPUTimestampTests
         {
             Reject<ArgumentException>(() => ProjectSettings.Set(ProjectSettings.MaxTimestampQueryElements, 0));
             ProjectSettings.Set(ProjectSettings.MaxTimestampQueryElements, 3);
-            if (profile == "renderer") Renderer(); else { Local(); Draw(); Retirement(); }
+            switch (profile)
+            {
+                case "renderer":
+                    Renderer();
+                    break;
+                case "local":
+                    Local();
+                    Draw();
+                    Retirement();
+                    break;
+                case "unsupported":
+                    using (var device = RenderingServer.CreateLocalRenderingDevice())
+                    {
+                        Reject<NotSupportedException>(() => device.CaptureTimestamp("unavailable"));
+                        Check(device.GetCapturedTimestampsCount() == 0 && device.GetCapturedTimestampsFrame() == 0,
+                            "An unavailable adapter leaves the completed batch untouched.");
+                    }
+                    Console.WriteLine("GPU timestamps: explicit unsupported adapter result passed.");
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown timestamp profile: {profile}", nameof(profile));
+            }
         }
         finally { ProjectSettings.Set(ProjectSettings.MaxTimestampQueryElements, limit); }
     }
@@ -72,7 +93,7 @@ internal static class GPUTimestampTests
         for (var i = 0; i < 64; i++) { _ = device.GetCapturedTimestampsCount(); _ = device.GetCapturedTimestampsFrame(); _ = device.GetCapturedTimestampName(0); _ = device.GetCapturedTimestampCPUTime(0); _ = device.GetCapturedTimestampGPUTime(1); }
         var idle = GC.GetAllocatedBytesForCurrentThread() - before;
         Check(active == 0 && idle == 0, "Prepared timestamp capture/submission/query intervals allocate no managed owner bytes.");
-        Console.WriteLine($"GPU timestamps local: real compute output, guards, frame publication, 64 active/64 idle intervals {active}/{idle} B passed.");
+        Console.WriteLine($"GPU timestamps local ({device.GetDeviceName()}): real compute output, guards, frame publication, 64 active/64 idle intervals {active}/{idle} B passed.");
     }
     private static void Draw()
     {
@@ -104,17 +125,49 @@ internal static class GPUTimestampTests
     {
         var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
         var root = new Window { Size = new(320, 240) }; root.AddChild(new ColorRect { Color = Colors.Red, Size = new(320, 240) });
-        RenderingDevice? device = null; var frames = 0;
-        void Before() { device!.CaptureTimestamp("renderer start"); device.CaptureTimestamp("renderer end"); }
+        RenderingDevice? device = null;
+        RID source = default, target = default;
+        byte[] payload = [17, 29, 41, 53];
+        var frames = 0;
+        var copies = 0;
+        void Before()
+        {
+            var completed = device!.GetCapturedTimestampsFrame();
+            device.CaptureTimestamp("renderer start");
+            device.BufferCopy(source, target, 0, 0, (uint)payload.Length);
+            device.CaptureTimestamp("renderer end");
+            Check(device.GetCapturedTimestampsFrame() == completed, "Recording does not publish the next borrowed batch.");
+            device.BufferGetDataAsync(target, bytes =>
+            {
+                Check(bytes.SequenceEqual(payload), "The timed borrowed-device copy produces the expected bytes.");
+                Check(device.GetCapturedTimestampsFrame() > completed && device.GetCapturedTimestampsCount() == 2,
+                    "The readback callback sees the completed borrowed batch.");
+                copies++;
+            });
+        }
         void After()
         {
-            frames++; Check(device!.GetCapturedTimestampsCount() == 2 && device.GetCapturedTimestampGPUTime(1) >= device.GetCapturedTimestampGPUTime(0), "Renderer completion publishes native markers before post-draw callbacks.");
+            frames++;
+            Check(device!.GetCapturedTimestampsCount() == 2 && device.GetCapturedTimestampGPUTime(1) > device.GetCapturedTimestampGPUTime(0),
+                "Renderer completion publishes GPU ticks around the copy before post-draw callbacks.");
             using var image = RenderingServer.Service!.Readback(); Check(image.GetPixel(8, 8) == Colors.Red, "Native timestamp work preserves window rendering.");
             if (frames == 2) { RenderingServer.FramePreDraw -= Before; RenderingServer.FramePostDraw -= After; root.Tree!.Quit(); }
         }
-        root.Ready += _ => { device = RenderingServer.GetRenderingDevice(); RenderingServer.FramePreDraw += Before; RenderingServer.FramePostDraw += After; };
-        try { Check(Engine.Run(root) == 0 && frames == 2 && device!.IsDisposed, "The borrowed device retires with the renderer."); }
+        root.Ready += _ =>
+        {
+            device = RenderingServer.GetRenderingDevice()!;
+            source = device.StorageBufferCreate((uint)payload.Length, payload);
+            target = device.StorageBufferCreate((uint)payload.Length);
+            Console.WriteLine($"GPU timestamps renderer adapter: {device.GetDeviceName()}.");
+            RenderingServer.FramePreDraw += Before;
+            RenderingServer.FramePostDraw += After;
+        };
+        try
+        {
+            Check(Engine.Run(root) == 0 && frames == 2 && copies == 2 && device!.IsDisposed,
+                "Two timed copies complete and the borrowed device retires with the renderer.");
+        }
         finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
-        Console.WriteLine("GPU timestamps renderer: two native marker frames, real window pixels and borrowed-device lifetime passed.");
+        Console.WriteLine("GPU timestamps renderer: two native marker frames, GPU copy bytes, real window pixels and borrowed-device lifetime passed.");
     }
 }

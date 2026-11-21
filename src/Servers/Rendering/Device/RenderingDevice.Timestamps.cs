@@ -16,7 +16,7 @@ public sealed unsafe partial class RenderingDevice
     /// GPU values use native device-clock nanoseconds and are not CPU-clock calibrated. A local Submit is
     /// one device frame; renderer-owned batches are submitted by the renderer. Capacity is captured from
     /// MaxTimestampQueryElements when the device is created. Recording after a draw/dispatch in an active
-    /// list rejects; an empty list permits a marker. Native support currently requires the pinned Vulkan bridge.
+    /// list rejects; an empty list permits a marker. The pinned native bridge supports Vulkan and Direct3D 12.
     /// Prepared repeated recording/querying does not allocate managed memory.</remarks>
     /// <exception cref="ArgumentNullException">The name is null.</exception>
     /// <exception cref="InvalidOperationException">Owner/list/capacity/native state is invalid.</exception>
@@ -49,7 +49,7 @@ public sealed unsafe partial class RenderingDevice
     public ulong GetCapturedTimestampCPUTime(int index) { TimestampIndex(index); return _timestampCPU[index]; }
     /// <summary>Returns a completed marker's native GPU-clock time in nanoseconds.</summary>
     /// <param name="index">Zero-based completed marker index.</param>
-    /// <returns>Device ticks scaled by timestamp period. The hardware counter may wrap; its epoch is independent of CPU time.</returns>
+    /// <returns>Device ticks scaled by the Vulkan timestamp period or Direct3D 12 queue frequency. The hardware counter may wrap; its epoch is independent of CPU time.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the completed frame.</exception>
     public ulong GetCapturedTimestampGPUTime(int index) { TimestampIndex(index); return _timestampGPU[index]; }
     private void TimestampIndex(int index) { Access(); if ((uint)index >= (uint)_timestampCount) throw new ArgumentOutOfRangeException(nameof(index)); }
@@ -59,7 +59,7 @@ public sealed unsafe partial class RenderingDevice
         if (_timestampPool is not null) return;
         var names = new string[_timestampCapacity]; var workNames = new string[_timestampCapacity];
         var cpu = new ulong[_timestampCapacity]; var gpu = new ulong[_timestampCapacity]; var workCPU = new ulong[_timestampCapacity]; var workGPU = new ulong[_timestampCapacity];
-        _timestampPool = new(Device, _context.Handle, (uint)_timestampCapacity);
+        _timestampPool = new(Device, _context.Handle, (uint)_timestampCapacity, TextureDriver == "direct3d12");
         _timestampNames = names; _timestampWorkNames = workNames; _timestampCPU = cpu; _timestampGPU = gpu; _timestampWorkCPU = workCPU; _timestampWorkGPU = workGPU;
     }
     private void ResetTimestamps(nint command) => _timestampPool?.Reset(command);

@@ -5,6 +5,7 @@
 #include <SDL3/SDL.h>
 
 extern int e2d_render_timestamp_create(SDL_GPUDevice *, uint32_t, uint32_t, void **);
+extern int e2d_render_d3d12_timestamp_create(SDL_GPUDevice *, uint32_t, uint32_t, void **);
 extern int e2d_render_timestamp_reset(SDL_GPUDevice *, uint32_t, void *, SDL_GPUCommandBuffer *);
 extern int e2d_render_timestamp_write(SDL_GPUDevice *, uint32_t, void *, SDL_GPUCommandBuffer *, uint32_t);
 extern int e2d_render_timestamp_read(SDL_GPUDevice *, uint32_t, void *, uint32_t, uint64_t *);
@@ -12,7 +13,7 @@ extern int e2d_render_timestamp_elapsed(SDL_GPUDevice *, uint32_t, void *, uint6
 extern void e2d_render_timestamp_destroy(SDL_GPUDevice *, uint32_t, void *);
 #define CHECK(condition) do { if (!(condition)) { fprintf(stderr, "timestamp check failed at %d: %s\n", __LINE__, #condition); return 1; } } while (0)
 
-int main(void)
+int main(int argc, char **argv)
 {
     void *pool = NULL; uint64_t values[4] = {0};
     CHECK(timestamp_ns(UINT64_MAX, 64, 1, &values[0]) && values[0] == UINT64_MAX);
@@ -24,12 +25,26 @@ int main(void)
     CHECK(!timestamp_ns(UINT64_MAX, 64, 2, &values[0]));
     CHECK(!timestamp_ns(1, 0, 1, &values[0]) && !timestamp_ns(1, 65, 1, &values[0]));
     CHECK(!timestamp_ns(1, 64, NAN, &values[0]) && !timestamp_ns(1, 64, -1, &values[0]));
+    CHECK(timestamp_frequency_ns(123456789, 30000000, &values[0]) && values[0] == 4115226300);
+    CHECK(timestamp_frequency_ns(UINT64_MAX, 1000000000, &values[0]) && values[0] == UINT64_MAX);
+    CHECK(timestamp_frequency_ns(UINT64_MAX - 1, UINT64_MAX, &values[0]) && values[0] == 999999999);
+    CHECK(!timestamp_frequency_ns(UINT64_MAX, 999999999, &values[0]));
+    CHECK(!timestamp_frequency_ns(1, 0, &values[0]));
     CHECK(e2d_render_timestamp_create(NULL, 1, 3, &pool) == -1);
     CHECK(SDL_Init(SDL_INIT_VIDEO));
-    SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan"); CHECK(device);
-    CHECK(e2d_render_timestamp_create(device, 9, 3, &pool) == -1);
-    CHECK(e2d_render_timestamp_create(device, 1, 0, &pool) == -1);
-    CHECK(e2d_render_timestamp_create(device, 1, 3, &pool) == 1 && pool);
+    const char *driver = argc > 1 ? argv[1] : "vulkan";
+    bool d3d12 = SDL_strcmp(driver, "direct3d12") == 0;
+    SDL_GPUDevice *device = SDL_CreateGPUDevice(d3d12 ? SDL_GPU_SHADERFORMAT_DXIL : SDL_GPU_SHADERFORMAT_SPIRV, true, driver);
+    if (!device) {
+        fprintf(stderr, "%s device creation failed: %s\n", driver, SDL_GetError());
+        return 1;
+    }
+    int (*create)(SDL_GPUDevice *, uint32_t, uint32_t, void **) =
+        d3d12 ? e2d_render_d3d12_timestamp_create : e2d_render_timestamp_create;
+    CHECK((d3d12 ? e2d_render_timestamp_create : e2d_render_d3d12_timestamp_create)(device, 1, 3, &pool) == 0 && !pool);
+    CHECK(create(device, 9, 3, &pool) == -1);
+    CHECK(create(device, 1, 0, &pool) == -1);
+    CHECK(create(device, 1, 3, &pool) == 1 && pool);
     CHECK(e2d_render_timestamp_read(device, 1, pool, 1, values) == -1);
     CHECK(e2d_render_timestamp_elapsed(device, 1, pool, &values[0]) == -1);
     CHECK(e2d_render_timestamp_read(device, 1, pool, 0, values) == -1);
@@ -48,6 +63,11 @@ int main(void)
     CHECK(e2d_render_timestamp_read(device, 1, pool, 3, values) == -1);
     e2d_render_timestamp_destroy(device, 9, pool);
     e2d_render_timestamp_destroy(device, 1, pool);
-    SDL_DestroyGPUDevice(device); SDL_Quit();
-    puts("Native timestamp ABI, unwritten queries, ordered real GPU readback and retirement passed."); return 0;
+    const char *name = SDL_GetStringProperty(SDL_GetGPUDeviceProperties(device), SDL_PROP_GPU_DEVICE_NAME_STRING, "unknown adapter");
+    printf("%s (%s): timestamp ABI, unwritten queries, GPU ticks scaled to ns (%llu, %llu), elapsed %llu ns and retirement passed.\n",
+        SDL_GetGPUDeviceDriver(device), name,
+        (unsigned long long)values[0], (unsigned long long)values[1], (unsigned long long)elapsed);
+    SDL_DestroyGPUDevice(device);
+    SDL_Quit();
+    return 0;
 }

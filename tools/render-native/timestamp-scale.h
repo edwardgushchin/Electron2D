@@ -2,6 +2,49 @@
 #include <stdint.h>
 #include <string.h>
 
+static inline bool timestamp_frequency_ns(uint64_t ticks, uint64_t frequency, uint64_t *result)
+{
+    const uint64_t scale = 1000000000;
+    if (!frequency) {
+        return false;
+    }
+    uint64_t seconds = ticks / frequency;
+    uint64_t remainder = ticks % frequency;
+    if (seconds > UINT64_MAX / scale) {
+        return false;
+    }
+    uint64_t fraction = 0;
+    if (remainder <= UINT64_MAX / scale) {
+        fraction = remainder * scale / frequency;
+    } else {
+        // Long multiplication modulo frequency avoids overflowing a 64-bit intermediate.
+        uint64_t residue = 0;
+        for (uint64_t bit = UINT64_C(1) << 29; bit; bit >>= 1) {
+            fraction *= 2;
+            if (residue >= frequency - residue) {
+                residue -= frequency - residue;
+                ++fraction;
+            } else {
+                residue *= 2;
+            }
+            if (scale & bit) {
+                if (residue >= frequency - remainder) {
+                    residue -= frequency - remainder;
+                    ++fraction;
+                } else {
+                    residue += remainder;
+                }
+            }
+        }
+    }
+    uint64_t whole = seconds * scale;
+    if (fraction > UINT64_MAX - whole) {
+        return false;
+    }
+    *result = whole + fraction;
+    return true;
+}
+
 static bool timestamp_ns(uint64_t ticks, uint32_t bits, float period, uint64_t *result)
 {
     _Static_assert(sizeof(float) == sizeof(uint32_t), "Vulkan timestamp period is binary32");

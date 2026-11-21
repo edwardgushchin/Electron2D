@@ -1609,7 +1609,7 @@ Reports enabled address execution, R32 image atomics and renderer main HDR outpu
 
 ## Native timestamps
 
-CaptureTimestamp records names alongside actual native query writes. GetCapturedTimestampsCount and GetCapturedTimestampsFrame identify one completed batch; the Name/CPUTime/GPUTime getters index only that batch. Results publish after native completion, before readback callbacks. CPU microseconds and GPU nanoseconds have separate clock epochs. Empty completed batches clear old markers. See [device timestamps](../components/gpu-timestamps.md) for capacity, list guards, local/renderer ownership, exact units and backend qualification.
+CaptureTimestamp records names alongside native query writes on Vulkan and Direct3D 12. GetCapturedTimestampsCount and GetCapturedTimestampsFrame identify one completed batch. The Name/CPUTime/GPUTime getters index that batch. Results publish after native completion, before readback callbacks. CPU microseconds and GPU nanoseconds have separate clock epochs. Empty completed batches clear old markers. See [device timestamps](../components/gpu-timestamps.md) for capacity, list guards, local and renderer ownership, and backend qualification.
 
 Multisample sampled color/depth targets now support explicit compute/vertex/fragment sample loads, image/sample queries and copied descriptor shape validation. See [multisample shader reads](../components/local-compute.md#multisample-shader-reads) for formats, ownership, sampler semantics and verification limits.
 
