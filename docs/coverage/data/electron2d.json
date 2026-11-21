@@ -132689,6 +132689,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.VibrateHandheld(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "VibrateHandheld",
+    "signature": "public static System.Void VibrateHandheld(System.Int32 durationMS = 500, System.Single amplitude = -1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "durationMS",
+        "type": "System.Int32",
+        "default": "500"
+      },
+      {
+        "name": "amplitude",
+        "type": "System.Single",
+        "default": "-1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.WarpMouse(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Input",

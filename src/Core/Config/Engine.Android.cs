@@ -1,5 +1,8 @@
 #if ANDROID
 using Android.App;
+using Android.Content;
+using Android.Content.PM;
+using Android.OS;
 using Electron2D.Platform.Android;
 using System.Runtime.Versioning;
 
@@ -17,6 +20,39 @@ internal static class AndroidWindowHost
     private static bool _movieDisableVSync;
     private static bool _runProject;
     private static WeakReference<AndroidGameActivity>? _activity;
+
+    internal static void VibrateHandheld(int durationMS, float amplitude)
+    {
+        var context = Application.Context;
+        if (context.CheckPermission(Android.Manifest.Permission.Vibrate, Process.MyPid(), Process.MyUid()) != Permission.Granted)
+        {
+            return;
+        }
+
+        var vibrator = OperatingSystem.IsAndroidVersionAtLeast(31)
+            ? (context.GetSystemService(Context.VibratorManagerService) as VibratorManager)?.DefaultVibrator
+            : context.GetSystemService(Context.VibratorService) as Vibrator;
+        if (vibrator is null || !vibrator.HasVibrator)
+        {
+            return;
+        }
+
+        if (OperatingSystem.IsAndroidVersionAtLeast(26))
+        {
+            var strength = amplitude < 0f || !vibrator.HasAmplitudeControl
+                ? VibrationEffect.DefaultAmplitude
+                : Math.Max(1, (int)MathF.Round(amplitude * 255f));
+            using var effect = VibrationEffect.CreateOneShot(durationMS, strength);
+            vibrator.Vibrate(effect);
+        }
+        else
+        {
+            // API levels below 26 only expose a timed request at system strength.
+#pragma warning disable CS0618
+            vibrator.Vibrate(durationMS);
+#pragma warning restore CS0618
+        }
+    }
 
     internal static void AttachActivity(AndroidGameActivity activity)
     {

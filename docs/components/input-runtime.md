@@ -126,6 +126,12 @@ Native rumble and LED calls use device capabilities. Weak/strong magnitudes are 
 
 [InputGamepadNativeTests](../../tests/Electron2D.Tests/InputGamepadNativeTests.cs) uses SDL virtual gamepad and raw joystick devices on dummy and Linux Wayland. It verifies initial and later connection callbacks, failure continuation, mapping transitions, raw/standardized button and axis values, device isolation, action and SceneTree delivery, rumble/LED callbacks, ignored vendor/product IDs, focus suppression and Engine.Run project settings.
 
+## Handheld vibration
+
+The Android window host resolves the default device vibrator from the application context, using `VibratorManager` from API 31 and the vibrator service on earlier versions. API 26 and later use a one-shot effect. Supported explicit strengths are rounded to the Android 1–255 range. Earlier APIs use the timed vibrator call at system strength. Requests hold no activity reference or gamepad state. See [Input](../classes/Input.md#handheld-vibration) for the manifest entry and argument rules.
+
+On an API 35 emulator, the Android vibration service recorded the default 500 ms request at system strength and a 173 ms request at half strength from a public API consumer. This verifies system delivery. Physical output and the legacy Android paths require separate verification.
+
 ## Native window observation
 
 [DisplayWindowEvents.Input](../classes/DisplayWindowEvents.md) adds a native-window observation phase to the existing parser. It sees committed raw/action state before scene dispatch for native, manually parsed and emulated events. Tagged events select their ID; untagged events broadcast to the captured live cohort. Active native-window observers require the display owner thread before mutation. A failing observer cannot suppress other publishers or scene delivery; stopping the loop skips stale scene input. Source disposal and registration affect subsequent recipient snapshots. Prepared success-path dispatch retains zero managed allocation; native SDL event construction remains a separate allocation gap.

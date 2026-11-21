@@ -12,6 +12,8 @@ Last updated: 2026-11-16
 
 [Controller motion sensors](../components/gamepad-motion.md) supply actual accelerometer, gravity and calibrated gyroscope data, native enable/rate reporting and typed calibration values through the public Input API.
 
+[Handheld vibration](../classes/Input.md#handheld-vibration) sends timed pulses through the Android host when the consumer declares the vibrator permission.
+
 ## Responsibility
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

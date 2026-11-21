@@ -88,6 +88,32 @@ public sealed partial class Input
     /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread.</exception>
     public static void StopJoyVibration(int device) => Service.StopJoyVibrationCore(device);
 
+    /// <summary>Requests a single timed vibration from the Android device's built-in vibrator.</summary>
+    /// <param name="durationMS">Duration in milliseconds. Zero skips the request.</param>
+    /// <param name="amplitude">Strength from zero (silent) to one (maximum), or -1 for system strength.</param>
+    /// <remarks>
+    /// The Android application manifest must declare android.permission.VIBRATE.
+    /// Devices without amplitude control use system strength for positive amplitudes.
+    /// Missing permission or hardware and calls on other platforms have no effect.
+    /// Android applies its vibration settings and foreground policy.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The duration is negative, or the amplitude is outside the allowed values.</exception>
+    public static void VibrateHandheld(int durationMS = 500, float amplitude = -1f)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(durationMS);
+        if (amplitude != -1f && !(amplitude >= 0f && amplitude <= 1f))
+        {
+            throw new ArgumentOutOfRangeException(nameof(amplitude), amplitude, "Use -1 or a value between 0 and 1.");
+        }
+
+#if ANDROID
+        if (durationMS != 0 && amplitude != 0f)
+        {
+            AndroidWindowHost.VibrateHandheld(durationMS, amplitude);
+        }
+#endif
+    }
+
     /// <summary>Gets the last requested weak and strong rumble strengths.</summary>
     /// <param name="device">Nonnegative controller ID.</param>
     /// <returns>The retained request, or zero when none was made.</returns>

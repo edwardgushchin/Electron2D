@@ -102,6 +102,18 @@ if (Input.IsActionPressed("jump"))
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-input-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-input-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 
+## Handheld vibration
+
+`public static void VibrateHandheld(int durationMS = 500, float amplitude = -1f)` requests one timed pulse from the Android device. Use `-1f` for system strength, or a value from `0f` to `1f`. Zero duration or strength skips the pulse. Negative durations and amplitudes outside the accepted values, including NaN and infinity, throw `ArgumentOutOfRangeException`.
+
+Add the permission as a child of `<manifest>` in the Android application's manifest.
+
+```xml
+<uses-permission android:name="android.permission.VIBRATE" />
+```
+
+Android uses system strength when amplitude control is unavailable. A missing permission or vibrator skips the request. Android controls foreground eligibility and vibration settings. Valid calls on other platforms have no effect. iOS and Web support remain open. Gamepad rumble has its own methods.
+
 ## Device sensor methods
 
 | Member | Contract |

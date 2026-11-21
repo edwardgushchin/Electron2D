@@ -2517,6 +2517,13 @@
     },
     {
       "godot": [
+        "Input::method:vibrate_handheld(int:,float:)"
+      ],
+      "state": "Partial",
+      "reason": "The Android host requests a timed pulse with manifest VIBRATE permission. Android API 35 emulator service history confirms 500 ms at system strength and 173 ms at explicit half strength. Desktop calls leave gamepad rumble alone. Legacy Android and physical vibration need separate checks; implement iOS and Web in their platform adapters."
+    },
+    {
+      "godot": [
         "Input::method:add_joy_mapping(String:,bool:)",
         "Input::method:remove_joy_mapping(String:)"
       ],

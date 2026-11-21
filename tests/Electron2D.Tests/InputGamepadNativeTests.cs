@@ -94,6 +94,20 @@ internal static class InputGamepadNativeTests
             Check(Input.HasJoyVibration(device) && Input.HasJoyLight(device),
                 "The virtual controller exposes its rumble and LED capabilities.");
             Input.StartJoyVibration(device, .25f, .5f, .2f);
+            var rumbleCount = rumble.Count;
+            Input.VibrateHandheld();
+            Input.VibrateHandheld(int.MaxValue, float.Epsilon);
+            Input.VibrateHandheld(1, 1f);
+            Input.VibrateHandheld(0);
+            Input.VibrateHandheld(1, 0f);
+            Reject<ArgumentOutOfRangeException>(() => Input.VibrateHandheld(-1));
+            foreach (var invalid in new[] { -2f, -.5f, 1.01f, float.NaN, float.NegativeInfinity, float.PositiveInfinity })
+            {
+                Reject<ArgumentOutOfRangeException>(() => Input.VibrateHandheld(0, invalid));
+            }
+            Check(rumble.Count == rumbleCount && Input.GetJoyVibrationStrength(device) == new Vector2(.25f, .5f) &&
+                  Input.GetJoyVibrationDuration(device) == .2f,
+                "Handheld requests leave native controller rumble and retained state intact.");
             Check(rumble.Count == 1 && rumble[0].Low is >= 32767 and <= 32768 &&
                   rumble[0].High is >= 16383 and <= 16384 &&
                   Input.GetJoyVibrationStrength(device) == new Vector2(.25f, .5f) &&
