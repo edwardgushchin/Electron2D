@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Electron2D;
 
@@ -30,6 +31,7 @@ internal static partial class RenderingRuntimeTests
         Engine.MaxFPS = 60;
         ProjectSettings.Set(ProjectSettings.RenderingMethod, unsupported ? "compatibility" : "gpu");
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        ProjectSettings.Set(ProjectSettings.FrameQueueSize, mode == "setting" ? 3 : 2);
         ProjectSettings.Set(ProjectSettings.DisableSTDOUT, true);
 
         using var stdout = new StringWriter();
@@ -46,6 +48,8 @@ internal static partial class RenderingRuntimeTests
                 ProjectSettings.ClearFeatureOverride(setting, "windows");
                 logger.Reports.Clear();
                 RunProfileWindow(logger, 0, unsupported: false);
+                ProjectSettings.Set(setting, true);
+                RunProfileWindow(logger, 2, unsupported: false);
             }
         }
         finally
@@ -60,9 +64,27 @@ internal static partial class RenderingRuntimeTests
     {
         using var root = new Window { Size = new(192, 144), Title = "GPU frame profile" };
         root.AddChild(new ColorRect { Color = Colors.Green, Size = new(192, 144) });
+        var movingRect = new ColorRect { Color = Colors.Red, Size = new(16, 16) };
+        root.AddChild(movingRect);
         var frames = 0;
+        var driver = "";
+        var hasGreenPixel = false;
         root.Ready += _ =>
         {
+            driver = RenderingServer.GetCurrentRenderingDriverName();
+            Console.Error.WriteLine($"Renderer: {driver}; adapter: {RenderingServer.GetVideoAdapterName()}; frame slots: {ProjectSettings.Get(ProjectSettings.FrameQueueSize)}");
+            if (OperatingSystem.IsWindows())
+            {
+                using var process = Process.GetCurrentProcess();
+                foreach (ProcessModule module in process.Modules)
+                {
+                    if (module.ModuleName is not ("SDL3.dll" or "libElectron2D.dll")) continue;
+
+                    using var binary = File.OpenRead(module.FileName);
+                    Console.Error.WriteLine($"{module.FileName}; version {module.FileVersionInfo.FileVersion}; SHA-256 {Convert.ToHexString(SHA256.HashData(binary))}");
+                }
+            }
+
             logger.Clock.Restart();
             RenderingServer.ForceDraw(swapBuffers: false);
             RenderingServer.FramePostDraw += () =>
@@ -71,16 +93,26 @@ internal static partial class RenderingRuntimeTests
                 if (reports > 0 && logger.Reports.Count < reports && logger.Clock.Elapsed < TimeSpan.FromSeconds(8)) return;
                 if (reports == 0 && logger.Clock.Elapsed < TimeSpan.FromSeconds(1.2)) return;
                 using var image = root.GetTexture().GetImage();
-                Check(image is not null && image.GetPixel(32, 32).G > .9f, "The profiled renderer produces window viewport pixels.");
+                hasGreenPixel = image is not null && image.GetPixel(32, 32).G > .9f;
                 root.Tree!.Quit();
             };
         };
-        Check(Engine.Run(root) == 0 && frames > 5, "Profiling preserves the window run and frame submission.");
+        var exitCode = Engine.Run((_, frame) => movingRect.Position = new((float)(frame % 128), 0), root);
+        Check(exitCode == 0 && frames > 5, "Profiling preserves the window run and frame submission.");
+        Check(hasGreenPixel, "The profiled renderer produces window viewport pixels.");
+        var requestedDriver = Environment.GetEnvironmentVariable("SDL_GPU_DRIVER");
+        if (!unsupported && requestedDriver is not null)
+        {
+            Check(driver == requestedDriver, $"Expected {requestedDriver}, got {driver}.");
+        }
+
+        Console.Error.WriteLine($"Drew {frames} frames, verified viewport pixels, and stopped the renderer.");
 
         if (unsupported)
         {
             Check(logger.Reports.Count == 1 && logger.Reports[0].Message.StartsWith("GPU profile unavailable on ", StringComparison.Ordinal),
                 "An unsupported renderer reports unavailability once and continues to draw.");
+            Console.Error.WriteLine(logger.Reports[0].Message);
             return;
         }
 
@@ -88,11 +120,17 @@ internal static partial class RenderingRuntimeTests
         var previous = TimeSpan.Zero;
         foreach (var (message, elapsed) in logger.Reports)
         {
-            var match = Regex.Match(message, @"^GPU profile \(ms\): frame ([0-9.]+), average setup ([0-9.]+), canvas ([0-9.]+), presentation ([0-9.]+) \(([0-9]+) frames\)$");
-            Check(match.Success && double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture) > 0 &&
-                double.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture) > 0 && int.Parse(match.Groups[5].Value, CultureInfo.InvariantCulture) > 1,
-                "Completed profiles include nonzero GPU frame and canvas durations and multiple samples.");
+            var match = Regex.Match(message, @"^GPU profile \(ms\): frame ([0-9]+\.[0-9]{3}), average setup ([0-9]+\.[0-9]{3}), canvas ([0-9]+\.[0-9]{3}), presentation ([0-9]+\.[0-9]{3}) \(([0-9]+) frames\)$");
+            Check(match.Success, $"Unexpected profile format: {message}");
+            for (var index = 1; index <= 4; index++)
+            {
+                Check(double.Parse(match.Groups[index].Value, CultureInfo.InvariantCulture) > 0,
+                    $"Expected a positive GPU interval: {message}");
+            }
+            Check(int.Parse(match.Groups[5].Value, CultureInfo.InvariantCulture) > ProjectSettings.Get(ProjectSettings.FrameQueueSize),
+                "Completed profiles include results from reused frame slots.");
             Check(elapsed - previous >= TimeSpan.FromMilliseconds(850), "Reports use real-time windows.");
+            Console.Error.WriteLine(message);
             previous = elapsed;
         }
     }

@@ -327,7 +327,7 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>False initially. A host --print-fps switch can enable reporting.</value>
     public static ProjectSetting<bool> PrintFPS { get; } = new("debug/settings/stdout/print_fps", false);
 
-    /// <summary>Enables periodic GPU frame timing diagnostics on supported windowed renderers.</summary>
+    /// <summary>Enables periodic timing diagnostics for completed GPU frames on Vulkan and Direct3D 12 windowed renderers with native timestamp support.</summary>
     /// <value>False initially. The host --gpu-profile switch can enable reporting.</value>
     public static ProjectSetting<bool> PrintGPUProfile { get; } = new("debug/settings/stdout/print_gpu_profile", false);
 

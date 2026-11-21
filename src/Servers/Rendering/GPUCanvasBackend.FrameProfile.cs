@@ -18,10 +18,14 @@ internal sealed partial class GPUCanvasBackend
     {
         var queries = new GPUTimestampQueries?[FrameQueueSize];
         var ready = new bool[queries.Length];
+        var d3d12 = Driver == "direct3d12";
         try
         {
             for (var index = 0; index < queries.Length; index++)
-                queries[index] = new GPUTimestampQueries(Device, _device, (uint)FrameProfileBoundary.End + 1);
+            {
+                queries[index] = new GPUTimestampQueries(
+                    Device, _device, (uint)FrameProfileBoundary.End + 1, d3d12: d3d12);
+            }
         }
         catch (Exception error) when (error is NotSupportedException or InvalidOperationException)
         {
