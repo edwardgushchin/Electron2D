@@ -4255,7 +4255,7 @@
         "Image::method:load_svg_from_buffer(PackedByteArray:,float:)",
         "Image::method:load_svg_from_string(String:,float:)"
       ],
-      "reason": "ADR 0039: bounded XML preflight and atomic RGBA8 publication. Root width and height cascade across attributes, matching embedded rules and inline declarations, and support calc(), min(), max() and clamp() over numbers and supported lengths before driving the scaled native viewport. Tests cover exact pixels and rollback, as well as file and scalable texture consumers. Remaining: other stylesheet-driven geometry, other CSS units and functions, variables, nested viewport fidelity and foreign-target qualification. See docs/components/images.md#svg-viewport-sizing."
+      "reason": "ADR 0039: bounded XML preflight and atomic RGBA8 publication. Root width and height cascade across attributes, matching embedded rules and inline declarations, and support bounded var() substitution from root custom properties and typed CSS math before driving the scaled native viewport. Tests cover exact pixels and rollback, as well as file and scalable texture consumers. Remaining: other stylesheet-driven geometry, other CSS units and functions, variables outside styled root dimensions, nested viewport fidelity and foreign-target qualification. See docs/components/images.md#svg-viewport-sizing."
     },
     {
       "state": "Partial",

@@ -90,6 +90,8 @@ public sealed partial class Image
     /// <remarks>Produces an RGBA8 base image without mipmaps. Root width and height can come from presentation attributes, embedded CSS or inline style.
     /// The style cascade uses importance, inline priority, selector specificity and source order. Dimensions accept positive pixel or physical lengths and percentages. Styled values also accept auto.
     /// The calc(), min(), max() and clamp() functions must evaluate to a positive finite length using supported units.
+    /// Styled dimensions resolve bounded var() substitutions from case-sensitive custom properties in the root cascade before length evaluation.
+    /// Missing or cyclic properties can use a fallback. An unresolved or invalid dimension, or a substitution that exceeds its limits, fails loading.
     /// Dimension values use CSS whitespace, which excludes nonbreaking spaces.
     /// Percentages use the corresponding viewBox axis or the 300 by 150 fallback.
     /// CSS comments between components of a compound root selector preserve its match.

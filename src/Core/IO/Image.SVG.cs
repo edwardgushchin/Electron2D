@@ -100,6 +100,9 @@ public sealed partial class Image
         @"\G(?:--|-?[_a-zA-Z\u0080-\uFFFF])[-_a-zA-Z0-9\u0080-\uFFFF]*",
         RegexOptions.CultureInvariant);
 
+    private readonly record struct SVGDeclaration(
+        string? Value, (bool Important, bool Inline, int IDs, int Classes, int Types) Priority);
+
     private static (string? Width, string? Height) CascadedSVGDimensions(XmlReader reader)
     {
         var rootName = reader.LocalName;
@@ -109,7 +112,8 @@ public sealed partial class Image
             (reader.GetAttribute("class") ?? "").Split(CSSWhitespace, StringSplitOptions.RemoveEmptyEntries),
             StringComparer.Ordinal);
         var inline = reader.GetAttribute("style");
-        (string? Value, (bool Important, bool Inline, int IDs, int Classes, int Types) Priority) width = default, height = default;
+        SVGDeclaration width = default, height = default;
+        var properties = new Dictionary<string, SVGDeclaration>(StringComparer.Ordinal);
 
         while (reader.Read())
         {
@@ -139,7 +143,16 @@ public sealed partial class Image
 
         if (inline is not null)
             ApplyDeclarations(inline, inlineStyle: true, default);
-        return (width.Value, height.Value);
+        var variables = new SVGVariables(properties);
+        return (ResolveDimension(width.Value), ResolveDimension(height.Value));
+
+        string? ResolveDimension(string? value)
+        {
+            if (value is null)
+                return null;
+            var resolved = variables.Resolve(value).AsSpan().Trim(CSSWhitespace);
+            return resolved.Equals("auto", StringComparison.OrdinalIgnoreCase) ? "100%" : resolved.ToString();
+        }
 
         void ApplyStylesheet(string css)
         {
@@ -190,7 +203,11 @@ public sealed partial class Image
                     continue;
                 var property = entry[..colon].Trim(CSSWhitespace);
                 var isWidth = property.Equals("width", StringComparison.OrdinalIgnoreCase);
-                if (!isWidth && !property.Equals("height", StringComparison.OrdinalIgnoreCase))
+                var isHeight = property.Equals("height", StringComparison.OrdinalIgnoreCase);
+                string? customName = null;
+                if (!isWidth && !isHeight && property.StartsWith("--", StringComparison.Ordinal))
+                    customName = SVGCustomPropertyName(property.ToString());
+                if (!isWidth && !isHeight && customName is null)
                     continue;
 
                 var value = entry[(colon + 1)..].Trim(CSSWhitespace);
@@ -198,13 +215,21 @@ public sealed partial class Image
                 var important = bang >= 0 && value[(bang + 1)..].Trim(CSSWhitespace).Equals("important", StringComparison.OrdinalIgnoreCase);
                 if (important)
                     value = value[..bang].TrimEnd(CSSWhitespace);
-                if (value.IsEmpty)
+                if (value.IsEmpty && customName is null)
                     continue;
 
-                ref var selected = ref (isWidth ? ref width : ref height);
                 var priority = (important, inlineStyle, specificity.IDs, specificity.Classes, specificity.Types);
+                var declaration = new SVGDeclaration(value.ToString(), priority);
+                if (customName is not null)
+                {
+                    if (!properties.TryGetValue(customName, out var previous) || priority.CompareTo(previous.Priority) >= 0)
+                        properties[customName] = declaration;
+                    continue;
+                }
+
+                ref var selected = ref (isWidth ? ref width : ref height);
                 if (selected.Value is null || priority.CompareTo(selected.Priority) >= 0)
-                    selected = (value.Equals("auto", StringComparison.OrdinalIgnoreCase) ? "100%" : value.ToString(), priority);
+                    selected = declaration;
             }
         }
     }

@@ -135,6 +135,8 @@ internal static class ImageCodecTests
         VerifySVGStylesheets();
         VerifySVGMath();
         VerifySVGMathWhitespace();
+        VerifySVGVariables();
+        VerifySVGVariableDepthAcrossAxes();
         Console.WriteLine("SVG checks passed (viewport dimensions, stylesheet cascade, CSS math, raster pixels, scaling, file and resource loading, failure rollback).");
     }
 
@@ -327,8 +329,14 @@ internal static class ImageCodecTests
             </svg>
             """;
         using var image = new Image();
+        VerifySVGComputedViewport(image, cascaded);
+        VerifySVGMathLimits(image);
+    }
+
+    private static void VerifySVGComputedViewport(Image image, string cascaded, string invalidWidth = "calc(8px / 0)")
+    {
         image.LoadSVGFromString(cascaded);
-        CheckMathPixels(image, 1, "SVG math string");
+        CheckMathPixels(image, 1, "Computed SVG string");
         var expectedPixels = image.GetData();
 
         var bytes = Encoding.UTF8.GetBytes(cascaded);
@@ -353,7 +361,7 @@ internal static class ImageCodecTests
 
             var changes = 0;
             image.Changed += _ => changes++;
-            File.WriteAllText(path, StylesheetWithWidth("calc(8px / 0)"));
+            File.WriteAllText(path, StylesheetWithWidth(invalidWidth));
             Reject<InvalidDataException>(() => image.Load(path));
             Check(image.Size == new Vector2i(16, 6) && image.GetData().SequenceEqual(expectedPixels) && changes == 0,
                 "A failed SVG math file reload keeps the previous image and emits no Changed event.");
@@ -364,7 +372,10 @@ internal static class ImageCodecTests
         }
 
         VerifySVGMathDPI(cascaded);
+    }
 
+    private static void VerifySVGMathLimits(Image image)
+    {
         image.LoadSVGFromString("""
             <svg xmlns="http://www.w3.org/2000/svg" width="calc(8192px + 8192px)" height="1">
                 <rect width="16384" height="1" fill="red"/>
@@ -436,6 +447,153 @@ internal static class ImageCodecTests
         image.LoadSVGFromString(StylesheetWithWidth("calc(+1.2e1px /**/ + (2px - 2px))"));
         Check(image.Size == new Vector2i(12, 6) && image.GetPixel(1, 1) == Colors.Red && mathChanges == 1,
             "Corrected SVG math accepts signed decimal exponents and parentheses, and emits Changed once.");
+    }
+
+    private static void VerifySVGVariables()
+    {
+        const string source = """
+            <svg xmlns="http://www.w3.org/2000/svg" id="root" class="icon" viewBox="0 0 8 4"
+                 width="5" height="7" style="--Width:2px; --height:2px; --inline:3px; width:var(--chain)">
+                <style>
+                    #root { --Width: 16px !important; --height: 3px; --order: 1px; }
+                    #root { --order: 2px; }
+                    .icon { --order: 5px; --inline: 4px; }
+                    :root { --width: 9px; --Width: 7px !important; --chain: VAR(/**/--Width);
+                            height: calc(var(--height) / 2 + var(--order) + var(--missing, min(var(--inline), 4px))); }
+                    rect { --Width: 4px !important; }
+                </style>
+                <rect width="4" height="4" fill="red"/>
+                <rect x="4" width="4" height="4" fill="blue"/>
+            </svg>
+            """;
+        using var image = new Image();
+        VerifySVGComputedViewport(image, source, "var(--missing)");
+        image.LoadSVGFromString(Document("--a:1px; width:var(--missing, /**/ var(--a) /**/); height:var(--auto); --auto:auto"));
+        Check(image.Size == new Vector2i(1, 150), "A nested fallback resolves and substituted auto uses the default axis.");
+
+        image.LoadSVGFromString(Document("--a:var(--b); --b:var(--a, var(--c)); --c:var(--a); width:var(--c, 3px)"));
+        Check(image.Size == new Vector2i(3, 2), "A fallback recovers when any member of a multi-edge cycle is referenced.");
+        image.LoadSVGFromString(Document("--a:3px; --b:var(--a, var(--b)); width:var(--b, 4px)"));
+        Check(image.Size == new Vector2i(4, 2), "An unused fallback still contributes its self-cycle.");
+        image.LoadSVGFromString(Document("--empty:; --a:3px; width:var(--a)var(--empty)var(--missing,)"));
+        Check(image.Size == new Vector2i(3, 2), "Empty variables and empty fallbacks substitute no tokens.");
+
+        var before = image.GetData();
+        var changes = 0;
+        image.Changed += _ => changes++;
+        using var dpi = DPITexture.CreateFromString(source);
+        var dpiChanges = 0;
+        dpi.Changed += _ => dpiChanges++;
+
+        var chain = string.Concat(Enumerable.Range(0, 66).Select(index => $"--v{index}:var(--v{index + 1});"));
+        var expansion = "--part:" + new string('1', 9000) + "; width:var(--part)var(--part)";
+        var repeated = "--part:; width:" + string.Concat(Enumerable.Repeat("var(--part)", 500)) + "3px";
+        foreach (var declarations in new[]
+        {
+            "width:3px; width:var(--missing)",
+            "--a:var(--a, 3px); width:var(--a)",
+            "--a:12oops; width:var(--a, 3px)",
+            "--a:NaN; width:var(--a)",
+            "width:var(--bad name, 3px)",
+            "width:var(width, 3px)",
+            "--a:12; width:var(--a)px",
+            "--a:2px; width:calc(var(--a)+ 1px)",
+            "--a:px; width:calc(3var(--a) + 1px)",
+            "width:var(--a)",
+            chain + "width:var(--v0, 3px)",
+            expansion,
+            repeated,
+        })
+        {
+            var invalid = Document(declarations);
+            Reject<InvalidDataException>(() => image.LoadSVGFromString(invalid));
+            Reject<InvalidDataException>(() => image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(invalid)));
+            Reject<InvalidDataException>(() => dpi.SetSource(invalid));
+            Check(image.Size == new Vector2i(3, 2) && image.GetData().SequenceEqual(before) && changes == 0,
+                $"Invalid SVG variables preserve the image and emit no Changed event ({declarations.Length} chars).");
+            Check(dpi.GetSource() == source && dpi.GetSize() == new Vector2(16, 6) && dpiChanges == 0,
+                "Invalid SVG variables preserve DPITexture source, size and Changed count.");
+        }
+
+        var corrected = Document("--a:3px; width:var(--a)");
+        image.LoadSVGFromString(corrected);
+        dpi.SetSource(corrected);
+        Check(changes == 1 && dpiChanges == 1 && dpi.GetSize() == new Vector2(3, 2),
+            "A corrected SVG replaces the previous image and DPITexture source once.");
+
+        static string Document(string declarations) => $"""
+            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="2" style="{declarations}">
+                <rect width="1" height="2" fill="red"/>
+            </svg>
+            """;
+    }
+
+    private static void VerifySVGVariableDepthAcrossAxes()
+    {
+        var chain = string.Concat(Enumerable.Range(0, 63).Select(index => $"--v{index}:var(--v{index + 1});"));
+        using var image = new Image();
+        image.LoadSVGFromString(Document("--v63:3px; width:var(--v0); height:var(--v0)"));
+        Check(image.Size == new Vector2i(3, 3) && image.GetPixel(0, 0) == Colors.Red,
+            "Both axes can share a 64-property chain.");
+        var pixels = image.GetData();
+        var changes = 0;
+        image.Changed += _ => changes++;
+
+        const string extended = "--v63:3px; --extra:var(--v0);";
+        foreach (var dimensions in new[]
+        {
+            "width:var(--v0); height:var(--extra, 3px)",
+            "width:var(--extra, 3px); height:var(--v0)",
+            "width:calc(var(--v0) + var(--extra, 3px)); height:3px",
+        })
+        {
+            var invalid = Document(extended + dimensions);
+            Reject<InvalidDataException>(() => image.LoadSVGFromString(invalid));
+            Reject<InvalidDataException>(() => image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(invalid)));
+            Check(image.Size == new Vector2i(3, 3) && image.GetData().SequenceEqual(pixels) && changes == 0,
+                "A 65-property chain is rejected even after a shorter lookup populated the cache.");
+        }
+
+        image.LoadSVGFromString(Document("--v63:4px; --extra:var(--v1); width:var(--v0); height:var(--extra)"));
+        Check(image.Size == new Vector2i(4, 4) && image.GetPixel(0, 0) == Colors.Red && changes == 1,
+            "Shortening the extra chain to 64 properties publishes the corrected image once.");
+
+        const string unusedFallback = "--v63:4px; --size:4px; --extra:var(--size, var(--v0));";
+        const string cyclicFallback = "--v63:4px; --size:4px; --extra:var(--size, var(--b));" +
+            "--a:var(--b, var(--v2)); --b:var(--a);";
+        pixels = image.GetData();
+        foreach (var declarations in new[]
+        {
+            unusedFallback + "width:var(--v0); height:var(--extra)",
+            unusedFallback + "width:var(--extra); height:var(--v0)",
+            unusedFallback + "width:calc(var(--v0) + var(--extra)); height:4px",
+            cyclicFallback + "width:var(--a, 4px); height:var(--extra)",
+            cyclicFallback + "width:var(--extra); height:var(--a, 4px)",
+        })
+        {
+            var invalid = Document(declarations);
+            Reject<InvalidDataException>(() => image.LoadSVGFromString(invalid));
+            Reject<InvalidDataException>(() => image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(invalid)));
+            Check(image.Size == new Vector2i(4, 4) && image.GetData().SequenceEqual(pixels) && changes == 1,
+                "An over-depth dependency in an unused fallback preserves the raster regardless of lookup order.");
+        }
+
+        image.LoadSVGFromString(Document(
+            "--v63:4px; --size:5px; --extra:var(--size, var(--v1)); width:var(--v0); height:var(--extra)"));
+        Check(image.Size == new Vector2i(4, 5) && image.GetPixel(0, 0) == Colors.Red && changes == 2,
+            "A fallback dependency within the limit allows the main value and emits Changed once.");
+
+        image.LoadSVGFromString(Document(
+            cyclicFallback.Replace("var(--v2)", "var(--v3)", StringComparison.Ordinal) +
+            "width:var(--extra); height:var(--a, 5px)"));
+        Check(image.Size == new Vector2i(4, 5) && changes == 3,
+            "A cycle within the depth limit still allows its caller to select a fallback.");
+
+        string Document(string declarations) => $"""
+            <svg xmlns="http://www.w3.org/2000/svg" style="{chain}{declarations}">
+                <rect width="1" height="1" fill="red"/>
+            </svg>
+            """;
     }
 
     private static void VerifySVGMathWhitespace()
