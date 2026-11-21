@@ -5,10 +5,15 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
-    internal override CanvasRenderTiming CreateRenderTiming() { GPUTimestampQueries.RequireElapsed(); return new GPUTiming(Device, _device); }
-    private sealed class GPUTiming(nint device, SafeHandle parent) : CanvasRenderTiming
+    internal override CanvasRenderTiming CreateRenderTiming()
     {
-        private readonly GPUTimestampQueries _queries = new(device, parent, 2);
+        GPUTimestampQueries.RequireElapsed();
+        return new GPUTiming(Device, _device, Driver == "direct3d12");
+    }
+
+    private sealed class GPUTiming(nint device, SafeHandle parent, bool d3d12) : CanvasRenderTiming
+    {
+        private readonly GPUTimestampQueries _queries = new(device, parent, 2, d3d12);
         private nint _fence;
         internal void Begin(nint command) { _queries.Reset(command); _queries.Write(command, 0); }
         internal void End(nint command) => _queries.Write(command, 1);

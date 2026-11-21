@@ -16,7 +16,13 @@ internal static partial class RenderingRuntimeTests
         Reject<InvalidOperationException>(() => RenderingServer.ViewportSetMeasureRenderTime(default, true));
         var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); var fps = Engine.MaxFPS;
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend == "software" ? "compatibility" : backend); Engine.MaxFPS = 60;
-        try { if (backend == "software") UnsupportedViewportTiming(); else NativeViewportTiming(backend); }
+        try
+        {
+            if (backend == "software" || backend == "compatibility" && OperatingSystem.IsWindows())
+                UnsupportedViewportTiming();
+            else
+                NativeViewportTiming(backend);
+        }
         finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); Engine.MaxFPS = fps; }
         Reject<InvalidOperationException>(() => RenderingServer.ViewportGetMeasuredRenderTimeGPU(default));
     }
@@ -25,11 +31,27 @@ internal static partial class RenderingRuntimeTests
         var root = new Window { Size = new(320, 240) }; root.AddChild(new ColorRect { Size = new(320, 240), Color = Colors.Red });
         root.Ready += _ =>
         {
+            var driver = RenderingServer.GetCurrentRenderingDriverName();
+            Check(RenderingServer.GetCurrentRenderingMethod() == "compatibility", "The Compatibility renderer is active.");
+            if (Environment.GetEnvironmentVariable("SDL_RENDER_DRIVER") is { } expected)
+                Check(driver == expected, "The requested Compatibility driver is active.");
+            Console.WriteLine($"Viewport timing unsupported driver: {driver}.");
             Reject<NotSupportedException>(() => RenderingServer.ViewportSetMeasureRenderTime(root.GetViewportRID(), true));
             RenderingServer.ViewportSetMeasureRenderTime(root.GetViewportRID(), false);
-            RenderingServer.FramePostDraw += () => { Check(RenderingServer.GetFrameSetupTimeCPU() > 0 && RenderingServer.ViewportGetMeasuredRenderTimeCPU(root.GetViewportRID()) == 0, "CPU setup executes while unsupported native timers reject."); root.Tree!.Quit(); };
+            RenderingServer.FramePostDraw += () =>
+            {
+                var rid = root.GetViewportRID();
+                Check(RenderingServer.GetFrameSetupTimeCPU() > 0 &&
+                    RenderingServer.ViewportGetMeasuredRenderTimeCPU(rid) == 0 &&
+                    RenderingServer.ViewportGetMeasuredRenderTimeGPU(rid) == 0,
+                    "CPU setup executes and disabled timing remains zero after rejection.");
+                using var image = root.GetTexture().GetImage()!;
+                Check(image.GetPixel(8, 8) == Colors.Red, "Compatibility renders the expected canvas after timer rejection.");
+                root.Tree!.Quit();
+            };
         };
-        Check(Engine.Run(root) == 0, "Software timer rejection preserves rendering."); Console.WriteLine("Viewport timing unsupported/native-query guard passed.");
+        Check(Engine.Run(root) == 0, "Native timer rejection preserves Compatibility rendering.");
+        Console.WriteLine("Viewport timing unsupported/native-query guard passed.");
     }
     private static void NativeViewportTiming(string backend)
     {
@@ -43,6 +65,7 @@ internal static partial class RenderingRuntimeTests
         var childDrawArmed = false; var childDrawSlept = false;
         var childDraw = new CanvasNode { DrawAction = _ => { if (childDrawArmed) { childDrawArmed = false; Thread.Sleep(300); childDrawSlept = true; } } }; sub.AddChild(childDraw);
         RID server = default, canvas = default, item = default; RID[] ids = [];
+        var direct3D12 = false;
         var phase = 0; var frames = 0; var warm = 0; var cycles = 0; long before = 0, active = -1, idle = -1;
         root.AddChild(new CanvasNode { DrawAction = node => { Reject<InvalidOperationException>(() => RenderingServer.ViewportSetMeasureRenderTime(root.GetViewportRID(), false)); node.DrawRect(new(1, 1, 2, 2), Colors.White); } });
         bool Measured()
@@ -64,6 +87,8 @@ internal static partial class RenderingRuntimeTests
             {
                 case 0:
                     Pixels(); if (!Measured()) return;
+                    Console.WriteLine(FormattableString.Invariant(
+                        $"Completed GPU durations (ms): root={RenderingServer.ViewportGetMeasuredRenderTimeGPU(ids[0]):G9}, SubViewport={RenderingServer.ViewportGetMeasuredRenderTimeGPU(ids[1]):G9}, RID={RenderingServer.ViewportGetMeasuredRenderTimeGPU(ids[2]):G9}, native child={RenderingServer.ViewportGetMeasuredRenderTimeGPU(ids[3]):G9}."));
                     RenderingServer.ViewportSetMeasureRenderTime(ids[0], false);
                     Check(RenderingServer.ViewportGetMeasuredRenderTimeCPU(ids[0]) == 0 && RenderingServer.ViewportGetMeasuredRenderTimeGPU(ids[0]) == 0, "Disable clears visible measurements immediately."); phase++; break;
                 case 1:
@@ -90,10 +115,15 @@ internal static partial class RenderingRuntimeTests
                     if (++warm < 32) break;
                     before = GC.GetAllocatedBytesForCurrentThread(); phase++; break;
                 case 7:
-                    Check(Measured(), "Prepared native measurements stay published.");
-                    if (++cycles < 64) break;
+                    if (++cycles < 64)
+                    {
+                        Check(Measured(), "Prepared native measurements stay published.");
+                        break;
+                    }
                     active = GC.GetAllocatedBytesForCurrentThread() - before;
-                    RenderingServer.FreeRID(server); RenderingServer.FreeRID(item); RenderingServer.FreeRID(canvas);
+                    RenderingServer.FreeRID(server);
+                    RenderingServer.FreeRID(item);
+                    RenderingServer.FreeRID(canvas);
                     Reject<ArgumentException>(() => RenderingServer.ViewportGetMeasuredRenderTimeGPU(server));
                     ids = [root.GetViewportRID(), sub.GetViewportRID(), child.GetViewportRID()];
                     foreach (var id in ids) RenderingServer.ViewportSetMeasureRenderTime(id, false);
@@ -112,6 +142,22 @@ internal static partial class RenderingRuntimeTests
         }
         root.Ready += _ =>
         {
+            var driver = RenderingServer.GetCurrentRenderingDriverName();
+            direct3D12 = driver == "direct3d12";
+            Check(RenderingServer.GetCurrentRenderingMethod() == backend, "The requested canvas backend is active.");
+            if (backend == "gpu" && Environment.GetEnvironmentVariable("SDL_GPU_DRIVER") is { } expected)
+                Check(driver == expected, "The requested native GPU driver is active.");
+            Console.WriteLine($"Viewport timing driver: {driver}, SDL {SDL3.SDL.GetVersion()}.");
+            if (OperatingSystem.IsWindows())
+            {
+                using var process = Process.GetCurrentProcess();
+                var sdl = process.Modules.Cast<ProcessModule>().Single(module =>
+                    string.Equals(module.ModuleName, "SDL3.dll", StringComparison.OrdinalIgnoreCase));
+                using var stream = System.IO.File.OpenRead(sdl.FileName);
+                var hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(stream));
+                Console.WriteLine($"Loaded SDL: {sdl.FileName}, SHA-256 {hash}.");
+            }
+
             Reject<ArgumentException>(() => RenderingServer.ViewportGetMeasuredRenderTimeCPU(default));
             Reject<ArgumentException>(() => RenderingServer.ViewportSetMeasureRenderTime(default, true));
             Reject<InvalidOperationException>(() => Task.Run(() => RenderingServer.GetFrameSetupTimeCPU()).GetAwaiter().GetResult());
@@ -124,5 +170,7 @@ internal static partial class RenderingRuntimeTests
         };
         Check(Engine.Run(root) == 0 && phase == 9 && active == 0 && idle == 0, "All native timing and lifetime phases complete.");
         Console.WriteLine($"Viewport timing {backend}: root/SubViewport/RID/native-child pixels, process/capture/owner guards, resize/remap/retirement, 64 active/64 idle frames {active}/{idle} B passed.");
+        if (backend == "gpu" && direct3D12)
+            RunPendingDirect3D12ViewportTiming();
     }
 }

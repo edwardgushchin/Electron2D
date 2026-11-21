@@ -7,4 +7,4 @@ Last updated: 2026-11-21
 - Component: [GPU timestamps](../components/gpu-timestamps.md)
 - Visibility: internal; unavailable to engine consumers.
 
-Owns private native timestamp storage through RenderHandle and its device lease. RenderingDevice selects the Vulkan or Direct3D 12 adapter. GPU canvas elapsed measurements use Vulkan. The owner validates native operation results and disposes the query storage before releasing the device lease.
+Owns private native timestamp storage through RenderHandle and its device lease. RenderingDevice markers and GPU canvas elapsed measurements select the Vulkan or Direct3D 12 adapter from the active driver. The owner validates native operation results and disposes the query storage before releasing the device lease.

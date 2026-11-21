@@ -34,7 +34,7 @@ public sealed partial class RenderingServer
     /// <param name="viewport">A live scene or caller-owned viewport.</param><param name="enable">Whether to retain native elapsed queries.</param>
     /// <remarks>Results are milliseconds from completed viewport draws. Child viewport CPU work, process scripts,
     /// frame caps and presentation waits are excluded. Disabled and not-yet-completed measurements read zero.
-    /// Enabling allocates cold query storage. The current native adapters are Vulkan and Linux GL timestamp contexts;
+    /// Enabling allocates cold query storage. Native adapters include Vulkan, Direct3D 12 and supported Compatibility GL contexts;
     /// unsupported backends reject. Disable/release retires pending native queries on the owner.</remarks>
     /// <exception cref="ArgumentException">The viewport identity is invalid.</exception>
     /// <exception cref="InvalidOperationException">Owner, capture/submission or native state is invalid.</exception>

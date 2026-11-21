@@ -36,7 +36,7 @@ internal sealed unsafe partial class GPUTimestampQueries : IDisposable
     internal static void RequireElapsed()
     {
         try { _ = NativeTimestampElapsed(0, 1, 0, out _); }
-        catch (Exception error) when (error is EntryPointNotFoundException or DllNotFoundException) { throw new NotSupportedException("Native elapsed queries require the current native Vulkan adapter.", error); }
+        catch (Exception error) when (error is EntryPointNotFoundException or DllNotFoundException) { throw new NotSupportedException("Native elapsed queries require the current native rendering bridge.", error); }
     }
     internal ulong ReadElapsed()
     {

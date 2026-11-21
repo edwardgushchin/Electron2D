@@ -23,7 +23,7 @@ Both identities use ordinary owned-texture drawing, updates, replacement and ret
 
 | Declaration | Contract |
 | --- | --- |
-| `public static void ViewportSetMeasureRenderTime(RID viewport, bool enable)` | Independently retain/retire a viewport's native measurements; ordinary owner/capture guards apply. |
+| `public static void ViewportSetMeasureRenderTime(RID viewport, bool enable)` | Retain or retire a viewport's native measurements independently. Supports Vulkan, Direct3D 12 and supported Compatibility GL contexts. Owner and capture guards apply. |
 | `public static double ViewportGetMeasuredRenderTimeCPU(RID viewport)` | Last completed owner CPU rendering milliseconds, excluding child viewport execution; zero when disabled/new. |
 | `public static double ViewportGetMeasuredRenderTimeGPU(RID viewport)` | Matching completed native GPU elapsed milliseconds; zero when disabled/new. |
 | `public static double GetFrameSetupTimeCPU()` | Last successful frame's common CPU setup, outside viewport submission and presentation. |
