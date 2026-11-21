@@ -3064,11 +3064,17 @@
         "OS::enum_value:SystemDir.SYSTEM_DIR_MUSIC",
         "OS::enum_value:SystemDir.SYSTEM_DIR_PICTURES",
         "OS::enum_value:SystemDir.SYSTEM_DIR_RINGTONES",
+        "OS::method:get_system_dir(int:OS.SystemDir,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "SDL resolves desktop roles. Android API 23+ resolves all eight roles in shared or app-specific primary external storage. Desktop and unknown values select the chosen root on Android. App-specific lookup may create directories and scoped storage still controls access. See docs/components/os-environment.md for mappings and verification."
+    },
+    {
+      "godot": [
         "OS::method:get_cache_dir()",
         "OS::method:get_config_dir()",
         "OS::method:get_data_dir()",
         "OS::method:get_environment(String:)",
-        "OS::method:get_system_dir(int:OS.SystemDir,bool:)",
         "OS::method:get_temp_dir()",
         "OS::method:get_user_data_dir()",
         "OS::method:has_environment(String:)",
@@ -3076,7 +3082,7 @@
         "OS::method:unset_environment(String:)"
       ],
       "state": "Implemented",
-      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; mobile shared/app/global directory adapters remain unavailable with explicit failures."
+      "reason": "Retained static OS environment/directory slice under ADR 0004/0019/0051/0095: process-local literal/empty values, native child inheritance, global XDG paths, current user:// root and typed native desktop directory roles execute. OSEnvironmentTests checks invalid inputs, fresh child inheritance, all roles, XDG overrides/non-creation and public FileAccess integration. Linux desktop evidence; global mobile config/data/cache adapters remain unavailable with explicit failures."
     },
     {
       "godot": [

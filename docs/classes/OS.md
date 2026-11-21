@@ -134,7 +134,7 @@ Forces termination of one positive native PID; descendants survive. Owned BCL/na
 
 ## Process environment and directories
 
-GetEnvironment, HasEnvironment, SetEnvironment and UnsetEnvironment manage process-local variables, including empty values, with native SDL child inheritance. GetConfigDir, GetDataDir, GetCacheDir and GetTempDir expose host paths; GetUserDataDir returns the current user:// root. GetSystemDir accepts the nested SystemDir enum and native user-directory policy. Queries do not create directories or grant access. See [behavior, failures and executable verification](../components/os-environment.md).
+GetEnvironment, HasEnvironment, SetEnvironment and UnsetEnvironment manage process-local variables, including empty values, with native SDL child inheritance. GetConfigDir, GetDataDir, GetCacheDir and GetTempDir expose host paths; GetUserDataDir returns the current user:// root. GetSystemDir accepts the nested SystemDir enum and native user-directory policy. Android may create an app-specific external directory during lookup. The query leaves filesystem permissions in effect. See [behavior, failures and executable verification](../components/os-environment.md).
 
 | API | Contract |
 | --- | --- |
@@ -142,7 +142,7 @@ GetEnvironment, HasEnvironment, SetEnvironment and UnsetEnvironment manage proce
 | SetEnvironment(string variable, string value) / UnsetEnvironment(string variable) | Update managed and SDL environments for subsequent children; process-local, validated names and literal values. |
 | GetConfigDir() / GetDataDir() / GetCacheDir() / GetTempDir() | Global host paths, with absolute XDG overrides on Linux. |
 | GetUserDataDir() | Exact active ProjectSettings.UserDataRoot. |
-| GetSystemDir(SystemDir dir, bool sharedStorage = true) | Native Desktop, DCIM, Documents, Downloads, Movies, Music, Pictures and Ringtones roles; explicit unsupported-host/role errors. |
+| GetSystemDir(SystemDir dir, bool sharedStorage = true) | Native Desktop, DCIM, Documents, Downloads, Movies, Music, Pictures and Ringtones roles. On Android, the storage selector chooses shared or app-specific external storage. Desktop and unknown roles return the corresponding Android root. |
 
 ## Standard handles and input
 

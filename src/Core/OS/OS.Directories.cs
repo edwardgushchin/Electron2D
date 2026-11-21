@@ -64,17 +64,22 @@ public sealed partial class OS
     /// <returns>The same root used by ProjectSettings.GlobalizePath for user://.</returns>
     public static string GetUserDataDir() => ProjectSettings.UserDataRoot;
 
-    /// <summary>Gets a platform-provided directory for user-managed files without creating it.</summary>
+    /// <summary>Gets a platform-provided directory path for user-managed files.</summary>
     /// <param name="dir">The directory role.</param>
-    /// <param name="sharedStorage">Selects Android shared storage; desktop hosts have no separate shared-storage selector.</param>
+    /// <param name="sharedStorage">On Android, true selects shared external storage and false selects app-specific external storage. Desktop hosts ignore this parameter.</param>
     /// <returns>The native directory path, which need not exist yet.</returns>
     /// <remarks>Desktop Linux/Windows map DCIM to Pictures and Ringtones to Music. macOS has no corresponding roles.
-    /// Mobile shared/app directory adapters are currently unavailable. Native directory policy is owned by SDL.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The directory role is unknown.</exception>
+    /// On supported Android hosts (API 23+), Desktop and unknown roles select the root of the chosen area.
+    /// For app-specific storage, Android may create the directory. This query leaves permissions and scoped storage
+    /// restrictions in effect and does not prompt for permission.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The directory role is unknown on a non-Android host.</exception>
     /// <exception cref="PlatformNotSupportedException">The host or directory role is unsupported.</exception>
-    /// <exception cref="IOException">The native directory service fails.</exception>
+    /// <exception cref="IOException">The native directory service cannot provide a path.</exception>
     public static string GetSystemDir(SystemDir dir, bool sharedStorage = true)
     {
+#if ANDROID
+        return GetAndroidSystemDir(dir, sharedStorage);
+#else
         if ((uint)dir > (uint)SystemDir.Ringtones) throw new ArgumentOutOfRangeException(nameof(dir));
         DesktopDirectories();
         if (OperatingSystem.IsMacOS() && dir is SystemDir.DCIM or SystemDir.Ringtones) throw new PlatformNotSupportedException("This desktop has no camera-image or ringtone directory role.");
@@ -90,7 +95,35 @@ public sealed partial class OS
         var path = SDL.GetUserFolder(folder);
         if (string.IsNullOrEmpty(path)) throw new IOException("Cannot obtain the user directory: " + SDL.GetError());
         return IOPath.TrimEndingDirectorySeparator(path);
+#endif
     }
+
+#if ANDROID
+    private static string GetAndroidSystemDir(SystemDir dir, bool sharedStorage)
+    {
+        var role = dir switch
+        {
+            SystemDir.DCIM => Android.OS.Environment.DirectoryDcim,
+            SystemDir.Documents => Android.OS.Environment.DirectoryDocuments,
+            SystemDir.Downloads => Android.OS.Environment.DirectoryDownloads,
+            SystemDir.Movies => Android.OS.Environment.DirectoryMovies,
+            SystemDir.Music => Android.OS.Environment.DirectoryMusic,
+            SystemDir.Pictures => Android.OS.Environment.DirectoryPictures,
+            SystemDir.Ringtones => Android.OS.Environment.DirectoryRingtones,
+            _ => null
+        };
+
+        // These APIs still identify shared paths under scoped storage.
+#pragma warning disable CS0618, CA1422
+        using var directory = sharedStorage
+            ? role is null
+                ? Android.OS.Environment.ExternalStorageDirectory
+                : Android.OS.Environment.GetExternalStoragePublicDirectory(role)
+            : Android.App.Application.Context.GetExternalFilesDir(role);
+#pragma warning restore CS0618, CA1422
+        return RequireDirectory(directory?.AbsolutePath);
+    }
+#endif
 
     private static void DesktopDirectories()
     {
@@ -98,7 +131,7 @@ public sealed partial class OS
             throw new PlatformNotSupportedException("Global and user-managed directories require a desktop directory adapter.");
     }
 
-    private static string RequireDirectory(string path)
+    private static string RequireDirectory(string? path)
     {
         if (string.IsNullOrEmpty(path)) throw new IOException("The host directory service returned no directory.");
         return path;

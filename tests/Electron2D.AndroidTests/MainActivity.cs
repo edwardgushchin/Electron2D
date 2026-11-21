@@ -43,6 +43,13 @@ internal sealed class MainActivity : SDLActivity
                 (Electron2D.OS.GetDistributionName() == "Android" && Electron2D.OS.GetVersion() != version) ||
                 Electron2D.OS.GetVersionAlias() != $"{release} (SDK {sdk} build {build})")
                 throw new InvalidOperationException("Engine OS identity disagrees with Android Build metadata.");
+            var expectUnavailableStorage = Intent?.GetBooleanExtra("unavailable-storage", false) == true;
+            SystemDirectoryChecks.Run(this, expectUnavailableStorage);
+            if (expectUnavailableStorage)
+            {
+                Log.Info("Electron2DTests", $"RESULT {run} PASS");
+                return;
+            }
             Log.Info("Electron2DTests", "CHECK managed contracts");
             ContractChecks.Run(message => Log.Info("Electron2DTests", message));
             Log.Info("Electron2DTests", "CHECK native font precision");

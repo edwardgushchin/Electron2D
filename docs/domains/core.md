@@ -74,7 +74,7 @@ The [typed connection boundary](../components/event-connections.md#exclusions) e
 
 The existing PropertyDescriptor/Resource scene-copy machinery now supports an internal force-subresource policy, used by Skeleton stacks to prevent shared mutable scene bindings. Existing DuplicationSession tracking retains aliases, rollback and instance-owned lifetime; no new public selector or reflection path is added.
 
-The [OS environment and directory component](../components/os-environment.md) now executes process-local variables, native child inheritance and global/project/user-directory queries through the retained static OS service.
+The [OS environment and directory component](../components/os-environment.md) now executes process-local variables, native child inheritance and global/project/user-directory queries through the retained static OS service. Android resolves user-directory roles in shared or app-specific external storage.
 
 The [standard-input component](../components/standard-input.md) executes actual native standard-handle classification and serialized raw/UTF-8 input, including pipe-driven child applications.
 
