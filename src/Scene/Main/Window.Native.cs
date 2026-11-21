@@ -136,7 +136,8 @@ public partial class Window
     }
 
     /// <summary>Reports whether the current native frame or detached window policy permits user maximization.</summary>
-    /// <returns>On Windows, whether the native maximize style is present. Other active backends report the resize policy.</returns>
+    /// <returns>On Windows, whether the native maximize style is present.
+    /// X11 combines resizability with the retained maximize restriction. Other active backends report the resize policy.</returns>
     /// <exception cref="InvalidOperationException">An active window is accessed off-thread.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowedCore() ?? (!Unresizable && !MaximizeDisabled); }

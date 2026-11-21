@@ -1521,7 +1521,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Windows 11 applies the selected HWND's DWM corner preference and reads the observed policy. WindowCornerTests exercises scene/root/child/popup lifetimes, independent DWM reads, external changes and rejection on dummy. Existing native border, resize, input and capture policies keep their own capabilities. Remaining triggers include macOS extend-to-title and capture sharing, macOS and X11 caption controls on ordinary windows and a supported top-level Wayland stacking/focus adapter (ADRs 0040/0021).",
+      "reason": "Windows 11 applies the selected HWND's DWM corner preference and reads the observed policy. WindowCornerTests exercises scene/root/child/popup lifetimes, independent DWM reads, external changes and rejection on dummy. Existing native border, resize, input and capture policies keep their own capabilities. Windows and X11 ordinary root and child windows retain independent caption restrictions. X11 sends Motif function hints and reports retained requests. Effective actions depend on the manager, with Xfwm4 4.20.0 verified. Remaining triggers include macOS extend-to-title, capture sharing and caption controls, plus a supported top-level Wayland stacking/focus adapter (ADRs 0040/0021).",
       "godot": [
         "DisplayServer::method:window_set_flag(int:DisplayServer.WindowFlags,bool:,int:)",
         "DisplayServer::method:window_get_flag(int:DisplayServer.WindowFlags,int:)"
@@ -1529,7 +1529,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Windows reads the observed maximize style including caption policy and mode. Other backends report SDL resizability. Requires macOS and X11 native maximize-policy observation and an SDL-owned listener or exposed capability for Wayland xdg_toplevel wm_capabilities (ADR 0040).",
+      "reason": "Windows reads the observed maximize style including caption policy and mode. X11 combines SDL resizability and the retained MaximizeDisabled request. Actual X11 actions depend on the window manager. Other active backends report SDL resizability. macOS native observation and Wayland xdg_toplevel wm_capabilities remain open (ADR 0040).",
       "godot": [
         "DisplayServer::method:window_is_maximize_allowed(int:)"
       ]

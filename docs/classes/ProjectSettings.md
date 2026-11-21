@@ -115,7 +115,7 @@ Viewport dimensions and scale must be positive, scale must be finite, override a
 
 ### Caption buttons
 
-`WindowMinimizeDisabled` and `WindowMaximizeDisabled` are bool settings under `display/window/size/`. Both default to false. The effective settings apply to the Windows project root before scene entry. Explicit window flags, including packed false values, take precedence. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
+`WindowMinimizeDisabled` and `WindowMaximizeDisabled` are bool settings under `display/window/size/`. Both default to false. The effective settings apply to the Windows and X11 project root before scene entry. Explicit window flags, including packed false values, take precedence. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
 
 ## Project window VSync
 

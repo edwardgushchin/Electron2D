@@ -409,6 +409,17 @@ public partial class Window : Viewport
             DisplayServer.WindowSetVSyncMode(ProjectSettings.GetWithOverride(ProjectSettings.WindowVSyncMode));
         _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow(), printGPUProfile);
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
+        ApplyX11CaptionButtons(_display);
+    }
+
+    private void ApplyX11CaptionButtons(DisplayServer display)
+    {
+        if (!display.UsesX11CaptionButtons)
+            return;
+
+        // SDL can replace the native X11 window when it initializes the renderer.
+        display.WindowSetFlagCore(WindowFlag.MinimizeDisabled, MinimizeDisabled);
+        display.WindowSetFlagCore(WindowFlag.MaximizeDisabled, MaximizeDisabled);
     }
 
     private static bool SupportsNativeSizeLimits =>
@@ -434,7 +445,8 @@ public partial class Window : Viewport
             display.WindowSetSizeCore(_size);
         }
         foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.MousePassthrough, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus, WindowFlag.Popup, WindowFlag.Transparent, WindowFlag.PopupWmHint, WindowFlag.MinimizeDisabled, WindowFlag.MaximizeDisabled, WindowFlag.SharpCorners, WindowFlag.ExcludeFromCapture })
-            if (GetFlag(flag))
+            if (GetFlag(flag) && !(display.UsesX11CaptionButtons &&
+                flag is WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled))
                 display.WindowSetFlagCore(flag, true);
         display.SetNativeTitleVisibility(_keepTitleVisible);
         display.WindowSetMousePassthroughCore(_mousePassthroughPolygon);

@@ -522,7 +522,7 @@ public sealed partial class DisplayServer
         var previousFlags = changesFrame ? SDL.GetWindowFlags(window) : default;
         var success = flag switch
         {
-            WindowFlag.Borderless => SDL.SetWindowBordered(window, !enabled),
+            WindowFlag.Borderless => SetWindowBordered(window, !enabled),
             WindowFlag.ResizeDisabled => SDL.SetWindowResizable(window, !enabled),
             WindowFlag.AlwaysOnTop => SDL.SetWindowAlwaysOnTop(window, enabled),
             WindowFlag.NoFocus => SDL.SetWindowFocusable(window, !enabled),
@@ -544,7 +544,7 @@ public sealed partial class DisplayServer
                 try
                 {
                     var restored = flag == WindowFlag.Borderless
-                        ? SDL.SetWindowBordered(window, (previousFlags & SDL.WindowFlags.Borderless) == 0)
+                        ? SetWindowBordered(window, (previousFlags & SDL.WindowFlags.Borderless) == 0)
                         : SDL.SetWindowResizable(window, (previousFlags & SDL.WindowFlags.Resizable) != 0);
                     if (!restored)
                         throw SDLFailure("restore the window frame");
@@ -562,8 +562,10 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) return ResolveWindow(windowId).WindowIsMaximizeAllowedCore(MainWindowId);
         EnsureOwner();
         var flags = SDL.GetWindowFlags(GetWindow(windowId));
-        if (SupportsCaptionButtons)
+        if (_videoDriver == "windows" && !IsNativePopup)
             return (ReadCaptionStyle(WindowGetNativeHandleCore(HandleType.WindowHandle)) & MaximizeBox) != 0;
+        if (_videoDriver == "x11" && !IsNativePopup && GetCaptionButtonDisabled(WindowFlag.MaximizeDisabled))
+            return false;
         return (flags & SDL.WindowFlags.Resizable) != 0;
     }
 

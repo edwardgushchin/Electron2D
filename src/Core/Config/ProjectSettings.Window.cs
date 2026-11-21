@@ -83,11 +83,11 @@ public sealed partial class ProjectSettings
     public static ProjectSetting<bool> WindowSharpCorners { get; } = new("display/window/size/sharp_corners", false);
 
     /// <summary>Disables the minimize button on the configured native top-level window.</summary>
-    /// <value>False by default. On Windows an explicitly assigned window flag takes precedence.</value>
+    /// <value>False by default. On Windows and X11 an explicitly assigned window flag takes precedence. X11 enforcement depends on the window manager.</value>
     public static ProjectSetting<bool> WindowMinimizeDisabled { get; } = new("display/window/size/minimize_disabled", false);
 
     /// <summary>Disables the maximize button on the configured native top-level window.</summary>
-    /// <value>False by default. On Windows an explicitly assigned window flag takes precedence.</value>
+    /// <value>False by default. On Windows and X11 an explicitly assigned window flag takes precedence. X11 enforcement depends on the window manager.</value>
     public static ProjectSetting<bool> WindowMaximizeDisabled { get; } = new("display/window/size/maximize_disabled", false);
 
     /// <summary>Allows the configured project's native window transparency request.</summary>

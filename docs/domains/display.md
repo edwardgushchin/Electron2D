@@ -18,6 +18,8 @@ Standard cursor selection and custom-image restoration share the display-owned [
 
 [Project startup geometry](../components/window-runtime.md#project-startup-geometry) supplies the configured root's initial size and stretch policy. [Project startup placement](../components/window-runtime.md#project-startup-placement) adds the effective display selector and native mode. [Project startup window flags](../components/window-runtime.md#project-startup-window-flags) apply configurable decoration, resize, stacking and focus policies. [Project window transparency](../components/window-runtime.md#main-window-native-transparency) selects the native alpha surface and viewport clear policy.
 
+[Native caption buttons](../components/window-runtime.md#native-caption-buttons) apply independent minimize and maximize policies to ordinary Windows and X11 windows.
+
 [Window content fitting](../components/window-runtime.md#fitting-child-controls) schedules a bounded layout refresh from runtime GUI changes for native and embedded windows.
 
 [Window drawability](../components/window-runtime.md#window-drawability) projects live native presentation eligibility through DisplayServer and Window.

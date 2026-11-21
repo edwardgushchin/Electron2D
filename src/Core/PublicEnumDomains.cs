@@ -102,9 +102,9 @@ public enum WindowFlag
     ExcludeFromCapture = 9,
     /// <summary>Whether the window manager treats the window as a popup; requires multiple-window ownership.</summary>
     PopupWmHint = 10,
-    /// <summary>Whether native minimization controls are disabled; requires platform window-style integration.</summary>
+    /// <summary>Whether native minimization controls are disabled; supported on Windows and requested from the window manager on X11.</summary>
     MinimizeDisabled = 11,
-    /// <summary>Whether native maximization controls are disabled; requires platform window-style integration.</summary>
+    /// <summary>Whether native maximization controls are disabled; supported on Windows and requested from the window manager on X11.</summary>
     MaximizeDisabled = 12,
     /// <summary>The number of defined policy identifiers; not a window policy.</summary>
     Max = 13,

@@ -853,7 +853,7 @@ Reads a supported native window flag.
 
 **Returns:** Whether the policy is enabled in the observed native flags.
 
-**Remarks.** On Wayland, `AlwaysOnTop` and `NoFocus` can be unavailable for the selected window. On Windows 11, `SharpCorners` reads the selected window's DWM preference. It returns true when that preference suppresses rounding.
+**Remarks.** On Wayland, `AlwaysOnTop` and `NoFocus` can be unavailable for the selected window. On Windows 11, `SharpCorners` reads the selected window's DWM preference. It returns true when that preference suppresses rounding. On Windows and X11, the caption flags report the retained restrictions.
 
 - `flag`: Policy to inspect.
 - `windowId` selects a live native window. Zero selects the main window.
@@ -871,7 +871,7 @@ Requests a supported native window policy.
 - `enabled`: Whether to enable the policy.
 - `windowId` selects a live native window. Zero selects the main window.
 
-**Remarks.** A platform may reject the policy or apply it asynchronously. On Windows 11, clearing `SharpCorners` restores the system corner preference. See [native window corners](../components/window-runtime.md#native-window-corners).
+**Remarks.** A platform may reject the policy or apply it asynchronously. On Windows 11, clearing `SharpCorners` restores the system corner preference. X11 sends independent minimize and maximize restrictions to the window manager. See [native window corners](../components/window-runtime.md#native-window-corners) and [native caption buttons](../components/window-runtime.md#native-caption-buttons).
 
 An undefined flag throws `ArgumentOutOfRangeException`. An unsupported backend throws `NotSupportedException`. A failed DWM write throws `IOException`.
 
@@ -880,7 +880,7 @@ An undefined flag throws `ArgumentOutOfRangeException`. An unsupported backend t
 <a id="method-windowismaximizeallowed"></a>
 #### `public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`
 
-Reports the current maximize style on Windows native top-level windows, including the active mode and caption policy. Other backends report SDL resizability. Wayland compositor `wm_capabilities` remain unavailable. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
+Reports the current maximize style on Windows native top-level windows, including the active mode and caption policy. X11 combines SDL resizability with the retained maximize restriction. The X11 window manager decides which actions are available. Other backends report SDL resizability. Wayland compositor `wm_capabilities` remain unavailable. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
 
 - `windowId`: The main-window ID, zero.
 

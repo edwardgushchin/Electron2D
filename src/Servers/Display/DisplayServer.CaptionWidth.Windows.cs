@@ -13,7 +13,7 @@ public sealed partial class DisplayServer
         EnsureOwner();
         if (_keepNativeTitleVisible == enabled)
             return;
-        if (enabled && !SupportsCaptionButtons)
+        if (enabled && (_videoDriver != "windows" || IsNativePopup))
             throw new NotSupportedException("Native title measurement requires a top-level Win32 window.");
 
         ApplyNativeCaptionMinimum(enabled ? MeasureWindowsCaptionWidth() : 0);

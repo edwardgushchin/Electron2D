@@ -385,7 +385,7 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADRs 0008/0040. Windows ordinary roots and children apply independent native caption policies with live and packed assignments. Native popups keep both buttons disabled. Remaining adapters include macOS standard window buttons and X11 window-manager function hints.",
+      "reason": "ADRs 0008/0040. Windows and X11 ordinary roots and children request independent caption policies with live and packed assignments. Native popups keep both buttons disabled. X11 enforcement depends on the window manager. macOS standard window button integration remains open.",
       "godot": ["Window::property:maximize_disabled", "Window::property:minimize_disabled"]
     },
     {

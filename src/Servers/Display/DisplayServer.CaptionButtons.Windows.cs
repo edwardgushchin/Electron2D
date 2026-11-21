@@ -13,7 +13,7 @@ public sealed partial class DisplayServer
     private const int MinimizeBox = 0x00020000;
     private const int MaximizeBox = 0x00010000;
     private int _disabledCaptionButtons;
-    internal bool SupportsCaptionButtons => _videoDriver == "windows" && !IsNativePopup;
+    internal bool SupportsCaptionButtons => (_videoDriver is "windows" or "x11") && !IsNativePopup;
 
     private static int CaptionButton(WindowFlag flag) => flag == WindowFlag.MinimizeDisabled ? MinimizeBox : MaximizeBox;
 
@@ -21,14 +21,21 @@ public sealed partial class DisplayServer
     {
         if (!SupportsCaptionButtons)
             throw new NotSupportedException("Native caption button policy is unavailable on this display.");
+        if (_videoDriver == "x11")
+            return (_x11DisabledCaptionButtons & X11CaptionFunction(flag)) != 0;
         return (_disabledCaptionButtons & CaptionButton(flag)) != 0;
     }
 
     private unsafe void SetCaptionButtonDisabled(WindowFlag flag, bool disabled)
     {
-        var button = CaptionButton(flag);
         if (GetCaptionButtonDisabled(flag) == disabled)
             return;
+        if (_videoDriver == "x11")
+        {
+            SetX11CaptionButtonDisabled(flag, disabled);
+            return;
+        }
+        var button = CaptionButton(flag);
         var hwnd = WindowGetNativeHandleCore(HandleType.WindowHandle);
         var previousStyle = ReadCaptionStyle(hwnd);
         var previousMask = _disabledCaptionButtons;

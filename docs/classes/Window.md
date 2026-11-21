@@ -465,7 +465,7 @@ An unchanged request does nothing. Failed native requests do not commit the conf
 <a id="ismaximizeallowed"></a>
 ### `public bool IsMaximizeAllowed()`
 
-Reports the native maximize style on Windows. Other active backends report SDL resizability and may impose compositor restrictions. Detached and embedded windows report the local resize and caption policy. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
+Reports the native maximize style on Windows. On X11 it combines SDL resizability with the retained `MaximizeDisabled` request. The X11 window manager decides which actions are available. Other active backends report SDL resizability. Detached and embedded windows report the local resize and caption policy. See [native caption buttons](../components/window-runtime.md#native-caption-buttons).
 
 **InvalidOperationException:** An active window is accessed off-thread.
 
@@ -758,8 +758,8 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 | `public System.Boolean Borderless { get; set; }` | Gets or sets the policy removing native or embedded window borders and title bar. |
 | `public System.Boolean Exclusive { get; set; }` | Gets or sets whether input outside this window is blocked while visible. |
 | `public Electron2D.LayoutDirection LayoutDirection { get; set; }` | Gets or sets the direction inherited by this window's controls. |
-| `public System.Boolean MaximizeDisabled { get; set; }` | Gets or sets whether user maximization is disabled. |
-| `public System.Boolean MinimizeDisabled { get; set; }` | Gets or sets whether user minimization is disabled. |
+| `public System.Boolean MaximizeDisabled { get; set; }` | Gets or sets whether user maximization is disabled. See [native caption buttons](../components/window-runtime.md#native-caption-buttons). |
+| `public System.Boolean MinimizeDisabled { get; set; }` | Gets or sets whether user minimization is disabled. See [native caption buttons](../components/window-runtime.md#native-caption-buttons). |
 | `public System.Boolean PopupWMHint { get; set; }` | Gets or sets the popup window-manager hint, retained by the embedded host. |
 | `public System.Boolean PopupWindow { get; set; }` | Gets or sets the popup input and outside-click close-request policy. |
 | `public System.Boolean Transient { get; set; }` | Gets or sets whether this window belongs to its containing parent window's transient chain. |

@@ -29,8 +29,8 @@ Identifies a native window policy; values are indices, not a bit mask. Used by [
 | `SharpCorners = 8` | Whether Windows 11 suppresses rounding for the native window. |
 | `ExcludeFromCapture = 9` | Whether ordinary screen capture excludes the window; requires platform capture-policy integration. |
 | `PopupWmHint = 10` | Whether the window manager treats the window as a popup; requires multiple-window ownership. |
-| `MinimizeDisabled = 11` | Disables the minimize caption button on Windows native top-level windows. Native popups have fixed disabled controls. |
-| `MaximizeDisabled = 12` | Disables the maximize caption button on Windows native top-level windows. Native popups have fixed disabled controls. |
+| `MinimizeDisabled = 11` | Disables the minimize caption button on Windows and requests the restriction from the X11 window manager. Native popups have fixed disabled controls. |
+| `MaximizeDisabled = 12` | Disables the maximize caption button on Windows and requests the restriction from the X11 window manager. Native popups have fixed disabled controls. |
 | `Max = 13` | The number of defined policy identifiers; not a window policy. |
 
 ## Lifecycle and validation

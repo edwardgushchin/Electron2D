@@ -1813,7 +1813,7 @@
       "electron2d": "method:Electron2D.Window.IsMaximizeAllowed()",
       "godot": "Window::method:is_maximize_allowed()",
       "state": "Partial",
-      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
+      "reason": "Windows reads the observed maximize style. X11 combines SDL resizability with the retained MaximizeDisabled request. Xfwm4 4.20.0 exercises the effective window-manager actions separately. Detached and embedded windows use local resize and caption policies. macOS native observation and Wayland compositor maximize capability remain open (ADR 0040)."
     },
     {
       "electron2d": "method:Electron2D.Window.MoveToCenter()",
@@ -9063,7 +9063,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Windows observes the native maximize style. Detached and embedded windows report local policy. Remaining native adapters include macOS, X11 and Wayland compositor capabilities (ADR 0040).",
+      "reason": "Windows reads the observed maximize style. X11 combines SDL resizability with the retained MaximizeDisabled request. Xfwm4 4.20.0 exercises the effective window-manager actions separately. Detached and embedded windows use local resize and caption policies. macOS native observation and Wayland compositor maximize capability remain open (ADR 0040).",
       "godot": ["Window::method:is_maximize_allowed()"]
     },
     {
@@ -9097,7 +9097,7 @@
         "ProjectSettings::property:display/window/size/maximize_disabled"
       ],
       "state": "Partial",
-      "reason": "ADRs 0019/0040. Windows applies effective project caption policies before Ready, with explicit scene assignments taking precedence. Remaining adapters need native macOS standard window buttons and X11 window-manager function hints with observed restoration."
+      "reason": "ADRs 0019/0040. Windows and X11 apply effective project caption requests before Ready, with explicit scene assignments taking precedence. X11 enforcement depends on the window manager. macOS standard window button integration remains open."
     },
     {
       "godot": [

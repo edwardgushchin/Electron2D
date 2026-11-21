@@ -474,6 +474,12 @@ internal static class ProjectMainSceneTests
         var windows = OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy";
         try
         {
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_X11_CAPTION_OUTPUT") is { } output)
+            {
+                X11CaptionButtonTests.Run(output);
+                return;
+            }
+
             using var root = new Window { Size = new(240, 160), GUIEmbedSubwindows = !windows };
             using var child = new Window { Size = new(160, 120), MaximizeDisabled = true, Visible = windows };
             root.AddChild(child);

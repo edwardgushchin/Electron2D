@@ -80,6 +80,7 @@ public partial class Window
             ConfigureNative();
             renderer.RegisterNativeWindow(this, _display);
             _renderer = renderer;
+            ApplyX11CaptionButtons(_display);
             UpdateNativeTransient();
             _display.SetWindowVisible(true);
             Tree?.RegisterNativePopup(this);
