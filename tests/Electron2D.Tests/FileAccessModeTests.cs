@@ -19,53 +19,53 @@ internal static class FileAccessModeTests
         foreach (var open in factories)
         {
             foreach (var mode in Enum.GetValues<FileAccessModeFlags>())
-            foreach (var exists in new[] { false, true })
-            foreach (var dispose in new[] { false, true })
-            {
-                var path = System.IO.Path.Combine(directory, "mode-matrix");
-                File.Delete(path);
-                if (exists)
-                    using (var seed = open(path, FileAccessModeFlags.Write)) seed.WriteBytes([11, 22, 33]);
-                var truncates = mode is FileAccessModeFlags.Write or FileAccessModeFlags.WriteRead;
-                if (!exists && !truncates)
-                {
-                    Reject<FileNotFoundException>(() => open(path, mode).Dispose());
-                    Check(!File.Exists(path), "Failed existing-file open has no side effects.");
-                    continue;
-                }
-                using var file = open(path, mode);
-                Check(file.Position == 0 && file.Length == (truncates ? 0 : 3), "Initial cursor and truncation.");
-                if (mode == FileAccessModeFlags.Read)
-                {
-                    Reject<InvalidOperationException>(() => file.WriteByte(99));
-                    Check(file.Position == 0 && file.ReadByte() == 11, "Read permission and cursor.");
-                }
-                else
-                {
-                    if (mode == FileAccessModeFlags.Write)
-                        Reject<InvalidOperationException>(() => file.ReadByte());
-                    file.WriteByte(99);
-                    Check(file.Position == 1, "Write cursor.");
-                    if (mode != FileAccessModeFlags.Write)
+                foreach (var exists in new[] { false, true })
+                    foreach (var dispose in new[] { false, true })
                     {
-                        file.Seek(0);
-                        Check(file.ReadByte() == 99, "Mixed mode can read its write.");
+                        var path = System.IO.Path.Combine(directory, "mode-matrix");
+                        File.Delete(path);
+                        if (exists)
+                            using (var seed = open(path, FileAccessModeFlags.Write)) seed.WriteBytes([11, 22, 33]);
+                        var truncates = mode is FileAccessModeFlags.Write or FileAccessModeFlags.WriteRead;
+                        if (!exists && !truncates)
+                        {
+                            Reject<FileNotFoundException>(() => open(path, mode).Dispose());
+                            Check(!File.Exists(path), "Failed existing-file open has no side effects.");
+                            continue;
+                        }
+                        using var file = open(path, mode);
+                        Check(file.Position == 0 && file.Length == (truncates ? 0 : 3), "Initial cursor and truncation.");
+                        if (mode == FileAccessModeFlags.Read)
+                        {
+                            Reject<InvalidOperationException>(() => file.WriteByte(99));
+                            Check(file.Position == 0 && file.ReadByte() == 11, "Read permission and cursor.");
+                        }
+                        else
+                        {
+                            if (mode == FileAccessModeFlags.Write)
+                                Reject<InvalidOperationException>(() => file.ReadByte());
+                            file.WriteByte(99);
+                            Check(file.Position == 1, "Write cursor.");
+                            if (mode != FileAccessModeFlags.Write)
+                            {
+                                file.Seek(0);
+                                Check(file.ReadByte() == 99, "Mixed mode can read its write.");
+                            }
+                        }
+                        if (dispose) file.Dispose();
+                        else { file.Close(); file.Close(); }
+                        if (!dispose)
+                        {
+                            Check(!file.IsOpen, "Close retires owner.");
+                            Reject<InvalidOperationException>(() => file.Seek(0));
+                        }
+                        file.Dispose();
+                        Reject<ObjectDisposedException>(() => file.Seek(0));
+                        using var read = open(path, FileAccessModeFlags.Read);
+                        var expected = mode == FileAccessModeFlags.Read ? new byte[] { 11, 22, 33 }
+                            : truncates ? new byte[] { 99 } : new byte[] { 99, 22, 33 };
+                        Check(read.ReadBytes(9).SequenceEqual(expected), "Reopened committed content.");
                     }
-                }
-                if (dispose) file.Dispose();
-                else { file.Close(); file.Close(); }
-                if (!dispose)
-                {
-                    Check(!file.IsOpen, "Close retires owner.");
-                    Reject<InvalidOperationException>(() => file.Seek(0));
-                }
-                file.Dispose();
-                Reject<ObjectDisposedException>(() => file.Seek(0));
-                using var read = open(path, FileAccessModeFlags.Read);
-                var expected = mode == FileAccessModeFlags.Read ? new byte[] { 11, 22, 33 }
-                    : truncates ? new byte[] { 99 } : new byte[] { 99, 22, 33 };
-                Check(read.ReadBytes(9).SequenceEqual(expected), "Reopened committed content.");
-            }
             foreach (var raw in new[] { -1, 0, 4, 5, 6, 8, int.MaxValue })
             {
                 var path = System.IO.Path.Combine(directory, "invalid-mode");
