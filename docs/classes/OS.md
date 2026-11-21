@@ -320,6 +320,7 @@ Sources: [OS.Host.cs](../../src/Core/OS/OS.Host.cs), [OS.HostIdentity.cs](../../
 | `public static string GetModelName()` | Native device model or GenericDevice. |
 | `public static int GetProcessorCount()` | Native logical CPU count; zero means unknown. |
 | `public static string GetProcessorName()` | Cached CPUID/Linux CPU model, empty when unavailable. |
+| `public static string GetUniqueID()` | Stable derived Linux installation identifier while the machine ID is unchanged. Returns an empty string when the Linux source is unavailable or invalid. Other hosts throw `PlatformNotSupportedException`. See [installation identity](../components/host-platform.md#linux-installation-identity). |
 | `public static string GetLocale()` | Live host locale, independent of application Culture. |
 | `public static string GetLocaleLanguage()` | Language component, retaining nonstandard system values. |
 | `public static bool IsDebugBuild()` | Engine assembly's Debug configuration. |

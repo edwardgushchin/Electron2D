@@ -32,6 +32,32 @@ HostPlatform.Consumer identity compares Windows results with runtime version, in
 
 `ELECTRON2D_TEST_OS_THREADS=delay` checks zero, negative and interrupted waits, both units, values past the 32-bit nanosecond boundary, a separate caller thread and Windows handle cleanup. It runs on Windows x64 and Arch Linux x64 under WSL. The browser suite includes both units on its UI thread. Browser execution, other target hosts and package qualification remain open.
 
+## Linux installation identity
+
+`OS.GetUniqueID()` reads the first nonblank line of `/etc/machine-id` on each
+call. It splits lines at LF and trims surrounding whitespace, including a
+trailing CR. The line must contain 32 lowercase
+hexadecimal digits and represent a nonzero value. Missing or unreadable files,
+blank input, the first-boot marker `uninitialized`, and other malformed first
+lines yield an empty string. The query uses only this Linux source and opens it
+read-only. [Linux machine-id format](https://www.freedesktop.org/software/systemd/man/latest/machine-id.html)
+
+The public result is an Electron2D-keyed digest. The query requires no SDL or
+window. On hosts without an adapter, including Android, it throws
+`PlatformNotSupportedException`. See [ADR 0113](../decisions/host-platform.md#installation-identity)
+for the stability and use boundaries.
+
+The public consumer check requires Linux, .NET 10, Python 3 and bubblewrap with
+mount namespace support. It compares fresh headless processes with an
+independent digest and replaces the source only within private mounts. It
+checks distinct inputs, parsing failures, missing files, denied reads and
+restoration. The test prints only the scenario outcome.
+
+```sh
+dotnet build tests/HostPlatform.Consumer/HostPlatform.Consumer.csproj -c Release -r linux-x64
+python3 -B tests/HostPlatform.Consumer/test_machine_id.py dotnet tests/HostPlatform.Consumer/bin/Release/net10.0/linux-x64/HostPlatform.Consumer.dll
+```
+
 ## Host entropy
 
 `OS.GetEntropy(size)` uses the runtime cryptographic random provider also used by `Crypto`. It returns an independent array for each positive size and an empty array for zero. Negative sizes throw before allocation. An unavailable or failing provider propagates its exception. The call is synchronous and requires no display, renderer, scene or owner thread.

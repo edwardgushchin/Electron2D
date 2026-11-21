@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.X86;
+using System.Security.Cryptography;
 using System.Text;
 using CryptoRandom = System.Security.Cryptography.RandomNumberGenerator;
 
@@ -69,6 +70,62 @@ public sealed partial class OS
     /// or GenericDevice when a model is unavailable.</returns>
     /// <remarks>Prepared once, independently of engine startup.</remarks>
     public static string GetModelName() => Service._deviceModel.Value;
+    /// <summary>Gets an Electron2D-specific identifier for the current Linux installation.</summary>
+    /// <returns>A derived identifier, or an empty string when the Linux machine ID is unreadable, missing or invalid.</returns>
+    /// <remarks>The result is stable across processes with the same machine ID and can change after reinstalling.
+    /// Use it to distinguish local installations. It provides no device authentication.
+    /// The query reads system metadata without starting SDL or opening a window.</remarks>
+    /// <exception cref="PlatformNotSupportedException">The host has no installation identity adapter.</exception>
+    public static string GetUniqueID() => Service.GetUniqueIDCore();
+
+    private string GetUniqueIDCore()
+    {
+        ThrowIfDisposed();
+        if (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid())
+        {
+            throw new PlatformNotSupportedException("Installation identity requires this platform's adapter.");
+        }
+
+        try
+        {
+            using var stream = System.IO.File.OpenRead("/etc/machine-id");
+            using var reader = new StreamReader(stream, new UTF8Encoding(false), detectEncodingFromByteOrderMarks: false);
+            var line = new StringBuilder();
+            while (reader.Peek() >= 0)
+            {
+                line.Clear();
+                int character;
+                while ((character = reader.Read()) >= 0 && character != '\n')
+                {
+                    line.Append((char)character);
+                }
+
+                var machineID = line.ToString().AsSpan().Trim();
+                if (machineID.IsEmpty)
+                {
+                    continue;
+                }
+
+                if (machineID.Length != 32 || machineID.IndexOfAnyExcept("0123456789abcdef") >= 0 ||
+                    machineID.IndexOfAnyExcept('0') < 0)
+                {
+                    return string.Empty;
+                }
+
+                Span<byte> bytes = stackalloc byte[16];
+                Convert.FromHexString(machineID, bytes, out _, out _);
+                // Keep the application key fixed so existing installations retain their derived ID.
+                return Convert.ToHexStringLower(HMACSHA256.HashData("Electron2D.OS.GetUniqueID"u8, bytes));
+            }
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+        {
+            return string.Empty;
+        }
+
+        return string.Empty;
+    }
+
     /// <summary>Gets the number of logical CPU cores reported by the platform.</summary>
     /// <returns>The native logical-core count, or zero when the platform cannot identify it.</returns>
     /// <remarks>This describes the host rather than a recommended worker count or a guarantee of process CPU capacity.</remarks>

@@ -2357,6 +2357,8 @@ FontContourPoint, FontGlyphContours, FontSizeCacheInfo and TextServer.ContourPoi
 
 [Host entropy](components/host-platform.md#host-entropy) extends the existing static OS service with runtime-backed cryptographic bytes.
 
+[Linux installation identity](components/host-platform.md#linux-installation-identity) adds a cold, read-only query to the existing OS service in [OS.Host.cs](../src/Core/OS/OS.Host.cs).
+
 [Host identity and runtime features](components/host-platform.md) extend existing OS, ProjectSettingsRegistry, RenderingServer, CanvasBackend/GPUCanvasBackend and NativeSystemFonts implementations. No new production type is introduced; public host queries and session compression observations use their retained owners. [OS.HostIdentity.cs](../src/Core/OS/OS.HostIdentity.cs) adds native model and branded version sources to the same service. [OS.WindowsSandbox.cs](../src/Core/OS/OS.WindowsSandbox.cs) reads the Windows process token for the same sandbox query.
 
 [Retained distance-field mode](components/canvas-rendering.md#retained-distance-field-mode) extends existing RenderingServer, RenderingCanvasItemState, CanvasItem, CanvasMesh, CanvasParticles and GPUCanvasBackend types. No new production type or native dependency is introduced.

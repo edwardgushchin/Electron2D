@@ -25,6 +25,17 @@ OS and ProjectSettings share normalized, case-insensitive host/build/architectur
 
 RenderingServer.HasOSFeature reports the active ordinary native-image upload profile. Each GPU backend captures complete BC family support after creating its already selected device; compatibility has no native compressed-upload family. Queries reuse immutable session data, require no new device and can run across threads. OS returns false for renderer tags without a published service; the renderer's public operation retains its ordinary active-service requirement. Native capability data retires with the session. CPU decompression support and unrelated SDL device-only image roles do not advertise ordinary canvas native upload support.
 
+### Installation identity
+
+The retained OS service exposes a cold, read-only Linux installation query
+through `OS.GetUniqueID()`. It uses a fixed Electron2D key with HMAC-SHA256
+over the decoded machine ID. This keeps the system ID private and produces the
+same result in independent processes as long as their machine ID is unchanged.
+Use the result for local installation distinction only. It provides no device
+authentication and can change after reinstalling. Hosts without an adapter
+throw `PlatformNotSupportedException`. See [the Linux source and failure
+rules](../components/host-platform.md#linux-installation-identity).
+
 ### Thread identities and names
 
 OS.GetThreadCallerID exposes process-local engine identity, not a native kernel

@@ -156697,6 +156697,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetUniqueID()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetUniqueID",
+    "signature": "public static System.String GetUniqueID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetUserDataDir()",
     "kind": "method",
     "declaringType": "Electron2D.OS",
