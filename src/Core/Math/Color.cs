@@ -112,7 +112,11 @@ public struct Color : IEquatable<Color>
 
     /// <summary>Gets or sets the perceptual OKHSL saturation, from <c>0</c> to <c>1</c>.</summary>
     /// <value>The normalized perceptual saturation; achromatic colors report <c>0</c>.</value>
-    /// <remarks>Setting the value reconstructs RGB through <see cref="FromOKHSL(float, float, float, float)"/> and preserves alpha.</remarks>
+    /// <remarks>
+    /// The getter clamps saturation. Near the blue cusp, the conversion uses the green
+    /// channel's gamut fit when rounding could change the choice of limiting channel.
+    /// Setting the value reconstructs RGB through <see cref="FromOKHSL(float, float, float, float)"/> and preserves alpha.
+    /// </remarks>
     public float OKHSLS
     {
         readonly get => GetOKHSL().S;
@@ -461,6 +465,7 @@ public struct Color : IEquatable<Color>
     /// <param name="lightness">The perceptual lightness, typically from <c>0</c> to <c>1</c>.</param>
     /// <param name="alpha">The alpha component, typically from <c>0</c> to <c>1</c>.</param>
     /// <returns>The equivalent sRGB color, componentwise clamped to <c>0..1</c>, including alpha.</returns>
+    /// <remarks>Uses the same gamut fit near the blue cusp as <see cref="OKHSLS"/>.</remarks>
     public static Color FromOKHSL(float hue, float saturation, float lightness, float alpha = 1f)
     {
         var rgb = OkColor.ToSRGB(hue, saturation, lightness);

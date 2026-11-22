@@ -178,7 +178,15 @@ internal static class OkColor
         float weightL;
         float weightM;
         float weightS;
-        if (((-1.88170328f * a) - (0.80936493f * b)) > 1f)
+        var redBoundary = (-1.88170328f * a) - (0.80936493f * b);
+        var greenBoundary = (1.81444104f * a) - (1.19445276f * b);
+        // At the blue cusp, rounding the hue can put the same direction on
+        // either side of the red/green boundary. Use the green fit there, where
+        // the double-precision reference places the sRGB blue axis.
+        const float boundaryTolerance = 0.000001f;
+        var atBlueCusp = Mathf.Abs(redBoundary - 1f) <= boundaryTolerance &&
+                         Mathf.Abs(greenBoundary - 1f) <= boundaryTolerance;
+        if (redBoundary > 1f && !atBlueCusp)
         {
             k0 = 1.19086277f;
             k1 = 1.76576728f;
@@ -189,7 +197,7 @@ internal static class OkColor
             weightM = -3.3077115913f;
             weightS = 0.2309699292f;
         }
-        else if (((1.81444104f * a) - (1.19445276f * b)) > 1f)
+        else if (greenBoundary > 1f || atBlueCusp)
         {
             k0 = 0.73956515f;
             k1 = -0.45954404f;

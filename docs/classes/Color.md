@@ -282,7 +282,7 @@ Gets or sets the perceptual OKHSL saturation, from `0` to `1`.
 
 **Value:** The normalized perceptual saturation; achromatic colors report `0`.
 
-**Remarks:** Setting the value reconstructs RGB through [`Color.FromOKHSL(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) and preserves alpha.
+**Remarks:** The getter clamps saturation. Near the blue cusp, the conversion uses the green channel's gamut fit when rounding could change the choice of limiting channel. Setting the value reconstructs RGB through [`Color.FromOKHSL(Single,Single,Single,Single)`](Color.md#m-electron2d-color-fromokhsl-system-single-system-single-system-single-system-single) and preserves alpha.
 
 <a id="p-electron2d-color-okhsll"></a>
 ### `public float OKHSLL { get; set; }`
@@ -543,6 +543,8 @@ Constructs a color from perceptually uniform OKHSL components.
 - `alpha`: The alpha component, typically from `0` to `1`.
 
 **Returns:** The equivalent sRGB color, componentwise clamped to `0..1`, including alpha.
+
+**Remarks:** Uses the same gamut fit near the blue cusp as [`OKHSLS`](#p-electron2d-color-okhsls).
 
 <a id="m-electron2d-color-fromrgbe9995-system-uint32"></a>
 ### `public static Color FromRGBE9995(uint rgbe)`
@@ -863,7 +865,7 @@ Named parsing is case-insensitive and removes spaces, hyphens, underscores, apos
 - `Clamp` follows `Math.Clamp`; if any minimum exceeds its corresponding maximum, the operation throws before returning a result.
 - HSV inputs are documented for `0..1` and are not generally normalized or validated outside that range.
 - OKHSL conversion uses the bundled MIT-licensed managed algorithm; constructed output, including alpha, is clamped, and NaN output becomes zero. Achromatic getters explicitly report zero hue/saturation.
-- OKHSL getters clamp their published coordinates to `0..1`. At a narrow saturated gamut boundary the raw reference saturation can slightly exceed one, so reconstructing only from the public clamped coordinates can be intentionally lossy; this is covered by an independent dark-blue fixture.
+- OKHSL getters clamp their published coordinates to `0..1`. Reconstruction can be lossy when the raw saturation exceeds one. The dark-blue regression fixture checks saturation and reconstruction against the double-precision reference near the blue cusp.
 - Exact equality and ordering are floating-point operations rather than a total-order key. Use `IsEqualApprox` for calculated ordinary colors.
 
 ## Lifecycle, threading, and allocation

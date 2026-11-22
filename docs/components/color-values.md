@@ -41,6 +41,7 @@ The API preserves uppercase acronyms under [ADR 0045](../decisions/product.md#ad
 - Named lookup is immutable after type initialization, thread-safe, and normalized without culture-sensitive casing.
 - Numeric hot paths do not allocate; strings and normalized name parsing may allocate.
 - Public OKHSL coordinates are clamped to `0..1`; a narrow saturated gamut edge whose raw reference saturation exceeds one cannot round-trip exactly through only those clamped coordinates.
+- The saturation and reconstruction paths use the green channel's gamut fit when both red and green boundary tests are within `1e-6` of their threshold near the blue cusp. The double-precision reference places the sRGB blue axis on that side. For `(0, 0, 0.25, 0.37)`, saturation is approximately `0.999998` and reconstruction preserves the RGB channels within `1e-5` and alpha exactly.
 
 ## Current implementation status
 

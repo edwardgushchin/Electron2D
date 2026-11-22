@@ -3758,16 +3758,23 @@ static void VerifyColors()
                     $"OKHSL must round-trip a broad ordinary sRGB grid: {sample} -> ({sample.OKHSLH}, {sample.OKHSLS}, {sample.OKHSLL}) -> {roundTrip}.");
             }
     var saturatedDarkBlue = new Color(0f, 0f, 0.25f, 0.37f);
-    var clampedDarkBlue = Color.FromOKHSL(
+    var darkBlueRoundTrip = Color.FromOKHSL(
         saturatedDarkBlue.OKHSLH,
         saturatedDarkBlue.OKHSLS,
         saturatedDarkBlue.OKHSLL,
         saturatedDarkBlue.A);
+    Require(NearlyEqual(saturatedDarkBlue.OKHSLS, 0.99999767f, 0.00001f),
+        $"Dark blue OKHSL saturation must match the reference near the blue cusp: {saturatedDarkBlue.OKHSLS}.");
+    Require(ColorNearlyEqual(darkBlueRoundTrip, saturatedDarkBlue, 0.00001f) &&
+            darkBlueRoundTrip.A == saturatedDarkBlue.A,
+        $"Dark blue OKHSL reconstruction must match the reference and preserve alpha: {darkBlueRoundTrip}.");
+    var referenceDarkBlue = Color.FromOKHSL(0.73347784f, 0.99999767f, 0.07191687f, saturatedDarkBlue.A);
+    Require(ColorNearlyEqual(referenceDarkBlue, saturatedDarkBlue, 0.00001f) &&
+            referenceDarkBlue.A == saturatedDarkBlue.A,
+        $"The reference OKHSL coordinates must reconstruct dark blue: {referenceDarkBlue}.");
     var okMutable = new Color(0.3f, 0.6f, 0.9f, 0.42f);
     okMutable.OKHSLL = 0.4f;
     Require(NearlyEqual(new Color(0.25f, 0.25f, 0.25f).OKHSLS, 0f) &&
-            saturatedDarkBlue.OKHSLS == 1f &&
-            ColorNearlyEqual(clampedDarkBlue, new Color(0.000297069f, 0.022376226f, 0.216744155f, 0.37f), 0.000001f) &&
             okMutable.A == 0.42f &&
             Color.FromOKHSL(0.5f, 0.5f, 0.5f, -1f).A == 0f &&
             Color.FromOKHSL(0.5f, 0.5f, 0.5f, 2f).A == 1f &&

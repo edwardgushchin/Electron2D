@@ -44,7 +44,7 @@ The typed C# empty-span behavior of `FromHTML` returning opaque black is retaine
 - Core gains a complete backend-independent color vocabulary before renderer work without creating a renderer abstraction.
 - Numeric operations are value-only and allocation-free after JIT warmup; named/string operations may allocate.
 - `Color` is naturally usable in existing typed configuration and packed-scene mechanisms, and their wire/capture contracts are verified rather than assumed.
-- Public OKHSL getters clamp coordinates to `0..1` as required; at a narrow saturated gamut boundary the reference algorithm can compute saturation slightly above one, so reconstruction from the clamped public triple is knowingly lossy and explicitly tested.
+- Public OKHSL getters clamp coordinates to `0..1`. When the reference algorithm computes saturation above one, reconstruction from the clamped coordinates can lose RGB precision.
 - Public mutable fields are an intentional API/layout choice, not a general encapsulation precedent.
 - Packed HDR/non-finite output is deterministic across supported runtimes but deliberately safer than unchecked casts in the reference C# binding.
 - Future SDL/render backends must convert explicitly and cannot assume ABI equivalence merely because `Color` is sequential.
@@ -62,6 +62,8 @@ The typed C# empty-span behavior of `FromHTML` returning opaque black is retaine
 ### Verification
 
 `tests/Electron2D.Tests/Program.cs` covers 16-byte layout/default semantics; constructors and mutable components; HSV/OKHSL anchors and round trips; color-space transfer; source-over blend; unbounded operations; failures; integer/HTML formats including non-finite quantization; all 146 public named properties and concurrent lookup; arithmetic, exact/approximate/NaN comparisons; invariant formatting; strict `ConfigFile` schema/rollback; `PackedScene` stored-property restoration; and zero allocations in a warmed numeric loop.
+
+The dark-blue OKHSL fixture checks saturation against the double-precision reference. It checks that both the public getter coordinates and the reference coordinates reconstruct the original RGB within `1e-5` and preserve alpha exactly.
 
 Verification is currently Linux/.NET 10. Renderer/native pixel equivalence and the full target platform matrix remain unavailable until their respective domains and hosts exist.
 
