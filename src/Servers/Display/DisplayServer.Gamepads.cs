@@ -19,7 +19,6 @@ public sealed partial class DisplayServer
         if (instances is null) return;
         foreach (var instance in instances)
         {
-            ApplyCustomMapping(instance);
             AddGamepad(instance, initial: true);
         }
     }
@@ -28,8 +27,10 @@ public sealed partial class DisplayServer
     {
         if (Input.ShouldIgnoreDevice(SDL.GetJoystickVendorForID(instance), SDL.GetJoystickProductForID(instance))) return;
         var guid = GetGamepadGUID(instance);
+        _gamepadsByInstance.TryGetValue(instance, out var prior);
+        if (prior is null) ApplyMappingOnConnection(instance, guid);
         var mapped = SDL.IsGamepad(instance) && !Input.Service.IsJoyMappingRemoved(guid);
-        if (_gamepadsByInstance.TryGetValue(instance, out var prior) && prior.Mapped == mapped && !refresh) return;
+        if (prior is not null && prior.Mapped == mapped && !refresh) return;
         var handle = mapped ? SDL.OpenGamepad(instance) : SDL.OpenJoystick(instance);
         if (handle == 0) return;
         var id = prior is not null ? prior.ID : _freeGamepadIDs.Count == 0 ? _nextGamepadID++ : _freeGamepadIDs.Min;
@@ -45,7 +46,7 @@ public sealed partial class DisplayServer
             var vibration = properties != 0 && SDL.GetBooleanProperty(properties, SDL.Props.JoystickCapRumbleBoolean, false);
             var light = properties != 0 && (SDL.GetBooleanProperty(properties, SDL.Props.JoystickCapRGBLedBoolean, false) ||
                 SDL.GetBooleanProperty(properties, SDL.Props.JoystickCapMonoLedBoolean, false));
-            var gamepad = new GamepadDevice(instance, id, handle, mapped);
+            var gamepad = new GamepadDevice(id, handle, mapped, guid);
             if (prior is null)
             {
                 _gamepadsByInstance.Add(instance, gamepad);
@@ -73,7 +74,7 @@ public sealed partial class DisplayServer
                 _gamepadsByDevice.Remove(id);
                 _freeGamepadIDs.Add(id);
             }
-            CloseHandle(new GamepadDevice(instance, id, handle, mapped));
+            CloseHandle(new GamepadDevice(id, handle, mapped, guid));
             throw;
         }
         if (prior is null)
@@ -119,7 +120,6 @@ public sealed partial class DisplayServer
         if (type is SDL.EventType.GamepadAdded or SDL.EventType.JoystickAdded or SDL.EventType.GamepadRemapped)
         {
             var addedInstance = type == SDL.EventType.JoystickAdded ? nativeEvent.JDevice.Which : nativeEvent.GDevice.Which;
-            if (type == SDL.EventType.JoystickAdded) ApplyCustomMapping(addedInstance);
             AddGamepad(addedInstance, refresh: type == SDL.EventType.GamepadRemapped);
             return;
         }
@@ -185,14 +185,46 @@ public sealed partial class DisplayServer
         return focused is null || (SDL.GetWindowFlags(focused._window.DangerousGetHandle()) & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0;
     }
 
-    internal void UpdateJoyMapping(string guid, string? mapping)
+    internal bool ApplyJoyMapping(string guid, string? mapping)
     {
         EnsureOwner();
-        foreach (var instance in _gamepadsByInstance.Keys.ToArray())
+        var target = _gamepadsByInstance
+            .Where(pair => StringComparer.OrdinalIgnoreCase.Equals(pair.Value.GUID, guid))
+            .OrderBy(pair => pair.Value.ID)
+            .FirstOrDefault();
+        if (target.Value is null) return false;
+
+        // SDL uses the instance to resolve a shared GUID mapping.
+        if (!SDL.SetGamepadMapping(target.Key, mapping))
         {
-            if (!StringComparer.OrdinalIgnoreCase.Equals(GetGamepadGUID(instance), guid)) continue;
+            throw new InvalidOperationException($"SDL_SetGamepadMapping failed for {guid}: {SDL.GetError()}");
+        }
+        return true;
+    }
+
+    internal void RefreshJoyMapping(string guid)
+    {
+        EnsureOwner();
+        foreach (var (instance, gamepad) in _gamepadsByInstance.ToArray())
+        {
+            if (StringComparer.OrdinalIgnoreCase.Equals(gamepad.GUID, guid)) AddGamepad(instance, refresh: true);
+        }
+    }
+
+    private static void ApplyMappingOnConnection(uint instance, string guid)
+    {
+        var input = Input.Service;
+        if (input.GetPendingJoyMapping(guid) is { } pending)
+        {
+            var applied = SDL.SetGamepadMapping(instance, pending);
+            input.CompletePendingJoyMapping(guid, pending, applied);
+            if (applied) return;
+        }
+        // Keep discovery independent of a rejected override. SDL still supplies
+        // its effective mapping, and an explicit removal still selects raw input.
+        if (input.GetCustomJoyMapping(guid) is { } mapping)
+        {
             SDL.SetGamepadMapping(instance, mapping);
-            AddGamepad(instance, refresh: true);
         }
     }
 
@@ -202,12 +234,6 @@ public sealed partial class DisplayServer
         SDL.GUIDToString(SDL.GetJoystickGUIDForID(instance), bytes, bytes.Length);
         var end = bytes.IndexOf((byte)0);
         return Encoding.ASCII.GetString(bytes[..(end < 0 ? bytes.Length : end)]);
-    }
-
-    private static void ApplyCustomMapping(uint instance)
-    {
-        var mapping = Input.Service.GetCustomJoyMapping(GetGamepadGUID(instance));
-        if (mapping is not null) SDL.SetGamepadMapping(instance, mapping);
     }
 
     internal void StartGamepadVibration(int device, float weak, float strong, float duration)
@@ -253,5 +279,5 @@ public sealed partial class DisplayServer
         else SDL.RumbleJoystick(gamepad.Handle, 0, 0, 0);
     }
 
-    private sealed record GamepadDevice(uint Instance, int ID, nint Handle, bool Mapped);
+    private sealed record GamepadDevice(int ID, nint Handle, bool Mapped, string GUID);
 }

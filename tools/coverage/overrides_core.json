@@ -2541,7 +2541,7 @@
         "Input::method:remove_joy_mapping(String:)"
       ],
       "state": "Partial",
-      "reason": "A persistent typed SDL mapping overlay upgrades connected or future raw joysticks and restores raw delivery after removal without changing logical IDs; virtual tests pass on dummy and Wayland. Full SDL2 binding-string parser diagnostics, global database precedence and platform mapping variants remain to audit."
+      "reason": "The process-local SDL overlay applies immediate changes once for each shared GUID and preserves logical IDs. Native refusal raises InvalidOperationException and preserves held input and the saved policy. Discovery discards a refused deferred mapping and keeps the previous policy. InputGamepadNativeTests covers native refusal, shared-GUID success, removal and reconnection. Full SDL2 binding-string parser diagnostics, global database precedence and platform mapping variants remain to audit."
     },
     {
       "godot": [

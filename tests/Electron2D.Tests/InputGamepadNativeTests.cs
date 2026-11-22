@@ -213,6 +213,7 @@ internal static class InputGamepadNativeTests
             Marshal.FreeCoTaskMem(name);
         }
         RawJoystick(display);
+        MappingRefusal();
         DeviceIsolation(display);
         Console.WriteLine("Virtual SDL gamepad connection and typed input checks passed.");
     }
@@ -501,6 +502,7 @@ internal static class InputGamepadNativeTests
             Check(Input.GetConnectedJoypads().Length == 0 &&
                   !Input.IsJoyButtonPressed(JoyButton.A, device),
                 "Unknown joystick removal clears raw input.");
+            Input.AddJoyMapping(mapping, updateExisting: true);
             instance = SDL.AttachVirtualJoystick(in descriptor);
             Check(instance != 0, "SDL reattached the virtual joystick.");
             DisplayServer.ProcessEvents();
@@ -520,6 +522,145 @@ internal static class InputGamepadNativeTests
             GC.KeepAlive(descriptor);
             Marshal.FreeCoTaskMem(name);
         }
+    }
+
+    private static void MappingRefusal()
+    {
+        var name = Marshal.StringToCoTaskMemUTF8("Electron2D Mapping Refusal");
+        var descriptor = new SDL.VirtualJoystickDesc();
+        SDL.InitInterface(ref descriptor);
+        descriptor.Name = name;
+        descriptor.VendorID = 0x0123;
+        descriptor.ProductID = 0x0457;
+        descriptor.NAxes = 2;
+        descriptor.NButtons = 2;
+        var first = 0u;
+        var second = 0u;
+        nint joystick = 0;
+        var connections = new List<(int Device, bool Connected)>();
+        void OnConnection(int device, bool connected) => connections.Add((device, connected));
+        Input.JoyConnectionChanged += OnConnection;
+        try
+        {
+            first = SDL.AttachVirtualJoystick(in descriptor);
+            second = SDL.AttachVirtualJoystick(in descriptor);
+            Check(first != 0 && second != 0, "SDL attached both mapping test joysticks.");
+            DisplayServer.ProcessEvents();
+            var devices = Input.GetConnectedJoypads();
+            Check(devices.Length == 2, "Both mapping test joysticks connected.");
+            var guid = Input.GetJoyGUID(devices[0]);
+            Check(Input.GetJoyGUID(devices[1]) == guid, "Both joysticks share one GUID.");
+            connections.Clear();
+
+            Input.AddJoyMapping($"{guid},First Shared Mapping,a:b0,leftx:a0,", updateExisting: true);
+            DisplayServer.ProcessEvents();
+            Check(devices.All(device => Input.GetJoyName(device) == "First Shared Mapping"),
+                "Both raw devices receive the initial shared mapping.");
+
+            var mapping = $"{guid},Working Shared Mapping,b:b0,lefty:a0,";
+            Input.AddJoyMapping(mapping, updateExisting: true);
+            DisplayServer.ProcessEvents();
+            Check(Input.GetConnectedJoypads().SequenceEqual(devices) && connections.Count == 0 &&
+                  devices.All(device => Input.IsJoyKnown(device) && Input.GetJoyName(device) == "Working Shared Mapping"),
+                "Replacing an active mapping updates both devices without connection events or new IDs.");
+            foreach (var instance in new[] { first, second })
+            {
+                joystick = SDL.OpenJoystick(instance);
+                Check(joystick != 0 && SDL.SetJoystickVirtualButton(joystick, 0, true) &&
+                      SDL.SetJoystickVirtualAxis(joystick, 0, short.MinValue),
+                    "SDL accepted input for both devices under the shared mapping.");
+                SDL.CloseJoystick(joystick);
+                joystick = 0;
+            }
+            SDL.UpdateJoysticks();
+            DisplayServer.ProcessEvents();
+
+            // The managed header has both separators, but SDL receives a truncated name.
+            var rejected = $"{guid},Rejected\0 Mapping,a:b0,leftx:a0,";
+            CheckMappingRefusal(() => Input.AddJoyMapping(rejected, updateExisting: true), guid);
+            DisplayServer.ProcessEvents();
+            Check(Input.GetConnectedJoypads().SequenceEqual(devices) && connections.Count == 0 &&
+                  devices.All(device => Input.GetJoyName(device) == "Working Shared Mapping" &&
+                      Input.IsJoyButtonPressed(JoyButton.B, device) && !Input.IsJoyButtonPressed(JoyButton.A, device) &&
+                      Input.GetJoyAxis(JoyAxis.LeftY, device) == -1 && Input.GetJoyAxis(JoyAxis.LeftX, device) == 0) &&
+                  Input.Service.GetCustomJoyMapping(guid) == mapping,
+                "SDL refusal preserves both IDs, held input and the saved mapping.");
+
+            Check(SDL.DetachVirtualJoystick(first), "SDL detached the first instance before its removal event is pumped.");
+            first = 0;
+            CheckMappingRefusal(() => Input.RemoveJoyMapping(guid), guid);
+            Check(Input.Service.GetCustomJoyMapping(guid) == mapping &&
+                  Input.GetConnectedJoypads().SequenceEqual(devices) && connections.Count == 0 &&
+                  Input.IsJoyButtonPressed(JoyButton.B, devices[1]) && Input.GetJoyAxis(JoyAxis.LeftY, devices[1]) == -1,
+                "A failed removal preserves the overlay and the live sibling's input.");
+            DisplayServer.ProcessEvents();
+            first = SDL.AttachVirtualJoystick(in descriptor);
+            Check(first != 0, "SDL attached a replacement with the same GUID.");
+            DisplayServer.ProcessEvents();
+            Check(Input.GetConnectedJoypads().SequenceEqual(devices) &&
+                  Input.GetJoyName(devices[0]) == "Working Shared Mapping" &&
+                  connections.SequenceEqual([(devices[0], false), (devices[0], true)]),
+                "Reconnect uses the saved mapping and reuses the released logical ID.");
+
+            // A deferred mapping is first attempted at discovery, where failure must not hide the device.
+            Input.AddJoyMapping(rejected);
+            Check(SDL.DetachVirtualJoystick(first), "SDL detached the replacement.");
+            first = SDL.AttachVirtualJoystick(in descriptor);
+            Check(first != 0, "SDL attached a joystick with a deferred override.");
+            DisplayServer.ProcessEvents();
+            Check(Input.GetConnectedJoypads().SequenceEqual(devices) && Input.IsJoyKnown(devices[0]) &&
+                  Input.GetJoyName(devices[0]) == "Working Shared Mapping" &&
+                  Input.Service.GetPendingJoyMapping(guid) is null && Input.Service.GetCustomJoyMapping(guid) == mapping,
+                "A refused deferred override is discarded and discovery uses the previous working mapping.");
+
+            connections.Clear();
+            Input.RemoveJoyMapping(guid);
+            DisplayServer.ProcessEvents();
+            Check(Input.GetConnectedJoypads().SequenceEqual(devices) &&
+                  devices.All(device => !Input.IsJoyKnown(device)) && connections.Count == 0,
+                "Retrying removal switches both devices to raw input without connection events.");
+            Input.AddJoyMapping(rejected);
+            Check(SDL.DetachVirtualJoystick(first), "SDL detached the raw joystick.");
+            first = SDL.AttachVirtualJoystick(in descriptor);
+            Check(first != 0, "SDL reattached the raw joystick.");
+            DisplayServer.ProcessEvents();
+            joystick = SDL.OpenJoystick(first);
+            Check(joystick != 0 && SDL.SetJoystickVirtualButton(joystick, 0, true) &&
+                  SDL.SetJoystickVirtualAxis(joystick, 0, short.MinValue),
+                "SDL accepted input after reconnecting a joystick with a removed mapping.");
+            SDL.UpdateJoysticks();
+            DisplayServer.ProcessEvents();
+            Check(Input.GetConnectedJoypads().SequenceEqual(devices) && !Input.IsJoyKnown(devices[0]) &&
+                  Input.Service.GetPendingJoyMapping(guid) is null && Input.Service.IsJoyMappingRemoved(guid) &&
+                  Input.IsJoyButtonPressed(JoyButton.A, devices[0]) && Input.GetJoyAxis(JoyAxis.LeftX, devices[0]) == -1,
+                "A successful removal persists across reconnection and delivers raw button and axis events.");
+        }
+        finally
+        {
+            Input.JoyConnectionChanged -= OnConnection;
+            if (joystick != 0) SDL.CloseJoystick(joystick);
+            if (first != 0) SDL.DetachVirtualJoystick(first);
+            if (second != 0) SDL.DetachVirtualJoystick(second);
+            DisplayServer.ProcessEvents();
+            GC.KeepAlive(descriptor);
+            Marshal.FreeCoTaskMem(name);
+        }
+    }
+
+    private static void CheckMappingRefusal(Action action, string guid)
+    {
+        try
+        {
+            action();
+        }
+        catch (InvalidOperationException error) when (error.GetType() == typeof(InvalidOperationException))
+        {
+            Check(error.Message.StartsWith($"SDL_SetGamepadMapping failed for {guid}: ", StringComparison.Ordinal) &&
+                  error.Message.EndsWith(SDL.GetError(), StringComparison.Ordinal) && SDL.GetError().Length > 0,
+                "The mapping exception identifies the GUID and includes the native diagnostic.");
+            return;
+        }
+        throw new InvalidOperationException("Expected InvalidOperationException from a refused native mapping write.");
     }
 
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }

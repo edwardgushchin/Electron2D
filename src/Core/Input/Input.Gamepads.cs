@@ -8,6 +8,7 @@ public sealed partial class Input
     private readonly Dictionary<int, JoypadState> _connectedJoypads = [];
     private readonly Dictionary<int, VibrationState> _joyVibrations = [];
     private readonly Dictionary<string, string> _joyMappings = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _pendingJoyMappings = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _removedJoyMappings = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<uint> _ignoredJoypadIDs = ReadIgnoredJoypads();
     private bool _ignoreJoypadOnUnfocusedApplication;
@@ -72,12 +73,21 @@ public sealed partial class Input
         var guid = mapping[..first];
         var display = DisplayServer.Service;
         display?.EnsureGamepadOwner();
+        var applied = updateExisting && display?.ApplyJoyMapping(guid, mapping) == true;
         lock (_gate)
         {
-            _joyMappings[guid] = mapping;
-            _removedJoyMappings.Remove(guid);
+            if (applied)
+            {
+                _pendingJoyMappings.Remove(guid);
+                _joyMappings[guid] = mapping;
+                _removedJoyMappings.Remove(guid);
+            }
+            else
+            {
+                _pendingJoyMappings[guid] = mapping;
+            }
         }
-        if (updateExisting) display?.UpdateJoyMapping(guid, mapping);
+        if (applied) display!.RefreshJoyMapping(guid);
     }
 
     internal void RemoveJoyMappingCore(string guid)
@@ -85,12 +95,14 @@ public sealed partial class Input
         ArgumentException.ThrowIfNullOrWhiteSpace(guid);
         var display = DisplayServer.Service;
         display?.EnsureGamepadOwner();
+        display?.ApplyJoyMapping(guid, null);
         lock (_gate)
         {
+            _pendingJoyMappings.Remove(guid);
             _joyMappings.Remove(guid);
             _removedJoyMappings.Add(guid);
         }
-        display?.UpdateJoyMapping(guid, null);
+        display?.RefreshJoyMapping(guid);
     }
 
     internal void StartJoyVibrationCore(int device, float weakMagnitude, float strongMagnitude, float duration = 0)
@@ -181,6 +193,25 @@ public sealed partial class Input
     internal string? GetCustomJoyMapping(string guid)
     {
         lock (_gate) return _joyMappings.GetValueOrDefault(guid);
+    }
+
+    internal string? GetPendingJoyMapping(string guid)
+    {
+        lock (_gate) return _pendingJoyMappings.GetValueOrDefault(guid);
+    }
+
+    internal void CompletePendingJoyMapping(string guid, string mapping, bool applied)
+    {
+        lock (_gate)
+        {
+            if (_pendingJoyMappings.GetValueOrDefault(guid) != mapping) return;
+            _pendingJoyMappings.Remove(guid);
+            if (applied)
+            {
+                _joyMappings[guid] = mapping;
+                _removedJoyMappings.Remove(guid);
+            }
+        }
     }
 
     internal bool IsJoyMappingRemoved(string guid)

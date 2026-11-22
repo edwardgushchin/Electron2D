@@ -126,6 +126,8 @@ Native rumble and LED calls use device capabilities. Weak/strong magnitudes are 
 
 [InputGamepadNativeTests](../../tests/Electron2D.Tests/InputGamepadNativeTests.cs) uses SDL virtual gamepad and raw joystick devices on dummy and Linux Wayland. It verifies initial and later connection callbacks, failure continuation, mapping transitions, raw/standardized button and axis values, device isolation, action and SceneTree delivery, rumble/LED callbacks, ignored vendor/product IDs, focus suppression and Engine.Run project settings.
 
+SDL keys mapping writes by GUID. An immediate update or removal uses one native write for the group. The host commits the process-local override and refreshes connected devices only after SDL accepts the write. If SDL refuses the write, the API throws `InvalidOperationException` and keeps the previous overlay, device IDs and held input. A deferred override is tried at discovery before choosing standardized or raw delivery. On refusal, the host discards the pending override, retains the last accepted policy and continues discovery. The shared-GUID test covers both refusal paths, retry and raw delivery after reconnect.
+
 ## Handheld vibration
 
 The Android window host resolves the default device vibrator from the application context, using `VibratorManager` from API 31 and the vibrator service on earlier versions. API 26 and later use a one-shot effect. Supported explicit strengths are rounded to the Android 1–255 range. Earlier APIs use the timed vibrator call at system strength. Requests hold no activity reference or gamepad state. See [Input](../classes/Input.md#handheld-vibration) for the manifest entry and argument rules.

@@ -691,12 +691,12 @@ Checks vendor/product pairs parsed from `SDL_GAMECONTROLLER_IGNORE_DEVICES` when
 <a id="gamepad-addjoymapping"></a>
 ### `public static void AddJoyMapping(string mapping, bool updateExisting = false)`
 
-Stores an SDL-style `GUID,name,bindings` mapping for later devices. `updateExisting: true` applies it to connected matching devices immediately without changing their logical IDs; false leaves them as they are until reconnect. The required GUID and name sections are checked by Electron2D; SDL validates binding syntax when the mapping is applied. Full parser diagnostics and platform database precedence remain Partial.
+Stores an SDL-style `GUID,name,bindings` mapping for later devices. `updateExisting: true` applies it to the shared GUID immediately when matching devices are connected and keeps their logical IDs. A deferred mapping is tried on the next matching connection. SDL can then apply it to peers with the same GUID. If SDL rejects a deferred mapping, discovery continues with the prior working override, SDL's effective mapping, or raw input. An immediate refusal throws `InvalidOperationException` with the SDL error and preserves input state and the saved mapping. Full binding diagnostics and platform database precedence remain Partial.
 
 <a id="gamepad-removejoymapping"></a>
 ### `public static void RemoveJoyMapping(string guid)`
 
-Removes a custom mapping and makes matching connected devices use raw joystick delivery without disconnecting them. The GUID is retained as a process-local removal override so future matching devices stay raw until another mapping is added. Global SDL mapping precedence remains Partial.
+Removes a custom mapping and makes matching connected devices use raw joystick delivery without disconnecting them. The GUID is retained as a process-local removal override so future matching devices stay raw until another mapping is applied. If SDL refuses removal, `InvalidOperationException` carries the SDL error and the previous mapping and input state remain in effect.
 
 <a id="gamepad-startjoyvibration"></a>
 ### `public static void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration = 0)`

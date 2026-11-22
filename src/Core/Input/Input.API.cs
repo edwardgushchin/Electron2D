@@ -60,17 +60,17 @@ public sealed partial class Input
     /// <summary>Adds an SDL-style controller mapping for future connections.</summary>
     /// <param name="mapping">A GUID, name and binding list separated by commas.</param>
     /// <param name="updateExisting">Whether connected devices with this GUID should adopt the mapping now.</param>
-    /// <remarks>The process-wide overlay applies through the native host; a false update flag leaves current devices unchanged until reconnection. The binding grammar beyond the required GUID/name fields is validated by SDL when applied to a device.</remarks>
+    /// <remarks>A deferred mapping is tried when a matching device connects. SDL applies the mapping to the shared GUID, so other devices with that GUID can adopt it then. If SDL rejects the deferred mapping, discovery continues with the previous mapping or raw input.</remarks>
     /// <exception cref="ArgumentNullException">Mapping is null.</exception>
     /// <exception cref="ArgumentException">The GUID, name or binding section is missing.</exception>
-    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread, or SDL refuses an immediate update. On native refusal, existing and saved mappings and input state are preserved.</exception>
     public static void AddJoyMapping(string mapping, bool updateExisting = false) => Service.AddJoyMappingCore(mapping, updateExisting);
 
     /// <summary>Removes a controller mapping and restores raw input for connected matching devices.</summary>
     /// <param name="guid">The SDL-compatible GUID to remove.</param>
     /// <remarks>Removal also suppresses the built-in mapping for this GUID in the current process; raw joystick events remain available.</remarks>
     /// <exception cref="ArgumentException">The GUID is blank.</exception>
-    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread.</exception>
+    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread, or SDL refuses removal. On native refusal, existing and saved mappings and input state are preserved.</exception>
     public static void RemoveJoyMapping(string guid) => Service.RemoveJoyMappingCore(guid);
 
     /// <summary>Starts a controller rumble effect with independent weak and strong motors.</summary>
