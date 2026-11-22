@@ -32,7 +32,7 @@ resize = resize_type(lambda context, value, size: engine.e2d_memory_realloc(valu
 free = free_type(lambda context, value: engine.e2d_memory_free(value))
 engine.e2d_text_memory.argtypes = [allocate_type, resize_type, free_type]
 assert engine.e2d_text_memory(allocate, resize, free) == 0
-data = ctypes.create_string_buffer((Path(__file__).resolve().parents[2] / "src/Vendor/ICU/data/TextBreak78.dat").read_bytes())
+data = ctypes.create_string_buffer((Path(__file__).resolve().parents[2] / "src/Vendor/ICU/data/TextBreak79.dat").read_bytes())
 engine.e2d_text_init.argtypes = [ctypes.c_void_p]
 assert engine.e2d_text_init(data) == 0
 engine.e2d_break_open.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(ctypes.c_int)]

@@ -4,7 +4,7 @@ Last updated: 2026-10-21
 
 ## Scope and selection
 
-This text/configuration slice connects one stored project definition to executable native line boundaries shared by Font layouts, TextServer buffers, TextLine/TextParagraph and scene text controls. It uses the existing private ICU 78.3 bridge and bounded process cache; no native ABI, vendored algorithm or new renderer is added. MIDI remains dependent on the separate user-approved domain/native-host decision explicitly required by ADR 0038. Raw viewport anisotropy would add a smaller server-authoring entry point over the scene sampler policy that already executes.
+This text/configuration slice connects one stored project definition to executable native line boundaries shared by Font layouts, TextServer buffers, TextLine/TextParagraph and scene text controls. It uses the existing private ICU 79.1 bridge and bounded process cache; no native ABI, vendored algorithm or new renderer is added. MIDI remains dependent on the separate user-approved domain/native-host decision explicitly required by ADR 0038. Raw viewport anisotropy would add a smaller server-authoring entry point over the scene sampler policy that already executes.
 
 ## Public workflow
 

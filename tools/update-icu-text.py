@@ -24,7 +24,7 @@ def verify_bytes(data, record, label):
 def check(manifest):
     expected = {entry["path"] for entry in manifest["files"]}
     expected.update(("manifest.json", "UPSTREAM.md", manifest["data"]["path"]))
-    actual = {str(path.relative_to(VENDOR)) for path in VENDOR.rglob("*") if path.is_file()}
+    actual = {path.relative_to(VENDOR).as_posix() for path in VENDOR.rglob("*") if path.is_file()}
     if expected != actual:
         raise ValueError(f"Vendor inventory mismatch: missing={sorted(expected-actual)}, extra={sorted(actual-expected)}")
     for entry in manifest["files"] + [manifest["data"]]:
@@ -49,6 +49,11 @@ def run(command, **kwargs):
     subprocess.run([str(value) for value in command], check=True, **kwargs)
 
 
+def write_if_changed(path, data):
+    if not path.is_file() or path.read_bytes() != data:
+        path.write_bytes(data)
+
+
 def restore(manifest, archive_path, jobs):
     with tempfile.TemporaryDirectory(prefix="electron2d-icu-text-") as temporary:
         work = Path(temporary)
@@ -61,19 +66,25 @@ def restore(manifest, archive_path, jobs):
         with tarfile.open(archive_path, "r:gz") as archive:
             # Validate all inputs before replacing any tracked file. No archive paths are extracted.
             source_bytes = {}
-            for entry in manifest["files"]:
-                data = archive_read(archive, "icu/source/" + entry["path"])
+            sources = {"icu/source/" + entry["path"]: entry for entry in manifest["files"]}
+            for member in archive.getmembers():
+                if member.name not in sources:
+                    continue
+                entry = sources.pop(member.name)
+                data = archive_read(archive, member.name)
                 verify_bytes(data, entry, entry["path"])
                 source_bytes[entry["path"]] = data
+            if sources:
+                raise ValueError(f"Missing pinned source files: {sorted(sources)}")
             license_bytes = archive_read(archive, "icu/LICENSE")
             verify_bytes(license_bytes, manifest["license"], "ICU license")
-            original = work / "icudt78l.dat"
-            original.write_bytes(archive_read(archive, "icu/source/data/in/icudt78l.dat"))
+            original = work / (manifest["data"]["tocPrefix"] + ".dat")
+            original.write_bytes(archive_read(archive, "icu/source/data/in/" + original.name))
         for name, data in source_bytes.items():
             target = VENDOR / name
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(data)
-        (ROOT / manifest["license"]["path"]).write_bytes(license_bytes)
+            write_if_changed(target, data)
+        write_if_changed(ROOT / manifest["license"]["path"], license_bytes)
 
         # The host utility comes from this exact source closure, never from a system ICU.
         build = work / "host-build"
@@ -87,11 +98,11 @@ def restore(manifest, archive_path, jobs):
             raise ValueError(f"Missing pinned data items: {sorted(keep-set(listing))}")
         removal = work / "remove.txt"
         removal.write_text("\n".join(sorted(set(listing)-keep)) + "\n", encoding="utf-8")
-        filtered = work / "TextBreak78.dat"
+        filtered = work / Path(manifest["data"]["path"]).name
         run([tool, "--toc_prefix", manifest["data"]["tocPrefix"], "-r", removal, original, filtered])
         result = filtered.read_bytes()
         verify_bytes(result, manifest["data"], "reproduced text data")
-        (VENDOR / manifest["data"]["path"]).write_bytes(result)
+        write_if_changed(VENDOR / manifest["data"]["path"], result)
     check(manifest)
 
 

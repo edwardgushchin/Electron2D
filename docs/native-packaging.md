@@ -68,6 +68,19 @@ Each platform package supplies audited engine-owned native assets and selects on
 
 A platform package may contain all supported architectures of its OS, under the ordinary NuGet `runtimes/<RID>/native` layout. The requested game RID selects the files to deploy. A project may reference several platform packages for cross-platform development, but one build still deploys only its own RID. A desktop build without an explicit RID selects the SDK host's native assets, including those from transitive dependencies. Universal macOS dependencies using the architecture-neutral `osx` RID are retained on macOS and deployed into the selected `osx-x64` or `osx-arm64` directory; they are excluded on other desktop hosts. Native runtime files preserve the selected RID directory; the .NET runtime and SDK application host retain their own normal layout. SDK static-link/native-app rules apply to Apple, Android and Web artifacts.
 
+Private text uses ICU 79.1 and embeds its Unicode 18 data in the managed
+package. The native bridge entry points stay stable, but initialization
+requires the matching ICU and Unicode versions. Build and deploy the managed
+package and platform assets from the same source revision, including the
+static application link on iOS, tvOS and Web. See the
+[ICU provenance and verification notes](../src/Vendor/ICU/UPSTREAM.md).
+
+The local ICU 79.1 check rebuilt the unified Linux x64 module and paired it
+with the existing audio, font and TLS assets. A fresh package-only consumer
+published and ran the text boundary, Unicode and security tests twice.
+The six native files in the Linux package matched the publish output and
+the producer receipt. The full release matrix still requires qualification.
+
 The managed package's transitive build targets exclude its browser-specific
 DLL/XML assets from non-browser build and publish outputs, including desktop builds without an
 explicit RID. The `browser-wasm` profile retains that implementation. A fast

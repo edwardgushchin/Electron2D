@@ -83,7 +83,7 @@ Viewport.PushTextInput replaces a focused LineEdit, TextEdit or CodeEdit through
 
 [LineEdit](../classes/LineEdit.md) uses complete shaped-line caret/selection geometry, scalar editing, grapheme/word navigation, native IME/commits, history, typed command dispatch, clipboard and text dragging. Nonprinting control display emits clipped hexadecimal placeholders. Local text clipping also applies to glyph rasters and missing-glyph geometry; other consumers keep their previous unclipped path. Caret geometry is prepared once per layout, with linear hit testing and reused buffers. The LineEdit class page records its executable owned popup and the remaining virtual-keyboard/picker prerequisites and test boundaries.
 
-Native delivery now uses the explicit `Electron2D.{Platform}` package. The filtered `TextBreak78.dat` remains embedded in the managed engine independently of native source-build mode. Native font, shaping and text libraries resolve from the selected RID directory. See [the delivery contract](../native-packaging.md).
+Native delivery now uses the explicit `Electron2D.{Platform}` package. The filtered `TextBreak79.dat` remains embedded in the managed engine independently of native source-build mode. Native font, shaping and text libraries resolve from the selected RID directory. See [the delivery contract](../native-packaging.md).
 
 The executable [multiline editing component](multiline-editing.md) connects TextEdit documents, typed syntax resources, existing font/Control rendering, scene storage and input. Its cold/warm and target limits are recorded with the exercised workflow.
 

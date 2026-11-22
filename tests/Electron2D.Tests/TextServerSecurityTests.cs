@@ -8,9 +8,14 @@ internal static class TextServerSecurityTests
     {
         var s = TextServerManager.GetPrimaryInterface();
         Check(s.LoadSupportData("") && s.LoadSupportData("missing-file.dat"), "Embedded initialization ignores external paths");
-        Check(s.GetSupportDataFilename() == "TextBreak78.dat" && s.GetSupportDataInfo().Contains("Unicode 17"), "Export identity");
-        var first = s.GetSupportData(); var copy = s.GetSupportData();
-        Check(first.Length == 4811936 && Convert.ToHexStringLower(SHA256.HashData(first)) == "632f80e9268e60542a9189d3575b53a4338a752ac8a4f1ebd89465ff73eca329", "Exact pinned data bytes");
+        Check(s.GetSupportDataFilename() == "TextBreak79.dat" &&
+            s.GetSupportDataInfo().Contains("ICU 79.1 / Unicode 18") &&
+            s.GetSupportDataInfo().Contains("(TextBreak79.dat)"), "Export identity");
+        var first = s.GetSupportData();
+        var copy = s.GetSupportData();
+        const string expectedHash = "bee9f22432543da67df2039ef53b4002a3cfb8d01b8d7364cefc28aadd3994b8";
+        Check(first.Length == 4_414_720 && Convert.ToHexStringLower(SHA256.HashData(first)) == expectedHash,
+            "Exact pinned data bytes");
         first[0] ^= 255; Check(!first.AsSpan().SequenceEqual(copy) && s.GetSupportData().AsSpan().SequenceEqual(copy), "Independent data snapshots");
         var directory = Path.Combine(Path.GetTempPath(), "electron2d-text-security-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(directory);
         try
@@ -45,7 +50,7 @@ internal static class TextServerSecurityTests
         var bytes = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 128; i++) { s.SpoofCheck("hello"); s.IsLocaleUsingSupportData("th-TH"); s.LoadSupportData(""); }
         Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "128 warm checks/initializations allocate zero managed bytes");
-        Console.WriteLine("TextServer security: Unicode 17 confusable/spoof checks, exact database export, embedded initialization, bounds, concurrency and 128 zero-byte cycles passed.");
+        Console.WriteLine("TextServer security: Unicode 18 confusable/spoof checks, exact database export, embedded initialization, bounds, concurrency and 128 zero-byte cycles passed.");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException("TextServer security: " + message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }

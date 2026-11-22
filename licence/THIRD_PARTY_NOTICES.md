@@ -31,7 +31,7 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | meshoptimizer 1.1.1 attribute-aware structural simplification | MIT | [Meshoptimizer-LICENSE](Meshoptimizer-LICENSE.txt) |
 | msdfgen 1.13.1 core for native font distance generation | MIT | [MSDFGen license](MSDFGen-LICENSE.txt) |
 | PCRE2 10.47 private regular-expression interpreter | BSD-3-Clause | [PCRE2 license](PCRE2-LICENSE.md) |
-| ICU 78.3 private text break runtime and dictionary data | Unicode-3.0 and retained ICU/component terms | [ICU and dictionary notices](ICUText-LICENSE.txt) |
+| ICU 79.1 private text break runtime and Unicode 18 dictionary data | Unicode-3.0 and retained ICU/component terms | [ICU and dictionary notices](ICUText-LICENSE.txt) |
 | Full Unicode uppercase data and locale casing rules | Unicode-3.0 and retained ICU terms | [Unicode and ICU notice](TextCase-LICENSE.txt) |
 | Embedded Open Sans SemiBold font | SIL Open Font License 1.1 | [Open Sans](OpenSans.txt) |
 

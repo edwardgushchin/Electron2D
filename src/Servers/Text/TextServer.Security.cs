@@ -65,7 +65,7 @@ public abstract partial class TextServer
     /// <summary>Returns an independent copy of the embedded native text database.</summary>
     /// <returns>The pinned ICU break, dictionary, property, normalization and confusable data.</returns>
     protected virtual byte[] OnGetSupportData() { using var nativeTextScope = EnterNativeBackend(); return NativeTextBreak.GetSupportData(); }
-    /// <summary>Returns the default database export filename.</summary><returns>TextBreak78.dat.</returns>
+    /// <summary>Returns the default database export filename.</summary><returns>TextBreak79.dat.</returns>
     public string GetSupportDataFilename()
     {
         var implementationCall = EnterImplementation();
@@ -78,8 +78,12 @@ public abstract partial class TextServer
         finally { implementationCall.Dispose(callbackFailure); }
     }
 
-    /// <summary>Returns the default database export filename.</summary><returns>TextBreak78.dat.</returns>
-    protected virtual string OnGetSupportDataFilename() { using var nativeTextScope = EnterNativeBackend(); return "TextBreak78.dat"; }
+    /// <summary>Returns the default database export filename.</summary><returns>TextBreak79.dat.</returns>
+    protected virtual string OnGetSupportDataFilename()
+    {
+        using var nativeTextScope = EnterNativeBackend();
+        return "TextBreak79.dat";
+    }
     /// <summary>Describes the embedded native text database.</summary><returns>The ICU and Unicode versions and supported data roles.</returns>
     public string GetSupportDataInfo()
     {
@@ -94,7 +98,11 @@ public abstract partial class TextServer
     }
 
     /// <summary>Describes the embedded native text database.</summary><returns>The ICU and Unicode versions and supported data roles.</returns>
-    protected virtual string OnGetSupportDataInfo() { using var nativeTextScope = EnterNativeBackend(); return "ICU 78.3 / Unicode 17 break, dictionary, property, normalization and confusable data (TextBreak78.dat)."; }
+    protected virtual string OnGetSupportDataInfo()
+    {
+        using var nativeTextScope = EnterNativeBackend();
+        return "ICU 79.1 / Unicode 18 break, dictionary, property, normalization and confusable data (TextBreak79.dat).";
+    }
     /// <summary>Initializes the immutable embedded native text database.</summary>
     /// <param name="filename">Optional external database path; the embedded-data backend uses its packaged database regardless of this value.</param>
     /// <returns>True after initialization succeeds.</returns>

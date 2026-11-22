@@ -693,7 +693,7 @@ See [Unicode security and support data](../components/text-server.md#unicode-sec
 | `int IsConfusable(string text, ReadOnlySpan<string> dictionary)` | First equal case-sensitive Unicode skeleton index, or -1. |
 | `bool SpoofCheck(string text)` | True when Unicode security checks flag the text. |
 | `byte[] GetSupportData()` | Independent exact copy of the embedded database. |
-| `string GetSupportDataFilename()` | TextBreak78.dat export name. |
+| `string GetSupportDataFilename()` | TextBreak79.dat export name. |
 | `string GetSupportDataInfo()` | ICU/Unicode versions and database roles. |
 | `bool LoadSupportData(string filename)` | Initializes the immutable embedded database; external path is unused in this profile. |
 | `bool SaveSupportData(string filename)` | Writes and flushes exact database bytes; file access failure returns false. |

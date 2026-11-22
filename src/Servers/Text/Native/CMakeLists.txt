@@ -28,6 +28,23 @@ endfunction()
 read_sources(runtimeSources ICU_RUNTIME_SOURCES)
 include("${CMAKE_CURRENT_LIST_DIR}/ICUMemory.cmake")
 
+# ICU 79's MessageFormat bidi helper uses narrow literals even when
+# conversion is disabled, which removes that constructor on MSVC.
+set(icu_bidi_path "${ICU_ROOT}/common/ubidi.cpp")
+file(READ "${icu_bidi_path}" icu_bidi)
+foreach(tag IN ITEMS "<bdi>" "</bdi>")
+    string(FIND "${icu_bidi}" "(\"${tag}\")" literal_position)
+    if(literal_position LESS 0)
+        message(FATAL_ERROR "The pinned ICU bidi literals no longer match.")
+    endif()
+    string(REPLACE "(\"${tag}\")" "(u\"${tag}\")" icu_bidi "${icu_bidi}")
+endforeach()
+set(icu_bidi_output "${CMAKE_CURRENT_BINARY_DIR}/ubidi_utf16.cpp")
+file(CONFIGURE OUTPUT "${icu_bidi_output}" CONTENT "${icu_bidi}" @ONLY)
+list(REMOVE_ITEM ICU_RUNTIME_SOURCES "${icu_bidi_path}")
+list(APPEND ICU_RUNTIME_SOURCES "${icu_bidi_output}")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${icu_bidi_path}")
+
 set(ICU_DEFINITIONS
     U_STATIC_IMPLEMENTATION U_COMMON_IMPLEMENTATION
     UCONFIG_NO_COLLATION=1 UCONFIG_NO_CONVERSION=1 UCONFIG_NO_FORMATTING=1

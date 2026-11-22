@@ -142,8 +142,8 @@ internal static unsafe partial class NativeTextBreak
             _data = (nint)memory;
         }
         byte* version = stackalloc byte[8]; Versions(version, version + 4);
-        if (version[0] != 78 || version[1] != 3 || version[4] != 17 || version[5] != 0)
-            throw new PlatformNotSupportedException("Text boundaries require the packaged ICU 78.3 and Unicode 17 data.");
+        if (version[0] != 79 || version[1] != 1 || version[4] != 18 || version[5] != 0)
+            throw new PlatformNotSupportedException("Text boundaries require the packaged ICU 79.1 and Unicode 18 data.");
         _initialized = true;
     }
     private static void Check(int error)

@@ -733,667 +733,667 @@
     {
       "godot": "class:Label",
       "electron2d": "T:Electron2D.Label",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::method:get_character_bounds(int:)",
       "electron2d": "method:Electron2D.Label.GetCharacterBounds(System.Int32)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::method:get_line_count()",
       "electron2d": "method:Electron2D.Label.GetLineCount()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::method:get_line_height(int:)",
       "electron2d": "method:Electron2D.Label.GetLineHeight(System.Int32)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::method:get_total_character_count()",
       "electron2d": "method:Electron2D.Label.GetTotalCharacterCount()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::method:get_visible_line_count()",
       "electron2d": "method:Electron2D.Label.GetVisibleLineCount()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:autowrap_mode",
       "electron2d": "property:Electron2D.Label.AutowrapMode()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:autowrap_trim_flags",
       "electron2d": "property:Electron2D.Label.AutowrapTrimFlags()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:clip_text",
       "electron2d": "property:Electron2D.Label.ClipText()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:ellipsis_char",
       "electron2d": "property:Electron2D.Label.EllipsisChar()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:horizontal_alignment",
       "electron2d": "property:Electron2D.Label.HorizontalAlignment()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:justification_flags",
       "electron2d": "property:Electron2D.Label.JustificationFlags()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:label_settings",
       "electron2d": "property:Electron2D.Label.LabelSettings()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:language",
       "electron2d": "property:Electron2D.Label.Language()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:lines_skipped",
       "electron2d": "property:Electron2D.Label.LinesSkipped()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:max_lines_visible",
       "electron2d": "property:Electron2D.Label.MaxLinesVisible()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:mouse_filter",
       "electron2d": "property:Electron2D.Control.MouseFilter()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:paragraph_separator",
       "electron2d": "property:Electron2D.Label.ParagraphSeparator()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:size_flags_vertical",
       "electron2d": "property:Electron2D.Control.SizeFlagsVertical()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:structured_text_bidi_override",
       "electron2d": "property:Electron2D.Label.StructuredTextBIDIOverride()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:structured_text_bidi_override_options",
       "electron2d": "property:Electron2D.Label.StructuredTextBIDIOverrideOptions()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:tab_stops",
       "electron2d": "property:Electron2D.Label.TabStops()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:text",
       "electron2d": "property:Electron2D.Label.Text()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:text_direction",
       "electron2d": "property:Electron2D.Label.TextDirection()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:text_overrun_behavior",
       "electron2d": "property:Electron2D.Label.TextOverrunBehavior()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:uppercase",
       "electron2d": "property:Electron2D.Label.Uppercase()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:vertical_alignment",
       "electron2d": "property:Electron2D.Label.VerticalAlignment()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:visible_characters",
       "electron2d": "property:Electron2D.Label.VisibleCharacters()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:visible_characters_behavior",
       "electron2d": "property:Electron2D.Label.VisibleCharactersBehavior()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::property:visible_ratio",
       "electron2d": "property:Electron2D.Label.VisibleRatio()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:focus",
       "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:font",
       "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:font_color",
       "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:font_outline_color",
       "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:font_shadow_color",
       "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:font_size",
       "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:line_spacing",
       "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:normal",
       "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:outline_size",
       "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:paragraph_spacing",
       "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:shadow_offset_x",
       "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:shadow_offset_y",
       "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Label::theme_item:shadow_outline_size",
       "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum:HorizontalAlignment",
       "electron2d": "T:Electron2D.HorizontalAlignment",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum_value:HorizontalAlignment.HORIZONTAL_ALIGNMENT_CENTER",
       "electron2d": "enumValue:Electron2D.HorizontalAlignment.Center()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum_value:HorizontalAlignment.HORIZONTAL_ALIGNMENT_FILL",
       "electron2d": "enumValue:Electron2D.HorizontalAlignment.Fill()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum_value:HorizontalAlignment.HORIZONTAL_ALIGNMENT_LEFT",
       "electron2d": "enumValue:Electron2D.HorizontalAlignment.Left()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum_value:HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT",
       "electron2d": "enumValue:Electron2D.HorizontalAlignment.Right()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum:VerticalAlignment",
       "electron2d": "T:Electron2D.VerticalAlignment",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum_value:VerticalAlignment.VERTICAL_ALIGNMENT_BOTTOM",
       "electron2d": "enumValue:Electron2D.VerticalAlignment.Bottom()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum_value:VerticalAlignment.VERTICAL_ALIGNMENT_CENTER",
       "electron2d": "enumValue:Electron2D.VerticalAlignment.Center()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum_value:VerticalAlignment.VERTICAL_ALIGNMENT_FILL",
       "electron2d": "enumValue:Electron2D.VerticalAlignment.Fill()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "@GlobalScope::enum_value:VerticalAlignment.VERTICAL_ALIGNMENT_TOP",
       "electron2d": "enumValue:Electron2D.VerticalAlignment.Top()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Control::enum:TextDirection",
       "electron2d": "T:Electron2D.TextDirection",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Control::enum_value:TextDirection.TEXT_DIRECTION_AUTO",
       "electron2d": "enumValue:Electron2D.TextDirection.Auto()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Control::enum_value:TextDirection.TEXT_DIRECTION_INHERITED",
       "electron2d": "enumValue:Electron2D.TextDirection.Inherited()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Control::enum_value:TextDirection.TEXT_DIRECTION_LTR",
       "electron2d": "enumValue:Electron2D.TextDirection.LTR()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Control::enum_value:TextDirection.TEXT_DIRECTION_RTL",
       "electron2d": "enumValue:Electron2D.TextDirection.RTL()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:Direction",
       "electron2d": "T:Electron2D.TextDirection",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Direction.DIRECTION_AUTO",
       "electron2d": "enumValue:Electron2D.TextDirection.Auto()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Direction.DIRECTION_INHERITED",
       "electron2d": "enumValue:Electron2D.TextDirection.Inherited()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Direction.DIRECTION_LTR",
       "electron2d": "enumValue:Electron2D.TextDirection.LTR()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Direction.DIRECTION_RTL",
       "electron2d": "enumValue:Electron2D.TextDirection.RTL()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:Orientation",
       "electron2d": "T:Electron2D.TextOrientation",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Orientation.ORIENTATION_HORIZONTAL",
       "electron2d": "enumValue:Electron2D.TextOrientation.Horizontal()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Orientation.ORIENTATION_VERTICAL",
       "electron2d": "enumValue:Electron2D.TextOrientation.Vertical()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:JustificationFlag",
       "electron2d": "T:Electron2D.TextJustificationFlags",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_AFTER_LAST_TAB",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.AfterLastTab()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_CONSTRAIN_ELLIPSIS",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.ConstrainEllipsis()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_DO_NOT_SKIP_SINGLE_LINE",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.DoNotSkipSingleLine()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_KASHIDA",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.Kashida()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_NONE",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.None()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_SKIP_LAST_LINE",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.SkipLastLine()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_SKIP_LAST_LINE_WITH_VISIBLE_CHARS",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.SkipLastLineWithVisibleChars()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_TRIM_EDGE_SPACES",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.TrimEdgeSpaces()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:JustificationFlag.JUSTIFICATION_WORD_BOUND",
       "electron2d": "enumValue:Electron2D.TextJustificationFlags.WordBound()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:LineBreakFlag",
       "electron2d": "T:Electron2D.TextLineBreakFlags",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_ADAPTIVE",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.Adaptive()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_GRAPHEME_BOUND",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.GraphemeBound()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_MANDATORY",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.Mandatory()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_NONE",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.None()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_END_EDGE_SPACES",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.TrimEndEdgeSpaces()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_INDENT",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.TrimIndent()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_TRIM_START_EDGE_SPACES",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.TrimStartEdgeSpaces()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:LineBreakFlag.BREAK_WORD_BOUND",
       "electron2d": "enumValue:Electron2D.TextLineBreakFlags.WordBound()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:SpacingType",
       "electron2d": "T:Electron2D.TextSpacingType",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SpacingType.SPACING_BOTTOM",
       "electron2d": "enumValue:Electron2D.TextSpacingType.Bottom()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SpacingType.SPACING_GLYPH",
       "electron2d": "enumValue:Electron2D.TextSpacingType.Glyph()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SpacingType.SPACING_MAX",
       "electron2d": "enumValue:Electron2D.TextSpacingType.Max()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SpacingType.SPACING_SPACE",
       "electron2d": "enumValue:Electron2D.TextSpacingType.Space()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SpacingType.SPACING_TOP",
       "electron2d": "enumValue:Electron2D.TextSpacingType.Top()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:FontStyle",
       "electron2d": "T:Electron2D.FontStyle",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:FontStyle.FONT_BOLD",
       "electron2d": "enumValue:Electron2D.FontStyle.Bold()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:FontStyle.FONT_FIXED_WIDTH",
       "electron2d": "enumValue:Electron2D.FontStyle.FixedWidth()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:FontStyle.FONT_ITALIC",
       "electron2d": "enumValue:Electron2D.FontStyle.Italic()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:Hinting",
       "electron2d": "T:Electron2D.FontHinting",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Hinting.HINTING_LIGHT",
       "electron2d": "enumValue:Electron2D.FontHinting.Light()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Hinting.HINTING_NONE",
       "electron2d": "enumValue:Electron2D.FontHinting.None()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:Hinting.HINTING_NORMAL",
       "electron2d": "enumValue:Electron2D.FontHinting.Normal()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:SubpixelPositioning",
       "electron2d": "T:Electron2D.FontSubpixelPositioning",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SubpixelPositioning.SUBPIXEL_POSITIONING_AUTO",
       "electron2d": "enumValue:Electron2D.FontSubpixelPositioning.Auto()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SubpixelPositioning.SUBPIXEL_POSITIONING_DISABLED",
       "electron2d": "enumValue:Electron2D.FontSubpixelPositioning.Disabled()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SubpixelPositioning.SUBPIXEL_POSITIONING_ONE_HALF",
       "electron2d": "enumValue:Electron2D.FontSubpixelPositioning.Half()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SubpixelPositioning.SUBPIXEL_POSITIONING_ONE_HALF_MAX_SIZE",
       "electron2d": "enumValue:Electron2D.FontSubpixelPositioning.HalfMaxSize()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SubpixelPositioning.SUBPIXEL_POSITIONING_ONE_QUARTER",
       "electron2d": "enumValue:Electron2D.FontSubpixelPositioning.Quarter()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:SubpixelPositioning.SUBPIXEL_POSITIONING_ONE_QUARTER_MAX_SIZE",
       "electron2d": "enumValue:Electron2D.FontSubpixelPositioning.QuarterMaxSize()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:AutowrapMode",
       "electron2d": "T:Electron2D.TextAutowrapMode",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:AutowrapMode.AUTOWRAP_ARBITRARY",
       "electron2d": "enumValue:Electron2D.TextAutowrapMode.Arbitrary()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:AutowrapMode.AUTOWRAP_OFF",
       "electron2d": "enumValue:Electron2D.TextAutowrapMode.Off()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:AutowrapMode.AUTOWRAP_WORD",
       "electron2d": "enumValue:Electron2D.TextAutowrapMode.Word()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:AutowrapMode.AUTOWRAP_WORD_SMART",
       "electron2d": "enumValue:Electron2D.TextAutowrapMode.WordSmart()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:OverrunBehavior",
       "electron2d": "T:Electron2D.TextOverrunBehavior",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:OverrunBehavior.OVERRUN_NO_TRIMMING",
       "electron2d": "enumValue:Electron2D.TextOverrunBehavior.NoTrimming()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:OverrunBehavior.OVERRUN_TRIM_CHAR",
       "electron2d": "enumValue:Electron2D.TextOverrunBehavior.TrimChar()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:OverrunBehavior.OVERRUN_TRIM_ELLIPSIS",
       "electron2d": "enumValue:Electron2D.TextOverrunBehavior.TrimEllipsis()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:OverrunBehavior.OVERRUN_TRIM_ELLIPSIS_FORCE",
       "electron2d": "enumValue:Electron2D.TextOverrunBehavior.TrimEllipsisForce()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:OverrunBehavior.OVERRUN_TRIM_WORD",
       "electron2d": "enumValue:Electron2D.TextOverrunBehavior.TrimWord()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:OverrunBehavior.OVERRUN_TRIM_WORD_ELLIPSIS",
       "electron2d": "enumValue:Electron2D.TextOverrunBehavior.TrimWordEllipsis()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:OverrunBehavior.OVERRUN_TRIM_WORD_ELLIPSIS_FORCE",
       "electron2d": "enumValue:Electron2D.TextOverrunBehavior.TrimWordEllipsisForce()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:VisibleCharactersBehavior",
       "electron2d": "T:Electron2D.TextVisibleCharactersBehavior",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:VisibleCharactersBehavior.VC_CHARS_AFTER_SHAPING",
       "electron2d": "enumValue:Electron2D.TextVisibleCharactersBehavior.CharsAfterShaping()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:VisibleCharactersBehavior.VC_CHARS_BEFORE_SHAPING",
       "electron2d": "enumValue:Electron2D.TextVisibleCharactersBehavior.CharsBeforeShaping()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:VisibleCharactersBehavior.VC_GLYPHS_AUTO",
       "electron2d": "enumValue:Electron2D.TextVisibleCharactersBehavior.GlyphsAuto()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:VisibleCharactersBehavior.VC_GLYPHS_LTR",
       "electron2d": "enumValue:Electron2D.TextVisibleCharactersBehavior.GlyphsLTR()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:VisibleCharactersBehavior.VC_GLYPHS_RTL",
       "electron2d": "enumValue:Electron2D.TextVisibleCharactersBehavior.GlyphsRTL()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum:StructuredTextParser",
       "electron2d": "T:Electron2D.StructuredTextParser",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:StructuredTextParser.STRUCTURED_TEXT_CUSTOM",
       "electron2d": "enumValue:Electron2D.StructuredTextParser.Custom()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:StructuredTextParser.STRUCTURED_TEXT_DEFAULT",
       "electron2d": "enumValue:Electron2D.StructuredTextParser.Default()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:StructuredTextParser.STRUCTURED_TEXT_EMAIL",
       "electron2d": "enumValue:Electron2D.StructuredTextParser.Email()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:StructuredTextParser.STRUCTURED_TEXT_FILE",
       "electron2d": "enumValue:Electron2D.StructuredTextParser.File()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:StructuredTextParser.STRUCTURED_TEXT_LIST",
       "electron2d": "enumValue:Electron2D.StructuredTextParser.List()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "TextServer::enum_value:StructuredTextParser.STRUCTURED_TEXT_URI",
       "electron2d": "enumValue:Electron2D.StructuredTextParser.URI()",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "Control::method:_structured_text_parser(Array:,String:)",
       "electron2d": "method:Electron2D.Control.OnStructuredTextParser(System.Collections.Generic.IReadOnlyList<System.String>,System.String)",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": "class:LineEdit",
@@ -4412,7 +4412,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0046: multiline shaping, width/max-lines wrapping, direction, explicit fallback and native drawing execute. Private ICU 78.3 supplies dictionary and locale-sensitive line/word boundaries, including Thai/Lao/Khmer/Burmese/CJK and strict Japanese. NativeTextBreakTests and TextLayoutBreakTests verify scalar boundary projection and layout; FontRenderingTests verifies both Linux Wayland backends. Managed UAX14/UAX29 conformance is separate evidence, not a substitute for dictionary segmentation.",
+      "reason": "ADR 0046: multiline shaping, width/max-lines wrapping, direction, explicit fallback and native drawing execute. Private ICU 79.1 supplies dictionary and locale-sensitive line/word boundaries, including Thai/Lao/Khmer/Burmese/CJK and strict Japanese. NativeTextBreakTests and TextLayoutBreakTests verify scalar boundary projection and layout; FontRenderingTests verifies both Linux Wayland backends. Managed UAX14/UAX29 conformance is separate evidence, not a substitute for dictionary segmentation.",
       "godot": [
         "CanvasItem::method:draw_multiline_string(Font:,Vector2:,String:,int:HorizontalAlignment,float:,int:,int:,Color:,int:TextServer.LineBreakFlag,int:TextServer.JustificationFlag,int:TextServer.Direction,int:TextServer.Orientation,float:)",
         "CanvasItem::method:draw_multiline_string_outline(Font:,Vector2:,String:,int:HorizontalAlignment,float:,int:,int:,int:,Color:,int:TextServer.LineBreakFlag,int:TextServer.JustificationFlag,int:TextServer.Direction,int:TextServer.Orientation,float:)",
@@ -4732,7 +4732,7 @@
         "Control::method:_structured_text_parser(Array:,String:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+      "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 79.1 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
     },
     {
       "godot": [
