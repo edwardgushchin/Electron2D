@@ -140,9 +140,9 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 
 ### Packaging boundary
 
-The managed runtime artifact is `Electron2D.dll`, with internal SDL3-CS core binding source from pinned release `v3.4.18.0`. The Linux x64 self-contained example packages native SDL 3.4.18 beside the application files. The native library is not embedded in the managed DLL; other target packages remain unverified.
+The managed runtime artifact is `Electron2D.dll`. It compiles the internal SDL3-CS bindings from pinned release `v3.4.20.0`. Platform packages select SDL 3.4.20 as a native dependency, or supply source-built SDL 3.4.20 archives for Web. See [native packaging](../native-packaging.md) for the platform profiles and their verification status.
 
-Native SDL deployment remains a separate platform constraint outside the verified Linux x64 package. This ADR does not claim that native SDL code has already been embedded into the managed DLL or that a physical one-file native deployment has been achieved. That decision requires an implemented and verified SDL integration.
+Native SDL stays outside the managed DLL. Platform packages deliver the native dependencies or archives alongside the managed package.
 
 ### Consequences
 

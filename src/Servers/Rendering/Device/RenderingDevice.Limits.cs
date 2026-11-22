@@ -90,7 +90,7 @@ public sealed unsafe partial class RenderingDevice
     /// Per-set budgets span both graphics stages; per-stage and shared native category constraints also apply.
     /// Format, role, simultaneous resources, available memory and shader compilation can impose additional restrictions.
     /// Indirect group counts, GPU-produced indices and shared workgroup storage remain the shader author's responsibility.
-    /// The current native adapter requires pinned SDL 3.4.18 Vulkan; other drivers reject explicitly.</remarks>
+    /// The current native adapter requires pinned SDL 3.4.20 Vulkan; other drivers reject explicitly.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The selector is undefined.</exception>
     /// <exception cref="NotSupportedException">The native driver or core has no compatible limit adapter.</exception>
     /// <exception cref="InvalidOperationException">The native limit snapshot is inconsistent.</exception>
@@ -107,7 +107,7 @@ public sealed unsafe partial class RenderingDevice
         fixed (ulong* output = values)
         {
             var result = ReadNativeLimits(device, 1, output, 37);
-            if (result == 0) throw new NotSupportedException("Device limit queries require the pinned SDL 3.4.18 Vulkan adapter.");
+            if (result == 0) throw new NotSupportedException("Device limit queries require the pinned SDL 3.4.20 Vulkan adapter.");
             if (result != 1) throw new InvalidOperationException("The native device returned an inconsistent limit snapshot.");
         }
         return EffectiveDeviceLimits(values);

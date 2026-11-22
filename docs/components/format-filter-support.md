@@ -6,7 +6,7 @@ Last updated: 2026-10-27
 
 ## Query and lifetime
 
-The pinned SDL 3.4.18 Vulkan adapter reads optimal-tiling sampled-image and ordinary linear-filter features for each mapped native format. It also checks SDL sampling usage; depth formats include their required depth-attachment role. Nearest requires sampled-image support. Linear additionally requires the native linear feature. Defined but unmapped or unsupported public formats return false. Undefined formats, Max and invalid filters reject. Owner-thread, callback and disposed-device guards remain active.
+The pinned SDL 3.4.20 Vulkan adapter reads optimal-tiling sampled-image and ordinary linear-filter features for each mapped native format. It also checks SDL sampling usage; depth formats include their required depth-attachment role. Nearest requires sampled-image support. Linear additionally requires the native linear feature. Defined but unmapped or unsupported public formats return false. Undefined formats, Max and invalid filters reject. Owner-thread, callback and disposed-device guards remain active.
 
 One immutable table belongs to the shared physical device. Local devices and a renderer lease reuse it until the last lease retires; a new physical device gets a new table. A prepared public query allocates no managed memory, creates no image and submits or waits for no GPU work. A positive result promises neither available memory nor all usage, sample-count or view combinations. Other native cores/drivers reject this query explicitly.
 

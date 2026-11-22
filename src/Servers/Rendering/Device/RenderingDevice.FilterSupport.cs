@@ -13,7 +13,7 @@ public sealed partial class RenderingDevice
     /// No image is allocated and no commands are submitted. A shared physical device caches one snapshot until retirement.
     /// The query does not promise every format/usage combination, sufficient memory or comparison-filter behavior.
     /// Integer filtering and depth-comparison roles retain their separate binding contracts.
-    /// Owner-thread, lifetime and callback guards match other device queries. The current adapter is pinned SDL 3.4.18 Vulkan.</remarks>
+    /// Owner-thread, lifetime and callback guards match other device queries. The current adapter is pinned SDL 3.4.20 Vulkan.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The format or filter is undefined, or format is Max.</exception>
     /// <exception cref="NotSupportedException">The native core or driver has no compatible query adapter.</exception>
     public bool SamplerIsFormatSupportedForFilter(DataFormat format, SamplerFilter samplerFilter)

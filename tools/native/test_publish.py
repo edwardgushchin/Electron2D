@@ -18,10 +18,10 @@ class PublishTests(unittest.TestCase):
     def make_windows_publish(self, publish):
         (publish / "Consumer.exe").touch()
         (publish / "Electron2D.dll").touch()
-        libraries = dict.fromkeys(("SDL3-CS.Windows/3.4.18", "SDL3-CS.Windows.Image/3.4.6.12",
+        libraries = dict.fromkeys(("SDL3-CS.Windows/3.4.20", "SDL3-CS.Windows.Image/3.4.6.12",
             "SDL3-CS.Windows.Shadercross/3.0.0.13", "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/10.0.1"), {})
         libraries["Electron2D.Windows/0.2.0-alpha"] = dict(type="package")
-        targets = {"net10.0/win-x64": {"SDL3-CS.Windows/3.4.18": dict(native={"runtimes/win-x64/native/SDL3.dll": {}}),
+        targets = {"net10.0/win-x64": {"SDL3-CS.Windows/3.4.20": dict(native={"runtimes/win-x64/native/SDL3.dll": {}}),
             "SDL3-CS.Windows.Image/3.4.6.12": dict(runtimeTargets={"runtimes/win-x64/native/aom.dll": dict(assetType="native", rid="win-x64")})}}
         (publish / "Consumer.deps.json").write_text(json.dumps(dict(libraries=libraries, targets=targets)))
         (publish / "Consumer.runtimeconfig.json").write_text(json.dumps(dict(runtimeOptions=dict(
@@ -115,7 +115,7 @@ class PublishTests(unittest.TestCase):
                 publish = Path(directory)
                 (publish / "Consumer.exe").touch()
                 (publish / "Electron2D.dll").touch()
-                libraries = dict.fromkeys(("SDL3-CS.Windows/3.4.18", "SDL3-CS.Windows.Image/3.4.6.12",
+                libraries = dict.fromkeys(("SDL3-CS.Windows/3.4.20", "SDL3-CS.Windows.Image/3.4.6.12",
                     "SDL3-CS.Windows.Shadercross/3.0.0.13", "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/" + version), {})
                 (publish / "Consumer.deps.json").write_text(json.dumps(dict(libraries=libraries)))
                 runtime = dict(tfm="net10.0")

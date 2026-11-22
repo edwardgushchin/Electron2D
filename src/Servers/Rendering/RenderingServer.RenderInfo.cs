@@ -34,7 +34,7 @@ public sealed partial class RenderingServer
     /// a reader racing closure may observe the preceding managed value without accessing native handles.
     /// Memory queries acquire the allocator mutex without submitting or waiting for GPU execution. GPU counts cover
     /// the physical device shared with local compute and physics leases, including cycled/deferred resources; total
-    /// includes reserved free blocks. Opaque driver-internal memory is excluded. Pinned SDL 3.4.18 Vulkan supplies the
+    /// includes reserved free blocks. Opaque driver-internal memory is excluded. Pinned SDL 3.4.20 Vulkan supplies the
     /// GPU adapter; other GPU drivers/releases reject explicitly. Compatibility counts owned native texture payloads
     /// on actual SafeHandle creation/release, with no engine-owned device buffers or opaque SDL driver totals.
     /// Several independent reads are not an atomic snapshot.</remarks>

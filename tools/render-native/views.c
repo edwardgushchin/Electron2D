@@ -317,13 +317,13 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_
     if (!v->format_count) { v->format_count = 1; v->formats[0] = src->header.info.format; }
     bool allowed = false; for (uint32_t i = 0; i < v->format_count; i++) allowed |= v->formats[i] == format;
     if (!allowed) { SDL_free(v); return NULL; }
-    SDL_LockMutex(r->allocatorLock); SDL_LockRWLockForReading(r->defragLock);
+    SDL_LockMutex(r->allocatorLock);
     v->source = src->activeTexture; v->levels = v->source->levelCount; v->layers = v->source->layerCount;
     SDL_AtomicIncRef(&v->source->referenceCount);
     if (v->source->usedRegion) { v->pinned = v->source->usedRegion->allocation; SDL_AtomicIncRef(&v->pinned->referenceCount); }
     // Aliases must keep sharing this physical image when a producer requests native cycling.
     src->canBeCycled = false;
-    SDL_UnlockRWLock(r->defragLock); SDL_UnlockMutex(r->allocatorLock);
+    SDL_UnlockMutex(r->allocatorLock);
     SDL_GPUTextureCreateInfo info = src->header.info; info.type = array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D;
     info.format = format; info.usage = usage; info.width = SDL_max(1, info.width >> level); info.height = SDL_max(1, info.height >> level); info.layer_count_or_depth = layers; info.num_levels = levels;
     if (!wrap(device, v, v->source->image, &info, sampled_only) || !publish(device, v)) { destroy_unpublished(device, v); return NULL; }

@@ -92,6 +92,12 @@ ordinary relevant profile. Retain untraced execution alongside diagnostic
 profilers; do not substitute relaxed allocation budgets or compiler-only shader
 checks for the native contract.
 
+For an SDL core update, run complete qualification on the new revision. The
+native jobs build and audit the affected platform packages, including Web's
+source-built SDL. When reporting a runtime check, record the package origin
+and the version and revision returned by the loaded SDL library. See
+[native packaging](native-packaging.md) for the source and package pins.
+
 ### Windows checkout line endings
 
 Git attributes keep shell entry points, shader bootstrap inputs and coverage

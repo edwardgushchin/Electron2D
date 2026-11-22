@@ -87,7 +87,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     dependencies = json.loads((publish / (app_name + ".deps.json")).read_text())
     packages = dependencies["libraries"]
     expected = {
-        f"SDL3-CS.{platform}/3.4.18",
+        f"SDL3-CS.{platform}/3.4.20",
         f"SDL3-CS.{platform}.Image/3.4.6.12",
         f"SDL3-CS.{platform}.Shadercross/3.0.0.13",
     }

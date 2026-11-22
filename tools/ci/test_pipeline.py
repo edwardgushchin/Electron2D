@@ -26,7 +26,7 @@ class Pipeline(unittest.TestCase):
         version = packages.native.configuration()['version']
         with tempfile.TemporaryDirectory(prefix='e2d native pack ') as directory:
             work = Path(directory); native = work/'tools/native'; native.mkdir(parents=True)
-            for name in ('Native.csproj', 'README.md', 'Electron2D.targets'):
+            for name in ('Native.csproj', 'README.md', 'Electron2D.targets', 'WindowsNative.targets'):
                 (native/name).write_bytes((root/'tools/native'/name).read_bytes())
             (work/'tools/native-package.props').write_bytes((root/'tools/native-package.props').read_bytes())
             (work/'Electron2D.csproj').write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
@@ -104,7 +104,7 @@ class Pipeline(unittest.TestCase):
     def test_android_package_selects_one_resolved_sdl_aar_before_native_filtering(self):
         root = Path(__file__).resolve().parents[2]
         with tempfile.TemporaryDirectory(prefix='e2d android & aar ') as directory:
-            work = Path(directory); selected = work/'sdl3-cs.android/3.4.18'
+            work = Path(directory); selected = work/'sdl3-cs.android/3.4.20'
             archive = selected/'lib/net10.0-android36.0/SDL3-CS.Android.aar'
             archive.parent.mkdir(parents=True); archive.write_bytes(b'selected Java archive')
             old = work/'sdl3-cs.android/3.4.16/lib/net10.0-android36.0/SDL3-CS.Android.aar'
@@ -163,7 +163,9 @@ class Pipeline(unittest.TestCase):
                 archive.writestr('lib/net10.0/Electron2D.dll', assembly)
                 archive.writestr('runtimes/browser-wasm/lib/net10.0/Electron2D.dll', assembly)
                 archive.writestr('runtimes/browser-wasm/lib/net10.0/Electron2D.xml', '<doc />')
-                if targets.exists(): archive.write(targets, 'buildTransitive/Electron2D.targets')
+                archive.write(targets, 'buildTransitive/Electron2D.targets')
+                archive.write(targets.parent / 'native/WindowsNative.targets',
+                              'buildTransitive/WindowsNative.targets')
             app = work / 'app'; app.mkdir(); project = app / 'Consumer.csproj'
             project.write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework>'
                 '<OutputType>Exe</OutputType><NuGetAudit>false</NuGetAudit></PropertyGroup><ItemGroup>'

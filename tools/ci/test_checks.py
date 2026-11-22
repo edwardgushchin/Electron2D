@@ -609,6 +609,8 @@ class Checks(unittest.TestCase):
             targets = root / "buildTransitive/Electron2D.Web.targets"
             targets.parent.mkdir()
             shutil.copyfile(rids.ROOT / "tools/native/Electron2D.targets", targets)
+            shutil.copyfile(rids.ROOT / "tools/native/WindowsNative.targets",
+                            targets.with_name("WindowsNative.targets"))
             native = root / "runtimes/browser-wasm/native"
             native.mkdir(parents=True)
             for name in check_rid.native_package.LIBRARIES["Web"]:
@@ -637,6 +639,8 @@ class Checks(unittest.TestCase):
             targets = root / "buildTransitive/Electron2D.targets"
             targets.parent.mkdir()
             shutil.copyfile(rids.ROOT / "tools/native/Electron2D.targets", targets)
+            shutil.copyfile(rids.ROOT / "tools/native/WindowsNative.targets",
+                            targets.with_name("WindowsNative.targets"))
             rows = [row for row in rids.matrix() if row["platform"] in {"iOS", "tvOS"}]
             for row in rows:
                 native = root / "runtimes" / row["rid"] / "native"

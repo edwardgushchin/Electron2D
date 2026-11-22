@@ -1,9 +1,13 @@
 # Private render allocator and sampler bridge
 
-This producer compiles the allocator/sampler declarations of SDL 3.4.18 from the archive
+This producer compiles the allocator/sampler declarations of SDL 3.4.20 from the archive
 SHA-256 pinned in CMakeLists.txt. It does not build or replace SDL. The selected
 target's SDL core is supplied through SDL3_LIBRARIES. The generated declarations
 retain SDL's notice; the platform package includes licence/SDL-LICENSE.txt.
+
+SDL 3.4.20 protects Vulkan defragmentation with its allocator mutex. The bridge
+takes that mutex while reading or retaining physical resources that SDL can
+replace during defragmentation.
 
 e2d_render_memory preserves ABI 1 and returns 1 for a coherent native snapshot, 0 for
 an unsupported core/revision/driver, and -1 for invalid arguments or inconsistent

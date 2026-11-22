@@ -24,9 +24,11 @@ sed -i -E 's/(private static partial|private delegate) ulong (SDL_(Read|Write)IO
 sed -i '1s/^\xEF\xBB\xBF/#pragma warning disable CS0649 \/\/ Native SDL initializes this callback table.\n/' \
     "$scratch/SDL/File and IO Abstractions/storage/StorageInterface.cs"
 mv "$scratch/LICENSE" "$scratch/SDL3-CS-LICENSE.txt"
-git -C "$scratch" apply --unidiff-zero "$root/tools/sdl3-window-flags.patch"
+# Anchor patch paths in the extracted tree and accept LF or CRLF checkouts of the patches.
+git -C "$scratch" init --quiet
+sed 's/\r$//' "$root/tools/sdl3-window-flags.patch" | git -C "$scratch" apply --unidiff-zero
 if rg -q 'SDL_SetGPUBlendConstants\(IntPtr renderPass, in FColor blendConstants\)' "$scratch/SDL/GPU/gpu/PInvoke.cs"; then
-    git -C "$scratch" apply --unidiff-zero "$root/tools/sdl3-gpu-blend-constants.patch"
+    sed 's/\r$//' "$root/tools/sdl3-gpu-blend-constants.patch" | git -C "$scratch" apply --unidiff-zero
 fi
 cat > "$scratch/UPSTREAM.md" <<EOF
 # SDL3-CS core, shadercross and image binding source
@@ -42,14 +44,11 @@ constants use the engine resolver's names, static executable symbols on iOS/tvOS
 or generated archive module tables on Web.
 Application-owned entry-point delegates are lazy so unrelated SDL calls do not
 retain nonexistent host exports during static application linking.
-Native SDL IO read/write results use pointer-sized size_t on both 32-bit and
-64-bit hosts; the managed binding convenience result remains ulong.
 Window flag imports use primitive ulong at the native boundary to preserve the
 64-bit ABI in the WebAssembly interpreter. Managed wrappers keep WindowFlags.
-GPU blend constants use a by-value native SDL_FColor parameter while preserving
-the managed in-parameter wrapper. Upstream fix: https://github.com/edwardgushchin/SDL3-CS/pull/321
-(commit 1c673cb25e94051fbfa1ae28e3b1332036883dd9). The ABI regression is covered by device
-graphics pixels and the upstream focused wrapper/native tests.
+In v3.4.20.0 upstream supplies pointer-sized SDL IO read/write results and passes
+SDL_FColor by value to SDL_SetGPUBlendConstants. The importer applies the IO and
+GPU compatibility edits only where the older signatures are present.
 The upstream license is retained.
 Refresh with tools/update-sdl3-cs.sh and a release tag, then inspect the diff and
 run the engine, test, coverage, and native example checks.

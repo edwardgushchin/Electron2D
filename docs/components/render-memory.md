@@ -11,7 +11,7 @@ a local device. Direct device reads retain ordinary owner/lifetime guards.
 
 ## GPU allocation source
 
-The private `Electron2DRender` bridge reads the pinned SDL 3.4.18 Vulkan
+The private `Electron2DRender` bridge reads the pinned SDL 3.4.20 Vulkan
 allocator under its existing native mutex. Texture and buffer values use actual
 native resource allocation requirements. Total sums committed native blocks,
 including free space retained for reuse. It is not the sum of public descriptor

@@ -11,11 +11,11 @@ int SDLCALL SDL_strcmp(const char *left, const char *right) { return strcmp(left
 #include "pinned-core.h"
 int main(void)
 {
-    version = SDL_VERSIONNUM(3, 4, 18);
-    revision = "SDL-3.4.18-release-3.4.18"; assert(e2d_render_pinned_core());
-    revision = "SDL-release-3.4.18-0-g829a65d76 (Electron2D memory 1)"; assert(e2d_render_pinned_core());
+    version = SDL_VERSIONNUM(3, 4, 20);
+    revision = "SDL-3.4.20-release-3.4.20"; assert(e2d_render_pinned_core());
+    revision = "SDL-release-3.4.20-0-gf00dc919c (Electron2D memory 1)"; assert(e2d_render_pinned_core());
     version++; assert(!e2d_render_pinned_core()); version--;
-    revision = "SDL-release-3.4.18-0-g829a65d76"; assert(!e2d_render_pinned_core());
-    revision = "SDL-release-3.4.18-0-g829a65d76 (Electron2D memory 2)"; assert(!e2d_render_pinned_core());
-    revision = "SDL-3.4.18-release-3.4.18-extra"; assert(!e2d_render_pinned_core());
+    revision = "SDL-release-3.4.20-0-gf00dc919c"; assert(!e2d_render_pinned_core());
+    revision = "SDL-release-3.4.20-0-gf00dc919c (Electron2D memory 2)"; assert(!e2d_render_pinned_core());
+    revision = "SDL-3.4.20-release-3.4.20-extra"; assert(!e2d_render_pinned_core());
 }

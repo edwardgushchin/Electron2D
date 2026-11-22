@@ -1608,20 +1608,6 @@ internal static partial class SDL
         public const string JoystickHIDAPIFLYDIGI  = "SDL_JOYSTICK_HIDAPI_FLYDIGI";
 
         /// <summary>
-        /// <para>A variable controlling whether the HIDAPI driver for GameSir controllers
-        /// should be used.</para>
-        /// <para>The variable can be set to the following values:</para>
-        /// <list type="bullet">
-        /// <item><c>"0"</c>: HIDAPI driver is not used.</item>
-        /// <item><c>"1"</c>: HIDAPI driver is used.</item>
-        /// </list>
-        /// <para>The default is the value of <see cref="JoystickHIDAPI"/>.</para>
-        /// </summary>
-        /// <remarks>This hint should be set before initializing joysticks and gamepads.</remarks>
-        /// <since>This hint is available since SDL 3.5.0.</since>
-        public const string JoystickHIDAPIGameSir = "SDL_JOYSTICK_HIDAPI_GAMESIR";
-        
-        /// <summary>
         /// <para>A variable controlling whether the HIDAPI driver for Nintendo Switch
         /// controllers should be used.</para>
         /// <para>The variable can be set to the following values:</para>
@@ -2893,6 +2879,18 @@ internal static partial class SDL
         /// </summary>
         /// <since>This hint is available since SDL 3.4.0.</since>
         public const string PS2GSMode = "SDL_PS2_GS_MODE";
+
+        /// <summary>
+        /// <para>A variable controlling the pixel storage mode of the PS2's framebuffer.</para>
+        /// <para>The variable can be set to the following values:</para>
+        /// <list type="bullet">
+        /// <item><c>"32"</c></item>
+        /// <item><c>"24"</c> (default)</item>
+        /// <item><c>"16"</c></item>
+        /// </list>
+        /// </summary>
+        /// <since>This hint is available since SDL 3.4.20.</since>
+        public const string PS2GSColorDepth = "SDL_PS2_GS_COLOR_DEPTH";
         
         /// <summary>
         /// <para>A variable controlling which Dispmanx layer to use on a Raspberry PI.</para>

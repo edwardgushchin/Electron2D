@@ -21,7 +21,7 @@ public sealed partial class RenderingDevice
     /// and uploads still contribute their actual native storage. Native release may be deferred until
     /// completion, and free allocation blocks can remain reserved. Total includes that reservation rather than
     /// summing texture and buffer usage. Driver-internal allocations outside the native allocator are excluded.
-    /// Vulkan on pinned SDL 3.4.18 supplies the native adapter; other native drivers/releases reject explicitly.</remarks>
+    /// Vulkan on pinned SDL 3.4.20 supplies the native adapter; other native drivers/releases reject explicitly.</remarks>
     /// <exception cref="NotSupportedException">The selected native driver or core has no compatible memory adapter.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The category is undefined.</exception>
     /// <exception cref="OverflowException">The native byte count exceeds Int64.</exception>

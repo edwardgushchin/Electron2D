@@ -107,17 +107,17 @@ E2D_EXPORT int e2d_render_driver_resource(SDL_GPUDevice *device, uint32_t abi, u
         case E2D_TEXTURE:
         case E2D_TEXTURE_VIEW:
         case E2D_TEXTURE_DATA_FORMAT:
-            SDL_LockRWLockForReading(renderer->defragLock);
+            SDL_LockMutex(renderer->allocatorLock);
             value = texture_resource(resource, kind);
-            SDL_UnlockRWLock(renderer->defragLock);
+            SDL_UnlockMutex(renderer->allocatorLock);
             break;
         case E2D_SAMPLER: value = (uint64_t)((const VulkanSampler *)resource)->sampler; break;
         case E2D_UNIFORM_SET: return 0;
         case E2D_BUFFER: {
-            SDL_LockRWLockForReading(renderer->defragLock);
+            SDL_LockMutex(renderer->allocatorLock);
             const VulkanBuffer *active = ((const VulkanBufferContainer *)resource)->activeBuffer;
             value = active ? (uint64_t)active->buffer : 0;
-            SDL_UnlockRWLock(renderer->defragLock);
+            SDL_UnlockMutex(renderer->allocatorLock);
             break;
         }
         case E2D_COMPUTE_PIPELINE: value = (uint64_t)((const VulkanComputePipeline *)resource)->pipeline; break;

@@ -16,7 +16,7 @@ internal sealed unsafe partial class RenderFormatSupport
         fixed (byte* output = _formats)
         {
             var result = ReadNative(device, 1, output, Count);
-            if (result == 0) throw new NotSupportedException("Format filter queries require the pinned SDL 3.4.18 Vulkan adapter.");
+            if (result == 0) throw new NotSupportedException("Format filter queries require the pinned SDL 3.4.20 Vulkan adapter.");
             if (result != 1) throw new InvalidOperationException("The native device could not report format filter support.");
         }
     }

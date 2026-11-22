@@ -1,6 +1,6 @@
 # SDL original allocation source profile
 
-This builds the pinned SDL 3.4.18 core with the existing pure-C allocation ledger
+This builds the pinned SDL 3.4.20 core with the existing pure-C allocation ledger
 as its original allocator. Loading or first using SDL therefore cannot create
 untracked SDL_malloc pointers that a later allocator replacement would free
 through another owner. Both callbacks and late frees remain native. This is a

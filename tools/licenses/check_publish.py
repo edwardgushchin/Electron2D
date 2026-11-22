@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGES = {
-    "SDL3-CS.Linux/3.4.18",
+    "SDL3-CS.Linux/3.4.20",
     "SDL3-CS.Linux.Image/3.4.6.12",
     "SDL3-CS.Linux.Shadercross/3.0.0.13",
 }

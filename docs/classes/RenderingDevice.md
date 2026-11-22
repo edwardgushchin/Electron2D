@@ -1537,7 +1537,7 @@ See [native render memory](../components/render-memory.md) for actual allocation
 
 ## SamplerIsFormatSupportedForFilter
 
-`public bool SamplerIsFormatSupportedForFilter(DataFormat format, SamplerFilter samplerFilter)` reads the shared native format feature snapshot without image allocation or GPU submission. Undefined arguments and Max reject; mapped unsupported and unmapped formats return false. Owner/lifetime guards remain active. The current query adapter requires pinned SDL 3.4.18 Vulkan. [Native format filter support](../components/format-filter-support.md) owns capability meanings, configured binding validation, lifetime and verification limits.
+`public bool SamplerIsFormatSupportedForFilter(DataFormat format, SamplerFilter samplerFilter)` reads the shared native format feature snapshot without image allocation or GPU submission. Undefined arguments and Max reject; mapped unsupported and unmapped formats return false. Owner/lifetime guards remain active. The current query adapter requires pinned SDL 3.4.20 Vulkan. [Native format filter support](../components/format-filter-support.md) owns capability meanings, configured binding validation, lifetime and verification limits.
 
 [Native 64-bit integer execution](../components/local-compute.md#native-64-bit-integer-arithmetic-and-data) connects raw buffers, original push data, typed overrides and wide graphics varyings, with independent feature fallback and explicit format/compiler limits.
 

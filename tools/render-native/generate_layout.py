@@ -7,9 +7,9 @@ import re
 
 SOURCES = {
     "src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h": "75921837d29c19f4c3b3b0e66e3c1db97a589cb2e928985c4e844948857e1258",
-    "src/gpu/d3d12/SDL_gpu_d3d12.c": "6cd3964004aff0aef48b2959131fb0eb6f3ad8dfd1d9befc571385f7e00c1e4d",
+    "src/gpu/d3d12/SDL_gpu_d3d12.c": "3ae66cfae1972358905b64ac37b00a528a4d1ab1e13a035523707fd290c68b33",
     "src/gpu/SDL_sysgpu.h": "86f74c57f00529fc9531f680340be114414688c4809b724eac894d862f86fb6e",
-    "src/gpu/vulkan/SDL_gpu_vulkan.c": "28b42c4286805a6cff952bd698de29659180132ae881eedd3f6bf24d16583361",
+    "src/gpu/vulkan/SDL_gpu_vulkan.c": "68c43e1c2b984d9e3cc559e52ca71c4a5c7cdee107de221067ddd40a4c070d3f",
     "src/video/wayland/SDL_waylandvideo.h": "a538db500621b7283d34ed5eab19819bc54a31f515cc74e3b9d619ea8704603e",
 }
 
@@ -78,7 +78,7 @@ def d3d12_layout(source):
 def generate(source):
     for name, expected in SOURCES.items():
         if hashlib.sha256((source / name).read_bytes()).hexdigest() != expected:
-            raise ValueError("The SDL memory ABI source differs from pinned 3.4.18: " + name)
+            raise ValueError("The SDL memory ABI source differs from pinned 3.4.20: " + name)
     gpu = (source / "src/gpu/SDL_sysgpu.h").read_text(encoding="utf-8")
     vulkan = (source / "src/gpu/vulkan/SDL_gpu_vulkan.c").read_text(encoding="utf-8")
     functions = (source / "src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h").read_text(encoding="utf-8")
@@ -91,7 +91,7 @@ def generate(source):
                         for name in pointers if not name.startswith("Vk"))
     return "\n".join([
         vulkan[:vulkan.index('#include "SDL_internal.h"')].rstrip(),
-        "/* Generated from pinned SDL 3.4.18. */",
+        "/* Generated from pinned SDL 3.4.20. */",
         "#include <SDL3/SDL.h>", "#include <SDL3/SDL_revision.h>",
         "#define VK_NO_PROTOTYPES", "#define VK_ENABLE_BETA_EXTENSIONS",
         '#include "vulkan/vulkan.h"',

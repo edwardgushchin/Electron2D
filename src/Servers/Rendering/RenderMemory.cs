@@ -21,7 +21,7 @@ internal static partial class RenderMemory
     internal static RenderMemorySnapshot Read(nint device)
     {
         var result = ReadNative(device, 1, out var memory);
-        if (result == 0) throw new NotSupportedException("Native render memory queries require the pinned SDL 3.4.18 Vulkan adapter.");
+        if (result == 0) throw new NotSupportedException("Native render memory queries require the pinned SDL 3.4.20 Vulkan adapter.");
         if (result != 1) throw new InvalidOperationException("The native render allocator returned an inconsistent memory snapshot.");
         return memory;
     }

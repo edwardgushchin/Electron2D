@@ -482,7 +482,7 @@ internal static partial class SDL
     /// <seealso cref="GetIOStatus"/>
     public static ulong ReadIO(IntPtr context, IntPtr ptr, UIntPtr size)
     {
-        return ReadIONativeFunction(context, ptr, size);
+        return ReadIONativeFunction(context, ptr, size).ToUInt64();
     }
 
 
@@ -521,7 +521,7 @@ internal static partial class SDL
     /// <seealso cref="GetIOStatus"/>
     public static ulong WriteIO(IntPtr context, IntPtr ptr, UIntPtr size)
     {
-        return WriteIONativeFunction(context, ptr, size);
+        return WriteIONativeFunction(context, ptr, size).ToUInt64();
     }
 
 

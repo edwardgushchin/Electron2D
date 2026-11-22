@@ -106,34 +106,32 @@ public sealed partial class Image
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int WebPDecodeNative(byte* bytes, ulong length, byte* pixels, ulong capacity, int width, int height);
 
-    private static unsafe partial class WebPMemory
+    private static partial class WebPMemory
     {
         private static readonly object Gate = new();
         private static bool _ready;
         internal static void Prepare()
         {
             if (Volatile.Read(ref _ready)) return;
-            NativeAllocation.Prepare();
             lock (Gate)
             {
                 if (_ready) return;
+                var functions = NativeAllocation.GetFunctions();
                 try
                 {
-                    if (Install(&Allocate, &Release) != 0) throw new InvalidOperationException("The native WebP allocator has another owner.");
+                    if (Install(functions.Allocate, functions.Release) != 0)
+                    {
+                        throw new InvalidOperationException("The native WebP allocator has another owner.");
+                    }
                 }
                 catch (EntryPointNotFoundException error)
-                { throw new PlatformNotSupportedException("WebP allocation accounting requires the matching source-built native bundle.", error); }
+                {
+                    throw new PlatformNotSupportedException("WebP allocation accounting requires the matching source-built native bundle.", error);
+                }
                 Volatile.Write(ref _ready, true);
             }
         }
-        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
-        private static void* Allocate(nuint size)
-        {
-            try { return NativeAllocation.Alloc(size); } catch (OutOfMemoryException) { return null; }
-        }
-        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
-        private static void Release(void* value) => NativeAllocation.Free(value);
         [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_webp_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-        private static partial int Install(delegate* unmanaged[Cdecl]<nuint, void*> allocate, delegate* unmanaged[Cdecl]<void*, void> release);
+        private static partial int Install(nint allocate, nint release);
     }
 }

@@ -8,8 +8,8 @@ This page lists Electron2D's direct third-party integrations and backends select
 
 | Software | Role and delivery | Version source |
 | --- | --- | --- |
-| SDL3-CS (SDL, Image and ShaderCross bindings) | Complete managed source modules compiled internally into the single `Electron2D.dll`; no public SDL types or separate managed binding assembly. | [Vendor provenance](../src/Vendor/SDL3-CS/UPSTREAM.md): `v3.4.18.0` |
-| SDL3 | Native window, input and rendering foundation. The runtime project supplies RID-specific packages transitively. | [Native pins](../tools/native-package.props): `SDL3-CS.{platform}` `3.4.18.0` (NuGet normalizes it to `3.4.18`) |
+| SDL3-CS (SDL, Image and ShaderCross bindings) | Complete managed source modules compiled internally into the single `Electron2D.dll`; no public SDL types or separate managed binding assembly. | [Vendor provenance](../src/Vendor/SDL3-CS/UPSTREAM.md): `v3.4.20.0` |
+| SDL3 | Native window, input and rendering foundation. The runtime project supplies RID-specific packages transitively. | [Native pins](../tools/native-package.props): `SDL3-CS.{platform}` `3.4.20.0` (NuGet normalizes it to `3.4.20`) |
 | SDL_image 3 | Native image decoding and encoding through the vendored Image bindings. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.{platform}.Image` `3.4.6.12`, upstream SDL_image `3.4.6` |
 | SDL_shadercross 3 | Native SPIR-V translation and reflection; the Linux package also supplies DXC and SPIRV-Cross. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.{platform}.Shadercross` `3.0.0.13`; [shader component](components/shader-materials.md) |
 | Clipper2 | Polygon clipping and offsets; nine C# source files compiled internally. | [Vendor provenance](../src/Vendor/Clipper2/UPSTREAM.txt): `2.0.1`; [license](../licence/Clipper2-LICENSE.txt) |

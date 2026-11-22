@@ -120,7 +120,7 @@ the whole resource family is removed. Renderer-source expiration immediately
 invalidates views; the renderer retires their native wrappers at its safe frame
 boundary. Authored source updates are prepared through the original borrow.
 
-The private source/hash/version/revision-bound SDL 3.4.18 Vulkan bridge owns real
+The private source/hash/version/revision-bound SDL 3.4.20 Vulkan bridge owns real
 image views and pinned SDL wrappers. It pins both the source texture and allocator
 region against defragmentation, disables native cycling of that source container,
 and resolves transfer locations to actual original coordinates. Native references

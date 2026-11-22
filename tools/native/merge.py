@@ -6,16 +6,17 @@ import tempfile
 
 
 def merge(output, archiver, inputs):
-    if not inputs or output in inputs or any(not path.is_file() for path in inputs):
+    archives = [output, *inputs]
+    if not inputs or output in inputs or any(not path.is_file() for path in archives):
         raise ValueError("A complete distinct target archive closure is required")
     with tempfile.TemporaryDirectory(dir=output.parent) as temporary:
         candidate = Path(temporary) / output.name
         if sys.platform == "darwin" and Path(archiver).name in ("ar", "libtool"):
-            subprocess.run(["xcrun", "libtool", "-static", "-o", str(candidate), *map(str, inputs)], check=True)
+            subprocess.run(["xcrun", "libtool", "-static", "-o", str(candidate), *map(str, archives)], check=True)
         else:
             # MRI scripts do not consistently quote paths; use bounded local names.
             aliases = []
-            for index, path in enumerate(inputs):
+            for index, path in enumerate(archives):
                 alias = Path(temporary) / ("input-" + str(index) + ".a")
                 alias.symlink_to(path)
                 aliases.append(alias.name)

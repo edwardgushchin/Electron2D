@@ -88,7 +88,9 @@ E2D_EXPORT int e2d_render_aspect_transfer(SDL_GPUDevice *device, uint32_t abi, S
 {
     VulkanCommandBuffer *c = command_for(device, abi, commands);
     if (!c || !region || !region->texture || !transfer || upload > 1 || depth_offset % 4 || stencil_offset % 4) return -1;
-    VulkanRenderer *r = c->renderer; int result = -1; SDL_LockRWLockForReading(r->defragLock);
+    VulkanRenderer *r = c->renderer;
+    int result = -1;
+    SDL_LockMutex(r->allocatorLock);
     VulkanTextureContainer *container = (VulkanTextureContainer *)region->texture; VulkanBuffer *b = ((VulkanBufferContainer *)transfer)->activeBuffer;
     if (!region_valid(container, region) || container->header.info.sample_count != SDL_GPU_SAMPLECOUNT_1 || !b || b->type != VULKAN_BUFFER_TYPE_TRANSFER) goto done;
     VulkanTexture *t = container->activeTexture; uint64_t pixels = (uint64_t)region->w * region->h;
@@ -107,7 +109,8 @@ E2D_EXPORT int e2d_render_aspect_transfer(SDL_GPUDevice *device, uint32_t abi, S
     else r->vkCmdCopyImageToBuffer(c->commandBuffer, t->image, layout, b->buffer, count, regions);
     transition(c, t, region, layout, true); result = 1;
 done:
-    SDL_UnlockRWLock(r->defragLock); return result;
+    SDL_UnlockMutex(r->allocatorLock);
+    return result;
 }
 
 E2D_EXPORT int e2d_render_depth_resolve_support(SDL_GPUDevice *device, uint32_t abi)
@@ -157,7 +160,8 @@ E2D_EXPORT DepthResolve *e2d_render_depth_resolve_create(SDL_GPUDevice *device, 
     if (!device || abi != 1 || !source || !destination || !source->texture || !destination->texture ||
         e2d_render_depth_resolve_support(device, abi) <= 0) return NULL;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
-    DepthResolve *target = NULL; SDL_LockRWLockForReading(r->defragLock);
+    DepthResolve *target = NULL;
+    SDL_LockMutex(r->allocatorLock);
     VulkanTextureContainer *a = (VulkanTextureContainer *)source->texture, *b = (VulkanTextureContainer *)destination->texture;
     SDL_GPUTextureRegion x = {.texture=source->texture,.mip_level=source->mip_level,.layer=source->layer,.w=width,.h=height,.d=1};
     SDL_GPUTextureRegion y = {.texture=destination->texture,.mip_level=destination->mip_level,.layer=destination->layer,.w=width,.h=height,.d=1};
@@ -208,15 +212,20 @@ E2D_EXPORT DepthResolve *e2d_render_depth_resolve_create(SDL_GPUDevice *device, 
     } else target->pass = VK_NULL_HANDLE;
     if (result != VK_SUCCESS) { SDL_SetError("Creating a depth/stencil resolve target failed: %d", (int)result); e2d_render_depth_resolve_release(device, abi, target); target = NULL; }
 done:
-    SDL_UnlockRWLock(r->defragLock); return target;
+    SDL_UnlockMutex(r->allocatorLock);
+    return target;
 }
 
 E2D_EXPORT int e2d_render_depth_resolve_record(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, DepthResolve *target)
 {
     VulkanCommandBuffer *c = command_for(device, abi, commands);
     if (!c || !target || target->device != device) return -1;
-    VulkanRenderer *r = c->renderer; SDL_LockRWLockForReading(r->defragLock);
-    if (!retain_texture(c, target->source) || !retain_texture(c, target->destination)) { SDL_UnlockRWLock(r->defragLock); return -1; }
+    VulkanRenderer *r = c->renderer;
+    SDL_LockMutex(r->allocatorLock);
+    if (!retain_texture(c, target->source) || !retain_texture(c, target->destination)) {
+        SDL_UnlockMutex(r->allocatorLock);
+        return -1;
+    }
     transition(c, target->source, &target->source_region, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
     transition(c, target->destination, &target->destination_region, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
     VkRenderPassBeginInfo info = {.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,.renderPass=target->pass,.framebuffer=target->framebuffer,
@@ -224,13 +233,16 @@ E2D_EXPORT int e2d_render_depth_resolve_record(SDL_GPUDevice *device, uint32_t a
     target->begin(c->commandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE); r->vkCmdEndRenderPass(c->commandBuffer);
     transition(c, target->source, &target->source_region, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, true);
     transition(c, target->destination, &target->destination_region, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, true);
-    SDL_UnlockRWLock(r->defragLock); return 1;
+    SDL_UnlockMutex(r->allocatorLock);
+    return 1;
 }
 E2D_EXPORT int e2d_render_aspect_copy(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, const SDL_GPUTextureLocation *source, const SDL_GPUTextureLocation *destination, uint32_t width, uint32_t height)
 {
     VulkanCommandBuffer *c = command_for(device, abi, commands);
     if (!c || !source || !destination || !source->texture || !destination->texture) return -1;
-    VulkanRenderer *r = c->renderer; int result = -1; SDL_LockRWLockForReading(r->defragLock);
+    VulkanRenderer *r = c->renderer;
+    int result = -1;
+    SDL_LockMutex(r->allocatorLock);
     VulkanTextureContainer *a = (VulkanTextureContainer *)source->texture, *b = (VulkanTextureContainer *)destination->texture;
     SDL_GPUTextureRegion x = {.texture=source->texture,.mip_level=source->mip_level,.layer=source->layer,.x=source->x,.y=source->y,.w=width,.h=height,.d=1};
     SDL_GPUTextureRegion y = {.texture=destination->texture,.mip_level=destination->mip_level,.layer=destination->layer,.x=destination->x,.y=destination->y,.w=width,.h=height,.d=1};
@@ -246,5 +258,6 @@ E2D_EXPORT int e2d_render_aspect_copy(SDL_GPUDevice *device, uint32_t abi, SDL_G
     r->vkCmdCopyImage(c->commandBuffer, src->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dst->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, count, regions);
     transition(c, src, &x, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, true); transition(c, dst, &y, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, true); result = 1;
 done:
-    SDL_UnlockRWLock(r->defragLock); return result;
+    SDL_UnlockMutex(r->allocatorLock);
+    return result;
 }

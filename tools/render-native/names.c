@@ -182,9 +182,9 @@ E2D_EXPORT int e2d_render_resource_name(SDL_GPUDevice *device, uint32_t abi, uin
         return label_resource(renderer, kind, resource, name);
 
     // Defragmentation can replace physical buffer and image handles inside a live container.
-    SDL_LockRWLockForReading(renderer->defragLock);
+    SDL_LockMutex(renderer->allocatorLock);
     int result = label_resource(renderer, kind, resource, name);
-    SDL_UnlockRWLock(renderer->defragLock);
+    SDL_UnlockMutex(renderer->allocatorLock);
     return result;
 }
 
