@@ -92,11 +92,30 @@ decides whether to show a prompt, including after prior denials. Invalid or
 undeclared names and denied requests without an active game Activity produce
 neither a prompt nor an event.
 
+`OS.RequestPermissions()` requests the application's declared dangerous
+permissions that Android reports as missing. It returns `true` if all are
+already granted or there are none, without opening a request. It returns
+`false` when any are missing, including when there is no active game Activity.
+Batch and single requests use the same FIFO. An overlapping permission shares
+its pending result, and each batch requests the names still missing when it
+starts. On Android 11 or later, when the app targets API 30 or later, background
+location goes into its own queue entry after the rest of the batch. Foreground
+location can then be decided before Android considers background access.
+Android 13 or later uses the same ordering for background body sensors when the
+app targets API 33 or later. If both background permissions are pending, each
+gets its own system request. On Android 12 or later, a request for precise
+location includes the approximate permission if the app declares it. This
+applies when approximate location is already granted and after an earlier
+denial in an overlapping request. A companion added to the system call adds
+no result to the originating loop.
+Android controls the order and number of visible dialogs. The originating loop
+receives one result per queued name.
+
 `OS.GetGrantedPermissions()` reads the current package's declared dangerous
 permissions and returns the ones Android reports as granted. The method works
 without an active window. It reads a fresh snapshot and never displays a dialog.
-The two operations use Android API 23 or later. On earlier Android versions and
-on Windows, Linux, macOS, iOS, tvOS and Web, the request returns `false` and the
+These operations use Android API 23 or later. On earlier Android versions and
+on Windows, Linux, macOS, iOS, tvOS and Web, both requests return `false` and the
 query returns an empty array.
 
 The Activity forwards SDK callbacks to SDL. Its own request results match the
@@ -148,9 +167,31 @@ The consumer compares snapshots with Android PackageManager before and after
 decisions. All seven scenarios passed on the Android API 36 x86-64 emulator
 using the Release application. Earlier direct SDK evidence is retained under
 `bin/physics-permissions/2026-10-26/`.
-API levels 23–35, physical devices and Android TV remain unverified for these
-methods. Bulk requests, revocation and Apple permission adapters retain their
-own coverage rows.
+
+Use `--bulk` for mixed decisions, both orders of overlapping requests, a
+partially granted package, an already-granted package and Activity destruction.
+Build the consumer with `-p:PermissionTestNoDangerous=true` and run the resulting
+APK with `--mode public-bulk-empty` to exercise a manifest with zero dangerous
+permissions. Both manifests include a denied non-dangerous permission to check
+filtering. All six batch scenarios passed on an Android API 36 x86-64 emulator.
+
+Build with `-p:PermissionTestLocation=true` and pass `--location` to the
+controller to exercise the foreground and background location sequence. The
+scenarios start from clean installations and cover foreground grant and denial,
+plus a foreground grant already present when the batch is requested and an
+upgrade from approximate to precise. In the overlapping case, denying the
+single approximate request still lets the queued batch prompt for precise
+location. The loop receives one decision per name. All five scenarios passed
+on Android 16 with target SDK 36. When Android opens location settings for
+background access, returning without granting it keeps the foreground-only
+grant.
+Build with `-p:PermissionTestSensors=true` and pass `--sensors` for the
+corresponding body sensor scenarios. Foreground grant, denial and an existing
+foreground grant passed on Android 15 with target SDK 35.
+
+The native runs cover the stated emulator profiles. Physical devices and
+Android TV remain unverified. Revocation and Apple permission adapters retain
+their own coverage rows.
 
 ## Whole-type contract audit
 

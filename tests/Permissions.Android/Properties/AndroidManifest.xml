@@ -3,6 +3,7 @@
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.VIBRATE" />
+  <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
   <application android:allowBackup="false" android:debuggable="true" android:label="Permission result contract" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
     <activity android:name="org.electron2d.GameActivity" android:exported="true"
               android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|assetsPaths">

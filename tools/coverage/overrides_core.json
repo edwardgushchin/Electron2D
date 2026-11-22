@@ -7,6 +7,12 @@
       "reason": "ADRs 0004/0021/0095: Android API 23+ requests one declared dangerous permission through the active Activity and delivers the result to its originating MainLoop. The API 36 x86-64 emulator verified grant, denial, FIFO, retry and Activity destruction. Other builds return false. API levels 23–35, devices, Android TV and Apple adapters retain their own gaps. See [Android app permissions](../../components/main-loop.md#native-permission-results)."
     },
     {
+      "godot": "OS::method:request_permissions()",
+      "electron2d": "method:Electron2D.OS.RequestPermissions()",
+      "state": "Partial",
+      "reason": "ADRs 0004/0021/0095: Android API 23+ batches missing declared dangerous permissions through the active Activity. Background location and body sensors run separately on the Android and target SDK versions that require it. On Android 12+ precise location includes declared approximate location in the system call even after an overlapping denial. A companion added to that call produces no extra result. True means all are already granted or the dangerous list is empty. Other hosts return false. See [Android app permissions](../../components/main-loop.md#native-permission-results) for platform boundaries and native checks."
+    },
+    {
       "godot": "OS::method:get_granted_permissions()",
       "electron2d": "method:Electron2D.OS.GetGrantedPermissions()",
       "state": "Partial",

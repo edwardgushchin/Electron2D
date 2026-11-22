@@ -12,6 +12,9 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AndroidManifest Condition="'$(PermissionTestNoDangerous)' == 'true'">Properties/NoDangerousPermissions.xml</AndroidManifest>
+    <AndroidManifest Condition="'$(PermissionTestLocation)' == 'true'">Properties/LocationPermissions.xml</AndroidManifest>
+    <AndroidManifest Condition="'$(PermissionTestSensors)' == 'true'">Properties/SensorPermissions.xml</AndroidManifest>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" SetTargetFramework="TargetFramework=net10.0-android" />

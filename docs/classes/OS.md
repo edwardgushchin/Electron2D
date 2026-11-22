@@ -28,6 +28,7 @@ Process argv, Linux MIDI names and GIO paths use [tracked UTF8 input storage](..
 | Complete declaration | Contract |
 | --- | --- |
 | `public static System.Boolean RequestPermission(System.String name)` | Returns true for an already-granted manifest permission. An eligible request for a denied dangerous permission goes through the game Activity and reports its decision through `MainLoop.OnRequestPermissionsResult`. |
+| `public static System.Boolean RequestPermissions()` | On Android API 23+, returns true when every declared dangerous permission is already granted or none are declared. Otherwise returns false and queues missing permissions if the game Activity is active. Other hosts return false. See [native permission results](../components/main-loop.md#native-permission-results). |
 | `public static System.String[] GetGrantedPermissions()` | Reads which declared dangerous permissions Android currently grants to the application without opening a dialog. |
 
 See [permission delivery and platform behavior](../components/main-loop.md#native-permission-results).

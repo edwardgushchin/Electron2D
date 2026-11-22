@@ -112,6 +112,7 @@ The domain contains the following active components:
 | [XML parsing](../components/xml-parsing.md) | Permissive UTF-8 token reading, byte offsets, attributes and section navigation | Applicable own API Implemented and verified under ADR 0049 |
 | [Project settings](../components/project-settings.md) | Typed global/default values, feature overrides, dirty events, project persistence, and virtual paths | Implemented and verified |
 | [Main loop](../components/main-loop.md) | Owner-thread application lifecycle, frame hooks, stop requests, and platform-notification endpoints | Implemented and verified |
+| [Android permissions](../components/main-loop.md#native-permission-results) | Explicit single and batch requests and a snapshot of dangerous grants | Android API 23+ |
 | [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, [compiled project loop registration](../components/engine-runtime.md#custom-project-loop), fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |
 | [Scalar math](../components/scalar-math.md) | Stateless constants, transcendental functions, angles, interpolation, approximation, rounding, wrapping, and audio conversion | Implemented and verified |
 | [Random generation](../components/random-generation.md) | Shared and independent PCG32 streams, seed/state restoration, bounded, weighted and normal sampling | Implemented and managed-verified |

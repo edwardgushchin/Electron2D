@@ -29,6 +29,26 @@ internal static partial class AndroidWindowHost
             return false;
         }
 
+        QueuePermissionRequest([name]);
+        return false;
+    }
+
+    [SupportedOSPlatform("android23.0")]
+    internal static bool RequestPermissions()
+    {
+        var missing = GetDangerousPermissions(Permission.Denied);
+        if (missing.Length == 0)
+        {
+            return true;
+        }
+
+        QueuePermissionRequest(missing);
+        return false;
+    }
+
+    [SupportedOSPlatform("android23.0")]
+    private static void QueuePermissionRequest(string[] names)
+    {
         AndroidGameActivity? activity;
         MainLoop? loop;
         lock (Gate)
@@ -38,19 +58,21 @@ internal static partial class AndroidWindowHost
         }
         if (activity is not null && loop is not null)
         {
-            activity.QueuePermissionRequest(loop, name);
+            activity.QueuePermissionRequest(loop, names);
         }
-        return false;
     }
 
     [SupportedOSPlatform("android23.0")]
-    internal static string[] GetGrantedPermissions()
+    internal static string[] GetGrantedPermissions() => GetDangerousPermissions(Permission.Granted);
+
+    [SupportedOSPlatform("android23.0")]
+    private static string[] GetDangerousPermissions(Permission state)
     {
         var context = Application.Context;
         var packages = context.PackageManager!;
         using var package = packages.GetPackageInfo(context.PackageName!, PackageInfoFlags.Permissions);
         return package?.RequestedPermissions?
-            .Where(name => context.CheckSelfPermission(name) == Permission.Granted && IsDangerous(packages, name))
+            .Where(name => context.CheckSelfPermission(name) == state && IsDangerous(packages, name))
             .Distinct(StringComparer.Ordinal)
             .ToArray() ?? [];
     }
@@ -93,27 +115,62 @@ internal static partial class AndroidWindowHost
 
 internal sealed partial class AndroidGameActivity
 {
+    [SupportedOSPlatform("android29.0")]
+    private const string BackgroundLocation = Android.Manifest.Permission.AccessBackgroundLocation;
+    [SupportedOSPlatform("android33.0")]
+    private const string BackgroundBodySensors = Android.Manifest.Permission.BodySensorsBackground;
+
     // Reserve a request-code range separate from SDL's requests.
     private const int FirstPermissionCode = 0x45320000;
     private const int LastPermissionCode = 0x4532FFFF;
     private int _permissionCode = LastPermissionCode;
-    private readonly Queue<(MainLoop Loop, string Name)> _permissionRequests = new();
+    private readonly Queue<(MainLoop Loop, string[] Names)> _permissionRequests = new();
     private readonly object _permissionGate = new();
-    private (MainLoop Loop, string Name)? _activePermission;
+    private (MainLoop Loop, string[] Names, bool[] Granted)? _activePermission;
     private bool _permissionActivityResumed;
     private bool _permissionActivityDestroyed;
 
     [SupportedOSPlatform("android23.0")]
-    internal void QueuePermissionRequest(MainLoop loop, string name)
+    internal void QueuePermissionRequest(MainLoop loop, string[] names)
     {
         lock (_permissionGate)
         {
-            var request = (loop, name);
-            if (_permissionActivityDestroyed || _activePermission == request || _permissionRequests.Contains(request))
+            if (_permissionActivityDestroyed)
             {
                 return;
             }
-            _permissionRequests.Enqueue(request);
+
+            var pending = names.Where(name =>
+                !(_activePermission is { } active && ReferenceEquals(active.Loop, loop) &&
+                    active.Names.Contains(name, StringComparer.Ordinal)) &&
+                !_permissionRequests.Any(request => ReferenceEquals(request.Loop, loop) &&
+                    request.Names.Contains(name, StringComparer.Ordinal))).ToList();
+            if (pending.Count == 0)
+            {
+                return;
+            }
+
+            var target = ApplicationInfo?.TargetSdkVersion;
+            var background = new List<string>(2);
+            // Android rejects foreground and background requests for these groups when submitted together.
+            if (OperatingSystem.IsAndroidVersionAtLeast(30) && target >= BuildVersionCodes.R &&
+                pending.Remove(BackgroundLocation))
+            {
+                background.Add(BackgroundLocation);
+            }
+            if (OperatingSystem.IsAndroidVersionAtLeast(33) && target >= BuildVersionCodes.Tiramisu &&
+                pending.Remove(BackgroundBodySensors))
+            {
+                background.Add(BackgroundBodySensors);
+            }
+            if (pending.Count > 0)
+            {
+                _permissionRequests.Enqueue((loop, pending.ToArray()));
+            }
+            foreach (var name in background)
+            {
+                _permissionRequests.Enqueue((loop, [name]));
+            }
         }
         SchedulePermissionRequest();
     }
@@ -138,22 +195,47 @@ internal sealed partial class AndroidGameActivity
                 {
                     continue;
                 }
-                if (CheckSelfPermission(request.Name) == Permission.Granted)
+                var granted = new bool[request.Names.Length];
+                var missing = new List<string>(request.Names.Length);
+                for (var i = 0; i < request.Names.Length; i++)
                 {
-                    request.Loop.PostPermissionResults([request.Name], [true]);
+                    var name = request.Names[i];
+                    granted[i] = CheckSelfPermission(name) == Permission.Granted;
+                    if (!granted[i])
+                    {
+                        missing.Add(name);
+                    }
+                }
+                if (missing.Count == 0)
+                {
+                    request.Loop.PostPermissionResults(request.Names, granted);
                     continue;
                 }
 
+                // Android requires the declared location pair even after an earlier coarse denial.
+                const string coarse = Android.Manifest.Permission.AccessCoarseLocation;
+                const string fine = Android.Manifest.Permission.AccessFineLocation;
+                if (OperatingSystem.IsAndroidVersionAtLeast(31) && missing.Contains(fine) &&
+                    !missing.Contains(coarse))
+                {
+                    using var package = PackageManager!.GetPackageInfo(PackageName!, PackageInfoFlags.Permissions);
+                    if (package?.RequestedPermissions?.Contains(coarse, StringComparer.Ordinal) == true)
+                    {
+                        // The companion is only for the system call. The original request owns its result.
+                        missing.Add(coarse);
+                    }
+                }
+
                 _permissionCode = _permissionCode == LastPermissionCode ? FirstPermissionCode : _permissionCode + 1;
-                _activePermission = request;
+                _activePermission = (request.Loop, request.Names, granted);
                 try
                 {
-                    RequestPermissions([request.Name], _permissionCode);
+                    RequestPermissions(missing.ToArray(), _permissionCode);
                 }
                 catch (Java.Lang.IllegalStateException)
                 {
                     _activePermission = null;
-                    request.Loop.PostPermissionResults([request.Name], [false]);
+                    request.Loop.PostPermissionResults(request.Names, granted);
                 }
             }
         }
@@ -178,9 +260,15 @@ internal sealed partial class AndroidGameActivity
             _activePermission = null;
             if (ReferenceEquals(loop, request.Loop))
             {
-                var granted = permissions.Length == 1 && permissions[0] == request.Name &&
-                    grants.Length == 1 && grants[0] == Permission.Granted;
-                request.Loop.PostPermissionResults([request.Name], [granted]);
+                for (var i = 0; i < request.Names.Length; i++)
+                {
+                    var resultIndex = Array.IndexOf(permissions, request.Names[i]);
+                    if (resultIndex >= 0 && resultIndex < grants.Length)
+                    {
+                        request.Granted[i] |= grants[resultIndex] == Permission.Granted;
+                    }
+                }
+                request.Loop.PostPermissionResults(request.Names, request.Granted);
             }
         }
         SchedulePermissionRequest();
