@@ -1,12 +1,12 @@
 {
   "repository": "https://github.com/FNA-XNA/FAudio",
-  "tag": "26.10",
-  "commit": "6839b88e304a046ae1a609ff14a085371e02a4e0",
-  "archiveSha256": "c508f297ec8d065b456b2d9d74bab89ffc84ac3afbcb428bd54e40f09f8b901e",
+  "tag": "26.11",
+  "commit": "0c423758079863fc3044ba26dd00fc89c41f469e",
+  "archiveSha256": "8fcd197678ad1ab5c95f0901c3770d8d76c1d8b1da819f6873db599807ad7d03",
   "managedSource": "Managed/FAudio.cs",
-  "managedUpstreamSha256": "21638c943bf9fa8341ddf8f33761993da5129ebf75b303842988de66b8a5267f",
+  "managedUpstreamSha256": "046a58701269fb8607603879b6f43bee8d651ba640c6847af1339b8e2858cfe9",
   "patches": [
-    "Internal top-level binding; preserve nested upstream API inside private backend boundary.",
+    "Internal top-level binding in the Electron2D.FAudioBindings namespace; preserve nested upstream API inside the backend boundary.",
     "Disable nullable and missing-XML diagnostics for the preserved upstream binding.",
     "Use the engine-owned native library constant, selecting executable static symbols on iOS/tvOS.",
     "Apply the desktop deployment default only to Darwin; retain the selected iOS/tvOS target minimum."
@@ -16,5 +16,7 @@
     "XNASONG": false,
     "BUILD_TESTS": false,
     "BUILD_UTILS": false
-  }
+  },
+  "archiveUrl": "https://codeload.github.com/FNA-XNA/FAudio/tar.gz/refs/tags/26.11",
+  "managedUpstreamPath": "csharp/FAudio.cs"
 }

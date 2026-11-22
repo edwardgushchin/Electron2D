@@ -15,7 +15,7 @@ This page lists Electron2D's direct third-party integrations and backends select
 | Clipper2 | Polygon clipping and offsets; nine C# source files compiled internally. | [Vendor provenance](../src/Vendor/Clipper2/UPSTREAM.txt): `2.0.1`; [license](../licence/Clipper2-LICENSE.txt) |
 | FastNoiseLite | Internal managed noise algorithm; the public resource exposes 1D/2D sampling. | [Vendor provenance](../src/Vendor/FastNoiseLite/UPSTREAM.txt): `1.1.1` |
 | Box2D.NET | Internal managed physics backend, including the recorded allocation adaptations. | [Vendor provenance](../src/Vendor/Box2D.NET/VENDOR.md): `3.1.654` |
-| FAudio and FAudio# | Native SDL3 mix graph and internal managed binding. | [Manifest](../src/Vendor/FAudio/manifest.json): `26.10`; [audio component](components/audio-playback.md) |
+| FAudio and FAudio# | Native SDL3 mix graph and internal managed binding. | [Manifest](../src/Vendor/FAudio/manifest.json): `26.11`; [audio component](components/audio-playback.md) |
 | NLayer / NVorbis / qoa-fu | Internal MP3, Vorbis and QOA codecs. | Manifests: [NLayer `3.0.0`](../src/Vendor/NLayer/manifest.json), [NVorbis `0.10.5`](../src/Vendor/NVorbis/manifest.json), [qoa-fu pinned commit](../src/Vendor/QOA/manifest.json) |
 | Avalonia Unicode / ICU | Internal Unicode 17 algorithms and private dictionary segmentation. | [Avalonia `12.1.3`](../src/Vendor/UnicodeText/manifest.json), [ICU `78.3`](../src/Vendor/ICU/manifest.json); no Avalonia UI dependency |
 | msdfgen | Private native core for multichannel font distance generation. | [Manifest](../src/Vendor/MSDFGen/manifest.json): [v1.13.1](https://github.com/Chlumsky/msdfgen/releases/tag/v1.13.1); [MIT license](../licence/MSDFGen-LICENSE.txt); [native delivery](native-packaging.md#msdf-font-generation) |
