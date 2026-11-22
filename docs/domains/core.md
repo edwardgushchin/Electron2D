@@ -46,7 +46,7 @@ Direct `ElectronObject` construction provides the concrete root role through the
 
 The Android application host supplies [system back navigation](../components/window-runtime.md#system-back-navigation) through the ordinary Engine lifecycle. Its existing unavailable STDIN read contract now has an explicit Android console guard; size validation remains first.
 
-[Native permission results](../components/main-loop.md#native-permission-results) now enter the exact Android window's loop through an owner-thread FIFO before its next frame hook. Terminal lifetime discards pending results; listener errors preserve unread results and the original exception. Platform request/query APIs remain separate.
+[Android app permissions](../components/main-loop.md#native-permission-results) use the active Activity for explicit single requests. Results reach the originating window's loop before its next frame hook. The granted-permission query reads the current application independently of the window.
 
 Last updated: 2026-11-15
 

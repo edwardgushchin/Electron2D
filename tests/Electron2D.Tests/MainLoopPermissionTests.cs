@@ -5,6 +5,11 @@ internal static class MainLoopPermissionTests
 {
     internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool threaded = false)
     {
+        if (!OperatingSystem.IsAndroid())
+        {
+            Check(!OS.RequestPermission("android.permission.CAMERA"), "Unsupported hosts cannot report a grant");
+            Check(OS.GetGrantedPermissions().Length == 0, "Unsupported hosts have no Android grants");
+        }
         VerifyBatchAndFailure();
         VerifyRejectedFinalization();
         VerifyRetirement();

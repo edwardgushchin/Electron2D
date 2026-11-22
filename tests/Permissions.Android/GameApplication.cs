@@ -34,6 +34,11 @@ public sealed class GameApplication(nint handle, JniHandleOwnership ownership) :
         try
         {
             mode = File.ReadAllText(IOPath.Combine(directory, "mode")).Trim();
+            if (mode.StartsWith("public-", StringComparison.Ordinal))
+            {
+                await RunPublicPermissionCheck(mode, directory);
+                return;
+            }
             if (mode.StartsWith("vibrate-", StringComparison.Ordinal))
             {
                 ProjectSettings.Set(ProjectSettings.RenderingMethod, "compatibility");
@@ -64,6 +69,19 @@ public sealed class GameApplication(nint handle, JniHandleOwnership ownership) :
             Log.Error("PermissionResult", result);
         }
         finally { UnregisterActivityLifecycleCallbacks(_activities); }
+    }
+
+    private async Task RunPublicPermissionCheck(string mode, string directory)
+    {
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, "compatibility");
+        ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+        var window = new PublicPermissionWindow(mode, () => _activities.Current!);
+        await Engine.RunAsync(window);
+        await _activities.Destroyed.Task.WaitAsync(TimeSpan.FromSeconds(15));
+        var results = window.Verify();
+        var receipt = $"RESULT {mode} PASS API={(int)Android.OS.Build.VERSION.SdkInt} results={results}";
+        File.WriteAllText(IOPath.Combine(directory, "result"), receipt);
+        Log.Info("PermissionResult", receipt);
     }
 
     private void CheckUnavailableVibrator()
@@ -130,8 +148,15 @@ public sealed class GameApplication(nint handle, JniHandleOwnership ownership) :
     {
         private Activity? _current;
         internal Activity? Current => Volatile.Read(ref _current);
+        internal TaskCompletionSource Destroyed { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public void OnActivityCreated(Activity activity, Android.OS.Bundle? savedInstanceState) => Volatile.Write(ref _current, activity);
-        public void OnActivityDestroyed(Activity activity) => Interlocked.CompareExchange(ref _current, null, activity);
+        public void OnActivityDestroyed(Activity activity)
+        {
+            if (ReferenceEquals(Interlocked.CompareExchange(ref _current, null, activity), activity))
+            {
+                Destroyed.TrySetResult();
+            }
+        }
         public void OnActivityPaused(Activity activity) { }
         public void OnActivityResumed(Activity activity) { }
         public void OnActivitySaveInstanceState(Activity activity, Android.OS.Bundle outState) { }

@@ -10,6 +10,17 @@ import time
 import xml.etree.ElementTree as ET
 
 PACKAGE = "org.electron2d.permissions"
+SDK_CASES = ["grant", "deny", "batch", "throw"]
+PUBLIC_CASES = ["public-order", "public-retry", "public-finish"]
+EXPECTED_DIALOGS = {
+    "grant": [("audio", True)],
+    "deny": [("audio", False)],
+    "batch": [("audio", True), ("camera", False)],
+    "throw": [("audio", True)],
+    "public-order": [("audio", True), ("camera", False)],
+    "public-retry": [("audio", False), ("audio", True)],
+    "public-finish": [],
+}
 
 
 def run(apk, serial, output, modes):
@@ -47,7 +58,9 @@ def run(apk, serial, output, modes):
             assert pid.isdigit(), "The native application must start before permission interaction"
             (case / "pid.txt").write_text(pid + "\n")
             deadline = time.monotonic() + 150
-            clicked = set()
+            clicked = []
+            expected = EXPECTED_DIALOGS[mode]
+            last_tap = None
             while time.monotonic() < deadline:
                 receipt = command("shell", "run-as", PACKAGE, "cat", "files/result", check=False).stdout.strip()
                 if receipt:
@@ -67,25 +80,38 @@ def run(apk, serial, output, modes):
                         camera = "take pictures" in message.lower() or "camera" in message.lower()
                         assert audio != camera, message
                         kind = "audio" if audio else "camera"
-                        if kind not in clicked:
-                            allow = mode != "deny" and audio
+                        if last_tap is None or time.monotonic() - last_tap > 1:
+                            assert len(clicked) < len(expected), f"{mode}: unexpected dialog {message}"
+                            if mode == "batch":
+                                assert kind not in clicked, (mode, kind, message)
+                                allow = kind == "audio"
+                            else:
+                                expected_kind, allow = expected[len(clicked)]
+                                assert kind == expected_kind, (mode, expected_kind, message)
                             suffixes = ["permission_allow_foreground_only_button", "permission_allow_button"] if allow else ["permission_deny_button"]
                             button = next((node for suffix in suffixes for node in dialog if node.get("resource-id", "").endswith("/" + suffix)), None)
                             assert button is not None, message
                             coords = [int(value) for value in re.findall(r"\d+", button.get("bounds", ""))]
                             assert len(coords) == 4
-                            (case / (kind + ".xml")).write_text(xml)
-                            (case / (kind + ".png")).write_bytes(command("exec-out", "screencap", "-p", binary=True).stdout)
+                            capture = f"{len(clicked) + 1}-{kind}" if mode in PUBLIC_CASES else kind
+                            (case / (capture + ".xml")).write_text(xml, encoding="utf-8")
+                            (case / (capture + ".png")).write_bytes(command("exec-out", "screencap", "-p", binary=True).stdout)
                             command("shell", "input", "tap", str((coords[0] + coords[2]) // 2), str((coords[1] + coords[3]) // 2))
-                            clicked.add(kind)
+                            clicked.append(kind)
+                            last_tap = time.monotonic()
                 time.sleep(.2)
             else:
                 raise TimeoutError(f"{mode}: native result deadline")
             log = command("logcat", "-d", "--pid=" + pid, "-v", "threadtime", "PermissionResult:I", "*:S").stdout
             (case / "logcat.txt").write_text(log)
-            assert f"READY {mode} warm=0/0" in log
-            assert clicked == ({"audio", "camera"} if mode == "batch" else {"audio"})
-            results.append({"mode": mode, "result": receipt, "dialogs": sorted(clicked)})
+            if mode in SDK_CASES:
+                assert f"READY {mode} warm=0/0" in log
+            expected_kinds = [kind for kind, _ in expected]
+            if mode == "batch":
+                assert sorted(clicked) == sorted(expected_kinds), (mode, clicked)
+            else:
+                assert clicked == expected_kinds, (mode, clicked)
+            results.append({"mode": mode, "result": receipt, "dialogs": clicked})
             print(receipt, flush=True)
             command("shell", "am", "force-stop", PACKAGE)
             command("uninstall", PACKAGE)
@@ -103,6 +129,8 @@ if __name__ == "__main__":
     parser.add_argument("apk", type=Path)
     parser.add_argument("serial")
     parser.add_argument("output", type=Path)
-    parser.add_argument("--mode", choices=["grant", "deny", "batch", "throw"])
+    parser.add_argument("--mode", choices=SDK_CASES + PUBLIC_CASES)
+    parser.add_argument("--public", action="store_true", help="Run only the public OS API scenarios.")
     args = parser.parse_args()
-    run(args.apk.resolve(), args.serial, args.output.resolve(), [args.mode] if args.mode else ["grant", "deny", "batch", "throw"])
+    modes = [args.mode] if args.mode else PUBLIC_CASES if args.public else SDK_CASES
+    run(args.apk.resolve(), args.serial, args.output.resolve(), modes)

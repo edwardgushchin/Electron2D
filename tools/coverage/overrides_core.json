@@ -1,5 +1,17 @@
 {
   "mappings": [
+    {
+      "godot": "OS::method:request_permission(String:)",
+      "electron2d": "method:Electron2D.OS.RequestPermission(System.String)",
+      "state": "Partial",
+      "reason": "ADRs 0004/0021/0095: Android API 23+ requests one declared dangerous permission through the active Activity and delivers the result to its originating MainLoop. The API 36 x86-64 emulator verified grant, denial, FIFO, retry and Activity destruction. Other builds return false. API levels 23–35, devices, Android TV and Apple adapters retain their own gaps. See [Android app permissions](../../components/main-loop.md#native-permission-results)."
+    },
+    {
+      "godot": "OS::method:get_granted_permissions()",
+      "electron2d": "method:Electron2D.OS.GetGrantedPermissions()",
+      "state": "Partial",
+      "reason": "ADRs 0004/0021/0095: Android API 23+ reads the current package's granted dangerous permissions. The API 36 x86-64 emulator verified snapshots against Android PackageManager through grants and denials. Other builds return an empty snapshot. API levels 23–35, devices, Android TV and Apple queries retain their own gaps. See [Android app permissions](../../components/main-loop.md#native-permission-results)."
+    },
     {"godot": "ProjectSettings::method:check_changed_settings_in_group(String:)", "electron2d": "method:Electron2D.ProjectSettings.CheckChangedSettingsInGroup(System.String)", "reason": "ADRs 0019/0095: Uses the same pending and in-flight names as GetChangedSettings, with ordinal prefix matching."},
     {"godot": "ProjectSettings::method:has_setting(String:)", "electron2d": "method:Electron2D.ProjectSettings.HasSetting`1(ProjectSetting<T>)", "reason": "ADRs 0019/0095: Tests exact registered definition identity in the selected registry."},
     {"godot": "ProjectSettings::signal:settings_changed()", "electron2d": "event:Electron2D.ProjectSettings.SettingsChanged()", "reason": "ADRs 0019/0095: Synchronously delivers one coalesced batch after a successful process callback or an explicit flush, with the exact registry sender. Concurrent and reentrant edits remain pending after delivery or failure."},

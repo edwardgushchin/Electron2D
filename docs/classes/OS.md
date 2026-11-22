@@ -23,6 +23,15 @@ Process argv, Linux MIDI names and GIO paths use [tracked UTF8 input storage](..
 | `public static System.Void ShellShowInFileManager(System.String fileOrDirPath, System.Boolean openFolder = true)` | Requests the file manager for an ordinary filesystem path; globalize project paths first. Windows enters a directory when openFolder is true, otherwise selects the file/directory in its parent. Existing directory views retain native selection state. Linux sends `ShowFolders` for directory entry and `ShowItems` for selection. If the service is absent, Linux opens the requested or containing folder. Invalid empty/null/NUL input fails before external work. A missing target or native rejection throws `IOException`. The macOS backend remains unavailable. See [native behavior and verification](../components/file-manager.md). |
 | `protected override System.Void ValidateDisposal()` | Inherited dialog/tree/scene lifecycle extension point; see the owning base reference. |
 
+## Android application permissions
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static System.Boolean RequestPermission(System.String name)` | Returns true for an already-granted manifest permission. An eligible request for a denied dangerous permission goes through the game Activity and reports its decision through `MainLoop.OnRequestPermissionsResult`. |
+| `public static System.String[] GetGrantedPermissions()` | Reads which declared dangerous permissions Android currently grants to the application without opening a dialog. |
+
+See [permission delivery and platform behavior](../components/main-loop.md#native-permission-results).
+
 ## Graphics driver
 
 `GetVideoAdapterDriverInfo()` returns the active renderer's reported driver name and version on Windows and desktop Linux. Each available pair is caller-owned. Direct3D reads its selected adapter's description and version through DXCore when available. See [graphics adapter identity](../components/graphics-adapter-identity.md) for unavailable values.

@@ -36,7 +36,7 @@ The component depends on Core object lifecycle, the process-wide Input transitio
 
 ## Current implementation status and exclusions
 
-The lifecycle, callbacks, stop results, constants, `Engine` attachment, Input transition integration, error states and `SceneTree` integration execute. `Engine.Run(Window)` owns the ordinary windowed clock, event pump, pacing, exit-code result and cleanup. Those services belong to their respective components; MainLoop itself remains caller-driven. Android permission results have a native producer; OS request/query/revocation APIs remain separate platform work. Runtime exception diagnostics do not establish an operating-system crash handler.
+The lifecycle, callbacks, stop results, constants, `Engine` attachment, Input transition integration, error states and `SceneTree` integration execute. `Engine.Run(Window)` owns the ordinary windowed clock, event pump, pacing, exit-code result and cleanup. Those services belong to their respective components; MainLoop itself remains caller-driven. Android permission results have a native producer. Runtime exception diagnostics do not establish an operating-system crash handler.
 
 ## Verification
 
@@ -82,12 +82,28 @@ API or numerical algorithm.
 
 ## Native permission results
 
-The owned Android Activity forwards its SDK permission callback to the SDL base,
-then copies permission names and grant decisions to the current window's exact
-MainLoop. A weak Activity identity and the current Engine loop identity reject
-inactive, replaced or destroyed hosts. A missing decision is denial. Core keeps
-only names and booleans; it acquires no Android dependency or permission-request
-API. Applications may issue requests through their standard Android bootstrap.
+`OS.RequestPermission(name)` uses the exact manifest name. An already-granted
+declared permission returns `true` without a callback. Otherwise the call returns
+`false`. A declared, denied dangerous permission can enter the active game
+Activity's FIFO. It opens one system request at a time on the Android UI thread
+while the Activity is resumed. Duplicate pending requests share one result.
+Subscribe to the loop's permission event before calling the method. Android
+decides whether to show a prompt, including after prior denials. Invalid or
+undeclared names and denied requests without an active game Activity produce
+neither a prompt nor an event.
+
+`OS.GetGrantedPermissions()` reads the current package's declared dangerous
+permissions and returns the ones Android reports as granted. The method works
+without an active window. It reads a fresh snapshot and never displays a dialog.
+The two operations use Android API 23 or later. On earlier Android versions and
+on Windows, Linux, macOS, iOS, tvOS and Web, the request returns `false` and the
+query returns an empty array.
+
+The Activity forwards SDK callbacks to SDL. Its own request results match the
+request code and originating loop. An interrupted Android request reports denial
+if its Activity and loop are still active. Direct SDK requests retain their
+existing result path. Finishing or replacing the Activity prevents delivery
+from it, and destruction discards pending requests.
 
 The loop drains a captured FIFO count at its next idle or physics entry, after
 Input setup and before the frame hook. Handlers run on the creating thread and
@@ -126,10 +142,15 @@ saves dialog XML/screenshots and removes only its test package after each case:
 python3 -B tests/Permissions.Android/run.py /absolute/path/to/test.apk emulator-5556 /absolute/path/to/new-results
 ```
 
-Evidence is retained under `bin/physics-permissions/2026-10-26/`. Android emulation
-does not qualify physical devices, native allocation totals or performance. Other
-platform permission policies and OS permission-request methods retain their own
-gates; inherited Object gaps remain on their declaring type.
+Add `--public` to run the three public API scenarios for ordered grant and
+denial, retry after denial, and Activity destruction with pending requests.
+The consumer compares snapshots with Android PackageManager before and after
+decisions. All seven scenarios passed on the Android API 36 x86-64 emulator
+using the Release application. Earlier direct SDK evidence is retained under
+`bin/physics-permissions/2026-10-26/`.
+API levels 23–35, physical devices and Android TV remain unverified for these
+methods. Bulk requests, revocation and Apple permission adapters retain their
+own coverage rows.
 
 ## Whole-type contract audit
 

@@ -156318,6 +156318,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetGrantedPermissions()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetGrantedPermissions",
+    "signature": "public static System.String[] GetGrantedPermissions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetKeycodeString(Electron2D.Key)",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -157144,6 +157157,25 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.RequestPermission(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "RequestPermission",
+    "signature": "public static System.Boolean RequestPermission(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

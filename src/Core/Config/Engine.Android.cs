@@ -8,7 +8,7 @@ using System.Runtime.Versioning;
 
 namespace Electron2D;
 
-internal static class AndroidWindowHost
+internal static partial class AndroidWindowHost
 {
     private static readonly object Gate = new();
     private static Window? _window;
@@ -71,14 +71,7 @@ internal static class AndroidWindowHost
 
     internal static void PostPermissionResults(AndroidGameActivity activity, string[] permissions, Android.Content.PM.Permission[] results)
     {
-        MainLoop? loop;
-        lock (Gate)
-        {
-            if (!_started || activity.IsFinishing || activity.IsDestroyed || _activity is null ||
-                !_activity.TryGetTarget(out var current) || !ReferenceEquals(current, activity)) return;
-            loop = _window?.Tree;
-            if (!ReferenceEquals(loop, Engine.Service.MainLoopCore)) return;
-        }
+        var loop = GetPermissionLoop(activity);
         if (loop is null) return;
         foreach (var permission in permissions) if (string.IsNullOrEmpty(permission)) return;
         Span<bool> granted = permissions.Length <= 64 ? stackalloc bool[permissions.Length] : new bool[permissions.Length];
@@ -140,7 +133,7 @@ internal static class AndroidWindowHost
 }
 
 [Activity(Name = "org.electron2d.GameActivity", EnableOnBackInvokedCallback = true)]
-internal sealed class AndroidGameActivity : SDLActivity
+internal sealed partial class AndroidGameActivity : SDLActivity
 {
     private Android.Window.IOnBackInvokedCallback? _backCallback;
 
@@ -163,7 +156,10 @@ internal sealed class AndroidGameActivity : SDLActivity
     public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
     {
         base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        AndroidWindowHost.PostPermissionResults(this, permissions, grantResults);
+        if (!HandlePermissionResult(requestCode, permissions, grantResults))
+        {
+            AndroidWindowHost.PostPermissionResults(this, permissions, grantResults);
+        }
     }
 
     public override bool DispatchKeyEvent(Android.Views.KeyEvent? e)
@@ -191,6 +187,7 @@ internal sealed class AndroidGameActivity : SDLActivity
 
     protected override void OnDestroy()
     {
+        ClosePermissionRequests();
         try
         {
             if (OperatingSystem.IsAndroidVersionAtLeast(33) && _backCallback is not null)
