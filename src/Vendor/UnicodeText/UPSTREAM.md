@@ -1,18 +1,29 @@
 # Unicode text algorithm source
 
 This directory contains the bounded Unicode runtime dependency closure from
-[Avalonia 12.1.3](https://github.com/AvaloniaUI/Avalonia/tree/8eeda4f6f546165b3f72e63c9f42247abb306905),
-commit `8eeda4f6f546165b3f72e63c9f42247abb306905`, with Unicode Character Database
+[Avalonia 12.1.6](https://github.com/AvaloniaUI/Avalonia/tree/cf8e564674700348947e93ab19105f27afe859a9),
+commit `cf8e564674700348947e93ab19105f27afe859a9`, with Unicode Character Database
 **17.0.0** tables. It compiles internally into `Electron2D.dll`. No Avalonia
 assembly, UI, renderer, dependency package or native library is included.
 
 `manifest.json` records every upstream URL and SHA-256, every adapted destination
-SHA-256, and the official Unicode conformance-data provenance. The source closure
+SHA-256, and the official Unicode conformance-data provenance. The importer reads
+individual files at pinned revisions. Git preserves the bytes of the vendored
+files and keeps the conformance fixture in LF form on Windows. The source closure
 contains the bidi algorithm/data, Unicode properties and trie lookup, grapheme, word and
 line-break enumerators, required enums/data, and six small buffer/collection helpers.
 The generator, trie builder implementation and UI text layout
 are excluded. `UnicodeTrieBuilder.Constants.cs` is retained because trie lookup uses
 those layout constants.
+
+The SHA-256 values below cover the compressed GitHub source archives for the
+two exact revisions. All 36 selected archive members per revision matched the
+individual files served by GitHub, including the license.
+
+| Release and source archive | SHA-256 |
+| --- | --- |
+| [12.1.3 tar.gz](https://codeload.github.com/AvaloniaUI/Avalonia/tar.gz/8eeda4f6f546165b3f72e63c9f42247abb306905) | `9109d00f8cfb7d38962d66ff1eb55fce8b144162111239f8f4f5d57dd91d6fcb` |
+| [12.1.6 tar.gz](https://codeload.github.com/AvaloniaUI/Avalonia/tar.gz/cf8e564674700348947e93ab19105f27afe859a9) | `7df88dd44b1abdcb825e1b044ed28ca021f0379ad468dda07b6cba7b259ebdfc` |
 
 ## Mechanical adaptations
 
@@ -28,24 +39,29 @@ All downloaded hashes and transformed hashes are checked before any replacement.
 `--full-fixture /tmp/UnicodeTextConformance.full.json` also writes the complete
 official test corpus for update-time verification.
 
+Run the bounded fixture from the repository root.
+
+```sh
+dotnet run --project tests/Electron2D.Tests -c Release -- --unicode-text
+```
+
+Pass the generated full fixture as the next argument to execute the full corpus.
+
 ## Engine entry points and verified integration
 
-Use the engine-owned `TextBIDI.Resolve` integration in `src/Servers/Text/TextBIDI.cs`
-for bidi levels. Do not call the upstream `BidiAlgorithm.Process(BidiData)` shortcut
-from layout code. The imported revision has two upstream issues:
+The upgrade changes three imported files: `BiDiAlgorithm.cs` tracks the
+preceding strong class in one pass for W2, `BiDiData.cs` re-detects embedding
+and isolate flags after reset, and `LineBreakEnumerator.cs` adds an optional
+scan limit. Electron2D uses the original unbounded constructor. The Unicode 17
+tables, script data, grapheme code and imported licenses have identical upstream
+bytes in both releases.
 
-1. `BidiData.Reset` leaves false embedding/isolate hints, while `Append` only sets
-   previously unknown hints. The engine calls the full overload with unknown hints,
-   so each paragraph is correctly scanned even when buffers are reused.
-2. `SetPairedBracketDirection` records the correct N0 direction for following NSMs
-   in the original-class buffer instead of the working-class buffer. Untouched core
-   results fail Unicode `BidiCharacterTest.txt` lines 85–90, 104, 110 and 115.
-   The engine recognizes exactly these N0 annotations by comparing the original
-   Unicode NSM class with the core's resulting L/R annotation. These marked NSMs
-   receive the level of their immediately preceding paired bracket. They share its
-   explicit embedding state and resolved type, so I1/I2 require the same level.
-   Other classes and unannotated NSMs remain unchanged. Bracket matching, isolates,
-   overrides and X9 removal are still performed by the imported core.
+Use the engine-owned `TextBIDI.Resolve` integration for bidi levels. It calls
+the full overload with unknown hints. The upstream `SetPairedBracketDirection`
+still writes the N0 direction for following NSMs into the original-class buffer.
+The engine identifies those annotations by comparing the original Unicode NSM
+class with the core's L/R annotation and assigns those marks the level of the
+preceding bracket. Other classes and unannotated NSMs retain the core result.
 
 This integration does not modify or optimize vendored algorithms. The rule is
 [UAX #9 N0's final clause](https://www.unicode.org/reports/tr9/#N0), rather than a

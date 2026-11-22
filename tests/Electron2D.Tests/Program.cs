@@ -2095,6 +2095,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_NATIVE") == "1")
     return;
 }
 
+if (args.Length is 1 or 2 && args[0] == "--unicode-text")
+{
+    UnicodeTextTests.Run(args.Length == 2 ? args[1] : null);
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT") == "1")
 {
     UnicodeTextTests.Run(); NativeTextBreakTests.Run(); TextCaseTests.Run(); TextHelperTests.Run(); LabelSettingsTests.Run();

@@ -16,7 +16,7 @@ internal static class UnicodeTextTests
         using var fixture = JsonDocument.Parse(stream);
         var root = fixture.RootElement;
         Check(root.GetProperty("unicodeVersion").GetString() == UnicodeDataSource.Version && UnicodeDataSource.Version == "17.0.0" &&
-            root.GetProperty("upstreamCommit").GetString() == "8eeda4f6f546165b3f72e63c9f42247abb306905", "Unicode fixture and imported algorithm/data revisions agree.");
+            root.GetProperty("upstreamCommit").GetString() == "cf8e564674700348947e93ab19105f27afe859a9", "Unicode fixture and imported algorithm/data revisions agree.");
         foreach (var source in root.GetProperty("sources").EnumerateArray())
         {
             var expected = source.GetProperty("name").GetString() switch
