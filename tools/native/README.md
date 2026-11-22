@@ -36,3 +36,15 @@ must invalidate its consumer object.
 Use Electron2DNativeLibrary to select a complete source-built module for a desktop consumer. Games consume the platform package and do not build native code. External font/shaping/TLS overrides and the existing .NET TLS provider contract remain unchanged. Native source integration and local tests do not qualify foreign targets or publish a package.
 
 See [native delivery](../../docs/native-packaging.md) and the rendering, mesh, text, networking and codec producer directories for their specific behavior and checks.
+
+## WSL build slot
+
+The desktop native and OpenSSL source producers share a single compilation slot per Linux user in WSL. This also covers the native targets of source builds launched through `dotnet build`. The producers use one compiler job in WSL. A second compile from any worktree reports that the slot is occupied and exits. Run it again after the current compile finishes. The slot uses `flock` from util-linux and a 45-minute `timeout` from GNU coreutils with a 15-second grace period before forced termination.
+
+Run standalone build and validation commands with the same slot. The following command wraps a direct CMake build from the repository root in WSL.
+
+```bash
+python3 -B tools/native/wsl_build.py -- cmake --build "$build_dir" --parallel 1
+```
+
+Call the standard source producer directly so it can acquire its own compilation slot. If WSL stops responding, keep the build log and ascertain the previous job's state before trying another build.

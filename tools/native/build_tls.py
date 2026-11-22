@@ -10,6 +10,7 @@ import shlex
 import subprocess
 import tarfile
 import urllib.request
+from wsl_build import jobs, run_build
 
 VERSION = "4.1.0"
 SHA256 = "50c17baf54cb008f6ce42d50deb4b28050a1aad711636cabd4b241c7e90cc2fd"
@@ -61,7 +62,7 @@ def build(rid, output, memory_library=None):
         return
     subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs",
                     "--prefix=/Electron2D", "--openssldir=/etc/ssl", *memory_options], cwd=directory, check=True)
-    subprocess.run(["make", "-j4", "build_libs"], cwd=directory, check=True)
+    run_build(["make", "-j" + jobs(4), "build_libs"], cwd=directory)
     if linux:
         # Standard major identities let the .NET PAL share these exact files.
         for original in ("crypto", "ssl"):

@@ -7,6 +7,7 @@ import subprocess
 import build_tls
 from build_webrtc import copy_header
 import package
+from wsl_build import jobs, run_build
 
 
 def tls_options(tls):
@@ -41,7 +42,7 @@ def build(rid, sdl, output, tls=None):
     subprocess.run(["cmake", "-S", str(package.ROOT / "tools/native"), "-B", str(output),
                     "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
                     "-DSDL3_LIBRARIES=" + str(sdl), *options], check=True)
-    subprocess.run(["cmake", "--build", str(output), "--target", "Electron2DNative", "--parallel", "2"], check=True)
+    run_build(["cmake", "--build", str(output), "--target", "Electron2DNative", "--parallel", jobs(2)])
     if rid.startswith("osx-"):
         library = output / "libElectron2D.dylib"
         imports = subprocess.check_output(["otool", "-L", str(library)], text=True).splitlines()[1:]
