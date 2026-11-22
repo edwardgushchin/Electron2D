@@ -95,6 +95,7 @@ public sealed partial class Image
         });
 
     private static readonly char[] CSSWhitespace = [' ', '\t', '\n', '\r', '\f'];
+    private const int MaximumSVGSelectorDepth = 64;
 
     private static readonly Regex SVGSelectorName = new(
         @"\G(?:--|-?[_a-zA-Z\u0080-\uFFFF])[-_a-zA-Z0-9\u0080-\uFFFF]*",
@@ -157,42 +158,44 @@ public sealed partial class Image
         void ApplyStylesheet(string css)
         {
             var offset = 0;
+            var blocks = new Stack<byte>();
             while (offset < css.Length)
             {
-                var selectors = ReadCSSSegment(css, ref offset, "{;", out var delimiter);
+                var selectors = ReadCSSRange(css, ref offset, "{;", out var delimiter, blocks);
                 if (delimiter != '{')
                     continue;
-                var declarations = ReadCSSSegment(css, ref offset, "}", out delimiter);
+                var declarations = ReadCSSRange(css, ref offset, "}", out delimiter);
                 var selectorOffset = 0;
                 SkipCSSTrivia(selectors, ref selectorOffset);
-                if (delimiter != '}' || selectors.AsSpan(selectorOffset).StartsWith("@", StringComparison.Ordinal))
+                if (delimiter != '}' || selectors[selectorOffset..].StartsWith("@", StringComparison.Ordinal))
                     continue;
 
                 (int IDs, int Classes, int Types)? best = null;
-                char separator;
+                var emptyEntry = false;
                 do
                 {
-                    var selector = ReadCSSSegment(selectors, ref selectorOffset, ",", out separator);
-                    var start = 0;
-                    SkipCSSTrivia(selector, ref start);
-                    if (start == selector.Length)
+                    SkipCSSTrivia(selectors, ref selectorOffset);
+                    if (AtSVGSelectorEnd(selectors, selectorOffset, depth: 0))
                     {
-                        best = null;
-                        break;
+                        emptyEntry = true;
                     }
-
-                    var specificity = MatchSVGRoot(selector, start, rootName, id, classes);
-                    if (specificity is { } match && (best is null || match.CompareTo(best.Value) > 0))
-                        best = match;
+                    else
+                    {
+                        var result = MatchSVGRoot(selectors, ref selectorOffset, rootName, id, classes, blocks, depth: 0);
+                        if (result is { Matches: true } match && (best is null || match.Specificity.CompareTo(best.Value) > 0))
+                            best = match.Specificity;
+                    }
+                    // Invalid compounds can leave unsupported syntax before the next branch.
+                    ReadCSSRange(selectors, ref selectorOffset, ",", out delimiter, blocks);
                 }
-                while (separator == ',');
+                while (delimiter == ',');
 
-                if (best is { } winner)
+                if (!emptyEntry && best is { } winner)
                     ApplyDeclarations(declarations, inlineStyle: false, winner);
             }
         }
 
-        void ApplyDeclarations(string css, bool inlineStyle, (int IDs, int Classes, int Types) specificity)
+        void ApplyDeclarations(ReadOnlySpan<char> css, bool inlineStyle, (int IDs, int Classes, int Types) specificity)
         {
             var offset = 0;
             while (offset < css.Length)
@@ -234,18 +237,27 @@ public sealed partial class Image
         }
     }
 
-    private static (int IDs, int Classes, int Types)? MatchSVGRoot(string selector, int offset, string name, string? id, HashSet<string> classes)
+    private readonly record struct SVGSelectorMatch(bool Matches, (int IDs, int Classes, int Types) Specificity);
+
+    private static bool AtSVGSelectorEnd(ReadOnlySpan<char> selector, int offset, int depth) =>
+        offset == selector.Length || selector[offset] == ',' || (depth > 0 && selector[offset] == ')');
+
+    private static SVGSelectorMatch? MatchSVGRoot(
+        ReadOnlySpan<char> selector, ref int offset, string name, string? id, HashSet<string> classes,
+        Stack<byte> blocks, int depth)
     {
         var specificity = (IDs: 0, Classes: 0, Types: 0);
+        var matches = true;
+        var valid = true;
         var start = offset;
         if (selector[offset] == '*')
         {
             offset++;
-            if (SkipCSSTrivia(selector, ref offset) && offset < selector.Length)
+            if (SkipCSSTrivia(selector, ref offset) && !AtSVGSelectorEnd(selector, offset, depth))
                 return null;
         }
 
-        while (offset < selector.Length)
+        while (!AtSVGSelectorEnd(selector, offset, depth))
         {
             var componentStart = offset;
             var prefix = selector[offset];
@@ -259,34 +271,97 @@ public sealed partial class Image
             else
                 prefix = '\0';
 
-            var identifier = SVGSelectorName.Match(selector, offset);
-            if (!identifier.Success)
+            var identifiers = SVGSelectorName.EnumerateMatches(selector[offset..]);
+            if (!identifiers.MoveNext())
                 return null;
 
-            var value = identifier.Value;
+            var length = identifiers.Current.Length;
+            var value = selector.Slice(offset, length);
+            // Leave an unexpected token untouched so recovery can see its block delimiter.
+            if (prefix == '\0' && componentStart != start)
+                return null;
+            offset += length;
             switch (prefix)
             {
-                case '\0' when componentStart == start && value == name:
+                case '\0':
+                    matches &= value.SequenceEqual(name);
                     specificity.Types++;
                     break;
-                case '#' when value == id:
+                case '#':
+                    matches &= value.SequenceEqual(id);
                     specificity.IDs++;
                     break;
-                case '.' when classes.Contains(value):
+                case '.':
+                    matches &= classes.GetAlternateLookup<ReadOnlySpan<char>>().Contains(value);
+                    specificity.Classes++;
+                    break;
+                case ':' when offset < selector.Length && selector[offset] == '(':
+                    var function = MatchSVGSelectorFunction(selector, ref offset, value, name, id, classes, blocks, depth + 1);
+                    if (function is { } result)
+                    {
+                        matches &= result.Matches;
+                        specificity.IDs += result.Specificity.IDs;
+                        specificity.Classes += result.Specificity.Classes;
+                        specificity.Types += result.Specificity.Types;
+                    }
+                    else
+                        valid = false;
+                    break;
                 case ':' when value.Equals("root", StringComparison.OrdinalIgnoreCase):
                     specificity.Classes++;
                     break;
                 default:
                     return null;
             }
-            offset += identifier.Length;
-            if (SkipCSSTrivia(selector, ref offset) && offset < selector.Length)
+            if (SkipCSSTrivia(selector, ref offset) && !AtSVGSelectorEnd(selector, offset, depth))
                 return null;
         }
-        return specificity;
+        return valid ? new SVGSelectorMatch(matches, specificity) : null;
     }
 
-    private static bool SkipCSSTrivia(string css, ref int offset)
+    private static SVGSelectorMatch? MatchSVGSelectorFunction(
+        ReadOnlySpan<char> selector, ref int offset, ReadOnlySpan<char> function,
+        string name, string? id, HashSet<string> classes, Stack<byte> blocks, int depth)
+    {
+        var negate = function.Equals("not", StringComparison.OrdinalIgnoreCase);
+        var zeroSpecificity = function.Equals("where", StringComparison.OrdinalIgnoreCase);
+        var supported = negate || zeroSpecificity || function.Equals("is", StringComparison.OrdinalIgnoreCase);
+        offset++;
+        if (!supported)
+        {
+            ReadCSSRange(selector, ref offset, ")", out _, blocks);
+            return null;
+        }
+        if (depth > MaximumSVGSelectorDepth)
+            throw new InvalidDataException("SVG selector nesting exceeds 64 levels.");
+
+        var matches = false;
+        var valid = true;
+        var specificity = (IDs: 0, Classes: 0, Types: 0);
+        char separator;
+        do
+        {
+            SkipCSSTrivia(selector, ref offset);
+            var result = AtSVGSelectorEnd(selector, offset, depth)
+                ? null
+                : MatchSVGRoot(selector, ref offset, name, id, classes, blocks, depth);
+            if (result is { } branch)
+            {
+                matches |= branch.Matches;
+                // All valid arguments contribute to the maximum, even when they do not match.
+                if (!zeroSpecificity && branch.Specificity.CompareTo(specificity) > 0)
+                    specificity = branch.Specificity;
+            }
+            else if (negate)
+                valid = false;
+            ReadCSSRange(selector, ref offset, ",)", out separator, blocks);
+        }
+        while (separator == ',');
+
+        return valid && separator == ')' ? new SVGSelectorMatch(negate ? !matches : matches, specificity) : null;
+    }
+
+    private static bool SkipCSSTrivia(ReadOnlySpan<char> css, ref int offset)
     {
         var whitespace = false;
         while (offset < css.Length)
@@ -296,7 +371,7 @@ public sealed partial class Image
                 whitespace = true;
                 offset++;
             }
-            else if (css.AsSpan(offset).StartsWith("/*", StringComparison.Ordinal))
+            else if (css[offset..].StartsWith("/*", StringComparison.Ordinal))
                 offset = EndCSSComment(css, offset);
             else
                 break;
@@ -304,17 +379,28 @@ public sealed partial class Image
         return whitespace;
     }
 
-    private static int EndCSSComment(string css, int start)
+    private static int EndCSSComment(ReadOnlySpan<char> css, int start)
     {
-        var close = css.IndexOf("*/", start + 2, StringComparison.Ordinal);
-        return close < 0 ? css.Length : close + 2;
+        var close = css[(start + 2)..].IndexOf("*/", StringComparison.Ordinal);
+        return close < 0 ? css.Length : start + close + 4;
     }
 
-    private static string ReadCSSSegment(string css, ref int offset, string separators, out char delimiter, bool preserveComments = true)
+    private static string ReadCSSSegment(
+        ReadOnlySpan<char> css, ref int offset, string separators, out char delimiter, bool preserveComments = true)
     {
-        var segment = new StringBuilder();
+        var withoutComments = preserveComments ? null : new StringBuilder();
+        var tail = ReadCSSRange(css, ref offset, separators, out delimiter, withoutComments: withoutComments);
+        return withoutComments is null ? tail.ToString() : withoutComments.Append(tail).ToString();
+    }
+
+    private static ReadOnlySpan<char> ReadCSSRange(
+        ReadOnlySpan<char> css, scoped ref int offset, string separators, out char delimiter,
+        Stack<byte>? blocks = null, StringBuilder? withoutComments = null)
+    {
+        var start = offset;
         var quote = '\0';
         var depth = 0;
+        blocks?.Clear();
         delimiter = '\0';
         while (offset < css.Length)
         {
@@ -326,7 +412,7 @@ public sealed partial class Image
             }
             if (ch == '\\' && offset < css.Length)
             {
-                segment.Append(ch).Append(css[offset++]);
+                offset++;
                 continue;
             }
             if (quote != '\0')
@@ -338,21 +424,28 @@ public sealed partial class Image
                 quote = ch;
             else if (ch == '/' && offset < css.Length && css[offset] == '*')
             {
-                var start = offset - 1;
-                offset = EndCSSComment(css, start);
-                if (preserveComments || depth > 0)
-                    segment.Append(css.AsSpan(start, offset - start));
-                else
-                    segment.Append(' ');
+                var commentStart = offset - 1;
+                offset = EndCSSComment(css, commentStart);
+                if (withoutComments is not null && depth == 0)
+                {
+                    withoutComments.Append(css[start..commentStart]).Append(' ');
+                    start = offset;
+                }
                 continue;
             }
             else if (ch is '(' or '[' or '{')
+            {
                 depth++;
-            else if ((ch is ')' or ']' or '}') && depth > 0)
+                blocks?.Push((byte)(ch == '(' ? ')' : ch == '[' ? ']' : '}'));
+            }
+            else if ((ch is ')' or ']' or '}') && depth > 0 && (blocks is null || blocks.Peek() == ch))
+            {
                 depth--;
-            segment.Append(ch);
+                blocks?.Pop();
+            }
         }
-        return segment.ToString();
+        var end = delimiter == '\0' ? offset : offset - 1;
+        return css[start..end];
     }
 
     private static byte[] RewriteSVGViewport(XmlReader reader, Vector2i size, string viewBox)

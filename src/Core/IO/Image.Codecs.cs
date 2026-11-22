@@ -88,6 +88,8 @@ public sealed partial class Image
     /// <param name="buffer">SVG data, copied before validation and decoding, at most 64 MiB.</param>
     /// <param name="scale">Finite positive multiplier for the SVG's intrinsic dimensions.</param>
     /// <remarks>Produces an RGBA8 base image without mipmaps. Root width and height can come from presentation attributes, embedded CSS or inline style.
+    /// Embedded CSS accepts compound root selectors with :is(), :where() and :not().
+    /// More than 64 nested supported selector functions in one branch fails loading.
     /// The style cascade uses importance, inline priority, selector specificity and source order. Dimensions accept positive pixel or physical lengths and percentages. Styled values also accept auto.
     /// The calc(), min(), max() and clamp() functions must evaluate to a positive finite length using supported units.
     /// Styled dimensions resolve bounded var() substitutions from case-sensitive custom properties in the root cascade before length evaluation.

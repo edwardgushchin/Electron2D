@@ -133,6 +133,8 @@ internal static class ImageCodecTests
         finally { File.Delete(path); }
 
         VerifySVGStylesheets();
+        VerifySVGFunctionalSelectors();
+        VerifySVGLargeSelectorArguments();
         VerifySVGMath();
         VerifySVGMathWhitespace();
         VerifySVGVariables();
@@ -237,7 +239,7 @@ internal static class ImageCodecTests
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:other="urn:other" id="Viewport" class="tile" width="4" height="3">
                 <style>
                     #viewport, .Tile, rect:root { width: 99px; height: 99px; }
-                    body svg, :is(rect, svg, circle) { width: 98px; height: 98px; }
+                    body svg, :has(rect) { width: 98px; height: 98px; }
                     svg/**/tile { width: 94px !important; height: 94px !important; }
                     sv/**/g, .ti/**/le { width: 93px !important; height: 93px !important; }
                     svg .tile, svg/**/ .tile { width: 92px !important; height: 92px !important; }
@@ -309,6 +311,164 @@ internal static class ImageCodecTests
             image.GetPixel(4 * scale, 2 * scale) == Colors.Red &&
             image.GetPixel(7 * scale, 2 * scale) == Colors.Blue &&
             image.GetPixel(10 * scale, 2 * scale).A == 0, $"{caller}: centered red and blue content with transparent margins.");
+    }
+
+    private static void VerifySVGFunctionalSelectors()
+    {
+        const string rules = """
+            svg:IS(.tile, #absent):not(rect, .other) {
+                --width: 16px !important;
+            }
+            .tile.panel:root { --width: 21px !important; }
+            svg:not(rect, #absent) { width: var(--width) !important; }
+            .tile.panel:root { width: 29px !important; }
+            :where(:is(#Viewport, rect), :not(.tile)) { height: 9px; }
+            svg { height: 6px; }
+            :where(#Viewport) { height: 11px; }
+            """;
+        using var image = new Image();
+        VerifySVGComputedViewport(image, Document(rules, "width:31px"));
+
+        foreach (var (selector, expected) in new (string Selector, int Width)[]
+        {
+            (":is(/* empty */, .tile, [data-x='),svg'], body svg, :hover,)", 16),
+            (":where(, :not(.missing, :is(rect, circle)), :has(rect))", 16),
+            (":not(:is(rect, circle), .missing)", 16),
+            (":not(:is(:hover))", 16),
+            (":not(.missing, .tile)", 5),
+            (":not(.missing, :hover)", 5),
+            (":not(.missing, body svg)", 5),
+            (":not(.missing,)", 5),
+            (":not()", 5),
+            (":is()", 5),
+            (":where([data-x], :has(rect))", 5),
+            (":is(rect, circle)", 5),
+            (":is([bad), svg)", 5),
+            (":is(.t\\ile, svg > rect, ::before, ns|svg)", 5),
+            (":is/**/(svg)", 5),
+            (":is (svg)", 5),
+            ("svg :is(.tile)", 5),
+            ("svg, :not(.missing, :hover)", 16),
+            ("svg, :is(.tile),", 5),
+        })
+        {
+            image.LoadSVGFromString(Document(selector + " { width:16px; }"));
+            Check(image.Size.X == expected, $"SVG functional selector {selector} should yield width {expected}.");
+        }
+
+        image.LoadSVGFromString(Document("""
+            .tile { width:16px; }
+            :is(svg, #Viewport:hover) { width:29px; }
+            """));
+        Check(image.Size.X == 16, "An invalid :is() argument contributes no specificity.");
+
+        var independentBranches = NestedSelector(63, ".tile") + ", " + NestedSelector(63, ".panel");
+        image.LoadSVGFromString(Document($":is({independentBranches}) {{ width:16px; height:6px; }}"));
+        CheckMathPixels(image, 1, "SVG selector branches with 64 levels each");
+        var before = image.GetData();
+        using var dpi = DPITexture.CreateFromString(Document(rules));
+        var originalSource = dpi.GetSource();
+        var imageChanges = 0;
+        var dpiChanges = 0;
+        image.Changed += _ => imageChanges++;
+        dpi.Changed += _ => dpiChanges++;
+
+        foreach (var selector in new[]
+        {
+            NestedSelector(65, ".tile"),
+            $":is(svg, {NestedSelector(64, ".missing")})",
+            $".missing{NestedSelector(65, ".tile")}, svg",
+            $":not(:hover, {NestedSelector(64, ".missing")})",
+        })
+        {
+            var invalid = Document(selector + " { width:16px; }");
+            Reject<InvalidDataException>(() => image.LoadSVGFromString(invalid));
+            Reject<InvalidDataException>(() => image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(invalid)));
+            Reject<InvalidDataException>(() => dpi.SetSource(invalid));
+            Check(image.Size == new Vector2i(16, 6) && image.GetData().SequenceEqual(before) && imageChanges == 0,
+                "Excessive selector nesting preserves the Image raster and emits no change.");
+            Check(dpi.GetSize() == new Vector2(16, 6) && dpi.GetSource() == originalSource && dpiChanges == 0,
+                "Excessive selector nesting preserves the DPITexture source and emits no change.");
+            using var pixels = dpi.GetImage()!;
+            Check(pixels.GetData().SequenceEqual(before), "Excessive selector nesting preserves DPITexture pixels.");
+        }
+
+        image.LoadSVGFromString(Document(rules));
+        CheckMathPixels(image, 1, "SVG selector reload after depth rejection");
+        Check(imageChanges == 1, "A valid SVG after selector rejection emits one change.");
+
+        static string Document(string rules, string inline = "") => $$"""
+            <svg xmlns="http://www.w3.org/2000/svg" id="Viewport" class="tile panel" viewBox="0 0 8 4"
+                 width="5" height="7" style="{{inline}}">
+                <style><![CDATA[
+                    {{rules}}
+                ]]></style>
+                <rect width="4" height="4" fill="red"/>
+                <rect x="4" width="4" height="4" fill="blue"/>
+            </svg>
+            """;
+
+        static string NestedSelector(int levels, string leaf)
+        {
+            string[] functions = ["not(", "not(", "is(", "where("];
+            var prefix = string.Concat(Enumerable.Range(0, levels).Select(i => ":" + functions[i % functions.Length]));
+            return prefix + leaf + new string(')', levels);
+        }
+    }
+
+    private static void VerifySVGLargeSelectorArguments()
+    {
+        const int payloadBytes = 16 * 1024 * 1024;
+        const long allocationBudget = 416L * 1024 * 1024;
+        using var image = new Image();
+        var supported = Document(64);
+        var start = GC.GetAllocatedBytesForCurrentThread();
+        image.LoadSVGFromBuffer(supported);
+        var acceptedBytes = GC.GetAllocatedBytesForCurrentThread() - start;
+        CheckMathPixels(image, 1, "SVG with 64 levels and 16 MiB of nested delimiters in a discarded branch");
+        var originalPixels = image.GetData();
+        var changes = 0;
+        image.Changed += _ => changes++;
+
+        var excessive = Document(65);
+        start = GC.GetAllocatedBytesForCurrentThread();
+        Reject<InvalidDataException>(() => image.LoadSVGFromBuffer(excessive));
+        var rejectedBytes = GC.GetAllocatedBytesForCurrentThread() - start;
+        Check(image.Size == new Vector2i(16, 6) && image.GetData().SequenceEqual(originalPixels) && changes == 0,
+            "Rejecting a large SVG at level 65 preserves size, pixels and the change count.");
+        Console.WriteLine($"SVG nested delimiter allocations: 64 levels={acceptedBytes} B, 65 levels={rejectedBytes} B (16 MiB payload).");
+        Check(acceptedBytes <= allocationBudget && rejectedBytes <= allocationBudget,
+            "Large SVG selector arguments stay within the managed allocation budget at both depth boundaries.");
+
+        byte[] Document(int levels)
+        {
+            var opening = string.Concat(Enumerable.Repeat(":is(", levels));
+            var closing = string.Concat(Enumerable.Repeat(", rect)", levels));
+            var prefix = Encoding.UTF8.GetBytes($$"""
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 4" width="5" height="7">
+                    <style><![CDATA[{{opening}}[
+                """);
+            var suffix = Encoding.UTF8.GetBytes($$"""
+                ], svg{{closing}} { width:16px; height:6px; }]]></style>
+                    <rect width="4" height="4" fill="red"/>
+                    <rect x="4" width="4" height="4" fill="blue"/>
+                </svg>
+                """);
+            var document = new byte[prefix.Length + payloadBytes + suffix.Length];
+            prefix.CopyTo(document, 0);
+            var payload = document.AsSpan(prefix.Length, payloadBytes);
+            const int parentheses = payloadBytes / 8;
+            const int brackets = payloadBytes / 8;
+            const int braces = payloadBytes / 4;
+            payload[..parentheses].Fill((byte)'(');
+            payload.Slice(parentheses, brackets).Fill((byte)'[');
+            payload.Slice(parentheses + brackets, braces).Fill((byte)'{');
+            payload.Slice(payloadBytes / 2, braces).Fill((byte)'}');
+            payload.Slice(payloadBytes - parentheses - brackets, brackets).Fill((byte)']');
+            payload[^parentheses..].Fill((byte)')');
+            suffix.CopyTo(document, prefix.Length + payloadBytes);
+            return document;
+        }
     }
 
     private static void VerifySVGMath()
