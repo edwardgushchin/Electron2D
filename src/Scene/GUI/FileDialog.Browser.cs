@@ -119,7 +119,34 @@ public partial class FileDialog
     private void ContextAction(int id) { if (id == 1) _mkdir.PopupCentered(new(320, 130)); else if (id == 2) _delete.PopupCentered(new(320, 130)); else if (id == 3 && _files.GetSelectedItems().Length > 0) ActivateEntry(_files.GetSelectedItems()[0]); else if (id == 4 && _files.GetSelectedItems().Length > 0) DisplayServer.ClipboardSet(_files.GetItemMetadata<Entry>(_files.GetSelectedItems()[0]).Path); else if (id == 5 && _files.GetSelectedItems().Length > 0) TryOperation(() => OS.ShellShowInFileManager(ProjectSettings.GlobalizePath(_files.GetItemMetadata<Entry>(_files.GetSelectedItems()[0]).Path))); else if (id == 6) Invalidate(); }
     private void CreateFolder() => TryOperation(() => { var name = _folderName.Text.Trim(); if (name.Length == 0 || name is "." or ".." || name.IndexOfAny(['/', '\\', '\0']) >= 0) throw new ArgumentException("Expected one folder name."); _directory.MakeDir(name); ChangeDirectory(name, true); _folderName.Text = ""; });
     private void TrashSelected() => TryOperation(() => { var paths = _files.GetSelectedItems().Select(i => _files.GetItemMetadata<Entry>(i).Path).ToArray(); try { foreach (var path in paths) OS.MoveToTrash(path); } finally { if (!IsDisposed) Invalidate(); } });
-    private void SelectDrive(int index) => TryOperation(() => ChangeDirectory(DirAccess.GetDriveName(index), true));
+    private bool CanBrowseDrives => _access == FileDialogAccess.FileSystem && _root.Length == 0 &&
+        (!OperatingSystem.IsAndroid() || OperatingSystem.IsAndroidVersionAtLeast(30));
+
+    private void RefreshDriveMenu()
+    {
+        var popup = _drives.GetPopup();
+        popup.Clear();
+        if (!CanBrowseDrives)
+        {
+            return;
+        }
+
+        TryOperation(() =>
+        {
+            foreach (var name in DirAccess.GetDriveNames())
+            {
+                popup.AddItem(name);
+            }
+        });
+    }
+
+    private void SelectDrive(int index)
+    {
+        if (CanBrowseDrives)
+        {
+            TryOperation(() => ChangeDirectory(_drives.GetPopup().GetItemText(index), true));
+        }
+    }
     private bool AccessMatches(string path) => _access == FileDialogAccess.Resources ? path.StartsWith("res://", StringComparison.Ordinal) : _access == FileDialogAccess.UserData ? path.StartsWith("user://", StringComparison.Ordinal) : !path.StartsWith("res://", StringComparison.Ordinal) && !path.StartsWith("user://", StringComparison.Ordinal);
     private void RefreshPlaces()
     {

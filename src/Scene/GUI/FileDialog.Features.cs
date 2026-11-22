@@ -36,8 +36,7 @@ public partial class FileDialog
         _files.SelectionMode = _mode == FileDialogMode.OpenFiles ? ItemList.SelectMode.Multi : ItemList.SelectMode.Single; _files.AllowRMBSelect = true;
         _files.MaxColumns = _display == DisplayModeType.List ? 1 : 0; _files.IconDisplayMode = _display == DisplayModeType.List ? ItemList.IconMode.Left : ItemList.IconMode.Top;
         _files.FixedIconSize = _display == DisplayModeType.List ? Vector2i.Zero : new(Math.Max(1, GetThemeConstant("thumbnail_size")), Math.Max(1, GetThemeConstant("thumbnail_size")));
-        if (_drives.ItemCount == 0 && _access == FileDialogAccess.FileSystem) for (var i = 0; i < DirAccess.GetDriveCount(); i++) _drives.GetPopup().AddItem(DirAccess.GetDriveName(i));
-        _drives.Visible = _access == FileDialogAccess.FileSystem && _root.Length == 0;
+        _drives.Visible = CanBrowseDrives;
         for (var i = 0; i < _sort.GetPopup().ItemCount; i++) _sort.GetPopup().SetItemChecked(i, i == _sortIndex); ApplyFileTheme(); RefreshOK();
     }
     private void ApplyFileTheme()

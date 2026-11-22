@@ -301,7 +301,7 @@ Gets the number of logical drives, mounted volumes, and platform filesystem shor
 - `UnauthorizedAccessException`: The runtime cannot enumerate drives.
 - `PlatformNotSupportedException`: The target has no integrated storage-volume enumerator.
 
-**Remarks:** Linux includes the home and desktop directories plus file bookmarks from the GTK 3 bookmark file.
+**Remarks:** Android API 24 and later counts mounted shared-storage volumes, including read-only mounts. Linux includes the home and desktop directories plus file bookmarks from the GTK 3 bookmark file.
 
 <a id="m-electron2d-diraccess-getdrivename-system-int32"></a>
 ### `public static string GetDriveName(int index)`
@@ -319,7 +319,9 @@ Gets the root name of one visible drive or mounted filesystem.
 - `ArgumentOutOfRangeException`: `index` is outside the current snapshot.
 - `IO.IOException`: Drive enumeration fails.
 - `UnauthorizedAccessException`: The runtime cannot enumerate drives.
-- `PlatformNotSupportedException`: The target has no integrated storage-volume enumerator.
+- `PlatformNotSupportedException`: The target cannot enumerate volume roots, including Android below API 30.
+
+**Remarks:** Android API 30 and later returns the mounted volume's absolute root path. The path does not grant file access.
 
 <a id="m-electron2d-diraccess-getdrivelabel-system-int32"></a>
 ### `public static string GetDriveLabel(int index)`
@@ -339,6 +341,8 @@ Gets the volume label of one visible drive or mounted filesystem.
 - `UnauthorizedAccessException`: The caller lacks access to the drive metadata.
 - `PlatformNotSupportedException`: The target has no integrated storage-volume enumerator.
 
+**Remarks:** Android API 24 and later checks the index against the mounted-volume count.
+
 <a id="m-electron2d-diraccess-getcurrentdrive"></a>
 ### `public int GetCurrentDrive()`
 
@@ -350,8 +354,10 @@ Gets the current directory's index in the current drive snapshot.
 
 - `IO.IOException`: Drive enumeration fails.
 - `UnauthorizedAccessException`: The runtime cannot enumerate drives.
-- `PlatformNotSupportedException`: The target has no integrated storage-volume enumerator.
+- `PlatformNotSupportedException`: The target cannot enumerate volume roots, including Android below API 30.
 - `ObjectDisposedException`: The instance is disposing or disposed.
+
+**Remarks:** Android API 30 and later compares the resolved directory path with mounted volume roots.
 
 <a id="m-electron2d-diraccess-changedir-system-string"></a>
 ### `public void ChangeDir(string path)`

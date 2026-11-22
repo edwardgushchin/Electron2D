@@ -217,7 +217,7 @@
     {
       "electron2d": "method:Electron2D.DirAccess.GetCurrentDrive()",
       "godot": "DirAccess::method:get_current_drive()",
-      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+      "reason": "ADR 0022: Android API 30+ matches the longest mounted root against the resolved directory, including virtual scopes. Unmatched paths return -1. Before API 30 the query throws PlatformNotSupportedException."
     },
     {
       "electron2d": "method:Electron2D.DirAccess.GetDirectories()",
@@ -227,7 +227,17 @@
     {
       "electron2d": "method:Electron2D.DirAccess.GetDriveCount()",
       "godot": "DirAccess::method:get_drive_count()",
-      "reason": "Managed return/error form of the same directory operation (ADR 0022)."
+      "reason": "ADR 0022: Android API 24+ counts application-visible mounted shared volumes, including read-only mounts. Unsupported hosts throw PlatformNotSupportedException."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetDriveLabel(System.Int32)",
+      "godot": "DirAccess::method:get_drive_label(int:)",
+      "reason": "ADR 0022: Windows returns a native label or a network marker. Android API 24+ returns an empty label for valid mounted indices. Invalid indices throw ArgumentOutOfRangeException."
+    },
+    {
+      "electron2d": "method:Electron2D.DirAccess.GetDriveName(System.Int32)",
+      "godot": "DirAccess::method:get_drive_name(int:)",
+      "reason": "ADR 0022: Android API 30+ returns the absolute mounted root in system order. Before API 30 the query throws PlatformNotSupportedException. Invalid indices on supported hosts throw ArgumentOutOfRangeException."
     },
     {
       "electron2d": "method:Electron2D.DirAccess.GetFiles()",

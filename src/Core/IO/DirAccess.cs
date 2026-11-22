@@ -258,35 +258,58 @@ public sealed partial class DirAccess : ElectronObject
 
     /// <summary>Gets the number of logical drives, mounted volumes, and platform filesystem shortcuts.</summary>
     /// <returns>The current platform snapshot length.</returns>
-    /// <remarks>Linux includes the home and desktop directories plus file bookmarks from the GTK 3 bookmark file.</remarks>
+    /// <remarks>Android API 24 and later counts mounted shared-storage volumes, including read-only mounts.
+    /// Linux includes the home and desktop directories plus file bookmarks from the GTK 3 bookmark file.</remarks>
     /// <exception cref="IOException">Drive enumeration fails.</exception>
     /// <exception cref="UnauthorizedAccessException">The runtime cannot enumerate drives.</exception>
     /// <exception cref="PlatformNotSupportedException">The target has no integrated storage-volume enumerator.</exception>
-    public static int GetDriveCount() => GetDriveEntries().Length;
+    public static int GetDriveCount()
+    {
+#if ANDROID
+        return GetMountedAndroidVolumes().Length;
+#else
+        return GetDriveEntries().Length;
+#endif
+    }
 
     /// <summary>Gets the root name of one visible drive or mounted filesystem.</summary>
     /// <param name="index">A zero-based index in the current drive snapshot.</param>
     /// <returns>A Windows drive name such as <c>C:</c>, or an absolute mounted-volume or shortcut path.</returns>
+    /// <remarks>Android API 30 and later returns the mounted volume's absolute root path. The path does not grant file access.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the current snapshot.</exception>
     /// <exception cref="IOException">Drive enumeration fails.</exception>
     /// <exception cref="UnauthorizedAccessException">The runtime cannot enumerate drives.</exception>
-    /// <exception cref="PlatformNotSupportedException">The target has no integrated storage-volume enumerator.</exception>
+    /// <exception cref="PlatformNotSupportedException">The target cannot enumerate volume roots, including Android below API 30.</exception>
     public static string GetDriveName(int index) => GetDrive(index).Name;
 
     /// <summary>Gets the volume label of one visible drive or mounted filesystem.</summary>
     /// <param name="index">A zero-based index in the current drive snapshot.</param>
     /// <returns>The Windows volume label or <c>&lt;network&gt;</c> for a remote drive; empty on other platforms.</returns>
+    /// <remarks>Android API 24 and later checks the index against the mounted-volume count.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is outside the current snapshot.</exception>
     /// <exception cref="IOException">The label cannot be queried.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks access to the drive metadata.</exception>
     /// <exception cref="PlatformNotSupportedException">The target has no integrated storage-volume enumerator.</exception>
-    public static string GetDriveLabel(int index) => GetDrive(index).Label;
+    public static string GetDriveLabel(int index)
+    {
+#if ANDROID
+        if ((uint)index >= (uint)GetDriveCount())
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
+
+        return string.Empty;
+#else
+        return GetDrive(index).Label;
+#endif
+    }
 
     /// <summary>Gets the current directory's index in the current drive snapshot.</summary>
     /// <returns>The zero-based matching drive index, or <c>-1</c> if no drive root contains the current directory.</returns>
+    /// <remarks>Android API 30 and later compares the resolved directory path with mounted volume roots.</remarks>
     /// <exception cref="IOException">Drive enumeration fails.</exception>
     /// <exception cref="UnauthorizedAccessException">The runtime cannot enumerate drives.</exception>
-    /// <exception cref="PlatformNotSupportedException">The target has no integrated storage-volume enumerator.</exception>
+    /// <exception cref="PlatformNotSupportedException">The target cannot enumerate volume roots, including Android below API 30.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposing or disposed.</exception>
     public int GetCurrentDrive()
     {
@@ -1446,6 +1469,9 @@ public sealed partial class DirAccess : ElectronObject
 
     private static DriveEntry[] GetDriveEntries()
     {
+#if ANDROID
+        return GetAndroidDriveEntries();
+#else
         if (OperatingSystem.IsLinux())
             return GetLinuxDriveEntries();
         if (OperatingSystem.IsWindows())
@@ -1460,7 +1486,10 @@ public sealed partial class DirAccess : ElectronObject
         if (OperatingSystem.IsMacOS())
             return GetMacDriveEntries();
         throw new PlatformNotSupportedException("Drive enumeration requires a platform storage-volume backend.");
+#endif
     }
+
+    internal static string[] GetDriveNames() => GetDriveEntries().Select(drive => drive.Name).ToArray();
 
     private static DriveEntry GetDrive(int index)
     {

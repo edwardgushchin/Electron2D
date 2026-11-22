@@ -65,7 +65,10 @@ public partial class FileDialog : ConfirmationDialog
         _vbox = new VBoxContainer { Name = "_file_browser" }; AddChild(_vbox, InternalMode.Front);
         _toolbar = new HBoxContainer { Name = "Toolbar" }; _vbox.AddChild(_toolbar);
         _previous = Tool("Previous", GoBack); _next = Tool("Next", GoForward); _up = Tool("Up", GoUp);
-        _drives = new MenuButton("Drives") { Name = "Drives" }; _toolbar.AddChild(_drives); _drives.GetPopup().IndexPressed += SelectDrive;
+        _drives = new MenuButton("Drives") { Name = "Drives" };
+        _toolbar.AddChild(_drives);
+        _drives.AboutToPopup += RefreshDriveMenu;
+        _drives.GetPopup().IndexPressed += SelectDrive;
         _directoryEdit = new LineEdit { Name = "Directory", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill }; _toolbar.AddChild(_directoryEdit); _directoryEdit.TextSubmitted += SubmitDirectory;
         _refresh = Tool("Refresh", Invalidate); _favorite = Tool("Favorite", ToggleFavorite); _favorite.ToggleMode = true;
         _newFolder = Tool("New Folder", BeginCreateFolder);
@@ -107,7 +110,45 @@ public partial class FileDialog : ConfirmationDialog
     private EventPublisher<Action<string>> _publisherFilenameFilterChanged;
     /// <summary>Gets or sets the directory access scope, resetting to the virtual root or filesystem working directory.</summary>
     /// <value>Resources initially.</value>
-    public FileDialogAccess Access { get { CheckFileDialog(); return _access; } set { EnsureMutable(); if (value is < FileDialogAccess.Resources or > FileDialogAccess.FileSystem) throw new ArgumentOutOfRangeException(nameof(value)); if (_access == value) return; var next = DirAccess.Open(value == FileDialogAccess.Resources ? "res://" : value == FileDialogAccess.UserData ? "user://" : IOPath.GetFullPath(".")); _directory.Dispose(); _directory = next; _access = value; _root = ""; _rootSubfolderText = ""; _history.Clear(); _historyIndex = -1; CurrentFile = ""; PushHistory(); Invalidate(); } }
+    public FileDialogAccess Access
+    {
+        get
+        {
+            CheckFileDialog();
+            return _access;
+        }
+        set
+        {
+            EnsureMutable();
+            if (value is < FileDialogAccess.Resources or > FileDialogAccess.FileSystem)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
+            if (_access == value)
+            {
+                return;
+            }
+
+            var path = value switch
+            {
+                FileDialogAccess.Resources => "res://",
+                FileDialogAccess.UserData => "user://",
+                _ => IOPath.GetFullPath(".")
+            };
+            var next = DirAccess.Open(path);
+            _directory.Dispose();
+            _directory = next;
+            _access = value;
+            _root = "";
+            _rootSubfolderText = "";
+            _drives.Visible = CanBrowseDrives;
+            _history.Clear();
+            _historyIndex = -1;
+            CurrentFile = "";
+            PushHistory();
+            Invalidate();
+        }
+    }
     /// <summary>Gets or sets the file/directory selection mode.</summary>
     /// <value>SaveFile initially.</value>
     public FileDialogMode FileMode { get { CheckFileDialog(); return _mode; } set { EnsureMutable(); if (value is < FileDialogMode.OpenFile or > FileDialogMode.SaveFile) throw new ArgumentOutOfRangeException(nameof(value)); _mode = value; if (_modeTitles) UpdateModeTitle(); ApplyFeatures(); Invalidate(); } }
@@ -128,7 +169,40 @@ public partial class FileDialog : ConfirmationDialog
     public string CurrentPath { get { CheckFileDialog(); return Join(CurrentDir, CurrentFile); } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var slash = value.Replace('\\', '/').LastIndexOf('/'); if (slash >= 0) CurrentDir = value[..(slash + 1)]; CurrentFile = slash < 0 ? value : value[(slash + 1)..]; } }
     /// <summary>Gets or sets a directory navigation boundary within the selected scope.</summary>
     /// <value>Empty initially. Requests with this boundary use the custom browser because the current native portal cannot confine navigation.</value>
-    public string RootSubfolder { get { CheckFileDialog(); return _rootSubfolderText; } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var old = _root; _root = ""; try { if (value.Length != 0) { ChangeDirectory(value, false); _root = CurrentDir; } } catch { _root = old; throw; } _rootSubfolderText = value; _history.Clear(); _historyIndex = -1; PushHistory(); Invalidate(); } }
+    public string RootSubfolder
+    {
+        get
+        {
+            CheckFileDialog();
+            return _rootSubfolderText;
+        }
+        set
+        {
+            EnsureMutable();
+            ArgumentNullException.ThrowIfNull(value);
+            var old = _root;
+            _root = "";
+            try
+            {
+                if (value.Length != 0)
+                {
+                    ChangeDirectory(value, false);
+                    _root = CurrentDir;
+                }
+            }
+            catch
+            {
+                _root = old;
+                throw;
+            }
+            _rootSubfolderText = value;
+            _drives.Visible = CanBrowseDrives;
+            _history.Clear();
+            _historyIndex = -1;
+            PushHistory();
+            Invalidate();
+        }
+    }
     /// <summary>Gets or sets whether hidden entries are listed.</summary>
     /// <value>False initially.</value>
     public bool ShowHiddenFiles { get { CheckFileDialog(); return _showHidden; } set { EnsureMutable(); _showHidden = value; _directory.IncludeHidden = value; ApplyFeatures(); Invalidate(); } }
