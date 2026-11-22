@@ -890,10 +890,10 @@
             "src/Vendor/MSDFGen/**"
           ],
           "copyright": [
-            "Copyright (c) 2014 - 2025 Viktor Chlumsky"
+            "Copyright (c) 2014 - 2026 Viktor Chlumsky"
           ],
           "license": "MSDFGen-LICENSE.txt",
-          "sha256": "32a94b25ad7072a78457d35019b32d73d2c265c806b0b76e9638fe800330bbe4"
+          "sha256": "1eabeb713d63b656a1c78a94a85375ab569e08371a3ab9a56db74e2667e3612e"
         }
       ]
     },

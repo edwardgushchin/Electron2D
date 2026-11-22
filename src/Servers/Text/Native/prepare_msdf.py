@@ -15,7 +15,7 @@ def prepare(source, output):
     source, output = source.resolve(), output.resolve()
     require(source != output and source not in output.parents and output not in source.parents, "MSDF output must be outside the pinned source tree")
     manifest = json.loads((source / "manifest.json").read_text(encoding="utf-8"))
-    require(manifest["commit"] == "1874bcf7d9624ccc85b4bc9a85d78116f690f35b", "Unexpected MSDF revision")
+    require(manifest["commit"] == "ec84cd53590bb114c5a7fa4fe7be5adafec6276a", "Unexpected MSDF revision")
     require({p.relative_to(source).as_posix() for p in source.rglob("*") if p.is_file()} == set(manifest["files"]) | {"manifest.json"}, "Unexpected MSDF source closure")
     for name, digest in manifest["files"].items():
         require(hashlib.sha256((source / name).read_bytes()).hexdigest() == digest, name)

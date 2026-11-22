@@ -1,12 +1,12 @@
 {
   "repository": "https://github.com/Chlumsky/msdfgen",
-  "commit": "1874bcf7d9624ccc85b4bc9a85d78116f690f35b",
-  "tag": "v1.13",
+  "commit": "ec84cd53590bb114c5a7fa4fe7be5adafec6276a",
+  "tag": "v1.13.1",
   "files": {
-    "LICENSE.txt": "32a94b25ad7072a78457d35019b32d73d2c265c806b0b76e9638fe800330bbe4",
+    "LICENSE.txt": "1eabeb713d63b656a1c78a94a85375ab569e08371a3ab9a56db74e2667e3612e",
     "core/Bitmap.h": "99ea9dac0de50218ec7983b677fdce5deb0da88b6f8a058e6623ebb7d69dbdd6",
     "core/Bitmap.hpp": "9a3ca718fe959d81c854a6ae56f69dd2989ee27c10a2970c18d1ce8e43e1ef3d",
-    "core/BitmapRef.hpp": "97a7c5950083aa0c60cc67fad1f248ce1b6cdf71e4178ff1042e16a9dd8ef417",
+    "core/BitmapRef.hpp": "59ae232fd2b995740142861dcd4d55441f0335bd942d90bc5312e6236867a23b",
     "core/Contour.cpp": "3851d5353e344743cba1311f047a10ac9c8ca2917342d6b8e61a3cdd96a39e88",
     "core/Contour.h": "d25f86609aa30d72a46a835bd1fc87e0e8d98051d25f07fa11ae91074f98cbe7",
     "core/DistanceMapping.cpp": "fe1b21f7c680c6fa0868ac58829eb9cc0030c6b2b27ecd2ab00f5fb50adf3bc3",
@@ -36,7 +36,7 @@
     "core/contour-combiners.h": "01d8508cef70843022e9cb545c489c7147a950179791e6e8fd592ad26501f7c0",
     "core/convergent-curve-ordering.cpp": "e129fb19d8bdf67ebc7d8f8002d3ff57b46d920de1d77dd6af60b2cf1e11d7c8",
     "core/convergent-curve-ordering.h": "342b64a2b0d10b0bee80cd9845c6f4933914fed58afefee8593fbf06b04b67a4",
-    "core/edge-coloring.cpp": "c124f6b740d3b5fb0e6092eb652b39cb3ad7ab252ac665a50172f8ead17461c1",
+    "core/edge-coloring.cpp": "b905559fdda426c0134974bfbc43cfc47f267a91505f28facb752f36f755a0ff",
     "core/edge-coloring.h": "b7aa060f024e4578fbf85fbd9c94f37e66d1fe703dde1007095e74138d514412",
     "core/edge-segments.cpp": "72e6335db720915c48cdd71e9e3b7c927a33ad333b05f2dc65e6e53aa68485c0",
     "core/edge-segments.h": "15a116ba83471ebbee5448166771ccf54b1017cbaf49db55fdb51e8b6956a4dc",
@@ -67,6 +67,10 @@
     "core/sdf-error-estimation.h": "d5d007778db9808b99ff2202aabdbc0044638c3a5dd11cf1b378400936cc1917",
     "core/shape-description.cpp": "b320ae0d46b607e016610285db3bb140ac930e00f9352fb3067bd505d2c52a36",
     "core/shape-description.h": "e67ced119337f78ccdad1806b6df77316af2ce0f79f45c63c4010db0751e2281",
-    "msdfgen.h": "40828d93b444f462fd5a72c484c2e90c0eeebf9e26e7818ab12f488304600db7"
+    "msdfgen.h": "6c7cff328c635623a638488c8042fc15dd83057255341e12dfc5ff1206cfd02a"
+  },
+  "sourceArchive": {
+    "url": "https://codeload.github.com/Chlumsky/msdfgen/tar.gz/refs/tags/v1.13.1",
+    "sha256": "ad381b09ef61af235690ea96eefafd01fd35f5163bcb6ad73db7904997675b71"
   }
 }

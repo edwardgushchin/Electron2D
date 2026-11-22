@@ -6,7 +6,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[2]
 vendor = root / "src/Vendor/MSDFGen"
 manifest = json.loads((vendor / "manifest.json").read_text())
-assert manifest["commit"] == "1874bcf7d9624ccc85b4bc9a85d78116f690f35b"
+assert manifest["commit"] == "ec84cd53590bb114c5a7fa4fe7be5adafec6276a"
 assert {p.relative_to(vendor).as_posix() for p in vendor.rglob("*") if p.is_file()} == set(manifest["files"]) | {"manifest.json"}
 for name, expected in manifest["files"].items():
     assert hashlib.sha256((vendor / name).read_bytes()).hexdigest() == expected, name
