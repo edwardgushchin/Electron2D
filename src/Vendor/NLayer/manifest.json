@@ -1,8 +1,8 @@
 {
   "repository": "https://github.com/naudio/NLayer",
-  "tag": "v3.0.0",
-  "commit": "046c7ce422970f8f0f0bc205d6c6341bcb7debf1",
-  "archiveSha256": "270828a7b451d30f93a2e3495cf4a54a37cf9587f0d4bdf091013c4a034e4a9d",
+  "tag": "v3.0.1",
+  "commit": "cdd16ea2a389b30f99d5797ad7b09224ab29e01a",
+  "archiveSha256": "332d93b6de8d2d8021ee82b0cf9d2058a1c8e821cd5129bf8a67ce2e3da30c79",
   "sources": {
     "MpegFrameDecoder.cs": "65361fd6d2e25128f7f60ff6c86855d3b14b833aaf778aa2fe3e6ce8cd9b04c5",
     "MpegFile.cs": "39d3178389530d49706ee1aa6861d2fd2c8bc7c5039115224bfcdcb0a63c60b8",
@@ -20,11 +20,11 @@
     "Decoder/ID3Frame.cs": "027348dbd5c7b206fb7003e8f1a69fb9f015d84d8907a6311034b8f16bf65e22",
     "Decoder/Huffman.cs": "3aac5e07f9af7134e2a2cca473f311c86093ebe8301735e364e58e53395010c6",
     "Decoder/FrameBase.cs": "8676940bc6fae0601ef80ab6ea187b7e83a53be69f898a643c1cabdc7437142b",
-    "Decoder/BitReservoir.cs": "4ed184472b74e174d7048064eaefcfd73afc031034ef3e74883c37d865fb9280"
+    "Decoder/BitReservoir.cs": "3043578a3e7032be5270dd340f6ff9812ac61358d4d76035ae46591934b61ffd"
   },
   "patches": [
     "Engine-private namespace and top-level visibility.",
     "Disable nullable/missing XML diagnostics for preserved upstream sources; decoder algorithms unchanged."
   ],
-  "archiveUrl": "https://codeload.github.com/naudio/NLayer/tar.gz/refs/tags/v3.0.0"
+  "archiveUrl": "https://codeload.github.com/naudio/NLayer/tar.gz/refs/tags/v3.0.1"
 }

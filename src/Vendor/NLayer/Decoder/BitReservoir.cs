@@ -12,6 +12,10 @@ namespace Electron2D.NLayerBindings.Decoder
         //  some encoders allow higher bitrates to maintain audio transparency).
         byte[] _buf = new byte[8192];
         int _start = 0, _end = -1, _bitsLeft = 0;
+
+        // _end wraps to -1 when the ring fills exactly to its last byte, so it can't also be used
+        //  to detect "nothing written since construction / Reset()".  Track that separately.
+        bool _hasData = false;
         long _bitsRead = 0L;
 
         static int GetSlots(IMpegFrame frame)
@@ -28,6 +32,7 @@ namespace Electron2D.NLayerBindings.Decoder
         public bool AddBits(IMpegFrame frame, int overlap)
         {
             var originalEnd = _end;
+            var wasEmpty = !_hasData;
 
             var slots = GetSlots(frame);
             while (--slots >= 0)
@@ -38,8 +43,9 @@ namespace Electron2D.NLayerBindings.Decoder
                 if (_end == _buf.Length - 1) _end = -1;
             }
 
+            _hasData = true;
             _bitsLeft = 8;
-            if (originalEnd == -1)
+            if (wasEmpty)
             {
                 // it's either the start of the stream or we've reset...  only return true if overlap says this frame is enough
                 return overlap == 0;
@@ -57,7 +63,7 @@ namespace Electron2D.NLayerBindings.Decoder
                 // otherwise, just set start to match the start of the frame (we probably skipped a frame)
                 else
                 {
-                    _start = originalEnd + overlap;
+                    _start = (originalEnd + overlap) % _buf.Length;
                     return false;
                 }
             }
@@ -207,6 +213,7 @@ namespace Electron2D.NLayerBindings.Decoder
             _start = 0;
             _end = -1;
             _bitsLeft = 0;
+            _hasData = false;
         }
     }
 }

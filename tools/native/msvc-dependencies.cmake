@@ -3,9 +3,16 @@ if(MSVC AND CMAKE_GENERATOR MATCHES "Ninja")
     set(probe "${CMAKE_BINARY_DIR}/CMakeFiles/Electron2DIncludes")
     file(MAKE_DIRECTORY "${probe}")
     file(WRITE "${probe}/header.h" "\n")
-    file(WRITE "${probe}/probe.cpp" "#include \"header.h\"\n")
+    if(CMAKE_CXX_COMPILER_LOADED)
+        set(probe_compiler "${CMAKE_CXX_COMPILER}")
+        set(probe_source "probe.cpp")
+    else()
+        set(probe_compiler "${CMAKE_C_COMPILER}")
+        set(probe_source "probe.c")
+    endif()
+    file(WRITE "${probe}/${probe_source}" "#include \"header.h\"\n")
     # Ninja compares raw compiler bytes; automatic console decoding can corrupt a localized prefix.
-    execute_process(COMMAND "${CMAKE_CXX_COMPILER}" /nologo /showIncludes /c probe.cpp
+    execute_process(COMMAND "${probe_compiler}" /nologo /showIncludes /c "${probe_source}"
         WORKING_DIRECTORY "${probe}" OUTPUT_VARIABLE output ERROR_VARIABLE output
         RESULT_VARIABLE result ENCODING NONE)
     if(NOT result EQUAL 0 OR NOT output MATCHES "(^|\n)([^:\r\n]+:[^:\r\n]+:[ \t]+)")

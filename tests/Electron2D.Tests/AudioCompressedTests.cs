@@ -4,6 +4,7 @@ internal static class AudioCompressedTests
 {
     internal static void Run(bool native = true)
     {
+        VerifyMP3ReservoirWrap();
         using var trace = PhysicsAllocationTrace.Open(PhysicsServer.Backend.CPU, 7UL << 32);
         using var mp3 = AudioStreamMP3.LoadFromBuffer(Fixture("tone.mp3")); using var ogg = AudioStreamOggVorbis.LoadFromBuffer(Fixture("tone.ogg"));
         Console.WriteLine($"Compressed durations: MP3={mp3.GetLength()}, Ogg={ogg.GetLength()}, tags={ogg.Tags.Count}.");
@@ -39,6 +40,83 @@ internal static class AudioCompressedTests
         VerifyLoaderAndNative(mp3, surround, native);
         Console.WriteLine(native ? "Compressed format/PCM/cursor/loop/loader/native and 64-pass allocation checks passed." : "Compressed CPU/cursor/loop/loader checks passed; native checks run separately.");
     }
+    private static void VerifyMP3ReservoirWrap()
+    {
+        // 48 kHz, 320 kbps, MPEG-1 Layer III stereo without padding or CRC.
+        // Each frame carries 924 main-data bytes, so the 8192-byte ring wraps exactly every 2048 frames.
+        ReadOnlySpan<byte> header = [0xff, 0xfb, 0xe4, 0x00];
+        const int frameBytes = 960;
+        const int frameCount = 4099;
+        const int samplesPerFrame = 1152 * 2;
+        var encoded = new byte[frameCount * frameBytes];
+
+        foreach (var overlap in new[] { 0, 100, 511 })
+        {
+            for (var frame = 0; frame < frameCount; frame++)
+            {
+                var offset = frame * frameBytes;
+                header.CopyTo(encoded.AsSpan(offset));
+                if (frame > 0)
+                {
+                    encoded[offset + 4] = (byte)(overlap >> 1);
+                    encoded[offset + 5] = (byte)((overlap & 1) << 7);
+                }
+            }
+
+            using var resource = AudioStreamMP3.LoadFromBuffer(encoded);
+            Check(Math.Abs(resource.GetLength() - frameCount * 1152.0 / 48000) < 1e-8,
+                $"MP3 import retains every frame across both reservoir wraps (overlap {overlap}).");
+
+            using var source = new MemoryStream(encoded, writable: false);
+            using var mpeg = new Electron2D.NLayerBindings.MpegFile(source);
+            Check(CountMPEGSamples(mpeg) == frameCount * samplesPerFrame,
+                $"MP3 decoder retains every frame (overlap {overlap}).");
+            mpeg.Time = TimeSpan.Zero;
+            Check(CountMPEGSamples(mpeg) == frameCount * samplesPerFrame,
+                $"MP3 rewind resets the reservoir (overlap {overlap}).");
+
+            using var forwardOnly = new ForwardOnlyMP3Stream(encoded);
+            using var streamed = new Electron2D.NLayerBindings.MpegFile(forwardOnly);
+            Check(!streamed.CanSeek && CountMPEGSamples(streamed) == frameCount * samplesPerFrame,
+                $"Forward-only MP3 retains every frame (overlap {overlap}).");
+        }
+
+        var lengthWithPartialHeader = (frameCount - 1) * frameBytes + 3;
+        using var truncatedSource = new MemoryStream(encoded, 0, lengthWithPartialHeader, writable: false);
+        using var truncated = new Electron2D.NLayerBindings.MpegFile(truncatedSource);
+        Check(CountMPEGSamples(truncated) == (frameCount - 1) * samplesPerFrame,
+            "MP3 omits a final frame with an incomplete header after a reservoir wrap.");
+
+        Console.WriteLine("MP3 reservoir wraps, rewind, forward-only decoding and incomplete final header passed.");
+    }
+
+    private static long CountMPEGSamples(Electron2D.NLayerBindings.MpegFile mpeg)
+    {
+        var buffer = new float[4096];
+        long total = 0;
+        int read;
+        while ((read = mpeg.ReadSamples(buffer, 0, buffer.Length)) > 0)
+        {
+            Check(!buffer.AsSpan(0, read).ContainsAnyExcept(0f), "Synthetic MP3 produces silent PCM.");
+            total += read;
+        }
+
+        return total;
+    }
+
+    private sealed class ForwardOnlyMP3Stream(byte[] data) : MemoryStream(data, writable: false)
+    {
+        public override bool CanSeek => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position
+        {
+            get => base.Position;
+            set => throw new NotSupportedException();
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+    }
+
     private static void VerifyMetadataAndCorruption(AudioStreamMP3 mp3, AudioStreamOggVorbis ogg)
     {
         Check(mp3.BPM == 0 && mp3.BarBeats == 4 && !mp3.Loop && ogg.Tags["title"] == "Electron2D test tone", "Compressed defaults/tags.");

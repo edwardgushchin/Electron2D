@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(Electron2DAudio C)
+include("${CMAKE_CURRENT_LIST_DIR}/../native/msvc-dependencies.cmake")
 # Fetch only the matching headers; the SDL library comes from NuGet.
 if(NOT ELECTRON2D_SDL_VERSION STREQUAL "3.4.20")
     message(FATAL_ERROR "Update the pinned SDL headers and archive hash with the native package version.")

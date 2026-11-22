@@ -119,7 +119,7 @@ GetOutputLatency reports opened SDL device chunk duration plus current queued so
 ### Consequences
 
 - SDL3 remains the platform foundation and FAudio supplies the mix graph. Public audio types and lifecycle remain Electron2D-owned; audio decoding adds no further native deployment library.
-- The managed decoder source and FAudio# binding join the single engine assembly only with an executable slice. FAudio and qoa-fu are pinned/internal in the first executable output slice; NVorbis 0.10.5 and NLayer 3.0.0 compile internally. The Vorbis slice includes independently verified multichannel PCM and the existing stereo playback projection. Current behavior and native/platform/physical verification limits are documented in the [audio component](../components/audio-playback.md).
+- The managed decoder source and FAudio# binding join the single engine assembly only with an executable slice. FAudio and qoa-fu are pinned/internal in the first executable output slice; NVorbis 0.10.5 and NLayer 3.0.1 compile internally. The Vorbis slice includes independently verified multichannel PCM and the existing stereo playback projection. Current behavior and native/platform/physical verification limits are documented in the [audio component](../components/audio-playback.md).
 
 ### Rejected alternatives
 
