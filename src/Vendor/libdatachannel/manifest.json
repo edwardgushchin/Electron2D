@@ -1,15 +1,33 @@
 {
   "repository": "https://github.com/paullouisageneau/libdatachannel",
-  "version": "0.24.6",
-  "commit": "6b1e2e620f1e37f0eafeee702eaea0043cb305fd",
+  "version": "0.24.7",
+  "commit": "800e849a1ede5667caaf8f6caa1eb21e4906dd87",
   "profile": "Unmodified data-channel-only C++ sources, libjuice/plog/usrsctp; no media/WebSocket/examples/tests.",
   "dependencies": {
     "libjuice": "b89c792e3612faf2f12cf35bcc56857313a06be3",
     "plog": "94899e0b926ac1b0f4750bfbd495167b4a6ae9ef",
     "usrsctp": "fec583d54493f879d2ae44a743423bf8a04371ab"
   },
+  "archives": {
+    "libdatachannel": {
+      "url": "https://codeload.github.com/paullouisageneau/libdatachannel/tar.gz/refs/tags/v0.24.7",
+      "sha256": "750c1a0af050493b9dd814e11d23d93f477974eeff0a32be04e83b17c463b9b5"
+    },
+    "libjuice": {
+      "url": "https://codeload.github.com/paullouisageneau/libjuice/tar.gz/b89c792e3612faf2f12cf35bcc56857313a06be3",
+      "sha256": "713b22174e8cb2e06538fa9bac2650bda21b83c86f5128813ab4dcf8f5bea9ed"
+    },
+    "plog": {
+      "url": "https://codeload.github.com/SergiusTheBest/plog/tar.gz/94899e0b926ac1b0f4750bfbd495167b4a6ae9ef",
+      "sha256": "92a08bce559b5f28aa88d3fd9071567414b9f43a83fe2a05a6dd14f1da536072"
+    },
+    "usrsctp": {
+      "url": "https://codeload.github.com/sctplab/usrsctp/tar.gz/fec583d54493f879d2ae44a743423bf8a04371ab",
+      "sha256": "e5c114afe73c9a0ec419fab5f5b3f63f3ce57b09b90d06ea85e63dca8aed3e7c"
+    }
+  },
   "files": {
-    "CMakeLists.txt": "00eb8b1a915c21bd1f3bce79cfd4ac34ae5f01f4f663cde6cd8d81212b4b03f2",
+    "CMakeLists.txt": "50cc44d91739336e111c65946e792cd57581bb02a90d0c53344fa61cb59d9de4",
     "LICENSE": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
     "cmake/LibDataChannelConfig.cmake.in": "553234c02be60b74e2bcfd670c404b019da4f5709b1060965e08cacb9f9e8e89",
     "cmake/Modules/FindGLIB.cmake": "05faf86bde8001e7b1817d3822fbb56eaf80b6650bcfb094637609fc57f04b2e",
@@ -305,7 +323,7 @@
     "include/rtc/rtppacketizer.hpp": "e123430b325137e56f447816f83e99827dafdab4f7118dab5260ef91ee3d47ff",
     "include/rtc/track.hpp": "602ea8a415d22fa64231769781da298a4a8e946cac68a502971281d06419bdd9",
     "include/rtc/utils.hpp": "182494c8d35f87eb12ed1ee41f9fbc9c76d787bc5613dd126ac00ba8ea8e6c40",
-    "include/rtc/version.h": "2e29aab5e954c96158e05a5f42a3cacc06d87741f5437f62ed2a564bf702d556",
+    "include/rtc/version.h": "a44132a12cb8301cb326e5b622d59a3c219c15b81e48b4a438c07ab0cb297b2d",
     "include/rtc/websocket.hpp": "a75a1d9dd6530c1a404b6ca6c1f3ff56a6cb95dfcec02f044d0c82f986dd7799",
     "include/rtc/websocketserver.hpp": "db8313e16cd007252fb08ac2a3cc1deb22ce36d09fff324c7c1c2a25f21602f6",
     "src/av1rtppacketizer.cpp": "24ad6f5294cd0bd81a763860c86db60a4ba6f40ce76d8b866eb9711960f5348a",
@@ -331,7 +349,7 @@
     "src/impl/datachannel.hpp": "67c34acfa689d1c35b0f7c8b755465e3d84b0e5c381bd3f060ac08d7f62c14be",
     "src/impl/dtlssrtptransport.cpp": "02116bedf7e9789fcbd8d0e25422cb5d74c0b1c3fe2fe998e61d32d11d46ad6d",
     "src/impl/dtlssrtptransport.hpp": "fdc4c4ba47528adb1320169f3d74bd7e2e72116733a10bcc9137d07fae884a8f",
-    "src/impl/dtlstransport.cpp": "842f37486740c369cedb19e544706dfa26a8cc342e8f29a071183c81631a8e61",
+    "src/impl/dtlstransport.cpp": "8a00bd43ef0a483e6d5caef85c8cba394f31f906cb00506bf49e75362952add2",
     "src/impl/dtlstransport.hpp": "ec3a9ecb29448cdcc16ddc1fdda1db79dbf2088485a936eace231d3bef2ea51b",
     "src/impl/http.cpp": "eee0ff0f2f961605345bee115b1239b5ac5bb1a493f88648bd2bfa56707379c5",
     "src/impl/http.hpp": "f3fed81674127366eae145a27cf5ea61b81c59ce7ce64333783714461ae71796",
@@ -339,7 +357,7 @@
     "src/impl/httpproxytransport.hpp": "d4601fb414199ba36678cf7991014623c0eb725146f7cb28ac5f478ee4fec710",
     "src/impl/icetransport.cpp": "cc9b1a9a9d2b068745ddeb523b441d4a218516d77eb8d3eb3f5830083534d96f",
     "src/impl/icetransport.hpp": "39f9fec6c9e80403f2707ffb72e7da634117c44248aad7c52e8ff5e27592eea0",
-    "src/impl/iceudpmuxlistener.cpp": "6e3ec7e579d410f0653eab6d9fbaadf1ddf4271a6152807cdf24c33e7da4af3c",
+    "src/impl/iceudpmuxlistener.cpp": "e7521f0a8654c7abd76bbd3abc241698b979d6c48f04be2a2a65de2bb528ef79",
     "src/impl/iceudpmuxlistener.hpp": "26180eac2be469e9edd2655967785f95a7f6978052f8a5739cc49d5fdf61c257",
     "src/impl/init.cpp": "10a30d9d63a88a4d2a4eb40d6a5e86ed374e1b12c0e78e668363044756f7bdae",
     "src/impl/init.hpp": "1188569fdc32ebc68ec643a9484c4869ee29efb0799f44ba6d669fdf18f1e685",
@@ -348,7 +366,7 @@
     "src/impl/logcounter.hpp": "eaa350e9e67cc51eaf494a932ead4387944799c2676d738f6469e5dff01631b1",
     "src/impl/peerconnection.cpp": "6817a64039d08b22c8134bbafadec1839d59fd6bbd991b68b035114f7d0f9757",
     "src/impl/peerconnection.hpp": "4aeb3a45d125e3cdddaeb25c4480457f4b62bfb296b0f397ff084001364217f0",
-    "src/impl/pollinterrupter.cpp": "2034f1ef0368557c29ad48a10e3cba42d7c53a86bf499f82cf7a6f129a8ab460",
+    "src/impl/pollinterrupter.cpp": "1838e559181ceee0290e59528fbb693523f4bf9b6617bfdf00a245b1bbb04f87",
     "src/impl/pollinterrupter.hpp": "6dfc830e9403997010264566697eee9aa0685e59529402d7e5c05e41efa7915d",
     "src/impl/pollservice.cpp": "a808425be9f72cd8d5e79d7606b651b8cabd0fa8994442269840c95ab0952114",
     "src/impl/pollservice.hpp": "6d57949a7e69d5e9660912023af454372b3909a87181364548a603b4fff6a63b",
@@ -378,7 +396,7 @@
     "src/impl/utils.hpp": "94b47d23cda29c305d100a7fe4215dc4a3c53db9e074b9a038c45f3d5aba41d5",
     "src/impl/verifiedtlstransport.cpp": "5966ed390726e915723df9f33dccd63b754b58e08c9814764a3dcc2f9a63dc86",
     "src/impl/verifiedtlstransport.hpp": "e3c4a4ecbfe2464cfb61bdd82332a98f7c9eec4166c1aaa21c58eddacca8826a",
-    "src/impl/websocket.cpp": "ab7332168c7e74bfe5c1c36627a833f82cbf29dd5d8d9c7a2565fcd64b51d776",
+    "src/impl/websocket.cpp": "14ed7b790c5988a1269745558e68163528208a16db138e93b76d69fc46b5f061",
     "src/impl/websocket.hpp": "4fb01e1c385b83bce493ea6412cee704f766f6b5ed79b14008f5118793fcaea3",
     "src/impl/websocketserver.cpp": "a5a341d32b98aff0fe3dba62231e651ba557a4fb8a74cbce1df6aa5e8b6d484a",
     "src/impl/websocketserver.hpp": "47eaaef8d4b5c02fbabc6555a6aae1bfab22e428a7ab49387299189f9e4b9293",
@@ -389,14 +407,14 @@
     "src/mediahandler.cpp": "54e63c7c444a433238b1579882651b6ba13c59f3b957e9a68059167925020a0e",
     "src/message.cpp": "5875e8355c2a0ee05307cdce96e51d3b38378ca3c7f11c4b99fbf7f6b7d566bb",
     "src/nalunit.cpp": "01234d4bf3ccbb3e4871e3deed3a0d1421d18df655d4312caceed229ebd406bd",
-    "src/pacinghandler.cpp": "5a03a3919ec402f0aa85c319ba40cd6d505e06d4d68ba317b67f03ed8ea0c4a9",
+    "src/pacinghandler.cpp": "f83bad45a3872e113a1b2af126c22177b3a795f56873c4b42c2af56b9440f510",
     "src/peerconnection.cpp": "67f18f3fae5eb291b2ba515b491a56347d3bfb82cee849d0b7f117a50aa707d3",
     "src/plihandler.cpp": "f2dc57e94f775226905aff2083c04b15012af7b8c9dde2631160563bc1b081ed",
     "src/rembhandler.cpp": "ca313769b5e55fc11b1a465158db6702a59b7ef262afcd4144480bb54f6173ce",
     "src/rtcpnackresponder.cpp": "58ef1fd87c9c0e2310820c25a038f7387ba136cf5a406ed22bb3a7ee6a8e1c02",
     "src/rtcpreceivingsession.cpp": "3f1917102ecee1b424524a092bb4eddb639322596703a5aa278d1f14a4a3a2ec",
     "src/rtcpsrreporter.cpp": "7eee958eef12f91ac9ec33204967164c64de63b1a2a38d9ac85388f794e83158",
-    "src/rtp.cpp": "c52927320a0a0b544a062465bdd933b83f84d4bfa5b0451eab83e1f8bbe25277",
+    "src/rtp.cpp": "39ebba129effa1d0ab2eaaca78b7972cd82ec6eb473279cf1db6aca851b3c227",
     "src/rtpdepacketizer.cpp": "3d0e90038f9476d00a2bf0a8a217f09836cc59dc1de33593e27d561f841681df",
     "src/rtppacketizationconfig.cpp": "1953720837a95a87ea749bb0b9a1376ada2ebdfba6897490688947a4a2907ec3",
     "src/rtppacketizer.cpp": "b27543ad13d023da1dcbaa73ae0b71fd0fa2e74497f336855797801f8c71f479",

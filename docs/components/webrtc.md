@@ -2,7 +2,7 @@
 
 # WebRTC data channels and multiplayer
 
-Last updated: 2026-11-05
+Last updated: 2026-11-23
 
 ## Scope and dependencies
 
@@ -10,7 +10,11 @@ Last updated: 2026-11-05
 
 Source-only C# builds can use an older locally cached platform package for unrelated features; native WebRTC execution requires the matching fresh platform payload or an explicit source/prebuilt bridge.
 
-The engine-owned C ABI bridge statically links unchanged libdatachannel 0.24.6, libjuice, usrsctp and plog. The vendored manifest pins every source file; platform packages carry the corresponding notices and source-access statement. Media and the dependency's independent WebSocket backend are disabled. The shared [OpenSSL 4.1.0 source profile](tls.md#unified-openssl-source-profile) supplies cryptographic transport. All desktop producer recipes select that same pair; configuration and runtime initialization reject a stale provider. Foreign execution remains a separate platform gate under [ADR 0021](../decisions/product.md#adr-0021).
+The engine-owned C ABI bridge statically links unchanged libdatachannel 0.24.7, libjuice, usrsctp and plog. The vendored manifest pins every source file; platform packages carry the corresponding notices and source-access statement. Media and the dependency's independent WebSocket backend are disabled. The shared [OpenSSL 4.1.0 source profile](tls.md#unified-openssl-source-profile) supplies cryptographic transport. All desktop producer recipes select that same pair; configuration and runtime initialization reject a stale provider. Foreign execution remains a separate platform gate under [ADR 0021](../decisions/product.md#adr-0021).
+
+The 0.24.7 import retains the upstream source bytes and the existing Electron2D bridge and producer settings. The [vendor manifest](../../src/Vendor/libdatachannel/manifest.json) records the release commit, the three dependency commits and the SHA-256 of the imported GitHub archives. The libjuice gitlink already pointed to the same revision in the preceding pin. The update sets the DTLS MTU before registering incoming traffic, initializes the ICE UDP mux stop flag and uses IPv4 loopback for the Windows poll interrupter.
+
+The unified native producer includes WebRTC on Windows (x86, x64, arm64), Linux (x64, arm64) and macOS (x64, arm64). The Android, iOS, tvOS and browser-wasm producers omit this bridge. The browser interoperability fixture uses the browser's own WebRTC implementation to connect to a native desktop peer. See [unified native delivery](../native-packaging.md#ci-and-package-contents) for package layout.
 
 ## Runtime flow and ownership
 
@@ -35,7 +39,7 @@ control blocks and handles, event objects, queue backing storage, weak-channel
 capacity and persistent proposal/event/metadata/diagnostic strings through the
 common pure-C ledger. Weak control blocks and thread-local capacity remain counted
 until their actual retirement. No managed callback or global allocator replacement
-is involved. libdatachannel remains the unchanged pinned 0.24.6 release, with the
+is involved. libdatachannel remains an unchanged vendored upstream release, with the
 same OpenSSL 4.1.0 pair.
 
 Failed event/channel extraction preserves ownership for retry. Failed receive
@@ -68,6 +72,8 @@ captures, SCTP/ICE, CRT and provider heaps retain their own allocation domains.
 This does not establish total native memory or coherent managed/native monitoring.
 
 ## Verification
+
+For libdatachannel 0.24.7, the Windows x64 Release bridge passed native peer negotiation, data transfer and close, a Chromium interoperability run, and 121 injected allocation refusals. The fault run used the existing fixture with a Windows aligned-allocation adapter. The local Windows x64 package exposed all 24 WebRTC bridge symbols in the unified module. The same six native files were verified in the package, build and publish outputs, and both outputs passed the managed peer scenarios. Chromium also exchanged text, binary and empty messages with the published consumer. Linux x64 on WSL passed the upstream-pinned OpenSSL build, clean and repeated bridge builds, 26 injected allocation refusals, the managed peer scenarios and the close-error fixture. These runs cover local ICE candidates. Production Linux packages and macOS execution require their release runners.
 
 ELECTRON2D_TEST_WEBRTC=1 exercises native peer negotiation, in-band and negotiated channels, UTF-8/NUL/empty packets, labels/protocols, zero reliability limits, exact span retry, owner/lifecycle/configuration failures, typed extension construction/events, rollback aggregation, callback mutation, bounded receive overflow, server/client reserved/custom routing, and SceneTree automatic polling with bidirectional typed RPC and raw packets. Thirty-two prepared native channel cycles and thirty-two prepared multiplayer cycles measure zero managed allocation on the owner thread. Native workers/allocators, setup, snapshots, string/configuration operations and throughput are outside those measurements.
 
