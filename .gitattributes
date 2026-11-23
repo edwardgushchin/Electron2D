@@ -24,6 +24,8 @@ docs/coverage/data/electron2d.json text eol=lf
 
 src/Vendor/PCRE2/** -text
 src/Vendor/libdatachannel/** -text
+# Preserve the upstream trailing blank line in the pinned libjuice blob.
+src/Vendor/libdatachannel/deps/libjuice/src/ice.c whitespace=-blank-at-eof
 src/Vendor/MSDFGen/** -text
 src/Vendor/ENet/** -text
 src/Vendor/FastLZ/** -text

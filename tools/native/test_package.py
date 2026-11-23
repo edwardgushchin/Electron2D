@@ -230,7 +230,7 @@ endif()
             self.assertEqual(len(package.WEBRTC_EXPORTS), 24)
         root = package.ROOT / "src/Vendor/libdatachannel"
         manifest = json.loads((root / "manifest.json").read_text())
-        self.assertEqual(manifest["commit"], "800e849a1ede5667caaf8f6caa1eb21e4906dd87")
+        self.assertEqual(manifest["commit"], "6c50b6d88fd691957f1d7df0d80875e9cd57606b")
         self.assertEqual({p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file() and p.name != "manifest.json"}, set(manifest["files"]))
         for name, checksum in manifest["files"].items():
             self.assertEqual(hashlib.sha256((root / name).read_bytes()).hexdigest(), checksum, name)

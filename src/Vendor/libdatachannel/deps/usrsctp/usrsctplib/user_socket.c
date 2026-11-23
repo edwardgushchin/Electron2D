@@ -60,9 +60,12 @@
 #endif
 userland_mutex_t accept_mtx;
 userland_cond_t accept_cond;
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <time.h>
 #include <sys/timeb.h>
+#if !defined(_MSC_VER)
+#include <minmax.h>
+#endif
 #endif
 
 MALLOC_DEFINE(M_PCB, "sctp_pcb", "sctp pcb");
@@ -239,6 +242,28 @@ sodealloc(struct socket *so)
 	SOCKBUF_LOCK_DESTROY(&so->so_rcv);
 
 	free(so);
+}
+
+/*
+ * Take a reference on a socket for an upcall, but only if it already has one.
+ * A socket without references has been closed and is being freed, or is
+ * a connection not accepted yet, which only its listen queue may free.
+ * The caller must ensure that the socket has not been deallocated yet,
+ * for instance by holding the lock of an association still pointing to it.
+ * Returns 1 if a reference was taken, 0 otherwise.
+ */
+int
+sotryref(struct socket *so)
+{
+	int referenced = 0;
+
+	SOCK_LOCK(so);
+	if (so->so_count > 0) {
+		soref(so);
+		referenced = 1;
+	}
+	SOCK_UNLOCK(so);
+	return (referenced);
 }
 
 /* Taken from  /src/sys/kern/uipc_socket.c

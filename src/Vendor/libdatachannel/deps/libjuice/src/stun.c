@@ -157,14 +157,14 @@ int stun_write(void *buf, size_t size, const stun_message_t *msg, const char *pa
 			goto overflow;
 		pos += len;
 	}
-	if (msg->ice_controlling) {
+	if (msg->has_ice_controlling) {
 		uint64_t ice_controlling = htonll(msg->ice_controlling);
 		len = stun_write_attr(pos, end - pos, STUN_ATTR_ICE_CONTROLLING, &ice_controlling, 8);
 		if (len <= 0)
 			goto overflow;
 		pos += len;
 	}
-	if (msg->ice_controlled) {
+	if (msg->has_ice_controlled) {
 		uint64_t ice_controlled = htonll(msg->ice_controlled);
 		len = stun_write_attr(pos, end - pos, STUN_ATTR_ICE_CONTROLLED, &ice_controlled, 8);
 		if (len <= 0)
@@ -321,10 +321,11 @@ int stun_write(void *buf, size_t size, const stun_message_t *msg, const char *pa
 
 			if (msg->msg_class == STUN_CLASS_REQUEST &&
 			    msg->credentials.password_algorithm != STUN_PASSWORD_ALGORITHM_UNSET) {
-				struct stun_value_password_algorithm pwa;
-				pwa.algorithm = htons(msg->credentials.password_algorithm);
-				len = stun_write_attr(pos, end - pos, STUN_ATTR_PASSWORD_ALGORITHM, &pwa,
-				                      sizeof(pwa));
+				uint8_t pwa_buf[sizeof(struct stun_value_password_algorithm)];
+				struct stun_value_password_algorithm *pwa = (struct stun_value_password_algorithm *)pwa_buf;
+				memset(pwa, 0, sizeof(*pwa));
+				pwa->algorithm = htons(msg->credentials.password_algorithm);
+				len = stun_write_attr(pos, end - pos, STUN_ATTR_PASSWORD_ALGORITHM, pwa_buf, sizeof(*pwa));
 				if (len <= 0)
 					goto overflow;
 				pos += len;
@@ -916,6 +917,7 @@ int stun_read_attr(const void *data, size_t size, stun_message_t *msg, uint8_t *
 		}
 		uint32_t *value32 = (uint32_t *)attr->value;
 		msg->ice_controlling = ((uint64_t)ntohl(value32[0]) << 32) | ntohl(value32[1]);
+		msg->has_ice_controlling = true;
 		break;
 	}
 	case STUN_ATTR_ICE_CONTROLLED: {
@@ -926,6 +928,7 @@ int stun_read_attr(const void *data, size_t size, stun_message_t *msg, uint8_t *
 		}
 		uint32_t *value32 = (uint32_t *)attr->value;
 		msg->ice_controlled = ((uint64_t)ntohl(value32[0]) << 32) | ntohl(value32[1]);
+		msg->has_ice_controlled = true;
 		break;
 	}
 	case STUN_ATTR_CHANNEL_NUMBER: {

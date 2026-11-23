@@ -1,6 +1,6 @@
 # Private WebRTC bridge
 
-The bridge uses the unchanged vendored libdatachannel 0.24.7 closure and the
+The bridge uses the unchanged vendored libdatachannel 0.24.8 closure and the
 same pinned OpenSSL 4.1.0 pair as the other TLS consumers. Media and the independent
 WebSocket backend remain disabled. See the [component contract](../../docs/components/webrtc.md).
 

@@ -74,6 +74,9 @@
 #if defined(__Userspace__) && defined(INET6)
 #include <netinet6/sctp6_var.h>
 #endif
+#if defined(_WIN32) && defined(__MINGW32__)
+#include <minmax.h>
+#endif
 #if defined(__APPLE__) && !defined(__Userspace__)
 #if !(defined(APPLE_LEOPARD) || defined(APPLE_SNOWLEOPARD))
 #define SCTP_MAX_LINKHDR 16
@@ -4215,7 +4218,7 @@ sctp_lowlevel_chunk_output(struct sctp_inpcb *inp,
 		ip->ip_id = htons(SCTP_IP_ID(inp)++);
 #elif defined(__FreeBSD__)
 		/* FreeBSD has a function for ip_id's */
-		ip_fillid(ip);
+		ip_fillid(ip, V_ip_random_id);
 #elif defined(__APPLE__)
 #if RANDOM_IP_ID
 		ip->ip_id = ip_randomid();
@@ -11856,7 +11859,7 @@ sctp_send_resp_msg(struct sockaddr *src, struct sockaddr *dst,
 #if defined(__Userspace__)
 		ip->ip_id = htons(ip_id++);
 #elif defined(__FreeBSD__)
-		ip_fillid(ip);
+		ip_fillid(ip, V_ip_random_id);
 #elif defined(__APPLE__)
 #if RANDOM_IP_ID
 		ip->ip_id = ip_randomid();
@@ -14252,6 +14255,20 @@ skip_preblock:
 					error = ECONNRESET;
 				} else {
 					error = ENOTCONN;
+				}
+				if (sp != NULL) {
+					/* Free data copied before the abort. */
+					if (sp->data != NULL) {
+						sctp_m_freem(sp->data);
+						sp->data = NULL;
+					}
+					/* Release the destination reference. */
+					if (sp->net != NULL) {
+						sctp_free_remote_addr(sp->net);
+						sp->net = NULL;
+					}
+					/* Free the pending message structure. */
+					sctp_free_a_strmoq(stcb, sp, SCTP_SO_LOCKED);
 				}
 				goto out;
 			}
