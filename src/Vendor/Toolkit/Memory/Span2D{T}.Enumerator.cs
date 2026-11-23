@@ -6,13 +6,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-#if !NET7_0_OR_GREATER
+#if !NET8_0_OR_GREATER
 using System;
 #endif
 using System.Runtime.CompilerServices;
 using Electron2DBufferTools.Enumerables;
 using Electron2DBufferTools.Memory.Internals;
-#if NETSTANDARD2_1_OR_GREATER && !NET7_0_OR_GREATER
+#if NETSTANDARD2_1_OR_GREATER && !NET8_0_OR_GREATER
 using System.Runtime.InteropServices;
 #elif NETSTANDARD2_0
 using RuntimeHelpers = Electron2DBufferTools.Helpers.Internals.RuntimeHelpers;
@@ -90,7 +90,7 @@ partial struct Span2D<T>
     /// </summary>
     internal ref struct Enumerator
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         /// <summary>
         /// The <typeparamref name="T"/> reference for the <see cref="Span2D{T}"/> instance.
         /// </summary>
@@ -149,7 +149,7 @@ partial struct Span2D<T>
         /// <param name="span">The target <see cref="Span2D{T}"/> instance to enumerate.</param>
         internal Enumerator(Span2D<T> span)
         {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
             this.reference = ref span.reference;
             this.height = span.height;
 #elif NETSTANDARD2_1_OR_GREATER
@@ -186,7 +186,7 @@ partial struct Span2D<T>
             // another row available: wrap to a new line and continue.
             this.x = 0;
 
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
             return ++this.y < this.height;
 #elif NETSTANDARD2_1_OR_GREATER
             return ++this.y < this.span.Length;
@@ -203,7 +203,7 @@ partial struct Span2D<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
                 ref T r0 = ref this.reference;
 #elif NETSTANDARD2_1_OR_GREATER
                 ref T r0 = ref MemoryMarshal.GetReference(this.span);

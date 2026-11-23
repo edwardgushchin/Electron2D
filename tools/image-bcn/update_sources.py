@@ -8,7 +8,12 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-PINS = {"BCn": "51d3199b3bc374e0bdda3947d9f347cb6235a9a0", "Toolkit": "657c6971a8d42655c648336b781639ed96c2c49f"}
+PINS = {"BCn": "51d3199b3bc374e0bdda3947d9f347cb6235a9a0", "Toolkit": "35dfe7b12da0e64384bfaec7ebc0883196a89f9f"}
+TOOLKIT_RELEASE = {
+    "version": "8.4.2",
+    "archive": "https://codeload.github.com/CommunityToolkit/dotnet/tar.gz/refs/tags/v8.4.2",
+    "archive_sha256": "0df05beae045ed4e8692f6cf7d129d66204dd3738605032341f11e828524181b",
+}
 SEEDS = ["Memory/", "Helpers/", "Enumerables/", "Buffers/", "Streams/",
          "Extensions/ArrayExtensions.1D.cs", "Extensions/ArrayExtensions.2D.cs", "Extensions/ArrayExtensions.3D.cs",
          "Extensions/BoolExtensions.cs", "Extensions/StringExtensions.cs", "Extensions/ArrayPoolExtensions.cs",
@@ -37,15 +42,30 @@ def main():
         source = repo / ("BCnEnc.Net" if name == "BCn" else "src/CommunityToolkit.HighPerformance")
         files = {}
         original = {}
-        for path in sorted(source.rglob("*.cs")):
+        for path in sorted(source.rglob("*.cs"), key=lambda path: path.as_posix()):
             relative = path.relative_to(source).as_posix()
             if name == "Toolkit" and not any(relative == seed or seed.endswith("/") and relative.startswith(seed) for seed in SEEDS): continue
-            data = path.read_bytes(); files[relative] = adapt(data, name == "BCn"); original[relative] = hashlib.sha256(data).hexdigest()
+            data = path.read_bytes().replace(b"\r\n", b"\n")
+            files[relative] = adapt(data, name == "BCn")
+            original[relative] = hashlib.sha256(data).hexdigest()
         for output, path in (("LICENSE-MIT", repo / "LICENSE-MIT"), ("UNLICENSE", repo / "UNLICENSE")) if name == "BCn" else (("LICENSE", repo / "License.md"),):
-            data = path.read_bytes(); files[output] = data; original[output] = hashlib.sha256(data).hexdigest()
-        manifest = {"repository": "https://github.com/Nominom/BCnEncoder.NET" if name == "BCn" else "https://github.com/CommunityToolkit/dotnet", "commit": PINS[name],
-                    "adaptations": "Private namespaces/types, target symbols and annotation/diagnostic policy; BCn Half identifier and explicit writable Span casts. Algorithms unchanged.",
-                    "files": {key: {"sha256": hashlib.sha256(data).hexdigest(), "upstream_sha256": original[key]} for key, data in files.items()}}
+            data = path.read_bytes().replace(b"\r\n", b"\n")
+            files[output] = data
+            original[output] = hashlib.sha256(data).hexdigest()
+        manifest = {
+            "repository": "https://github.com/Nominom/BCnEncoder.NET" if name == "BCn" else "https://github.com/CommunityToolkit/dotnet",
+            **({"version": TOOLKIT_RELEASE["version"]} if name == "Toolkit" else {}),
+            "commit": PINS[name],
+        }
+        if name == "Toolkit":
+            manifest["archive"] = TOOLKIT_RELEASE["archive"]
+            manifest["archive_sha256"] = TOOLKIT_RELEASE["archive_sha256"]
+        adaptations = "Private namespaces/types, target symbols and annotation/diagnostic policy; BCn Half identifier and explicit writable Span casts."
+        manifest["adaptations"] = adaptations + (" Algorithms unchanged." if name == "BCn" else " No local algorithm changes.")
+        manifest["files"] = {
+            key: {"sha256": hashlib.sha256(data).hexdigest(), "upstream_sha256": original[key]}
+            for key, data in files.items()
+        }
         files["manifest.json"] = (json.dumps(manifest, indent=2) + "\n").encode()
         destination = ROOT / "src/Vendor" / name
         actual = {p.relative_to(destination).as_posix() for p in destination.rglob("*") if p.is_file()}

@@ -380,7 +380,7 @@ internal sealed class StringPool
         /// <summary>
         /// Gets an <see cref="object"/> that can be used to synchronize access to the current instance.
         /// </summary>
-        public object SyncRoot
+        public readonly object SyncRoot
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => this.buckets;
@@ -753,7 +753,7 @@ internal sealed class StringPool
         /// a given number of nodes, those are all contiguous from the start of the array.
         /// </summary>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private void UpdateAllTimestamps()
+        private readonly void UpdateAllTimestamps()
         {
             int count = this.count;
             ref HeapEntry heapEntriesRef = ref this.heapEntries.DangerousGetReference();

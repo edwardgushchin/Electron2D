@@ -25,7 +25,7 @@ namespace Electron2DBufferTools.Enumerables;
 /// <typeparam name="T">The type of items to enumerate.</typeparam>
 internal readonly ref struct ReadOnlyRefEnumerable<T>
 {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
     /// <summary>
     /// The <typeparamref name="T"/> reference for the <see cref="ReadOnlyRefEnumerable{T}"/> instance.
     /// </summary>
@@ -65,7 +65,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     private readonly int step;
 
 #if NETSTANDARD2_1_OR_GREATER
-#if !NET7_0_OR_GREATER
+#if !NET8_0_OR_GREATER
     /// <summary>
     /// Initializes a new instance of the <see cref="ReadOnlyRefEnumerable{T}"/> struct.
     /// </summary>
@@ -74,7 +74,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private ReadOnlyRefEnumerable(ReadOnlySpan<T> span, int step)
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         this.reference = ref MemoryMarshal.GetReference(span);
         this.length = span.Length;
 #else
@@ -93,7 +93,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal ReadOnlyRefEnumerable(in T reference, int length, int step)
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         this.reference = ref reference;
         this.length = length;
         this.step = step;
@@ -151,7 +151,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     public int Length
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         get => this.length;
 #elif NETSTANDARD2_1_OR_GREATER
         get => this.span.Length;
@@ -178,7 +178,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
                 ThrowHelper.ThrowIndexOutOfRangeException();
             }
 
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
             ref T r0 = ref Unsafe.AsRef(in this.reference);
 #elif NETSTANDARD2_1_OR_GREATER
             ref T r0 = ref MemoryMarshal.GetReference(this.span);
@@ -212,7 +212,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Enumerator GetEnumerator()
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         return new(in this.reference, this.length, this.step);
 #elif NETSTANDARD2_1_OR_GREATER
         return new(this.span, this.step);
@@ -230,7 +230,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     /// </exception>
     public void CopyTo(RefEnumerable<T> destination)
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         if (this.step == 1)
         {
             destination.CopyFrom(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in this.reference), this.length));
@@ -290,7 +290,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     /// <returns>Whether or not the operation was successful.</returns>
     public bool TryCopyTo(RefEnumerable<T> destination)
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         int sourceLength = this.length;
         int destinationLength = destination.Length;
 #elif NETSTANDARD2_1_OR_GREATER
@@ -320,7 +320,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     /// </exception>
     public void CopyTo(Span<T> destination)
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         if (this.step == 1)
         {
             MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in this.reference), this.length).CopyTo(destination);
@@ -361,7 +361,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     /// <returns>Whether or not the operation was successful.</returns>
     public bool TryCopyTo(Span<T> destination)
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         int length = this.length;
 #elif NETSTANDARD2_1_OR_GREATER
         int length = this.span.Length;
@@ -382,7 +382,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     /// <inheritdoc cref="RefEnumerable{T}.ToArray"/>
     public T[] ToArray()
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         int length = this.length;
 #elif NETSTANDARD2_1_OR_GREATER
         int length = this.span.Length;
@@ -410,7 +410,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator ReadOnlyRefEnumerable<T>(RefEnumerable<T> enumerable)
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         return new(in enumerable.Reference, enumerable.Length, enumerable.Step);
 #elif NETSTANDARD2_1_OR_GREATER
         return new(enumerable.Span, enumerable.Step);
@@ -424,7 +424,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
     /// </summary>
     internal ref struct Enumerator
     {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         /// <inheritdoc cref="ReadOnlyRefEnumerable{T}.reference"/>
         private readonly ref readonly T reference;
 
@@ -452,7 +452,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
         /// </summary>
         private int position;
 
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
         /// <summary>
         /// Initializes a new instance of the <see cref="Enumerator"/> struct.
         /// </summary>
@@ -503,7 +503,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext()
         {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
             return ++this.position < this.length;
 #elif NETSTANDARD2_1_OR_GREATER
             return ++this.position < this.span.Length;
@@ -518,7 +518,7 @@ internal readonly ref struct ReadOnlyRefEnumerable<T>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
                 ref T r0 = ref Unsafe.AsRef(in this.reference);
 #elif NETSTANDARD2_1_OR_GREATER
                 ref T r0 = ref this.span.DangerousGetReference();

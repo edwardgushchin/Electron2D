@@ -386,13 +386,6 @@ internal readonly struct ReadOnlyMemory2D<T> : IEquatable<ReadOnlyMemory2D<T>>
             ThrowHelper.ThrowArgumentOutOfRangeExceptionForPitch();
         }
 
-        if (width == 0 || height == 0)
-        {
-            this = default;
-
-            return;
-        }
-
         int area = OverflowHelper.ComputeInt32Area(height, width, pitch);
         int remaining = length - offset;
 
@@ -457,13 +450,6 @@ internal readonly struct ReadOnlyMemory2D<T> : IEquatable<ReadOnlyMemory2D<T>>
         if (pitch < 0)
         {
             ThrowHelper.ThrowArgumentOutOfRangeExceptionForPitch();
-        }
-
-        if (width == 0 || height == 0)
-        {
-            this = default;
-
-            return;
         }
 
         int area = OverflowHelper.ComputeInt32Area(height, width, pitch);

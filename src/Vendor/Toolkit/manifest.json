@@ -1,7 +1,10 @@
 {
   "repository": "https://github.com/CommunityToolkit/dotnet",
-  "commit": "657c6971a8d42655c648336b781639ed96c2c49f",
-  "adaptations": "Private namespaces/types, target symbols and annotation/diagnostic policy; BCn Half identifier and explicit writable Span casts. Algorithms unchanged.",
+  "version": "8.4.2",
+  "commit": "35dfe7b12da0e64384bfaec7ebc0883196a89f9f",
+  "archive": "https://codeload.github.com/CommunityToolkit/dotnet/tar.gz/refs/tags/v8.4.2",
+  "archive_sha256": "0df05beae045ed4e8692f6cf7d129d66204dd3738605032341f11e828524181b",
+  "adaptations": "Private namespaces/types, target symbols and annotation/diagnostic policy; BCn Half identifier and explicit writable Span casts. No local algorithm changes.",
   "files": {
     "Buffers/ArrayPoolBufferWriter{T}.cs": {
       "sha256": "4e25a748a007f674d3e276c3a1fa4cbcab0370677c772b4fca4f4f4ef99137d9",
@@ -48,32 +51,32 @@
       "upstream_sha256": "36678e969efffd9affbedabc134fce7e13d15bcc425b929bef24a26e5a4710ac"
     },
     "Buffers/StringPool.cs": {
-      "sha256": "b1487a1988819e8eedefa4d731f853f0cd4c29d67c4e6dc3d64cf4f7b94f2359",
-      "upstream_sha256": "87533e5e1ade2290136b679cd64054421180eae07ca7ef42b756474a7ab956c4"
+      "sha256": "d265a8107e9349dd7355b090de41e11366bc217416f7a95da74da2ef79ea6814",
+      "upstream_sha256": "9df1cca467874cb559cf090fe111bc1ffb78bce8100082c5e4a8aba6d930d4e4"
     },
     "Buffers/Views/MemoryDebugView{T}.cs": {
       "sha256": "6ce6e95af90762f7d7f06bb83668078e253c41769f995a91a3bf75d24383c7cd",
       "upstream_sha256": "0adeb490f7816c17df793bd47874d884d314c9a6fba678575f9fafd6b53b4b13"
     },
     "Enumerables/ReadOnlyRefEnumerable{T}.cs": {
-      "sha256": "fc4b44b04ecfe9a0df70c10ff111664a854d4887fdabf04f148eb00a3416d626",
-      "upstream_sha256": "b119af1ed3b761e87923151727f1d88b17a284af80e659bfeb2c8f01e9a6caf6"
+      "sha256": "ad6b74964d819989ce497cca7b95a45a9c629fc45e1dd3dd939dadb0e0943fd1",
+      "upstream_sha256": "dc7d1b101ec5786131b5487a247f72172edfcce624a7fbe1964b23434f57d0e9"
     },
     "Enumerables/ReadOnlySpanEnumerable{T}.cs": {
-      "sha256": "6d84de7dd0b8be21c28d4f231000f1439c4d36e0e0bdc2cda578fa341a2f3868",
-      "upstream_sha256": "3504f32afd320e99cca717aa2d2e7cf60e4b99371c9528f5a5629a1888718ec6"
+      "sha256": "ef1cb799ae4bc0aaf414614877eeda3501e4a912ee835f9b51071116b7881c49",
+      "upstream_sha256": "e36651f9f379dbf5254b0b8f5eb786787ce42140fbca0f2c57d73673fbb09b52"
     },
     "Enumerables/ReadOnlySpanTokenizer{T}.cs": {
       "sha256": "cf766919b7589737a3d23af5db349603652be40a9147778b3a20de0a52901cef",
       "upstream_sha256": "257cb63059874fb7fc44f976a7507fa63d57f871c891fcc77b8ca6422d96fed3"
     },
     "Enumerables/RefEnumerable{T}.cs": {
-      "sha256": "44ab456d298f41b64771600e85e42d020477acc8fb30088c702562998160e248",
-      "upstream_sha256": "d86907bf7a11180bb7eb396c0811ae6fa6c5d7bda3248f2efe77bc6038b53bd1"
+      "sha256": "c266268ceeb57c583a8145fd2cb1ed9cebec82c1537345965232866f888fba23",
+      "upstream_sha256": "5b1d3c10250d7ea9618df08420bd1d36e042ba099c2c4e4b3cc39157d320094e"
     },
     "Enumerables/SpanEnumerable{T}.cs": {
-      "sha256": "405f8dda9dbac567d869db5871be718d41e6463bd05edb486c8b6754da739d38",
-      "upstream_sha256": "090224a95acd5ebc8e3ad9a347ca900b7f28df370dfe36270d44b602e4ad5771"
+      "sha256": "5d181d0be562ff2995ee08405401d70c9f71ac8b8e2231c078b9eb55ce3f9f7a",
+      "upstream_sha256": "89eae6049b7fb6f905de78909a7f08977377693ef47530b541c63c9bbb8a3e30"
     },
     "Enumerables/SpanTokenizer{T}.cs": {
       "sha256": "07bf714e177451730786770e59bdd36222d65d6515fc06c8e60b305401008a6d",
@@ -124,8 +127,8 @@
       "upstream_sha256": "60d1b520e43effdda59a987308cc6e58cbe5920d1f20fd2d8c88646f4e330bd5"
     },
     "Extensions/StreamExtensions.cs": {
-      "sha256": "76ef5e0d71609ee348182e6cd0436d17acfd9dbdb13fa62faf7858b0b268c37e",
-      "upstream_sha256": "f5342042ae4288f6e790230ba6af61e4be4967082b97f0bd8af03b9713585874"
+      "sha256": "54679ef2e92f217012e24e60c5cf77a932092c0e6f08adfd7f9e09a9c0ee5374",
+      "upstream_sha256": "5be61b407c05164bc615a115b00d3a03e49d20871804aae3d092d09130df5719"
     },
     "Extensions/StringExtensions.cs": {
       "sha256": "60c4bb0473dddcd64da51202a8119a930eae9a6bbf47222dcdaf306f9148cccc",
@@ -192,36 +195,36 @@
       "upstream_sha256": "a7265fad117ecf38fb925fd8b2632d2210c09d86ac80ec6768da6a26c423a472"
     },
     "Memory/Internals/OverflowHelper.cs": {
-      "sha256": "50ff8812511ab56a463a593769a7d087fa651accae05db8b5c87ffcf03068cb7",
-      "upstream_sha256": "d8044ae8eeae2a42fb8af99935addc7f49f0c0347a90a0df393bab36a5b93162"
+      "sha256": "856d4516fb0708dbb1972744dd4a51a97b4c34028b6411f8faade1b8cc451260",
+      "upstream_sha256": "d5104f8c06664d252f5d16f456306e39b5ff14a07bb79e1954087be24371c336"
     },
     "Memory/Internals/ThrowHelper.cs": {
       "sha256": "b3ed2f5deefb357d68bc2f540b5b8299fd966e4de5f202f61cba84d63f229845",
       "upstream_sha256": "b87ddc9da778a5700a17775bc32054d1763731f8ca727086152535ba66f946a2"
     },
     "Memory/Memory2D{T}.cs": {
-      "sha256": "4fa573e04270bb05727f446b58b7278f53b30cd15d030e89704028f146e32498",
-      "upstream_sha256": "18d6fb741c81984245295c375215a03f4eb8e8a8115d9cbd6c52b1ceb5ec9300"
+      "sha256": "7d9d2b97708af49bb49c7db0e727205c465c235958e62528fba04ea8de5a3484",
+      "upstream_sha256": "5d8933a1123a04994280799c9c811a3eae812d9c8a3193817f128f93180cee01"
     },
     "Memory/ReadOnlyMemory2D{T}.cs": {
-      "sha256": "bfd5e9734f6abdac9770d3a083ac1dc24e26aac6adc9b5a24b787e35254d13a9",
-      "upstream_sha256": "99ced2728c670abaa1aa97e04b13d839b6e9ed8f24be8ecf0b23618ba4f67eb6"
+      "sha256": "2631582648bf4326214e7e88d74566352ca7fa55b9342009588ddc4717748ed9",
+      "upstream_sha256": "475a299336c7d99325a9172acb2bae0e0dd9a47becbc1e02fbd98000f0bb6fde"
     },
     "Memory/ReadOnlySpan2D{T}.Enumerator.cs": {
-      "sha256": "218c7aa469dac76dceb2ba9a3b3262ba2b3764f0796f15382b2aae358375ec68",
-      "upstream_sha256": "a067805caca5ac39c0c271ba8cca6ae01af5c1f7f37fa55ba256405164f88627"
+      "sha256": "d1927f473ac039682bcc89a59a2a15f76d2608370b4f4e5d1d89df3ff3da9429",
+      "upstream_sha256": "93b0a83ed985cc754c51b895c156445a69d1445167d8ab08f5a41f18b5f2f579"
     },
     "Memory/ReadOnlySpan2D{T}.cs": {
-      "sha256": "f25c3795a708fdf49e0a2a5c1cda0bd9dbb121845f5c645ca6c0201511539a6e",
-      "upstream_sha256": "59b3de86e6aa13188d87d6f580755df9a1c01f4c70758bfb30c16a48c7d26702"
+      "sha256": "053e797e228f3c60ed77c69f7adb8deee2cc33abfdc1df9c5e149ab7c87a3fea",
+      "upstream_sha256": "6bf19cb866d0f414dc637a46640a1883fb2c9b587a24177955850496303f800a"
     },
     "Memory/Span2D{T}.Enumerator.cs": {
-      "sha256": "723b984fffe5f0b44de345f1d5ca59953e5b2e095dac2874820f539656a1a4b7",
-      "upstream_sha256": "9ee1eacfb17b96dd812d9488853dfe050442fe0f026ab4ac74644f502d5dd353"
+      "sha256": "bed508f35c5ea6b05fb2ad4b19c12b8dde4ca477b6f9bc236cf6c6e41b7c7b04",
+      "upstream_sha256": "d8dd74eb18f14436605da68d4080db7e2450102a6a842843215e70d74cb826e0"
     },
     "Memory/Span2D{T}.cs": {
-      "sha256": "19fb13e45d0e848918b9606a1de7300b9973514ecc7acf8f1a40239a8d47e9d7",
-      "upstream_sha256": "3f46cfbd7c984e8f43a7dc90bdd9d958decc145165f77011126927d817b7378b"
+      "sha256": "60769fac26e832fb202db2ecab288ff309ccab7bf97e7b92413da4e556926af4",
+      "upstream_sha256": "5e912eb82f2cbcf47447d7e4e1252e7d6948cd842a5ee15b6a069f2b613e268c"
     },
     "Memory/Views/MemoryDebugView2D{T}.cs": {
       "sha256": "8c9a43c6889f36032a23421a5ee43f9a1ee53051884910b8710df0489b51af70",

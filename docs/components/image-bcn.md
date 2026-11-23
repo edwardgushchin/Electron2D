@@ -16,9 +16,9 @@ Compatibility draws BC1–BC5/BC7 from prepared RGBA8. BC6 requires an HDR-capab
 
 ## Private source dependency
 
-The runtime compiles BCnEncoder.NET 2.3.0 at `51d3199b3bc374e0bdda3947d9f347cb6235a9a0` and the required CommunityToolkit.HighPerformance 8.4.0 closure at `657c6971a8d42655c648336b781639ed96c2c49f` into Electron2D.dll. They add no managed runtime dependency DLL or public backend type.
+The runtime compiles BCnEncoder.NET 2.3.0 at `51d3199b3bc374e0bdda3947d9f347cb6235a9a0` and the required CommunityToolkit.HighPerformance 8.4.2 closure at `35dfe7b12da0e64384bfaec7ebc0883196a89f9f` into Electron2D.dll. They add no managed runtime dependency DLL or public backend type. The [Toolkit source manifest](../../src/Vendor/Toolkit/manifest.json) records the tagged archive SHA-256 and the SHA-256 of each upstream file and its LF-normalized engine copy.
 
-`tools/image-bcn/update_sources.py --bcn <pinned-checkout> --toolkit <pinned-checkout>` reproduces the import; `--check` compares every delivered byte. Namespace/type visibility, target symbols, nullable/diagnostic policy, the Half identifier and two explicit writable Span casts are mechanical compilation adaptations. Codec algorithms are unchanged. Source manifests retain original and delivered SHA-256 hashes, pins and notices; `python3 -B tools/image-bcn/check_sources.py` verifies the shipped closure. The buffer-tool memory/enumerable/extension/buffer/stream closure compiles the selected upstream codec API without replacing its data structures.
+`tools/image-bcn/update_sources.py --bcn <pinned-checkout> --toolkit <pinned-checkout>` reproduces the import. It normalizes text to LF and uses the same file order on Windows and Unix. The `--check` option compares every delivered byte. Namespace/type visibility, target symbols, nullable/diagnostic policy, the Half identifier and two explicit writable Span casts are mechanical compilation adaptations. The import applies no local algorithm changes. `python3 -B tools/image-bcn/check_sources.py` verifies the shipped closure and notice copies.
 
 ## Slice choice
 

@@ -181,7 +181,7 @@ Locale names, aliases, scripts, regional defaults and gettext rule definitions a
 
 ## Private BC and DDS codec sources
 
-BCnEncoder.NET 2.3.0, source `51d3199b3bc374e0bdda3947d9f347cb6235a9a0`, is used under its [MIT license](BCnEncoder-LICENSE.txt). The required CommunityToolkit.HighPerformance 8.4.0 source closure, `657c6971a8d42655c648336b781639ed96c2c49f`, retains its [MIT license](BufferTools-LICENSE.txt). Both compile as private types in Electron2D.dll; no additional managed runtime DLL is delivered. Original and delivered hashes and mechanical compilation adaptations are recorded in src/Vendor/BCn/manifest.json and src/Vendor/Toolkit/manifest.json. Their codec algorithms are unchanged.
+BCnEncoder.NET 2.3.0, source `51d3199b3bc374e0bdda3947d9f347cb6235a9a0`, is used under its [MIT license](BCnEncoder-LICENSE.txt). The required CommunityToolkit.HighPerformance 8.4.2 source closure, `35dfe7b12da0e64384bfaec7ebc0883196a89f9f`, retains its [MIT license](BufferTools-LICENSE.txt). Both compile as private types in Electron2D.dll; no additional managed runtime DLL is delivered. Original and delivered hashes and mechanical compilation adaptations are recorded in src/Vendor/BCn/manifest.json and src/Vendor/Toolkit/manifest.json. The import applies no local algorithm changes.
 
 The private EXR codec compiles TinyEXR.NET at `b57d68083c443da538a71410ac181cd232127f0a` into the engine, under its [MIT notice](TinyEXR.NET-LICENSE.txt). Its underlying TinyEXR/OpenEXR codec provenance is retained in the [BSD notices](TinyEXR-BSD-LICENSE.txt). Namespace/visibility packaging and the B44 raw-fallback allocation correction are recorded in the source manifest; no extra runtime DLL is delivered.
 

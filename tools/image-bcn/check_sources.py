@@ -3,11 +3,13 @@
 import hashlib
 import json
 from pathlib import Path
-from update_sources import PINS, ROOT
+from update_sources import PINS, ROOT, TOOLKIT_RELEASE
 for name, commit in PINS.items():
     vendor = ROOT / "src/Vendor" / name
     manifest = json.loads((vendor / "manifest.json").read_text())
     assert manifest["commit"] == commit, name
+    if name == "Toolkit":
+        assert all(manifest[key] == value for key, value in TOOLKIT_RELEASE.items()), name
     assert {p.relative_to(vendor).as_posix() for p in vendor.rglob("*") if p.is_file()} == set(manifest["files"]) | {"manifest.json"}, name
     for path, record in manifest["files"].items():
         assert hashlib.sha256((vendor / path).read_bytes()).hexdigest() == record["sha256"], path
