@@ -150,7 +150,7 @@ CI caches only each RID's staged native libraries and source receipts, keyed by 
 
 The same package project accepts `NativePackagePlatform=MacOS` and produces `Electron2D.MacOS` with both `osx-x64` and `osx-arm64`. Matching macOS runners build private ICU, FAudio over the restored SDL core, ENet with statically linked pinned Zstandard, and private OpenSSL 4.1.0. Native assets retain the RID directory. Mach-O checks require the exact CPU, relocatable library identities, expected bridge exports, shared SDL identity, private crypto dependency and no build-machine RPATH. Source archive hashes and original licenses are pinned; OpenSSL loader identities are changed and the dylibs ad-hoc signed after relocation.
 
-The package now also supplies `libElectron2DFreeType.dylib`, built from pinned FreeType 2.14.3 with static zlib 1.3.2, libpng 1.6.59, Brotli 1.2.0 and HarfBuzz 15.0.0. The build requires every codec/auto-hinting dependency, includes libpng's generated headers explicitly, reads the actual bundled WOFF2 font before staging, and rejects runtime imports of global codec/HarfBuzz libraries. Existing licenses cover these source versions; [the notices](../licence/THIRD_PARTY_NOTICES.md) record their exact commits. The ordinary runtime resolves this private library rather than the upstream macOS FreeType binary whose build disables Brotli and HarfBuzz.
+The package now also supplies `libElectron2DFreeType.dylib`, built from pinned FreeType 2.14.3 with static zlib 1.3.2, libpng 1.6.59, Brotli 1.2.0 and HarfBuzz 15.2.0. The build requires every codec/auto-hinting dependency, includes libpng's generated headers explicitly, reads the actual bundled WOFF2 font before staging, and rejects runtime imports of global codec/HarfBuzz libraries. Existing licenses cover these source versions; [the notices](../licence/THIRD_PARTY_NOTICES.md) record their exact commits. The ordinary runtime resolves this private library rather than the upstream macOS FreeType binary whose build disables Brotli and HarfBuzz.
 
 [Tests run 37281227270](https://github.com/edwardgushchin/Electron2D/actions/runs/37281227270), at `6e464e97e5db208dc4d181f6faf01da5ee238e94`, passed both matching macOS native producers and combined package audits. The first connected [integration run 37284017058](https://github.com/edwardgushchin/Electron2D/actions/runs/37284017058) failed in both public macOS consumers with FreeType error 2 while decoding the bundled WOFF2; downstream full suites did not run. The replacement passed local decoder/raster checks; its first macOS compilation then exposed the missing generated-libpng include path, fixed before the corrected run below. The native workflow exercises fresh ProjectReference/NuGet consumers and publishes on both architectures with native tools blocked; successful production alone does not establish execution.
 
@@ -168,7 +168,7 @@ The first Windows candidate stopped at a missing stock ENet oracle source; that 
 
 A Windows executable now explicitly selects `Electron2D.Windows`. The resolver loads the text and ENet bridges from `libElectron2D.dll`, audio from `FAudio.dll`, fonts from `freetype.dll` and `harfbuzz.dll`, and `libcrypto-4.dll` before `libssl-4.dll`. All modules share the canonical `SDL3.dll`. Windows system-trust clients reuse the bounded .NET OS-chain callback; custom CA/unsafe options are unchanged. All three Windows RIDs passed the full self-contained headless suite, trimmed contracts and fresh ProjectReference/NuGet publish consumers at `975c9693`; x64/ARM64 also passed NativeAOT contracts, which have no supported x86 compiler. No renderer or physical audio acceptance is inferred. Explicit MSBuild source mode remains Linux/macOS-only; Windows production uses its dedicated producer CLI.
 
-Linux now also supplies `libElectron2DFreeType.so` from the same pinned private recipe. It replaces the MonoGame FreeType dependency, registers the auto-hinter allocator through `e2d_ft_hb_memory`, and uses the same HarfBuzz 15.0.0 source pin as the source-built desktop shaper. HarfBuzzSharp.NativeAssets package dependencies are removed. All platform export audits require the allocator and version bridge; runtime preparation rejects mixed shaping/auto-hinting versions. `Electron2DFontNativeLibrary` selects a local qualified build without modifying a package cache. This change requires newly qualified packages; historical CI receipts do not certify the new payload.
+Linux now also supplies `libElectron2DFreeType.so` from the same pinned private recipe. It replaces the MonoGame FreeType dependency, registers the auto-hinter allocator through `e2d_ft_hb_memory`, and uses the same HarfBuzz 15.2.0 source pin as the source-built desktop shaper. HarfBuzzSharp.NativeAssets package dependencies are removed. All platform export audits require the allocator and version bridge; runtime preparation rejects mixed shaping/auto-hinting versions. `Electron2DFontNativeLibrary` selects a local qualified build without modifying a package cache. This change requires newly qualified packages; historical CI receipts do not certify the new payload.
 
 ## Android, Apple and Web producers
 
@@ -187,6 +187,61 @@ Apple uses Xcode with explicit CPU, SDK, minimum version and device/simulator ta
 Apple executables explicitly select `Electron2D.iOS` or `Electron2D.tvOS`. Its selected common bridge and external archives use SDK NativeReference metadata (Static/ForceLoad/SmartLink/IsCxx), with CoreBluetooth supplied by the package rather than application backend setup. Target-compiled engine imports use `__Internal`; desktop/Android dynamic identities are unchanged. The package removes only SDL_image's duplicate `libpng16.a`/`libz.a` references before compilation/native expansion, so image decoding and FreeType share the audited private PNG/zlib copies. Local MSBuild tests cover all six RID paths, flags, wrong/missing package rejection and preservation of unrelated references. This is not Xcode link or simulator execution evidence. The four simulator apps now include the same native font precision/raster fixture as Android plus TLS/ENet/captured-PCM/two-lifecycle checks; those target runs remain required. Device bundles are unsigned build-only checks.
 
 Web uses the Emscripten toolchain supplied by the selected .NET WebAssembly SDK. It builds the common bridge and external wasm32 archives, including SDL3 from its pinned 3.4.20 source archive and SDL_image 3.4.6, and rejects archives containing foreign objects or missing exports. SDL_image and the engine link the same pinned libwebp 1.6.0 and sharpyuv targets. This keeps the engine allocator adapters on the source inputs they verify. A linked native FreeType executable decodes and rasterizes the bundled WOFF2 and rejects corrupt data under Node. `Electron2D.Web` supplies all selected archives as NativeFileReference and notices as `wwwroot/licence/*`; the browser driver compares the notice bytes before execution. The reflection-disabled test app exercises native fonts/ICU dictionary boundaries, all six public image decoders, PNG/JPEG saving and finite nonzero FAudio PCM/output over two balanced lifecycles. The nonthreaded host yields between owner frames. Strict warmed allocation checks use a fixed Mono interpreter test profile; no production runtime setting is changed. Browser canvas presentation, WebGPU, input/storage, raw-socket TLS/ENet and a complete production host remain separate work.
+
+## HarfBuzz 15.2.0 delivery
+
+The [shared source pin and release provenance](thirdparty.md#private-native-producers-and-update-audit)
+cover the desktop shaper and the FreeType auto-hinter. The task baseline
+already used HarfBuzz 15.0.0. The 45 C entry points imported by Electron2D
+retain the same declarations across the upstream 14.5.1 to 15.2.0 tags.
+Electron2D creates fonts from their faces with `hb_font_create`.
+Upstream deprecated `hb_font_set_face` in 15.0.0 and made it a no-op in 15.2.0.
+The allocator bridge and the mixed-version check still apply.
+[15.0.0 release notes](https://github.com/harfbuzz/harfbuzz/releases/tag/15.0.0)
+and [15.2.0 release notes](https://github.com/harfbuzz/harfbuzz/releases/tag/15.2.0).
+
+Windows, Linux and macOS deliver a separate shaping library and link HarfBuzz
+statically into their private FreeType library. Android delivers the shared
+`libElectron2DHarfBuzz.so` built by the font producer. iOS, tvOS and Web pass
+`libElectron2DHarfBuzz.a` and `libElectron2DFreeType.a` to the target linker
+with the other private archives. Web uses the same `browser-wasm` native input for
+the linked Node FreeType probe and the nonthreaded browser consumer.
+The [native package project](../tools/native/Native.csproj) lists the exact RIDs
+for each package.
+
+Local Windows x64 Release built private FreeType from a clean build directory
+and repeated the build without recompiling. The resulting DLL loaded, reported
+HarfBuzz 15.2.0, and exercised WOFF2 decoding, rasterization, allocator refusal,
+same-face retry, and concurrent auto-hinting. The embedded static archive
+contained the shaping entry points and the four local allocator hooks. The
+separate x64 shaper built and loaded with the native ledger. It reported
+15.2.0 and resolved all 45 HarfBuzz entry points used by the managed bindings.
+The x86 and ARM64 shapers passed clean and incremental builds and PE export
+audits. The x86 DLL also returned 15.2.0 in a 32-bit process. The Linux x64
+shaping library exercised Arabic and Devanagari with the local C ledger and
+drained its allocations on native exit.
+
+A local `win-x64` package passed the native audit after clean and incremental
+builds. A fresh package-only restore and self-contained publish preserved all
+six private DLLs byte for byte. The application loaded HarfBuzz 15.2.0 and used
+the public font API to lay out Arabic and Devanagari text. The source pin and
+the HarfBuzz DLL hash matched across runs.
+
+The local `linux-x64` producer and repeat yielded the same six shared library
+hashes. A fresh package-only build and publish preserved the package bytes and
+produced the same Arabic and Devanagari metrics as Windows x64. The Linux
+shaping allocation probe compared 32 exact vectors with the upstream build of
+the same pin and checked 3,390 refused allocations, retries and exit cleanup.
+
+A local Linux x64 static-link check built the FreeType and HarfBuzz archives,
+linked and executed the bundled WOFF2 and allocation-refusal probes, and
+verified the HarfBuzz C entry points and four allocator symbols in the archive.
+The target-specific Apple and Web archive audits still require their SDKs.
+
+Earlier package runs record results for their own source pins. The platform
+package checks must validate current source receipts and target binaries before
+packing. Release qualification also exercises the resulting application with
+the selected package payload.
 
 ## Public publication
 

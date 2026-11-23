@@ -1,7 +1,7 @@
 # Original shaping allocation profile
 
-The desktop and private auto-hinter producers use the same HarfBuzz 15.0.0
-source, `35f656a1a2bab548ea7f54a6dd3fba2b09680d14`, declared once in
+The desktop and private auto-hinter producers use the same HarfBuzz 15.2.0
+source, `ed51d202cfd0c29372d3ee056eb0dc715688a410`, declared once in
 `tools/native/harfbuzz.cmake`. No older native-assets package supplies desktop
 shaping. Android/Apple/Web use the same pin through the font producer. Desktop
 original malloc/calloc/realloc/free functions call the pure-C ledger; the private

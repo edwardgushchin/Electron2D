@@ -5,7 +5,7 @@ from pathlib import Path
 import shutil
 import sys
 
-SOURCE_SHA256 = "38851838c6a2ed1caf09e9ab0074fa69dc516f5ce802c4cf2a7a3a6d425b53bb"
+SOURCE_SHA256 = "19e09f7bb8573b4c95bc6035620f7f0713a170e9bbb9789d3c74a0d5df730ca4"
 ORIGINAL = """      p = this->template call_create<Stored, Funcs> ();
       if (unlikely (!p))"""
 REPLACEMENT = """      const uint64_t allocation_epoch = e2d_memory_failure_epoch ();
