@@ -37,9 +37,11 @@ The separate Linux x64 `ShaderImport` tool packages **glslang 16.6.0** and its u
 
 ## Private native producers and update audit
 
-The [FreeType producer](../tools/font-native/CMakeLists.txt) pins FreeType `2.15.0`, zlib `1.3.2`, libpng `1.6.59`, Brotli `1.2.1` and HarfBuzz `15.2.0`. The [ENet producer](../tools/enet-native/CMakeLists.txt) uses pinned zlib `1.3.2` and Zstandard `1.5.7` where static compression is required.
+The [FreeType producer](../tools/font-native/CMakeLists.txt) pins FreeType `2.15.0`, zlib `1.4`, libpng `1.6.59`, Brotli `1.2.1` and HarfBuzz `15.2.0`. The [ENet producer](../tools/enet-native/CMakeLists.txt) uses the same zlib revision for Windows, Android and Web and pins Zstandard `1.5.7` where it builds Zstandard from source.
 
 FreeType builds its WOFF2 decoder from the [Brotli 1.2.1 release commit](https://github.com/google/brotli/commit/db24a98aed38a16de78cc05ca15cdd8dc2a0d92d) using a verified Git checkout. The producer consumes no Brotli release archives. FreeType routes WOFF2 allocations through its own memory callbacks, and the Emscripten build explicitly links the decoder to Brotli Common. See the [native package layout](native-packaging.md#freetype-woff2-delivery) for the delivered libraries.
+
+The native producers pin [zlib 1.4 to Git commit `99623ef7097352da7993ba614161fd6a311e046e`](https://github.com/madler/zlib/commit/99623ef7097352da7993ba614161fd6a311e046e). The [upstream release tarball](https://zlib.net/fossils/zlib-1.4.tar.gz) has a published SHA-256 of `02dd159783677a749c04adbdd02b55b8a2bcc7e054f51b76b549199a916ad584`. The downloaded tarball matched this checksum. Producer builds fetch the identified Git revision. The separate .NET compression producer uses its own zlib-ng input.
 
 The [TLS producer](../tools/native/build_tls.py) pins OpenSSL `4.1.0` and verifies its source archive by SHA-256 before extraction. Windows packages use the ABI 4 pair `libcrypto-4.dll` and `libssl-4.dll`. Linux packages use `libcrypto.so.4` and `libssl.so.4`. The [migration record](openssl-migration.md#upstream-sources) gives the release revisions, archive hashes and compatibility with the former `3.6.5` baseline. The original notices accompany the [native delivery](native-packaging.md).
 

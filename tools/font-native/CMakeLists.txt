@@ -5,7 +5,7 @@ include(FetchContent)
 include("${CMAKE_CURRENT_LIST_DIR}/verify-source.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/../native/harfbuzz.cmake")
 
-set(zlib_revision da607da739fa6047df13e66a2af6b8bec7c2a498)
+include("${CMAKE_CURRENT_LIST_DIR}/../native/zlib.cmake")
 set(brotli_revision db24a98aed38a16de78cc05ca15cdd8dc2a0d92d)
 set(harfbuzz_revision ${ELECTRON2D_HARFBUZZ_REVISION})
 set(freetype_revision 37515cf56ba3349656049edbed89ffc6f6466f2d)
@@ -18,9 +18,6 @@ foreach(dependency zlib brotli harfbuzz freetype)
     endif()
 endforeach()
 
-FetchContent_Declare(Zlib
-    GIT_REPOSITORY https://github.com/madler/zlib.git
-    GIT_TAG ${zlib_revision} GIT_CONFIG core.autocrlf=false core.longpaths=true)
 FetchContent_Declare(Brotli
     GIT_REPOSITORY https://github.com/google/brotli.git
     GIT_TAG ${brotli_revision} GIT_CONFIG core.autocrlf=false core.longpaths=true)
@@ -32,11 +29,6 @@ FetchContent_Declare(FreeType
     GIT_TAG ${freetype_revision} GIT_CONFIG core.autocrlf=false core.longpaths=true)
 
 set(BUILD_SHARED_LIBS OFF)
-set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(ZLIB_BUILD_TESTING OFF CACHE BOOL "" FORCE)
-set(ZLIB_BUILD_SHARED OFF CACHE BOOL "" FORCE)
-set(ZLIB_BUILD_STATIC ON CACHE BOOL "" FORCE)
-set(ZLIB_INSTALL OFF CACHE BOOL "" FORCE)
 set(SKIP_INSTALL_ALL ON CACHE BOOL "" FORCE)
 set(BROTLI_DISABLE_TESTS ON CACHE BOOL "" FORCE)
 set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
@@ -44,6 +36,10 @@ set(HB_HAVE_FREETYPE OFF CACHE BOOL "" FORCE)
 set(HB_HAVE_CORETEXT OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(Zlib)
 verify_source(Zlib "${zlib_revision}" "${zlib_SOURCE_DIR}")
+if(NOT ELECTRON2D_STATIC_NATIVE AND NOT WIN32)
+    # Keep the embedded codec private when FreeType is loaded alongside system zlib.
+    set_target_properties(zlibstatic PROPERTIES C_VISIBILITY_PRESET hidden)
+endif()
 include("${CMAKE_CURRENT_LIST_DIR}/../native/png.cmake")
 FetchContent_MakeAvailable(Brotli)
 verify_source(Brotli "${brotli_revision}" "${brotli_SOURCE_DIR}")

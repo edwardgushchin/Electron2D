@@ -1411,16 +1411,16 @@
       ]
     },
     {
-      "name": "zlib-1.3.2",
+      "name": "zlib-1.4",
       "parts": [
         {
           "files": [
-            "licence/zlib-1.3.2-LICENSE.txt"
+            "licence/zlib-1.4-LICENSE.txt"
           ],
           "copyright": [
             "(C) 1995-2026 Jean-loup Gailly and Mark Adler"
           ],
-          "license": "zlib-1.3.2-LICENSE.txt",
+          "license": "zlib-1.4-LICENSE.txt",
           "sha256": "e32ff4e00d9d94930537635291da39e7e612703334bf6fde8c7f1686fe8a45a2"
         }
       ]
