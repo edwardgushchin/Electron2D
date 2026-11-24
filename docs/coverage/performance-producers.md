@@ -114,10 +114,10 @@ CLR/AOT receipts and libraries remain historical evidence under
 `bin/freetype-hinted-oom/2026-10-28/`.
 
 **Provenance correction:** those builds used explicit source overrides, not the
-recipe's declared pin `0a0221a1347e2f1e07c395263540026e9a0aa7c7`. That pin is
-FreeType **2.14.3** and already checks TT_New_Context before publishing it.
+recipe's pin at that time, `0a0221a1347e2f1e07c395263540026e9a0aa7c7`.
+FreeType **2.14.3** already checked TT_New_Context before publishing it.
 The obsolete backport helper has been removed. The legacy 2.13.3 evidence does
-not qualify the pinned producer; the current qualification follows below.
+not qualify the pinned producer; the qualification of the 2.14.3 baseline follows below.
 
 ### Source revision qualification (2026-10-28)
 
@@ -130,14 +130,13 @@ exact revision. The self-contained regression checks clean, changed,
 wrong-revision and unversioned
 inputs; the native workflow runs it before selecting its producer matrix.
 
-The actual pinned closure is FreeType **2.14.3**, HarfBuzz **14.5.1**, zlib
-**1.3.2**, libpng **1.6.59** and Brotli **1.2.0**. Its existing recipe revisions
-are unchanged. FreeType's default runtime HarfBuzz lookup is explicitly disabled;
-the supplied static target is used instead. A runtime version query confirms
+The tested closure was FreeType **2.14.3**, HarfBuzz **14.5.1**, zlib
+**1.3.2**, libpng **1.6.59** and Brotli **1.2.0**. The recipe disabled the runtime
+HarfBuzz lookup and linked the supplied static target. A runtime version query confirms
 2.14.3 and embedded HarfBuzz 14.5.1, and the ELF dependency list has no dynamic
 HarfBuzz. The bytecode null-context check comes from that pinned upstream source.
 
-The WOFF2 generated unit now checks the actual 2.14.3 source hash. Native failure
+The WOFF2 generated unit checked the actual 2.14.3 source hash. Native failure
 matrices pass **1172/1180** unhinted/hinted positions with zero retained blocks,
 two same-face context retries, decoder refusal reported as Out_Of_Memory and
 corrupt-stream cleanup, under default properties and interpreter 35. The raster
@@ -151,7 +150,7 @@ interpreter-35 properties and its raster-policy suite. A separate 60-case run on
 the legacy 2.13.3 library also passes the version-aware oracle. Cached packages,
 other platforms and complete ordinary-suite acceptance remain separate gates.
 
-Commands, exact revision receipts, the original configuration failure and current
+Commands, exact revision receipts, the original configuration failure and baseline
 qualification are under `bin/font-source-provenance/2026-10-28/`. Qualified library
 SHA-256: `bf0006ee1e333aa90537282b937af6be7965721b98064283dedae7c702e8b836`.
 

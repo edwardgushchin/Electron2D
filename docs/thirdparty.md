@@ -37,7 +37,7 @@ The separate Linux x64 `ShaderImport` tool packages **glslang 16.6.0** and its u
 
 ## Private native producers and update audit
 
-The [FreeType producer](../tools/font-native/CMakeLists.txt) pins FreeType `2.14.3`, zlib `1.3.2`, libpng `1.6.59`, Brotli `1.2.1` and HarfBuzz `15.2.0`. The [ENet producer](../tools/enet-native/CMakeLists.txt) uses pinned zlib `1.3.2` and Zstandard `1.5.7` where static compression is required.
+The [FreeType producer](../tools/font-native/CMakeLists.txt) pins FreeType `2.15.0`, zlib `1.3.2`, libpng `1.6.59`, Brotli `1.2.1` and HarfBuzz `15.2.0`. The [ENet producer](../tools/enet-native/CMakeLists.txt) uses pinned zlib `1.3.2` and Zstandard `1.5.7` where static compression is required.
 
 FreeType builds its WOFF2 decoder from the [Brotli 1.2.1 release commit](https://github.com/google/brotli/commit/db24a98aed38a16de78cc05ca15cdd8dc2a0d92d) using a verified Git checkout. The producer consumes no Brotli release archives. FreeType routes WOFF2 allocations through its own memory callbacks, and the Emscripten build explicitly links the decoder to Brotli Common. See the [native package layout](native-packaging.md#freetype-woff2-delivery) for the delivered libraries.
 

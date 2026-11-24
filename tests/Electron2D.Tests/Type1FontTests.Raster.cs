@@ -47,6 +47,13 @@ internal static partial class Type1FontTests
     }
     private static void Match(NativeRasterGlyph actual, string[] result, bool msdf)
     {
-        var header = result[0].Split(' '); Check(header[0] == "2.14.3" && actual.Width == int.Parse(header[1]) && actual.Height == int.Parse(header[2]) && Math.Abs(actual.Left - double.Parse(header[3], CultureInfo.InvariantCulture)) < .0001 && Math.Abs(actual.Top - double.Parse(header[4], CultureInfo.InvariantCulture)) < .0001 && (msdf || actual.LCD == (header[5] == "1")) && actual.Pixels.AsSpan().SequenceEqual(Convert.FromHexString(result[1])), "Exact independent Type 1 glyph pixels/bounds.");
+        var header = result[0].Split(' ');
+        Check(header[0] == "2.15.0", "Type 1 oracle loads FreeType 2.15.0.");
+        Check(actual.Width == int.Parse(header[1])
+            && actual.Height == int.Parse(header[2])
+            && Math.Abs(actual.Left - double.Parse(header[3], CultureInfo.InvariantCulture)) < .0001
+            && Math.Abs(actual.Top - double.Parse(header[4], CultureInfo.InvariantCulture)) < .0001
+            && (msdf || actual.LCD == (header[5] == "1"))
+            && actual.Pixels.AsSpan().SequenceEqual(Convert.FromHexString(result[1])), "Exact independent Type 1 glyph pixels/bounds.");
     }
 }

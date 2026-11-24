@@ -425,13 +425,13 @@
       "parts": [
         {
           "files": [
-            "licence/FreeType-2.14.3-FTL.txt"
+            "licence/FreeType-2.15.0-FTL.txt"
           ],
           "copyright": [
             "Copyright 1996-2002, 2006 by\n          David Turner, Robert Wilhelm, and Werner Lemberg",
             "The FreeType  Project is copyright (C) 1996-2000  by David Turner,\n  Robert Wilhelm, and Werner Lemberg.  All rights reserved except as\n  specified below."
           ],
-          "license": "FreeType-2.14.3-FTL.txt",
+          "license": "FreeType-2.15.0-FTL.txt",
           "sha256": "5a5ee54c5001bbad1cdc1a57cc3dd4c42199b2da09d39c7ee41fab002d02967f"
         },
         {

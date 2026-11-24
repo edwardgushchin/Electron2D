@@ -28,7 +28,13 @@ internal static partial class FontMSDFTests
                                     using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEnd(); var error = process.StandardError.ReadToEnd(); process.WaitForExit();
                                     Check(process.ExitCode == 0 && string.IsNullOrWhiteSpace(error), "MSDF oracle executes: " + error);
                                     var lines = output.Trim().Split('\n'); var header = lines[0].Split(' ');
-                                    Check(header[0] == "2.14.3" && raster.Width == int.Parse(header[1]) && raster.Height == int.Parse(header[2]) && Math.Abs(raster.Left - double.Parse(header[3], CultureInfo.InvariantCulture)) < 0.0001 && Math.Abs(raster.Top - double.Parse(header[4], CultureInfo.InvariantCulture)) < 0.0001 && raster.Pixels.AsSpan().SequenceEqual(Convert.FromHexString(lines[1])), $"Exact source MSDF size={size}, range={range}, hint={hinting}, style={style}, char={character}."); count++;
+                                    Check(header[0] == "2.15.0", "MSDF oracle loads FreeType 2.15.0.");
+                                    Check(raster.Width == int.Parse(header[1])
+                                        && raster.Height == int.Parse(header[2])
+                                        && Math.Abs(raster.Left - double.Parse(header[3], CultureInfo.InvariantCulture)) < 0.0001
+                                        && Math.Abs(raster.Top - double.Parse(header[4], CultureInfo.InvariantCulture)) < 0.0001
+                                        && raster.Pixels.AsSpan().SequenceEqual(Convert.FromHexString(lines[1])), $"Exact source MSDF size={size}, range={range}, hint={hinting}, style={style}, char={character}.");
+                                    count++;
                                 }
             }
         }
