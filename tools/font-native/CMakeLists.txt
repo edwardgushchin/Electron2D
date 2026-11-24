@@ -6,7 +6,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/verify-source.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/../native/harfbuzz.cmake")
 
 set(zlib_revision da607da739fa6047df13e66a2af6b8bec7c2a498)
-set(brotli_revision 028fb5a23661f123017c060daa546b55cf4bde29)
+set(brotli_revision db24a98aed38a16de78cc05ca15cdd8dc2a0d92d)
 set(harfbuzz_revision ${ELECTRON2D_HARFBUZZ_REVISION})
 set(freetype_revision 0a0221a1347e2f1e07c395263540026e9a0aa7c7)
 

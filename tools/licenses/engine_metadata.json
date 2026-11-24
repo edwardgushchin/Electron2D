@@ -65,16 +65,16 @@
       ]
     },
     {
-      "name": "Brotli-1.2.0",
+      "name": "Brotli-1.2.1",
       "parts": [
         {
           "files": [
-            "licence/Brotli-1.2.0-LICENSE.txt"
+            "licence/Brotli-1.2.1-LICENSE.txt"
           ],
           "copyright": [
             "Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors."
           ],
-          "license": "Brotli-1.2.0-LICENSE.txt",
+          "license": "Brotli-1.2.1-LICENSE.txt",
           "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94"
         }
       ]

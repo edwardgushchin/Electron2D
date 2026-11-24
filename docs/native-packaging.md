@@ -2,6 +2,24 @@
 
 Last updated: 2026-11-14
 
+## FreeType WOFF2 delivery
+
+All font producers build Brotli Decoder and Common as static FreeType dependencies. The Windows, Linux, macOS and Android packages carry those dependencies inside the FreeType DLL or shared library. Apple device/simulator and Web packages carry `libElectron2DBrotliDec.a` and `libElectron2DBrotliCommon.a` alongside `libElectron2DFreeType.a` for final application linkage. The Brotli encoder and CLI are outside the runtime payload.
+
+| Native package | FreeType producer profiles |
+| --- | --- |
+| Windows | `win-x86`, `win-x64`, `win-arm64` |
+| Linux | `linux-x64`, `linux-arm64` |
+| macOS | `osx-x64`, `osx-arm64` |
+| Android | `android-arm`, `android-arm64`, `android-x86`, `android-x64` |
+| iOS | `ios-arm64`, `iossimulator-arm64`, `iossimulator-x64` |
+| tvOS | `tvos-arm64`, `tvossimulator-arm64`, `tvossimulator-x64` |
+| Web | `browser-wasm` |
+
+The [private FreeType checks](../tools/font-native) exercise bundled WOFF2 input. Windows runs a native check executable for host-compatible builds. Linux and macOS load the produced library, and Web runs a linked wasm32 check under Node. Android and Apple device/simulator archives or shared libraries need a matching application run to establish WOFF2 decoding on the target. The [package audit](../tools/native/package.py) checks the selected binary payload independently of those runtime checks.
+
+Local Release checks for Brotli 1.2.1 used FreeType 2.14.3 and HarfBuzz 15.2.0. The Windows x86 and x64 and Linux x64 shared libraries decoded and rasterized the bundled WOFF2, rejected a corrupt stream, and passed allocator failure checks. The Linux x64 probe also passed with static FreeType and separate Brotli Decoder and Common archives. Repeat builds preserved the library and archive hashes. The Windows ARM64 build passed the PE architecture, dependency and export checks. ARM64 execution and the remaining Linux, macOS, mobile and Web target checks require their corresponding hosts or SDKs.
+
 ## Windows native layout
 
 The Windows producer selects six native assets: `libElectron2D.dll`, `FAudio.dll`, `freetype.dll`, `harfbuzz.dll`, `libcrypto-4.dll` and `libssl-4.dll`. The managed API remains in `Electron2D.dll`. OpenSSL keeps its upstream major in the filename; the selected configuration omits architecture suffixes because NuGet's RID directory already separates architectures. Source pins, exported PE identity, imports, required exports and SHA-256 are checked before packaging. FreeType and HarfBuzz retain their existing allocator adapters and source versions under their library names.
@@ -150,7 +168,7 @@ CI caches only each RID's staged native libraries and source receipts, keyed by 
 
 The same package project accepts `NativePackagePlatform=MacOS` and produces `Electron2D.MacOS` with both `osx-x64` and `osx-arm64`. Matching macOS runners build private ICU, FAudio over the restored SDL core, ENet with statically linked pinned Zstandard, and private OpenSSL 4.1.0. Native assets retain the RID directory. Mach-O checks require the exact CPU, relocatable library identities, expected bridge exports, shared SDL identity, private crypto dependency and no build-machine RPATH. Source archive hashes and original licenses are pinned; OpenSSL loader identities are changed and the dylibs ad-hoc signed after relocation.
 
-The package now also supplies `libElectron2DFreeType.dylib`, built from pinned FreeType 2.14.3 with static zlib 1.3.2, libpng 1.6.59, Brotli 1.2.0 and HarfBuzz 15.2.0. The build requires every codec/auto-hinting dependency, includes libpng's generated headers explicitly, reads the actual bundled WOFF2 font before staging, and rejects runtime imports of global codec/HarfBuzz libraries. Existing licenses cover these source versions; [the notices](../licence/THIRD_PARTY_NOTICES.md) record their exact commits. The ordinary runtime resolves this private library rather than the upstream macOS FreeType binary whose build disables Brotli and HarfBuzz.
+The package now also supplies `libElectron2DFreeType.dylib`, built from pinned FreeType 2.14.3 with static zlib 1.3.2, libpng 1.6.59, Brotli (see the [source pin](thirdparty.md)) and HarfBuzz 15.2.0. The build requires every codec/auto-hinting dependency, includes libpng's generated headers explicitly, reads the actual bundled WOFF2 font before staging, and rejects runtime imports of global codec/HarfBuzz libraries. Existing licenses cover these source versions; [the notices](../licence/THIRD_PARTY_NOTICES.md) record their exact commits. The ordinary runtime resolves this private library rather than the upstream macOS FreeType binary whose build disables Brotli and HarfBuzz.
 
 [Tests run 37281227270](https://github.com/edwardgushchin/Electron2D/actions/runs/37281227270), at `6e464e97e5db208dc4d181f6faf01da5ee238e94`, passed both matching macOS native producers and combined package audits. The first connected [integration run 37284017058](https://github.com/edwardgushchin/Electron2D/actions/runs/37284017058) failed in both public macOS consumers with FreeType error 2 while decoding the bundled WOFF2; downstream full suites did not run. The replacement passed local decoder/raster checks; its first macOS compilation then exposed the missing generated-libpng include path, fixed before the corrected run below. The native workflow exercises fresh ProjectReference/NuGet consumers and publishes on both architectures with native tools blocked; successful production alone does not establish execution.
 
