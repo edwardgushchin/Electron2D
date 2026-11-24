@@ -76,17 +76,20 @@ As cenas e a lógica do jogo são criadas em C#. Para as demais tarefas, estão 
 ### Mundos, imagem e mecânicas de jogo
 
 - **[Cenas e níveis](docs/domains/scene.md).** Monte personagens, itens e níveis a partir de hierarquias de nós; salve as cenas e crie novas instâncias. Há eventos, grupos, temporizadores e chamadas adiadas para a lógica.
+- **[Scripts em C#](docs/components/scripting.md).** Anexe scripts compilados aos nós e salve-os como recursos junto com as cenas. Se alterar o código, recompile o projeto.
 - **[Gráficos e câmeras](docs/domains/rendering.md).** Sprites e atlas, formas e texto, paralaxe, recorte e viewports independentes para mundos de jogo, minimapas e visualizações de várias câmeras.
+- **[Imagens](docs/components/images.md) e [texturas](docs/components/compressed-textures.md).** Carregue imagens PNG, WebP, SVG e EXR em HDR. Os formatos de textura incluem DDS, KTX2 e Basis.
 - **[Shaders e efeitos](docs/components/shader-materials.md).** Materiais HLSL/GLSL, [grafos visuais de shaders](docs/components/visual-shaders.md), iluminação, sombras, HDR e partículas CPU/GPU permitem definir a aparência de objetos e ambientes.
 - **[Mapas](docs/components/tiles.md) e [geometria](docs/components/meshes.md).** Grades quadradas, isométricas e hexagonais, tiles animados, conexões de terreno e camadas de colisão e navegação. As malhas podem ser geradas de forma procedural e desenhadas em várias instâncias.
 - **[Animação](docs/components/scene-animation.md).** Animação de quadros e propriedades, curvas Bézier, tweens, mistura e máquinas de estados; [esqueletos e IK](docs/components/skeletal-animation.md) permitem trabalhar com ossos e deformar personagens.
-- **[Física](docs/domains/physics.md).** Um backend de CPU e um backend GPU independente: corpos rígidos, personagens controláveis, áreas de gatilho, forças, juntas e molas. Consultas de raios e formas ajudam a verificar o ambiente e as colisões.
+- **[Física 2D em CPU e GPU](docs/domains/physics.md).** Um backend de CPU e um backend GPU independente: corpos rígidos, personagens controláveis, áreas de gatilho, forças, juntas e molas. Consultas de raios e formas ajudam a verificar o ambiente e as colisões.
 - **[Busca de caminhos](docs/domains/navigation.md).** A-star em grafos ou grades, regiões e conexões de navegação, geração de navegação a partir da geometria, acompanhamento de caminhos e desvio de obstáculos para mover personagens.
 
 ### Interface e interação com o jogador
 
 - **[Interface e texto](docs/domains/scene.md).** Monte menus, HUDs, inventários e diálogos com botões, listas, árvores, contêineres e campos de texto. Há temas, rolagem, editores de texto e código, texto formatado, Unicode, layout bidirecional e fontes alternativas.
-- **[Controles](docs/domains/input.md) e [janelas](docs/domains/display.md).** Teclado, mouse, toque, controles, mapeamento de ações e entrada IME. Modos de janela e tela cheia, escala, várias janelas e popups incorporados ou nativos.
+- **[Controles](docs/domains/input.md) e [janelas](docs/domains/display.md).** Teclado, mouse, toque, controles, mapeamento de ações e entrada IME. Modos de janela e tela cheia, escala, várias janelas e popups incorporados ou nativos. A [entrada por caneta](docs/components/input-runtime.md) inclui pressão, inclinação e estado da borracha. A [entrada MIDI](docs/components/midi-input.md) está disponível no Windows e no Linux para desktop.
+- **Integração com o sistema.** Use o [seletor de arquivos do sistema no Windows ou o portal de arquivos no Linux](docs/components/native-file-portal.md). O Windows também oferece [menus nativos](docs/components/native-menus.md).
 - **[Áudio](docs/domains/audio.md) e [vídeo](docs/components/video-playback.md).** Áudio posicional, barramentos, mixagem, efeitos, microfone e fluxos procedurais; reprodução de Ogg Theora com áudio. A [gravação de filmes](docs/components/movie-writing.md) salva quadros e áudio em PNG/WAV, AVI ou OGV sem depender do tempo real.
 - **[Localização](docs/domains/localization.md) e [acessibilidade](docs/components/accessibility.md).** Traduções, contextos, formas plurais, catálogos PO/MO e recursos localizados. AT-SPI no Linux expõe a semântica da interface e oferece ações, texto e rolagem; os adaptadores de outras plataformas continuam em desenvolvimento.
 

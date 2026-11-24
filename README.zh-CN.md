@@ -76,17 +76,20 @@ Player (CharacterBody)
 ### 世界、画面与游戏机制
 
 - **[场景与关卡](docs/domains/scene.md)。** 通过节点层级组合角色、物品和关卡；保存场景并再次创建实例。事件、分组、计时器和延迟调用可用于组织逻辑。
+- **[C# 脚本](docs/components/scripting.md)。** 可将编译后的脚本附加到节点，并作为资源与场景一起保存。修改代码后需要重新构建。
 - **[图形与摄像机](docs/domains/rendering.md)。** 精灵与图集、图形与文字、视差、裁剪和独立视口，可用于游戏世界、小地图和多摄像机画面。
+- **[图像](docs/components/images.md)与[纹理](docs/components/compressed-textures.md)。** 可加载 PNG、WebP、SVG 和 HDR EXR 图像，支持 DDS、KTX2 和 Basis 纹理格式。
 - **[着色器与特效](docs/components/shader-materials.md)。** HLSL/GLSL 材质、[可视化着色器图](docs/components/visual-shaders.md)、光照、阴影、HDR 和 CPU/GPU 粒子，可用于定制对象与环境的外观。
 - **[地图](docs/components/tiles.md)与[几何体](docs/components/meshes.md)。** 方形、等距和六边形网格、动画图块、地形连接、碰撞层与导航层。网格可以通过程序生成，并以多个实例绘制。
 - **[动画](docs/components/scene-animation.md)。** 逐帧与属性动画、贝塞尔曲线、补间、混合和状态机；[骨骼与 IK](docs/components/skeletal-animation.md)用于骨骼控制与角色变形。
-- **[物理](docs/domains/physics.md)。** CPU 与独立 GPU 后端提供刚体、可控制角色、触发区域、力、关节和弹簧。射线与形状查询可用于检测周围环境和碰撞。
+- **[CPU 与 GPU 上的 2D 物理](docs/domains/physics.md)。** CPU 与独立 GPU 后端提供刚体、可控制角色、触发区域、力、关节和弹簧。射线与形状查询可用于检测周围环境和碰撞。
 - **[寻路](docs/domains/navigation.md)。** 图与网格上的 A-star、导航区域与连接、从几何体烘焙导航、路径跟随和避障，可用于游戏角色移动。
 
 ### 界面与玩家交互
 
 - **[界面与文本](docs/domains/scene.md)。** 使用按钮、列表、树、容器和文本框组合菜单、HUD、背包与对话界面。提供主题、滚动、文本和代码编辑器、富文本、Unicode、双向排版及后备字体。
-- **[输入](docs/domains/input.md)与[窗口](docs/domains/display.md)。** 键盘、鼠标、触摸、手柄、动作映射和 IME 输入。支持窗口与全屏模式、缩放、多窗口，以及嵌入式或原生弹出窗口。
+- **[输入](docs/domains/input.md)与[窗口](docs/domains/display.md)。** 键盘、鼠标、触摸、手柄、动作映射和 IME 输入。支持窗口与全屏模式、缩放、多窗口，以及嵌入式或原生弹出窗口。 [触控笔输入](docs/components/input-runtime.md)支持压力、倾斜和橡皮擦状态。Windows 和桌面 Linux 支持 [MIDI 输入](docs/components/midi-input.md)。
+- **系统集成。** [文件选择](docs/components/native-file-portal.md)可使用 Windows 系统对话框或 Linux 文件门户。Windows 支持[原生菜单](docs/components/native-menus.md)。
 - **[音频](docs/domains/audio.md)与[视频](docs/components/video-playback.md)。** 位置音效、音频总线、混音、效果、麦克风和程序化音频流；播放带声音的 Ogg Theora 视频。[影片录制](docs/components/movie-writing.md)可不受实时速度限制，将画面与声音保存为 PNG/WAV、AVI 或 OGV。
 - **[本地化](docs/domains/localization.md)与[无障碍](docs/components/accessibility.md)。** 翻译、上下文、复数形式、PO/MO 目录和本地化资源。Linux AT-SPI 提供界面语义，并支持操作、文本和滚动；其他平台适配器仍在开发中。
 

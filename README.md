@@ -76,17 +76,20 @@ Scenes and game logic are created in C#. The following tools support the other p
 ### Worlds, visuals and game mechanics
 
 - **[Scenes and levels](docs/domains/scene.md).** Build characters, items and levels from node hierarchies; save and instantiate scenes again. Events, groups, timers and deferred calls support game logic.
+- **[C# scripts](docs/components/scripting.md).** Attach compiled scripts to nodes and save them as resources alongside scenes. Code changes require a rebuild.
 - **[Graphics and cameras](docs/domains/rendering.md).** Sprites and atlases, shapes and text, parallax, clipping and independent viewports support game worlds, minimaps and multiple camera views.
+- **[Images](docs/components/images.md) and [textures](docs/components/compressed-textures.md).** Load PNG, WebP, SVG and HDR EXR images. Texture formats include DDS, KTX2 and Basis.
 - **[Shaders and effects](docs/components/shader-materials.md).** HLSL/GLSL materials, [visual shader graphs](docs/components/visual-shaders.md), lighting, shadows, HDR and CPU/GPU particles let you define the appearance of objects and environments.
 - **[Maps](docs/components/tiles.md) and [geometry](docs/components/meshes.md).** Square, isometric and hexagonal grids, animated tiles, terrain connections, collision and navigation layers. Meshes can be generated procedurally and drawn as many instances.
 - **[Animation](docs/components/scene-animation.md).** Frame and property animation, Bézier curves, tweens, blending and state machines; [skeletons and IK](docs/components/skeletal-animation.md) support bones and character deformation.
-- **[Physics](docs/domains/physics.md).** CPU and independent GPU backends provide rigid bodies, controllable characters, trigger areas, forces, joints and springs. Ray and shape queries help inspect surroundings and collisions.
+- **[2D physics on CPU and GPU](docs/domains/physics.md).** CPU and independent GPU backends provide rigid bodies, controllable characters, trigger areas, forces, joints and springs. Ray and shape queries help inspect surroundings and collisions.
 - **[Pathfinding](docs/domains/navigation.md).** A-star on graphs or grids, navigation regions and links, navigation baking from geometry, path following and obstacle avoidance support character movement.
 
 ### Interface and player interaction
 
 - **[UI and text](docs/domains/scene.md).** Build menus, HUDs, inventories and dialogs from buttons, lists, trees, containers and text fields. Themes, scrolling, text/code editors, rich text, Unicode, bidirectional layout and font fallbacks are available.
-- **[Input](docs/domains/input.md) and [windows](docs/domains/display.md).** Keyboard, mouse, touch, controllers, action mappings and IME input. Windowed and fullscreen modes, scaling, multiple windows and embedded or native popups.
+- **[Input](docs/domains/input.md) and [windows](docs/domains/display.md).** Keyboard, mouse, touch, controllers, action mappings and IME input. Windowed and fullscreen modes, scaling, multiple windows and embedded or native popups. [Pen input](docs/components/input-runtime.md) includes pressure, tilt and eraser state. [MIDI input](docs/components/midi-input.md) is available on Windows and desktop Linux.
+- **System integration.** Use the [system file picker on Windows or the file portal on Linux](docs/components/native-file-portal.md). [Native menus](docs/components/native-menus.md) are available on Windows.
 - **[Audio](docs/domains/audio.md) and [video](docs/components/video-playback.md).** Positional audio, buses, mixing, effects, microphone input and procedural streams; Ogg Theora playback with audio. [Movie recording](docs/components/movie-writing.md) saves frames and audio to PNG/WAV, AVI or OGV without a real-time constraint.
 - **[Localization](docs/domains/localization.md) and [accessibility](docs/components/accessibility.md).** Translations, contexts, plural forms, PO/MO catalogs and localized resources. Linux AT-SPI exposes UI semantics and supports actions, text and scrolling; other platform adapters remain in development.
 
