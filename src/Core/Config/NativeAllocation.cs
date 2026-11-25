@@ -34,6 +34,19 @@ internal static unsafe partial class NativeAllocation
         Prepare(); ReadState(out var state);
         return ((long)state.NativeCurrent, (long)state.NativePeak);
     }
+
+    internal static (long Current, long Peak) ProcessSnapshot()
+    {
+        Prepare();
+        ReadState(out var state);
+        // A managed caller can only reach this point after the runtime has allocated objects.
+        if (state.ManagedPeak == 0)
+        {
+            throw new PlatformNotSupportedException("Combined memory accounting requires the instrumented managed runtime and its matching native bundle.");
+        }
+
+        return ((long)state.Current, (long)state.Peak);
+    }
     // A native provider can return a fallback value after refusing its required storage.
     internal static ulong GetFailureEpoch()
     {

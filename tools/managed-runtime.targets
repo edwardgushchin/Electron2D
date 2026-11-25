@@ -1,4 +1,5 @@
 <Project>
+  <Import Project="MemoryProfile.targets" Condition="'$(Electron2DMemoryProfile)' != ''" />
   <Import Project="WindowsNative.targets" Condition="Exists('$(MSBuildThisFileDirectory)WindowsNative.targets')" />
   <Import Project="native/WindowsNative.targets" Condition="!Exists('$(MSBuildThisFileDirectory)WindowsNative.targets')" />
   <!-- The selected SDL platform dependency supplies Java/JNI without another managed binding. -->

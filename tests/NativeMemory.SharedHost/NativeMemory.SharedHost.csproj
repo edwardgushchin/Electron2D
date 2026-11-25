@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PublishAot>true</PublishAot>
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
     <TieredCompilation>false</TieredCompilation>
@@ -14,8 +15,18 @@
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
-  <ItemGroup>
+  <PropertyGroup Condition="'$(MemoryCheckPackageVersion)' != ''">
+    <DefineConstants>$(DefineConstants);MEMORY_CHECK_PACKAGE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(MemoryCheckPackageVersion)' == ''">
     <ProjectReference Include="../../Electron2D.csproj" />
   </ItemGroup>
-  <Import Project="../../tools/physics/aot-memory-probe/runtime.targets" />
+  <ItemGroup Condition="'$(MemoryCheckPackageVersion)' != ''">
+    <PackageReference Include="Electron2D" Version="[$(MemoryCheckPackageVersion)]" />
+    <PackageReference Include="Electron2D.Linux" Version="[$(MemoryCheckNativePackageVersion)]" />
+  </ItemGroup>
+  <Import Project="../../tools/physics/aot-memory-probe/runtime.targets" Condition="'$(MemoryCheckPackageVersion)' == ''" />
+  <ItemGroup Condition="'$(Electron2DMemoryProfile)' != '' and '$(PublishAot)' == 'true'">
+    <DirectPInvoke Include="Electron2DAOTMemory" />
+  </ItemGroup>
 </Project>

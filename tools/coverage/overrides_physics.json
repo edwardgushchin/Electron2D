@@ -7416,7 +7416,7 @@
         "Performance::enum_value:Monitor.MEMORY_STATIC_MAX"
       ],
       "state": "Unimplemented",
-      "reason": "Trigger: actual coherent managed/native current and peak allocation producers with explicit lifetime. Deferred-message retained capacity and the direct owned native payload ledger, including FreeType-owned callback allocations, execute independently. Managed heap, marshalled strings and libraries without supplied allocators remain outside the complete composed producer; a sampled GC size, process RSS or sum of unrelated domain peaks does not establish total current/peak semantics."
+      "reason": "Trigger: actual coherent managed/native current and peak allocation producers with explicit lifetime. Deferred-message retained capacity and the direct owned native payload ledger, including FreeType-owned callback allocations, execute independently. See the [qualified profile and remaining producer gaps](../performance-producers.md#direct-owned-native-storage). A sampled GC size, process RSS or sum of unrelated domain peaks does not establish total current/peak semantics."
     },
     {
       "godot": [

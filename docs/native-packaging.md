@@ -304,6 +304,11 @@ dotnet pack tools/native/Native.csproj -c Release -o bin/native-feed -p:NativePa
 
 A desktop consumer selects only its own platform package. `python3 -B tools/native/test_consumer.py bin/native-feed linux-x64` exercises the managed package and Linux platform package with native compilers blocked; use the matching RID and package on another desktop host. Package production/CI may use a local feed, but ordinary game installation uses NuGet and has no manual feed setup.
 
+The [managed memory profile](../tools/runtime-native/memory/README.md) adds
+pinned .NET runtime inputs for Linux x64 package consumers. The application
+selects those inputs explicitly when publishing, and its launcher loads the
+engine module from the published package layout.
+
 The explicit one-RID pack is a local Linux x64 verification artifact. CI merges independently built x64 and ARM64 artifacts and packs both; the default pack rejects an incomplete two-RID bundle. Cross-compiling private source still requires target toolchains or audited prebuilt libraries under the existing per-component properties. `dotnet build -p:Electron2DBuildNativeFromSource=true` also retains the full runtime-plus-native source build.
 
 ## Verification boundaries

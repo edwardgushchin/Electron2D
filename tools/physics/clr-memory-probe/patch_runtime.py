@@ -7,17 +7,21 @@ from pathlib import Path
 import sys
 
 
-def patch(root, output):
+def patch(root, output, version='10.0.1'):
     pins = {
         'src/coreclr/gc/gc.cpp': '4d92ead47fc1472ea47f4c2c0b8d9246def3f49ac427f374703d1aadfe74de8c',
         'src/coreclr/vm/gchelpers.cpp': 'db21a2367bf0528bb7ddc1e68a0b73e238e5844e4a2280eee729f317f8b6889f',
         'src/coreclr/vm/gcenv.ee.cpp': '3207e7ca63b1c560b33293f0ca6390d6387aea76b80d6434f4f8c7e41f8128c9',
         'src/coreclr/dlls/mscoree/coreclr/CMakeLists.txt': 'b08679bd8510e0be1edc67885bcaf3523c4c45f1741ea633a6db5a8e2c8821e3',
         'src/coreclr/dlls/mscoree/mscorwks_unixexports.src': '143c94e504f057425644da68f177c4c7acf56ff2e195d19d5660947c5f7aa3b7'}
+    if version == '10.0.14':
+        pins['src/coreclr/gc/gc.cpp'] = '5b1394edf34d08b18550b582940ab0a28079c44d4e8ae3a7cb7ace30636f37b6'
+    elif version != '10.0.1':
+        raise ValueError('Unsupported runtime version: ' + version)
     original = {}
     for name, digest in pins.items():
         if hashlib.sha256((root / name).read_bytes()).hexdigest() != digest:
-            raise ValueError('Use an unmodified v10.0.1 source copy: ' + name)
+            raise ValueError(f'Use an unmodified v{version} source copy: ' + name)
         original[name] = (root / name).read_text()
     changed = dict(original)
 
@@ -94,4 +98,4 @@ extern "C" DLLEXPORT void E2DUnregisterFrozenSegment(void* handle)
 
 
 if __name__ == '__main__':
-    patch(Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve())
+    patch(Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve(), *sys.argv[3:])

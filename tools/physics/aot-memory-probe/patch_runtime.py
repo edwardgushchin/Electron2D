@@ -107,17 +107,22 @@ void gc_heap::update_ro_segment''')
     return changed.replace('e2d_aot_', prefix)
 
 
-def patch(root, output):
+def patch(root, output, version='10.0.1'):
     pins = {
         'src/coreclr/runtime/amd64/AllocFast.S': '0e4fc5b3fe604baa8ccad94ade11a9b1251e06e4d2b48761e932291191ed8c25',
         'src/coreclr/nativeaot/Runtime/GCHelpers.cpp': '7c21403b38e035b712384917f198506cd15e15fbae0b18a15ea5ed7129abd226',
         'src/coreclr/nativeaot/Runtime/gcenv.ee.cpp': '34a4106345051e0c58ed1a03dc124f64c66ce6037c6bea1ea2b5fd1bcae59550',
         'src/coreclr/gc/gc.cpp': '4d92ead47fc1472ea47f4c2c0b8d9246def3f49ac427f374703d1aadfe74de8c'}
+    if version == '10.0.14':
+        pins['src/coreclr/nativeaot/Runtime/gcenv.ee.cpp'] = 'abe5ce8c438949da21562d2e04beb36767aac7a2a51806f024652017a1359a49'
+        pins['src/coreclr/gc/gc.cpp'] = '5b1394edf34d08b18550b582940ab0a28079c44d4e8ae3a7cb7ace30636f37b6'
+    elif version != '10.0.1':
+        raise ValueError('Unsupported runtime version: ' + version)
     originals = {}
     for name, expected in pins.items():
         path = root / name
         if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
-            raise ValueError('Use an unmodified v10.0.1 source copy: ' + name)
+            raise ValueError(f'Use an unmodified v{version} source copy: ' + name)
         originals[name] = path.read_text()
     changed = dict(originals)
 
@@ -243,4 +248,4 @@ void GCToEEInterface::GcDone(int condemned)
 
 
 if __name__ == '__main__':
-    patch(Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve())
+    patch(Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve(), *sys.argv[3:])

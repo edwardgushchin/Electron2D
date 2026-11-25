@@ -1,0 +1,41 @@
+<Project>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Electron2D.MemoryProfile.sh" Link="Electron2D.MemoryProfile.sh" CopyToPublishDirectory="Always" />
+  </ItemGroup>
+
+  <Target Name="ValidateElectron2DMemoryProfile" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(RuntimeIdentifier)' != 'linux-x64'" Text="Electron2DMemoryProfile requires RuntimeIdentifier=linux-x64." />
+    <Error Condition="'$(ConcurrentGarbageCollection)' != 'false'" Text="Electron2DMemoryProfile requires ConcurrentGarbageCollection=false." />
+    <Error Condition="'$(ServerGarbageCollection)' == 'true'" Text="Electron2DMemoryProfile requires workstation GC." />
+    <Error Condition="'$(RuntimeFrameworkVersion)' != '10.0.14'" Text="Electron2DMemoryProfile requires RuntimeFrameworkVersion=10.0.14." />
+    <Error Condition="'$(PublishAot)' == 'true' and ('$(IlcLinkServerGC)' == 'true' or '$(StaticExecutable)' == 'true')" Text="The memory-accounted NativeAOT profile requires workstation GC and dynamic native linkage." />
+    <Error Condition="'$(PublishAot)' != 'true' and ('$(SelfContained)' == 'true' or !Exists('$(Electron2DMemoryProfile)/clr/dotnet'))" Text="The memory-accounted CoreCLR profile requires a framework-dependent deployment and the source-built runtime." />
+  </Target>
+
+  <Target Name="LinkElectron2DMemoryRuntime" AfterTargets="SetupOSSpecificProps" DependsOnTargets="ResolvePackageAssets" Condition="'$(PublishAot)' == 'true'">
+    <PropertyGroup>
+      <_MemoryRuntimeArchive>$(Electron2DMemoryProfile)/aot/libRuntime.WorkstationGC.a</_MemoryRuntimeArchive>
+      <_MemoryProducerObject>$(Electron2DMemoryProfile)/aot/producer.o</_MemoryProducerObject>
+    </PropertyGroup>
+    <ItemGroup>
+      <_MemoryEngineModule Include="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.NuGetPackageId)' == 'Electron2D.Linux' and '%(NativeCopyLocalItems.Filename)%(NativeCopyLocalItems.Extension)' == 'libElectron2D.so'" />
+      <_MemoryRuntimeLinkerArg Include="@(LinkerArg)" Condition="'%(LinkerArg.Identity)' == '$(IlcSdkPath)$(FullRuntimeName).a'" />
+      <_MemoryILCompiler Include="@(KnownILCompilerPack)" Condition="'%(KnownILCompilerPack.TargetFramework)' == 'net10.0'" />
+    </ItemGroup>
+    <Error Condition="!Exists('$(_MemoryRuntimeArchive)') or !Exists('$(_MemoryProducerObject)')" Text="Electron2DMemoryProfile is missing the NativeAOT runtime archive or producer object." />
+    <Error Condition="'@(_MemoryEngineModule->Count())' != '1'" Text="Electron2DMemoryProfile requires exactly one engine module from Electron2D.Linux." />
+    <Error Condition="'@(_MemoryRuntimeLinkerArg->Count())' != '1'" Text="The pinned NativeAOT runtime archive was not found in the linker arguments." />
+    <Error Condition="'@(_MemoryILCompiler->'%(ILCompilerPackVersion)')' != '10.0.14'" Text="Use an SDK with Microsoft.DotNet.ILCompiler 10.0.14 for this memory profile." />
+    <ItemGroup>
+      <_MemoryLinkerArgs Include="@(LinkerArg)">
+        <Path Condition="'%(Identity)' == '$(IlcSdkPath)$(FullRuntimeName).a'">&quot;$(_MemoryRuntimeArchive)&quot;</Path>
+        <Path Condition="'%(Identity)' != '$(IlcSdkPath)$(FullRuntimeName).a'">%(Identity)</Path>
+      </_MemoryLinkerArgs>
+      <LinkerArg Remove="@(LinkerArg)" />
+      <LinkerArg Include="@(_MemoryLinkerArgs->'%(Path)')" />
+      <NativeLibrary Remove="$(IlcSdkPath)$(FullRuntimeName).a" />
+      <NativeLibrary Include="$(_MemoryRuntimeArchive);$(_MemoryProducerObject);@(_MemoryEngineModule)" />
+      <LinkerArg Include="&quot;$(_MemoryProducerObject)&quot;;@(_MemoryEngineModule->'&quot;%(FullPath)&quot;');-lstdc++" />
+    </ItemGroup>
+  </Target>
+</Project>

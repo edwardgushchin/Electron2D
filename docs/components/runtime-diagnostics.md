@@ -14,7 +14,18 @@ Last updated: 2026-10-29
 
 ## Direct native allocation ownership
 
-[The internal allocation ledger](../coverage/performance-producers.md#direct-owned-native-storage) uses a pure-C core in the existing private native bundle, shared with the source-instrumented CLR and NativeAOT hosts. Loading this core opens no device or network service. It records requested CPU native payload bytes at successful alloc/resize/free boundaries for the runtime's direct allocations and FAudio allocator callbacks. Failed reallocations preserve the old block and counters; transient allocations contribute to the process peak even without an intervening read. Native callback allocation failures return null. [PCRE2 contexts](../coverage/performance-producers.md#pcre2-owned-allocation-domain-2026-10-29) now contribute compiled and transient interpreter payloads through the same callbacks. [Private ICU callbacks](../coverage/performance-producers.md#private-icu-allocation-domain-2026-10-29) now include iterator, dictionary and Unicode/security storage with retained process caches. Managed heap and remaining native producer composition are still open, so this source does not expose or certify MemoryStatic/MemoryStaticMax.
+[The internal allocation ledger](../coverage/performance-producers.md#direct-owned-native-storage) uses a pure-C core in the existing private native bundle, shared with the source-instrumented CLR and NativeAOT hosts. Loading this core opens no device or network service. It records requested CPU native payload bytes at successful alloc/resize/free boundaries for the runtime's direct allocations and FAudio allocator callbacks. Failed reallocations preserve the old block and counters. Transient allocations contribute to the process peak even without an intervening read. Native callback allocation failures return null. [PCRE2 contexts](../coverage/performance-producers.md#pcre2-owned-allocation-domain-2026-10-29) contribute compiled and transient interpreter payloads through the same callbacks. [Private ICU callbacks](../coverage/performance-producers.md#private-icu-allocation-domain-2026-10-29) include iterator, dictionary and Unicode/security storage with retained process caches.
+
+`NativeAllocation.Snapshot()` reads the native payload pair. The internal
+`NativeAllocation.ProcessSnapshot()` reads the combined current bytes and
+process-lifetime peak in one ledger snapshot. The [managed memory profile](../../tools/runtime-native/memory/README.md)
+feeds aligned dynamic and frozen managed object bytes into the ledger for
+Linux x64 with the pinned source-built runtime. A stock host with no managed
+publication receives `PlatformNotSupportedException` from the combined read.
+The total covers managed objects and registered native allocation domains.
+Allocator padding and metadata, GPU resources, unused GC space, stacks, JIT
+code, profiler bookkeeping and allocations outside the native ledger are
+outside this measurement. The public memory selectors remain separate.
 
 ## Deferred message memory
 

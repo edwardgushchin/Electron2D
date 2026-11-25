@@ -93,7 +93,7 @@ The internal NativeAllocation ledger replaces direct NativeMemory and HGlobal pa
 
 Current consumers include [the selected TLS original allocator](#tls-original-allocation-domain-2026-10-29), [ENet hosts/packets/codecs and file blocks](#enet-owned-allocation-domain), FAudio's engine/effect allocator callbacks and streaming callback storage, text font/data/table/bitmap callbacks, retained ICU data, accessibility callbacks and temporary byte buffers, DTLS cookies, gzip native wrapper state, filesystem stat buffers and native message-button records. Borrowed native pointers keep their original release functions and never enter this allocator. FAudio allocation failures return null across the unmanaged callback boundary; no managed out-of-memory exception escapes to native code. Ordinary managed callers still receive OutOfMemoryException.
 
-This ledger does not yet count allocations performed inside libraries without the supplied callbacks, marshalled strings, the managed heap, driver memory or allocator bookkeeping. The StreamPeerGZIP domain now supplies its internal zlib storage as described below; BCL compression consumers use a separate runtime boundary, qualified only in the [owned source-runtime profile](#bcl-compression-source-runtime-domain-2026-10-29). It is not either public MemoryStatic monitor and must not be added to an independent managed peak to fabricate a concurrent total. Complete composed producer instrumentation and qualification remain required below.
+`NativeAllocation.Snapshot()` returns the current and peak bytes for tracked native CPU payloads on both ordinary and instrumented runtimes. The [opt-in Linux x64 package profile](#managed-heap-source-qualification) adds managed objects to the same ledger and exposes the internal combined read through `NativeAllocation.ProcessSnapshot()`. On an ordinary runtime the combined read reports `PlatformNotSupportedException`. When a UTF-8 argument and its terminator exceed the supplied scratch space, `NativeUTF8StringMarshaller` allocates the buffer through `NativeAllocation`. Those bytes contribute to the native snapshot and, on an instrumented runtime, the combined snapshot until release. Scratch space and string marshalling buffers outside the ledger are excluded, along with driver memory, allocator bookkeeping and allocations outside registered native domains. StreamPeerGZIP supplies its internal zlib storage. BCL compression uses the separate [owned source-runtime boundary](#bcl-compression-source-runtime-domain-2026-10-29). Public MemoryStatic selectors still require their own integration and qualification.
 
 Before the shared-core extraction, NativeAllocationTests passed on Linux x64 CLR and strict full-trim NativeAOT, including native allocation/reallocation failure, zero-size blocks, alignment 1–4096, four concurrent workers, an unobserved transient high-water mark and 1024 warmed alloc/resize/free/read cycles at strict 0/0 owner/all-thread managed bytes. Sixteen source-bound root profiles also pass for native allocation, file identity, networking, fonts/60 independent raster oracle cases, text, dialogs, audio, accessibility and CPU/GPU owner/separate physics. Receipts and exact payload/PDB/source hashes are under `bin/native-allocation-accounting/2026-10-28/`. The full ordinary suite also passed on that unchanged cohort in 951.475 seconds with one completion marker. Other platforms and total-memory producers remain open.
 
@@ -279,8 +279,9 @@ Receipts and source/cohort manifests are under
 `bin/enet-allocation-accounting/2026-10-28/`. This closes the ENet bridge allocation
 source only. Runtime compression PAL/BCL allocation now has a separate
 [qualified source-runtime profile](#bcl-compression-source-runtime-domain-2026-10-29);
-stock runtime delivery, other uninstrumented native libraries, marshalled strings
-and coherent managed/native current/peak aggregation remain open. The complete
+the [managed heap package profile](#managed-heap-source-qualification) covers
+composed current and peak accounting on qualified runtimes. Native libraries and string
+marshalling buffers outside the ledger remain untracked. The complete
 MEMORY_STATIC/MEMORY_STATIC_MAX producers and Performance.GetMonitor remain open;
 current declaration totals are recorded at the top of this audit. Other platforms
 and final whole-goal acceptance remain separate.
@@ -591,6 +592,20 @@ The source manifest and bounded trace receipt are retained in
 platform, network or performance acceptance evidence.
 
 ## Managed heap source qualification
+
+The [Linux x64 package consumer profile](../../tools/runtime-native/memory/README.md)
+uses the source-runtime hooks below to publish managed object bytes through the
+same gate as tracked native CPU allocations. Its combined read is
+`NativeAllocation.ProcessSnapshot()`. The shared host compares the composed
+pair with the unchanged `NativeAllocation.Snapshot()` native view. The
+Linux x64 package runs on Arch/WSL2 with .NET 10.0.14 inputs covered CoreCLR and
+NativeAOT with workstation GC and concurrent collection disabled. Both runs
+retained an unobserved allocation peak, distinguished disjoint from overlapping
+ownership and made 20,000 prepared reads without allocating managed bytes on
+the caller. Stock CoreCLR and NativeAOT runs exercised the native-only view and
+the unsupported combined read. The historical diagnostic receipts below apply to
+their isolated probe binaries. Other RIDs and GC modes remain outside this
+package profile.
 
 The standalone [managed-memory probe](../../tools/physics/managed-memory-probe/ManagedMemoryProbe.csproj)
 checks the stock .NET 10.0.1 APIs on Linux x64 CLR and strict full-trim NativeAOT.

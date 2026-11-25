@@ -97,8 +97,10 @@ the copied CLR and exactly one production native ledger.
 runtime and profiler. Its prepared-read measurement disables tiered compilation.
 Put its copied memory bundle first in LD_LIBRARY_PATH so
 the loader and engine resolver select the same file. It checks public codec
-startup, full native drain and prepared zero-byte reads. The existing NativeAOT
-profile uses the same host with `PublishAot=true`.
+startup, full native drain, prepared zero-byte reads and exactly one mapped
+`libElectron2D.so`. The diagnostic host accepts the probe directory in the
+process maps. The package build also checks the installed RID path. The
+existing NativeAOT profile uses the same host with `PublishAot=true`.
 
 This profile qualifies its reservation, GC and registry accounting boundaries.
 Concurrent collection, complete module/unload and native-library ownership,
