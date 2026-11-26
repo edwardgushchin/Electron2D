@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 int main() {
-    std::cout << "{\"commit\":\"b22872835dbabc56a6e4a366ea9917f62b7daf1a\",\"records\":[";
+    std::cout << "{\"commit\":\"9e1f07b159d3cb777f1c67ed31fc11fd117986f4\",\"records\":[";
     bool first_record = true;
     for (unsigned cells : {6u, 8u, 16u}) for (bool deformable : {false, true}) {
         size_t vertices = (cells + 1) * (cells + 1); std::vector<float> positions(vertices * 3), attributes(vertices * 6, 1); std::vector<unsigned> current;

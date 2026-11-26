@@ -319,9 +319,89 @@ Linux x64 local verification exercises fresh source, ProjectReference/NuGet cons
 
 ## Importer mesh dependency checkpoint
 
-The current candidate adds meshoptimizer 1.1.1 at immutable commit `b22872835dbabc56a6e4a366ea9917f62b7daf1a`. Only its unmodified header, allocator and simplifier sources are vendored, with MIT notices and SHA-256 verification. The private bridge exports `e2d_mesh_scale` and `e2d_mesh_simplify`. Its entry points are delivered by the common Electron2D native module on every platform. This changes the source fingerprint and requires fresh platform bundles. Previously published packages and foreign execution evidence above do not cover this dependency.
+The [vendor manifest](../src/Vendor/meshoptimizer/manifest.json) pins meshoptimizer
+1.3 to commit `9e1f07b159d3cb777f1c67ed31fc11fd117986f4` and records the source archive
+and file SHA-256 values. The producer compiles the allocator and simplifier from
+the vendored files. The header, both sources and the MIT license match upstream
+byte for byte. The engine's existing bridge retains the C calling convention,
+allocator registration and allocation failure translation. It supplies
+the same triangle indices, packed float positions and weighted attributes and
+returns indices into the supplied vertices with the simplification error.
 
-The local Linux x64 candidate passed source integrity, package receipt/export checks and fresh source/ProjectReference/NuGet build and publish consumers with native compilers blocked, including explicit-RID and default-host paths. Those consumers execute public ImporterMesh LOD generation and compile the resulting drawable ArrayMesh. GLSL, HLSL and compatibility rendering also passed focused importer pixel checks with zero managed allocations across 64 active and 64 idle warmed frames. Foreign producer builds, target execution and publication remain required; no new package was published.
+The platform package ships the mesh code in the common module with entry
+points `e2d_mesh_memory`, `e2d_mesh_scale` and `e2d_mesh_simplify`. The new source
+fingerprint requires fresh bundles for all 18 RIDs. The platform package projects use these profiles:
+
+| Package | RIDs | Common module |
+| --- | --- | --- |
+| Windows | win-x86, win-x64, win-arm64 | libElectron2D.dll |
+| Linux | linux-x64, linux-arm64 | libElectron2D.so |
+| MacOS | osx-x64, osx-arm64 | libElectron2D.dylib |
+| Android | android-arm, android-arm64, android-x86, android-x64 | libElectron2D.so |
+| iOS | ios-arm64, iossimulator-arm64, iossimulator-x64 | libElectron2D.a |
+| tvOS | tvos-arm64, tvossimulator-arm64, tvossimulator-x64 | libElectron2D.a |
+| Web | browser-wasm | libElectron2D.a |
+
+Clean and repeated Release builds of the isolated mesh bridge passed for
+Windows x86, x64 and ARM64 and Linux x64. The three Windows binaries expose the
+three mesh entry points. The Windows x86 and x64 upstream oracle reproduced the
+previous fixture's exact LOD indices for six combinations of grid size and
+deformation settings. On Linux x64 the isolated bridge passed 562 allocation
+cases in Release and under AddressSanitizer, LeakSanitizer and
+UndefinedBehaviorSanitizer. The 556 injected failures preserved the input,
+released scratch storage and allowed successful retry.
+
+A Windows x64 application using the Release runtime and the isolated bridge
+with the production allocation ledger reproduced all six index fixtures in
+both build and publish output. It checked retained input, valid shrinking
+triangle levels, increasing finite thresholds and the resulting ArrayMesh
+LODs.
+
+The initial Windows x64 qualification used base
+`67d935214c2226f75734103c3769d0e54ac1df18` with the mesh upgrade in
+`30f5588bf6fe2947c1fa1a15dd04b8ced66e292e`. The initial Linux x64
+qualification used base `6e510c4df5cd9d6a00abe4b3172ac185f44db64a` with
+the same upgrade applied. The complete common modules passed clean and repeated
+builds and exposed all 188 expected symbols, including the three mesh entry
+points. Both local one-RID packages contained six private libraries. Their
+consumers passed clean build, repeated build and publish, and generated and
+compiled ImporterMesh LODs. The Windows checks also covered LOD selection and
+storage.
+
+With the mesh upgrade applied to target `e209dbff79d6498906f8453d755e6bb44e5b26af`,
+the managed Release package contains `buildTransitive/MemoryProfile.targets`
+and `buildTransitive/Electron2D.MemoryProfile.sh`. The earlier Linux x64
+package matches the current native source fingerprint, all six recorded
+binary hashes and the 100 notice files. Its consumer passed clean build,
+repeated build and publish again with the current managed package.
+
+The current Windows x64 one-RID package contains six private libraries and
+100 notice files, including Brotli 1.2.1, FreeType 2.15.0 and HarfBuzz 15.2.0.
+Its common module exposes all 188 expected symbols. The complete producer
+passed its FreeType and HarfBuzz checks after a clean rebuild of the font
+component. A repeated producer run relinked two DLLs. Both packages passed
+the composition and export checks. For each, a consumer with the current
+managed package passed clean build, repeated build and publish with all
+six packaged DLLs. Both outputs generated and compiled two LODs from
+81 vertices and 384 indices.
+
+The current Windows x86 one-RID package also passed the six-library,
+100-notice and 188-export checks. The clean producer ran the native font
+checks, and an incremental common-module build kept the same DLL. The
+self-contained x86 consumer ran from the clean build, repeated build and
+publish outputs with the packaged DLLs and generated the same two LODs.
+The Windows x64 host rejected a target-native ARM64 executable with Win32
+error 216. The ARM64 producer runs target-native checks before staging and
+requires a compatible Windows runner.
+
+The complete matrix still follows [package qualification](development-ci.md#complete-qualification).
+The local host is Windows x64 with x64 WSL. Linux ARM64 needs an ARM64
+runner for the native execution checks. The macOS, iOS and tvOS profiles
+require Xcode SDKs and matching runners or devices. The Android SDK on this
+host has NDK 23.2.8568313, while the producer workflow pins 28.2.13676358.
+ADB listed no Android targets. The browser profile lacks the .NET
+WebAssembly workload and its Emscripten SDK on this host. These platform
+runs require separate evidence for the 1.3 revision.
 
 The private ENet bridge now also carries `e2d_file_encode` and `e2d_file_decode` for FileAccess FastLZ/Zstandard blocks. The bridge additionally carries four opaque streaming GZIP calls; native producers require these entry points in the complete common ABI. These calls do not need a network host or socket. Existing published bundles without these exports fail explicitly; Linux x64 file-codec checks use the matching source-built asset and an explicit `Electron2DNativeLibrary` selection. Repository consumer builds/publishes copy that selection after package assets. Foreign bundle execution and refreshed feed delivery remain separate gates.
 

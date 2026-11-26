@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 root = Path(__file__).resolve().parents[2] / "src/Vendor/meshoptimizer"
 manifest = json.loads((root / "manifest.json").read_text())
-assert manifest["commit"] == "b22872835dbabc56a6e4a366ea9917f62b7daf1a"
+assert manifest["commit"] == "9e1f07b159d3cb777f1c67ed31fc11fd117986f4"
 for name, expected in manifest["files"].items():
     assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
 print("Immutable meshoptimizer source hashes passed.")
