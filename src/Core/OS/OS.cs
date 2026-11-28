@@ -11,6 +11,38 @@ public sealed partial class OS : ElectronObject
 {
     internal static OS Service { get; } = new();
     private OS() { }
+
+    /// <summary>Returns the current combined managed and tracked native CPU allocation size in bytes.</summary>
+    /// <returns>A nonnegative 64-bit byte count, or zero in Release.</returns>
+    /// <remarks>Debug requires the instrumented Linux x64 managed runtime and matching native bundle. This query needs no window.
+    /// The ledger includes dynamic and frozen managed objects and tracked native CPU payloads.
+    /// GPU storage, stacks, JIT code, unused GC capacity, allocator bookkeeping and allocations outside the ledger are excluded.</remarks>
+    /// <exception cref="PlatformNotSupportedException">The installed runtime or native bundle lacks compatible combined accounting in Debug.</exception>
+    /// <exception cref="DllNotFoundException">The native bundle cannot be loaded in Debug.</exception>
+    public static long GetStaticMemoryUsage()
+    {
+#if DEBUG
+        return NativeAllocation.ProcessSnapshot().Current;
+#else
+        return 0;
+#endif
+    }
+
+    /// <summary>Returns the greatest simultaneous combined managed and tracked native CPU allocation size in bytes.</summary>
+    /// <returns>A nonnegative 64-bit byte count, or zero in Release.</returns>
+    /// <remarks>Uses the same accounting scope and runtime requirements as <see cref="GetStaticMemoryUsage"/>.
+    /// The process retains this peak after memory is released, including allocations that end between queries.</remarks>
+    /// <exception cref="PlatformNotSupportedException">The installed runtime or native bundle lacks compatible combined accounting in Debug.</exception>
+    /// <exception cref="DllNotFoundException">The native bundle cannot be loaded in Debug.</exception>
+    public static long GetStaticMemoryPeakUsage()
+    {
+#if DEBUG
+        return NativeAllocation.ProcessSnapshot().Peak;
+#else
+        return 0;
+#endif
+    }
+
     /// <summary>Moves a file, directory or symbolic link to the desktop trash without permanently deleting it.</summary>
     /// <param name="path">An ordinary, res:// or user:// path identifying the entry itself.</param>
     /// <remarks>This blocking operation may perform filesystem I/O and is unsuitable for a real-time callback.

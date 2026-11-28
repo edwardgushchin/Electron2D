@@ -38,7 +38,15 @@ internal static unsafe partial class NativeAllocation
     internal static (long Current, long Peak) ProcessSnapshot()
     {
         Prepare();
-        ReadState(out var state);
+        State state;
+        try
+        {
+            ReadState(out state);
+        }
+        catch (EntryPointNotFoundException error)
+        {
+            throw new PlatformNotSupportedException("Combined memory accounting requires the matching source-built native bundle.", error);
+        }
         // A managed caller can only reach this point after the runtime has allocated objects.
         if (state.ManagedPeak == 0)
         {

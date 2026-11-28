@@ -1,5 +1,7 @@
 [System CA export](../components/system-certificates.md) now projects fresh native public trust anchors through OS.GetSystemCACertificates, with explicit custom TLS snapshot selection and independent native/source failure controls. Foreign platform/package and native allocation gates remain open.
 
+The [static OS memory queries](../classes/OS.md) expose current and peak combined allocation bytes in the instrumented Debug profile. Release returns zero.
+
 [Legacy UTF8 inputs](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29) extend the common allocation gate to directory/xattr/DBus/ALSA calls, scoped GIO paths and POSIX argv. Complete memory composition remains open.
 
 [UTF8 native inputs](../coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29) now route source-generated heap arguments and explicit WebRTC/DBus temporary strings through the common allocation gate, retaining stack scratch and failure cleanup. Bootstrap, provider/runtime ownership and the exact composed memory monitor remain open.

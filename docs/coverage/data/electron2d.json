@@ -156551,6 +156551,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetStaticMemoryPeakUsage()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetStaticMemoryPeakUsage",
+    "signature": "public static System.Int64 GetStaticMemoryPeakUsage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetStaticMemoryUsage()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetStaticMemoryUsage",
+    "signature": "public static System.Int64 GetStaticMemoryUsage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetSystemCACertificates()",
     "kind": "method",
     "declaringType": "Electron2D.OS",

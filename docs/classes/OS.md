@@ -1,12 +1,16 @@
 # OS
 
-Last updated: 2026-11-13
+Last updated: 2026-11-25
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
 Retained permanent process operating-system service with static operations and named Engine lookup. It cannot be independently constructed, disposed or unregistered. MoveToTrash uses system GIO on desktop Linux and the [Windows Shell recycle adapter](../components/windows-trash.md), preserving native recovery metadata/mount/link policies; no permanent deletion fallback exists. ShellOpen delegates URI/path requests to SDL. [ShellShowInFileManager](../components/file-manager.md) uses Windows Shell identities or Linux FileManager1 to open directories and request exact item selection. macOS native selection requires its backend.
 
 `GetSystemCACertificates()` exports fresh public system CA encodings as PEM for an explicitly selected X509Certificate/TLSOptions trust snapshot. It uses read-only native Windows ROOT/disallow metadata, standard desktop Unix bundles or macOS anchors, without display initialization or trust-store mutation. See [system certificates](../components/system-certificates.md) for source order, native ownership, empty/error behavior, default live OS-trust distinction and verified platform boundaries.
+
+`GetStaticMemoryUsage()` and `GetStaticMemoryPeakUsage()` report the current and highest simultaneous byte counts from the process allocation ledger. They work without a window. Results range from `0` to `long.MaxValue`. Freeing memory reduces the current count and preserves the peak, including peaks between reads. Each call reads the ledger separately.
+
+Release returns `0` for both methods. Debug uses the [instrumented Linux x64 profile](../../tools/runtime-native/memory/README.md), with workstation GC and concurrent collection disabled. The ledger includes dynamic and frozen managed objects and tracked native CPU payloads, including tracked UTF-8 buffers. It excludes GPU memory, stacks, JIT code, unused GC capacity, bookkeeping and allocations outside the ledger. Debug throws `PlatformNotSupportedException` with an ordinary managed runtime or an incompatible allocation ABI. An absent native module can surface as `DllNotFoundException`. See [qualified profiles and allocation boundaries](../coverage/performance-producers.md#managed-heap-source-qualification).
 
 Empty/null/NUL inputs fail before external work. Recoverable trash failure throws IOException or unavailable-service NotSupportedException. Launch failure throws InvalidOperationException. These blocking native operations are unsuitable for real-time callbacks. FileDialog invokes trash only after its confirmation; the caller decides when to launch an external application.
 
@@ -18,6 +22,8 @@ Process argv, Linux MIDI names and GIO paths use [tracked UTF8 input storage](..
 
 | Complete declaration | Contract |
 | --- | --- |
+| `public static System.Int64 GetStaticMemoryUsage()` | Reads current combined allocation bytes. Returns zero in Release. |
+| `public static System.Int64 GetStaticMemoryPeakUsage()` | Reads the retained peak of simultaneous combined allocation bytes. Returns zero in Release. |
 | `public static System.Void MoveToTrash(System.String path)` | Moves a file, directory or symbolic link to the desktop trash without permanently deleting it. path: An ordinary, res:// or user:// path identifying the entry itself. System.ArgumentException: The path is empty or contains a null character. System.ArgumentNullException: The path is null. System.NotSupportedException: The platform or system trash service is unavailable. System.IO.IOException: The native service cannot trash the entry. |
 | `public static System.Void ShellOpen(System.String uri)` | Requests the platform's default application for a URI or filesystem resource. uri: A nonempty URI or ordinary filesystem path. System.ArgumentException: The resource identifier is empty or contains a null character. System.InvalidOperationException: The native platform rejects the launch request. |
 | `public static System.Void ShellShowInFileManager(System.String fileOrDirPath, System.Boolean openFolder = true)` | Requests the file manager for an ordinary filesystem path; globalize project paths first. Windows enters a directory when openFolder is true, otherwise selects the file/directory in its parent. Existing directory views retain native selection state. Linux sends `ShowFolders` for directory entry and `ShowItems` for selection. If the service is absent, Linux opens the requested or containing folder. Invalid empty/null/NUL input fails before external work. A missing target or native rejection throws `IOException`. The macOS backend remains unavailable. See [native behavior and verification](../components/file-manager.md). |

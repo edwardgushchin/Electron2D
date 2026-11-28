@@ -27,6 +27,20 @@ internal static class Program
     private static void Require(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Main(string[] args)
     {
+        if (args is ["--os-memory", var profile])
+        {
+            CheckOSMemory(profile);
+            return;
+        }
+
+        if (args is ["--os-memory-range"])
+        {
+            Require(ReadOSMemory() == (long.MaxValue - 1, long.MaxValue),
+                "The public OS queries truncated or changed signed 64-bit totals");
+            Console.WriteLine("Both public OS queries preserved the signed 64-bit boundary.");
+            return;
+        }
+
         if (args is ["--native-only"])
         {
             CheckWithoutManagedProducer();
@@ -85,6 +99,65 @@ internal static class Program
         Console.WriteLine(JsonSerializer.Serialize(report, Context.Default.Report));
         CheckNativeModule();
     }
+
+    private static void CheckOSMemory(string profile)
+    {
+        if (profile == "unsupported")
+        {
+            foreach (Func<long> query in new Func<long>[] { OS.GetStaticMemoryUsage, OS.GetStaticMemoryPeakUsage })
+            {
+                try
+                {
+                    query();
+                    throw new InvalidOperationException("The combined OS query accepted an unsupported runtime or bundle");
+                }
+                catch (PlatformNotSupportedException)
+                {
+                }
+            }
+
+            Console.WriteLine("Both OS queries rejected the unsupported profile.");
+            return;
+        }
+
+        Require(profile is "release" or "accounting", "Unknown OS memory profile");
+        using var codec = new StreamPeerGZIP();
+        codec.StartCompression();
+        codec.Clear();
+        ReadOSMemory();
+
+        const int managedSize = 32 * 1024 * 1024;
+        var baseline = ReadOSMemory();
+        var retained = new byte[managedSize];
+        var managed = ReadOSMemory();
+        codec.StartCompression();
+        var active = ReadOSMemory();
+        codec.Clear();
+        var retired = ReadOSMemory();
+        GC.KeepAlive(retained);
+
+        if (profile == "release")
+        {
+            Require(baseline == (0, 0) && managed == (0, 0) && active == (0, 0) && retired == (0, 0),
+                "Release reported accounted bytes");
+        }
+        else
+        {
+            Require(baseline.Current > 0 && managed.Current >= baseline.Current + managedSize,
+                "The public current count missed managed storage");
+            Require(active.Current > managed.Current && retired.Current >= managed.Current &&
+                retired.Current < active.Current,
+                "The public current count did not follow native codec ownership");
+            Require(active.Peak >= active.Current && active.Peak > baseline.Peak && retired.Peak == active.Peak,
+                "The public peak did not record or retain simultaneous ownership");
+        }
+
+        Console.WriteLine($"OS memory ({profile}): baseline {baseline}, managed {managed}, active {active}, retired {retired}.");
+        CheckNativeModule();
+    }
+
+    private static (long Current, long Peak) ReadOSMemory() =>
+        (OS.GetStaticMemoryUsage(), OS.GetStaticMemoryPeakUsage());
 
     private static void CheckNativeModule()
     {

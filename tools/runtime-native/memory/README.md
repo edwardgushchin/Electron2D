@@ -80,3 +80,13 @@ the peak between two reads, disjoint and overlapping ownership, the existing
 native-only snapshot and 20,000 allocation-free prepared reads. Record the
 engine revision or source hashes, SDK and OS versions, the package, deployed
 module and runtime hashes, process maps and the output of both hosts.
+
+For the public OS memory queries, pack Electron2D with `-c Debug` and a
+distinct package version. Publish the same shared host with that managed
+package and the same Linux platform package. Pass `--os-memory accounting`
+through the launcher on CoreCLR and NativeAOT. The scenario checks a retained
+managed allocation, a live codec allocation, and the current count and peak
+after clearing the codec. For the Release control, publish with the Release
+managed package and run with `--os-memory release`. For the stock-runtime
+control, publish with the Debug package, omit `Electron2DMemoryProfile`, and
+run with `--os-memory unsupported`.

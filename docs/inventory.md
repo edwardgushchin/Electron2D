@@ -8,6 +8,8 @@ The static OS service owns [file-manager navigation](components/file-manager.md)
 
 The existing static OS service owns [system certificate snapshots](components/system-certificates.md) through OS.Certificates.cs and its private native helpers. It adds no public type or trust-store owner.
 
+The static [OS service](classes/OS.md) exposes the existing combined allocation ledger through two memory queries. Native-only diagnostics retain their separate snapshot.
+
 The existing Window/DisplayServer family owns [native Windows capture exclusion](components/window-capture.md) through DisplayServer.Capture.cs; no production type is added. Window and SceneAccessibility also publish [window names and descriptions](components/accessibility.md#window-names-and-descriptions) through the existing AT-SPI bridge.
 
 DisplayServer applies and observes [native window corners](components/window-runtime.md#native-window-corners) through [DisplayServer.WindowCorners.cs](../src/Servers/Display/DisplayServer.WindowCorners.cs). Window owns the stored scene request.
